@@ -7,6 +7,7 @@ define('Controls/List/BaseControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
+   'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
@@ -14,6 +15,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
+
    'css!Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
@@ -23,6 +25,7 @@ define('Controls/List/BaseControl', [
    require,
    VirtualScroll,
    SourceController,
+   isEqualObject,
    Deferred,
    multiSelectTpl,
    RecordSet,
@@ -32,14 +35,14 @@ define('Controls/List/BaseControl', [
    'use strict';
 
    var _private = {
-      reload: function(self, userCallback, userErrback) {
+      reload: function(self, filter, userCallback, userErrback) {
          if (self._sourceController) {
             _private.showIndicator(self);
 
             //Need to create new Deffered, returned success result
             //load() method may be fired with errback
             var resDeferred = new Deferred();
-            self._sourceController.load(self._filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(filter, self._sorting).addCallback(function(list) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -49,6 +52,12 @@ define('Controls/List/BaseControl', [
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
+               }
+
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !list.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
@@ -70,7 +79,7 @@ define('Controls/List/BaseControl', [
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
 
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
@@ -85,6 +94,13 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.prependItems(addedItems);
                   self._virtualScroll.prependItems(addedItems.getCount());
                }
+
+               //pre scroll loading
+               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
+               if (self._mounted && !addedItems.getCount()) {
+                  self._notify('checkScroll', [], {bubbling: true});
+               }
+
                return addedItems;
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
@@ -138,7 +154,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options.filter, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], {bubbling: true});
                } else {
@@ -314,7 +330,7 @@ define('Controls/List/BaseControl', [
 
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.actionClick(self, event, action, self._listViewModel._activeItem);
+            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
             self._children.itemActionsOpener.close();
          }
          self._listViewModel.setActiveItem(null);
@@ -325,6 +341,21 @@ define('Controls/List/BaseControl', [
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
+      },
+
+      setPopupOptions: function(self) {
+         self._popupOptions = {
+            closeByExternalClick: true,
+            corner: {vertical: 'top', horizontal: 'right'},
+            horizontalAlign: {side: 'left'},
+            eventHandlers: {
+               onResult: self._closeActionsMenu,
+               onClose: self._closeActionsMenu
+            },
+            templateOptions: {
+               showClose: true
+            }
+         };
       }
    };
 
@@ -339,7 +370,6 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IRemovable
     * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
@@ -358,7 +388,6 @@ define('Controls/List/BaseControl', [
       _loadingIndicatorState: null,
 
       //TODO пока спорные параметры
-      _filter: undefined,
       _sorting: undefined,
 
       _itemTemplate: null,
@@ -369,12 +398,15 @@ define('Controls/List/BaseControl', [
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
 
+      _popupOptions: null,
+
       constructor: function(cfg) {
          BaseControl.superclass.constructor.apply(this, arguments);
       },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
+         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -384,10 +416,9 @@ define('Controls/List/BaseControl', [
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
-         this._filter = newOptions.filter;
 
-         if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
+         if (newOptions.viewModelConstructor) {
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
          }
@@ -402,7 +433,7 @@ define('Controls/List/BaseControl', [
                this._sourceController.calculateState(receivedState);
                this._listViewModel.setItems(receivedState);
             } else {
-               return _private.reload(this, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+               return _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
             }
          }
       },
@@ -425,23 +456,11 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var filterChanged = newOptions.filter !== this._options.filter;
+         var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
-         //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-
-         if (filterChanged) {
-            this._filter = newOptions.filter;
-         }
-
-         if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
-            _private.initListViewModelHandler(this, this._listViewModel);
-
-            //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
-         } else
-         if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listViewModel.setMarkedKey(newOptions.selectedKey);
+         if (newOptions.markedKey !== this._options.markedKey) {
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
 
@@ -458,14 +477,17 @@ define('Controls/List/BaseControl', [
             });
          }
 
+         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
+            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
+         }
+
          if (filterChanged || sourceChanged) {
-            _private.reload(this, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
+            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
          }
 
-         if (this._options.selectedKeys !== newOptions.selectedKeys) {
-            this._listViewModel.select(newOptions.selectedKeys);
+         if (newOptions.selectedKeys !== this._options.selectedKeys) {
+            this._listViewModel._updateSelection(newOptions.selectedKeys);
          }
-
       },
 
       _beforeUnmount: function() {
@@ -512,7 +534,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
-         this._notify('onCheckBoxClick', [key, status]);
+         this._notify('checkboxClick', [key, status]);
       },
 
       _listSwipe: function(event, itemData, childEvent) {
@@ -520,24 +542,12 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility) {
             var status = itemData.multiSelectStatus;
-            this._notify('onCheckBoxClick', [itemData.key, status]);
+            this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
          }
-      },
-
-      removeItems: function(items) {
-         this._children.removeControl.removeItems(items);
-      },
-
-      _beforeItemsRemove: function(event, items) {
-         return this._notify('beforeItemsRemove', [items]);
-      },
-
-      _afterItemsRemove: function(event, items, result) {
-         this._notify('afterItemsRemove', [items, result]);
       },
 
       _showIndicator: function(event, direction) {
@@ -551,7 +561,7 @@ define('Controls/List/BaseControl', [
       },
 
       reload: function() {
-         return _private.reload(this, this._options.dataLoadCallback, this._options.dataLoadErrback);
+         return _private.reload(this, this._options.filter, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
@@ -562,7 +572,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 
@@ -572,7 +582,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       editItem: function(options) {
-         this._children.editInPlace.editItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.editItem(options);
+         }
       },
 
       /**
@@ -581,7 +593,9 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-         this._children.editInPlace.addItem(options);
+         if (!this._options.readOnly) {
+            this._children.editInPlace.addItem(options);
+         }
       },
 
       _onBeforeItemAdd: function(e, options) {
@@ -626,28 +640,8 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      moveItemUp: function(item) {
-         this._children.moveControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.moveControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.moveControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
-      _onActionClick: function(e, action, item) {
-         this._notify('actionClick', [action, item]);
+      _onItemActionsClick: function(e, action, item) {
+         this._notify('itemActionsClick', [action, item]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {
@@ -685,8 +679,8 @@ define('Controls/List/BaseControl', [
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
-            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         if (dragTarget) {
+            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
          }
       },
 

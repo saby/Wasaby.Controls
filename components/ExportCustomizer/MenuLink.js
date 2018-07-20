@@ -125,7 +125,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
                if (presets && presets.length) {
                   items.push.apply(items, presets.map(function (preset) {
                      var item = cMerge({isPreset:true, className:'controls-ExportCustomizer-MenuLink__dual'}, preset);
-                     item.title += '<span class="controls-ExportCustomizer-MenuLink__edit icon-16 icon-Edit icon-primary"></span>';
+                     item.title = '<span class="controls-ExportCustomizer-MenuLink__edit icon-16 icon-Edit icon-primary action-hover" title="' + rk('Редактировать шаблон', 'НастройщикЭкспорта') + '"></span>' + item.title;
                      return item;
                   }));
                }

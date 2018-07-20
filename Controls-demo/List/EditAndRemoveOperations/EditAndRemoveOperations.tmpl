@@ -13,29 +13,44 @@
     </style>
     <div>
         <h3>Обычный список</h3>
-        <Controls.List
-                name="list"
-                source="{{_viewSource}}"
-                on:beforeItemEdit="_onBeginEdit()"
-                on:beforeItemAdd="_onBeginAdd()"
-                on:beforeItemEndEdit="_onEndEdit()"
-                allowEmptySelection="{{false}}"
-                itemActionsType="outside"
-                itemActions="{{_itemActions}}"
-                itemActionVisibilityCallback="{{_showAction}}"
-                on:beforeItemsRemove="_beforeItemsRemove()"
-                keyProperty="id">
-            <ws:editingConfig>
-                <ws:Object editOnClick="{{true}}"/>
-            </ws:editingConfig>
-            <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/ItemTemplate">
-                    <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"/>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:itemTemplate>
-        </Controls.List>
+        <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+            <ws:content>
+                <div>
+                    <Controls.List.Remover name="remover" on:beforeItemsRemove="_beforeItemsRemove()"/>
+                    <Controls.List.Container>
+                        <Controls.List
+                                name="list"
+                                on:beforeItemEdit="_onBeginEdit()"
+                                on:beforeItemAdd="_onBeginAdd()"
+                                on:beforeItemEndEdit="_onEndEdit()"
+                                allowEmptySelection="{{false}}"
+                                itemActionsType="outside"
+                                itemActions="{{_itemActions}}"
+                                itemActionVisibilityCallback="{{_showAction}}"
+                                on:beforeItemsRemove="_beforeItemsRemove()">
+                            <ws:editingConfig>
+                                <ws:Object editOnClick="{{true}}"/>
+                            </ws:editingConfig>
+                            <ws:itemTemplate>
+                                <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                                    <ws:contentTemplate>
+                                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                                    attr:class="controls-EditingTemplateDemo"
+                                                    value="{{ itemTemplate.itemData.item.title }}"
+                                                    enabled="{{true}}">
+                                            <ws:editorTemplate>
+                                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                                     selectOnClick="{{ false }}" />
+                                            </ws:editorTemplate>
+                                        </ws:partial>
+                                    </ws:contentTemplate>
+                                </ws:partial>
+                            </ws:itemTemplate>
+                        </Controls.List>
+                    </Controls.List.Container>
+                </div>
+            </ws:content>
+        </Controls.Container.Data>
         <Controls.List.AddButton caption="Добавить запись" on:click="list.addItem()"/>
         <Controls.Popup.Opener.Confirmation name="popupOpener"/>
     </div>

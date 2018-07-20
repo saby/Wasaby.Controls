@@ -1,18 +1,18 @@
-<Controls.Container.MassSelector
-   selectedKeys="{{[1, 3]}}"
-   name="massSelector">
-   <div class="123">
-      <h2>Default</h2>
-      <Controls.List.MassSelector>
-         <Controls.List
-            source="{{_viewSource}}"
-            markedKey="{{2}}"
-            selectedKeys="{{[1, 3]}}"
-            bind:selectedKeys="_selectedKeys"
-            allowEmptySelection="{{false}}"
-            multiSelectVisibility="visible"
-            keyProperty="id"
-         />
-      </Controls.List.MassSelector>
-   </div>
-</Controls.Container.MassSelector>;
+<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+      <Controls.Container.MultiSelector
+              selectedKeys="{{[1, 3]}}"
+              name="multiSelector">
+         <div class="123">
+            <h2>Default</h2>
+            <Controls.List.Container>
+               <Controls.List.MultiSelector>
+                  <Controls.List
+                          markedKey="{{2}}"
+                          allowEmptySelection="{{false}}"
+                          multiSelectVisibility="visible"
+                  />
+               </Controls.List.MultiSelector>
+            </Controls.List.Container>
+         </div>
+      </Controls.Container.MultiSelector>
+</Controls.Container.Data>

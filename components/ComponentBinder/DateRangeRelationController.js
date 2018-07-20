@@ -1,7 +1,8 @@
 define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
    'Core/Abstract',
-   'Core/helpers/date-helpers'
-], function(cAbstract, dateHelpers) {
+   'Core/helpers/Date/getPeriodType',
+   'Core/helpers/Date/getPeriodLengthInMonthByType'
+], function(cAbstract, getPeriodType, getPeriodLengthInMonthByType) {
 
    /**
     * Контроллер, позволяющий связывать контролы выбора периодов
@@ -137,10 +138,10 @@ define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
             return;
          }
 
-         periodType = dateHelpers.getPeriodType(start, end);
-         periodLength = dateHelpers.getPeriodLengthInMonthByType(periodType);
-         oldPeriodType = (oldStart && oldEnd) ? dateHelpers.getPeriodType(oldStart, oldEnd) : null;
-         oldPeriodLength = oldPeriodType ? dateHelpers.getPeriodLengthInMonthByType(oldPeriodType) : null;
+         periodType = getPeriodType(start, end);
+         periodLength = getPeriodLengthInMonthByType(periodType);
+         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
+         oldPeriodLength = oldPeriodType ? getPeriodLengthInMonthByType(oldPeriodType) : null;
          capacityChanged = oldPeriodType !== periodType;
 
          if (!periodLength) {
@@ -212,13 +213,13 @@ define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
          var updatedControl = this._options.dateRanges[updatedControlNumber],
             updatedStartValue = updatedControl.getStartValue(),
             updatedEndValue = updatedControl.getEndValue(),
-            updatedPeriodType = dateHelpers.getPeriodType(updatedStartValue, updatedEndValue);
+            updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
 
          var updateRelation = function (controlNumber) {
             var control = this._options.dateRanges[controlNumber],
                startValue = control.getStartValue(),
                endValue = control.getEndValue(),
-               periodType = dateHelpers.getPeriodType(startValue, endValue);
+               periodType = getPeriodType(startValue, endValue);
 
             if (updatedPeriodType === periodType &&
                 updatedStartValue.getFullYear() !== startValue.getFullYear() &&

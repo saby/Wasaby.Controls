@@ -153,6 +153,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                      windowTitle: 'Смена шаблона',
                      onlyTemplate: true,
                      parent: button,
+                     opener: this.getParent(),
                      target: button.getContainer(),
                      verticalAlign: {
                         side: 'top'

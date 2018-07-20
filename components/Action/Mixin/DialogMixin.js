@@ -2,10 +2,11 @@
 define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/core-merge',
    'Core/Deferred',
+   'Core/core-instance',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC'
-], function(cMerge, Deferred, Utils, ControlHierarchyManager, IoC) {
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC) {
    'use strict';
 
    /**
@@ -93,6 +94,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _doExecute: function(meta) {
          if (!this._isExecuting) { //Если завершился предыдущий execute
+            this._closeDialogAfterDestroy = meta && meta.hasOwnProperty('closeDialogAfterDestroy') ? meta.closeDialogAfterDestroy : true;
             this._executeDeferred = new Deferred();
             this._openComponent(meta);
             return this._executeDeferred;
@@ -131,28 +133,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       _createComponent: function(config, meta) {
          var componentName = this._getComponentName(meta),
-            self = this,
-            resetWidth;
+            self = this;
          
          if (this._isNeedToRedrawDialog()) {
-            this._resetComponentOptions();
-
-            //Если поменялся шаблон панели, то надо обновить размеры.
-            resetWidth = this._dialog._options.template !== config.template;
-            cMerge(this._dialog._options, config);
-            this._dialog.reload(true, resetWidth);
+            this._reloadTemplate(config);
          } else {
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
                   var deps = [];
                   if (isNewEnvironment()) {
+                     config._mode = meta.mode;
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
-                     if (meta.mode === 'floatArea' && config.isStack === true) {
+                     if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
                         config.className = (config.className || '') + ' controls-Stack';
-                     } else if (meta.mode === 'floatArea' && config.isStack === false) {
+                     } else if (meta.mode !== 'dialog' && config.isStack === false && config.target) {
                         deps.push('Controls/Popup/Opener/Sticky/StickyController');
                         config._type = 'sticky';
                      } else {
@@ -173,12 +170,16 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                      requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
                         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
                            CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
-                           config.className = 'ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+                           config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
                            config.componentOptions._initCompoundArea = function(compoundArea) {
                               var dialog = self._dialog;
-                              dialog._container.closest('.ws-float-area, .ws-float-area-stack-cut-wrapper, .ws-window').removeClass('ws-invisible');
+                              if (dialog._recalcPosition) {
+                                 dialog._recalcPosition();
+                              }
+                              dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                            };
                         }
+                        config._openFromAction = true;
                         self._dialog = new Component(config);
                      });
                   }
@@ -187,6 +188,24 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                }
             }.bind(this));
 
+         }
+      },
+
+      _reloadTemplate: function(config) {
+         var self = this;
+         this._resetComponentOptions();
+
+         if (this._dialog._setCompoundAreaOptions) {
+            requirejs(['Controls/Popup/Compatible/BaseOpener', config.template], function(compatibleOpener, Template) {
+               compatibleOpener._prepareConfigForOldTemplate(config, Template);
+               self._dialog._setCompoundAreaOptions(config.templateOptions);
+               self._dialog.reload();
+            });
+         }
+         else {
+            var resetWidth = this._dialog._options.template !== config.template;
+            cMerge(this._dialog._options, config);
+            this._dialog.reload(true, resetWidth);
          }
       },
 
@@ -222,6 +241,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area'); //Клик может быть в стики шапку, она лежит выше .ws-float-area
          if (floatArea.length) {
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
+         }
+
+         //todo Compatible
+         var compoundArea = $(target).closest('.controls-CompoundArea');
+         if (compoundArea.length) {
+            var opener = compoundArea[0].controlNodes[0].control.getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               var openerContainer = opener.getOpener && opener.getOpener() && opener.getOpener().getContainer();
+               compoundArea = openerContainer && $(openerContainer).closest('.controls-CompoundArea');
+               opener = compoundArea && compoundArea[0] && compoundArea[0].controlNodes[0].control;
+            }
          }
 
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
@@ -410,10 +443,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       after: {
          destroy: function() {
-            if (this._dialog) {
-               this._dialog.destroy();
-               this._dialog = undefined;
+            if (this._dialog && this._closeDialogAfterDestroy) {
+               if (cInstance.instanceOfModule(this._dialog, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea')) {
+                  this._dialog.close();
+               } else {
+                  this._dialog.destroy();
+               }
             }
+            this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
          }

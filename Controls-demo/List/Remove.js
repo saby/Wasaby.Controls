@@ -1,10 +1,11 @@
 define('Controls-demo/List/Remove', [
    'Core/Control',
    'Core/core-clone',
+   'WS.Data/Source/Memory',
    'Controls-demo/List/Remove/RemoveDemoSource',
    'tmpl!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
-], function(BaseControl, cClone, DemoSource, template) {
+], function(BaseControl, cClone, Memory, DemoSource, template) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -30,16 +31,15 @@ define('Controls-demo/List/Remove', [
       ],
 
       _beforeMount: function() {
-         this._viewSource = this._createSource(this._items);
-         this._viewSourceClone = this._createSource(this._items);
-         this._viewSourceSecond = this._createSource([{ id: 0 }]);
+         this._viewSource = this._createSource(DemoSource, this._items);
+         this._viewSourceSecond = this._createSource(DemoSource, this._items);
 
-         this._itemActions = this._createItemsActions('list');
-         this._itemActionsSecond = this._createItemsActions('listSecond');
+         this._itemActions = this._createItemsActions('listRemoveFirst');
+         this._itemActionsSecond = this._createItemsActions('listRemoveSecond');
       },
 
-      _createSource: function(items) {
-         return new DemoSource({
+      _createSource: function(Source, items) {
+         return new Source({
             idProperty: 'id',
             data: cClone(items)
          });
@@ -72,10 +72,6 @@ define('Controls-demo/List/Remove', [
          if (result instanceof Error) {
             this._showError(result.message);
          }
-      },
-
-      _secondListRemoveHandler: function() {
-         this._showError('Events should not bubbling');
       },
 
       _showError: function(message) {

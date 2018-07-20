@@ -503,6 +503,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных компонента.
              * @remark
              * Данные, полученные из источника, будут отображены в компоненте при вызове метода {@link reload}.
+             * Опцию dataSource нельзя биндить, поскольку значения setDataSource и getDataSource имеют разные форматы. 
+             * Подробнее читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/databinding/ статье}.
              * @example
              * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
              * <pre>

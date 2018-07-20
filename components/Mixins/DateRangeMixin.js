@@ -1,8 +1,9 @@
 define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
    'SBIS3.CONTROLS/Utils/DateUtil',
    'Core/core-instance',
-   'Core/helpers/date-helpers'
-], function (DateUtil, cInstance, dateHelpers) {
+   'Core/helpers/Date/getPeriodLength',
+   'Core/helpers/Date/getPeriodType'
+], function (DateUtil, cInstance, getPeriodLength, getPeriodType) {
    var setSQLSerializationMode = function (date, mode) {
       if (date) {
          date.setSQLSerializationMode(mode);
@@ -86,7 +87,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
        * @private
        */
       _getPeriodLengthInMonth: function (start, end) {
-         var periodType = dateHelpers.getPeriodType(start, end);
+         var periodType = getPeriodType(start, end);
          if(periodType === 'month') {
             return 1;
          } else if(periodType === 'quarter') {
@@ -121,7 +122,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
          if (delta) {
             this._slidePeriodByMonth(direction*delta);
          } else {
-            this._slidePeriodByDays(direction*(dateHelpers.getPeriodLength(start, end)));
+            this._slidePeriodByDays(direction*(getPeriodLength(start, end)));
          }
 
       },

@@ -1,0 +1,13 @@
+<div class="controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center">
+   <ws:for data="halfYearIndex as halfYear in _months">
+      <ws:for data="quarterIndex as quarter in halfYear.quarters">
+            <div class="controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
+               on:click="_onQuarterClick(halfYearIndex*2 + quarterIndex)"
+               on:mouseenter="_onQuarterMouseEnter(halfYearIndex*2 + quarterIndex)"
+               on:mouseleave="_onQuarterMouseLeave()"
+            >
+               {{ quarter.name }} {{rk('квартал')}}
+            </div>
+      </ws:for>
+   </ws:for>
+</div>

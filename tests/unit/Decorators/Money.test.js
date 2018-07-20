@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Decorators/Money'
+      'Controls/Decorator/Money'
    ],
    function(Money) {
 
       'use strict';
 
-      describe('Controls.Decorators.Money', function() {
+      describe('Controls.Decorator.Money', function() {
          var result;
 
          it('parseNumber', function() {

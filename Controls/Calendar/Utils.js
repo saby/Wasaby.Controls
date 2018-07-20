@@ -1,8 +1,10 @@
 define('Controls/Calendar/Utils', [
    'Core/helpers/i18n/locales',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(locales, DateUtil) {
-      
+   'Controls/Utils/Date'
+], function(
+   locales,
+   DateUtil
+) {
    'use strict';
 
    var locale = locales.current;
@@ -179,6 +181,14 @@ define('Controls/Calendar/Utils', [
          } else {
             return [date, baseDate];
          }
+      },
+
+      proxyModelEvents: function(component, model, eventNames) {
+         eventNames.forEach(function(eventName) {
+            model.subscribe(eventName, function(event, value) {
+               component._notify(eventName, value);
+            });
+         });
       }
    };
 

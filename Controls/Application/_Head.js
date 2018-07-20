@@ -27,6 +27,16 @@ define('Controls/Application/_Head',
                return res;
             });
             return innerDef;
+         },
+         isMultiThemes: function() {
+            return Array.isArray(this._options.theme);
+         },
+         getCssWithTheme: function(value, theme) {
+            if (this._options.appRoot) {
+               value = this._options.appRoot + value;
+               value = value.replace('//', '/');
+            }
+            return  value.replace('.css', '') + '_' + theme + '.css';
          }
       });
       Page.contextTypes = function() {

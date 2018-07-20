@@ -1,0 +1,7 @@
+<div attr:class="controls-BreadCrumbsView__items">
+    <ws:for data="itemData in items">
+        <ws:partial template="{{itemTemplate}}"
+                    itemData="{{itemData}}"
+                    on:click="_onItemClick(itemData)"/>
+    </ws:for>
+</div>

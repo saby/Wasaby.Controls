@@ -207,12 +207,20 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
+            
+            /**
+             * @cfg {Boolean} Пересчитывать положение попапа при отображении клавиатуры на мобильных устройствах
+             */
+            recalculateOnKeyboardShow: true,
             isHint: true,
             parentContainer: '',
             /*
             эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
             */
             _canScroll: false,
+            /* Опция необходима, чтобы на мобильных устройствах была возможность отключить resize попапа при скроле страницы.
+               Не все попапы должны менять свое положение при скроле, т.к. скролить можно быстро и они будут скакать. */
+            _resizeOnScroll: true,
             _fixJqueryPositionBug: false, //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
             _fixPopupRevertCorner: false //Логика поиска противоположного угла для меню. Скорее всего такая логика должна быть по умолчанию
          }
@@ -231,8 +239,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
          this._initOppositeCorners();
 
-         //Скрываем попап если при скролле таргет скрылся
-         EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
+         if (this._options._resizeOnScroll) {
+            //Скрываем попап если при скролле таргет скрылся
+            EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
+         }
 
          //Скрываем попап при драг'н'дропе
          EventBus.channel('WindowChangeChannel').subscribe('onDocumentDrag', this._dragHandler, this);
@@ -293,9 +303,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
           }
           return this._options.parentContainer;
       },
-
-      _touchKeyboardMoveHandler: function(){
-         this.recalcPosition();
+   
+      _touchKeyboardMoveHandler: function() {
+         if (this._options.recalculateOnKeyboardShow) {
+            this.recalcPosition();
+         }
       },
 
       //Подписка на изменение состояния таргета
@@ -1230,7 +1242,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       },
 
       _getZIndex: function(){
-         if (!this._isNewEnvironment()) {
+         if (!this._isNewEnvironment() || this._options._isSubmitPopup) {
             this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
             cWindowManager.setVisible(this._zIndex);
 
@@ -1247,10 +1259,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                }
             }
          } else {
-            var opener = this.getOpener();
-            var openerPopup = opener && opener._container && opener._container.closest('.controls-Popup');
-            var openerPopupZIndex = openerPopup && openerPopup.css('z-index');
-
+            var openerPopupZIndex = this._getOpenerZIndex();
             if (openerPopupZIndex) {
                this._zIndex = parseInt(openerPopupZIndex, 10) + 1; //Выше vdom-окна, над которым открывается попап
             } else {
@@ -1260,6 +1269,19 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          }
          return this._zIndex;
+      },
+
+      _getOpenerZIndex: function() {
+         var opener = this.getOpener() || this.getParent();
+         var selector = '.controls-Popup, .controls-FloatArea, .ws-window:not(".controls-CompoundArea"), .controls-StylesPalette, .controls-Menu__Popup';
+         var openerPopup = opener && opener._container && opener._container.closest(selector);
+         //Из-за того, что все вешают классы как хотят, по селектору мы можем добраться до контейнера, который лежит внутри попапа.
+         //Пытаемся достучаться до корневой ноды попапа, чтобы взять  z-index
+         while (openerPopup && openerPopup.length > 0 && (!openerPopup.css('z-index') || openerPopup.css('z-index') === 'auto')) {
+            openerPopup = openerPopup.parent();
+         }
+
+         return openerPopup && openerPopup.css('z-index');
       },
 
       _isNewEnvironment: function() {
@@ -1362,7 +1384,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             this._unsubscribeTargetMove();
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
-            EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            if (this._options._resizeOnScroll) {
+               EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._onResizeHandler, this);
+            }
             EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentDrag', this._dragHandler, this);
 
             if (this._options.closeByExternalOver) {

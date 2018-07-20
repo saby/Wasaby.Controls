@@ -35,13 +35,15 @@ define('Controls/Popup/Previewer',
 
          _beforeMount: function() {
             this._resultHandler = this._resultHandler.bind(this);
+            this._enableClose = true;
          },
 
          _open: function(event) {
             var type = _private.getType(event.type);
 
             this._children.openerPreviewer.open({
-               target: event.target
+               target: event.target,
+               closeChildWindows: this._options.closeChildWindows
             }, type);
          },
 
@@ -75,11 +77,21 @@ define('Controls/Popup/Previewer',
 
          _resultHandler: function(event) {
             switch (event.type) {
+               case 'menuclosed':
+                  this._enableClose = true;
+                  event.stopPropagation();
+                  break;
+               case 'menuopened':
+                  this._enableClose = false;
+                  event.stopPropagation();
+                  break;
                case 'mouseenter':
                   this._cancel(event, 'closing');
                   break;
                case 'mouseleave':
-                  this._close(event, 'hover');
+                  if (this._enableClose) {
+                     this._close(event, 'hover');
+                  }
                   break;
                case 'mousedown':
                   event.stopPropagation();

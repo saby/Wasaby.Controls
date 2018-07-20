@@ -12,10 +12,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
       'Core/core-merge',
-      'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
-      'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'SBIS3.CONTROLS/ExportCustomizer/Constants',
+      'SBIS3.CONTROLS/ExportCustomizer/_Executor',
+      'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
+      /*'SBIS3.CONTROLS/Utils/InformationPopupManager',*/
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -23,7 +24,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, RemoteCall, InformationPopupManager, RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -78,176 +79,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
        */
 
-      var _typeIfDefined = function (type, value) {
-         // Если значение есть - оно должно иметь указанный тип
-         return value !=/*Не !==*/ null && typeof value !== type ? new Error('Value must be a ' + type) : value;
-      };
-
       /**
-       * Константа (как бы) - Проверочная информация о типах данных опций
-       *
+       * Инструмент обработки опций
        * @private
-       * @type {object}
+       * @type {SBIS3.CONTROLS/Utils/ImportExport/OptionsTool}
        */
-      var _OPTION_TYPES = {
-         dialogMode: _typeIfDefined.bind(null, 'boolean'),
-         waitingMode: _typeIfDefined.bind(null, 'boolean'),
-         dialogTitle: _typeIfDefined.bind(null, 'string'),
-         dialogButtonTitle: _typeIfDefined.bind(null, 'string'),
-         presetAddNewTitle: _typeIfDefined.bind(null, 'string'),
-         presetNewPresetTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderTitle: _typeIfDefined.bind(null, 'string'),
-         columnBinderEmptyTitle: _typeIfDefined.bind(null, 'string'),
-         formatterTitle: _typeIfDefined.bind(null, 'string'),
-         formatterMenuTitle: _typeIfDefined.bind(null, 'string'),
-         serviceParams: function (value) {
-            // Должно быть значение
-            if (!value) {
-               return new Error('Value required');
-            }
-            // и должна быть {@link ExportServiceParams}
-            if (typeof value !== 'object' ||
-               !(value.MethodName && typeof value.MethodName === 'string') ||
-               !(value.Filter ==/*Не ===*/ null || typeof value.Filter === 'object') ||
-               !(value.Pagination ==/*Не ===*/ null || typeof value.Pagination === 'object') ||
-               !(value.HierarchyField ==/*Не ===*/ null || typeof value.HierarchyField === 'string') ||
-               !(value.FileName && typeof value.FileName === 'string')
-            ) {
-               return new Error('Value must be an ExportServiceParams');
-            }
-            return value;
-         },
-         usePresets: _typeIfDefined.bind(null, 'boolean'),
-         staticPresets: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть массивом
-               if (!Array.isArray(value)) {
-                  return new Error('Value must be array');
-               }
-               // И каждый элемент массива должен быть {@link ExportPreset}
-               if (!value.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.id && (typeof v.id === 'string' || typeof v.id === 'number') &&
-                     (v.title && typeof v.title === 'string') &&
-                     (v.fieldIds && Array.isArray(v.fieldIds) && v.fieldIds.every(function (v2) { return !!v2 && typeof v2 === 'string'; }))) &&
-                     (v.fileUuid && typeof v.fileUuid === 'string')
-                  ); })) {
-                  return new Error('Array items must be an ExportPreset');
-               }
-            }
-            return value;
-         },
-         presetNamespace: _typeIfDefined.bind(null, 'string'),
-         selectedPresetId: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть строкой или числом
-               if (typeof value !== 'string' && typeof value !== 'number') {
-                  return new Error('Value must be string or number');
-               }
-            }
-            return value;
-         },
-         allFields: function (value) {
-            // Должно быть значение
-            if (!value) {
-               return new Error('Value required');
-            }
-            // и быть не пустым массивом или рекодсетом
-            if (!(Array.isArray(value) && value.length) && !(value instanceof RecordSet && value.getCount())) {
-               return new Error('Value must be none empty array or recordset');
-            }
-            var isRecordSet = value instanceof RecordSet;
-            var list = isRecordSet ? value.getRawData() : value;
-            // И каждый элемент массива (или рекодсета) должен быть {@link BrowserColumnInfo}. Но проверить достаточно только на актуальные здесь свойства
-            if (!list.every(function (v) { return (
-                  typeof v === 'object' &&
-                  (v.id && typeof v.id === 'string') &&
-                  (v.title && typeof v.title === 'string')
-               ); })) {
-               return new Error((isRecordSet ? 'RecordSet' : 'Array') + ' items must be a BrowserColumnInfo');
-            }
-            return value;
-         },
-         fieldIds: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть массивом
-               if (!Array.isArray(value)) {
-                  return new Error('Value must be array');
-               }
-               // И каждый элемент массива должен быть не пустой строкой
-               if (!value.every(function (v) { return !!v && typeof v === 'string'; })) {
-                  return new Error('Array items must be none empty strings');
-               }
-            }
-            return value;
-         },
-         fieldGroupTitles: _typeIfDefined.bind(null, 'object'),
-         fileUuid: _typeIfDefined.bind(null, 'string'),
-         validators: function (value) {
-            // Если значение есть, то оно должна быть массивом
-            if (value && !Array.isArray(value)) {
-               return new Error('Value must be an Array');
-            }
-            if (value) {
-               // И каждый элемент массива должен быть {@link ExportValidator}
-               if (!value.every(function (v) { return (
-                     typeof v === 'object' &&
-                     (v.validator && typeof v.validator === 'function') &&
-                     (!v.params || Array.isArray(params)) &&
-                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                  ); })) {
-                  return new Error('Value items must be an ExportValidator');
-               }
-            }
-            return value;
-         },
-         outputCall: function (value) {
-            // Если значение есть
-            if (value) {
-               // оно должно быть объектом
-               if (typeof value !== 'object') {
-                  return new Error('Value must be an object');
-               }
-               // и должно быть {@link ExportRemoteCall} - если получится создать экземпляр RemoteCall - значит это {@link ExportRemoteCall}
-               var instance;
-               try {
-                  instance = new RemoteCall(value);
-               }
-               catch (ex) {
-                  return new Error('Value must be an ExportRemoteCall');
-               }
-            }
-            return value;
-         }
-      };
+      var optionsTool = new OptionsTool(Constants.OPTION_TYPES, Constants.DEFAULT_OPTIONS, Constants.SKIP_OWN_OPTIONS_NAMES);
 
-      /**
-       * онстанта (как бы) - Значения опций по умолчанию
-       *
-       * @private
-       * @type {object}
-       */
-      var _DEFAULT_OPTIONS = {
-         validators: [{
-            validator: function (data, optionGetter) { return !!(data.fieldIds && data.fieldIds.length); },
-            errorMessage: rk('Не выбрано ни одной колонки для экспорта', 'НастройщикЭкспорта')
-         }]
-      };
 
-      /**
-       * Константа (как бы) - Список имён собственных опций компонента, которые не должны входить в общий список (выдаваемый методом getOwnOptionNames)
-       *
-       * @private
-       * @type {Array<string>}
-       */
-      var _SKIP_OWN_OPTIONS_NAMES = [
-         'dialogMode',
-         'waitingMode'
-      ];
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/Area.prototype*/ {
 
@@ -255,6 +94,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          $protected: {
             _options: {
                dialogMode: null,// {boolean} Отображать как часть диалога (опционально)
+
                /**
                 * @cfg {string} Отображать в режиме ожидания (опционально)
                 */
@@ -334,7 +174,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                /**
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
-               outputCall: null
+               outputCall: null,
+
+               isTemporaryFile: null// {boolean} Текущее значение fileUuid в опциях указывает на временный файл
             },
             // Имя кнопки применения
             _BUTTON_NAME: 'controls-ExportCustomizer-Area__completeButton',
@@ -366,68 +208,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _processOptions: function (options) {
-            this._resolveOptions(options);
-            this._validateOptions(options, this._filterValidatedOptionNames.bind(this));
+            optionsTool.resolveOptions(options, true);
+            optionsTool.validateOptions(options, !options.dialogMode ? function (name, options) { return ['dialogTitle', 'dialogButtonTitle'].indexOf(name) === -1; } : null);
             this._reshapeOptions(options);
-         },
-
-         /**
-          * Разрешить неустановленные собственные опции компонента их значениями по умолчанию из статического метода getDefaultOptions
-          * @protected
-          * @param {object} options Опции компонента
-          */
-         _resolveOptions: function (options) {
-            var defaultOptions = Area.getDefaultOptions();
-            for (var name in defaultOptions) {
-               if (options[name] ==/*Не ===*/ null) {
-                  options[name] = defaultOptions[name];
-               }
-            }
-         },
-
-         /**
-          * Отобрать из указанных имён собственных опций только те, проверки для которых актуальны, учитывая значения других опций
-          * @protected
-          * @param {Array<string>} names Имена собственных опций компонента, для которых имеются валидаторы из статического метода getOptionTypes
-          * @param {object} options Опции компонента
-          * @param {Array<string>}
-          */
-         _filterValidatedOptionNames: function (names, options) {
-            if (!options.waitingMode) {
-               if (!options.dialogMode) {
-                  var _remove = function (list) { Array.prototype.slice.call(arguments, 1).forEach(function (item) { var i = list.indexOf(item); if (i !== -1) { list.splice(i, 1); }; }); };
-                  _remove(names, 'dialogTitle', 'dialogButtonTitle');
-               }
-               return names;
-            }
-         },
-
-         /**
-          * Проверить собственные опции компонента на допустимость их значений, используя валидаторы из статического метода getOptionTypes
-          * @protected
-          * @param {object} options Опции компонента
-          * @param {function(Array<string>, object):Array<string>} [namesFilter] Фильт имён опций, которые подлежат проверке. Применяется при необходимости варьировать проверку в зависимости от значений других опций (опционально)
-          */
-         _validateOptions: function (options, namesFilter) {
-            var typeValidators = Area.getOptionTypes();
-            if (typeValidators) {
-               var names = Object.keys(typeValidators);
-               if (namesFilter) {
-                  names = namesFilter.call(null, names, options);
-               }
-               if (names && names.length) {
-                  for (var i = 0; i < names.length; i++) {
-                     var name = names[i];
-                     var validator = typeValidators[name];
-                     if (validator) {
-                        var err = validator(options[name]);
-                        if (err instanceof Error) {
-                           throw new Error('Wrong option "' + name + '": ' + err.message);
-                        }
-                     }
-                  }
-               }
-            }
          },
 
          /**
@@ -436,6 +219,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @param {object} options Опции компонента
           */
          _reshapeOptions: function (options) {
+            var allFields = options.allFields;
             var presetsOptions;
             var usePresets = options.usePresets;
             if (usePresets) {
@@ -455,12 +239,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
+                  allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
                   selectedId: options.selectedPresetId
                };
             }
-            var allFields = options.allFields;
             var fieldIds = options.fieldIds;
             var fileUuid = options.fileUuid;
             if (!usePresets && fieldIds && fieldIds.length) {
@@ -479,6 +263,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
+                  fieldGroupTitles: options.fieldGroupTitles || undefined,
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
                },
@@ -573,17 +358,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = fieldIds.slice();
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
                case 'edit':
-                  options.fileUuid = fileUuid;
                   var consumer = args[0];
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumer.patternUuid || consumer.fileUuid};
-                  formatterMeta = {reason:reason, args:reason === 'clone' ? [args[1]] : []};
+                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  options.fileUuid = fileUuid || consumerUuid;
+                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
+                  formatterMeta = {reason:reason, args:args.slice(1)};
                   if (reason === 'edit') {
                      this._isEditMode = true;
+                  }
+                  else {
+                     options.isTemporaryFile = null;
                   }
                   break;
                case 'editEnd':
                   formatterMeta = {reason:'transaction', args:args};
                   this._isEditMode = null;
+                  options.isTemporaryFile = null;
                   break;
                case 'delete':
                   var deleteUuid = args[0].fileUuid;
@@ -633,7 +423,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var values = views.formatter.getValues();
             var fileUuid = values.fileUuid;
             if (fileUuid) {
-               this._options.fileUuid = fileUuid;
+               var options = this._options;
+               options.fileUuid = fileUuid;
+               options.isTemporaryFile = true;
                var presetsView = views.presets;
                if (presetsView) {
                   /*return*/ presetsView.restate({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
@@ -675,77 +467,32 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          },
 
          /*
-          * Проверить результаты
-          *
-          * @protected
-          * @param {object} data Результирующие данные
-          * @return {Core/Deferred}
-          */
-         _checkResults: function (data) {
-            var validators = this._options.validators;
-            var promise;
-            if (validators && validators.length) {
-               var errors = [];
-               var warnings = [];
-               var optionGetter = this._getOption.bind(this);
-               for (var i = 0; i < validators.length; i++) {
-                  var check = validators[i];
-                  var args = check.params;
-                  args = args && args.length ? args.slice() : [];
-                  args.unshift(data, optionGetter);
-                  var result = check.validator.apply(null, args);
-                  if (result !== true) {
-                     (check.noFailOnError ? warnings : errors).push(
-                        result || check.errorMessage || rk('Неизвестная ошибка', 'НастройщикЭкспорта')
-                     );
-                  }
-               }
-               if (errors.length) {
-                  promise = Area.showMessage('error', rk('Исправьте пожалуйста', 'НастройщикЭкспорта'), errors.join('\n'));
-               }
-               else
-               if (warnings.length) {
-                  promise = Area.showMessage('confirm', rk('Проверьте пожалуйста', 'НастройщикЭкспорта'), warnings.join('\n') + '\n\n' + rk('Действительно экспортировать так?', 'НастройщикЭкспорта'));
-               }
-            }
-            return promise || Deferred.success(true);
-         },
-
-         /*
           * Реализация команды "complete"
           *
           * @protected
           */
          _cmdComplete: function () {
-            // Сформировать результирующие данные из всего имеющегося
-            // И сразу прроверить их
-            this.getValues(true).addCallback(function (data) {
-               // И если всё нормально - завершить диалог
-               if (data) {
-                  var presetsView = this._views.presets;
-                  if (presetsView) {
-                     presetsView.save();
-                  }
-                  var outputCall = this._options.outputCall;
-                  if (outputCall) {
-                     (new RemoteCall(outputCall)).call(data).addCallbacks(
-                        function (result) {
-                           data.result = result;
-                           this._notify('onComplete', /*ExportResults:*/data);
-                        }.bind(this),
-                        function (err) {
-                           this._notify('onFatalError', true, /*err*/rk('При отправке данных поизошла ошибка', 'НастройщикЭкспорта'));
-                        }.bind(this)
-                     );
-                  }
-                  else {
+            this.complete().addCallbacks(
+               function (data) {
+                  if (data) {
                      this._notify('onComplete', /*ExportResults:*/data);
                   }
-               }
-               /*else {
-                  // Иначе пользователь продолжает редактирование
-               }*/
-            }.bind(this));
+                  /*else {
+                     // Иначе пользователь продолжает редактирование
+                  }*/
+               }.bind(this),
+               this._notify.bind(this, 'onFatalError', true)
+            );
+         },
+
+         /*
+          * Завершить работу с текущими данными
+          *
+          * @public
+          * @return {Core/Deferred<ExportResults>}
+          */
+         complete: function () {
+            return Executor.execute(this._options);
          },
 
          /**
@@ -771,7 +518,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                this._processOptions(options);
             }
             var views = this._views;
-            var needRebuild = !options.waitingMode ? !views.columnBinder || !views.formatter : !!views.columnBinder || !!views.formatter;
+            var needRebuild = !options.waitingMode ? (options.usePresets && !views.presets) || !views.columnBinder || !views.formatter : (options.usePresets && !!views.presets) || !!views.columnBinder || !!views.formatter;
             if (needRebuild) {
                this.rebuildMarkup();
                this._init();
@@ -792,54 +539,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * @return {Core/Deferred<ExportResults>}
           */
          getValues: function (withValidation) {
-            var options = this._options;
-            var data = {
-               serviceParams: options.serviceParams,
-               fieldIds: options.fieldIds,
-               columnTitles: this._selectFields(options.allFields, options.fieldIds, function (v) { return v.title; }),
-               fileUuid: options.fileUuid || null,//Если значначение пусто, значит стилевого эксель-файла нет. БЛ в таком случае безальтернативно требует значения null
-               canDeleteFile: this._isEditMode || null
-            };
-            return withValidation
-               ?
-                  // Прроверить собранные данные
-                  this._checkResults(data).addCallback(function (isSuccess) {
-                     return isSuccess ? data : null;
-                  })
-               :
-                  // Вернуть сразу
-                  Deferred.success(data);
-         },
-
-         /**
-          * Выбрать из списка всех колонок только объекты согласно указанным идентификаторам. Если указана функция-преобразователь, то преобразовать с её помощью каждый полученный элемент списка
-          *
-          * @protected
-          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
-          * @param {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {function} [mapper] Функция-преобразователь отобранных объектов (опционально)
-          * @return {Array<*>}
-          */
-         _selectFields: function (allFields, fieldIds, mapper) {
-            if (allFields && fieldIds && fieldIds.length) {
-               var isRecordSet = allFields instanceof RecordSet;
-               if (isRecordSet ? allFields.getCount() : allFields.length) {
-                  var needMap = typeof mapper === 'function';
-                  return fieldIds.map(function (id, i) {
-                     var field;
-                     if (!isRecordSet) {
-                        allFields.some(function (v) { if (v.id === id) { field = v; return true; } });
-                     }
-                     else {
-                        var model = allFields.getRecordById(id);
-                        if (model) {
-                           field = model.getRawData();
-                        }
-                     }
-                     return field && needMap ? mapper(field) : field;
-                  });
-               }
-            }
+            return Executor.gatherValues(this._options, withValidation);
          }//,
 
          /*destroy: function () {
@@ -858,9 +558,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {object}
        */
-      Area.getDefaultOptions = function () {
-         return _DEFAULT_OPTIONS;
-      };
+      Area.getDefaultOptions = optionsTool.getDefaultOptions.bind(optionsTool);
 
       /**
        * Получить список имён всех собственных опций компонента
@@ -869,15 +567,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {Array<string>}
        */
-      Area.getOwnOptionNames = function () {
-         var names = Object.keys(_OPTION_TYPES);
-         for (var i = 0; i < _SKIP_OWN_OPTIONS_NAMES.length; i++) {
-            var name = _SKIP_OWN_OPTIONS_NAMES[i];
-            var j = names.indexOf(name);
-            names.splice(j, 1);
-         }
-         return names;
-      };
+      Area.getOwnOptionNames = optionsTool.getOwnOptionNames.bind(optionsTool);
 
       /**
        * Получить проверочную информацию о типах данных опций
@@ -886,9 +576,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @static
        * @return {object}
        */
-      Area.getOptionTypes = function () {
-         return _OPTION_TYPES;
-      };
+      Area.getOptionTypes = optionsTool.getOptionTypes.bind(optionsTool);
 
       /**
        * Показать сообщение пользователю
@@ -900,7 +588,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @param {string} text Текст сообщения
        * @return {Core/Deferred}
        */
-      Area.showMessage = function (type, title, text) {
+      /*Area.showMessage = function (type, title, text) {
          var isConfirm = type === 'confirm';
          var promise = new Deferred();
          var args = [{
@@ -916,11 +604,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
          }
          InformationPopupManager[isConfirm ? 'showConfirmDialog' : 'showMessageDialog'].apply(InformationPopupManager, args);
          return promise;
-      };
+      };*/
 
 
 
       // Private methods:
+
+      /**
+       * Удалить из массива указанные элементы
+       *
+       * @private
+       * @param {Array<*>} list Массив элементов
+       * @param {*} ...items Список удаляемых элементов (остальные аргументы)
+       */
+      var _arrayRemove = function (list/*, ...items*/) {
+         var items = Array.prototype.slice.call(arguments, 1);
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var j = list.indexOf(item);
+            if (j !== -1) {
+               list.splice(j, 1);
+            }
+         }
+      };
 
       /**
        * Получить вложенный под-компонент, если он есть

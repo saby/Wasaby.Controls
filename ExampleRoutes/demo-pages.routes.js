@@ -15,7 +15,7 @@ module.exports = function(Component) {
         ### Пространство имён - Controls/ . ###
       */
 
-      // Демо-пример: Демо-пример: открытие шаблона, совместимого с WS3, в программном окружении WS4.
+      // Демо-пример: открытие шаблона, совместимого с WS3, в программном окружении WS4.
       '/demo-ws4-open-component-from-ws3': function(req, res) {
          requirejs('Examples/ws4open/Module');
          res.render('tmpl!Controls/Application/Route', {
@@ -24,11 +24,37 @@ module.exports = function(Component) {
           }, []);
       },
 
+      '/demo-ws4-input': function(req, res) {
+         requirejs('Controls-demo/Example/Input');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Example/Input',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах.
       '/demo-ws4-swipe': function(req, res) {
         requirejs('Examples/Swipe/Module');
         res.render('tmpl!Controls/Application/Route', {
            application: 'Examples/Swipe/Module',
+           initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: работа всплывающих окон и панелей
+      '/demo-ws4-opener-stack': function(req, res) {
+        requirejs('Controls-demo/Popup/PopupPage');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Controls-demo/Popup/PopupPage',
+           initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: работа инфобокса
+      '/demo-ws4-infobox': function(req, res) {
+        requirejs('Controls-demo/InfoBox/InfoBox');
+        res.render('tmpl!Controls/Application/Route', {
+           application: 'Controls-demo/InfoBox/InfoBox',
            initDependencies: false
          }, []);
       },
@@ -78,6 +104,16 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: операции над записью.
+      '/demo-ws4-item-actions': function(req, res) {
+         requirejs('Examples/List/ItemActions');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Examples/List/ItemActions',
+            initDependencies: false
+         }, []);
+      },
+
+
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
         ### Для построения страницы используется шаблон VIEW. ###
@@ -89,6 +125,13 @@ module.exports = function(Component) {
         requirejs(['Examples/ws3open/Module'], function() {
            render(req, res, 'Examples/ws3open/Module');
         });
+      },
+
+      '/demo-ws3-import': function(req, res) {
+        requirejs(['Examples/Import/ImportModule'], function() {
+           render(req, res, 'Examples/Import/ImportModule');
+        });
       }
+
    }
 };

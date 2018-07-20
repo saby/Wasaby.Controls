@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(cfg, sizes) {
-            cfg.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes);
+            cfg.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes, cfg.popupOptions);
          }
       };
 
@@ -24,7 +24,20 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
 
          elementUpdated: function(cfg, container) {
+            /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            var width = container.style.width;
+            var height = container.style.height;
+            container.style.width = 'auto';
+            container.style.height = 'auto';
+
+            /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
             this.prepareConfig(cfg, container);
+
+            /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            container.style.width = width;
+            container.style.height = height;
+
+            /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
          },
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);

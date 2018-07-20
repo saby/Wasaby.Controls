@@ -28,9 +28,6 @@ define("File/Attach/Container/GetterLazy", ["require", "exports", "tslib", "Core
                 if (!_this._links[name]) {
                     return error;
                 }
-                /*
-                 * Загружаем Модуль через optional! т.к. не все проекты включают в себя модули из репозитория СБИС Плагина
-                 */
                 return moduleStubs.require("optional!" + _this._links[name]).addCallback(function (_a) {
                     var ResourceGetter = _a[0];
                     delete _this._links[name];

@@ -22,10 +22,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * @typedef {object} ExportProviderArgsResult Тип, описывающий возвращаемые настраиваемые значения компонента
           * @property {number} columnCount Количество имеющихся колонок
           * @property {Array<number>} columns Список индексов колонок, задающих иерархию разделов импортируемых данных
+          * @property {string} hierarchyName Имя поля, хранящего иерархию
           * @property {string} hierarchyField Имя поля, хранящего иерархию
           *
           * @see columnCount
           * @see columns
+          * @see hierarchyName
           * @see hierarchyField
           */
 
@@ -40,6 +42,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
                 * @cfg {Array<number>} Список индексов колонок, задающих иерархию разделов импортируемых данных
                 */
                columns: [],
+               /**
+                * @cfg {string} Имя поля, хранящего иерархию
+                */
+               hierarchyName: null,
                /**
                 * @cfg {string} Имя поля, хранящего иерархию
                 */
@@ -155,6 +161,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {number} [values.columnCount] Количество имеющихся колонок (опционально)
           * @param {Array<number>} [values.columns] Список индексов колонок, задающих иерархию импортируемых данных (опционально)
+          * @param {string} [values.hierarchyName] Имя поля, хранящего иерархию (опционально)
           * @param {string} [values.hierarchyField] Имя поля, хранящего иерархию (опционально)
           */
          setValues: function (values) {
@@ -162,7 +169,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
                throw new Error('Object required');
             }
             var options = this._options;
-            var waited = {columnCount:false, columns:true, hierarchyField:false};
+            var waited = {columnCount:false, columns:true, hierarchyName:false, hierarchyField:false};
             var has = {};
             for (var name in values) {
                if (name in waited) {
@@ -196,6 +203,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
             return {
                columnCount: options.columnCount,
                columns: options.columns.slice(),
+               hierarchyName: options.hierarchyName,
                hierarchyField: options.hierarchyField
             };
          }

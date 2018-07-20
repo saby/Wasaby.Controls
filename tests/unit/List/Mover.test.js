@@ -2,11 +2,9 @@ define([
    'Controls/List/Mover',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
-   'Controls/Controllers/SourceController',
-   'Controls/List/ListViewModel',
    'Core/Deferred',
    'Core/core-clone'
-], function(Mover, MemorySource, RecordSet, SourceController, ListViewModel, Deferred, cClone) {
+], function(Mover, MemorySource, RecordSet, Deferred, cClone) {
    describe('Controls.List.Mover', function() {
       var
          items,
@@ -16,35 +14,44 @@ define([
          var
             data = [{
                id: 1,
-               title: 'Первый'
+               title: 'Первый',
+               folder: null,
+               'folder@': true
             }, {
                id: 2,
-               title: 'Второй'
+               title: 'Второй',
+               folder: null,
+               'folder@': null
             }, {
                id: 3,
-               title: 'Третий'
-            }],
-            cfg = {
-               keyProperty: 'id',
-               listModel: new ListViewModel({
-                  keyProperty: 'id'
-               }),
-               sourceController: new SourceController({
-                  source: new MemorySource({
-                     idProperty: 'id',
-                     data: cClone(data)
-                  })
-               })
-            };
+               title: 'Третий',
+               folder: null,
+               'folder@': null
+            }, {
+               id: 4,
+               title: 'Третий',
+               folder: 1,
+               'folder@': true
+            }, {
+               id: 5,
+               title: 'Третий',
+               folder: 1,
+               'folder@': null
+            }];
 
          items = new RecordSet({
             idProperty: 'id',
             rawData: cClone(data)
          });
-
-         cfg.listModel.setItems(items);
-         mover = new Mover(cfg);
-         mover.saveOptions(cfg);
+         mover = new Mover({});
+         mover._options.parentProperty = 'folder';
+         mover._options.nodeProperty = 'folder@';
+         mover._items = items;
+         mover._source = new MemorySource({
+            idProperty: 'id',
+            data: cClone(data)
+         });
+         mover._keyProperty = 'id';
 
       });
 
@@ -75,7 +82,7 @@ define([
             target = items.at(1),
             result = 'custom_result';
 
-         mover._options.sourceController.move = function() {
+         mover._source.move = function() {
             return Deferred.success(result);
          };
          mover._notify = function(event, args) {
@@ -90,7 +97,7 @@ define([
          mover.moveItemUp(item);
       });
 
-      it('moveItemUp', function(done) {
+      it('moveItemUp by item', function(done) {
          var item = items.at(2);
 
          mover._notify = function(event) {
@@ -100,6 +107,16 @@ define([
             }
          };
          mover.moveItemUp(item);
+      });
+
+      it('moveItemUp by id', function(done) {
+         mover._notify = function(event) {
+            if (event === 'afterItemsMove') {
+               assert.equal(items.at(1).getId(), 3);
+               done();
+            }
+         };
+         mover.moveItemUp(3);
       });
 
       it('moveItemUp first item', function() {
@@ -109,7 +126,7 @@ define([
          assert.equal(items.at(0).getId(), item.getId());
       });
 
-      it('moveItemDown', function(done) {
+      it('moveItemDown by item', function(done) {
          var item = items.at(0);
 
          mover._notify = function(event) {
@@ -121,14 +138,24 @@ define([
          mover.moveItemDown(item);
       });
 
-      it('moveItemDown last item', function() {
-         var item = items.at(2);
-
-         mover.moveItemDown(item);
-         assert.equal(items.at(2).getId(), item.getId());
+      it('moveItemDown by id', function(done) {
+         mover._notify = function(event) {
+            if (event === 'afterItemsMove') {
+               assert.equal(items.at(1).getId(), 1);
+               done();
+            }
+         };
+         mover.moveItemDown(1);
       });
 
-      it('moveItem', function(done) {
+      it('moveItemDown last item', function() {
+         var item = items.at(4);
+
+         mover.moveItemDown(item);
+         assert.equal(items.at(4).getId(), item.getId());
+      });
+
+      it('moveItems by item', function(done) {
          var
             item = items.at(0),
             target = items.at(2);
@@ -143,7 +170,7 @@ define([
          mover.moveItems([item], target, 'after');
       });
 
-      it('moveItems', function(done) {
+      it('moveItems by id', function(done) {
          var target = items.at(2);
 
          mover._notify = function(event) {
@@ -154,6 +181,49 @@ define([
          };
 
          mover.moveItems([1, 2], target, 'after');
+      });
+
+      it('moveItems in folder', function(done) {
+         mover._notify = function(event) {
+            if (event === 'afterItemsMove') {
+               assert.equal(items.getRecordById(4).get('folder'), 1);
+               assert.equal(items.getRecordById(5).get('folder'), 1);
+               done();
+            }
+         };
+
+         mover.moveItems([4, 5], 1, 'on');
+      });
+
+      it('moveItems in root', function(done) {
+         var movedItems = [];
+         movedItems.push(items.getRecordById(4));
+         movedItems.push(items.getRecordById(5));
+
+         mover._notify = function(event) {
+            if (event === 'afterItemsMove') {
+               assert.equal(items.getRecordById(4).get('folder'), null);
+               assert.equal(items.getRecordById(5).get('folder'), null);
+               done();
+            }
+         };
+
+         mover.moveItems(movedItems, null, 'on');
+      });
+
+      it('moveItems in list', function() {
+         mover.moveItems([4], 5, 'on');
+         assert.equal(items.getRecordById(4).get('folder'), 1);
+      });
+
+      it('moveItems folder in child folder', function() {
+         mover.moveItems([1], 4, 'on');
+         assert.equal(items.getRecordById(1).get('folder'), null);
+      });
+
+      it('moveItems in himself', function() {
+         mover.moveItems([1], 1, 'on');
+         assert.equal(items.getRecordById(1).get('folder'), null);
       });
 
       it('beforeItemsMove = MoveInItems', function(done) {
@@ -169,8 +239,8 @@ define([
 
          mover.moveItems([item], target, 'after');
          assert.equal(items.at(2).getId(), item.getId());
-         mover._options.sourceController.load().addCallback(function(recordSet) {
-            assert.equal(recordSet.at(0).getId(), item.getId());
+         mover._source.query().addCallback(function(dataSet) {
+            assert.equal(dataSet.getAll().at(0).getId(), item.getId());
             done();
          });
       });
@@ -188,8 +258,8 @@ define([
 
          mover.moveItems([item], target, 'after');
          assert.equal(items.at(0).getId(), item.getId());
-         mover._options.sourceController.load().addCallback(function(recordSet) {
-            assert.equal(recordSet.at(0).getId(), item.getId());
+         mover._source.query().addCallback(function(dataSet) {
+            assert.equal(dataSet.getAll().at(0).getId(), item.getId());
             done();
          });
       });

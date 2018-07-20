@@ -191,7 +191,7 @@ define('Controls/Container/Scroll',
 
                if (receivedState) {
                   _private.updateDisplayState(this, receivedState.displayState);
-                  this._styleHideScrollbar = receivedState.styleHideScrollbar;
+                  this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar();
                   this._useNativeScrollbar = receivedState.useNativeScrollbar;
                } else {
                   def = new Deferred();
@@ -237,11 +237,6 @@ define('Controls/Container/Scroll',
 
                   this._forceUpdate();
                }
-               if (typeof this._styleHideScrollbar === 'undefined') {
-                  this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar();
-
-                  this._forceUpdate();
-               }
             },
 
             _beforeUpdate: function(options, context) {
@@ -262,11 +257,12 @@ define('Controls/Container/Scroll',
                this._displayState = _private.calcDisplayState(this);
             },
 
-            _scrollHandler: function() {
+            _scrollHandler: function(ev) {
                if (!this._dragging) {
                   this._scrollTop = _private.getScrollTop(this._children.content);
                   this._notify('scroll', [this._scrollTop]);
                }
+               this._children.scrollDetect.start(ev);
             },
 
             _scrollbarTaken: function(notify) {

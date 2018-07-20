@@ -10,8 +10,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
    'Core/core-clone',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
-   'Core/helpers/Array/uniq'
-], function(cAbstract, SbisService, Chain, Model, RecordSet, recordSetFactory, DataSet, SbisAdapter, coreClone, InformationPopupManager, historyUtil, uniqArray) {
+   'Core/helpers/Array/uniq',
+   'Core/detection'
+], function(cAbstract, SbisService, Chain, Model, RecordSet, recordSetFactory, DataSet, SbisAdapter, coreClone, InformationPopupManager, historyUtil, uniqArray, detection) {
 
    'use strict';
 
@@ -603,6 +604,8 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       prepareRecordSet: function(record, idPrefix, history) {
+         var self = this;
+         record.setEventRaising(false, true);
          _private.addProperty(this, record, 'visible', 'boolean', true);
          _private.addProperty(this, record, 'pinned', 'boolean', false);
          _private.addProperty(this, record, 'historyItem', 'boolean', history);
@@ -611,12 +614,28 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          if (this._options.additionalProperty === 'additional') {
             _private.addProperty(this, record, 'additional', 'boolean', false);
          }
-
+   
          record.forEach(function(item) {
+            /* Источники данных работают по разному в ИЕ, при добавлении поля в формат рекордсета, это поле не добавится
+               в формат owner'a записи, если он не совпадает с этим рекордсетом. */
+            if (detection.isIE11 || detection.isIE10) {
+               var itemOwner = item.getOwner(),
+                  ownerFormat;
+         
+               if (itemOwner) {
+                  ownerFormat = itemOwner.getFormat();
+            
+                  if (ownerFormat.getFieldIndex('historyId') === -1) {
+                     _private.addProperty(self, itemOwner, 'historyId', 'string', 'id');
+                  }
+               }
+            }
             item.set('historyId', idPrefix + item.getId());
          });
-
+   
+   
          record.setIdProperty(_private.getHistoryId(this));
+         record.setEventRaising(true, true);
       },
 
       /**

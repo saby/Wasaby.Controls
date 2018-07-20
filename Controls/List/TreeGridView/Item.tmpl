@@ -1,0 +1,41 @@
+<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
+   <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
+      <div attr:class="{{itemData.getCurrentColumn().cellClasses}} controls-TreeGrid__row"
+           attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
+         <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
+            <ws:partial template="{{multiSelectTpl}}"
+                        triState="{{itemData.dispItem.isNode()}}"
+                        multiSelectStatus="{{itemData.multiSelectStatus}}"
+                        key="{{itemData.key}}"
+                        attr:class="controls-GridView__checkbox"/>
+         </ws:if>
+         <ws:else>
+            <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 1 || !itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
+               <ws:if data="{{!withoutLevelPadding && itemData.dispItem.getLevel() > 1}}">
+                  <ws:for data="i in itemData.dispItem.getLevel() - 1">
+                     <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{expanderSize ? expanderSize : 'default'}}"></div>
+                  </ws:for>
+               </ws:if>
+               <ws:if data="{{itemData.dispItem.isNode()}}">
+                  <div on:click="_onNodeExpanderClick(itemData.dispItem)"
+                       class="controls-TreeGrid__row-nodeExpander controls-TreeGrid__row-nodeExpander_size_{{expanderSize ? expanderSize : 'default'}} controls-TreeGrid__row-nodeExpander_{{itemData.isExpanded ? 'expanded' : 'collapsed'}} js-controls-ListView__notEditable"></div>
+               </ws:if>
+               <ws:else data="{{!expanderSize}}">
+                  <div class="controls-TreeGrid__row-nodeExpanderPadding js-controls-ListView__notEditable"></div>
+               </ws:else>
+            </ws:if>
+            <ws:partial template="{{itemData.getCurrentColumn().template}}"
+                        attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
+                        itemData="{{itemData.getCurrentColumn()}}" />
+            <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.itemActions  && itemData.itemActions.all && itemData.itemActions.all.length}}">
+               <ws:partial template="{{itemActionsTemplate}}" itemData="{{itemData}}"/>
+            </ws:if>
+         </ws:else>
+      </div>
+   </ws:for>
+</div>
+<ws:if data="{{itemData.ladder}}">
+   <div attr:class="controls-Grid__row-ladder-cell {{itemData.ladder.currentColumn.cellClasses}}" attr:style="{{itemData.ladder.style}}">
+      <ws:partial template="{{itemData.ladder.currentColumn.template}}" attr:class="controls-Grid__row-ladder-cell__content" itemData="{{itemData.ladder.currentColumn}}" />
+   </div>
+</ws:if>

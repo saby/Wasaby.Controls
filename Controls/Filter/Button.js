@@ -7,13 +7,12 @@ define('Controls/Filter/Button',
       'tmpl!Controls/Filter/Button/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'WS.Data/Type/descriptor',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, types, Deferred, isEqual) {
+   function(Control, template, Chain, Utils, Deferred, isEqual) {
 
       /**
        * Component for data filtering.
@@ -82,19 +81,15 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         constructor: function() {
-            FilterButton.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
+            if (options.items) {
+               _private.resolveItems(this, options.items);
+            }
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
 
          _beforeUpdate: function(options) {
             if (!isEqual(this._options.items, options.items)) {
-               _private.resolveItems(this, options.items);
-            }
-         },
-
-         _beforeMount: function(options) {
-            if (options.items) {
                _private.resolveItems(this, options.items);
             }
          },
@@ -122,7 +117,7 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      templateOptions: {
-                        template: this._options.template,
+                        template: this._options.templateName,
                         items: this._options.items,
                         historyId: this._options.historyId
                      },
@@ -142,15 +137,6 @@ define('Controls/Filter/Button',
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
-         };
-      };
-
-      FilterButton.getOptionsTypes = function() {
-         return {
-            itemTemplate: types(Object),
-            itemTemplateProperty: types(String),
-            additionalTemplate: types(Object),
-            additionalTemplateProperty: types(String)
          };
       };
 

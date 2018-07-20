@@ -11,12 +11,11 @@ define('Controls/interface/IMultiSelectable', [
    /**
     * @name Controls/interface/IMultiSelectable#selectedKeys
     * @cfg {Array} Array of selected items' keys.
-    * @variant [null] Everything selected.
-    * @variant [] Nothing selected.
     */
 
    /**
     * @event Controls/interface/IMultiSelectable#selectedKeysChanged Occurs when selected keys were changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array} keys Array of selected items' keys.
     * @param {Array} added Array of added keys in selection.
     * @param {Array} deleted Array of deleted keys in selection.

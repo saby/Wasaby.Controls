@@ -16,6 +16,8 @@ define('SBIS3.CONTROLS/HighCharts', [
 function( SbisService, Query, getType, coreClone, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
    'use strict';
 
+   var LOADING_INDICATOR_DELAY = 2000;
+
    function ctxOnFieldChange(e, field, value, init) {
       var changedFilter = this._ctxBind[field];
       if (changedFilter && (init !== this) && (this._filters[changedFilter] !== value)) {
@@ -46,7 +48,7 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
     * @control
     * @public
     *
-    * @author Миронов А.Ю.
+    * @author Волоцкой В.Д.
     * @category Table
     * @designTime actions /design/design
     *
@@ -1135,7 +1137,6 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
       },
 
       reload : function(noUpdateFromCtx) {
-         this._loadingIndicator.removeClass('ws-hidden');
          var
             def = new Deferred(),
             self = this;
@@ -1143,6 +1144,10 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
          if (!noUpdateFromCtx) {
             this._updateFiltersFromContext();
          }
+
+         this._loadingIndicatorTimer = setTimeout(function() {
+            self._loadingIndicator.removeClass('ws-hidden');
+         }, LOADING_INDICATOR_DELAY);
 
          /*найдем фильтры которые изменились*/
          var changedFilters = {};
@@ -1167,6 +1172,10 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
 
             //готовим оси
             self._notify('onBeforeReload', self._options.highChartOptions, self._chartObj, self._series);
+
+            //Если успели прогрузиться то не показываем индикатор
+            clearTimeout(self._loadingIndicatorTimer);
+
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();

@@ -1,4 +1,4 @@
-define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(TreeViewModel, cMerge) {
+define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(TreeViewModel, cMerge, RecordSet) {
    var
       treeData = [
          {
@@ -6,7 +6,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             'title': 'Хлеб',
             'price': 50,
             'parent': null,
-            'parent@' : true,
+            'parent@': true,
             'balance': 15
          },
          {
@@ -14,15 +14,33 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             'title': 'Батон',
             'price': 150,
             'parent': '123',
-            'parent@' : null,
+            'parent@': true,
             'balance': 3
+         },
+         {
+            'id': '1',
+            'title': 'один',
+            'parent': '234',
+            'parent@': false
+         },
+         {
+            'id': '2',
+            'title': 'два',
+            'parent': '234',
+            'parent@': false
+         },
+         {
+            'id': '3',
+            'title': 'три',
+            'parent': '234',
+            'parent@': true
          },
          {
             'id': '345',
             'title': 'Масло',
             'price': 100,
             'parent': null,
-            'parent@' : null,
+            'parent@': null,
             'balance': 5
          },
          {
@@ -30,7 +48,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             'title': 'Помидор',
             'price': 75,
             'parent': null,
-            'parent@' : null,
+            'parent@': null,
             'balance': 7
          },
          {
@@ -38,7 +56,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             'title': 'Капуста китайская',
             'price': 35,
             'parent': null,
-            'parent@' : null,
+            'parent@': null,
             'balance': 2
          }
       ],
@@ -47,7 +65,10 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          displayProperty: 'title',
          parentProperty: 'parent',
          nodeProperty: 'parent@',
-         items: treeData
+         items: new RecordSet({
+            rawData: treeData,
+            idProperty: 'id'
+         })
       };
 
    describe('Controls.List.Tree.TreeViewModel', function() {
@@ -78,7 +99,10 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilterTree(item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
+               expandedNodes: treeViewModel._expandedNodes,
+               keyProperty: treeViewModel._options.keyProperty
+            }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
@@ -113,6 +137,34 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, false);
             assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, false)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, false)".');
+         });
+
+         it('multiSelectStatus', function() {
+            treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
+            treeViewModel._curIndex = 1; //234
+            treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
+            treeViewModel._updateSelection(['123', '234', '1', '2', '3']);
+            treeViewModel._curIndex = 0; //123
+            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._curIndex = 1; //234
+            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._updateSelection(['123', '234', '1']);
+            treeViewModel._curIndex = 0; //123
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._curIndex = 1; //123
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._updateSelection(['123']);
+            treeViewModel._curIndex = 0; //123
+            assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._curIndex = 1; //234
+            assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._updateSelection(['123', '234', '3']);
+            treeViewModel._curIndex = 0; //123
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._curIndex = 1; //234
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
+            treeViewModel._curIndex = 4; //3
+            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
          });
       });
    });

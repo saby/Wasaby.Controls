@@ -1,7 +1,7 @@
 /* global define */
 define('Controls/Calendar/Month/Model', [
    'Controls/Calendar/MonthView/MonthViewModel',
-   'SBIS3.CONTROLS/Utils/DateUtil'
+   'Controls/Utils/Date'
 ], function(
    MonthViewModel,
    DateUtil

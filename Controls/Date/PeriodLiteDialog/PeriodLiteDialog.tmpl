@@ -1,0 +1,63 @@
+<div class="controls-PeriodLiteDialog {{_getWidthCssClass()}}">
+   <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
+      <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
+      <div class="controls-PeriodLiteDialog__bodyWrapper">
+         <div class="controls-PeriodLiteDialog__item-background-hovered{{ !_yearHovered ? ' ws-hidden'}}"></div>
+         <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}">
+            <span class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></span>
+            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
+               <Controls.Button
+                  style="linkMain"
+                  icon="icon-small icon-Home3"
+                  on:click="_onHomeClick()"
+               />
+            </div>
+            <span
+               class="controls-PeriodLiteDialog__year {{ _getYearCssClasses() }}"
+               on:mouseenter="_onYearMouseEnter()"
+               on:mouseleave="_onYearMouseLeave()"
+               on:click="_onYearClick(_year)"
+            >
+               {{ _year }}
+            </span>
+            <span class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></span>
+         </div>
+         <ws:partial
+            template="{{_itemTmpl}}"
+            _options="{{_options}}"
+            _year="{{_year}}"
+            _months="{{_months}}"
+            _yearHovered="{{_yearHovered}}"
+            _quarterHovered="{{_quarterHovered}}"
+            _halfyearHovered="{{_halfyearHovered}}"
+            checkedStart="{{_options.checkedStart}}"
+            checkedEnd="{{_options.checkedEnd}}"
+            on:wheel="_onWheel()"
+         />
+      </div>
+   </ws:if>
+   <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
+      <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__text-align-center"
+         on:wheel="_onWheel()"
+      >
+         <ws:for data="value in [0, 1, 2, 3, 4]">
+            <div  class="controls-PeriodLiteDialog-item-years
+                           controls-PeriodLiteDialog__vLayoutItem
+                           {{_year - value !== _options.startValue.getFullYear() ? 'controls-PeriodLiteDialog__vLayoutItem-clickable'}}
+                           {{_year - value === _options.startValue.getFullYear() ? ' controls-PeriodLiteDialog__selectedYear'}}"
+               on:click="_onYearClick(_year - value)">
+               {{ _year - value }}
+            </div>
+         </ws:for>
+      </div>
+      <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__years-home">
+         <Controls.Button
+            style="iconButtonBordered"
+            icon="icon-small icon-Home3"
+            on:click="_onHomeClick()"
+         />
+      </div>
+   </ws:if>
+</div>

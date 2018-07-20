@@ -22,8 +22,7 @@ define('Controls/Popup/Manager/Container',
 
          _template: template,
          _overlayId: null,
-         constructor: function() {
-            Container.superclass.constructor.apply(this, arguments);
+         _afterMount: function() {
             ManagerController.setContainer(this);
          },
 
@@ -36,13 +35,6 @@ define('Controls/Popup/Manager/Container',
             this._overlayId = index;
          },
 
-         _overlayClickHandler: function(event) {
-            //По клику на overlay закрываем окно, к которому относится этот overlay
-            event.stopPropagation();
-            var popupId = this._popupItems.at(this._overlayId).id;
-            ManagerController.remove(popupId);
-         },
-
          /**
           * Изменить набор окон
           * @function Controls/Popup/Manager/Container#setPopupItems
@@ -51,9 +43,16 @@ define('Controls/Popup/Manager/Container',
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
             this._forceUpdate();
+         },
+
+         _popupDeactivated: function(event, popupId) {
+            this._notify('popupDeactivated', [popupId], { bubbling: true });
+         },
+
+         _overlayClickHandler: function(event) {
+            event.preventDefault();
          }
       });
 
       return Container;
-   }
-);
+   });

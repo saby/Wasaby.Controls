@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
    "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
    "SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil",
    "Core/helpers/Object/isEqual",
-   "Core/helpers/random-helpers",
+   'Core/helpers/Number/randomId',
    "Core/helpers/Function/debounce",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/find",
@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
    "Core/Date"
 ],
 
-    function(coreClone, EventBus, HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, randHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
+    function(coreClone, EventBus, HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, randomId, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -158,7 +158,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
-                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure()));
+                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
              } else {
                 filterButton.sendCommand('reset-filter');
              }
@@ -201,7 +201,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                  needUpdateHistory = false;
 
              this._listHistory.each(function(historyElem) {
-                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
+                FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter, self._options.noSaveFilters);
                 var linkText = FilterToStringUtil.string(historyElem.filter, 'historyItemTemplate');
 
                 if(linkText) {
@@ -242,7 +242,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                 });
                 return;
              }
-
+             
+             structure = FilterHistoryControllerUntil.resetNoSaveStructureKeys(structure, this._options.noSaveFilters);
+             
              self.saveToHistory({
                 linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
                 filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)
@@ -324,7 +326,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
 
              /* Добавим новый фильтр в начало набора */
              this._listHistory.add({
-                id: randHelpers.randomId(),
+                id: randomId(),
                 linkText: filterObject.linkText,
 	             viewFilter: this.prepareViewFilter(),
                 filter: filterObject.filter,

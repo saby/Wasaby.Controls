@@ -1,13 +1,18 @@
-<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}" on:close="closeHandler()">
-   <ws:if data="{{_options.type === 'stack'}}">
-      <Controls.Popup.Templates.Stack.StackTemplate caption="{{_options.caption || _options.title || _options.templateOptions.caption}}">
+<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}"
+     on:close="closeHandler()" on:keydown="_keyDown()" on:keyup="_keyUp()"
+     on:mouseenter="_mouseenterHandler()" on:mouseleave="_mouseleaveHandler()">
+   <ws:if data="{{_options.type === 'base'}}">
+      <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
+   </ws:if>
+   <ws:else data="{{_options.type === 'stack'}}">
+      <Controls.Popup.Templates.Stack.StackTemplate>
          <ws:contentArea>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>
       </Controls.Popup.Templates.Stack.StackTemplate>
-   </ws:if>
+   </ws:else>
    <ws:else>
-      <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.caption || _options.title || _options.templateOptions.caption}}">
+      <Controls.Popup.Templates.Dialog.DialogTemplate hideCross="{{_options.hideCross}}">
          <ws:contentArea>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>

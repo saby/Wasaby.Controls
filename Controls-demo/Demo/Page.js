@@ -101,10 +101,11 @@ define('Controls-demo/Demo/Page',
                   : window.location.href + '&theme=' + theme;
             setCurrentThemeLinks(themeLinks[theme]);
             window.history.replaceState({}, '', newLocation);
+//            this._notify('themeChanged', [theme], {bubbling:true});
          },
 
          backClickHdl: function() {
-            window.location.href = window.location.origin + '/Controls-demo/demo.html';
+            window.history.back();
          },
 
          constructor: function(cfg) {

@@ -8,7 +8,6 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Deferred'
    ],
    function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
-
       /**
        * Базовый опенер
        * @category Popup
@@ -37,7 +36,7 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this._isExecuting) { //Если мы еще не обработали первый вызов, то дожидаемся его
+            if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
                return;
             }
             this._isExecuting = true;
@@ -46,7 +45,7 @@ define('Controls/Popup/Opener/BaseOpener',
                this._popupId = null;
             }
 
-            if (cfg.isCompoundTemplate) { //TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+            if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
                      self._openPopup(cfg, controller);
@@ -60,14 +59,18 @@ define('Controls/Popup/Opener/BaseOpener',
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
-               Base.showDialog(result.template, cfg, result.controller, self._popupId).addCallback(function(popupId) {
-                  self._popupId = popupId;
+               Base.showDialog(result.template, cfg, result.controller, self._popupId, self).addCallback(function(result) {
                   self._isExecuting = false;
+                  if (Base.isNewEnvironment()) {
+                     self._popupId = result;
+                  } else {
+                     self._action = result;
+                  }
                });
             });
          },
 
-         //Ленивая загрузка шаблона
+         // Ленивая загрузка шаблона
          _requireModules: function(config, controller) {
             var deps = [];
             if (this._needRequireModule(config.template)) {
@@ -112,12 +115,15 @@ define('Controls/Popup/Opener/BaseOpener',
          close: function() {
             if (this._popupId) {
                ManagerController.remove(this._popupId);
+            } else if (!Base.isNewEnvironment() && this._action) {
+               this._action.destroy();
+               this._action = null;
             }
          },
 
          _scrollHandler: function(event) {
-            //listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
-            if (this.isOpened() && event.type === 'listscroll') {
+            // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
+            if (this.isOpened() && event.type === 'scroll') {
                if (this._options.targetTracking) {
                   ManagerController.popupUpdated(this._popupId);
                } else if (this._options.closeOnTargetScroll) {
@@ -135,11 +141,17 @@ define('Controls/Popup/Opener/BaseOpener',
           * @returns {Boolean} Признак открыта ли связанная всплывающая панель
           */
          isOpened: function() {
-            //todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            return Base.isNewEnvironment() ? !!ManagerController.find(this._popupId) : null;
+            // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+            if (Base.isNewEnvironment()) {
+               return !!ManagerController.find(this._popupId);
+            }
+            if (this._action) {
+               return !!this._action.getDialog();
+            }
+            return null;
          }
       });
-      Base.showDialog = function(rootTpl, cfg, controller, popupId) {
+      Base.showDialog = function(rootTpl, cfg, controller, popupId, opener) {
          var def = new Deferred();
 
          if (Base.isNewEnvironment()) {
@@ -162,10 +174,34 @@ define('Controls/Popup/Opener/BaseOpener',
                });
             }
          } else {
-            requirejs(['Controls/Popup/Compatible/BaseOpener', 'SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(CompatibleOpener, OpenEditDialog) {
+            var isFormController = false;
+            var proto = rootTpl.prototype && rootTpl.prototype.__proto__;
+            while (proto && !isFormController) {
+               if (proto._moduleName === 'SBIS3.CONTROLS/FormController') {
+                  isFormController = true;
+               }
+               proto = proto.__proto__;
+            }
+
+            var deps = ['Controls/Popup/Compatible/BaseOpener'];
+
+            if (isFormController) {
+               deps.push('SBIS3.CONTROLS/Action/List/OpenEditDialog');
+            } else {
+               deps.push('SBIS3.CONTROLS/Action/OpenDialog');
+            }
+
+            requirejs(deps, function(CompatibleOpener, Action) {
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
-               new OpenEditDialog().execute(newCfg);
-               def.callback();
+               var action;
+               if (!opener || !opener._action) {
+                  action = new Action();
+               } else {
+                  action = opener._action;
+                  action.closeDialog();
+               }
+               action.execute(newCfg);
+               def.callback(action);
             });
          }
          return def;
@@ -177,18 +213,17 @@ define('Controls/Popup/Opener/BaseOpener',
          };
       };
 
-      //TODO Compatible
+      // TODO Compatible
       Base.isVDOMTemplate = function(templateClass) {
-         //на VDOM классах есть св-во _template.
-         //Если его нет, но есть _stable, значит это функция от tmpl файла
+         // на VDOM классах есть св-во _template.
+         // Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!templateClass.prototype._template || !!templateClass.stable;
       };
 
-      //TODO Compatible
+      // TODO Compatible
       Base.isNewEnvironment = function() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
+         return document && !!document.getElementsByTagName('html')[0].controlNodes;
       };
 
       return Base;
-   }
-);
+   });

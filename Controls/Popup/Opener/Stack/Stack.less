@@ -2,49 +2,26 @@
    overflow: hidden;
    padding-left: @controls-Popup-stack-shadow-padding;
    .controls-Popup__template {
-      -webkit-animation-duration: @controls-Popup-animate-duration;
-      -moz-animation-duration: @controls-Popup-animate-duration;
-      -o-animation-duration: @controls-Popup-animate-duration;
-      animation-duration: @controls-Popup-animate-duration;
-
-      -webkit-animation-fill-mode: both;
-      -moz-animation-fill-mode: both;
-      -o-animation-fill-mode: both;
-      animation-fill-mode: both;
-
-      -webkit-animation-name: stackShow;
-      -moz-animation-name: stackShow;
-      -o-animation-name: stackShow;
-      animation-name: stackShow;
-
       width: 100%;
       height: 100%;
       position: relative;
       border-left: @border-left_stackTemplate;
-      .box-shadow(@controls-Popup-stack-shadow);
-      &.controls-Stack_hide {
-         -webkit-animation-name: stackHide;
-         -moz-animation-name: stackHide;
-         -o-animation-name: stackHide;
-         animation-name: stackHide;
-      }
+      box-shadow: @controls-Popup-stack-shadow;
    }
 }
 
-@keyframes stackHide {
-   0% {
-      left: 0;
-   }
-   100% {
-      left: 100%;
-   }
+.controls-Stack__waiting .controls-Popup__template {
+   transform: translateX(100%);
 }
 
-@keyframes stackShow {
-   0% {
-      left: 100%;
-   }
-   100% {
-      left: 0;
-   }
+.controls-Stack__open .controls-Popup__template {
+   will-change: transform;
+   transition: transform @controls-Popup-animate-duration linear;
+   transform: translateX(0%);
+}
+
+.controls-Stack__close .controls-Popup__template {
+   will-change: transform;
+   transition: transform @controls-Popup-animate-duration linear;
+   transform: translateX(100%);
 }

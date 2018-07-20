@@ -617,7 +617,7 @@ define('SBIS3.CONTROLS/FieldLink',
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
-                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
+                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions, cfg);
              }
           },
 
@@ -976,8 +976,7 @@ define('SBIS3.CONTROLS/FieldLink',
                     displayFields.push(rec.get(self._options.displayProperty) || '');
                  });
               }
-              // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
-              // выполним replace из него прямо тут
+
               return escapeTagsFromStr(displayFields.join(', ').replace(/<br>/g, '\n'), '\\w+');
           },
 

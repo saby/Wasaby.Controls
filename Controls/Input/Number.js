@@ -35,6 +35,7 @@ define('Controls/Input/Number', [
 
       /**
        * Number input.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Number
        * @extends Core/Control
@@ -172,6 +173,12 @@ define('Controls/Input/Number', [
          this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
    });
+
+   NumberInput.getDefaultOptions = function() {
+      return {
+         value: ''
+      };
+   };
 
    NumberInput.getOptionTypes = function() {
       return {

@@ -41,7 +41,7 @@
     <ws:if data="{{ virtualScrolling }}">
         <div class="controls-ListView__virtualScrollBottom"></div>
     </ws:if>
-    <div class="controls-ListView-scrollIndicator {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
+    <div class="controls-ListView-scrollIndicator controls-ListView-scrollIndicator_style_{{scrollIndicatorStyle}} {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
     <div class="controls-ListView__scrollPager {{!infiniteScroll ? 'ws-hidden' : ''}}"></div>
 </div>

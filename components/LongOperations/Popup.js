@@ -1,18 +1,19 @@
 define('SBIS3.CONTROLS/LongOperations/Popup',
    [
+      'Core/core-merge',
       "Core/UserInfo",
       'Core/Deferred',
       'Core/EventBus',
-      'Lib/TabMessage/TabMessage',
+      'Lib/Tab/Message',
       "SBIS3.CONTROLS/NotificationPopup",
       'SBIS3.CONTROLS/LongOperations/Entry',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/contentTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/footerTemplate",
-      "Lib/Control/FloatArea/FloatArea",
-      "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup"
+      "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup",
+      'SBIS3.CONTROLS/LongOperations/Registry'
    ],
-   function (UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (cMerge, UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
       'use strict';
 
       /**
@@ -35,9 +36,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
        * @type {object}
        */
       var RESULT_BUTTON_TITLES = {
-         download: 'Скачать',
-         open:     'Открыть',
-         viewLog:  'Журнал'
+         download: rk('Скачать'),
+         open:     rk('Открыть'),
+         viewLog:  rk('Журнал')
       };
 
       /**
@@ -59,13 +60,29 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
                customConditions: null,
                withAnimation: null,
-               waitIndicatorText: null
+               waitIndicatorText: null,
+
+               _actionOpenRegistry: {
+                  template: 'SBIS3.CONTROLS/LongOperations/Registry',
+                  mode: 'floatArea',
+                  dialogOptions: {
+                     title: rk('Все операции', 'ДлительныеОперации'),
+                     direction: 'left',
+                     animation: 'slide',
+                     isStack: true,
+                     autoCloseOnHide: true,
+                     minWidth: 1000,
+                     maxWidth: 1000
+                  }
+               }
             },
 
             _activeOperation: null,
-            _floatArea: null,
+            _actionOpenRegistry: null,
+            _isRegistryOpened: null,
 
             _longOpList: null,
+            _resultButton: null,
 
             _notificationContainer: null,
             _progressContainer: null,
@@ -86,6 +103,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             LongOperationsPopup.superclass.init.call(this);
 
             this._longOpList = this.getChildControlByName('operationList');
+            this._resultButton = this.getChildControlByName('downloadButton');
+            this._actionOpenRegistry = this.getChildControlByName('controls-LongOperationsPopup__actionOpenRegistry');
+
             var customConditions = this._options.customConditions;
             // В текущей реализации наличие непустой опции customConditions обязательно
             if (!customConditions || !Array.isArray(customConditions)) {
@@ -182,7 +202,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                self._longOpList.applyMainAction(meta.item);
             });
 
-            this.subscribeTo(this.getChildControlByName('downloadButton'), 'onActivated', function () {
+            this.subscribeTo(this._resultButton, 'onActivated', function () {
                if (self._activeOperation) {
                   self._longOpList.applyMainAction(self._activeOperation);
                }
@@ -250,27 +270,21 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          /**
-          * Метод показывает floatArea.
+          * Метод показывает реестр всех операций
           */
          _showRegistry: function () {
-            this._onFloatAreaClose_b = this._onFloatAreaClose_b || this._onFloatAreaClose.bind(this)
-            this._floatArea = new FloatArea({
-               title: rk('Все операции'),
-               template: 'SBIS3.CONTROLS/LongOperations/Registry',
-               componentOptions: {
-                  columns: {
-                     userPic: false
-                  },
-                  userId: this._options.userId
-               },
-               opener: this,
-               direction: 'left',
-               animation: 'slide',
-               isStack: true,
-               autoCloseOnHide: true,
-               maxWidth: 1000
-            });
-            this._floatArea.once('onAfterClose', this._onFloatAreaClose_b);
+            var componentOptions = {
+               columns: {userPic:false},
+               userId: this._options.userId
+            };
+            var actionOptions = this._options._actionOpenRegistry;
+            this._actionOpenRegistry.execute({
+               dialogOptions: cMerge({
+                  opener: this
+               }, actionOptions.dialogOptions),
+               componentOptions: componentOptions
+            }).addBoth(this._onRegistryClose.bind(this));
+            this._isRegistryOpened = true;
 
             //Скрываем нашу панель, во время работы с floatArea, она не нужна (Т.к. setVisible(false) вызовет событие onClose с последующим вызовом destroy менеджером информационных окон, то просто меняем стиль)
             this.getContainer().css('visibility', 'hidden');
@@ -278,8 +292,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this._notify('onSizeChange');
          },
 
-         _onFloatAreaClose: function () {
-            this._floatArea = null;
+         _onRegistryClose: function () {
+            this._isRegistryOpened = null;
             this.getContainer().css('visibility', 'visible');
             this._notify('onSizeChange');
          },
@@ -316,10 +330,28 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             var butCaption = this._getResultButtonCaption(this._activeOperation);
             var hasButton = !!butCaption;
-            var button = this.getChildControlByName('downloadButton');
+            var button = this._resultButton;
             button.setVisible(hasButton);
             if (hasButton) {
-               button.setCaption(rk(butCaption));
+               var isMarkup = butCaption.indexOf('<') !== -1;
+               var prevTmpl = button.getProperty('contentTemplate');
+               var wasMarkup = !!prevTmpl && typeof prevTmpl === 'string';
+               if (isMarkup) {
+                  if (!wasMarkup || butCaption !== prevTmpl) {
+                     button.setProperties({contentTemplate:butCaption, caption:null});
+                     button._origContentTemplate = prevTmpl;
+                     button.rebuildMarkup();
+                  }
+               }
+               else {
+                  if (wasMarkup) {
+                     button.setProperties({contentTemplate:button._origContentTemplate, caption:butCaption});
+                     button.rebuildMarkup();
+                  }
+                  else {
+                     button.setCaption(butCaption);
+                  }
+               }
             }
          },
 
@@ -569,7 +601,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                setTimeout(function () {
                   if (!self.isDestroyed() && self.isVisible()
                         //Если активен режим с floatArea (открыт журнал), то просто скрываем ромашку. Анимация не нужна.
-                        && !self._floatArea) {
+                        && !self._isRegistryOpened) {
                      var _moveTo = function ($target, zIndex, $element) {
                         var offset = $target.offset();
                         $element
@@ -611,9 +643,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          destroy: function () {
             this._tabChannel.destroy();
             this._tabChannel = null;
-            if (this._floatArea) {
-               this._floatArea.unsubscribe('onAfterClose', this._onFloatAreaClose_b);
-            }
 
             var container = this.getContainer();
             [

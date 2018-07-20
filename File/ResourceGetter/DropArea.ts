@@ -7,6 +7,7 @@ import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 import filter = require("File/utils/filter");
 import replaceDir = require("File/ResourceGetter/DropArea/replaceDir");
 import {Overlay, OverlayViewConfig} from 'File/ResourceGetter/DropArea/Overlay';
+import {isDestroyedAsync} from 'File/Decorator/isDestroyed'
 
 type DropAreaConfig = OverlayViewConfig & {
     element: HTMLElement;
@@ -45,15 +46,23 @@ const OPTION: Partial<DropAreaConfig> = {
      */
     ondrop: (files: Array<LocalFile>) => {}
     /**
-     * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
+     * @cfg {String} Текст подсказки во время перемещения файлов
      * @name File/ResourceGetter/DropArea#dragText
      */
     /**
-     * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
+     * @cfg {String} Текст подсказки во время перемещения файлов непосредственно над областью
      * @name File/ResourceGetter/DropArea#dropText
      */
     /**
-     * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
+     * @cfg {String} Текст дополнительной подсказки во время перемещения файлов
+     * @name File/ResourceGetter/DropArea#dragSubtitle
+     */
+    /**
+     * @cfg {String} Текст дополнительной подсказки во время перемещения файлов непосредственно над областью
+     * @name File/ResourceGetter/DropArea#dropSubtitle
+     */
+    /**
+     * @cfg {String} Дополнительный класс элемента обёртки
      * @name File/ResourceGetter/DropArea#innerClass
      */
 };
@@ -108,10 +117,8 @@ class DropArea extends IResourceGetterBase {
      * @name File/ResourceGetter/DropArea#getFiles
      * @see File/LocalFile
      */
+    @isDestroyedAsync
     getFiles(): Deferred<Array<LocalFile | Error>> {
-        if (this.isDestroyed()) {
-            return Deferred.fail("Resource getter is destroyed");
-        }
         if (this._selectDef) {
             this._selectDef.cancel();
         }

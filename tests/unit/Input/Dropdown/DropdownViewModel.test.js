@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Dropdown/resources/DropdownViewModel',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'Controls/Constants',
    ],
-   (DropdownViewModel, RecordSet) => {
+   (DropdownViewModel, RecordSet, ControlsConstants) => {
       describe('DropdownViewModel', () => {
          let rs = new RecordSet({
             idProperty: 'id',
@@ -103,6 +104,48 @@ define(
             let current = viewModel.getCurrent();
             let checkData = current.isSelected && current.hasChildren && current.item.get(config.keyProperty) === '3' && viewModel.isEnd();
             assert.isTrue(checkData);
+         });
+         describe('Groups and separator', function() {
+               let newConfig = {
+                  keyProperty: 'id',
+               };
+               newConfig.itemsGroup = {
+                  method: function (item) {
+                     if (item.get('group') === 'hidden' || !item.get('group')) {
+                        return ControlsConstants.view.hiddenGroup;
+                     }
+                     return item.get('group');
+                  },
+                  template: '',
+               };
+               newConfig.items = new RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     {id: '1', title: 'Запись 1', parent: null, '@parent': false, recent: true},
+                     {id: '2', title: 'Запись 2', parent: null, '@parent': false, pinned: true},
+                     {id: '3', title: 'Запись 3', parent: null, '@parent': false},
+                     {id: '4', title: 'Запись 4', parent: null, '@parent': false, group: 'group_2'},
+                     {id: '5', title: 'Запись 5', parent: null, '@parent': false, group: 'group_1'},
+                     {id: '6', title: 'Запись 6', parent: null, '@parent': false, group: 'group_1'},
+                     {id: '7', title: 'Запись 7', parent: null, '@parent': false, group: 'group_2'},
+                     {id: '8', title: 'Запись 8', parent: null, '@parent': false, group: 'group_2'},
+                  ]
+               });
+
+               let viewModel3 = new DropdownViewModel(newConfig);
+               viewModel3._options.additionalProperty = null;
+               viewModel3._options.nodeProperty = '@parent';
+            it('groupItems', function () {
+               assert.equal(viewModel3._itemsModel._display.getCount(), 11)
+               assert.equal(viewModel3._itemsModel._display.at(9).getContents().get('group'), 'group_1');
+               assert.equal(viewModel3._itemsModel._display.at(10).getContents().get('group'), 'group_1');
+            });
+            it('historySeparator', function () {
+               viewModel3.goToNext();
+               assert.isFalse(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+               viewModel3.goToNext();
+               assert.isTrue(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+            });
          });
 
          it('destroy', () => {

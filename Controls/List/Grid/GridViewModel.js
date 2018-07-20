@@ -180,9 +180,9 @@ define('Controls/List/Grid/GridViewModel', [
                self._notify('onListChange');
             });
             this._columns = this._prepareColumns(this._options.columns);
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible');
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility === 'visible');
-            this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility === 'visible');
+            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');
+            this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');
          },
 
          _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
@@ -235,7 +235,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          setHeader: function(columns) {
             this._options.header = columns;
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible');
+            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');
          },
 
          _prepareHeaderColumns: function(columns, multiSelectVisibility) {
@@ -267,7 +267,7 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += _private.getPaddingCellClasses({
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
-                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible',
+                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover',
                   leftPadding: this._options.leftPadding,
                   rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
@@ -315,13 +315,13 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses = 'controls-Grid__results-cell';
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility === 'visible' && columnIndex === 0) {
+            if ((this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover') && columnIndex === 0) {
                cellClasses += ' controls-Grid__results-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: this._resultsColumns,
                   columnIndex: columnIndex,
-                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible',
+                  multiSelectVisibility: this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover',
                   leftPadding: this._options.leftPadding,
                   rightPadding: this._options.rightPadding,
                   rowSpacing: this._options.rowSpacing
@@ -387,13 +387,16 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          getMultiSelectVisibility: function() {
-            return this._options.multiSelectVisibility;
+            return this._model.getMultiSelectVisibility();
          },
 
          setMultiSelectVisibility: function(multiSelectVisibility) {
-            this._options.multiSelectVisibility = multiSelectVisibility;
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility);
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility);
+            var
+               hasMultiSelect = multiSelectVisibility === 'visible' || multiSelectVisibility === 'onhover';
+            this._model.setMultiSelectVisibility(multiSelectVisibility);
+            this._prepareColgroupColumns(this._columns, hasMultiSelect);
+            this._prepareHeaderColumns(this._options.header, hasMultiSelect);
+            this._prepareResultsColumns(this._columns, hasMultiSelect);
          },
 
          getItemById: function(id, keyProperty) {
@@ -574,12 +577,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
-         select: function(keys) {
-            this._model.select(keys);
-         },
-
-         unselect: function(keys) {
-            this._model.unselect(keys);
+         _updateSelection: function(selectedKeys) {
+            this._model._updateSelection(selectedKeys);
          },
 
          setDragTargetItem: function(itemData) {
@@ -588,6 +587,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setDragItems: function(items) {
             this._model.setDragItems(items);
+         },
+
+         getActiveItem: function() {
+            return this._model.getActiveItem();
          },
 
          destroy: function() {

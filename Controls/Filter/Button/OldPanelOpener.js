@@ -153,6 +153,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             declareCmd('reset-filter', this._resetFilter.bind(this, false));
             declareCmd('show-filter', showPicker);
             declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
+            declareCmd('close', this.hidePicker.bind(this));
          },
    
          _modifyOptions: function() {
@@ -258,6 +259,11 @@ define('Controls/Filter/Button/OldPanelOpener',
                         self._notify('onPickerClose');
                         self._picker.destroy();
                         self._picker = null;
+                     }
+                  },
+                  onCommandCatch: function(event, commandName) {
+                     if (commandName === 'resizeYourself' && self._picker) {
+                        self._picker.recalcPosition(true);
                      }
                   }
                }

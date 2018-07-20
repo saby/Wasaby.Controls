@@ -1,18 +1,27 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/constants'
    ],
-   function(Base) {
+   function(Base, cConstants) {
+      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var POPUP_CLASS = 'controls-Stack';
+      if (HAS_ANIMATION) {
+         POPUP_CLASS += ' controls-Stack__waiting';
+      }
 
       /**
-       * Действие открытия стековой панели
+       * Действие открытия стековой панели.
+       *
+       * <a href="https://test-wi.sbis.ru/materials/demo-ws4-opener-stack">Демо-пример</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       *
        * @class Controls/Popup/Opener/Stack
        * @control
        * @public
        * @category Popup
        * @extends Controls/Popup/Opener/Base
-       * @demo Controls-demo/Popup/PopupPage
        */
       var Stack = Base.extend({
 
@@ -28,10 +37,9 @@ define('Controls/Popup/Opener/Stack',
          },
 
          _setCompatibleConfig: function(config) {
-            config._type = 'stack'; //for compoundArea
+            config._type = 'stack'; // for compoundArea
          }
       });
 
       return Stack;
-   }
-);
+   });

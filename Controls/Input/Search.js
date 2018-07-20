@@ -4,10 +4,11 @@ define('Controls/Input/Search',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/BaseViewModel',
+      'Core/constants',
       'css!Controls/Input/Search/Search'
    ],
 
-   function(Control, types, template, BaseViewModel) {
+   function(Control, types, template, BaseViewModel, constants) {
       'use strict';
 
       /**
@@ -65,7 +66,15 @@ define('Controls/Input/Search',
          },
 
          _searchClick: function() {
+            //move focus from search button to input
+            this.activate();
             this._notify('searchClick');
+         },
+   
+         _keyUpHandler: function(event) {
+            if (event.nativeEvent.which === constants.key.enter) {
+               this._searchClick();
+            }
          }
          
       });

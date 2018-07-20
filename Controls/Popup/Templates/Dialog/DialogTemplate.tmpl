@@ -11,7 +11,9 @@
             </ws:if>
         </div>
     </div>
-    <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"/>
+    <ws:if data="{{!_options.hideCross}}">
+        <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"/>
+    </ws:if>
     <div class="controls-DialogTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
     </div>
