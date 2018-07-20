@@ -5,10 +5,8 @@
    cursor:pointer;
    display: inline-flex;
    font-size: @font-size__checkBox;
+   //Не можем сделать на флексах из-за стандарта
    line-height: @height_CheckBox;
-}
-.controls-Checkbox__wrapper:before {
-   content: '\200b';
 }
 .controls-Checkbox__icon-border-color__enabled {
    color: @color_CheckBox__iconBox;
@@ -25,6 +23,7 @@
 .controls-Checkbox__caption {
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
+   //Не можем сделать на флексах из-за стандарта
    line-height: @check-box-caption-line-height;
 }
 .controls-Checkbox__icon {
