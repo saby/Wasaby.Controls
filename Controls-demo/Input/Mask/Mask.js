@@ -4,8 +4,7 @@ define('Controls-demo/Input/Mask/Mask',
       'tmpl!Controls-demo/Input/Mask/Mask',
       'Controls/Input/Mask/Formatter',
       'WS.Data/Source/Memory',
-      'Controls/Input/Mask',
-      'css!Controls-demo/Input/Mask/Mask',
+      'Controls/Input/Mask'
    ],
    function(Control, template, Formatter, Memory) {
 
