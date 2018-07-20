@@ -363,6 +363,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             e.stopPropagation();
             this._close(arg);
          },
+         _mouseenterHandler: function() {
+            if (this._options.hoverTarget) {
+               clearTimeout(this._hoverTimer);
+               this._hoverTimer = null;
+            }
+         },
+         _mouseleaveHandler: function() {
+            if (this._options.hoverTarget) {
+               var _this = this;
+
+               this._hoverTimer = setTimeout(function() {
+                  _this.hide();
+               }, 1000);
+            }
+         },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
