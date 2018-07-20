@@ -96,7 +96,9 @@ function(cMerge,
             top: 'bottom',
             bottom: 'top',
             left: 'right',
-            right: 'left'
+            right: 'left',
+            middle: 'center',
+            center: 'center'
          };
 
          if (cfg.hasOwnProperty('verticalAlign')) {
@@ -148,6 +150,7 @@ function(cMerge,
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
             if (!cfg.autoShow) {
+               cfg.closeByExternalClick = false;
                cfg.className += ' ws-hidden';
             }
          }
@@ -264,7 +267,6 @@ function(cMerge,
             dimensions.title || dimensions.caption ||
             templateClass.caption || templateClass.title ||
             compoundAreaOptions.title || compoundAreaOptions.caption ||
-            compoundAreaOptions.templateOptions.title || compoundAreaOptions.templateOptions.caption ||
             templateOptions.title || templateOptions.caption;
       },
 
