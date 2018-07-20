@@ -66,12 +66,6 @@ define('Controls/Input/ComboBox',
             this._forceUpdate();
          },
 
-         _beforeUpdate: function(options) {
-            if (options.placeholder !== this._placeholder) {
-               this._placeholder = !this._isEmptyItem ? options.placeholder : this._placeholder;
-            }
-         },
-
          _mouseDownHandler: function() {
             this._isOpen = !this._isOpen;
          },

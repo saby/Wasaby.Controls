@@ -98,6 +98,7 @@ define('Controls/Dropdown/Container',
                instance._selectedItems.push(null);
             } else {
                Chain(instance._items).each(function(item) {
+                  //We check whether the key of the item is contained in the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                      instance._selectedItems.push(item);
                   }
@@ -159,7 +160,7 @@ define('Controls/Dropdown/Container',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys && !isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+            if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
@@ -204,6 +205,10 @@ define('Controls/Dropdown/Container',
             } else {
                open();
             }
+         },
+
+         _getEmptyText: function() {
+            return dropdownUtils.prepareEmpty(this._options.emptyText);
          }
       });
 
