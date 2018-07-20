@@ -256,5 +256,7 @@
    "Загрузить": "Upload",
    "Переместите файлы сюда": "Drag files here",
    "Отпустите файлы": "Drag files",
-   "Инициализация камеры": "Initialize the camera"
+   "Инициализация камеры": "Initialize the camera",
+   "plural#запись(-и,-ей)": "record|records",
+   "Перенести $count$d$ $records$s$ в": "Move $count$d$ $records$s$ to"
 }
