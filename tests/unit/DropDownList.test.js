@@ -99,23 +99,6 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             
             /*************************************/
          });
-   
-         it('_private.updateHierarchy', function() {
-            var dropDownConfig, dropDownList;
-      
-            dropDownConfig = getDropDownConfig();
-            dropDownList = new DropdownList(dropDownConfig);
-            dropDownList.saveOptions(dropDownConfig);
-      
-            dropDownList._beforeMount(dropDownConfig);
-            dropDownList._beforeUpdate(dropDownConfig);
-      
-            assert.isTrue(dropDownList._hasHierarchy);
-            dropDownList._hasHierarchy = false;
-   
-            DropdownList._private.updateHierarchy(dropDownList);
-            assert.isTrue(dropDownList._hasHierarchy);
-         });
          
       });
       

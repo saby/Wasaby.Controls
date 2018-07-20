@@ -25,10 +25,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   onResult: self.resultHandler
                }
             };
-         },
-         
-         updateHierarchy: function(self) {
-            self._hasHierarchy = self._listModel.hasHierarchy();
          }
       };
       
@@ -115,7 +111,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   emptyText: newOptions.emptyText,
                   itemsGroup: newOptions.itemsGroup
                });
-               _private.updateHierarchy(this);
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
             _private.setPopupOptions(this, newOptions);
          },
@@ -134,7 +130,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
    
             if (rootChanged || itemsChanged) {
-               _private.updateHierarchy(this);
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
          },
 
@@ -200,7 +196,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _toggleExpanded: function() {
             this._expanded = !this._expanded;
             this._listModel.toggleExpanded(this._expanded);
-            _private.updateHierarchy(this);
+            this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();
          },
          _getChildContext: function() {
