@@ -224,7 +224,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
       // TODO Compatible
       Base.isNewEnvironment = function() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
+         return document && !!document.getElementsByTagName('html')[0].controlNodes;
       };
 
       return Base;

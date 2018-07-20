@@ -123,7 +123,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _beforeMount: function() {
             this._className = 'controls-CompoundArea';
-            this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+            if (this._options.type !== 'base') {
+               this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+            }
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;

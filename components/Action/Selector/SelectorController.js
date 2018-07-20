@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                 /**
                  * @cfg {Boolean} Разрешить всплытие комманд selectorWrapperSelectionChanged, selectComplete
                  */
-                allowSelectionCommandBubbling: false,
+                allowSelectionCommandBubbling: false
              },
              _linkedObject: undefined,
              _selectButton: null
