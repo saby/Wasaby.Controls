@@ -688,7 +688,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
                popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
 
-               ManagerController.update(this._getPopupId(), popupConfig);
+               ManagerController.update(this._getPopupId(), popupConfig.popupOptions);
             }
          },
          _getManagerConfig: function() {
