@@ -66,7 +66,7 @@ define('Controls/Container/Data',
                   //компоненте, при вызове метода query. Поэтому на клиент прилетает неправильное состояние и
                   //первый вызов query возвращает захэшированные данные, а не пытается загрузить актуальные данные.
                   //Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
-                  self._prefetchSource._done.query = true;
+                  result.source._done.query = true;
                   return result;
                });
             }
