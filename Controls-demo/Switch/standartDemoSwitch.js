@@ -26,7 +26,7 @@ define('Controls-demo/Switch/standartDemoSwitch', [
       _source: source,
       _selectKey: '1',
       _selectKey2: '1',
-      _selectKey3: '1',
+      _selectKey3: '',
       value: false,
       value1: true,
       value2: false,
@@ -41,6 +41,9 @@ define('Controls-demo/Switch/standartDemoSwitch', [
                break;
             case 2:
                this._selectKey2 = key;
+               break;
+            case 3:
+               this._selectKey3 = key;
                break;
          }
       }

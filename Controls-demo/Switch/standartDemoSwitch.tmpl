@@ -16,7 +16,7 @@
     <h2>Horizontal radio group</h2>
     <div class="demo__block">
         <Controls.Toggle.Radio
-                attr:class="demo__element"
+                attr:class="demo__element horizontal__element"
                 on:selectedKeyChanged="changeKey(1)"
                 keyProperty="id"
                 selectedKey="{{_selectKey}}"
@@ -25,12 +25,22 @@
                 readOnly="{{false}}"/>
     </div>
     <h2>Vertical radio group</h2>
-    <div class="demo__block">
+    <div class="demo__block_inline">
         <Controls.Toggle.Radio
-                attr:class="demo__element"
+                attr:class="demo__element vertical__element"
                 on:selectedKeyChanged="changeKey(2)"
                 keyProperty="id"
                 selectedKey="{{_selectKey2}}"
+                source="{{_source}}"
+                direction="vertical"
+                readOnly="{{false}}"/>
+    </div>
+    <div class="demo__block_inline">
+        <Controls.Toggle.Radio
+                attr:class="demo__element vertical__element"
+                on:selectedKeyChanged="changeKey(3)"
+                keyProperty="id"
+                selectedKey="{{_selectKey3}}"
                 source="{{_source}}"
                 direction="vertical"
                 readOnly="{{false}}"/>
@@ -40,9 +50,9 @@
         <Controls.Toggle.Switch attr:class="demo__element" readOnly="{{true}}" value="{{value4}}" caption="State"/>
         <Controls.Toggle.DoubleSwitch attr:class="demo__element" readOnly="{{true}}" value="{{value5}}" captions="{{['State1', 'State2']}}"/>
         <Controls.Toggle.Radio
-                attr:class="demo__element"
+                attr:class="demo__element horizontal__element"
                 keyProperty="id"
-                selectedKey="{{_selectKey3}}"
+                selectedKey="1"
                 source="{{_source}}"
                 direction="horizontal"
                 readOnly="{{true}}"/>
