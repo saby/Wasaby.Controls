@@ -4,7 +4,7 @@ define('Controls/Button/interface/IIcon', [
    /**
     * Interface for button icon.
     *
-    * @mixin Controls/Button/interface/IIcon
+    * @interface Controls/Button/interface/IIcon
     * @public
     */
 

@@ -3,7 +3,7 @@ define('Controls/interface/IOpener', [], function() {
    /**
     * Interface for opener.
     *
-    * @mixin Controls/interface/IOpener
+    * @interface Controls/interface/IOpener
     * @public
     */
 

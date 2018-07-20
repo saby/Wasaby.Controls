@@ -8,6 +8,10 @@ define('Controls/Toggle/Checkbox', [
    /**
     * Basic checkbox.
     *
+    * <a href="/materials/demo-ws4-checkbox">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Toggle/Checkbox
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
@@ -55,7 +59,6 @@ define('Controls/Toggle/Checkbox', [
    Checkbox.getOptionTypes = function getOptionTypes() {
       return {
          triState: types(Boolean),
-         caption: types(String),
          tooltip: types(String)
       };
    };

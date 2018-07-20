@@ -8,7 +8,7 @@ define('Controls/Header', [
 
    /**
     * Control showing the header.
-    * <a href="https://test-wi.sbis.ru/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
     * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
     * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
     *

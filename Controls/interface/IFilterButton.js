@@ -3,7 +3,7 @@ define('Controls/interface/IFilterButton', [
    
    /**
     * Provides a user interface for browsing and editing the filter fields.
-    * @mixin Controls/interface/IFilterButton
+    * @interface Controls/interface/IFilterButton
     * @public
     */
    

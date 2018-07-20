@@ -96,6 +96,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: чекбокс
+      '/demo-ws4-checkbox': function(req, res) {
+         requirejs('Controls-demo/Checkbox/standartDemoCheckboxWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Checkbox/standartDemoCheckboxWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: заголовки(разделители) и кнопка назад
       '/demo-ws4-header-separator': function(req, res) {
          requirejs('Controls-demo/Headers/standartDemoHeader');
@@ -104,6 +113,16 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+
+      // Демо-пример: Переключатели
+      '/demo-ws4-switchers': function(req, res) {
+         requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: операции над записью.
       '/demo-ws4-item-actions': function(req, res) {
          requirejs('Examples/List/ItemActions');

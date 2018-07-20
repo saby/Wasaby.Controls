@@ -4,12 +4,12 @@ define('Controls/Input/interface/IValidation', [
    /**
     * Interface for input's invalid state.
     *
-    * @mixin Controls/Input/interface/IValidation
+    * @interface Controls/Input/interface/IValidation
     * @public
     */
 
    /**
-    * @name Controls/Input/interface/IValidationError#validationErrors
+    * @name Controls/Input/interface/IValidation#validationErrors
     * @cfg {String} List of validation errors.
     */
 

@@ -77,7 +77,6 @@ node('controls') {
 
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
-		def smoke_server_address=props["SMOKE_SERVER_ADDRESS"]
 		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
@@ -457,13 +456,17 @@ node('controls') {
 
         def site = "http://${NODE_NAME}:30010"
         site.trim()
+
         dir("./controls/tests/int"){
-            tmp_smoke = sh returnStatus:true, script: """
+            sh"""
                 source /home/sbis/venv_for_test/bin/activate
-                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome
+                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
                 deactivate
+
             """
-            if ( "${tmp_smoke}" != "0" ) {
+            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            sh "sudo rm -rf ./test-reports"
+            if ( currentBuild.result != null ) {
                 currentBuild.result = 'FAILURE'
                 currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
                 gitlabStatusUpdate()
@@ -500,7 +503,7 @@ node('controls') {
                         dir("./controls/tests/reg"){
                             sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                 deactivate
                             """
                         }
@@ -518,19 +521,19 @@ node('controls') {
     """
 
 
-        if ( regr ){
-            dir("./controls") {
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
-            }
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            }
-        if ( unit ){
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            }
-        if ( regr || inte ){
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
+    if ( unit ){
+        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+        }
+    if ( regr || inte ){
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+        junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        }
+    if ( regr ){
+        dir("./controls") {
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        }
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+        }
     gitlabStatusUpdate()
         }
     }

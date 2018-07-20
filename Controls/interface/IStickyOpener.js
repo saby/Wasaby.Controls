@@ -3,7 +3,7 @@ define('Controls/interface/IStickyOpener', [], function() {
    /**
     * Interface for opener.
     *
-    * @mixin Controls/interface/IStickyOpener
+    * @interface Controls/interface/IStickyOpener
     * @public
     */
 

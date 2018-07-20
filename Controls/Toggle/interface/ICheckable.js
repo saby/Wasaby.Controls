@@ -3,7 +3,7 @@ define('Controls/Toggle/interface/ICheckable', [], function() {
    /**
     * Interface for 2-position switch.
     *
-    * @mixin Controls/Toggle/interface/ICheckable
+    * @interface Controls/Toggle/interface/ICheckable
     * @public
     */
 

@@ -35,6 +35,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             if (rootAsNode) {
                root = Model.fromObject(root, 'adapter.sbis');
                root.keyProperty = cfg.keyProperty;
+               displayProperties.rootEnumerable = true;
             }
             displayProperties.root = root;
 

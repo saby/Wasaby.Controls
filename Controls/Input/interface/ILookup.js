@@ -7,7 +7,7 @@ define('Controls/Input/interface/ILookup', [
    /**
     * Interface for Input.Lookup.
     *
-    * @mixin Controls/Input/interface/ILookup
+    * @interface Controls/Input/interface/ILookup
     * @public
     */
 

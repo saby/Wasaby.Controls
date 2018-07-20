@@ -17,9 +17,9 @@ define('Controls/Button/ButtonSeparator', [
    /**
     * @name Controls/Button/ButtonSeparator#style
     * @cfg {String} Icon display style.
-    * @variant Accent Icon will be default.
-    * @variant Additional Icon will be non accented.
-    * @variant Main Icon will be accented.
+    * @variant accent Icon will be default.
+    * @variant additional Icon will be non accented.
+    * @variant main Icon will be accented.
     */
 
    /**
@@ -58,9 +58,9 @@ define('Controls/Button/ButtonSeparator', [
       return {
          bold: types(Boolean),
          style: types(String).oneOf([
-            'Accent',
-            'Additional',
-            'Main'
+            'accent',
+            'additional',
+            'main'
          ]),
          value: types(Boolean)
       };
@@ -68,7 +68,7 @@ define('Controls/Button/ButtonSeparator', [
 
    ButtonSeparator.getDefaultOptions = function() {
       return {
-         style: 'Accent',
+         style: 'accent',
          value: false,
          bold: false
       };

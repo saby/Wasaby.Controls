@@ -30,12 +30,7 @@ define('Controls/Container/Data',
                sorting: self._sorting,
                filter: self._filter,
                keyProperty: self._keyProperty
-            }, data)
-               .addCallback(function(result) {
-                  self._items = result.data;
-                  self._prefetchSource = result.source;
-                  return result;
-               });
+            }, data);
          },
          
          resolveOptions: function(self, options) {
@@ -44,6 +39,10 @@ define('Controls/Container/Data',
             self._source = options.source;
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
+         },
+         resolvePrefetchSourceResult: function(self, result) {
+            self._items = result.data;
+            self._prefetchSource = result.source;
          }
       };
       
@@ -51,9 +50,17 @@ define('Controls/Container/Data',
          
          _template: template,
          
-         _beforeMount: function(options) {
+         _beforeMount: function(options, context, receivedState) {
+            var self = this;
             _private.resolveOptions(this, options);
-            return _private.createPrefetchSource(this);
+            if (receivedState) {
+               _private.resolvePrefetchSourceResult(this, receivedState);
+            } else {
+               return _private.createPrefetchSource(this).addCallback(function(result) {
+                  _private.resolvePrefetchSourceResult(self, result);
+                  return result;
+               });
+            }
          },
    
          _filterChanged: function(event, filter) {

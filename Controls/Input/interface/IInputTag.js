@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputTag', [
    /**
     * Interface for input tags (colored indicators in the right top corner).
     *
-    * @mixin Controls/Input/interface/IInputTag
+    * @interface Controls/Input/interface/IInputTag
     * @public
     */
 

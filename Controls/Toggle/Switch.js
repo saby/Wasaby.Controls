@@ -9,6 +9,10 @@ define('Controls/Toggle/Switch', [
    /**
     * Switch control.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Toggle/Switch
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
@@ -24,6 +28,13 @@ define('Controls/Toggle/Switch', [
     * @cfg {String} Title.
     */
 
+   /**
+    * @name Controls/Toggle/Switch#captionPosition
+    * @cfg {Boolean} Switch caption has left position.
+    * @variant left Switch has caption before toggle composition.
+    * @variant right Switch has toggle before caption composition.
+    */
+
    var Switch = Control.extend({
       _template: template,
 
@@ -36,14 +47,19 @@ define('Controls/Toggle/Switch', [
 
    Switch.getDefaultOptions = function getDefaultOptions() {
       return {
-         value: false
+         value: false,
+         captionPosition: 'right'
       };
    };
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
          value: types(Boolean),
-         caption: types(String)
+         caption: types(String),
+         captionPosition: types(String).oneOf([
+            'left',
+            'right'
+         ])
       };
    };
 

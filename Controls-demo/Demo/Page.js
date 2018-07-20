@@ -70,7 +70,7 @@ define('Controls-demo/Demo/Page',
          },
          old_load = cssPlugin.load;
 
-      /*//хитрю с css плагином для демок
+      //хитрю с css плагином для демок
       if (UrlParams.theme) {
          cssPlugin.load = function(name, require, load) {
             if (name.indexOf('SBIS3.CONTROLS.Demo') === -1 &&  (name.indexOf('SBIS3.CONTROLS') !== -1 || name.indexOf('Controls/') !== -1))     {
@@ -79,25 +79,33 @@ define('Controls-demo/Demo/Page',
                old_load.apply(this, arguments);
             }
          };
-      }*/
+      }
 
       var DemoPage = Control.extend({
          _template: template,
+         _theme: null,
          componentName: 'Controls-demo/Index',
          _beforeMount: function() {
             var deferred = new Deferred();
             if (UrlParams.cname) {
                this.componentName = 'Controls-demo/' + UrlParams.cname;
             }
+            this._theme = themeLinks[UrlParams['theme']] || themeLinks['base'];
             requirejs([this.componentName], deferred.callback.bind(deferred));
             return deferred;
          },
          changeTheme: function(event, theme) {
-            this._notify('themeChanged', [theme], {bubbling:true});
+            var
+               newLocation = ~window.location.href.indexOf('theme')
+                  ? window.location.href.replace(/theme=(.*)($|&)/, 'theme=' + theme)
+                  : window.location.href + '&theme=' + theme;
+            setCurrentThemeLinks(themeLinks[theme]);
+            window.history.replaceState({}, '', newLocation);
+//            this._notify('themeChanged', [theme], {bubbling:true});
          },
 
          backClickHdl: function() {
-            window.location.href = window.location.origin + '/Controls-demo/demo.html';
+            window.history.back();
          },
 
          constructor: function(cfg) {

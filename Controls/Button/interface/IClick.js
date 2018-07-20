@@ -4,7 +4,7 @@ define('Controls/Button/interface/IClick', [
    /**
     * Click event interface.
     *
-    * @mixin Controls/Button/interface/IClick
+    * @interface Controls/Button/interface/IClick
     * @public
     */
 
