@@ -604,6 +604,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       },
 
       prepareRecordSet: function(record, idPrefix, history) {
+         var self = this;
          record.setEventRaising(false, true);
          _private.addProperty(this, record, 'visible', 'boolean', true);
          _private.addProperty(this, record, 'pinned', 'boolean', false);
@@ -614,10 +615,10 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             _private.addProperty(this, record, 'additional', 'boolean', false);
          }
    
-         /* Источники данных работают по разному в ИЕ, при добавлении поля в формат рекордсета, это поле не добавится
-          в формат owner'a записи, если он не совпадает с этим рекордсетом. */
-         if (detection.isIE11 || detection.isIE10) {
-            record.forEach(function(item) {
+         record.forEach(function(item) {
+            /* Источники данных работают по разному в ИЕ, при добавлении поля в формат рекордсета, это поле не добавится
+               в формат owner'a записи, если он не совпадает с этим рекордсетом. */
+            if (detection.isIE11 || detection.isIE10) {
                var itemOwner = item.getOwner(),
                   ownerFormat;
          
@@ -628,10 +629,11 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                      _private.addProperty(self, itemOwner, 'historyId', 'string', 'id');
                   }
                }
-               item.set('historyId', idPrefix + item.getId());
-            });
-         }
-
+            }
+            item.set('historyId', idPrefix + item.getId());
+         });
+   
+   
          record.setIdProperty(_private.getHistoryId(this));
          record.setEventRaising(true, true);
       },
