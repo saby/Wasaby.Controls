@@ -75,7 +75,7 @@ define('Controls/Input/Mask',
 
       var
          _private = {
-            regExpQuantifiers: '\\\\({.*?}|.)',
+            regExpQuantifiers: /\\({.*?}|.)/,
 
             findLastUserEnteredCharPosition: function(value, replacer) {
                var position;
