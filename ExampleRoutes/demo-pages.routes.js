@@ -104,6 +104,16 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+
+      // Демо-пример: Переключатели
+      '/demo-ws4-switchers': function(req, res) {
+         requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: операции над записью.
       '/demo-ws4-item-actions': function(req, res) {
          requirejs('Examples/List/ItemActions');
