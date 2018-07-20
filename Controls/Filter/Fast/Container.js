@@ -1,10 +1,10 @@
 /**
  * Created by am.gerasimov on 22.03.2018.
  */
-define('Controls/Container/Filter/Fast',
+define('Controls/Filter/Fast/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Filter/Fast/Fast',
+      'tmpl!Controls/Filter/Fast/Container',
       'Controls/Container/Filter/FilterContextField',
       'Core/helpers/Object/isEqual'
    ],
@@ -31,19 +31,19 @@ define('Controls/Container/Filter/Fast',
          _beforeUpdate: function(options, context) {
             //context from Filter layout
             var filterItems = context.filterLayoutField.fastFilterItems;
-            if (!isEqual(this._items, filterItems)) {
+            if (!isEqual(this.context.get('filterLayoutField').fastFilterItems, filterItems)) {
                this._items = filterItems;
             }
          },
-   
+         
          _beforeMount: function(options, context) {
             if (context.filterLayoutField.fastFilterItems) {
                this._items = context.filterLayoutField.fastFilterItems;
             }
          },
-   
+         
          _filterChanged: function() {
-            this._notify('itemsChanged', [this._items], {bubbling: true});
+            this._notify('filterItemsChanged', [this._items], {bubbling: true});
          }
       });
       

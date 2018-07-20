@@ -4,7 +4,7 @@
          <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
               on:click="_openFilterPanel()"
               name="filterText">
-            <ws:if data="{{_options.filterAlign === 'right'}}">
+            <ws:if data="{{_options.orientation === 'left'}}">
                <div class="controls-FilterButton__arrow controls-FilterButton__arrow_state_{{_getFilterState()}} icon-DayForward"></div>
             </ws:if>
             <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}"
@@ -19,17 +19,13 @@
       <ws:if data="{{_options.spaceTemplate}}">
          <div class="controls-FilterButton__space"></div>
       </ws:if>
-      <div class="controls-FilterButton__icon controls-FilterButton__icon_{{_options.filterAlign}} controls-FilterButton__icon_state_{{_getFilterState()}} icon-FilterBig"
+      <div class="controls-FilterButton__icon controls-FilterButton__icon_{{_options.orientation}} controls-FilterButton__icon_state_{{_getFilterState()}} icon-FilterBig"
            on:click="_openFilterPanel()">
       </div>
    </div>
    <ws:if data="{{_options.filterTemplate}}">
-      <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
+      <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.orientation}}"></div>
    </ws:if>
 
-   <Controls.Popup.Opener.Sticky name="filterStickyOpener">
-      <ws:popupOptions closeByExternalClick="{{true}}">
-         <ws:eventHandlers onResult="{{_onFilterChanged}}"/>
-      </ws:popupOptions>
-   </Controls.Popup.Opener.Sticky>
+   <Controls.Popup.Opener.Sticky name="filterStickyOpener" popupOptions="{{_popupOptions}}"/>
 </div>

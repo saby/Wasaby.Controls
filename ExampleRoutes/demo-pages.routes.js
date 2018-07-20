@@ -130,6 +130,33 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+   
+      // Демо-пример: с поиском
+      '/demo-ws4-search-container': function(req, res) {
+         requirejs('Controls-demo/Search/ContainerApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Search/ContainerApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с фильтром
+      '/demo-ws4-filter-container': function(req, res) {
+         requirejs('Controls-demo/Filter/ContainerApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Filter/ContainerApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с фильтром и поиском
+      '/demo-ws4-filter-search-new': function(req, res) {
+         requirejs('Controls-demo/FilterSearch/FilterSearchApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/FilterSearch/FilterSearchApplication',
+            initDependencies: false
+         }, []);
+      },
 
       // Демо-пример: операции над записью.
       '/demo-ws4-item-actions': function(req, res) {
