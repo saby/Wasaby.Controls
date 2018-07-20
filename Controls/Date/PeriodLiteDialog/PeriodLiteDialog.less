@@ -36,11 +36,11 @@
    min-width: @min-width_PeriodLiteDialog-medium;
 }
 
-.controls-PeriodLiteDialog__v-layout {
+.controls-PeriodLiteDialog__vLayout {
    background-color: @background-color_PeriodLiteDialog;
 }
 
-.controls-PeriodLiteDialog__v-layout-item {
+.controls-PeriodLiteDialog__vLayoutItem {
    cursor: pointer;
    position: relative;
    box-sizing: border-box;
@@ -48,10 +48,12 @@
    line-height: @standart-line-height_PeriodLiteDialog;
    border: solid @border-width_PeriodLiteDialog_hovered transparent;
 
-   ~ .controls-PeriodLiteDialog__v-layout-item {
+   ~ .controls-PeriodLiteDialog__vLayoutItem {
       margin-top: -1px;
    }
+}
 
+.controls-PeriodLiteDialog__vLayoutItem-clickable {
    &:hover {
       border-color: @border-color_PeriodLiteDialog_hovered;
       background-color: @background-color_PeriodLiteDialog_hovered;

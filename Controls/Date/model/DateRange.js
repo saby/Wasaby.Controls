@@ -21,6 +21,7 @@ define('Controls/Date/model/DateRange', [
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
       _startValue: null,
       _endValue: null,
+      _options: null,
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
