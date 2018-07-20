@@ -207,7 +207,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // лишних свойств, которые еще не применены к дому
             // панельки с этим начали вылезать плавненько
 
-            this._compoundControlCreated = new cDeferred();
+            self._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                moduleStubs.require([self._templateName]).addCallback(function(result) {
                   self._createCompoundControl(result[0]);
@@ -218,8 +218,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   });
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
-                  this._compoundControlCreated.errback(e);
-               }.bind(this));
+                  self._compoundControlCreated.errback(e);
+               });
             });
          },
          _createCompoundControl: function(Component) {
@@ -240,7 +240,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this.handle('onReady');
-            this._compoundControl.setActive(true);
+            if (this._container.length) {
+               this._compoundControl.setActive(true);
+            }
             var self = this;
             runDelayed(function() {
                self._compoundControl._notifyOnSizeChanged();
