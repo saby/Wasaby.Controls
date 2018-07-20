@@ -16,7 +16,19 @@ define('Controls/Container/Data',
       var _private = {
          createOptionsObject: function(self) {
             function reducer(result, optName) {
-               result[optName] = self['_' + optName];
+               if (optName === 'source') {
+                  //TODO: При построении на сервере в сериализованом состоянии в компонент приходят prefetchSource и
+                  //source изначально заданный в опциях. prefetchSource содержит в себе source из опций, но так как
+                  //это 2 разных парамтра, при десериализации получаем 2 разных source. Один десериализуется внутри
+                  //prefetchSource, второй из опций. prefetchSource передаётся в табличные представления данных, а
+                  //source из опций распространяется по контексту. Получется тот кто влияет на source из контекста,
+                  //не влияет на source из таблицы. Решение: Не будем брать source из опций, а в контекс положим
+                  //source, который лежит внутри prefetchSource.
+                  //Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
+                  result.source = self._prefetchSource._$target;
+               } else {
+                  result[optName] = self['_' + optName];
+               }
                return result;
             }
             
