@@ -41,6 +41,7 @@ define('Controls/Input/Text', [
        * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
        * @variant true Remove whitespaces.
        * @variant false Do not remove whitespaces.
+       * @default false
        */
 
    /**
