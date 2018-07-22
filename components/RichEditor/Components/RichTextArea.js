@@ -2091,7 +2091,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._toggleScrollEvents('off');
             },
             _toggleScrollEvents: function(method) {
-               //todo - частично отсутствует в vDom нехватает 3х первых строк
                var _editorWin = $(this.getTinyEditor().getWin());
                _editorWin[method]('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
                _editorWin[method]('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
