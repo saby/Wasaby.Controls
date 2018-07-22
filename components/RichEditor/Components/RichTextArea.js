@@ -723,10 +723,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._tinyEditor.off();
                   this._unSubscribeOnScroll();
 
+                  //уничтожение тини --->
                   this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
                   this._tinyEditor.destroy && this._tinyEditor.destroy();
                   this._tinyEditor.remove && this._tinyEditor.remove();
-
+                  //<---уничтожение тини
                   if (this._tinyEditor.theme) {
                      if (this._tinyEditor.theme.panel) {
                         this._tinyEditor.theme.panel._elmCache = null;
@@ -778,7 +779,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._imageUploader = null;
                this._codeSampleDialog = null;
                this._beforeFocusOutRng = null;
-               this._sourceContainer = null;
                this._defaultFormats = null;
             },
 
@@ -2085,19 +2085,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }.bind(this));
             },
             _subscribeOnScroll: function() {
-               var _editorWin = $(this.getTinyEditor().getWin());
-               _editorWin.on('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               _editorWin.on('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               this._container.on('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               this._container.on('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               _editorWin = null;
+               this._toggleScrollEvents('on');
             },
             _unSubscribeOnScroll: function() {
+               this._toggleScrollEvents('off');
+            },
+            _toggleScrollEvents: function(method) {
+               //todo - частично отсутствует в vDom нехватает 3х первых строк
                var _editorWin = $(this.getTinyEditor().getWin());
-               _editorWin.off('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               _editorWin.off('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               this._container.off('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
-               this._container.off('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin[method]('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               _editorWin[method]('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container[method]('scroll', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
+               this._container[method]('mousewheel', this._hideImageOptionsPanel); // не всегда стреляет (iframe)
                _editorWin = null;
             },
             _onInitContentBody: function() {
@@ -2135,12 +2134,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this._readyControlDeffered.isReady()) {
                   this._tinyReady.addCallback(this._tinyReadyCallback0);
                }
-               // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
-               // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
-               // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
-               for (var i = 1; i <= 9; i++) {
-                  editor.shortcuts.remove('access+' + i);
-               }
+
+               this._removeShortcuts();
 
                this._inputControl = $(editor.getBody());
 
@@ -2150,17 +2145,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
 
+               editor.formatter.formatChanged(this._getFormatsFromNotification(), this._formatChangedCallback);
+
+               this._notify('onInitEditor');
+            },
+            _removeShortcuts: function() {
+               var editor = this.getTinyEditor();
+               // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
+               // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
+               // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
+               for (var i = 1; i <= 9; i++) {
+                  editor.shortcuts.remove('access+' + i);
+               }
+            },
+            _getFormatsFromNotification: function() {
+               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
                for (var key in this._options.customFormats) {
                   if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
                      formats += ',' + key;
                   }
                }
-
-               editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
-
-               this._notify('onInitEditor');
+               return formats;
             },
             _formatChangedCallback: function(state, obj) {
                this._notify('onFormatChange', obj, state);
@@ -2524,7 +2530,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _onKeyDownCallback6: function(e) {
                if (e.key && 1 < e.key.length) {
                   this._linkEditStart();
-                  setTimeout(this._onKeyDownCallback6Timeout.bind(this), 1);
+                  setTimeout(this._onKeyDownCallback6Timeout, 1);
                }
             },
             _onKeyDownCallback6Timeout: function() {
@@ -2631,7 +2637,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
-               setTimeout(this._onKeyPressCallbackTimeout.bind(this), 1);
+               setTimeout(this._onKeyPressCallbackTimeout, 1);
             },
             _onKeyPressCallbackTimeout: function() {
                if (!this.isDestroyed()) {
@@ -2674,10 +2680,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _onUNDOMANAGERChange: function() {
-               this._notify('onUndoRedoChange', {
-                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
-                  hasUndo: this._tinyEditor.undoManager.hasUndo()
-               });
+               var editor = this.getTinyEditor();
+               var undoManager = editor && editor.undoManager;
+               this._notify('undoRedoChanged', [{
+                  hasRedo: undoManager && undoManager.hasRedo() || false,
+                  hasUndo: undoManager && undoManager.hasUndo() || false
+               }]);
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
@@ -2698,6 +2706,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             saveCallbacks: function() {
                this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._formatChangedCallback = this._formatChangedCallback.bind(this);
                this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
                this._prepareReviewContent = this._prepareReviewContent.bind(this);
                this._prepareContent = this._prepareContent.bind(this);
@@ -2729,7 +2738,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._onKeyDownCallback5 = this._onKeyDownCallback5.bind(this);
                this._onKeyUpCallback3 = this._onKeyUpCallback3.bind(this);
                this._onKeyDownCallback6 = this._onKeyDownCallback6.bind(this);
+               this._onKeyDownCallback6Timeout = this._onKeyDownCallback6Timeout.bind(this);
                this._onKeyPressCallback = this._onKeyPressCallback.bind(this);
+               this._onKeyPressCallbackTimeout = this._onKeyPressCallbackTimeout.bind(this);
                this._onChangeEditorCallback = this._onChangeEditorCallback.bind(this);
                this._onCut = this._onCut.bind(this);
                this._onResizeEditorCallback = this._onResizeEditorCallback.bind(this);
