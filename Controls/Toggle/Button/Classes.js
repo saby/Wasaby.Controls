@@ -9,6 +9,16 @@ define('Controls/Toggle/Button/Classes', ['Core/IoC'], function(IoC) {
       linkMain: {
          style: 'link-main_toggled',
          type: 'link_toggled'
+      },
+
+      buttonLinkMain: {
+         style: 'link-main',
+         type: 'link'
+      },
+
+      buttonLinkAdditional: {
+         style: 'link-additional',
+         type: 'link'
       }
    };
    var Classes = {
