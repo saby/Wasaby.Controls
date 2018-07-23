@@ -122,6 +122,7 @@ node('controls') {
         }
 
         if ( coverage ) {
+            // покрытие кода по интеграционным тестам
             inte = true
         }
 
