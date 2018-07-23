@@ -79,17 +79,7 @@ if __name__ == '__main__':
         coverage.build(args.source_path)
 
     if args.changelist:
-        print('Отбираем тесты для запуска по изменениям в ', args.changelist)
         test = Test()
         test.search(args.changelist)
-        print('Всего: ', len(test.all_files))
-        print('\nНайдено по совпадению')
-        s_result = set(test.result)
-        for i, t in enumerate(s_result):
-            print(i + 1, t)
+        print(' '.join(set(test.result)))
 
-        print('\nНе найдено в:')
-        diff_result = set(test.all_files) - s_result
-
-        for i, t in enumerate(diff_result):
-            print(i + 1, t)
