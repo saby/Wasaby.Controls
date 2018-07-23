@@ -75,6 +75,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.source_path:
         print('Собираем покрытие', args.source_path)
+        coverage = Coverage()
+        coverage.build(args.source_path)
 
     if args.changelist:
         print('Отбираем тесты для запуска по изменениям в ', args.changelist)
