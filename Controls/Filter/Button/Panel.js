@@ -2,12 +2,13 @@ define('Controls/Filter/Button/Panel', [
    'Core/Control',
    'WS.Data/Chain',
    'WS.Data/Utils',
+   'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, _FilterPanelOptions, template) {
+], function(Control, Chain, Utils, isEqual, Clone, _FilterPanelOptions, template) {
 
    /**
     * Control "Filter panel"
@@ -50,7 +51,8 @@ define('Controls/Filter/Button/Panel', [
       getFilter: function(self, items) {
          var filter = {};
          Chain(items || self._items).each(function(item) {
-            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
+            if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
+               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                filter[item.id] = getPropValue(item, 'value');
             }
          });
@@ -60,7 +62,8 @@ define('Controls/Filter/Button/Panel', [
       isChangedValue: function(items) {
          var isChanged = false;
          Chain(items).each(function(item) {
-            if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue') && getPropValue(item, 'visibility')) {
+            if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
+               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                isChanged = true;
             }
          });
@@ -70,7 +73,7 @@ define('Controls/Filter/Button/Panel', [
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
-            if (!getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'visibility') !== undefined && !getPropValue(item, 'visibility')) {
                hasAdditional = true;
             }
          });
@@ -120,6 +123,9 @@ define('Controls/Filter/Button/Panel', [
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
          Chain(this._items).each(function(item) {
             setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            if (getPropValue(item, 'visibility') !== undefined) {
+               setPropValue(item, 'visibility', false);
+            }
          });
          this._isChanged = false;
       }
