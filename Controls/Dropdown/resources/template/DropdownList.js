@@ -90,7 +90,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
-                  hideSelectMark: newOptions.hideSelectMark,
                   itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
