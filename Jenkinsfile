@@ -12,11 +12,6 @@ def gitlabStatusUpdate() {
     }
 }
 
-@NonCPS
-def getName() {
-    return env.get("BRANCH_NAME", "JOB_BASE_NAME")
-}
-
 node('controls') {
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
@@ -70,7 +65,7 @@ node('controls') {
 
 
     echo "Определяем рабочую директорию"
-    def jobName = getName()
+    def jobName = env.BRANCH_NAME || env.JOB_BASE_NAME
     def workspace = "/home/sbis/workspace/controls_${version}/${jobName}"
     ws(workspace) {
         def inte = params.run_int
