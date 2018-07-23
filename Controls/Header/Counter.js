@@ -12,6 +12,8 @@ define('Controls/Header/Counter', [
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @mixes Controls/Header/Counter/CounterStyles
     */
 
    /**
