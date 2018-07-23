@@ -7,7 +7,7 @@
                <div class="controls-PeriodLiteDialog__item-background-hovered{{ _quarterHovered !== quarter.number ? ' ws-hidden'}}"></div>
                <div class="controls-PeriodLiteDialog-item__month-wrapper{{ _yearHovered || _halfyearHovered === halfYearIndex ? ' controls-PeriodLiteDialog__background-transparent'}}">
                   <ws:for data="month in quarter.months">
-                     <div class="controls-PeriodLiteDialog-item__month-caption controls-PeriodLiteDialog__v-layout-item"
+                     <div class="controls-PeriodLiteDialog-item__month-caption controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
                           on:click="_onMonthClick(month.number)">
                         <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
                            <div class="controls-PeriodLiteDialog-item__checkBox icon-16 icon-Yes icon-done"></div>

@@ -18,8 +18,6 @@ define('Controls/Input/Date/interface/ILinkView', [
    return {
       getDefaultOptions: function() {
          return {
-            startValue: DateUtil.getStartOfMonth(new Date()),
-            endValue: DateUtil.getEndOfMonth(new Date()),
 
             /**
              * @name Controls/Input/Date/interface/ILinkView#style

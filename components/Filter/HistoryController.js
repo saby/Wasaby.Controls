@@ -158,7 +158,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
-                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure()));
+                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
              } else {
                 filterButton.sendCommand('reset-filter');
              }

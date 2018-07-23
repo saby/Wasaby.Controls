@@ -1,15 +1,15 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-
       'WS.Data/Type/descriptor',
+      'Controls/Utils/tmplNotify',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, template, RenderHelper, cDetection) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection) {
 
       'use strict';
 
@@ -62,6 +62,8 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _template: template,
 
+         _notifyHandler: tmplNotify,
+
          _inputHandler: function(e) {
             var
                value = this._options.viewModel.getDisplayValue(),
@@ -110,10 +112,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _inputCompletedHandler: function(e) {
             this._notify('inputCompleted', [this._options.viewModel.getValue()]);
-         },
-
-         _notifyHandler: function(e, value) {
-            this._notify(value);
          },
 
          _getInputState: function() {

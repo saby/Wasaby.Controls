@@ -19,6 +19,7 @@ define('Controls/Input/Area', [
 
    /**
     * Multiline text input with autoheight.
+    * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Area
     * @extends Controls/Input/Text
