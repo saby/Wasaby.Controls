@@ -645,7 +645,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      cIndicator.hide();
                      require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
                         document.addEventListener('paste', onPaste, true);
-                        dialog = InformationPopupManager.showMessageDialog({
+                        var _message = {
                            className: 'controls-RichEditor__pasteWithStyles-alert',
                            message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
                            details: null,
@@ -653,9 +653,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                            isModal: true,
                            closeByExternalClick: true,
                            opener: self
-                           },
-                           onClose
-                        );
+                        };
+                        dialog = InformationPopupManager.showMessageDialog(_message, onClose);
                      });
                      service.destroy();
                   };
