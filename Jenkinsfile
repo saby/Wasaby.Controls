@@ -74,7 +74,6 @@ node('controls') {
         //используем в получении покрытия кода
         target = env.JOB_BASE_NAME
     }
-    def jobName =
     def workspace = "/home/sbis/workspace/controls_${version}/${target}"
     ws(workspace) {
         def inte = params.run_int
