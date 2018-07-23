@@ -60,9 +60,10 @@ node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
-            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
             echo "ВЕТКА: ${env.BRANCH_NAME}"
             echo "Обычная сборка: ${env.JOB_BASE_NAMEE}"
+            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+
         }
 
 
