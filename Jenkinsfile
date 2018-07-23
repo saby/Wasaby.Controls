@@ -80,6 +80,8 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def coverage = params.COVERAGE
+        def onlyDependency = true
+        def changed_files
 
         try {
         echo "Чистим рабочую директорию"
@@ -151,6 +153,9 @@ node('controls') {
                         git fetch
                         git merge origin/rc-${version}
                         """
+                        if ( isBranch ) {
+                            changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        }
                     }
                     updateGitlabCommitStatus state: 'running'
                     parallel (
@@ -510,6 +515,24 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
+        def tests_for_run = ""
+        if ( onlyDependency ) {
+            dir("./controls/tests/") {
+                def url = "${env.JENKINS_URL}view/${version}/job/branch_controls_${version}/job/${version}%252Ffeature%252Fpea%252Fcoverage/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                script = """
+                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+                    echo "result.json exitsts"; cp -fr tmp_result.json result.json
+                    else rm -f result.json
+                fi
+                """
+                sh returnStdout: true, script: script
+                echo changed_files
+                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
+                echo tests_files
+                tests_for_run = "--files_to_start ${tests_files}"
+
+            }
+        }
         parallel (
             int_test: {
                 echo "Запускаем интеграционные тесты"
@@ -522,16 +545,14 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverageParam}
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverageParam}
                             deactivate
                             """
-                        if ( coverage ) {
-                            sh """
-                            cp ../coverage_handler.py ./coverage/coverage_handler.py
-                            cd ./coverage
-                            python3 coverage_handler.py
-                            """
-                            }
+                            if ( coverage ) {
+                                sh """
+                                python3 ../coverage_handler.py -s ${workspace}/controls/tests/int/coverage
+                                """
+                                }
 
                         }
 

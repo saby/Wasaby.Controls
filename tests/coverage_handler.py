@@ -1,48 +1,93 @@
 import os
 import json
 from pprint import pprint
+import argparse
 
 
-path = os.getcwd()
+class Coverage:
 
-path_result = {}
-test_path = os.listdir(path)
-result = {}
-for tdir in test_path:
-    path_list = []
-    root = os.path.join(path, tdir)
-    for top, d, f in os.walk(root):
-        for i in d:
-            file_path = os.path.join(top, i)
-            file_name = os.path.join(file_path, 'coverage.json')
-            if os.path.exists(file_name):
-                path_list.append(file_name)
-    path_result[tdir] = path_list
+    path_result = {}
+    result = {}
 
-coverage_result = []
-ts = tf = 1
+    def build(self, path):
+        test_path = os.listdir(path)
+        for tdir in test_path:
+            path_list = []
+            root = os.path.join(path, tdir)
+            for top, d, f in os.walk(root):
+                for i in d:
+                    file_path = os.path.join(top, i)
+                    file_name = os.path.join(file_path, 'coverage.json')
+                    if os.path.exists(file_name):
+                        path_list.append(file_name)
+            self.path_result[tdir] = path_list
 
-for item in path_result:
-    coverage_result = []
-    print(ts,'ТЕСТ:', item)
-    ts +=1
-    for fname in path_result[item]:
-        with open(fname, encoding='utf-8', mode='r') as f:
-            d = json.loads(f.read(), encoding='utf-8')
-            print(tf, 'Filename: ', fname)
-            tf+=1
-            for k in d:
-                coverage_result.append(k)
-    uresult = sorted(set(coverage_result))
-    result[item] = uresult
+        ts = tf = 1
 
-pprint(path_result)
-name = 'result.json'
-mode = 'a+'
-if os.path.exists(name) :
-    mode = 'r+'
+        for item in self.path_result:
+            coverage_result = []
+            print(ts,'ТЕСТ:', item)
+            ts +=1
+            for fname in self.path_result[item]:
+                with open(fname, encoding='utf-8', mode='r') as f:
+                    d = json.loads(f.read(), encoding='utf-8')
+                    print(tf, 'Filename: ', fname)
+                    tf+=1
+                    for k in d:
+                        coverage_result.append(k)
+            uresult = sorted(set(coverage_result))
+            self.result[item] = uresult
 
-with open('result.json', mode=mode, encoding='utf-8') as f:
-    f.seek(0)
-    f.write(json.dumps(result, indent=2))
-    f.truncate()
+        pprint(self.path_result)
+        name = 'result.json'
+        mode = 'a+'
+        if os.path.exists(name) :
+            mode = 'r+'
+
+        with open(os.path.join(path, 'result.json'), mode=mode, encoding='utf-8') as f:
+            f.seek(0)
+            f.write(json.dumps(self.result, indent=2))
+            f.truncate()
+
+
+class Test:
+    result_name = 'result.json'
+    result = []
+    all_files = []
+
+    def search(self, change_files):
+        with open(self.result_name, encoding='utf-8') as f:
+            data = json.loads(f.read(), encoding='utf-8')
+            for name in data:
+                self.all_files.append(name)
+                for source in data[name]:
+                    for file in change_files:
+                        if file in source:
+                            self.result.append(name)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    build = parser.add_argument_group('build')
+    build.add_argument('-s', '--source_path', help='root path with inner coverage.json ')
+    action = parser.add_argument_group('action')
+    action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
+    args = parser.parse_args()
+    if args.source_path:
+        print('Собираем покрытие', args.source_path)
+
+    if args.changelist:
+        print('Отбираем тесты для запуска по изменениям в ', args.changelist)
+        test = Test()
+        test.search(args.changelist)
+        print('Всего: ', len(test.all_files))
+        print('\nНайдено по совпадению')
+        s_result = set(test.result)
+        for i, t in enumerate(s_result):
+            print(i + 1, t)
+
+        print('\nНе найдено в:')
+        diff_result = set(test.all_files) - s_result
+
+        for i, t in enumerate(diff_result):
+            print(i + 1, t)
