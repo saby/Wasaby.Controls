@@ -9,6 +9,23 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 ) {
    'use strict';
 
+   /**
+    * @class Controls/Controllers/Multiselect/HierarchySelection
+    * @extends Controls/Controllers/Multiselect/Selection
+    * @author Зайцев А.С.
+    * @private
+    */
+
+   /**
+    * @name Controls/Controllers/Multiselect/HierarchySelection#nodeProperty
+    * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+    */
+
+   /**
+    * @name Controls/Controllers/Multiselect/HierarchySelection#parentProperty
+    * @cfg {String} Name of the field that contains information about parent node.
+    */
+
    var
       SELECTION_STATUS = {
          NOT_SELECTED: false,
