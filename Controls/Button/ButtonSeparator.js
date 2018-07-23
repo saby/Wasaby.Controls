@@ -12,6 +12,8 @@ define('Controls/Button/ButtonSeparator', [
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @mixes Controls/Button/ButtonSeparator/ButtonSeparatorStyles
     */
 
    /**

@@ -151,39 +151,57 @@ define('Controls-demo/Headers/headerDemo', [
          _showButtonSeparator: true,
          _showSeparator: true,
          _bold: true,
+         _clickedComponent: 'no component',
 
-         clickIcon: function (e) {
+         clickIcon: function(e) {
             this._iconValue = !this._iconValue;
          },
 
-         changeSize: function (e, key) {
-            this._selectedSize=key;
+         clickHandler: function(e, indexOfComponent) {
+            switch (indexOfComponent) {
+               case 1:
+                  this._clickedComponent = 'back-button';
+                  break;
+               case 2:
+                  this._clickedComponent = 'button-separator';
+                  break;
+               case 3:
+                  this._clickedComponent = 'header or header-separator';
+                  break;
+               case 4:
+                  this._clickedComponent = 'counter';
+                  break;
+            }
          },
 
-         changeStyle: function (e, key) {
+         changeSize: function(e, key) {
+            this._selectedSize = key;
+         },
+
+         changeStyle: function(e, key) {
             this._selectedStyle = key;
          },
-         counterChangeSize: function (e, key) {
-            this._counterSelectedSize=key;
+         counterChangeSize: function(e, key) {
+            this._counterSelectedSize = key;
          },
 
-         counterChangeStyle: function (e, key) {
+         counterChangeStyle: function(e, key) {
             this._counterSelectedStyle = key;
          },
 
-         separatorChangeStyle: function (e, key) {
+         separatorChangeStyle: function(e, key) {
             this._separatorSelectedStyle = key;
          },
 
-         iconChangeStyle: function (e, key) {
+         iconChangeStyle: function(e, key) {
             this._iconSelectedStyle = key;
          },
 
-         backChangeStyle: function (e, key) {
+         backChangeStyle: function(e, key) {
             this._backSelectedStyle = key;
          },
 
-         backChangeSize: function (e, key) {
+         backChangeSize: function(e, key) {
             this._backSelectedSize = key;
          }
       });

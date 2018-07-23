@@ -12,6 +12,8 @@ define('Controls/Header/Separator', [
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @mixes Controls/Header/Separator/SeparatorStyles
     */
 
    /**
