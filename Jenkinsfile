@@ -52,6 +52,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+            booleanParam(defaultValue: false, description: "Запуск для получения покрытия тестами", name: 'COVERAGE')
             ]),
         pipelineTriggers([])
     ])
@@ -274,14 +275,17 @@ node('controls') {
                 }
             )
             echo "Собираем controls"
-            dir("./controls"){
-                echo "подкидываем istanbul в проект"
-                sh 'istanbul instrument --complete-copy --output ./components-cover ./components'
-                sh 'istanbul instrument --complete-copy --output ./controls-cover ./Controls'
-                sh 'sudo mv ./components ./components-orig && sudo mv ./components-cover ./components'
-                sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./controls-cover ./Controls'
-                sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
-            }
+            if ( params.COVERAGE ) {
+                dir("./controls"){
+                    echo "подкидываем istanbul в проект"
+                    sh 'istanbul instrument --complete-copy --output ./components-cover ./components'
+                    sh 'istanbul instrument --complete-copy --output ./controls-cover ./Controls'
+                    sh 'sudo mv ./components ./components-orig && sudo mv ./components-cover ./components'
+                    sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./controls-cover ./Controls'
+                    }
+                }
+            sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+
             dir(workspace){
                 echo "Собираем ws если задан сторонний бранч"
                 if ("${params.ws_revision}" != "sdk"){
@@ -490,10 +494,14 @@ node('controls') {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( inte ){
+                        def coverage
+                        if ( params.COVERAGE ) {
+                            coverage = "--COVERAGE True"
+                        }
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverage}
                             deactivate
                             """
                             sh """
@@ -537,10 +545,12 @@ node('controls') {
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || inte ){
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.json', caseSensitive: false
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
+    if ( inte && params.COVERAGE ) {
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.json', caseSensitive: false
+    }
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
