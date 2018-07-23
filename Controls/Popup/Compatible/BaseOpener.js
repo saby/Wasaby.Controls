@@ -66,7 +66,8 @@ function(cMerge,
             if (cfg.context instanceof Context) {
                cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
             } else {
-               cfg.templateOptions.context = Context.createContext(destroyDef, cfg.context ? cfg.context : {}, null);
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+               cfg.templateOptions.context.setContextData(cfg.context);
             }
 
             if (!cfg.templateOptions.handlers) {
