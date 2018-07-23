@@ -125,13 +125,25 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             var id = idArray && idArray[0];
             var self = this;
             var args = arguments;
+            var items = self.getItems();
+            var item = items && items.getRecordById(id);
+            var historyDef;
       
             /* Прикладные разработкичи могут менять ключ ещё до загрузки списка,
                надо на это проверять */
-            if (!this._options.multiselect && id && self.getItems()) {
-               _private.addToHistory(this, id).addCallback(function() {
+            if (!this._options.multiselect && id && items) {
+               historyDef = _private.addToHistory(this, id);
+               
+               /* Если запись в данных уже есть, можно не дожидаться добавления записи в историю,
+                  т.к. вычитки для добавления в список производиться не будет */
+               if (item) {
                   SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
-               });
+               } else {
+                  historyDef.addCallback(function(res) {
+                     SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
+                     return res;
+                  });
+               }
             } else {
                SbisDropdownList.superclass.setSelectedKeys.apply(self, args);
             }
