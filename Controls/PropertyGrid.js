@@ -23,7 +23,7 @@ define('Controls/PropertyGrid', [
    var PropertyGrid = Control.extend({
       _template: template,
 
-      _isVisible: function(item) {
+      _isItemVisible: function(item) {
          return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
             Utils.getItemPropertyValue(item, 'visibility');
       },

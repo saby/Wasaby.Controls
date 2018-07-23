@@ -26,7 +26,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       countItems: function(self, items) {
          var result = 0;
          Chain(items).each(function(elem) {
-            if (!self._isVisible(elem)) {
+            if (!self._isItemVisible(elem)) {
                result++;
             }
          });
@@ -63,7 +63,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          }
       },
 
-      _isVisible: function(item) {
+      _isItemVisible: function(item) {
          return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
             Utils.getItemPropertyValue(item, 'visibility');
       },

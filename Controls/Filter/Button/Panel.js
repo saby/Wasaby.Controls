@@ -52,7 +52,7 @@ define('Controls/Filter/Button/Panel', [
          var filter = {};
          Chain(items || self._items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
-               getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility')) {
+               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                filter[item.id] = getPropValue(item, 'value');
             }
          });
