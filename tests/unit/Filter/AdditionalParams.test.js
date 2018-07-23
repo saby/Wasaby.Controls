@@ -9,8 +9,7 @@ define(
             {
                id: 'list',
                value: 1,
-               resetValue: 1,
-               visibility: true
+               resetValue: 1
             },
             {
                id: 'text',
@@ -26,8 +25,17 @@ define(
             }
          ];
 
+         var addParams = new AddParams();
+         addParams._beforeMount({items: items});
+
+         it('is visible', function() {
+            assert.equal(addParams._isItemVisible(items[0]), true);
+            assert.equal(addParams._isItemVisible(items[1]), true);
+            assert.equal(addParams._isItemVisible(items[2]), false);
+         });
+
          it('count items', function() {
-            assert.equal(AddParams._private.countItems(items), 1);
+            assert.equal(AddParams._private.countItems(addParams, items), 1);
          });
 
       });
