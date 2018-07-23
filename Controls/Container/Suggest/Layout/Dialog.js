@@ -4,12 +4,13 @@ define('Controls/Container/Suggest/Layout/Dialog',
       'tmpl!Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
+      'Controls/Container/Scroll/Context',
       'css!Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Scroll',
       'Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
    
-   function(Control, template, SearchContextField, FilterContextField) {
+   function(Control, template, SearchContextField, FilterContextField, ScrollData) {
       
       /**
        * Dialog for list in Suggest component.
@@ -27,10 +28,16 @@ define('Controls/Container/Suggest/Layout/Dialog',
          _template: template,
          _resizeTimeout: null,
 
+         _beforeMount: function() {
+            this._scrollData = new ScrollData({pagingVisible: false});
+            this._searchData = new SearchContextField(null);
+         },
+         
          _getChildContext: function() {
             return {
-               searchLayoutField: new SearchContextField(null),
-               filterLayoutField: new FilterContextField({filter: this._options.filter})
+               searchLayoutField: this._searchData,
+               ScrollData: this._scrollData,
+               filterLayoutField: new FilterContextField({filter: this._options.filter}),
             };
          },
          
