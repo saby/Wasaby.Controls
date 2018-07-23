@@ -3,7 +3,7 @@ define('Controls-demo/Decorators/Money/Money',
       'Core/Control',
       'tmpl!Controls-demo/Decorators/Money/Money',
 
-      'Controls/Decorators/Money',
+      'Controls/Decorator/Money',
       'css!Controls-demo/Decorators/Money/Money'
    ],
    function(Control, template) {

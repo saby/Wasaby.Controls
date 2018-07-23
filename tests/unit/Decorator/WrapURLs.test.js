@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/Decorators/WrapURLs'
+      'Controls/Decorator/WrapURLs'
    ],
    function(WrapURLs) {
 
       'use strict';
 
-      describe('Controls.Decorators.WrapURLs', function() {
+      describe('Controls.Decorator.WrapURLs', function() {
          var result;
 
          describe('parseText', function() {
