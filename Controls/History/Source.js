@@ -223,14 +223,19 @@ define('Controls/History/Source', [
             if (self._parentProperty) {
                item.set(self._parentProperty, null);
             }
+
+            //removing group allows items to be shown in history items
             if (historyType === 'pinned') {
                item.set('pinned', true);
+               item.set('group', null);
             }
             if (historyType === 'recent') {
                item.set('recent', true);
+               item.set('group', null);
             }
             if (historyType === 'frequent') {
                item.set('frequent', true);
+               item.set('group', null);
             }
             item.set('HistoryId', historyId);
             items.add(item);

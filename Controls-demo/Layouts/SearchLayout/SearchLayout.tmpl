@@ -13,6 +13,7 @@
                                         <Controls.Input.Search bind:value="_searchValue"/>
                                     </ws:content>
                                 </Controls.Container.Input.Search>
+                               <div class="controls-demo__Layouts_filter">
                                 <Controls.Container.Filter.Fast>
                                    <Controls.Filter.Fast bind:value="_value"/>
                                 </Controls.Container.Filter.Fast>
@@ -51,6 +52,7 @@
                                            </ws:items>
                                         </Controls.Filter.Button>
                                 </Controls.Container.Filter.Button>
+                               </div>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List searchParam="firstName" source="{{_dataSource}}" navigation="{{_navigation}}">
