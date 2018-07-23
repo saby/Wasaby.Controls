@@ -79,6 +79,7 @@ node('controls') {
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
+        def coverage = params.COVERAGE
 
         try {
         echo "Чистим рабочую директорию"
@@ -290,7 +291,7 @@ node('controls') {
                 }
             )
             echo "Собираем controls"
-            if ( params.COVERAGE ) {
+            if ( coverage ) {
                 dir("./controls"){
                     echo "подкидываем istanbul в проект"
                     sh 'istanbul instrument --complete-copy --output ./components-cover ./components'
@@ -509,14 +510,14 @@ node('controls') {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( inte ){
-                        def coverage = ""
-                        if ( params.COVERAGE ) {
-                            coverage = "--COVERAGE True"
+                        def coverageParam = ""
+                        if ( coverage ) {
+                            coverageParam = "--COVERAGE True"
                         }
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverage}
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverageParam}
                             deactivate
                             """
                             sh """
@@ -563,7 +564,7 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
-    if ( inte && params.COVERAGE ) {
+    if ( coverage ) {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.json', caseSensitive: false
     }
     if ( regr ){
