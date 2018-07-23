@@ -65,7 +65,8 @@ node('controls') {
 
 
     echo "Определяем рабочую директорию"
-    def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
+    def jobName = env.get("BRANCH_NAME", "JOB_BASE_NAME")
+    def workspace = "/home/sbis/workspace/controls_${version}/${jobName}"
     ws(workspace) {
         def inte = params.run_int
         def regr = params.run_reg
@@ -110,7 +111,7 @@ node('controls') {
                     echo "Выкачиваем controls "
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: env.BRANCH_NAME]],
+                        branches: [[name: jobName]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -413,7 +414,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/int/"""
 
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
@@ -429,7 +430,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
@@ -450,7 +451,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
