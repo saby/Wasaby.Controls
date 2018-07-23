@@ -57,7 +57,7 @@ node('controls') {
     ])
 
 
-    if ( "${env.BUILD_NUMBER}" != "1" && (!params.run_reg || !params.run_int || !params.run_unit || !params.COVERAGE)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.COVERAGE)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             echo " REG ${params.run_reg}"
