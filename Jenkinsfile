@@ -139,7 +139,7 @@ node('controls') {
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                     }
-                    echo "Обновляемся из rc-{version}"
+                    echo "Обновляемся из rc-${version}"
                     dir("./controls"){
                         sh """
                         git fetch
