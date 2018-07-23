@@ -517,7 +517,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         def tests_for_run = ""
-        if ( onlyDependency ) {
+        if ( onlyDependency && isBranch ) {
             dir("./controls/tests/") {
                 def url = "${env.JENKINS_URL}view/${version}/job/branch_controls_${version}/job/${version}%252Ffeature%252Fpea%252Fcoverage/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                 script = """
