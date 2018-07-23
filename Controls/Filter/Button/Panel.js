@@ -63,7 +63,7 @@ define('Controls/Filter/Button/Panel', [
          var isChanged = false;
          Chain(items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
-               getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility')) {
+               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                isChanged = true;
             }
          });
