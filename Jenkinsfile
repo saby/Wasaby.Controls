@@ -60,16 +60,22 @@ node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
-            echo "ВЕТКА: ${env.BRANCH_NAME}"
-            echo "Обычная сборка: ${env.JOB_BASE_NAME}"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
 
         }
 
 
     echo "Определяем рабочую директорию"
-    def jobName = env.BRANCH_NAME || env.JOB_BASE_NAME
-    def workspace = "/home/sbis/workspace/controls_${version}/${jobName}"
+    def isBranch = env.BRANCH_NAME
+    def target
+    if ( isBranch ) {
+        target = isBranch
+    } else {
+        //используем в получении покрытия кода
+        target = env.JOB_BASE_NAME
+    }
+    def jobName =
+    def workspace = "/home/sbis/workspace/controls_${version}/${target}"
     ws(workspace) {
         def inte = params.run_int
         def regr = params.run_reg
@@ -107,6 +113,14 @@ node('controls') {
             unit = true
         }
 
+        def repo
+        if (target == isBranch) {
+            repo = env.BRANCH_NAME
+        } else {
+            //repo = "rc-${version}"
+            repo = "3.18.400/feature/pea/coverage"
+        }
+
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
@@ -114,7 +128,7 @@ node('controls') {
                     echo "Выкачиваем controls "
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: jobName]],
+                        branches: [[name: repo]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -126,7 +140,7 @@ node('controls') {
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                     }
-                    echo "Обновляемся из rc-"
+                    echo "Обновляемся из rc-{version}"
                     dir("./controls"){
                         sh """
                         git fetch
