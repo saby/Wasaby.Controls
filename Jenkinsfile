@@ -48,7 +48,8 @@ node('controls') {
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
             booleanParam(defaultValue: false, description: "Запуск для получения покрытия тестами", name: 'COVERAGE')
@@ -57,7 +58,7 @@ node('controls') {
     ])
 
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.COVERAGE)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int || params.COVERAGE)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -80,7 +81,7 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def coverage = params.COVERAGE
-        def onlyDependency = true
+        def quick_int = params.run_quick_int
         def changed_files
 
         try {
@@ -154,7 +155,7 @@ node('controls') {
                         git checkout ${branch}
                         git merge origin/rc-${version}
                         """
-                        if ( isBranch ) {
+                        if ( isBranch && quick_int ) {
                             changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         }
                     }
@@ -517,9 +518,9 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         def tests_for_run = ""
-        if ( onlyDependency && isBranch ) {
+        if ( quick_int && isBranch ) {
             dir("./controls/tests/") {
-                def url = "${env.JENKINS_URL}view/${version}/job/branch_controls_${version}/job/${version}%252Ffeature%252Fpea%252Fcoverage/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                def url = "${env.JENKINS_URL}job/${version}_coverage/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                 script = """
                 if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
                     echo "result.json exitsts"; cp -fr tmp_result.json result.json
