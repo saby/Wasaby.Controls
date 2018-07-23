@@ -1749,7 +1749,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                   if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
                      callback(e, target);
                   }
-               }.bind(this));
+               });
             },
             _onInitContentBody: function() {
                var editor = this.getTinyEditor();
