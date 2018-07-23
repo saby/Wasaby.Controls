@@ -433,7 +433,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/int/"""
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/int/"""
 
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
@@ -449,7 +449,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
@@ -470,7 +470,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${jobName}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
