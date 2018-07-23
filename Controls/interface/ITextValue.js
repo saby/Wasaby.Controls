@@ -8,11 +8,6 @@ define('Controls/interface/ITextValue', [], function() {
     */
 
    /**
-    * @name Controls/interface/ITextValue#textValue
-    * @cfg {String} Field storing textValue.
-    */
-
-   /**
     * @event Controls/interface/ITextValue#textValueChanged Occurs when field textValue was changed.
     * @param {String} textValue New field textValue.
     */
