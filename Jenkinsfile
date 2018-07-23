@@ -115,12 +115,12 @@ node('controls') {
             unit = true
         }
 
-        def repo
+        def branch
         if (target == isBranch) {
-            repo = env.BRANCH_NAME
+            branch = env.BRANCH_NAME
         } else {
-            //repo = "rc-${version}"
-            repo = "3.18.400/feature/pea/coverage"
+            //branch = "rc-${version}"
+            branch = "3.18.400/feature/pea/coverage"
         }
 
         if ( coverage ) {
@@ -135,7 +135,7 @@ node('controls') {
                     echo "Выкачиваем controls "
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: repo]],
+                        branches: [[name: branch]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -151,6 +151,7 @@ node('controls') {
                     dir("./controls"){
                         sh """
                         git fetch
+                        git checkout ${branch}
                         git merge origin/rc-${version}
                         """
                         if ( isBranch ) {
