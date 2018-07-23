@@ -526,7 +526,7 @@ node('controls') {
                 fi
                 """
                 sh returnStdout: true, script: script
-                echo changed_files
+                echo "Изменения были в файлах: ${changed_files}"
                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
                 echo tests_files
                 tests_for_run = "--files_to_start ${tests_files}"
