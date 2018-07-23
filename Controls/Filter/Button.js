@@ -77,9 +77,11 @@ define('Controls/Filter/Button',
          },
 
          resetItems: function(self, items) {
-            Chain(items).each(function(item, index) {
+            Chain(items).each(function(item) {
                Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
-               Utils.setItemPropertyValue(item, 'visibility', Utils.getItemPropertyValue(self._sourceItems[index], 'visibility'));
+               if (Utils.getItemPropertyValue(item, 'visibility') !== undefined) {
+                  Utils.setItemPropertyValue(item, 'visibility', false);
+               }
             });
          }
       };
@@ -93,7 +95,6 @@ define('Controls/Filter/Button',
 
          _beforeMount: function(options) {
             if (options.items) {
-               this._sourceItems = Clone(options.items);
                _private.resolveItems(this, options.items);
             }
             this._onFilterChanged = this._onFilterChanged.bind(this);

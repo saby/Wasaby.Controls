@@ -1,8 +1,9 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
    'tmpl!Controls/PropertyGrid/PropertyGrid',
+   'WS.Data/Utils',
    'css!Controls/PropertyGrid/PropertyGrid'
-], function(Control, template) {
+], function(Control, template, Utils) {
 
    /**
     * Control PropertyGrid
@@ -21,6 +22,11 @@ define('Controls/PropertyGrid', [
 
    var PropertyGrid = Control.extend({
       _template: template,
+
+      _isVisible: function(item) {
+         return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
+            Utils.getItemPropertyValue(item, 'visibility');
+      },
 
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;

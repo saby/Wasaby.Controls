@@ -144,7 +144,7 @@ define('Controls-demo/Layouts/SearchLayout', [
       {id: 'Test5', value: true, resetValue: true, textValue: '1', visibility: false},
       {id: 'Test6', value: '', resetValue: '', textValue: '1', visibility: false},
       {id: 'Test7', value: '1', resetValue: '1', textValue: '1', visibility: false},
-      {id: 'Test8', value: true, resetValue: true, textValue: '1', visibility: true}
+      {id: 'Test8', value: true, resetValue: true, textValue: '1'}
    ];
 
    var ModuleClass = BaseControl.extend(

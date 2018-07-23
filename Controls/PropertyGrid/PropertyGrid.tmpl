@@ -1,6 +1,6 @@
 <div class="controls-PropertyGrid">
    <ws:for data="index, item in _options.items">
-      <ws:if data="{{item.visibility}}">
+      <ws:if data="{{_isVisible(item)}}">
          <div class="controls-PropertyGrid__item">
             <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                         item="{{item}}"
