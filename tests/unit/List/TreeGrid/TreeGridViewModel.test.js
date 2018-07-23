@@ -17,5 +17,14 @@ define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], f
          treeGridViewModel.toggleExpanded();
          assert.isTrue(toggleExpandedCalled, 'Invalid call toggleExpanded on model instance.');
       });
+      it('setRoot', function() {
+         var
+            setRootCalled = false;
+         treeGridViewModel._model.setRoot = function() {
+            setRootCalled = true;
+         };
+         treeGridViewModel.setRoot('testRoot');
+         assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
+      });
    });
 });

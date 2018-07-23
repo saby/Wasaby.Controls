@@ -61,7 +61,7 @@ define('Controls/BreadCrumbs/View', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0]]);
+         this._notify('itemClick', [this._options.items[0], true]);
       },
 
       _onResize: function() {
