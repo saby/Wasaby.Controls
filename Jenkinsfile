@@ -60,12 +60,6 @@ node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.COVERAGE)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
-            echo " REG ${params.run_reg}"
-            echo "INT ${params.run_int}"
-            echo " UNIT ${params.run_unit}"
-            echo "COVERAGE ${params.COVERAGE}"
-            def condition = !params.run_reg || !params.run_int || !params.run_unit || !params.COVERAGE
-            echo "${condition}"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
 
         }
