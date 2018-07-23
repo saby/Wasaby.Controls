@@ -1,26 +1,48 @@
 define(
    [
+      'Core/IoC',
       'Controls/Input/Mask'
    ],
-   function(Mask) {
+   function(IoC, Mask) {
 
       'use strict';
 
       describe('Controls.Input.Mask', function() {
-         var defaultOptions = Mask.getDefaultOptions();
+         it('findLastUserEnteredCharPosition', function() {
+            var findLastUserEnteredCharPosition = Mask._private.findLastUserEnteredCharPosition;
 
-         it('calcPositionAtFocus', function() {
-            assert.equal(Mask._private.findLastUserEnteredCharPosition('12.34.56', ' '), 8);
-            assert.equal(Mask._private.findLastUserEnteredCharPosition('12.34.  ', ' '), 6);
-            assert.equal(Mask._private.findLastUserEnteredCharPosition('12.34.56', ''), 8);
-            assert.equal(Mask._private.findLastUserEnteredCharPosition('12.34.', ''), 6);
+            assert.equal(findLastUserEnteredCharPosition('12.34.56', ' '), 8);
+            assert.equal(findLastUserEnteredCharPosition('12.34.  ', ' '), 6);
+            assert.equal(findLastUserEnteredCharPosition('12.34.56', ''), 8);
+            assert.equal(findLastUserEnteredCharPosition('12.34.', ''), 6);
+         });
+
+         it('validateReplacer', function() {
+            var message = '';
+            var error = IoC.resolve('ILogger').error;
+            var validateReplacer = Mask._private.validateReplacer;
+
+            IoC.resolve('ILogger').error = function(arg1, arg2) {
+               message = arg1 + ': ' + arg2;
+            };
+
+            assert.equal(validateReplacer('', 'dd.dd'), true);
+            assert.equal(message, '');
+            assert.equal(validateReplacer(' ', 'dd.dd'), true);
+            assert.equal(message, '');
+            assert.equal(validateReplacer('', 'd\\*'), true);
+            assert.equal(message, '');
+            assert.equal(validateReplacer(' ', 'd\\*'), false);
+            assert.equal(message, 'Mask: Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+
+            IoC.resolve('ILogger').error = error;
          });
 
          it('calcReplacer', function() {
-            assert.equal(Mask._private.calcReplacer('', 'dd.dd'), '');
-            assert.equal(Mask._private.calcReplacer(' ', 'dd.dd'), ' ');
-            assert.equal(Mask._private.calcReplacer('', 'd\\*'), '');
-            assert.equal(Mask._private.calcReplacer(' ', 'd\\*'), '');
+            var calcReplacer = Mask._private.calcReplacer;
+
+            assert.equal(calcReplacer(' ', 'dd.dd'), ' ');
+            assert.equal(calcReplacer(' ', 'd\\*'), '');
          });
       });
    }

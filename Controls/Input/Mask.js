@@ -107,7 +107,7 @@ define('Controls/Input/Mask',
             validateReplacer: function(replacer, mask) {
                var validation;
 
-               if (replacer && this.regExpQuantifiers.test(mask)) {
+               if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
                   IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
                } else {
@@ -117,7 +117,7 @@ define('Controls/Input/Mask',
                return validation;
             },
             calcReplacer: function(replacer, mask) {
-               return this.validateReplacer(replacer, mask) ? replacer : '';
+               return _private.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
          Mask = Control.extend({
