@@ -31,7 +31,7 @@
 @padding_InputRender:                        0 4px;
 @horizontal-padding_InputRender:             4px;
 @border-width_InputRender:                   1px;
-@width_InputRender-tagStyle:                 16px;
+@width_InputRender-tagStyle:                 8px;
 @height_InputRender-tagStyle:                8px;
 @line-height_InputRender_m:                  @default-line-height;
 @line-height_InputRender_l:                  23px;
@@ -274,8 +274,13 @@
 @padding_DropDownList_item_child_text: 16px;
 @font-size_DropDownList:               @default-text-size;
 @top_DropdownList_picker_marker:       13px;
-@right-DropdownList-cross:             6px;
+@right-DropdownList-cross:             5px;
 @top-DropdownList-cross:               7px;
+@margin_DropdownList-group:                           4px 12px;
+@thickness_DropdownList-group-separator:              1px;
+@spacing_DropdownList-group-between-text-separator:   12px;
+@font-size_DropdownList-group-text:                   12px;
+
 //Marker
 @background-size_Marker:                                  3px;
 //ListView
@@ -309,12 +314,13 @@
 
 //DropdownList
 @max-height_DropdownList:       400px;
+@max-width_DropdownList:        700px;
 @height_DropdownList-item:      32px;
 @border-size_DropdownList:      1px;
 @spacing_DropdownList-pin:      12px;
 @padding_DropdownList-default:  12px;
 @spacing_DropdownList_arrowSubMenu:28px;
-@spacing_DropdownList_cross:       36px;
+@spacing_DropdownList_cross:       30px;
 @padding_DropdownList-item:     5px;
 @spacing_DropdownList-item-history: @spacing_DropdownList_arrowSubMenu;
 @width_DropdownList-marker:     6px;
@@ -445,8 +451,8 @@
 //Suggest VDOM
 @spacing_Suggest_suggestionsContainer_overInput: 8px;
 @border-width_suggestionsContainer:              1px;
-@spacing-bottom_Suggest-between-search-tabs:     8px;
-@top_Suggest_close:                              8px;
+@spacing_Suggest-between-tabs-and-content:       8px;
+@margin-top_Suggest_close:                       8px;
 
 //CloseButton
 @border-width_CloseButton:               1px 0 1px 1px;
@@ -488,6 +494,7 @@
 //Label
 @height_Label:                           @default-height;
 @padding_Label:                          0 8px 0 0;
+@font-size_Label:                        0;
 //ReportBrowser
 @height_ReportBrowser-top-content:       44px;
 //Tabs/Buttons
@@ -594,7 +601,7 @@
 @spacing_FastFilter-item:                   0;
 @height_FastFilter-iconArrow:               9px;
 @width_FastFilter-iconArrow:                16px;
-@spacing_FastFilter-between-icon-text:      0 2px 0 2px;
+@margin-bottom_FastFilter-popup:            2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 2px @color-IconButton__shadow;
 @height-IconButton_size-m:               24px;
@@ -610,16 +617,18 @@
 @width_FilterPanel_default:                                    400px;
 @font-size_FilterPanel-caption:                                15px;
 @margin_FilterPanel-resetButton-title:                         0 16px 0 auto;
-@margin_FilterPanel__PropertyGrid:                             0 0 12px 22px;
+@margin_FilterPanel__PropertyGrid:                             0 12px 6px 34px;
+@margin_FilterPanel-AdditionalParams:                          6px 12px;
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @height_FilterPanel-item:                                      24px;
-@margin_FilterPanel-blockParams:                               0 12px 6px 12px;
-@padding_FilterPanel-history:                                  6px 12px 6px 12px;
+@margin_FilterPanel-blockParams:                               12px;
+@padding_FilterPanel-history:                                  6px 12px 12px 12px;
 @spacing_FilterPanel-items:                                    22px;
 @margin_FilterPanel-caption:                                   6px 0;
 //PropertyGrid
-@height_PropertyGrid-item:                                     28px;
+@height_PropertyGrid-item:                                     24px;
+@spacing_PropertyGrid-between-items:                           4px;
 //AdditionalParams
 @max-height_FilterPanel-items:              120px;
 @height_AdditionalParams-arrow:             26px;

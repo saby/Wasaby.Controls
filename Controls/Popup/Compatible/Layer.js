@@ -128,22 +128,29 @@ define('Controls/Popup/Compatible/Layer', [
          }),
          profileSource = new SbisService({
             endpoint: 'СервисПрофилей'
-         });
+         }),
+         data = {};
 
-      return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
-         var
-            deferred,
-            result = res.getRow(),
-            data = {};
-         if (result) {
-            result.each(function(k, v) {
-               data[k] = v;
-            });
+      //Получение данных из контекста
+
+      var opt = document.querySelector('html').controlNodes;
+
+      for (var i = 0, len = opt.length; i < len; i++) {
+         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+            data = opt[i].control._getChildContext().userInfoField.userInfo;
+            break;
          }
+      }
+
+      return expandUserInfo(data);
+
+      function expandUserInfo(data) {
+         var deferred;
+
          data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
          data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] == '__сбис__физики') {
+         if (data['КлассПользователя'] === '__сбис__физики') {
             deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
                data.hasMoreAccounts = res.getScalar();
                return data;
@@ -153,10 +160,7 @@ define('Controls/Popup/Compatible/Layer', [
          }
 
          return deferred;
-      }).addErrback(function(e) {
-         IoC.resolve('ILogger').error('User info', 'Transport error', e);
-         return {};
-      });
+      }
    }
 
    function getUserLicense() {

@@ -41,7 +41,9 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.template
+                  content: self._options.template,
+                  contentTemplateName: self._options.templateName,
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
@@ -60,18 +62,24 @@ define('Controls/Popup/InfoBox',
 
          _open: function(event) {
             this._children.openerInfoBox.open(_private.getCfg(this, event));
+
             clearTimeout(this._openId);
             clearTimeout(this._closeId);
+
             this._openId = null;
             this._closeId = null;
+            this._opened = true;
          },
 
          _close: function() {
             this._children.openerInfoBox.close();
+
             clearTimeout(this._openId);
             clearTimeout(this._closeId);
+
             this._openId = null;
             this._closeId = null;
+            this._opened = false;
          },
 
          _contentMousedownHandler: function(event) {

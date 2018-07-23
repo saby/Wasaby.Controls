@@ -260,6 +260,11 @@ define('Controls/Filter/Button/OldPanelOpener',
                         self._picker.destroy();
                         self._picker = null;
                      }
+                  },
+                  onCommandCatch: function(event, commandName) {
+                     if (commandName === 'resizeYourself' && self._picker) {
+                        self._picker.recalcPosition(true);
+                     }
                   }
                }
             });

@@ -234,9 +234,16 @@ define('Controls/Container/Scroll',
                 */
                if (typeof this._displayState.heightFix === 'undefined') {
                   this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
-
-                  this._forceUpdate();
                }
+
+               /**
+                * The following states cannot be defined in _beforeMount because the DOM is needed.
+                */
+               this._displayState.hasScroll = _private.calcHasScroll(this);
+               this._displayState.contentHeight = _private.getContentHeight(this);
+               this._displayState.shadowPosition = _private.getShadowPosition(this);
+
+               this._forceUpdate();
             },
 
             _beforeUpdate: function(options, context) {
@@ -257,11 +264,12 @@ define('Controls/Container/Scroll',
                this._displayState = _private.calcDisplayState(this);
             },
 
-            _scrollHandler: function() {
+            _scrollHandler: function(ev) {
                if (!this._dragging) {
                   this._scrollTop = _private.getScrollTop(this._children.content);
                   this._notify('scroll', [this._scrollTop]);
                }
+               this._children.scrollDetect.start(ev);
             },
 
             _scrollbarTaken: function(notify) {

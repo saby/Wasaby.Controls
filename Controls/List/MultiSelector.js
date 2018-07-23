@@ -12,8 +12,8 @@ define('Controls/List/MultiSelector', [
    var MultiSelector = Control.extend({
       _template: template,
 
-      _onSelectionChange: function(event, keys) {
-         this._notify('listSelectionChange', [keys], {
+      _onSelectionChange: function(event, keys, added, removed) {
+         this._notify('listSelectionChange', [keys, added, removed], {
             bubbling: true
          });
       }

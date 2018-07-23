@@ -96,7 +96,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       var InfoBoxController = StickyController.constructor.extend({
          _openedPopupId: null,
 
-         _destroyDeferred: null,
+         _destroyDeferred: {},
 
          elementCreated: function(cfg, container, id) {
             // Открыто может быть только одно окно
@@ -112,21 +112,22 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
          },
 
-         elementDestroyed: function(element, container, id) {
+         elementDestroyed: function(item, container, id) {
             if (id === this._openedPopupId) {
                this._openedPopupId = null;
             }
 
-            this._destroyDeferred = new Deferred();
+            this._destroyDeferred[item.id] = new Deferred();
 
             container.classList.add('controls-PreviewerController_close');
 
-            return this._destroyDeferred;
+            return this._destroyDeferred[item.id];
          },
 
-         elementAnimated: function(element, container) {
-            if (container.classList.contains('controls-PreviewerController_close')) {
-               this._destroyDeferred.callback();
+         elementAnimated: function(item) {
+            if (this._destroyDeferred[item.id]) {
+               this._destroyDeferred[item.id].callback();
+               delete this._destroyDeferred[item.id];
             }
          },
 

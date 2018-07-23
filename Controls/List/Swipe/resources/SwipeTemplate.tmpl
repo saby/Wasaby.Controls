@@ -4,7 +4,9 @@
 <ws:else data="{{swipeConfig}}">
     <div class="controls-itemActionsV_swipe_animationContainer">
         <div class="controls-itemActionsV_swipe
-            {{menuIsShown ? 'controls-itemActionsV_invisible'}}">
+            {{menuIsShown ? 'controls-itemActionsV_invisible'}}
+            controls-itemActionsV_swipe_{{animationState}}"
+            on:animationend="_onAnimationEnd()">
             <div class="controls-itemActionsV_{{swipeConfig.direction}}
                 {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
                 <ws:partial
@@ -14,6 +16,7 @@
                         showedActions="{{swipeConfig.direction === 'row' ? itemData.itemActions.showed : itemData.itemActions.showedFirst}}"
                         swipeConfig="{{swipeConfig}}"
                         needShowSeparator="{{needShowSeparator}}"
+                        needShowIcon="{{needShowIcon}}"
                         needShowTitle="{{needShowTitle}}"/>
             </div>
             <ws:if data="{{itemData.itemActions.showedSecond}}">
@@ -27,6 +30,7 @@
                             columnNumber="{{2}}"
                             swipeConfig="{{swipeConfig}}"
                             needShowSeparator="{{needShowSeparator}}"
+                            needShowIcon="{{needShowIcon}}"
                             needShowTitle="{{needShowTitle}}"/>
                 </div>
             </ws:if>

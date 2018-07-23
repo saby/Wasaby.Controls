@@ -44,9 +44,9 @@ define('Controls/Container/MultiSelector', [
          return this._multiselection.getSelection();
       },
 
-      _onListSelectionChange: function(event, diff) {
-         this._multiselection.unselect(diff.removed);
-         this._multiselection.select(diff.added);
+      _onListSelectionChange: function(event, keys, added, removed) {
+         this._multiselection.unselect(removed);
+         this._multiselection.select(added);
 
          this._updateSelectionContext();
       },
