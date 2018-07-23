@@ -8,6 +8,15 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Deferred'
    ],
    function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
+
+      var _private = {
+         updatePopupIds: function(popupIds, opened, displayMode) {
+            if (!opened && displayMode === 'single') {
+               popupIds.length = [];
+            }
+         }
+      };
+
       /**
        * Базовый опенер
        * @category Popup
@@ -44,9 +53,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
             this._isExecuting = true;
 
-            if (!this.isOpened() && this._options.displayMode === 'single') { // удаляем неактуальные id
-               this._popupIds = [];
-            }
+            _private.updatePopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
@@ -238,6 +245,8 @@ define('Controls/Popup/Opener/BaseOpener',
       Base.isNewEnvironment = function() {
          return document && !!document.getElementsByTagName('html')[0].controlNodes;
       };
+
+      Base._private = _private;
 
       return Base;
    });
