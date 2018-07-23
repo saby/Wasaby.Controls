@@ -12,7 +12,7 @@ define('Controls-demo/Input/Mask/Mask',
 
       var Mask = Control.extend({
          _template: template,
-
+         _mask:'',
          _placeholder: '',
          _replacer: '-',
          _tagStyle: 'attention',
