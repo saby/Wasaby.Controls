@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 17.07.2018.
  */
-define('Controls-demo/Utils/MemorySourceFilter', ['Core/core-instance'], function(cInstance) {
+define('Controls-demo/Utils/MemorySourceFilter', [], function() {
    
    'use strict';
    
@@ -34,18 +34,18 @@ define('Controls-demo/Utils/MemorySourceFilter', ['Core/core-instance'], functio
    
    return function memorySourceFilter(searchParam) {
       return function(item, queryFilter) {
-         let data = item.getData();
-         let addToData = false;
-         let hasItemFieldInFilter = false;
-         let searchParamFilterValue = queryFilter[searchParam];
+         var data = item.getData();
+         var addToData = false;
+         var hasItemFieldInFilter = false;
+         var searchParamFilterValue = queryFilter[searchParam];
          
          //Сначала понимаем, подходит ли запись под поисковой параметр
          if (searchParamFilterValue) {
             hasItemFieldInFilter = true;
             searchParamFilterValue = searchParamFilterValue.toLowerCase();
             
-            for (let dataKey in data) {
-               let dataValue = data[dataKey];
+            for (var dataKey in data) {
+               var dataValue = data[dataKey];
                
                if (typeof dataValue === 'string') {
                   dataValue = dataValue.toLowerCase();
@@ -57,16 +57,16 @@ define('Controls-demo/Utils/MemorySourceFilter', ['Core/core-instance'], functio
             }
          } else {
             //Поискового параметра нет, фильтруем по остальным полям
-            for (let filterKey in queryFilter) {
-               let filterValue = queryFilter[filterKey];
+            for (var filterKey in queryFilter) {
+               var filterValue = queryFilter[filterKey];
                
                if (typeof filterValue === 'string') {
                   filterValue = filterValue.toLowerCase();
                }
                
-               for (let dataKey in data) {
-                  let dataValue = data[dataKey];
-                  let dataValueLoweCase;
+               for (var dataKey in data) {
+                  var dataValue = data[dataKey];
+                  var dataValueLoweCase;
                   
                   if (filterKey === dataKey) {
                      hasItemFieldInFilter = true;

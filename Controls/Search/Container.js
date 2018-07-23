@@ -50,6 +50,7 @@ define('Controls/Search/Container',
        *
        * @class Controls/Search/Container
        * @extends Core/Control
+       * @mixes Controls/Input/interface/ISearch
        * @author Герасимов Александр
        * @demo Controls-demo/Search/Container
        * @control
