@@ -98,7 +98,7 @@ define('Controls/Dropdown/Container',
                instance._selectedItems.push(null);
             } else {
                Chain(instance._items).each(function(item) {
-                  //We check whether the key of the item is contained in the array of selected keys
+                  //fill the array of selected items from the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                      instance._selectedItems.push(item);
                   }
