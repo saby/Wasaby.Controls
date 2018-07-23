@@ -149,7 +149,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                         currentStructureCopy[key].visibilityValue = elemFromHistory.visibilityValue;
                      }
                   }
-               } else if(!doNotResetIfFound && needApply && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue) && doNotApplyKeys) {
+               } else if(!doNotResetIfFound && needApply && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue)) {
                   resetField('value', currentStructureCopy[key]);
                }
             }
