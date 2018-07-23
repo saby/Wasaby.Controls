@@ -1,4 +1,4 @@
-define(['Controls/List/TreeGrid/TreeGridViewModel', 'Core/core-instance'], function(TreeGridViewModel, cInstance) {
+define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], function(TreeGridViewModel, cInstance) {
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var

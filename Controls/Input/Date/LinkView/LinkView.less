@@ -1,0 +1,69 @@
+.controls-DateLinkView {
+   display: inline-block;
+   .user-select();
+
+   font-size: @font-size_DateLinkView;
+   line-height: @height_DateLinkView;
+   white-space: nowrap;
+}
+
+.controls-DateLinkView__prev,
+.controls-DateLinkView__next,
+.controls-DateLinkView__value-wrapper {
+   color: @color_Link-text;
+   height: @height_DateLinkView;
+}
+.controls-DateLinkView__prev:before {
+   content: "\e008 ";
+}
+.controls-DateLinkView__next:before {
+   content: "\e007";
+}
+.controls-DateLinkView__prev,
+.controls-DateLinkView__next {
+   display: inline-block;
+   font-size: @font-size_DateLinkView-prev-next-buttons;
+   font-weight: normal;
+   text-align: center;
+   line-height: ~"calc("@height_DateLinkView~" - "@font-size_DateLinkView-prev-next-buttons~" + "@font-size_DateLinkView~")";
+   height: @height_DateLinkView;
+   width: @width_DateLinkView-prev-next-buttons;
+}
+
+.controls-DateLinkView__prevNextButtons-enabled,
+.controls-DateLinkView__value-enabled {
+   cursor: pointer;
+   &:hover {
+      color: @color_Link-text_hovered;
+   }
+}
+
+.controls-DateLinkView__value-enabled {
+   &:hover {
+      text-decoration: underline;
+   }
+}
+
+.controls-DateLinkView__prevNextButtons-disabled,
+.controls-DateLinkView__value-disabled {
+   color: @disabled-text-color;
+}
+
+.controls-DateLinkView__value-wrapper {
+   display: inline-block;
+   text-align: center;
+}
+
+.controls-DateLinkView__value-wrapper-minWidth {
+   min-width: @min-width_DateLinkView-value;
+}
+.controls-DateLinkView__yearState {
+   .controls-DateLinkView__value-wrapper-withArrow {
+      min-width: @width_DateLinkView-year-state - @width_DateLinkView-prev-next-buttons*2;
+   }
+}
+
+.controls-DateLinkView__value {
+   font-weight: @font-weight_DateLinkView-value;
+   padding-top: @padding_DateLinkView-value;
+}

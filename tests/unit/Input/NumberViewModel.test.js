@@ -650,7 +650,7 @@ define(
                },
 
                {
-                  testName: '0.0 delete firts 0',
+                  testName: '0.0 delete first 0 (backspace)',
                   controlConfig: {
                   },
                   splitValue: {
@@ -664,6 +664,125 @@ define(
                      position: 1
                   },
                   inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: '0.0 delete first 0 (delete)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.0',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 0
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: '0. delete 0 (delete)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: '0',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: '-0.0 delete first 0 (delete)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '.0',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 0
+                  },
+                  inputType: 'deleteForward'
+               },
+
+               {
+                  testName: '0.0 delete first 0 (delete with selection)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.0',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 0
+                  },
+                  inputType: 'delete'
+               },
+
+               {
+                  testName: '0. delete 0 (delete with selection)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '',
+                     after: '.',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '',
+                     position: 0
+                  },
+                  inputType: 'delete'
+               },
+
+               {
+                  testName: '-0.0 delete first 0 (delete with selection)',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '.0',
+                     delete: '0'
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 0
+                  },
+                  inputType: 'delete'
                },
 
                {

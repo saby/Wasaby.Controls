@@ -340,6 +340,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                 corner: isRightAlign ? 'tl' : 'tr',
                 opener: this,
                 parent: this,
+                target: this.getContainer().find('.controls__filterButton-button'),
                 horizontalAlign: {
                    side: isRightAlign ? 'left' : 'right'
                 },

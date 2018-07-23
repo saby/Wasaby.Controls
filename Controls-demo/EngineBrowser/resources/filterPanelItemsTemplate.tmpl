@@ -1,0 +1,15 @@
+<ws:template name="title">
+   <Controls.Input.Text bind:value="item.value"/>
+</ws:template>
+
+<ws:template name="FIO">
+<Controls.Input.Text bind:value="item.value"/>
+</ws:template>
+
+<ws:template name="country">
+<Controls.Input.Dropdown bind:selectedKeys="item.value"
+                         keyProperty="title"
+                         source="{{item.source}}"/>
+</ws:template>
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

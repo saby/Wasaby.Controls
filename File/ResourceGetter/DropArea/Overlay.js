@@ -1,10 +1,11 @@
-/// <amd-module name="File/ResourceGetter/DropArea/Overlay" />
-/// <amd-dependency path="css!File/ResourceGetter/DropArea/Overlay" />
-define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/helpers/random-helpers", "css!File/ResourceGetter/DropArea/Overlay"], function (require, exports, random) {
+define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/helpers/createGUID", "css!File/ResourceGetter/DropArea/Overlay"], function (require, exports, createGUID) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OVERLAY_ID_PREFIX = "DropArea-";
     var OVERLAY_CLASS = 'DropArea_overlay';
+    var TITLE_CLASS = "title";
+    var SUBTITLE_CLASS = "subtitle";
+    var SIZE_CLASS_POSTFIX = "_size_";
     var GLOBAL = (function () { return this || (0, eval)('this'); }());
     var DOC = GLOBAL.document;
     var IS_SUPPORT = DOC && DOC.body;
@@ -34,26 +35,50 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
      */
     var setOverlayPosition = function (overlay, element) {
         overlay.setAttribute('style', "\n        top: " + element.offsetTop + "px;\n        left: " + element.offsetLeft + "px;\n        width: " + element.offsetWidth + "px;\n        height: " + element.offsetHeight + "px;\n        z-index: " + (getZIndex(element) + 1) + ";\n    ");
+        var sizes = [190, 280, 340, 400, 510];
+        for (var i = 0; i < sizes.length; i++) {
+            var width = sizes[i];
+            if (element.offsetWidth < width) {
+                element.classList.add("" + OVERLAY_CLASS + SIZE_CLASS_POSTFIX + (i + 1));
+                break;
+            }
+        }
     };
     // Создаёт обёртку над указанным элементом
     var createOverlay = function (area, uid) {
         var overlay = DOC.createElement("div");
         var element = area.element;
-        overlay.classList.add(OVERLAY_CLASS);
+        overlay.classList.add(OVERLAY_CLASS, area.innerClass);
         overlay.setAttribute('id', "" + OVERLAY_ID_PREFIX + uid);
         setOverlayPosition(overlay, element);
-        var inner = DOC.createElement("div");
-        if (area.innerClass) {
-            inner.classList.add(area.innerClass || "");
-        }
-        inner.innerText = area.dragText;
-        overlay.appendChild(inner);
+        // title
+        var title = DOC.createElement("div");
+        title.classList.add(TITLE_CLASS);
+        title.innerText = area.dragText;
+        overlay.appendChild(title);
+        // subtitle
+        var dragSubtitle = DOC.createElement("div");
+        dragSubtitle.classList.add(SUBTITLE_CLASS);
+        dragSubtitle.innerText = area.dragSubtitle;
+        overlay.appendChild(dragSubtitle);
         element.parentNode.insertBefore(overlay, element);
         return overlay;
     };
     var getArea = function (element) {
         var uid = element.getAttribute("id").replace(OVERLAY_ID_PREFIX, "");
         return areas[uid];
+    };
+    var updateOverlayText = function (target, isDragOver) {
+        var area = getArea(target);
+        var title = target.querySelector('.' + TITLE_CLASS);
+        var subtitle = target.querySelector('.' + SUBTITLE_CLASS);
+        if (isDragOver) {
+            title.innerText = area.dropText;
+            subtitle.innerText = area.dropSubtitle;
+            return;
+        }
+        title.innerText = area.dragText;
+        subtitle.innerText = area.dragSubtitle;
     };
     /**
      * Зафиксировано ли перемещения файла над окном.
@@ -81,7 +106,7 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
             if (dropAreas.indexOf(event.target) === -1) {
                 return;
             }
-            event.target.querySelector('div').innerText = getArea(event.target).dropText;
+            updateOverlayText(event.target, true);
         },
         dragover: function (event) {
             // без этого нормально не убьётся стандартный обработчик drop
@@ -93,13 +118,17 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
                 (dropAreas.indexOf(event.relatedTarget) !== -1)) {
                 return;
             }
-            var target = dropAreas.indexOf(event.target) === -1 ? event.target.parentNode : event.target;
-            target.querySelector('div').innerText = getArea(target).dragText;
+            var target = dropAreas.indexOf(event.target) === -1 ?
+                event.target.parentNode :
+                event.target;
+            updateOverlayText(target, false);
         },
         drop: function (event) {
             event.preventDefault();
             event.stopPropagation();
-            var target = dropAreas.indexOf(event.target) === -1 ? event.target.parentNode : event.target;
+            var target = dropAreas.indexOf(event.target) === -1 ?
+                event.target.parentNode :
+                event.target;
             dragEnd();
             var area = getArea(target);
             area.ondrop(event.dataTransfer);
@@ -164,31 +193,41 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
     var OPTION = {
         /**
          * @cfg {HTMLElement} DOM элемент для перетаскивания файлов
-         * @name File/ResourceGetter/DropArea#element
+         * @name File/ResourceGetter/DropArea/Overlay#element
          */
         /**
          * @cfg {Function} Обработчик события onDrop элемента. Позволяет получать ресурсы не ожидая вызова метода getFiles
-         * @name File/ResourceGetter/DropArea#ondrop
+         * @name File/ResourceGetter/DropArea/Overlay#ondrop
          */
         ondrop: function (data) { },
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов
-         * @name File/ResourceGetter/DropArea#dragText
+         * @cfg {String} Текст подсказки во время перемещения файлов
+         * @name File/ResourceGetter/DropArea/Overlay#dragText
          */
-        dragText: rk("Переместите файлы сюда"),
+        dragText: rk('Переместите файлы сюда'),
         /**
-         * @cfg {String} Текст на внутреннем элементе во время перемещения файлов непосредственно над ним
-         * @name File/ResourceGetter/DropArea#dropText
+         * @cfg {String} Текст подсказки во время перемещения файлов непосредственно над областью
+         * @name File/ResourceGetter/DropArea/Overlay#dropText
          */
-        dropText: rk("Отпустите файлы")
+        dropText: rk('Отпустите файлы'),
         /**
-         * @cfg {String} Класс внутреннего элемента обёртки, содержащий текст
-         * @name File/ResourceGetter/DropArea#innerClass
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов
+         * @name File/ResourceGetter/DropArea/Overlay#dragSubtitle
+         */
+        dragSubtitle: '',
+        /**
+         * @cfg {String} Текст дополнительной подсказки во время перемещения файлов непосредственно над областью
+         * @name File/ResourceGetter/DropArea/Overlay#dropSubtitle
+         */
+        dropSubtitle: ''
+        /**
+         * @cfg {String} Дополнительный класс элемента обёртки
+         * @name File/ResourceGetter/DropArea/Overlay#innerClass
          */
     };
     var Overlay = /** @class */ (function () {
         function Overlay(cfg) {
-            this.__uid = random.createGUID();
+            this.__uid = createGUID();
             var config = Object.assign({}, OPTION, cfg);
             if (!(config.element instanceof HTMLElement)) {
                 throw new Error('argument "element" must be extended of HTMLElement');

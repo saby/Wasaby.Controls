@@ -1,10 +1,11 @@
 <div class="demo-Grid">
-    <Controls.List.AddButton caption="Add record" on:click="list.addItem()"/>
+    <Controls.List.AddButton caption="Add record" on:click="list.addItem()" class="test_add_record_1"/>
     <div class="demo-Grid__container">
         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <Controls.TreeGrid
                     name="list"
                     attr:class="demo-Grid__control"
+                    attr:test_name="test_grid_1"
                     keyProperty="id"
                     parentProperty="Раздел"
                     nodeProperty="Раздел@"

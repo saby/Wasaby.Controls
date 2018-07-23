@@ -3,8 +3,7 @@ import SourceContainer = require("File/Attach/Container/Source");
 import {Source as ISource} from 'File/Attach/Source';
 import Deferred = require("Core/Deferred");
 import moduleStubs = require("Core/moduleStubs");
-import IResourceConstructor = require("File/IResourceConstructor");
-import IResource = require("File/IResource");
+import {IResource, IResourceConstructor} from 'File/IResource';
 
 type Wrapper = {
     fileType: IResourceConstructor;

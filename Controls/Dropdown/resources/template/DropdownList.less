@@ -2,6 +2,7 @@
    .flexbox();
    .flex-direction(column);
    max-height: @max-height_DropdownList;
+   max-width: @max-width_DropdownList;
    border: @border-width_suggestionsContainer solid @border-color_suggestionsContainer;
    background: @background_DropdownList;
    box-sizing: border-box;
@@ -24,7 +25,6 @@
    cursor: pointer;
    position: relative;
    min-height: @height_DropdownList-item;
-   height: @height_DropdownList-item;
    .flexbox();
    .align-items(center);
    padding-left: @padding_DropdownList-default;
@@ -33,6 +33,11 @@
    &:hover {
       background: @background_DropdownList-item_hover;
    }
+}
+
+//не удалять, высота необходима, чтобы корректно работал align-items:center в IE
+.controls-DropdownList__row_singleLine {
+   height: @height_DropdownList-item;
 }
 
 .controls-DropdownList__emptyItem {
@@ -50,8 +55,16 @@
   padding-right: @spacing_DropdownList_arrowSubMenu;
 }
 
+.controls-DropdownList__item-right_close-padding {
+  padding-right: @spacing_DropdownList_cross;
+}
+
 .controls-DropdownList__content {
    font-size: @large-text-size;
+}
+
+.controls-DropdownList__content_singleLine {
+   .text-overflow();
 }
 
 .controls-DropdownList__selected:after {
@@ -188,4 +201,38 @@
 
 .controls-DropdownList__icon_style_done {
    color: @color-Icon_style_done;
+}
+
+.controls-DropdownList__group_separator {
+   border-bottom: @thickness_DropdownList-group-separator solid @color_DropdownList-group-separator;
+   margin: @margin_DropdownList-group;
+}
+
+.controls-DropdownList__group_separator_left, .controls-DropdownList__group_separator_right {
+   height: @thickness_DropdownList-group-separator;
+   border-bottom: @thickness_DropdownList-group-separator solid @color_DropdownList-group-separator;
+   width: 100%;
+}
+
+.controls-DropdownList__group_separator_left {
+   margin-right: @spacing_DropdownList-group-between-text-separator;
+}
+
+.controls-DropdownList__group_separator_right {
+   margin-left: @spacing_DropdownList-group-between-text-separator;
+}
+
+.controls-DropdownList__group_content {
+   display: flex;
+   margin: @margin_DropdownList-group;
+   align-items:center;
+}
+
+.controls-DropdownList__group_content-text {
+   display: inline-block;
+   color: @color_DropdownList-group-text;
+   font-size: @font-size_DropdownList-group-text;
+   white-space: nowrap;
+   text-align: center;
+   flex-shrink: 0;
 }

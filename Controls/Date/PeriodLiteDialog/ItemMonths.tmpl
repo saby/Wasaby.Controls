@@ -1,0 +1,15 @@
+<div class="controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center">
+   <ws:for data="halfYear in _months">
+      <ws:for data="quarter in halfYear.quarters">
+         <ws:for data="month in quarter.months">
+            <div class="controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
+                 on:click="_onMonthClick(month.number)">
+               {{ month.name }}
+               <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
+                  <div class="controls-PeriodLiteDialog-item__checkBox icon-16 icon-Yes icon-done"></div>
+               </ws:if>
+            </div>
+         </ws:for>
+      </ws:for>
+   </ws:for>
+</div>

@@ -1,44 +1,58 @@
+<ws:template name="firstList">
+    <Controls.List
+            class="test_list_1"
+            name="list"
+            readOnly="{{_readOnly}}"
+            source="{{_viewSource}}"
+            on:beforeItemEdit="_onItemEdit()"
+            on:beforeItemAdd="_onItemAdd()"
+            allowEmptySelection="{{false}}"
+            keyProperty="id">
+        <ws:editingConfig>
+            <ws:Object editOnClick="{{_editOnClick}}"
+                       singleEdit="{{_singleEdit}}"
+                       showToolbar="{{_showToolbar}}"
+                       autoAdd="{{_autoAdd}}"/>
+        </ws:editingConfig>
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                <ws:contentTemplate>
+                    <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
+                                attr:class="controls-EditingTemplateDemo"
+                                value="{{ itemTemplate.itemData.item.title }}"
+                                enabled="{{true}}">
+                        <ws:editorTemplate>
+                            <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                 selectOnClick="{{ false }}" />
+                        </ws:editorTemplate>
+                    </ws:partial>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.List>
+</ws:template>
 <div class="editInPlaceDemo">
     <div>
         <h3>Simple list</h3>
-        <Controls.List
-                class="test_list_1"
-                name="list"
-                source="{{_viewSource}}"
-                on:beforeItemEdit="_onItemEdit()"
-                on:beforeItemAdd="_onItemAdd()"
-                allowEmptySelection="{{false}}"
-                keyProperty="id">
-            <ws:editingConfig>
-                <ws:Object editOnClick="{{_editOnClick}}"
-                           singleEdit="{{_singleEdit}}"
-                           showToolbar="{{_showToolbar}}"
-                           autoAdd="{{_autoAdd}}"/>
-            </ws:editingConfig>
-            <ws:itemTemplate>
-                <ws:partial template="tmpl!Controls/List/ItemTemplate">
-                    <ws:contentTemplate>
-                        <ws:partial template="tmpl!Controls/List/EditInPlace/EditingTemplate"
-                                    attr:class="controls-EditingTemplateDemo"
-                                    value="{{ itemTemplate.itemData.item.title }}"
-                                    enabled="{{true}}">
-                            <ws:editorTemplate>
-                                <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
-                                                     selectOnClick="{{ false }}" />
-                            </ws:editorTemplate>
-                        </ws:partial>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:itemTemplate>
-        </Controls.List>
+        <ws:if data="{{_handleItemClick}}">
+            <ws:partial template="firstList" on:itemClick="_itemClickHandler()" />
+            <ws:if data="{{_handleClickError}}">
+                <div class="demo__handleClickError">всплыл клик по input</div>
+            </ws:if>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="firstList" />
+        </ws:else>
         <Controls.List.AddButton class="test_add_record_1" caption="Add record" on:click="addItem()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
-                <Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
-                <Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
-                <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
-                <Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar"/>
+                <Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick" class="demo__editOnClick"/>
+                <Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit" class="demo__singleEdit"/>
+                <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd" class="demo__autoAdd"/>
+                <Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar" class="demo__showToolbar"/>
+                <Controls.Toggle.Checkbox bind:value="_handleItemClick" caption="_handleItemClick" class="demo__handleItemClick"/>
+                <Controls.Toggle.Checkbox bind:value="_readOnly" caption="readOnly" class="demo__readOnly"/>
             </div>
         </div>
     </div>

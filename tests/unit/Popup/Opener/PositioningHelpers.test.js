@@ -192,6 +192,37 @@ define(
                }
             });
 
+            it('Sticky with option locationStrategy=fixed', function() {
+               var position = Sticky.getPosition({
+                  locationStrategy: 'fixed',
+                  corner: {
+                     vertical: 'bottom',
+                     horizontal: 'left'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'bottom',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'left',
+                        offset: 0
+                     }
+                  },
+                  config: {},
+                  sizes: {
+                     width: 400,
+                     height: 200,
+                     margins: {
+                        top: 0,
+                        left: 10
+                     }
+                  }
+               }, targetCoords);
+
+               assert.isTrue(position.top === 400);
+               assert.isTrue(position.left === -190);
+            });
          });
 
          describe('Dialog', function() {
@@ -209,7 +240,7 @@ define(
                let position = Dialog.getPosition(300, 300, sizes , {});
                assert.equal(position.top, 0);
                assert.equal(position.left, 50);
-               assert.equal(position.width, 200);
+               assert.equal(position.width, undefined);
                assert.equal(position.height, 300);
             });
 

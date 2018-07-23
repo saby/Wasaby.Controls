@@ -53,7 +53,11 @@
                         </ws:Array>
                      </ws:filterStructure>
                      <ws:template>
-                        <SBIS3.CONTROLS.LongOperations.Registry.resources.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}" />
+                        <SBIS3.CONTROLS.LongOperations.Registry.resources.LongOperationsFilter
+                           useUsersFilter="{{useUsersFilter}}"
+                           usersFilterComponent="{{usersFilterComponent}}"
+                           usersFilterParams="{{usersFilterParams}}"
+                        />
                      </ws:template>
                   </SBIS3.CONTROLS.Filter.Button>
                </div>

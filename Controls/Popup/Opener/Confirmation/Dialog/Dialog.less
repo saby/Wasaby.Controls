@@ -1,51 +1,3 @@
-.controls-InformationPopup {
-   border-style: solid;
-   border-width: @controls-InformationPopup-border-width;
-   background: @controls-InformationPopup-bg;
-   .box-shadow(@controls-panel-shadow);
-
-   &.controls-InformationPopup__status-default {
-      border-color: @controls-InformationPopup-default-status-border-color;
-   }
-
-   &.controls-InformationPopup__status-success {
-      border-color: @controls-InformationPopup-success-status-border-color;
-   }
-
-   &.controls-InformationPopup__status-error {
-      border-color: @controls-InformationPopup-error-status-border-color;
-   }
-
-   &.controls-InformationPopup__status-confirm {
-      border-color: @controls-InformationPopup-default-status-border-color;
-   }
-}
-
-.controls-SubmitPopup {
-   border-top: @controls-SubmitPopup-border-top;
-   border-left: @controls-SubmitPopup-border-left;
-   border-right: @controls-SubmitPopup-border-right;
-   border-bottom: @controls-SubmitPopup-border-bottom;
-   .box-sizing(border-box);
-   .flex-shrink(1);
-}
-
-.controls-SubmitPopup__size-big {
-   width: @controls-SubmitPopup-size-big-width;
-}
-
-.controls-SubmitPopup__size-standard {
-   width: @controls-SubmitPopup-size-standard-width;
-}
-
-.controls-SubmitPopup_popup {
-   .flexbox();
-}
-
-.controls-SubmitPopup__body {
-   padding: @controls-SubmitPopup-body-padding;
-}
-
 .controls-SubmitPopup__message{
    font-size: @controls-SubmitPopup-message-font-size;
    line-height: normal;
@@ -72,11 +24,7 @@
    text-align: center;
 }
 
-.controls-SubmitPopup__footer {
-   padding: @controls-SubmitPopup-footer-padding;
-   border-top: @controls-SubmitPopup-footer-border-top;
-   background: @controls-SubmitPopup-footer-bg;
-}
+
 
 .controls-SubmitPopup__buttonContainer {
    .flexbox();
@@ -95,13 +43,3 @@
       min-width: @controls-SubmitPopup-button-mini-min-width;
    }
 }
-
-//TODO Для матильды, так как нужно уместить в окно < 320px
-//В рамках переделки стилей решить этот вопрос и переделать.
-.controls-Confirmation_popup {
-   max-width: @controls-Confirmation-max-width;
-   .controls-SubmitPopup_popup{
-      width: 100%;
-   }
-}
-//TODO

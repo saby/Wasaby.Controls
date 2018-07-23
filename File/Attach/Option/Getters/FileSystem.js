@@ -1,12 +1,12 @@
 /// <amd-module name="File/Attach/Option/Getters/FileSystem" />
-define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", "File/Attach/Option/ResourceGetter", "File/ResourceGetter/FileSystem"], function (require, exports, tslib_1, ResourceGetter, Getter) {
+define("File/Attach/Option/Getters/FileSystem", ["require", "exports", "tslib", "File/Attach/Option/Getter", "File/ResourceGetter/FileSystem"], function (require, exports, tslib_1, ResourceGetter, Getter) {
     "use strict";
     var GETTER_TYPE = "FileSystem";
     /**
      * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
      * @class
      * @name File/Attach/Option/Getters/FileSystem
-     * @extends File/Attach/Option/ResourceGetter
+     * @extends File/Attach/Option/Getter
      * @public
      * @author Заляев А.В.
      */

@@ -1,22 +1,32 @@
 define(
    [
       'Controls/Popup/Manager',
+      'Controls/Popup/Manager/Container',
       'Controls/Popup/Opener/BaseController'
    ],
 
-   function (ManagerConstructor, BaseController) {
+   function (ManagerConstructor, ManagerContainer, BaseController) {
       'use strict';
+
+      function getManager() {
+         let Manager = new ManagerConstructor();
+         let Container = new ManagerContainer();
+         Manager._afterMount();
+         Container._afterMount();
+         return Manager;
+      }
+
       describe('Controls/Popup/Manager', function () {
          var id, element;
-         let Manager = new ManagerConstructor();
+         let Manager = getManager();
 
          it('initialize', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             assert.equal(Manager._popupItems.getCount(), 0);
          });
 
          it('append popup', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -26,7 +36,7 @@ define(
          });
 
          it('update popup', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -38,7 +48,7 @@ define(
          });
    
          it('fireEventHandler', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -58,7 +68,7 @@ define(
          });
 
          it('remove popup', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -67,7 +77,7 @@ define(
          });
 
          it('add modal popup', function() {
-            let Manager = new ManagerConstructor();
+            let Manager = getManager();
             let id1 = Manager.show({
                isModal: false,
                testOption: 'created'

@@ -19,6 +19,7 @@ define('Controls/Input/Area', [
 
    /**
     * Multiline text input with autoheight.
+    * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Area
     * @extends Controls/Input/Text
@@ -44,7 +45,6 @@ define('Controls/Input/Area', [
     * @cfg {String} New line key.
     * @variant enter When user presses Enter.
     * @variant ctrlEnter When user presses Ctrl + Enter.
-    * @variant shiftEnter When user presses Shift + Enter.
     */
 
    var _private = {

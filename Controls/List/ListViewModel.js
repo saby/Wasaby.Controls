@@ -35,27 +35,40 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
-            this._selectedKeys =  cfg.selectedKeys || [];
+            this._selectedKeys = cfg.selectedKeys || [];
 
             //TODO надо ли?
             _private.updateIndexes(self);
          },
 
          _getItemDataByItem: function() {
-            var itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments);
+            var
+               itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments),
+               drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) >= 0;
-            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible';
-            itemsModelCurrent.drawActions =
-               itemsModelCurrent.itemActions &&
-               ((itemsModelCurrent.itemActions.showed &&
-               itemsModelCurrent.itemActions.showed.length) ||
-               (itemsModelCurrent.itemActions.showedFirst &&
-               itemsModelCurrent.itemActions.showedFirst.length));
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover';
+            if (itemsModelCurrent.itemActions) {
+               if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
+                  drawedActions = itemsModelCurrent.itemActions.showed;
+               } else {
+                  drawedActions = itemsModelCurrent.itemActions.showedFirst;
+               }
+            }
+            itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
+            if (itemsModelCurrent.drawActions) {
+               itemsModelCurrent.hasShowedItemActionWithIcon = false;
+               for (var i = 0; i < drawedActions.length; i++) {
+                  if (!!drawedActions[i].icon) {
+                     itemsModelCurrent.hasShowedItemActionWithIcon = true;
+                     break;
+                  }
+               }
+            }
             if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
@@ -72,6 +85,9 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
+            if (key === this._options.markedKey) {
+               return;
+            }
             this._options.markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
@@ -145,11 +161,6 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         select: function(keys) {
-            this._selectedKeys = keys;
-            this._nextVersion();
-         },
-
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                this._startIndex = startIndex;
@@ -178,8 +189,8 @@ define('Controls/List/ListViewModel',
          },
 
          setItemActions: function(item, actions) {
-            if (item.getId) {
-               var itemById = this.getItemById(item.getId());
+            if (item.get) {
+               var itemById = this.getItemById(item.get(this._options.keyProperty));
                var collectionItem = itemById ?  itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
@@ -192,6 +203,25 @@ define('Controls/List/ListViewModel',
             var itemById = this.getItemById(item.getId());
             var collectionItem = itemById ?  itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
+         },
+
+         _updateSelection: function(selectedKeys) {
+            this._selectedKeys = selectedKeys || [];
+            this._nextVersion();
+         },
+
+         getActiveItem: function() {
+            return this._activeItem;
+         },
+
+         setMultiSelectVisibility: function(multiSelectVisibility) {
+            this._options.multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getMultiSelectVisibility: function() {
+            return this._options.multiSelectVisibility;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

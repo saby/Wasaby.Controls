@@ -51,6 +51,10 @@ define('Controls/Popup/Manager/ManagerController', [],
 
          find: function(id) {
             return this._manager.find(id);
+         },
+
+         reindex: function() {
+            this._manager.reindex();
          }
       };
    }

@@ -1,11 +1,28 @@
-<div class="controls-VDomMenu" style="padding: 50px;">
-   И немножко меню
-   <Controls.History.Menu name="myMenuButton1"
-                  keyProperty="id"
-                  style="buttonDefault"
-                  icon="icon-medium icon-Author icon-primary"
-                  caption="123"
-                  parentProperty="parent"
-                  nodeProperty="@parent"
-                  source="{{_getHierarchyMenuItems()}}"/>
+<div>
+   <div class="controls-VDomMenu" style="padding: 50px;">
+      Меню с историей и разделителями
+      <Controls.History.Menu
+              name="myMenuButton1"
+              keyProperty="id"
+              style="buttonDefault"
+              icon="icon-medium icon-Author icon-primary"
+              caption="Menu"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              source="{{_getHierarchyMenuItems()}}"
+              itemsGroup="{{_itemsGroup}}"/>
+   </div>
+   <div class="controls-VDomMenu" style="padding: 50px;">
+      Меню с историей и группировкой с текстом
+      <Controls.History.Menu
+              name="myMenuButton2"
+              keyProperty="id"
+              style="buttonDefault"
+              icon="icon-medium icon-Author icon-primary"
+              caption="Menu"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              source="{{_getHierarchyMenuItems()}}"
+              itemsGroup="{{_itemsGroupText}}"/>
+   </div>
 </div>

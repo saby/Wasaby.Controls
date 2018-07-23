@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
-
+      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
 
       var _private = {
 
@@ -45,6 +45,9 @@ define('Controls/Popup/Opener/Stack/StackController',
             instance._update();
             instance._destroyDeferred[element.id].callback();
             delete instance._destroyDeferred[element.id];
+         },
+         removeAnimationClasses: function(className) {
+            return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '');
          }
       };
 
@@ -69,22 +72,33 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
-               item.popupOptions.className += ' controls-Stack__opened';
+               if (HAS_ANIMATION) {
+                  item.popupOptions.className += ' controls-Stack__open';
+               }
                this._update();
             }
          },
 
          elementUpdated: function(item, container) {
-            if (this._checkContainer(item, container)) {
-               _private.prepareSizes(item, container);
-               this._update();
+            if (this._canUpdate(container)) {
+               if (this._checkContainer(item, container)) {
+                  _private.prepareSizes(item, container);
+                  this._update();
+               }
             }
+         },
+
+         _canUpdate: function(container) {
+            // if container contains waiting class then animation wasn't over
+            // if container contains closing class then popup destroying
+            return !container.classList.contains('controls-Stack__waiting') || container.classList.contains('controls-Stack__close');
          },
 
          elementDestroyed: function(element, container) {
             this._destroyDeferred[element.id] = new Deferred();
-            if (cConstants.browser.chrome && !cConstants.browser.isMobilePlatform) {
-               container.classList.remove('controls-Stack__opened');
+            if (HAS_ANIMATION) {
+               element.popupOptions.className += ' controls-Stack__close';
+               container.classList.add('controls-Stack__close');
                this._fixTemplateAnimation(element);
             } else {
                _private.elementDestroyed(this, element);
@@ -94,8 +108,11 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementAnimated: function(element, container) {
-            if (!container.classList.contains('controls-Stack__opened')) {
+            element.popupOptions.className = _private.removeAnimationClasses(element.popupOptions.className);
+            if (this._destroyDeferred[element.id]) {
                _private.elementDestroyed(this, element);
+            } else {
+               container.classList.remove('controls-Stack__waiting', 'controls-Stack__open');
             }
          },
 

@@ -7,13 +7,12 @@ define('Controls/Filter/Button',
       'tmpl!Controls/Filter/Button/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
-      'WS.Data/Type/descriptor',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, types, Deferred, isEqual) {
+   function(Control, template, Chain, Utils, Deferred, isEqual) {
 
       /**
        * Component for data filtering.
@@ -24,6 +23,7 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
+       * @demo Controls-demo/FilterButton/FilterButton
        */
 
       'use strict';
@@ -81,8 +81,10 @@ define('Controls/Filter/Button',
          _text: '',
          _historyId: null,
 
-         constructor: function() {
-            FilterButton.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
+            if (options.items) {
+               _private.resolveItems(this, options.items);
+            }
             this._onFilterChanged = this._onFilterChanged.bind(this);
          },
 
@@ -92,21 +94,17 @@ define('Controls/Filter/Button',
             }
          },
 
-         _beforeMount: function(options) {
-            if (options.items) {
-               _private.resolveItems(this, options.items);
-            }
-         },
-
          _getFilterState: function() {
             return this._options.readOnly ? 'disabled' : 'default';
          },
 
          _clearClick: function() {
-            _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-               panelOpener.clearFilter();
-               this._text = '';
-            });
+            if (this._options.filterTemplate) {
+               _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
+                  panelOpener.clearFilter();
+               });
+            }
+            this._text = '';
          },
 
          _openFilterPanel: function() {
@@ -119,14 +117,11 @@ define('Controls/Filter/Button',
                } else {
                   this._children.filterStickyOpener.open({
                      templateOptions: {
+                        template: this._options.templateName,
                         items: this._options.items,
-                        itemTemplate: this._options.itemTemplate,
-                        itemTemplateProperty: this._options.itemTemplateProperty,
-                        additionalTemplate: this._options.additionalTemplate,
-                        additionalTemplateProperty: this._options.additionalTemplateProperty,
                         historyId: this._options.historyId
                      },
-                     template: 'Controls/Filter/Button/Panel',
+                     template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                      target: this._children.panelTarget
                   });
                }
@@ -142,15 +137,6 @@ define('Controls/Filter/Button',
       FilterButton.getDefaultOptions = function() {
          return {
             filterAlign: 'right'
-         };
-      };
-
-      FilterButton.getOptionsTypes = function() {
-         return {
-            itemTemplate: types(Object),
-            itemTemplateProperty: types(String),
-            additionalTemplate: types(Object),
-            additionalTemplateProperty: types(String)
          };
       };
 

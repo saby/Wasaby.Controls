@@ -69,10 +69,7 @@ define('Controls/Toolbar', [
                parentProperty: newOptions.parentProperty,
                nodeProperty: newOptions.nodeProperty,
                iconSize: newOptions.size,
-               showHeader: true,
-               headConfig: {
-                  menuStyle: 'cross'
-               }
+               showClose: true
             }
          };
       }

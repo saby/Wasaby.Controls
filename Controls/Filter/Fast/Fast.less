@@ -1,6 +1,5 @@
 .controls-FastFilter {
    display: flex;
-   width: 100%;
 }
 
 .controls-FastFilter__iconReset {
@@ -12,22 +11,28 @@
    fill: @color_FastFilter-iconArrow;
    height: @height_FastFilter-iconArrow;
    width: @width_FastFilter-iconArrow;
-   margin: @spacing_FastFilter-between-icon-text;
 }
 
 .controls-FastFilter__wrapper {
    margin: @spacing_FastFilter-item;
-   display: flex;
+   display: inline-flex;
    align-items: center;
    cursor: pointer;
+   overflow: hidden;
 }
 
 .controls-FastFilter__block {
    white-space: nowrap;
-   display: flex;
+   display: inline-flex;
    align-items: baseline;
+   min-width: 0;
 }
 
 .controls-FastFilter__block:hover .controls-FastFilter__iconArrow {
    fill: @color_FastFilter-iconArrow_hover;
+}
+
+.controls-FastFilter-popup {
+   margin-top: @margin-top_DropdownList;
+   margin-left: @margin-bottom_FastFilter-popup;
 }

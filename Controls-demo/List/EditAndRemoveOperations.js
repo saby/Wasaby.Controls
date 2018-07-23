@@ -145,7 +145,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                style: 'bordered',
                showType: showType.MENU_TOOLBAR,
                handler: function(item) {
-                  this._children.list.removeItems([item.get('id')]);
+                  this._children.remover.removeItems([item.get('id')]);
                }.bind(this)
             },
             {

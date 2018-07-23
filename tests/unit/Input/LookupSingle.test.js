@@ -31,7 +31,31 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
          assert.isFalse(self._isEmpty);
          assert.isFalse(self._suggestState);
       });
-      
+
+      it('LoadItems', function(done) {
+         var self = {
+            _options : {
+               selectedKeys : [1,2],
+               source: new Memory({
+                  data: [
+                     {id: 1, title: 'Alex', text: 'Alex'},
+                     {id: 2, title: 'Ilya', text: 'Ilya'},
+                     {id: 3, title: 'Mike', text: 'Mike'}
+                  ],
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id'
+            }
+         };
+         Lookup._private.loadItems(self, null, self._options.keyProperty, self._options.selectedKeys, self._options.source).addCallback(function(result) {
+            assert.equal(result.at(0).getId(), 1);
+            assert.equal(result.at(1).getId(), 2);
+            assert.equal(result.getCount(), 2);
+            done()
+         });
+      });
+
+
       it('removeItem', function() {
          var self = {};
          self._selectedKeys = [1];
@@ -132,7 +156,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
             selectedKeys: selectedKeys,
             source: new Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               idProperty: 'id',
             })
          });
       
@@ -145,7 +169,8 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
             selectedKeys: emptySelectedKeys,
             source: new Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               idProperty: 'id',
+               model: 'testmodel'
             })
          });
          assert.isTrue(emptyLookup._isEmpty);
@@ -257,7 +282,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
          lookup._deactivated();
          assert.isFalse(lookup._suggestState);
       });
-      
+
    });
    
 });

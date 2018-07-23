@@ -680,13 +680,13 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._notify = function(e, args) {
-            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
-            assert.equal(e, 'onCheckBoxClick');
+            assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
          };
@@ -1131,6 +1131,90 @@ define([
                assert.isTrue(args[1]);
             };
             ctrl._onAfterItemEndEdit({}, opt, true);
+         });
+
+         it('readOnly, editItem', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               readOnly: true
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  editItem: function() {
+                     throw new Error('editItem shouldn\'t be called if BaseControl is readOnly');
+                  }
+               }
+            };
+            ctrl.editItem(opt);
+         });
+
+         it('readOnly, addItem', function() {
+            var opt = {
+               test: 'test'
+            };
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               readOnly: true
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  addItem: function() {
+                     throw new Error('addItem shouldn\'t be called if BaseControl is readOnly');
+                  }
+               }
+            };
+            ctrl.addItem(opt);
          });
       });
 

@@ -13,13 +13,12 @@
                                         <Controls.Input.Search bind:value="_searchValue"/>
                                     </ws:content>
                                 </Controls.Container.Input.Search>
+                               <div class="controls-demo__Layouts_filter">
                                 <Controls.Container.Filter.Fast>
                                    <Controls.Filter.Fast bind:value="_value"/>
                                 </Controls.Container.Filter.Fast>
                                 <Controls.Container.Filter.Button>
-                                        <Controls.Filter.Button>
-                                           <ws:itemTemplate templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate"/>
-                                           <ws:additionalTemplate templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate"/>
+                                        <Controls.Filter.Button templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
                                            <ws:items>
                                               <ws:Array>
                                                  <ws:Object id="FIO" value="Name" resetValue="" visibility="{{false}}">
@@ -53,6 +52,7 @@
                                            </ws:items>
                                         </Controls.Filter.Button>
                                 </Controls.Container.Filter.Button>
+                               </div>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List searchParam="firstName" source="{{_dataSource}}" navigation="{{_navigation}}">

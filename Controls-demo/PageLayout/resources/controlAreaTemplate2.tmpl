@@ -1,0 +1,12 @@
+<ws:if data="{{type === 'topArea'}}">
+    <div class="controlAreaTemplate">
+        <Controls.Button.Back attr:class="margin_right" size="l" caption="Back" inHeader="{{false}}"/>
+        <Controls.Button attr:class="margin_right" readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="error" icon="icon-16 icon-Author" style="linkMain" size="m"/>
+        <Controls.Button attr:class="margin_right" readOnly="{{false}}" attr:test_name="icon_border_2" iconStyle="done" icon="icon-16 icon-Author" style="linkMain" size="m"/>
+        <Controls.Button attr:class="margin_right" readOnly="{{false}}" attr:test_name="icon_border_3" iconStyle="default" icon="icon-16 icon-Author" style="linkMain" size="m"/>
+        <Controls.Button readOnly="{{true}}" attr:test_name="icon_border_4" iconStyle="default" icon="icon-16 icon-Author" style="linkMain" size="m"/>
+    </div>
+</ws:if>
+<ws:else>
+    <div>Super Abstract Content 2</div>
+</ws:else>

@@ -89,17 +89,6 @@ define(
             assert.deepEqual(dropdownContainer._items.getRawData(), itemsRecords.getRawData());
          });
 
-         it('after mount', () => {
-            let selectedItem;
-            dropdownContainer._notify = (e, args) => {
-               if (e == 'selectedItemsChanged') {
-                  selectedItem = args[0];
-               }
-            };
-            dropdownContainer._afterMount();
-            assert.deepEqual(selectedItem[0], dropdownContainer._items.at(1));
-         });
-
          it('check selectedItemsChanged event', () => {
             let selectedKeys,
                selectedItem;

@@ -36,10 +36,20 @@ define('SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS/OperationsPanel} Связанная панель массовых операций
+             * @cfg {SBIS3.CONTROLS/OperationsPanel} Связанная панель массовых операций,  отображением которой можно управлять с помощью данной кнопки.
+             * В качестве значения опции следует передать экземпляр класса такой панели. Значение панели можно изменить с помощью метода setLinkedPanel().
+             * @remark Через вёрстку аналогичную связку выполнить нельзя.
              * @example
+             * В функции init компонента связать кнопку и панель массовых операций можно так:
              * <pre>
-             *     <option name="linkedPanel">MyOperationPanel</option>
+             *     // Экземпляр класса кнопки ПМО.
+             *     var panelsButton = this.getChildControlByName('myOpenButton'),
+             *
+             *     // Экземпляр класса ПМО.
+             *     operationsPanel = this.getChildControlByName('myOperationsPanel');
+             *
+             *     // Связываем кнопку и ПМО.
+             *     panelsButton.setLinkedPanel(operationsPanel);
              * </pre>
              * @see getLinkedPanel
              */

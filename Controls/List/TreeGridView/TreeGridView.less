@@ -1,0 +1,66 @@
+.controls-TreeGrid__row-nodeExpander_size_s {
+   padding: @padding_TreeGridView-nodeExpander_size_s;
+}
+.controls-TreeGrid__row-nodeExpander_size_m {
+   padding: @padding_TreeGridView-nodeExpander_size_m;
+}
+.controls-TreeGrid__row-nodeExpander_size_l {
+   padding: @padding_TreeGridView-nodeExpander_size_l;
+}
+.controls-TreeGrid__row-nodeExpander_size_xl {
+   padding: @padding_TreeGridView-nodeExpander_size_xl;
+}
+.controls-TreeGrid__row-nodeExpander_size_default, .controls-TreeGrid__row-nodeExpanderPadding {
+   padding: @padding_TreeGridView-nodeExpander_size_default;
+}
+.controls-TreeGrid__row-nodeExpander, .controls-TreeGrid__row-nodeExpanderPadding {
+   display: inline-block;
+   position: relative;
+   min-height: @height_TreeGridView-nodeExpander;
+   min-width: @width_TreeGridView-nodeExpander;
+}
+.controls-TreeGrid__row-nodeExpanderPadding {
+   visibility: hidden;
+}
+.controls-TreeGrid__row-nodeExpander:hover:before {
+   color: @color_TreeGridView-nodeExpander_hover;
+}
+.controls-TreeGrid__row-nodeExpander:before {
+   font-family: @icon-font;
+   font-size: @font-size_TreeGridView-nodeExpander;
+   color: @color_TreeGridView-nodeExpander;
+   user-select: none;
+   flex-shrink: 0;
+   cursor: pointer;
+   overflow: hidden;
+   text-align: center;
+   position: absolute;
+}
+.controls-TreeGrid__row-nodeExpander_collapsed:before {
+   content: '\e96e';
+}
+.controls-TreeGrid__row-nodeExpander_expanded:before {
+   content: '\e96d';
+}
+.controls-TreeGrid__row {
+   display: inline-flex;
+}
+.controls-TreeGrid__row-levelPadding {
+   flex-shrink: 0;
+   display: inline-block;
+}
+.controls-TreeGrid__row-levelPadding_size_default {
+   width: @width-TreeViewGrid-levelPadding_size_default;
+}
+.controls-TreeGrid__row-levelPadding_size_s {
+   width: @width-TreeViewGrid-levelPadding_size_s;
+}
+.controls-TreeGrid__row-levelPadding_size_m {
+   width: @width-TreeViewGrid-levelPadding_size_m;
+}
+.controls-TreeGrid__row-levelPadding_size_l {
+   width: @width-TreeViewGrid-levelPadding_size_l;
+}
+.controls-TreeGrid__row-levelPadding_size_xl {
+   width: @width-TreeViewGrid-levelPadding_size_xl;
+}

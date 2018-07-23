@@ -4,7 +4,7 @@
             {{!!action.iconError ? ' controls-itemActionsV__action_error'}}
             {{action.iconStyle ? ' action_icon_style_' + action.iconStyle  : 'action_icon_style_default'}}"
       attr:title="{{!!action.title ? action.title}}"
-      on:click="_onActionClick(action, itemData)">
+      on:click="_onItemActionsClick(action, itemData)">
     <ws:if data="{{!!action.icon}}">
         <i attr:class="{{action.icon}}"/>
     </ws:if>
