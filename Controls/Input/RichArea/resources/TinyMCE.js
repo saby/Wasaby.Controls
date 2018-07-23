@@ -27,27 +27,27 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'i18n!SBIS3.CONTROLS/RichEditor',
       'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
    ], function(cContext,
-               cIndicator,
-               coreClone,
-               CommandDispatcher,
-               cConstants,
-               Deferred,
-               runDelayed,
-               Control,
-               UserConfig,
-               template,
-               RichUtil,
-               smiles,
-               Di,
-               ImageUtil,
-               Sanitize,
-               escapeTagsFromStr,
-               escapeHtml,
-               LinkWrap,
-               ImageOptionsPanel,
-               CodeSampleDialog,
-               WaitIndicator,
-               moduleStabs) {
+      cIndicator,
+      coreClone,
+      CommandDispatcher,
+      cConstants,
+      Deferred,
+      runDelayed,
+      Control,
+      UserConfig,
+      template,
+      RichUtil,
+      smiles,
+      Di,
+      ImageUtil,
+      Sanitize,
+      escapeTagsFromStr,
+      escapeHtml,
+      LinkWrap,
+      ImageOptionsPanel,
+      CodeSampleDialog,
+      WaitIndicator,
+      moduleStabs) {
       'use strict';
 
       /**
@@ -173,6 +173,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             _beforeMount: function() {
                this._sanitizeClass = this._sanitizeClasses.bind(this);
             },
+
             /**
              * Колбек инициализации тини
              * @param editor
@@ -184,6 +185,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                this._bindEvents();
                this._tinyEditor.on('postRender', this._onTinyPostRender.bind(this));
             },
+
             /**
              * Колбек отрисовки тини
              * @private
@@ -196,6 +198,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                //Необходимо позвать для обновления плейсхолдера
                this._forceUpdate();
             },
+
             /**
              * Колбек подгрузки тини
              * @private
@@ -243,10 +246,13 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                   this._tinyEditor.off();
 
                   //уничтожение тини --->
+
                   this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
                   this._tinyEditor.destroy && this._tinyEditor.destroy();
                   this._tinyEditor.remove && this._tinyEditor.remove();
+
                   //<---уничтожение тини
+
                   if (this._tinyEditor.theme) {
                      if (this._tinyEditor.theme.panel) {
                         this._tinyEditor.theme.panel._elmCache = null;
@@ -640,13 +646,13 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
                         document.addEventListener('paste', onPaste, true);
                         dialog = InformationPopupManager.showMessageDialog({
-                              className: 'controls-RichEditor__pasteWithStyles-alert',
-                              message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
-                              details: null,
-                              submitButton: {caption: rk('Отменить')},
-                              isModal: true,
-                              closeByExternalClick: true,
-                              opener: self
+                           className: 'controls-RichEditor__pasteWithStyles-alert',
+                           message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
+                           details: null,
+                           submitButton: {caption: rk('Отменить')},
+                           isModal: true,
+                           closeByExternalClick: true,
+                           opener: self
                            },
                            onClose
                         );
@@ -1140,8 +1146,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                if (isA.list) {
                   if (!isAlreadyApplied) {
                      if (['aligncenter', 'alignright'].some(function(v) {
-                           return formatter.match(v);
-                        })) {
+                        return formatter.match(v);
+                     })) {
                         afterProcess = function() {
                            var list = editor.dom.getParent(selection.getRng().commonAncestorContainer, 'ol,ul');
                            list.style['list-style-position'] = 'inside';
@@ -1781,6 +1787,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             },
             _removeShortcuts: function() {
                var editor = this.getTinyEditor();
+
                // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
                // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
                // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
@@ -1941,6 +1948,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
                //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
                setTimeout(this._on_onSelectionChange2, 1);
+
                // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
                setTimeout(this._off_onSelectionChange2, 120000);
             },
@@ -2217,6 +2225,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                }
             },
             _saveCallbacks: function() {
+               this._bindImageEvent = this._bindImageEvent.bind(this);
                this._ondblClickCallback = this._ondblClickCallback.bind(this);
                this._onClickCallback = this._onClickCallback.bind(this);
                this._formatChangedCallback = this._formatChangedCallback.bind(this);
@@ -2815,17 +2824,16 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             _showImgError: function() {
                var promise = new Deferred();
                require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
-                  InformationPopupManager.showMessageDialog({
-                        status: 'error',
-                        className: 'controls-RichEditor__insertImg-alert',
-                        message: rk('Ошибка'),
-                        details: rk('Невозможно открыть изображение'),
-                        isModal: true,
-                        closeByExternalClick: true,
-                        opener: this
-                     },
-                     promise.callback.bind(promise)
-                  );
+                  var message = {
+                     status: 'error',
+                     className: 'controls-RichEditor__insertImg-alert',
+                     message: rk('Ошибка'),
+                     details: rk('Невозможно открыть изображение'),
+                     isModal: true,
+                     closeByExternalClick: true,
+                     opener: this
+                  };
+                  InformationPopupManager.showMessageDialog(message, promise.callback.bind(promise));
                });
                return promise;
             },
