@@ -121,6 +121,10 @@ node('controls') {
             repo = "3.18.400/feature/pea/coverage"
         }
 
+        if ( coverage ) {
+            inte = true
+        }
+
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
