@@ -509,7 +509,7 @@ node('controls') {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( inte ){
-                        def coverage
+                        def coverage = ""
                         if ( params.COVERAGE ) {
                             coverage = "--COVERAGE True"
                         }
