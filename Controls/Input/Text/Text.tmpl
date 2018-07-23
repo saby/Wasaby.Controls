@@ -8,10 +8,12 @@
      viewModel="{{_textViewModel}}"
      tagStyle="{{_options.tagStyle}}"
      validationErrors="{{_options.validationErrors}}"
-     on:valueChanged="_valueChangedHandler()"
-     on:inputCompleted="_inputCompletedHandler()"
-     on:tagHover="_notifyHandler('onTagHover')"
-     on:tagClick="_notifyHandler('onTagClick')">
+     textAlign="{{_options.textAlign}}"
+     style="{{_options.style}}"
+     on:tagClick="_notifyHandler('tagClick')"
+     on:tagHover="_notifyHandler('tagHover')"
+     on:valueChanged="_notifyHandler('valueChanged')"
+     on:inputCompleted="_inputCompletedHandler()">
    <ws:content>
       <ws:partial
          template="tmpl!Controls/Input/resources/input"

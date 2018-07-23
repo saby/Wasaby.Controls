@@ -4,7 +4,7 @@ define('Controls/Input/interface/ISearch', [
    /**
     * Interface for Search inputs.
     *
-    * @mixin Controls/Input/interface/ISearch
+    * @interface Controls/Input/interface/ISearch
     * @public
     */
 

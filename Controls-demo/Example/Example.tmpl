@@ -1,0 +1,5 @@
+<div class="ws-flexbox ws-flex-column">
+   <ws:for data="module in _data">
+      <a href="{{_href}}?cname=Example/{{module.name}}" on:click="_clickHandler(module.name)">{{module.title}}</a>
+   </ws:for>
+</div>

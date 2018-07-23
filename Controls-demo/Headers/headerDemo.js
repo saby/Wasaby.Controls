@@ -73,13 +73,13 @@ define('Controls-demo/Headers/headerDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'Accent'
+            title: 'accent'
          },
          {
-            title: 'Additional'
+            title: 'additional'
          },
          {
-            title: 'Main'
+            title: 'main'
          }
       ]
    });
@@ -130,7 +130,7 @@ define('Controls-demo/Headers/headerDemo', [
          _selectedStyle: 'primary',
          _counterSelectedSize: 'l',
          _counterSelectedStyle: 'default',
-         _separatorSelectedStyle: 'Accent',
+         _separatorSelectedStyle: 'accent',
          _iconSelectedStyle: 'default',
          _backSelectedStyle: 'default',
          _backSelectedSize: 'm',

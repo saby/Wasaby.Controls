@@ -20,9 +20,13 @@ define('Controls/List/Tree/TreeViewModel', [
       _private = {
          isVisibleItem: function(item) {
             var
+               isExpanded,
                itemParent = item.getParent ? item.getParent() : undefined;
-            if (itemParent && !itemParent.isRoot()) {
-               if (this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)]) {
+            if (itemParent) {
+               isExpanded = this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)];
+               if (itemParent.isRoot()) {
+                  return itemParent.getOwner().isRootEnumerable() ? isExpanded : true;
+               } else if (isExpanded) {
                   return _private.isVisibleItem.call(this, itemParent);
                } else {
                   return false;
@@ -143,7 +147,7 @@ define('Controls/List/Tree/TreeViewModel', [
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
 
-            if (current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
+            if (!current.isGroup && current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
                //TODO: проверка на hasMore должна быть тут
                if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
                   current.multiSelectStatus = true;

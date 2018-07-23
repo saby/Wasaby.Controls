@@ -58,6 +58,7 @@ define('Controls/Container/List',
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new Memory({
+               model: data.getModel(),
                idProperty: data.getIdProperty(),
                data: data.getRawData(),
                adapter: self._options.source.getAdapter()
@@ -76,7 +77,7 @@ define('Controls/Container/List',
                self._options.searchEndCallback(null, filter);
             }
    
-            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj))) {
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._context))) {
                _private.updateFilter(self, filter);
             }
             self._searchMode = false;
@@ -98,7 +99,7 @@ define('Controls/Container/List',
                });
             }
    
-            if (!isEqual(filter, _private.getFilterFromContext(self, self._contextObj)) || !isEqual(filter, self._filter)) {
+            if (!isEqual(filter, _private.getFilterFromContext(self, self._context)) || !isEqual(filter, self._filter)) {
                _private.updateFilter(self, filter);
             }
             _private.updateSource(self, result.data);
@@ -139,7 +140,7 @@ define('Controls/Container/List',
          },
          
          isFilterChanged: function(self, context) {
-            var oldValue = this.getFilterFromContext(self, self._contextObj),
+            var oldValue = this.getFilterFromContext(self, self._context),
                newValue = this.getFilterFromContext(self, context),
                changed = false;
             
@@ -155,7 +156,7 @@ define('Controls/Container/List',
          },
          
          isSearchValueChanged: function(self, context) {
-            var oldValue = this.getSearchValueFromContext(self, self._contextObj),
+            var oldValue = this.getSearchValueFromContext(self, self._context),
                newValue = this.getSearchValueFromContext(self, context);
             return !isEqual(oldValue, newValue);
          },
@@ -235,6 +236,7 @@ define('Controls/Container/List',
             if (this._searchMode) {
                _private.cachedSourceFix(this);
                this._source = new Memory({
+                  model: options.source.getModel(),
                   idProperty: options.source.getIdProperty()
                });
             }
@@ -245,7 +247,7 @@ define('Controls/Container/List',
          
          _beforeUpdate: function(newOptions, context) {
             if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
-               var currentFilter = _private.getFilterFromContext(this, this._contextObj);
+               var currentFilter = _private.getFilterFromContext(this, this._context);
                _private.resolveOptions(this, newOptions);
                
                if (this._searchMode) {

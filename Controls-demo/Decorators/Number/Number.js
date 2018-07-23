@@ -1,7 +1,7 @@
 define('Controls-demo/Decorators/Number/Number',
    [
       'Core/Control',
-      'Controls/Decorators/Number',
+      'Controls/Decorator/Number',
       'tmpl!Controls-demo/Decorators/Number/Number',
 
       'Controls/Input/Number',

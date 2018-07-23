@@ -26,10 +26,15 @@ function(cMerge,
             type: cfg._type,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
+            _mode: cfg._mode,
 
             // На каждое обновление конфига генерируем новый id, чтобы понять, что нужно перерисовать шаблон
             _compoundId: randomId('compound-')
          };
+
+         if (cfg.hoverTarget) {
+            cfg.templateOptions.hoverTarget = cfg.hoverTarget;
+         }
 
          if (cfg.target) {
             // нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
@@ -95,7 +100,9 @@ function(cMerge,
             top: 'bottom',
             bottom: 'top',
             left: 'right',
-            right: 'left'
+            right: 'left',
+            middle: 'center',
+            center: 'center'
          };
 
          if (cfg.hasOwnProperty('verticalAlign')) {
@@ -135,7 +142,7 @@ function(cMerge,
 
          cfg.corner = cfg.corner || {};
          if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = cfg.direction ? 'left' : 'right';
+            cfg.direction = 'right';
          }
          cfg.corner.horizontal = revertPosition[cfg.direction];
 
@@ -147,6 +154,7 @@ function(cMerge,
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
             if (!cfg.autoShow) {
+               cfg.closeByExternalClick = false;
                cfg.className += ' ws-hidden';
             }
          }
@@ -194,6 +202,10 @@ function(cMerge,
             cfg.autoHide = cfg.closeByExternalClick;
          }
 
+         if (cfg.hasOwnProperty('closeChildWindows')) {
+            newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
+         }
+
          if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
             newCfg.dialogOptions.direction = 'top';
          }
@@ -208,6 +220,9 @@ function(cMerge,
 
          if (newCfg.target) {
             newCfg.dialogOptions.target = $(newCfg.target);
+            if (cfg.mode === 'floatArea') {
+               newCfg.dialogOptions.fitWindow = true;
+            }
          }
 
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
@@ -259,7 +274,6 @@ function(cMerge,
             dimensions.title || dimensions.caption ||
             templateClass.caption || templateClass.title ||
             compoundAreaOptions.title || compoundAreaOptions.caption ||
-            compoundAreaOptions.templateOptions.title || compoundAreaOptions.templateOptions.caption ||
             templateOptions.title || templateOptions.caption;
       },
 

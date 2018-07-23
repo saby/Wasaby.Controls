@@ -13,16 +13,26 @@ define('Controls/Dropdown/resources/DropdownViewModel',
    function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
-            if (!this._options.parentProperty || !this._options.nodeProperty) {
+
+            if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
                return true;
             }
             return item.get(this._options.parentProperty) === this._options.rootKey;
          },
          filterAdditional: function(item) {
-            if (!this._options.additionalProperty || this._expanded === true) {
+            if (!this._options.additionalProperty || this._expanded === true || !item.get) {
                return true;
             }
             return item.get(this._options.additionalProperty) !== true;
+         },
+
+         needToDrawSeparator: function(item, nextItem) {
+            if (!nextItem.get) {
+               return false;
+            }
+            var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
+            var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
+            return itemInHistory && !nextItemInHistory;
          }
       };
 
@@ -34,6 +44,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
+               itemsGroup: cfg.itemsGroup,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
@@ -86,10 +97,22 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
+
+            //if we had group element we should return it without changes
+            if (itemsModelCurrent.isGroup) {
+               return itemsModelCurrent;
+            }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+
+            //Draw the separator to split history and nohistory items.
+            //Separator is needed only when list has both history and nohistory items
+            //if the last item is in history then separator is unnecessary
+            if (!this._itemsModel.isLast()) {
+               itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
+            }
             itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
@@ -112,7 +135,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var display = this._itemsModel._display;
             for (var i = 0; i < display.getCount(); i++) {
                var item = display.at(i).getContents();
-               if (item.get(this._options.nodeProperty)) {
+               if (item.get && item.get(this._options.nodeProperty)) {
                   return true;
                }
             }
@@ -153,5 +176,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          }
       });
 
+      DropdownViewModel._private = _private;
       return DropdownViewModel;
    });

@@ -42,7 +42,11 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
             _options: {
                className: '',
                userId: null,
-               useGroupByEasyGroup: true
+               useGroupByEasyGroup: true,
+
+               useUsersFilter: null,
+               usersFilterComponent: null,
+               usersFilterParams: null
             },
 
             _longOpList: null,
@@ -76,7 +80,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
 
          _modifyOptions: function () {
             var options = LongOperationsRegistry.superclass._modifyOptions.apply(this, arguments);
-            options.hideStaffFilter = !!options.userId || !(RightsManager.getRights(['Long_requests_config'])['Long_requests_config'] & RightsManager.ADMIN_MASK);
+            options.useUsersFilter = !options.userId && !!(RightsManager.getRights(['Long_requests_config'])['Long_requests_config'] & RightsManager.ADMIN_MASK);
             return options;
          },
 

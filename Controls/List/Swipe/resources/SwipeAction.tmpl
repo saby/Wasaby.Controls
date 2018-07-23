@@ -2,12 +2,9 @@
       title="{{!!action.title ? action.title}}"
       style="{{'height:' + action.height}}"
       on:click="_onItemActionsClick(action, itemData)">
-    <ws:if data="{{!!action.icon}}">
+   <ws:if data="{{needShowIcon(action, swipeConfig.direction, itemData.hasShowedItemActionWithIcon)}}">
         <i class="{{action.icon}} {{swipeConfig.swipeIconSize}} controls-itemActionsV__action_icon_swipe"/>
     </ws:if>
-    <ws:else data="{{needShowTitle(false, swipeConfig.type, swipeConfig.hasIcon)}} ">
-        <i class="controls-itemActionsV__action_icon icon-size {{swipeConfig.swipeIconSize}} controls-itemActionsV__action_icon_swipe"/>
-    </ws:else>
     <ws:if data="{{needShowTitle(action, swipeConfig.type)}}">
         <span class="controls-itemActionsV__action_title_swipe {{swipeConfig.bigTitle ? 'controls-itemActionsV__action_title_lonely'}}">{{action.title}}</span>
     </ws:if>

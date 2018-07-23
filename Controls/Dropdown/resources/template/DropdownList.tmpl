@@ -13,10 +13,11 @@
       <div>
          <ws:partial template="tmpl!Controls/Dropdown/resources/template/For"
                      listModel="{{_listModel}}"
+                     defaultGroupTemplate="{{_defaultGroupTemplate}}"
                      itemTemplate="{{_options.itemTemplate}}"
                      defaultItemTemplate="{{_defaultItemTemplate}}"
                      showClose="{{_options.showClose}}"
-                     parentProperty="{{_options.parentProperty}}"
+                     groupTemplate="{{_groupTemplate}}"                     parentProperty="{{_options.parentProperty}}"
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_options.additionalProperty}}">

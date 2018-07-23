@@ -1,0 +1,155 @@
+<div class="example-Text ws-inline-flexbox ws-flex-column" on:labelClick="_labelClickHandler()">
+   <Controls-demo.Example.resource.BaseDemoInput title="Simple text field">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text placeholder="Tooltip"
+                                       bind:value="_value1"/>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls-demo.Example.resource.BaseDemoInput title="Labels for input fields">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text name="text2"
+                                       placeholder="Tooltip"
+                                       bind:value="_value2"/>
+               </ws:template>
+               <ws:label position="left" value="Label1" name="text2"/>
+            </ws:Object>
+            <ws:Object spacing="big">
+               <ws:template>
+                  <Controls.Input.Text name="text3"
+                                       placeholder="Tooltip"
+                                       bind:value="_value3"/>
+               </ws:template>
+               <ws:label position="top" value="Label1" name="text3"/>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls-demo.Example.resource.BaseDemoInput title="Field labels are required">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text name="text4"
+                                       placeholder="Tooltip"
+                                       bind:value="_value4"/>
+               </ws:template>
+               <ws:label position="left" value="Label1" name="text4" required="{{true}}"/>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text name="text5"
+                                       placeholder="Tooltip"
+                                       bind:value="_value5"/>
+               </ws:template>
+               <ws:label position="left" value="Label2" name="text5" required="{{true}}"/>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text name="text6"
+                                       placeholder="Tooltip"
+                                       bind:value="_value6"/>
+               </ws:template>
+               <ws:label position="left" value="Label3" name="text6" required="{{true}}"/>
+            </ws:Object>
+            <ws:Object spacing="big">
+               <ws:template>
+                  <Controls.Input.Text name="text8"
+                                       placeholder="Tooltip"
+                                       bind:value="_value8"/>
+               </ws:template>
+               <ws:label position="top" value="Label1" name="text8" required="{{true}}"/>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls-demo.Example.resource.BaseDemoInput title="Input field with tag" blocker="{{true}}">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text tagStyle="primary"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value9"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="done"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value10"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="attention"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value11"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="error"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value12"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="info"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value13"/>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls-demo.Example.resource.BaseDemoInput title="Header fonts">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text name="text14"
+                                       style="header"
+                                       placeholder="Tooltip"
+                                       bind:value="_value14"/>
+               </ws:template>
+               <ws:label position="top" value="Default" name="text14"/>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text name="text15"
+                                       style="accentHeader"
+                                       placeholder="Tooltip"
+                                       bind:value="_value15"/>
+               </ws:template>
+               <ws:label position="top" value="Accent" name="text15"/>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls.Popup.Opener.InfoBox name="infoBox"/>
+</div>

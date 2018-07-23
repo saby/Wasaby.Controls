@@ -1,14 +1,17 @@
 <ws:template name="content">
    <Controls.Layout.Scroll scope="{{_options}}" name="scrollLayout">
-      <div name="content"
-           style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
-           class="ws-flex-grow-1 controls-Scroll__content
-                  {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                  {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-           on:resize="_resizeHandler()"
-           on:scroll="_scrollHandler()">
-         <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
-      </div>
+      <Controls.Event.Listener name="scrollDetect" register="scroll">
+         <div name="content"
+              style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
+              class="ws-flex-grow-1 controls-Scroll__content
+                     {{_useNativeScrollbar ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
+                     {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
+                     {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+              on:resize="_resizeHandler()"
+              on:scroll="_scrollHandler()">
+            <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
+         </div>
+      </Controls.Event.Listener>
    </Controls.Layout.Scroll>
 </ws:template>
 

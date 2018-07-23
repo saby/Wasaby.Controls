@@ -4,7 +4,7 @@ define('Controls/interface/IRemovable', [], function() {
    /**
     * Interface for item removal in collections.
     *
-    * @mixin Controls/interface/IRemovable
+    * @interface Controls/interface/IRemovable
     * @public
     */
 

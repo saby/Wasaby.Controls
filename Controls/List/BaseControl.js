@@ -370,7 +370,6 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IRemovable
     * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
@@ -418,8 +417,8 @@ define('Controls/List/BaseControl', [
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
 
-         if (newOptions.viewModelConfig && newOptions.viewModelConstructor) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
+         if (newOptions.viewModelConstructor) {
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
          }
@@ -460,12 +459,6 @@ define('Controls/List/BaseControl', [
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
 
-         if (newOptions.viewModelConfig && (newOptions.viewModelConfig !== this._options.viewModelConfig)) {
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions.viewModelConfig);
-            _private.initListViewModelHandler(this, this._listViewModel);
-
-            //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
-         } else
          if (newOptions.markedKey !== this._options.markedKey) {
             this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
@@ -482,6 +475,10 @@ define('Controls/List/BaseControl', [
                source: newOptions.source,
                navigation: newOptions.navigation
             });
+         }
+
+         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
+            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
 
          if (filterChanged || sourceChanged) {
@@ -548,21 +545,9 @@ define('Controls/List/BaseControl', [
             this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.viewConfig.keyProperty);
+            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
          }
-      },
-
-      removeItems: function(items) {
-         this._children.removeControl.removeItems(items);
-      },
-
-      _beforeItemsRemove: function(event, items) {
-         return this._notify('beforeItemsRemove', [items]);
-      },
-
-      _afterItemsRemove: function(event, items, result) {
-         this._notify('afterItemsRemove', [items, result]);
       },
 
       _showIndicator: function(event, direction) {
@@ -587,7 +572,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item) {
-         var newKey = ItemsUtil.getPropertyValue(item, this._options.viewConfig.keyProperty);
+         var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },
 
@@ -655,26 +640,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      moveItemUp: function(item) {
-         this._children.moveControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.moveControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.moveControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
       _onItemActionsClick: function(e, action, item) {
          this._notify('itemActionsClick', [action, item]);
       },
@@ -714,8 +679,8 @@ define('Controls/List/BaseControl', [
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
-            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         if (dragTarget) {
+            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
          }
       },
 

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
    [
       'Core/core-instance',
       'Core/EventBus',
-      'Lib/TabMessage/TabMessage',
+      'Lib/Tab/Message',
       'SBIS3.CONTROLS/LongOperations/Const',
       'SBIS3.CONTROLS/LongOperations/TabKey',
       'SBIS3.CONTROLS/LongOperations/Tools/Postloader',
@@ -69,7 +69,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       /**
        * Канал событий вкладок
        * @protected
-       * @type {Lib/TabMessage/TabMessage}
+       * @type {Lib/Tab/Message}
        */
       //var _tabChannel;
 
