@@ -36,8 +36,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
 
             return {
-               top: targetCoords.top,
-               right: window.innerWidth - targetCoords.right
+               top: Math.max(targetCoords.top, 0),
+               right: Math.max(window.innerWidth - targetCoords.right, 0)
             };
          },
          elementDestroyed: function(instance, element) {
