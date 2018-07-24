@@ -16,8 +16,10 @@ define('Controls-demo/Checkbox/Checkbox', [
          _triState: false,
          _tooltip: 'tooltip',
          _value: false,
+         _eventName: 'no event',
          changeValue: function(e, value) {
             this._value = value;
+            this._eventName = 'valueChanged';
          }
       });
    return ModuleClass;
