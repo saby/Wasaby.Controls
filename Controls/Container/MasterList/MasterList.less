@@ -1,49 +1,55 @@
-.ws-is-no-touch:not(.ws-is-mobile-platform) {
-  .controls-MasterList {
-    margin-right: @border-width_MasterList-right;
+.controls-MasterList {
+  margin-right: @border-width_MasterList-right;
+  position: relative;
+
+  &:after {
+    content: '';
+    z-index: 0;
+    width: @border-width_MasterList-right;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .controls-ListView__itemV .controls-Grid__row-cell {
     position: relative;
 
-    &:after {
-      content: '';
-      z-index: 0;
-      width: @border-width_MasterList-right;
-      height: 100%;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-
-    .controls-ListView__itemV .controls-Grid__row-cell {
-      position: relative;
-      &:hover {
+    &.controls-Grid__row-cell_withSelectionMarker {
+      background-color: #fff;
+      &:before {
+        content: '';
+        z-index: 2;
+        box-sizing: border-box;
+        border-top: 1px solid #c2d0de;
+        border-bottom: 1px solid #9cb3ca;
+        height: ~'calc(100% + 1px)';
+        width: ~'calc(100% + @border-width_MasterList-right)';
+        position: absolute;
+        box-shadow: -4px 0 8px rgba(0, 0, 0, .15);
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+      }
+      &:after {
+        content: '';
+        z-index: 1;
+        height: ~'calc(100% + @border-width_MasterList-right)';
+        top: -1px;
+        width: @border-width_MasterList-right;
+        position: absolute;
+        right: -@border-width_MasterList-right;
         background-color: #fff;
       }
-      &.controls-Grid__row-cell_withSelectionMarker {
+    }
+  }
+}
+
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+  .controls-MasterList {
+    .controls-Grid__row-cell_withSelectionMarker {
+      &:hover {
         background-color: #fff;
-        &:before {
-          content: '';
-          z-index: 2;
-          box-sizing: border-box;
-          border-top: 1px solid #c2d0de;
-          border-bottom: 1px solid #9cb3ca;
-          height: 100% + 1px;
-          width: calc(100% + @border-width_MasterList-right);
-          position: absolute;
-          box-shadow: -4px 0 8px rgba(0,0,0, .15);
-          bottom: 0;
-          left: 0;
-          pointer-events: none;
-        }
-        &:after {
-          content: '';
-          z-index: 1;
-          height: 100% + @border-width_MasterList-right;
-          top: -1px;
-          width: @border-width_MasterList-right;
-          position: absolute;
-          right: -@border-width_MasterList-right;
-          background-color: #fff;
-        }
       }
     }
   }
