@@ -30,6 +30,8 @@ define('Controls/Container/Suggest/Layout/Dialog',
 
          _beforeMount: function() {
             this._scrollData = new ScrollData({pagingVisible: false});
+            
+            //TODO временное решение, контекст должен долетать от Application'a, удалить, как будет сделано (Шипин делает)
             this._searchData = new SearchContextField(null);
          },
          
