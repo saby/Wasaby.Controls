@@ -124,8 +124,8 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          getDefaultPosition: function(popupOptions) {
-            var tCoords = _private.getStackParentCoords();
-            var position = StackStrategy.getPosition(tCoords, { popupOptions: popupOptions });
+            var baseCoord = { top: 0, right: 0 };
+            var position = StackStrategy.getPosition(baseCoord, { popupOptions: popupOptions });
 
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
             return {
