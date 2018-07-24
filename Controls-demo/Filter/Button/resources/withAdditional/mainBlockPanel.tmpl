@@ -1,5 +1,7 @@
 <ws:template name="period">
-   <Controls.Button style="linkMain" size="l" caption="January'15" bind:value="item.value"/>
+   <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            keyProperty="key"
+                            source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">

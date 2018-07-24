@@ -91,27 +91,27 @@ define('Controls-demo/Filter/Button/PanelVDom',
       };
 
       var itemsSimple = [
-         {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod, visibility: true},
-         {id: 'state', value: [1], resetValue: [1], source: sourceState, visibility: true},
-         {id: 'sender', value: '', resetValue: '', visibility: true},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true},
-         {id: 'responsible', value: '', resetValue: '', visibility: true}
+         {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod},
+         {id: 'state', value: [1], resetValue: [1], source: sourceState},
+         {id: 'sender', value: '', resetValue: ''},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: ''},
+         {id: 'responsible', value: '', resetValue: ''}
       ];
 
       var itemsTemplate = [
-         {id: 'author', value: '', resetValue: '', visibility: true,
+         {id: 'author', value: '', resetValue: '',
             templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
-         { id: 'period', value: [1], textValue: 'Period', resetValue: [1], visibility: true,
+         { id: 'period', value: [1], textValue: 'Period', resetValue: [1],
             source: sourcePeriod,
             templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period'}
       ];
 
       var items = [
-         {id: 'period', value: [1], resetValue: [1], source: sourcePeriod, visibility: true},
-         {id: 'state', value: [1], resetValue: [1], source: sourceState, visibility: true},
+         {id: 'period', value: [1], resetValue: [1], source: sourcePeriod},
+         {id: 'state', value: [1], resetValue: [1], source: sourceState},
          {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', source: sourceLimit, visibility: false},
          {id: 'sender', value: '', resetValue: '', visibility: false},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', visibility: true},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: ''},
          {id: 'responsible', value: '', resetValue: '', visibility: false},
          {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
          {id: 'operation', value: '', resetValue: '', visibility: false},
