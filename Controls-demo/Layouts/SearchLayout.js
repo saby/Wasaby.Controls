@@ -157,7 +157,7 @@ define('Controls-demo/Layouts/SearchLayout', [
       {id: 'Test5', value: false, resetValue: false, textValue: 'FilterText', visibility: false},
       {id: 'Test6', value: false, resetValue: false, textValue: 'Test6', visibility: false},
       {id: 'Test7', value: false, resetValue: false, textValue: 'Test7', visibility: false},
-      {id: 'Test8', value: false, resetValue: false, textValue: 'Test8', visibility: true}
+      {id: 'Test8', value: false, resetValue: false, textValue: 'Test8'}
    ];
 
    var ModuleClass = BaseControl.extend(
@@ -174,7 +174,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: filterData
          }),
-         _navigation:{
+         _navigation: {
             source: 'page',
             view: 'page',
             sourceConfig: {
@@ -183,9 +183,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                mode: 'totalCount'
             }
          },
-         _fastFilterData: filterData,
-         sourceDropdown: sourceDropdown,
-         _value: 3
+         _fastFilterData: filterData
       });
    return ModuleClass;
 });

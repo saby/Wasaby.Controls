@@ -94,6 +94,7 @@ define('Controls/Button/Menu',
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
+            this._filter = this._options.filter;
          },
 
          _onItemClickHandler: function(event, result) {
@@ -106,7 +107,8 @@ define('Controls/Button/Menu',
          return {
             showHeader: true,
             style: 'buttonDefault',
-            size: 'default'
+            size: 'default',
+            filter: {}
          };
       };
 

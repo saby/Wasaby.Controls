@@ -51,9 +51,10 @@ define([
                   title: 'Notebooks 2'
                }
             };
-            bc._notify = function(e, item) {
+            bc._notify = function(e, args) {
                if (e === 'itemClick') {
-                  assert.equal(itemData.item, item[0]);
+                  assert.equal(itemData.item, args[0]);
+                  assert.isFalse(!!args[1]);
                }
             };
             bc._onItemClick({}, itemData);
@@ -77,9 +78,10 @@ define([
          });
       });
       it('_onHomeClick', function() {
-         bc._notify = function(e, item) {
+         bc._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(bc._options.items[0], item[0]);
+               assert.equal(bc._options.items[0], args[0]);
+               assert.isTrue(args[1]);
             }
          };
          bc._onHomeClick();

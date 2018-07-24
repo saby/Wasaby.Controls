@@ -17,6 +17,12 @@ define('Controls/Filter/Button',
       /**
        * Component for data filtering.
        * Uses property grid for editing filter fields.
+       *
+       * <a href="/materials/demo-ws4-filter-container">Демо-пример c кнопкой фильтров</a>.
+       * <a href="/materials/demo-ws4-filter-search">Демо-пример c кнопкой фильтров и строкой поиска</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       *
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
@@ -54,7 +60,8 @@ define('Controls/Filter/Button',
 
             Chain(items).each(function(item) {
                if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue') &&
-               Utils.getItemPropertyValue(item, 'visibility')) {
+                  Utils.getItemPropertyValue(item, 'visibility')
+               ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
                   if (textValue) {
@@ -74,6 +81,44 @@ define('Controls/Filter/Button',
             if (self._options.filterTemplate && self._filterCompatible) {
                self._filterCompatible.updateFilterStructure(items);
             }
+         },
+         setPopupOptions: function(self, options) {
+            self._popupOptions = {
+               closeByExternalClick: true,
+               eventHandlers: {
+                  onResult: self._onFilterChanged
+               }
+            };
+
+            if (options.orientation === 'left') {
+               self._popupOptions.corner = {
+                  vertical: 'top',
+                  horizontal: 'right'
+               };
+               self._popupOptions.horizontalAlign = {
+                  side: 'left'
+               };
+            }
+         },
+
+         requireDeps: function(self) {
+            if (!self._depsDeferred) {
+               self._depsDeferred = new Deferred();
+               requirejs([self._options.templateName], function() {
+                  self._depsDeferred.callback();
+               });
+            }
+            return self._depsDeferred;
+
+         },
+
+         resetItems: function(self, items) {
+            Chain(items).each(function(item) {
+               Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
+               if (Utils.getItemPropertyValue(item, 'visibility') !== undefined) {
+                  Utils.setItemPropertyValue(item, 'visibility', false);
+               }
+            });
          }
       };
 
@@ -83,12 +128,15 @@ define('Controls/Filter/Button',
          _oldPanelOpener: null,
          _text: '',
          _historyId: null,
+         _popupOptions: null,
+         _depsDeferred: null,
 
          _beforeMount: function(options) {
             if (options.items) {
                _private.resolveItems(this, options.items);
             }
             this._onFilterChanged = this._onFilterChanged.bind(this);
+            _private.setPopupOptions(this, options);
          },
 
          _beforeUpdate: function(options) {
@@ -106,11 +154,15 @@ define('Controls/Filter/Button',
                _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                   panelOpener.clearFilter();
                });
+            } else {
+               _private.resetItems(this, this._items);
+               this._notify('itemsChanged', [this._items]);
             }
             this._text = '';
          },
 
          _openFilterPanel: function() {
+            var self = this;
             if (!this._options.readOnly) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
@@ -118,14 +170,17 @@ define('Controls/Filter/Button',
                      panelOpener.showFilterPanel();
                   });
                } else {
-                  this._children.filterStickyOpener.open({
-                     templateOptions: {
-                        template: this._options.templateName,
-                        items: this._options.items,
-                        historyId: this._options.historyId
-                     },
-                     template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-                     target: this._children.panelTarget
+                  _private.requireDeps(this).addCallback(function(res) {
+                     self._children.filterStickyOpener.open({
+                        templateOptions: {
+                           template: self._options.templateName,
+                           items: self._options.items,
+                           historyId: self._options.historyId
+                        },
+                        template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+                        target: self._children.panelTarget
+                     });
+                     return res;
                   });
                }
             }
@@ -139,7 +194,7 @@ define('Controls/Filter/Button',
 
       FilterButton.getDefaultOptions = function() {
          return {
-            filterAlign: 'right'
+            orientation: 'left'
          };
       };
 

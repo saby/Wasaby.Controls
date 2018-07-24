@@ -108,6 +108,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
       prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound, doNotApplyKeys) {
          /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
          var currentStructureCopy = coreClone(currentStructure);
+         var needApply;
          doNotApplyKeys = doNotApplyKeys || [];
 
          this.prepareNewStructure(currentStructureCopy, structure, doNotApplyKeys);
@@ -122,9 +123,11 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                var elemFromHistory = objectFind(structure, function(structureElem) {
                   return currentStructureCopy[key].internalValueField === structureElem.internalValueField;
                }, false);
-
+   
+               needApply = doNotApplyKeys.indexOf(currentStructureCopy[key].filterField || currentStructureCopy[key].internalValueField) === -1;
+               
                if(elemFromHistory) {
-                  if (doNotApplyKeys.indexOf(elemFromHistory.filterField || elemFromHistory.internalValueField) === -1) {
+                  if (needApply) {
                      /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
                       остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
                      if (elemFromHistory.value !== undefined) {
@@ -146,7 +149,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                         currentStructureCopy[key].visibilityValue = elemFromHistory.visibilityValue;
                      }
                   }
-               } else if(!doNotResetIfFound && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue)) {
+               } else if(!doNotResetIfFound && needApply && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue)) {
                   resetField('value', currentStructureCopy[key]);
                }
             }

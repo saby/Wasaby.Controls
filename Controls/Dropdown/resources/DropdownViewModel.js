@@ -123,7 +123,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (keys instanceof Array) {
                return keys.indexOf(item.get(this._options.keyProperty)) > -1;
             }
-            return keys !== undefined  && keys === item.get(this._options.keyProperty);
+            return keys !== undefined && keys === item.get(this._options.keyProperty);
          },
          _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
