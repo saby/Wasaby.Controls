@@ -14,6 +14,11 @@ define('Controls/Input/Search',
       /**
        * Search input.
        *
+       * <a href="/materials/demo-ws4-search-container">Демо-пример cо строкой поиска</a>.
+       * <a href="/materials/demo-ws4-filter-search">Демо-пример c кнопкой фильтров и поиском</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
