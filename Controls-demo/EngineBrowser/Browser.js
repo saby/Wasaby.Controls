@@ -2,12 +2,13 @@ define('Controls-demo/EngineBrowser/Browser', [
    'Core/Control',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/EngineBrowser/Browser',
+   'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/EngineBrowser/Browser',
    'Controls/EngineBrowser',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate',
    'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate'
-], function(Control, Memory, template) {
+], function(Control, Memory, template, MemorySourceFilter) {
    'use strict';
 
    var countries = [
@@ -142,7 +143,8 @@ define('Controls-demo/EngineBrowser/Browser', [
 
          _source: new Memory({
             idProperty: 'id',
-            data: sourceData
+            data: sourceData,
+            filter: MemorySourceFilter('title')
          }),
          _fastFilterSource: fastFilterData,
          _items: items
