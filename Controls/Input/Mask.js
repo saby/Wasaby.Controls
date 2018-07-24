@@ -6,6 +6,7 @@ define('Controls/Input/Mask',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
       'tmpl!Controls/Input/Mask/Mask',
+
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
@@ -15,7 +16,7 @@ define('Controls/Input/Mask',
 
       /**
        * Input for entering text with a specified format.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
        * @extends Core/Control
@@ -23,6 +24,7 @@ define('Controls/Input/Mask',
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
