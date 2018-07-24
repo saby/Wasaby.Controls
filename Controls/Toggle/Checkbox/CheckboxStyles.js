@@ -3,6 +3,7 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
    ],
    function() {
    }
+   
    /**
     * @mixin Controls/Toggle/Checkbox/CheckboxStyles
     * @public
