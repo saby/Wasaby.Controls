@@ -2,19 +2,22 @@ define('Controls-demo/Checkbox/Checkbox', [
    'Core/Control',
    'tmpl!Controls-demo/Checkbox/Checkbox',
    'WS.Data/Source/Memory',
-   'Controls/Toggle/Checkbox'
-], function (Control,
-             template) {
+   'Controls/Toggle/Checkbox',
+   'css!Controls-demo/Checkbox/Checkbox',
+], function(Control, template) {
    'use strict';
 
 
    var ModuleClass = Control.extend(
       {
          _template: template,
+         _readOnly: false,
+         _caption: 'no caption',
+         _triState: false,
+         _tooltip: 'tooltip',
          _value: false,
-         checkEvent: function (e, value) {
+         changeValue: function(e, value) {
             this._value = value;
-            console.log('Value changed');
          }
       });
    return ModuleClass;

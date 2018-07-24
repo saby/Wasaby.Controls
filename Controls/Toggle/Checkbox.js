@@ -21,6 +21,8 @@ define('Controls/Toggle/Checkbox', [
     * @public
     * @category Toggle
     * @demo Controls-demo/Checkbox/Checkbox
+    *
+    * @mixes Controls/Toggle/Checkbox/CheckboxStyles
     */
 
    /**
