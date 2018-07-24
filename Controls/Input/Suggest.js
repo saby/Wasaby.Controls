@@ -10,6 +10,7 @@ define('Controls/Input/Suggest',
       
       /**
        * Input that suggests options as you are typing.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Suggest
        * @extends Controls/Input/Text
