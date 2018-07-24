@@ -10,7 +10,7 @@ define('Controls/Input/interface/IInputPlaceholder', [
 
    /**
     * @name Controls/Input/interface/IInputPlaceholder#placeholder
-    * @cfg {String} Input's placeholder text.
+    * @cfg {Function|String} Input's placeholder text.
     */
 
 });
