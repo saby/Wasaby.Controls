@@ -116,11 +116,15 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
       it('Suggest::_private.updateFilter', function () {
          var self = getComponentObject();
          self._options.searchParam = 'searchParam';
+         self._options.filter = {
+            filterTest: 'filterTest'
+         };
          var tab = 1;
          var value = 'test';
          var resultFilter = {
             currentTab: 1,
-            searchParam: 'test'
+            searchParam: 'test',
+            filterTest: 'filterTest'
          };
    
          Suggest._private.updateFilter(self, 'test', 1);

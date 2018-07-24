@@ -3,7 +3,7 @@ define('Controls/Input/Suggest',
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Text/ViewModel',
       'css!Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, BaseViewModel) {
@@ -29,9 +29,14 @@ define('Controls/Input/Suggest',
       
       var _private = {
          initViewModel: function(self, options) {
-            self._simpleViewModel = new BaseViewModel({
-               value: options.value
-            });
+            self._simpleViewModel = new BaseViewModel(this.getViewModelOptions(options));
+         },
+         
+         getViewModelOptions: function(options) {
+            return {
+               value: options.value,
+               maxLength: options.maxLength
+            };
          }
       };
       
@@ -51,9 +56,7 @@ define('Controls/Input/Suggest',
          },
          
          _beforeUpdate: function(newOptions) {
-            this._simpleViewModel.updateOptions({
-               value: newOptions.value
-            });
+            this._simpleViewModel.updateOptions(_private.getViewModelOptions(newOptions));
          },
          
          // </editor-fold>
