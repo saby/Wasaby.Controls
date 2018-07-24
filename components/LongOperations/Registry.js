@@ -6,6 +6,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/emptyHTMLTpl',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
       'css!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
+      'i18n!SBIS3.CONTROLS/LongOperations/Registry',
       'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'SBIS3.CONTROLS/Browser',
       'SBIS3.CONTROLS/SearchForm',
@@ -19,12 +20,12 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
       'use strict';
 
       var FILTER_STATUSES = {
-         'null': rk('В любом состоянии'),
-         'running': rk('В процессе'),
-         'suspended': rk('Приостановленные'),
-         'ended': rk('Завершенные'),
-         'success-ended': rk('Успешно'),
-         'error-ended': rk('С ошибками')
+         'null': rk('В любом состоянии', 'ДлительныеОперации'),
+         'running': rk('В процессе', 'ДлительныеОперации'),
+         'suspended': rk('Приостановленные', 'ДлительныеОперации'),
+         'ended': rk('Завершенные', 'ДлительныеОперации'),
+         'success-ended': rk('Успешно', 'ДлительныеОперации'),
+         'error-ended': rk('С ошибками', 'ДлительныеОперации')
       };
 
       /**
