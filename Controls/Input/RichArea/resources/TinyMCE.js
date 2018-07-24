@@ -1641,7 +1641,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
                               callback(e, target);
                            }
-                        });
+                        }.bind(this));
                      };
 
                   //По двойному клику на изображение показывать диалог редактирования размеров
