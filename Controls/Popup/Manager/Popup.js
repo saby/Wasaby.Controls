@@ -2,10 +2,11 @@ define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Popup',
+      'Core/helpers/Function/runDelayed',
       'Core/constants',
       'css!Controls/Popup/Manager/Popup'
    ],
-   function(Control, template, CoreConstants) {
+   function(Control, template, runDelayed, CoreConstants) {
       'use strict';
 
       var Popup = Control.extend({
@@ -68,6 +69,12 @@ define('Controls/Popup/Manager/Popup',
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
+         },
+
+         _delayedUpdate: function() {
+            //На resize многие обработчики могут влиять на размеры и верстку страницы.
+            //Дожидаемся когда они отработают и пересчитываем размеры попапов.
+            runDelayed(this._update.bind(this));
          },
 
          /**

@@ -173,6 +173,9 @@ define('Controls/Dropdown/Container',
          },
 
          _open: function() {
+            if (this._options.readOnly) {
+               return;
+            }
             var self = this;
 
             function open() {
