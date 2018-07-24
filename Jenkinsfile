@@ -519,6 +519,7 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
+        // EXPERIMENTAL
         def tests_for_run = ""
         if ( quick_int && isBranch ) {
             dir("./controls/tests/") {
@@ -532,8 +533,13 @@ node('controls') {
                 sh returnStdout: true, script: script
                 echo "Изменения были в файлах: ${changed_files}"
                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}| tr '\n' ' '"
-                echo "Будут запущены ${tests_files}"
-                tests_for_run = "--files_to_start ${tests_files}"
+                if ( test_files ) {
+                    echo "Будут запущены ${tests_files}"
+                    tests_for_run = "--files_to_start ${tests_files}"
+                } else {
+                    echo "Тесты для запуска не найдены по внесенным изменениям. Будут запущены все тесты."
+                }
+
 
             }
         }
