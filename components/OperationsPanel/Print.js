@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print', [
     * @class SBIS3.CONTROLS/OperationsPanel/Print
     * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @author Сухоручкин А.С.
+    * @deprecated Используйте {@link SBIS3.CONTROLS/Action/Save}.
     * @public
     */
    var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Print.prototype */{
