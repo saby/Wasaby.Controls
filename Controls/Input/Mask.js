@@ -1,5 +1,6 @@
 define('Controls/Input/Mask',
    [
+      'Core/IoC',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
@@ -8,12 +9,13 @@ define('Controls/Input/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
       'use strict';
 
       /**
        * Input for entering text with a specified format.
+       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
        * @extends Core/Control
@@ -55,6 +57,10 @@ define('Controls/Input/Mask',
       /**
        * @name Controls/Input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
+       *
+       * @remark If quantifiers are used in the mask, the replacer cannot be set.
+       * Correct operation is not supported.
+       *
        * @example
        * <pre>
        *    For example, mask='dd.dd', replacer=' ', value='12.34'.
@@ -70,6 +76,8 @@ define('Controls/Input/Mask',
 
       var
          _private = {
+            regExpQuantifiers: /\\({.*?}|.)/,
+
             findLastUserEnteredCharPosition: function(value, replacer) {
                var position;
 
@@ -96,6 +104,21 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
+            },
+            validateReplacer: function(replacer, mask) {
+               var validation;
+
+               if (replacer && _private.regExpQuantifiers.test(mask)) {
+                  validation = false;
+                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+               } else {
+                  validation = true;
+               }
+
+               return validation;
+            },
+            calcReplacer: function(replacer, mask) {
+               return _private.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
          Mask = Control.extend({
@@ -103,13 +126,11 @@ define('Controls/Input/Mask',
 
             _viewModel: null,
 
-            constructor: function(options) {
-               Mask.superclass.constructor.call(this, options);
-
+            _beforeMount: function(options) {
                this._viewModel = new ViewModel({
                   value: options.value,
                   mask: options.mask,
-                  replacer: options.replacer,
+                  replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
                });
             },
@@ -124,7 +145,7 @@ define('Controls/Input/Mask',
                   this._viewModel.updateOptions({
                      value: newOptions.value,
                      mask: newOptions.mask,
-                     replacer: newOptions.replacer,
+                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
                      formatMaskChars: newOptions.formatMaskChars
                   });
                }

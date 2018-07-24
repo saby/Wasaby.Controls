@@ -209,7 +209,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // лишних свойств, которые еще не применены к дому
             // панельки с этим начали вылезать плавненько
 
-            this._compoundControlCreated = new cDeferred();
+            self._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                moduleStubs.require([self._templateName]).addCallback(function(result) {
                   self._createCompoundControl(result[0]);
@@ -220,8 +220,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   });
                }).addErrback(function(e) {
                   IoC.resolve('ILogger').error('CompoundArea', 'Шаблон "' + self._options.template + '" не смог быть загружен!');
-                  this._compoundControlCreated.errback(e);
-               }.bind(this));
+                  self._compoundControlCreated.errback(e);
+               });
             });
          },
          _createCompoundControl: function(Component) {
@@ -242,7 +242,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this.handle('onReady');
-            this._compoundControl.setActive(true);
+            if (this._container.length) {
+               this._compoundControl.setActive(true);
+            }
             var self = this;
             runDelayed(function() {
                self._compoundControl._notifyOnSizeChanged();
@@ -365,6 +367,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             e.stopPropagation();
             this._close(arg);
          },
+         _mouseenterHandler: function() {
+            if (this._options.hoverTarget) {
+               clearTimeout(this._hoverTimer);
+               this._hoverTimer = null;
+            }
+         },
+         _mouseleaveHandler: function() {
+            if (this._options.hoverTarget) {
+               var _this = this;
+
+               this._hoverTimer = setTimeout(function() {
+                  _this.hide();
+               }, 1000);
+            }
+         },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
@@ -378,6 +395,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _setCompoundAreaOptions: function(newOptions) {
+            if (newOptions.record) { //recordFloatArea
+               this._record = newOptions.record;
+            }
             this._templateOptions = newOptions.templateOptions || {};
          },
 
@@ -668,7 +688,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
                popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
 
-               ManagerController.update(this._getPopupId(), popupConfig);
+               ManagerController.update(this._getPopupId(), popupConfig.popupOptions);
             }
          },
          _getManagerConfig: function() {
