@@ -16,7 +16,7 @@ define('Controls/Input/Text',
 
       /**
        * Single-line text input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Text
        * @extends Core/Control
@@ -24,6 +24,7 @@ define('Controls/Input/Text',
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
