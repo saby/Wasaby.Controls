@@ -536,7 +536,7 @@ node('controls') {
         )
     }
 } catch (err) {
-    echo "${err}"
+    echo "ERROR: ${err}"
 
 }finally {
     sh """
