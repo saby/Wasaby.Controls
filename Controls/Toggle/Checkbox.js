@@ -53,8 +53,10 @@ define('Controls/Toggle/Checkbox', [
       _template: template,
 
       _clickHandler: function() {
-         var map = this._options.triState ? mapTriState : mapBoolState;
-         _private.notifyChangeValue(this, map[this._options.value + '']);
+         if (!this._options.readOnly) {
+            var map = this._options.triState ? mapTriState : mapBoolState;
+            _private.notifyChangeValue(this, map[this._options.value + '']);
+         }
       }
    });
 

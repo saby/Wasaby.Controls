@@ -1,11 +1,16 @@
 .controls-Checkbox {
    display: inline-block;
 }
+.controls-Checkbox__disabled {
+   cursor: default;
+}
+.controls-Checkbox__enabled {
+   cursor: pointer;
+}
 .controls-Checkbox__wrapper:before {
    content: '\200b';
 }
 .controls-Checkbox__wrapper {
-   cursor:pointer;
    display: inline-flex;
    font-size: @font-size__checkBox;
    //Не можем сделать на флексах из-за стандарта
