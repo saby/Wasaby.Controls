@@ -24,7 +24,7 @@
         border-top: 1px solid #c2d0de;
         border-bottom: 1px solid #9cb3ca;
         height: ~'calc(100% + 1px)';
-        width: ~'calc(100% + @border-width_MasterList-right)';
+        width: ~'calc(100% + @{border-width_MasterList-right})';
         position: absolute;
         box-shadow: -4px 0 8px rgba(0, 0, 0, .15);
         bottom: 0;
@@ -34,7 +34,7 @@
       &:after {
         content: '';
         z-index: 1;
-        height: ~'calc(100% + @border-width_MasterList-right)';
+        height: ~'calc(100% + @{border-width_MasterList-right})';
         top: -1px;
         width: @border-width_MasterList-right;
         position: absolute;
