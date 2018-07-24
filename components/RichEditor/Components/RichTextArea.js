@@ -12,6 +12,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       "Core/constants",
       "Core/Deferred",
       "Core/helpers/Function/runDelayed",
+      'Core/helpers/domToJsonML',
+      'Core/HtmlJson',
       "SBIS3.CONTROLS/TextBox/TextBoxBase",
       "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
       "SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil",
@@ -40,6 +42,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants,
                Deferred,
                runDelayed,
+               domToJson,
+               HtmlJson,
                TextBoxBase,
                dotTplFn,
                RichUtil,
@@ -308,6 +312,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                _fromTouch: false,
                _codeSampleDialog: undefined,
                _beforeFocusOutRng: undefined,
+               _htmlJson: undefined,
                _images: {},
                _lastActive: undefined,
                _lastSavedText: undefined,
@@ -396,6 +401,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!this._readyControlDeffered.isReady()) {
                      this._readyControlDeffered.callback();
                   }
+               }
+               var self = this;
+               if (self._options.hasOwnProperty('json')) {
+                  self._htmlJson = new HtmlJson();
+                  self.setJson(self._options.json);
+
+                  self.subscribe('onTextChange', function(e, text) {
+                     if (text[0] !== '<') {
+                        text = '<p>' + text + '</p>';
+                     }
+                     var div = document.createElement('div');
+                     div.innerHTML = text;
+                     self._options.json = domToJson(div).slice(1);
+                     self._notify('onJsonChange', self._options.json);
+                  });
                }
                this._updateDataReview(this.getText());
             },
@@ -656,6 +676,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._drawText(text);
                }
                this._setText(text);
+            },
+            setJson: function(json) {
+               this._options.json = json;
+               this._htmlJson._options.json = json;
+               this.setText(this._htmlJson.render());
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
