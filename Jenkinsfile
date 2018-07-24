@@ -486,9 +486,9 @@ node('controls') {
         // EXPERIMENTAL
         def tests_for_run = ""
         if ( quick_int ) {
+            step([$class: 'CopyArtifact', projectName: "coverage_3.18.400/coverage_new_3.18.400", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
+            echo "Изменения были в файлах: ${changed_files}"
             dir("./controls/tests/int") {
-                step([$class: 'CopyArtifact', projectName: "coverage_3.18.400/coverage_new_3.18.400", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
-                echo "Изменения были в файлах: ${changed_files}"
                 def tests_files = sh returnStdout: true, script: "cd ./coverage && python3 ../../coverage_handler.py -c ${changed_files}| tr '\n' ' '"
                 echo "tests_files=${tests_files}="
                 if ( test_files ) {
@@ -498,6 +498,7 @@ node('controls') {
                     echo "Тесты для запуска не найдены по внесенным изменениям. Будут запущены все тесты."
                 }
             }
+
         }
         parallel (
             int_test: {
