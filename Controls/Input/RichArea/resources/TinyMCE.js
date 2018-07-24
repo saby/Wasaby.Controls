@@ -212,8 +212,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                //Проблема утечки памяти через tinyMCE
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor) {
-
-                  this._tinyEditor.destroy ();
+                  this._tinyEditor.destroy();
                   if (this._tinyEditor.theme) {
                      if (this._tinyEditor.theme.panel) {
                         this._tinyEditor.theme.panel._elmCache = null;
@@ -578,16 +577,16 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      cIndicator.hide();
                      require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
                         document.addEventListener('paste', onPaste, true);
-                        var _message ={
-                              className: 'controls-RichEditor__pasteWithStyles-alert',
-                              message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
-                              details: null,
-                              submitButton: {caption: rk('Отменить')},
-                              isModal: true,
-                              closeByExternalClick: true,
-                              opener: self
-                           };
-                           dialog = InformationPopupManager.showMessageDialog(_message,onClose
+                        dialog = InformationPopupManager.showMessageDialog({
+                           className: 'controls-RichEditor__pasteWithStyles-alert',
+                           message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
+                           details: null,
+                           submitButton: {caption: rk('Отменить')},
+                           isModal: true,
+                           closeByExternalClick: true,
+                           opener: self
+                        },
+                        onClose
                         );
                      });
                      service.destroy();
@@ -1641,7 +1640,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
                               callback(e, target);
                            }
-                        }.bind(this));
+                        });
                      };
 
                   //По двойному клику на изображение показывать диалог редактирования размеров
@@ -1681,26 +1680,25 @@ define('Controls/Input/RichArea/resources/TinyMCE',
 
                   this._children.mceContainer.setAttribute('tabindex', 1);
 
+                  // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
+                  // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
+                  // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
+                  for (var i = 1; i <= 9; i++) {
+                     editor.shortcuts.remove('access+' + i);
+                  }
 
-               // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
-               // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
-               // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
-               for (var i = 1; i <= 9; i++) {
-                  editor.shortcuts.remove('access+' + i);
-               }
-
-            RichUtil.markRichContentOnCopy(this._children.mceContainer);
+                  RichUtil.markRichContentOnCopy(this._children.mceContainer);
 
                   /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                   //formatter есть только после инита поэтому подписка осуществляется здесь
-               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
-               for (var key in this._options.customFormats) {
-                  if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
-                     formats += ',' + key;
+                  var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
+                  for (var key in this._options.customFormats) {
+                     if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
+                        formats += ',' + key;
+                     }
                   }
-               }
-               editor.formatter.formatChanged( formats, function(state, obj) {
-            self._notify('formatChanged', [obj, state]);
+                  editor.formatter.formatChanged(formats, function(state, obj) {
+                     self._notify('formatChanged', [obj, state]);
                   });
                   self._notify('onInitEditor');
                }.bind(this));
@@ -1841,46 +1839,46 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                   // пробелы заменяются с чередованием '&nbsp;' + ' '
                   html = this._replaceWhitespaces(html);
 
-               // И теперь (только один раз) вставим в DOM
-               content.innerHTML = html;
-            }.bind(this));
-           if (this.editorConfig.browser_spellcheck) {
+                  // И теперь (только один раз) вставим в DOM
+                  content.innerHTML = html;
+               }.bind(this));
+
+               if (this.editorConfig.browser_spellcheck) {
                   // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
-                  var _onSelectionChange1= function() {
-               //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
-               //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
-               //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
-               setTimeout(function() {
+                  var _onSelectionChange1 = function() {
+                     //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
+                     //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
+                     //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
+                     setTimeout(function() {
                         document.addEventListener('selectionchange', _onSelectionChange2, {once: true});
                      }, 1);
-               // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-               setTimeout( function() {
-               document.removeEventListener('selectionchange', _onSelectionChange2);
-            },120000);
-            };
 
-            var
-            _onSelectionChange2= function() {
-               this._updateTextByTiny();
-            }.bind(this);
-            //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
+                     // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+                     setTimeout(function() {
+                        document.removeEventListener('selectionchange', _onSelectionChange2);
+                     }, 120000);
+                  };
+
+                  var _onSelectionChange2 = function() {
+                     this._updateTextByTiny();
+                  }.bind(this);
+
+                  //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
                   editor.on('mousedown', function(evt) {
-               if (evt.button === 2) {
-                  if (evt.currentTarget === this._children.mceContainer[0] &&
-                     (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
-
-                     cConstants.$doc.off('selectionchange', _onSelectionChange2);
-
-                     if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
-                        // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
-                        // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(function() {
+                     if (evt.button === 2) {
+                        if (evt.currentTarget === this._children.mceContainer[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
+                           cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                           if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
+                              // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
+                              // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
+                              setTimeout(function() {
                                  document.addEventListener('selectionchange', _onSelectionChange1, {once: true});
                               }, 1);
-                     } else {
-                        document.addEventListener('selectionchange', _onSelectionChange1, {once: true});
+                           } else {
+                              document.addEventListener('selectionchange', _onSelectionChange1, {once: true});
+                           }
+                        }
                      }
-                  }}
                   }.bind(this));
                }
 
@@ -2620,16 +2618,16 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             _showImgError: function() {
                var promise = new Deferred();
                require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
-                  var message ={
-                        status: 'error',
-                        className: 'controls-RichEditor__insertImg-alert',
-                        message: rk('Ошибка'),
-                        details: rk('Невозможно открыть изображение'),
-                        isModal: true,
-                        closeByExternalClick: true,
-                        opener: this
-                     };
-                     InformationPopupManager.showMessageDialog(message,promise.callback.bind(promise)
+                  InformationPopupManager.showMessageDialog({
+                     status: 'error',
+                     className: 'controls-RichEditor__insertImg-alert',
+                     message: rk('Ошибка'),
+                     details: rk('Невозможно открыть изображение'),
+                     isModal: true,
+                     closeByExternalClick: true,
+                     opener: this
+                  },
+                  promise.callback.bind(promise)
                   );
                });
                return promise;
