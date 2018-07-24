@@ -523,7 +523,7 @@ node('controls') {
         def tests_for_run = ""
         if ( quick_int && isBranch ) {
             dir("./controls/tests/") {
-                def url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}_controls/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                def url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                 script = """
                 if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
                     echo "result.json exitsts"; cp -fr tmp_result.json result.json
