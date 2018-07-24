@@ -652,6 +652,29 @@ define([
       });
 
       describe('_onItemClick', function() {
+         it('clickItemInfo', function() {
+            eip.editItem = function() {};
+            eip.saveOptions({
+               editingConfig: {
+                  editOnClick: true
+               }
+            });
+            eip._onItemClick({}, newItem, {
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               },
+               nativeEvent: {
+                  clientX: 10,
+                  clientY: 20
+               }
+            });
+            assert.equal(eip._clickItemInfo.item, newItem);
+            assert.equal(eip._clickItemInfo.clientX, 10);
+            assert.equal(eip._clickItemInfo.clientY, 20);
+         });
+
          it('editOnClick: true, notEditable element', function(done) {
             eip.commitEdit = function() {
                done();
