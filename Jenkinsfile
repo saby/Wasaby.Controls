@@ -490,7 +490,7 @@ node('controls') {
             echo "Изменения были в файлах: ${changed_files}"
             dir("./controls/tests/int/coverage") {
                 def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}| tr '\n' ' '"
-                if ( tests_files ) {
+                if ( tests_files != " " ) {
                     echo "Будут запущены ${tests_files}"
                     tests_for_run = "--files_to_start ${tests_files}"
                 } else {
