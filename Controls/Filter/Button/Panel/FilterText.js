@@ -26,6 +26,10 @@ define('Controls/Filter/Button/Panel/FilterText', [
    var FilterText = Control.extend({
       _template: template,
 
+      _afterMount: function() {
+         this._notify('valueChanged', [true]);
+      },
+
       _resetHandler: function() {
          this._notify('visibilityChanged', [false]);
       }
