@@ -1,10 +1,10 @@
-define('Controls/Input/interface/PasswordDocs',
+define('Controls/Input/Password/PasswordStyles',
    [
 
    ],
    function() {
       /**
-       * @mixin Controls/Input/interface/PasswordDocs
+       * @mixin Controls/Input/Password/PasswordStyles
        * @css @font-size_PasswordInput-showPassword "View password" icon size.
        * @css @font-family_PasswordInput-showPassword "View password" icon font.
        * @css @color_PasswordInput-showPassword "View password" icon color.

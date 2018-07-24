@@ -1075,13 +1075,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _getYearRange: function (startDate, endDate, quantum) {
-         var date = new Date(startDate);
          if (startDate <= endDate) {
-            date.setYear(date.getFullYear() + quantum - 1);
-            return [endDate, date]
+            return [endDate, new Date(startDate.getFullYear() + quantum, 0, 0)];
          } else {
-            date.setYear(date.getFullYear() - quantum + 1);
-            return [date, endDate]
+            return [new Date(startDate.getFullYear() + quantum + 1, 0, 1), endDate];
          }
       },
 

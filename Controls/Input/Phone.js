@@ -10,13 +10,14 @@ define('Controls/Input/Phone',
 
       /**
        * Phone input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input

@@ -35,7 +35,7 @@ define('Controls/Input/Number', [
 
       /**
        * Number input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Number
        * @extends Core/Control
@@ -43,6 +43,7 @@ define('Controls/Input/Number', [
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
