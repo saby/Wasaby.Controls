@@ -1,26 +1,26 @@
 <div>
-    <h3>Кликабельный</h3>
-    <Controls.Toggle.Switch bind:value="value" caption="On" attr:test_name="clicked" />
-    <h3>Кликабельный, в режиме чтения</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption="On" attr:test_name="readonly" />
-    <h3>Выключен</h3>
-    <Controls.Toggle.Switch bind:value="value" />
-    <h3>Включен</h3>
-    <Controls.Toggle.Switch bind:value="value1"/>
-    <h3>Выключен, с caption</h3>
-    <Controls.Toggle.Switch bind:value="value" caption = "On"/>
-    <h3>Включен, с caption</h3>
-    <Controls.Toggle.Switch bind:value="value1" caption = "On"/>
-    <h3>В режиме чтения, выключен</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value" />
-    <h3>В режиме чтения, включен</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1"/>
-    <h3>В режиме чтения, выключен, с caption</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" caption = "On" bind:value="value"/>
-    <h3>В режиме чтения, включен, с caption</h3>
-    <Controls.Toggle.Switch readOnly="{{true}}" bind:value="value1" caption = "On"/>
-    <h3>Базовая линия</h3>
-    baseline<Controls.Toggle.Switch caption = "On" bind:value="value"/>
-    <h3>В режиме чтения, включен, с caption</h3>
-    <Controls.Toggle.Switch readOnly="{{false}}" captionPosition="left" bind:value="value1" caption = "On"/>
+    <div class="exampleBlock">
+        <h2>Switch</h2>
+        <Controls.Toggle.Switch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" caption="{{_caption}}" captionPosition="{{_selectedCaptionPosition}}"/>
+    </div>
+    <div class="optionsBlock">
+        <h3>Options</h3>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly"/>
+        <br/>
+        <Controls.Label caption="Caption"/>
+        <Controls.Input.Text bind:value="_caption"/>
+        <Controls.Label caption="Caption position:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeCaptionPosition()"
+                keyProperty="title"
+                selectedKey="{{_selectedCaptionPosition}}"
+                source="{{_captionPositionSource}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+    </div>
+    <div class="eventBlock">
+        <span>Event that surfaced:</span>
+        <br/>
+        <span>{{_eventName}}</span>
+    </div>
 </div>
