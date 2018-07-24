@@ -486,10 +486,10 @@ node('controls') {
         // EXPERIMENTAL
         def tests_for_run = ""
         if ( quick_int ) {
-            dir("./controls/tests/") {
-                step([$class: 'CopyArtifact', projectName: "coverage_3.18.400/coverage_new_3.18.400", filter: "**/result.json", target: "${workspace}/controls/tests/", selector: [$class: 'LastCompletedBuildSelector']])
+            dir("./controls/tests/int") {
+                step([$class: 'CopyArtifact', projectName: "coverage_3.18.400/coverage_new_3.18.400", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
                 echo "Изменения были в файлах: ${changed_files}"
-                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}| tr '\n' ' '"
+                def tests_files = sh returnStdout: true, script: "cd ./coverage && python3 ../../coverage_handler.py -c ${changed_files}| tr '\n' ' '"
                 echo "tests_files=${tests_files}="
                 if ( test_files ) {
                     echo "Будут запущены ${tests_files}"
