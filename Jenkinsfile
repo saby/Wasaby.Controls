@@ -537,6 +537,8 @@ node('controls') {
     }
 } catch (err) {
     echo "ERROR: ${err}"
+    currentBuild.result = 'FAILURE'
+    gitlabStatusUpdate()
 
 }finally {
     sh """
