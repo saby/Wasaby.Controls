@@ -160,6 +160,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
             template: template,
             componentOptions: componentOptions || {},
             opener: this,
+            _openFromAction: true,
             parent: this._options.chooserMode === 'dialog' ? this : null,
             context: cContext.createContext(self, null, this.getLinkedContext()),
             target: this.getContainer()

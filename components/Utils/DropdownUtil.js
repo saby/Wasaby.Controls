@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
       initHistory: function(self, callback, event) {
          var myself = this;
 
-         if (!self._historyDeferred || !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet())) {
+         if (!self._historyDeferred || (self._historyDeferred.isReady() && !historyUtil.isEqualHistory(self._options.historyId, this._getHistoryController(self).getHistoryDataSet()))) {
             this._getHistoryController(self).initRecordSet();
 
             // нужна вычитка данных с БЛ по id позвать списочный метод с нужным фильтром
