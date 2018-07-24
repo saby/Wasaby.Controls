@@ -21,6 +21,13 @@ define('Controls/Popup/InfoBox',
        *
        * @mixin Controls/interface/IStickyOpener
        *
+       * @name Controls/Popup/InfoBox#showMode
+       * @cfg {String} The behavior of opening and closing the template.
+       * @variant click Opening and closing with a click.
+       * @variant hover Opening and closing with a hover.
+       * @variant all Opening and closing with a click and hover.
+       * @default all
+       *
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.
        *
@@ -118,7 +125,9 @@ define('Controls/Popup/InfoBox',
                   this._closeId = null;
                   break;
                case 'mouseleave':
-                  this._contentMouseleaveHandler();
+                  if (this._options.showMode === 'hover') {
+                     this._contentMouseleaveHandler();
+                  }
                   break;
                case 'mousedown':
                   event.stopPropagation();
@@ -129,6 +138,7 @@ define('Controls/Popup/InfoBox',
 
       InfoBox.getDefaultOptions = function() {
          return {
+            showMode: 'all',
             position: 'tl',
             showDelay: 300,
             hideDelay: 300
