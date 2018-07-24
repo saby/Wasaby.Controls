@@ -10,12 +10,14 @@ define('Controls/Input/Phone',
 
       /**
        * Phone input.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
@@ -46,6 +48,12 @@ define('Controls/Input/Phone',
          _focusinHandler: function() {}
       });
 
+      Phone.getDefaultOptions = function() {
+         return {
+            value: ''
+         };
+      };
+      
       return Phone;
    }
 );

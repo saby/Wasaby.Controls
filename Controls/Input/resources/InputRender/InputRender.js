@@ -1,22 +1,22 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-
       'WS.Data/Type/descriptor',
+      'Controls/Utils/tmplNotify',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, template, RenderHelper, cDetection) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection) {
 
       'use strict';
 
       /**
        * @class Controls.Input.resources.InputRender.InputRender
        * @extends Core/Control
-       * @mixes Controls/Input/resources/InputRender/InputRenderDocs
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @private
        * @category Input
@@ -61,6 +61,8 @@ define('Controls/Input/resources/InputRender/InputRender',
       var InputRender = Control.extend({
 
          _template: template,
+
+         _notifyHandler: tmplNotify,
 
          _inputHandler: function(e) {
             var
@@ -110,10 +112,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _inputCompletedHandler: function(e) {
             this._notify('inputCompleted', [this._options.viewModel.getValue()]);
-         },
-
-         _notifyHandler: function(e, value) {
-            this._notify(value);
          },
 
          _getInputState: function() {

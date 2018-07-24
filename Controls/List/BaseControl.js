@@ -364,7 +364,7 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -399,10 +399,6 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
-
-      constructor: function(cfg) {
-         BaseControl.superclass.constructor.apply(this, arguments);
-      },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
@@ -560,8 +556,10 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function() {
-         return _private.reload(this, this._options.filter, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function(filter) {
+         var
+            reloadFilter = filter || this._options.filter;
+         return _private.reload(this, reloadFilter, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {

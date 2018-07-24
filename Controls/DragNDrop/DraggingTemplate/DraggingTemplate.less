@@ -1,0 +1,76 @@
+.controls-DragNDrop__draggingTemplate-wrapper {
+   position: absolute;
+}
+
+.controls-DragNDrop__draggingTemplate {
+   display: flex;
+   width: @width_DraggingTemplate;
+   height: @height_DraggingTemplate;
+   background: @background-color_DraggingTemplate;
+   border: @border-width_DraggingTemplate solid @border-color_DraggingTemplate;
+   z-index: 10;
+   .box-shadow(0 0 @box-shadow-size_DraggingTemplate @box-shadow-color_DraggingTemplate);
+}
+
+.controls-DragNDrop__draggingTemplate-icon {
+   color: @color_DraggingTemplate-icon;
+   width: @width_DraggingTemplate-icon;
+   height: @height_DraggingTemplate-icon;
+   border-radius: @border-radius_DraggingTemplate-icon;
+   margin: @margin_DraggingTemplate-icon;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.controls-DragNDrop__draggingTemplate-icon-size {
+   .icon-size(@icon-size_DraggingTemplate-icon);
+}
+
+.controls-DragNDrop__draggingTemplate-text {
+   flex-shrink: 1;
+   width: 100%;
+   margin: @margin_DraggingTemplate-text;
+   overflow: hidden;
+}
+
+.controls-DragNDrop__draggingTemplate-text:after {
+   content: '';
+   display: block;
+   height: 100%;
+   width: @width_DraggingTemplate-textShadow;
+   position: absolute;
+   right: 0;
+   top: 0;
+   .horizontal-gradient(fade(@background-color_DraggingTemplate, 100%), @background-color_DraggingTemplate, left);
+}
+
+.controls-DragNDrop_draggingTemplate-mainText, .controls-DragNDrop__draggingTemplate-additionalText {
+   white-space: nowrap;
+}
+
+.controls-DragNDrop__draggingTemplate-mainText {
+   font-size: @font-size_DraggingTemplate-mainText;
+   font-weight: bold;
+   color: @color_DraggingTemplate-mainText;
+}
+
+.controls-DragNDrop__draggingTemplate-additionalText {
+   font-size: @font-size_DraggingTemplate-additionalText;
+   color: @color_DraggingTemplate-additionalText;
+}
+
+.controls-DragNDrop__draggingTemplate-counter {
+   position: absolute;
+   display: flex;
+   align-items: center;
+   right: -(@height_DraggingTemplate-counter / 2);
+   top: -(@height_DraggingTemplate-counter / 2);
+   height: @height_DraggingTemplate-counter;
+   font-size: @font-size_DraggingTemplate-counter;
+   color: @color_DraggingTemplate-counter;
+   background-color: @background-color_DraggingTemplate-counter;
+   border-radius: @height_DraggingTemplate-counter / 2;
+   padding: @padding_DraggingTemplate-counter;
+}

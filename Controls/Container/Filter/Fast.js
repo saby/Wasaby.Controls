@@ -31,7 +31,7 @@ define('Controls/Container/Filter/Fast',
          _beforeUpdate: function(options, context) {
             //context from Filter layout
             var filterItems = context.filterLayoutField.fastFilterItems;
-            if (!isEqual(this.context.get('filterLayoutField').fastFilterItems, filterItems)) {
+            if (!isEqual(this._items, filterItems)) {
                this._items = filterItems;
             }
          },
@@ -42,7 +42,7 @@ define('Controls/Container/Filter/Fast',
             }
          },
    
-         _filterChanged: function(event) {
+         _filterChanged: function() {
             this._notify('itemsChanged', [this._items], {bubbling: true});
          }
       });

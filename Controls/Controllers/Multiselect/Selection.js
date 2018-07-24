@@ -10,6 +10,30 @@ define('Controls/Controllers/Multiselect/Selection', [
 ) {
    'use strict';
 
+   /**
+    * @class Controls/Controllers/Multiselect/Selection
+    * @extends Core/core-simpleExtend
+    * @author Зайцев А.С.
+    * @private
+    */
+
+   /**
+    * @name Controls/Controllers/Multiselect/Selection#selectedKeys
+    * @cfg {Array} Array of selected items' keys.
+    * @variant [null] Everything selected.
+    * @variant [] Nothing selected.
+    */
+
+   /**
+    * @name Controls/Controllers/Multiselect/Selection#excludedKeys
+    * @cfg {Array} Array of keys for items that should be excluded from the selection.
+    */
+
+   /**
+    * @name Controls/Controllers/Multiselect/Selection#keyProperty
+    * @cfg {String|Number} Name of the item property that uniquely identifies collection item.
+    */
+
    var
       ALLSELECTION_VALUE = [null],
       SELECTION_STATUS = {
@@ -37,6 +61,10 @@ define('Controls/Controllers/Multiselect/Selection', [
          Selection.superclass.constructor.apply(this, arguments);
       },
 
+      /**
+       * Add keys to selection.
+       * @param {Array} keys Keys to add to selection.
+       */
       select: function(keys) {
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
@@ -48,6 +76,10 @@ define('Controls/Controllers/Multiselect/Selection', [
          }
       },
 
+      /**
+       * Remove keys from selection.
+       * @param {Array} keys Keys to remove from selection.
+       */
       unselect: function(keys) {
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
@@ -59,16 +91,26 @@ define('Controls/Controllers/Multiselect/Selection', [
          }
       },
 
+      /**
+       * Select all items.
+       * @remark Sets selectedKeys to [null].
+       */
       selectAll: function() {
          this._selectedKeys = ALLSELECTION_VALUE;
          this._excludedKeys = [];
       },
 
+      /**
+       * Remove selection from all items.
+       */
       unselectAll: function() {
          this._selectedKeys = [];
          this._excludedKeys = [];
       },
 
+      /**
+       * Invert selection.
+       */
       toggleAll: function() {
          var swap;
 
@@ -83,6 +125,10 @@ define('Controls/Controllers/Multiselect/Selection', [
          }
       },
 
+      /**
+       * Returns selection.
+       * @returns {{selected: Array, excluded: Array}}
+       */
       getSelection: function() {
          return {
             selected: this._selectedKeys,
@@ -90,10 +136,18 @@ define('Controls/Controllers/Multiselect/Selection', [
          };
       },
 
+      /**
+       * Set items which will be used to calculate selectedKeys for render.
+       * @param {WS.Data/Collection/RecordSet} items
+       */
       setItems: function(items) {
          this._items = cClone(items);
       },
 
+      /**
+       * Returns the number of selected items.
+       * @returns {number}
+       */
       getCount: function() {
          if (this._isAllSelection({
             selectedKeys: this._selectedKeys,
@@ -106,6 +160,10 @@ define('Controls/Controllers/Multiselect/Selection', [
          }
       },
 
+      /**
+       * Transforms selection to single array of selectedKeys and returns it. Used for rendering checkboxes in lists.
+       * @returns {Array}
+       */
       getSelectedKeysForRender: function() {
          var
             res = [],
