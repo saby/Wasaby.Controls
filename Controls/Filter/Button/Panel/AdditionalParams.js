@@ -23,10 +23,10 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          }
       },
 
-      countItems: function(items) {
+      countItems: function(self, items) {
          var result = 0;
          Chain(items).each(function(elem) {
-            if (!getPropValue(elem, 'visibility')) {
+            if (!self._isItemVisible(elem)) {
                result++;
             }
          });
@@ -34,7 +34,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       },
 
       onResize: function(self) {
-         self._arrowVisible = _private.countItems(self._options.items) > MAX_NUMBER_ITEMS;
+         self._arrowVisible = _private.countItems(self, self._options.items) > MAX_NUMBER_ITEMS;
          
          if (!self._arrowVisible) {
             self._isMaxHeight = true;
@@ -61,6 +61,11 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
             this.items = _private.cloneItems(this._options.items);
             _private.onResize(this);
          }
+      },
+
+      _isItemVisible: function(item) {
+         return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
+            Utils.getItemPropertyValue(item, 'visibility');
       },
 
       _clickItemHandler: function(event, index) {

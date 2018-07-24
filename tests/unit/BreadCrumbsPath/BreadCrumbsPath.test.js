@@ -135,18 +135,20 @@ define([
       });
 
       it('_onItemClick', function() {
-         path._notify = function(e, item) {
+         path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[1], item[0]);
+               assert.equal(path._options.items[1], args[0]);
+               assert.isFalse(!!args[1]);
             }
          };
          path._onItemClick({}, path._options.items[1]);
       });
 
       it('_onBackButtonClick', function() {
-         path._notify = function(e, item) {
+         path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[0], item[0]);
+               assert.equal(path._options.items[0], args[0]);
+               assert.isTrue(args[1]);
             }
          };
          path._onBackButtonClick({}, path._options.items[0]);

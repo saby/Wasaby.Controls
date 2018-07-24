@@ -71,7 +71,9 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) && Utils.getItemPropertyValue(item, 'visibility')) {
+               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue') &&
+                  Utils.getItemPropertyValue(item, 'visibility')
+               ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
                   if (textValue) {
@@ -91,6 +93,15 @@ define('Controls/Filter/Button',
             if (self._options.filterTemplate && self._filterCompatible) {
                self._filterCompatible.updateFilterStructure(items);
             }
+         },
+
+         resetItems: function(self, items) {
+            Chain(items).each(function(item) {
+               Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
+               if (Utils.getItemPropertyValue(item, 'visibility') !== undefined) {
+                  Utils.setItemPropertyValue(item, 'visibility', false);
+               }
+            });
          }
       };
 
@@ -123,6 +134,9 @@ define('Controls/Filter/Button',
                _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                   panelOpener.clearFilter();
                });
+            } else {
+               _private.resetItems(this, this._items);
+               this._notify('itemsChanged', [this._items]);
             }
             this._text = '';
          },

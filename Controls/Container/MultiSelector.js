@@ -13,18 +13,35 @@ define('Controls/Container/MultiSelector', [
 ) {
    'use strict';
 
+   /**
+    * Container for content that can work with multiselection.
+    * Puts selection in child context.
+    *
+    * @class Controls/Container/MultiSelector
+    * @extends Core/Control
+    * @mixes Controls/interface/IPromisedSelectable
+    * @control
+    * @author Зайцев А.С.
+    * @public
+    */
+
    var MultiSelector = Control.extend({
       _template: template,
       _multiselection: null,
       _items: null,
 
       _beforeMount: function(newOptions, context) {
-         var self = this;
          this._items = context.dataOptions.items;
          this._createMultiselection(newOptions, context);
          this._updateSelectionContext();
+      },
+
+      _afterMount: function() {
+         var self = this;
+
          this._items.subscribe('onCollectionChange', function() {
             self._updateSelectionContext();
+            self._notify('selectionChange', [self._multiselection.getSelection()]);
          });
       },
 
@@ -36,6 +53,7 @@ define('Controls/Container/MultiSelector', [
             this._updateSelectionContext();
             this._items.subscribe('onCollectionChange', function() {
                self._updateSelectionContext();
+               self._notify('selectionChange', [self._multiselection.getSelection()]);
             });
          }
       },
@@ -47,12 +65,14 @@ define('Controls/Container/MultiSelector', [
       _onListSelectionChange: function(event, keys, added, removed) {
          this._multiselection.unselect(removed);
          this._multiselection.select(added);
+         this._notify('selectionChange', [this._multiselection.getSelection()]);
 
          this._updateSelectionContext();
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
          this._multiselection[typeName]();
+         this._notify('selectionChange', [this._multiselection.getSelection()]);
 
          this._updateSelectionContext();
       },
@@ -67,9 +87,6 @@ define('Controls/Container/MultiSelector', [
             this._multiselection.getCount()
          );
 
-         if (this._options.selectionChangeHandler) {
-            this._options.selectionChangeHandler(currentSelection);
-         }
          this._forceUpdate();
       },
 
