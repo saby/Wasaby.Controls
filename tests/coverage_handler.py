@@ -1,15 +1,23 @@
+"""
+модуль для составления файла из отчетов istanbul
+может вовзарщать список тестов, в зависимости какие исходные файлы изменялись
+
+"""
+
 import os
 import json
 from pprint import pprint
 import argparse
 
+RESULT_JSON = 'result.json'
 
 class Coverage:
-
+    """Составляет исходный json файл с названиями тестов и их зависимостями"""
     path_result = {}
     result = {}
 
     def build(self, path):
+        """Пробегает по всем папкам в поисках coverage.json"""
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -22,44 +30,37 @@ class Coverage:
                         path_list.append(file_name)
             self.path_result[tdir] = path_list
 
-        ts = tf = 1
-
-        for item in self.path_result:
+        for ts, item in enumerate(self.path_result):
             coverage_result = []
-            print(ts,'ТЕСТ:', item)
-            ts +=1
+            print(ts, 'Name: ', item)
             for fname in self.path_result[item]:
                 with open(fname, encoding='utf-8', mode='r') as f:
                     d = json.loads(f.read(), encoding='utf-8')
-                    print(tf, 'Filename: ', fname)
-                    tf+=1
+                    # получаем зависимости
                     for k in d:
                         coverage_result.append(k)
-            uresult = sorted(set(coverage_result))
-            self.result[item] = uresult
+            s_result = sorted(set(coverage_result))
+            self.result[item] = s_result
 
-        pprint(self.path_result)
-        name = 'result.json'
+        # записываем результаты в файл
         mode = 'a+'
-        if os.path.exists(name) :
+        if os.path.exists(RESULT_JSON) :
             mode = 'r+'
 
-        with open(os.path.join(path, 'result.json'), mode=mode, encoding='utf-8') as f:
+        with open(os.path.join(path, RESULT_JSON), mode=mode, encoding='utf-8') as f:
             f.seek(0)
             f.write(json.dumps(self.result, indent=2))
             f.truncate()
 
 
 class Test:
-    result_name = 'result.json'
+    """Возвращает список тестов по зависимостям"""
     result = []
-    all_files = []
 
     def search(self, change_files):
-        with open(self.result_name, encoding='utf-8') as f:
+        with open(RESULT_JSON, encoding='utf-8') as f:
             data = json.loads(f.read(), encoding='utf-8')
             for name in data:
-                self.all_files.append(name)
                 for source in data[name]:
                     for file in change_files:
                         if file in source:
