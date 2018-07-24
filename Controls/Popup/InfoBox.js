@@ -41,7 +41,9 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.template
+                  content: self._options.template,
+                  contentTemplateName: self._options.templateName,
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
