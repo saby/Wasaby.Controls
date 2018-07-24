@@ -675,18 +675,20 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          _initPaging: function() {
             if (this._options.isPaging) {
                requirejs(['SBIS3.CONTROLS/Paging'], function(paging) {
-                  this._paging = new paging({
-                     element: this._container.find('.js-controls-ScrollContainer__paging'),
-                     className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',
-                     visiblePath: this._options.navigationToolbar,
-                     parent: this
-                  });
-                  var containerHeight = this._getContainerHeight();
-                  if (containerHeight) {
-                     this._setPagesCount(Math.ceil(this._getScrollHeight() / containerHeight));
+                  if (!this.isDestroyed()) {
+                     this._paging = new paging({
+                        element: this._container.find('.js-controls-ScrollContainer__paging'),
+                        className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',
+                        visiblePath: this._options.navigationToolbar,
+                        parent: this
+                     });
+                     var containerHeight = this._getContainerHeight();
+                     if (containerHeight) {
+                        this._setPagesCount(Math.ceil(this._getScrollHeight() / containerHeight));
+                     }
+                     this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
+                     this._page = 1;
                   }
-                  this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
-                  this._page = 1;
                }.bind(this));
             }
          },
