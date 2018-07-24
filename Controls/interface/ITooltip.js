@@ -4,7 +4,7 @@ define('Controls/interface/ITooltip', [
    /**
     * Interface for the tooltip.
     *
-    * @mixin Controls/interface/ITooltip
+    * @interface Controls/interface/ITooltip
     * @public
     */
 

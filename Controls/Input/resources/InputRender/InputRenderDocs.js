@@ -4,7 +4,7 @@ define('Controls/Input/resources/InputRender/InputRenderDocs',
    ],
    function() {
       /**
-       * @mixin Controls/Input/resources/InputRender/InputRenderDocs
+       * @interface Controls/Input/resources/InputRender/InputRenderDocs
        * @css @height_InputRender_m Высота контейнера поля ввода при указанном размере "m".
        * @css @height_InputRender_l Высота контейнера поля ввода при указанном размере "l".
        * @css @height_InputRender_default Высота контейнера поля ввода при размере "по умолчанию". Значение "по умолчанию", в зависимости от темы, указывает на один из доступных размеров (например, "m" или "l").

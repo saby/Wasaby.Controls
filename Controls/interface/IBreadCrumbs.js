@@ -4,7 +4,7 @@ define('Controls/interface/IBreadCrumbs', [
    /**
     * Interface for breadcrumbs.
     *
-    * @mixin Controls/interface/IBreadCrumbs
+    * @interface Controls/interface/IBreadCrumbs
     * @public
     */
 

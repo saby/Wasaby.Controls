@@ -4,7 +4,7 @@ define('Controls/List/interface/IGridControl', [
    /**
     * Interface for Grid (table view).
     *
-    * @mixin Controls/List/interface/IGridControl
+    * @interface Controls/List/interface/IGridControl
     * @public
     */
 

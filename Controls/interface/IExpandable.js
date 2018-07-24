@@ -3,7 +3,7 @@ define('Controls/interface/IExpandable', [
 
    /**
     * Interface for components with switchable state of extensibility.
-    * @mixin Controls/interface/IExpandable
+    * @interface Controls/interface/IExpandable
     * @public
     */
 

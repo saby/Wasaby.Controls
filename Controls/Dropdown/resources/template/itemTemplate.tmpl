@@ -1,4 +1,4 @@
-<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}}
+<div attr:class="controls-DropdownList__row {{marker !== false && itemData.isSelected ? 'controls-DropdownList__selected'}}
                  controls-DropdownList__item-right_{{showClose ? 'close-padding' : itemData.hasChildren ? 'hierarchy-padding': 'default-padding'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}}">
    <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}}">

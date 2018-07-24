@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputNumber', [
    /**
     * Interface for Input.Number.
     *
-    * @mixin Controls/Input/interface/IInputNumber
+    * @interface Controls/Input/interface/IInputNumber
     * @public
     */
 

@@ -4,7 +4,7 @@ define('Controls/interface/IGroupedView', [
    /**
     * Interface for components implementing item grouping.
     *
-    * @mixin Controls/interface/IGroupedView
+    * @interface Controls/interface/IGroupedView
     * @public
     */
 
