@@ -89,7 +89,7 @@ define('Controls/Filter/Button/Panel', [
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
          this._historyId = options.historyId || (this._contextOptions && this._contextOptions.historyId);
-         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = options.additionalTemplate && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 

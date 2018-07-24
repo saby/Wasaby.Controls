@@ -58,7 +58,7 @@ define('Controls/Container/Data',
          }
       };
       
-      var Base =  Control.extend({
+      var Data =  Control.extend({
          
          _template: template,
          
@@ -83,13 +83,22 @@ define('Controls/Container/Data',
                });
             }
          },
+         
+         _beforeUpdate: function(newOptions) {
+            _private.resolveOptions(this, newOptions);
+         },
    
          _filterChanged: function(event, filter) {
-            this._filter = clone(filter);
+            this._filter = filter;
+            this._notify('filterChanged', [filter]);
          },
          
          _itemsChanged: function(event, items) {
-            _private.createPrefetchSource(this, items);
+            var self = this;
+            _private.createPrefetchSource(this, items).addCallback(function(result) {
+               _private.resolvePrefetchSourceResult(self, result);
+               return result;
+            });
          },
          
          _getChildContext: function() {
@@ -98,7 +107,7 @@ define('Controls/Container/Data',
             };
          }
       });
-      
-      Base._private = _private;
-      return Base;
+   
+      Data._private = _private;
+      return Data;
    });

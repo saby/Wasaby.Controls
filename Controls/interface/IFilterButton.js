@@ -39,7 +39,7 @@ define('Controls/interface/IFilterButton', [
     */
    
    /**
-    * @name Controls/interface/IFilterButton#filterAlign
+    * @name Controls/interface/IFilterButton#orientation
     * @cfg {String} Sets the direction in which the popup panel will open.
     * @variant right The panel opens to the left.
     * @variant left The panel opens to the right.
