@@ -108,7 +108,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       var items = [
          {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod},
          {id: 'state', value: [1], resetValue: [1], source: sourceState},
-         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', source: sourceLimit, visibility: false},
+         {id: 'limit', value: [1], resetValue: '', source: sourceLimit, visibility: false},
          {id: 'sender', value: '', resetValue: ''},
          {id: 'author', value: 'Ivanov K.K.', resetValue: '', templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
          {id: 'responsible', value: '', resetValue: ''},

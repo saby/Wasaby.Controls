@@ -17,7 +17,8 @@
 
 <ws:template name="group">
 <Controls.Filter.Button.Panel.FilterSelect
-        keyProperty="key">
+        keyProperty="key"
+        bind:textValue="item.textValue">
    <ws:items>
       <ws:Array>
          <ws:Object key="{{1}}" value="My"/>
@@ -37,7 +38,8 @@
 
 <ws:template name="limit">
 <Controls.Filter.Button.Panel.FilterSelect
-        keyProperty="key">
+        keyProperty="key"
+        bind:textValue="item.textValue">
    <ws:items>
       <ws:Array>
          <ws:Object key="{{1}}" value="Due date"/>
@@ -49,7 +51,8 @@
 
 <ws:template name="own">
 <Controls.Filter.Button.Panel.FilterSelect
-        keyProperty="key">
+        keyProperty="key"
+        bind:textValue="item.textValue">
    <ws:items>
       <ws:Array>
          <ws:Object key="{{1}}" value="On me"/>

@@ -30,10 +30,6 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
          this._notify('textValueChanged', [text]);
       },
 
-      _textChangedHandler: function(event, text) {
-         this._notify('textChanged', [text]);
-      },
-
       _resetHandler: function() {
          this._notify('visibilityChanged', [false]);
       }

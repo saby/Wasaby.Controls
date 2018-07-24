@@ -10,6 +10,7 @@ define('Controls/Filter/Button/Panel/FilterSelect', [
       _template: template,
 
       _clickHandler: function(event, item) {
+         this._notify('textValueChanged', [Utils.getItemPropertyValue(item, 'value')]);
          this._notify('valueChanged', [[Utils.getItemPropertyValue(item, this._options.keyProperty)]]);
       }
 

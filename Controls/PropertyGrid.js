@@ -36,10 +36,6 @@ define('Controls/PropertyGrid', [
       _visibilityChangedHandler: function(event, index, visibility) {
          this._options.items[index].visibility = visibility;
          this._notify('visibilityChanged', [visibility]);
-      },
-
-      _textChangedHandler: function(event, index, text) {
-         this._options.items[index].textValue = text;
       }
    });
 

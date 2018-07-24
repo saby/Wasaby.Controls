@@ -72,8 +72,8 @@ define('Controls/Filter/Button/Panel', [
       isChangedValue: function(items) {
          var isChanged = false;
          Chain(items).each(function(item) {
-            if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
-               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
+            if ((!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
+               getPropValue(item, 'visibility') === undefined) || getPropValue(item, 'visibility')) {
                isChanged = true;
             }
          });
@@ -132,8 +132,10 @@ define('Controls/Filter/Button/Panel', [
       _resetFilter: function() {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
          Chain(this._items).each(function(item) {
-            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
-            if (getPropValue(item, 'visibility') !== undefined) {
+            if (getPropValue(item, 'visibility') === undefined) {
+               setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            }
+            if (getPropValue(item, 'visibility')) {
                setPropValue(item, 'visibility', false);
             }
          });

@@ -1,11 +1,13 @@
 <ws:template name="period">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            bind:textValue="item.textValue"
                             keyProperty="key"
                             source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                         bind:textValue="item.textValue"
                          keyProperty="key"
                          source="{{item.source}}"/>
 </ws:template>
@@ -36,7 +38,7 @@
 </ws:template>
 
 <ws:template name="tagging">
-<Controls.Toggle.Checkbox bind:value="item.value" caption="Marks"/>
+<Controls.Toggle.Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="operation">
@@ -49,21 +51,23 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
 <ws:template name="unread">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Unread"/>
+<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Loose"/>
+<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="own">
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
@@ -74,7 +78,7 @@
 </ws:template>
 
 <ws:template name="document">
-   <Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
+   <Controls.Button style="linkMain"  caption="Document" attr:class="panel-demo-text"/>
    <Controls.Input.Text bind:value="item.value"
                         attr:class="panel-demo-input"/>
 </ws:template>
@@ -83,6 +87,7 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
