@@ -56,19 +56,8 @@ node('controls') {
         pipelineTriggers([])
     ])
 
-    def isBranch = env.BRANCH_NAME
-    def target
-    def coverage = false
-    if ( isBranch ) {
-        target = isBranch
-    } else {
-        //используем в получении покрытия кода
-        target = env.JOB_BASE_NAME
-        if ( target == "coverage_${version}_controls" ) {
-            coverage = true
-        }
-    }
-    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int) && !coverage) {
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -77,8 +66,7 @@ node('controls') {
 
 
     echo "Определяем рабочую директорию"
-
-    def workspace = "/home/sbis/workspace/controls_${version}/${target}"
+    def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         def inte = params.run_int
         def regr = params.run_reg
@@ -118,19 +106,6 @@ node('controls') {
             unit = true
         }
 
-        def branch
-        if (target == isBranch) {
-            branch = env.BRANCH_NAME
-        } else {
-            //branch = "rc-${version}"
-            branch = "3.18.400/feature/pea/coverage"
-        }
-
-        if ( coverage ) {
-            // покрытие кода по интеграционным тестам
-            inte = true
-        }
-
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
@@ -138,7 +113,7 @@ node('controls') {
                     echo "Выкачиваем controls "
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: branch]],
+                        branches: [[name: env.BRANCH_NAME]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
@@ -154,10 +129,10 @@ node('controls') {
                     dir("./controls"){
                         sh """
                         git fetch
-                        git checkout ${branch}
+                        git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
-                        if ( isBranch && quick_int ) {
+                        if ( quick_int ) {
                             changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         }
                     }
@@ -305,17 +280,9 @@ node('controls') {
                 }
             )
             echo "Собираем controls"
-            if ( coverage ) {
-                dir("./controls"){
-                    echo "подкидываем istanbul в проект"
-                    sh 'istanbul instrument --complete-copy --output ./components-cover ./components'
-                    sh 'istanbul instrument --complete-copy --output ./controls-cover ./Controls'
-                    sh 'sudo mv ./components ./components-orig && sudo mv ./components-cover ./components'
-                    sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./controls-cover ./Controls'
-                    }
-                }
-            sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
-
+            dir("./controls"){
+                sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+            }
             dir(workspace){
                 echo "Собираем ws если задан сторонний бранч"
                 if ("${params.ws_revision}" != "sdk"){
@@ -448,7 +415,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/int/"""
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
 
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
@@ -464,7 +431,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
@@ -485,7 +452,7 @@ node('controls') {
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${target}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1:5434
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 #BRANCH=True
@@ -493,9 +460,6 @@ node('controls') {
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
         }
-
-        def site = "http://${NODE_NAME}:30010"
-        site.trim()
 
         dir("./controls/tests/int"){
             sh"""
@@ -521,7 +485,7 @@ node('controls') {
         }
         // EXPERIMENTAL
         def tests_for_run = ""
-        if ( quick_int && isBranch ) {
+        if ( quick_int ) {
             dir("./controls/tests/") {
                 def url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                 script = """
@@ -540,8 +504,6 @@ node('controls') {
                 } else {
                     echo "Тесты для запуска не найдены по внесенным изменениям. Будут запущены все тесты."
                 }
-
-
             }
         }
         parallel (
@@ -549,22 +511,12 @@ node('controls') {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( inte ){
-                        def coverageParam = ""
-                        if ( coverage ) {
-                            coverageParam = "--COVERAGE True"
-                        }
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} ${coverageParam}
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                             deactivate
                             """
-                            if ( coverage ) {
-                                sh """
-                                python3 ../coverage_handler.py -s ${workspace}/controls/tests/int/coverage
-                                """
-                                }
-
                         }
 
                     }
@@ -603,9 +555,6 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
-    if ( coverage ) {
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.json', caseSensitive: false
-    }
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
