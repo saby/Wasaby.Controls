@@ -337,6 +337,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             //    return parent.sendCommand.apply(parent, argWithName);
             // }
          },
+
+         _resizeHandler: function() {
+            if (this._compoundControl) {
+               this._compoundControl._notifyOnSizeChanged();
+            }
+         },
          _sendCompoundControlCommand: function(commandName, args) {
             var commandHandler = this._getCommandHandler(commandName);
             if (commandHandler) {
@@ -395,7 +401,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _setCompoundAreaOptions: function(newOptions) {
-            if (newOptions.record) { //recordFloatArea
+            if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
             this._templateOptions = newOptions.templateOptions || {};
