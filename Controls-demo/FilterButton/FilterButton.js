@@ -4,14 +4,7 @@ define('Controls-demo/FilterButton/FilterButton',
       'tmpl!Controls-demo/FilterButton/FilterButton',
       'Controls/Filter/Button',
       'Controls/Button',
-      'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2',
-      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
-      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/FIO',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/country',
-      'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate',
-      'tmpl!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate'
+      'WS.Data/Source/Memory'
    ],
    
    function(Control, template) {

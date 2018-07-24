@@ -1,0 +1,90 @@
+<ws:template name="period">
+   <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            keyProperty="key"
+                            source="{{item.source}}" />
+</ws:template>
+
+<ws:template name="state">
+<Controls.Input.Dropdown bind:selectedKeys="item.value"
+                         keyProperty="key"
+                         source="{{item.source}}"/>
+</ws:template>
+
+<ws:template name="limit">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+<ws:template name="sender">
+   <Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="author">
+   <Controls.Button style="linkMain"  caption="Author" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="responsible">
+   <Controls.Button style="linkMain"  caption="Responsible" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="tagging">
+<Controls.Toggle.Checkbox bind:value="item.value" caption="Marks"/>
+</ws:template>
+
+<ws:template name="operation">
+   <Controls.Button style="linkMain"  caption="Operation" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="group">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+<ws:template name="unread">
+<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Unread"/>
+</ws:template>
+
+<ws:template name="loose">
+<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Loose"/>
+</ws:template>
+
+<ws:template name="own">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+<ws:template name="our organisation">
+   <Controls.Button style="linkMain"  caption="Our company" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="document">
+   <Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
+   <Controls.Input.Text bind:value="item.value"
+                        attr:class="panel-demo-input"/>
+</ws:template>
+
+<ws:template name="activity">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

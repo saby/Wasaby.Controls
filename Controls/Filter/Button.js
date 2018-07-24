@@ -32,6 +32,24 @@ define('Controls/Filter/Button',
        * @demo Controls-demo/FilterButton/FilterButton
        */
 
+      /**
+       * @css @height_FilterButton Height of button.
+       * @css @color_FilterButton-icon Color of button icon.
+       * @css @color_FilterButton-icon_hover Color of button icon when hovering.
+       * @css @color_FilterButton-icon_disabled Color icon unavailable button.
+       * @css @spacing_FilterButton-between-icon-text Spacing between the filter icon and the filter string.
+       * @css @color_FilterButton-text Color of filter string.
+       * @css @color_FilterButton-text_hover Color of filter string when hovering.
+       * @css @color_FilterButton-text_disabled Color of filter string of unavailable button.
+       * @css @font-size_FilterButton-text The font size of the filter string.
+       * @css @color_FilterButton-arrow Color of icon 'arrow'.
+       * @css @color_FilterButton-arrow_disabled Color of icon 'arrow' of unavailable button.
+       * @css @color_FilterButton-clear Color of icon 'cross'.
+       * @css @font-size_FilterButton-icon Size of filter button icon.
+       * @css @font-family_FilterButton-icon Font family of filter button icon.
+       * @css @icon-size_FilterButton-text-icon Size of icon icon 'arrow' and icon 'cross'.
+       */
+
       'use strict';
 
       var _private = {
@@ -60,7 +78,7 @@ define('Controls/Filter/Button',
 
             Chain(items).each(function(item) {
                if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) &&
-                  Utils.getItemPropertyValue(item, 'visibility')
+                  (Utils.getItemPropertyValue(item, 'visibility') === undefined || Utils.getItemPropertyValue(item, 'visibility'))
                ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
