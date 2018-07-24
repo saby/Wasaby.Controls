@@ -8,10 +8,20 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
 ], function(Control, Utils, isEqual, Clone, template, Chain) {
 
+   /**
+    * @css @max-height_FilterPanel-items Maximum height of the folded block.
+    * @css @font-size_FilterPanel-caption Font size of the header.
+    * @css @color_FilterPanel-caption Color of the header.
+    * @css @height_FilterPanel-caption Height of the header.
+    * @css @margin_AdditionalParams-items Indent to the left of the edge for the elements.
+    * @css @color_AdditionalParams-item Color of item in the block.
+    * @css @height_AdditionalParams-item Height of item in the block.
+    * @css @height_AdditionalParams-arrow Height of the arrow to unfold the block.
+    */
+
    'use strict';
 
    var MAX_NUMBER_ITEMS = 10;
-   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
    var _private = {
 

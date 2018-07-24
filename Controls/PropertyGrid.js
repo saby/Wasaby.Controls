@@ -18,6 +18,11 @@ define('Controls/PropertyGrid', [
     * @author Золотова Э.Е.
     */
 
+   /**
+    * @css @height_PropertyGrid-item Height of item in the block.
+    * @css @spacing_PropertyGrid-between-items Spacing between items.
+    */
+
    'use strict';
 
    var PropertyGrid = Control.extend({
