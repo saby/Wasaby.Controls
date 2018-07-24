@@ -8,7 +8,7 @@ define([
    describe('Controls/Date/model/DateRange', function() {
       describe('.update', function() {
 
-         it('should update [start|end]Value and _options.[start|end]Value fields', function() {
+         it('should update [start|end]Value and _state.[start|end]Value fields', function() {
             let model = new DateRange(),
                options = {
                   startValue: new Date(2018, 0, 1),
@@ -18,9 +18,9 @@ define([
             model.update(options);
 
             assert.strictEqual(model.startValue, options.startValue);
-            assert.strictEqual(model._options.startValue, options.startValue);
+            assert.strictEqual(model._state.startValue, options.startValue);
             assert.strictEqual(model.endValue, options.endValue);
-            assert.strictEqual(model._options.endValue, options.endValue);
+            assert.strictEqual(model._state.endValue, options.endValue);
          });
 
          it('should not update [start|end]Value fields if they were not updated from the outside', function() {
@@ -30,8 +30,8 @@ define([
                   endValue: new Date(2018, 0, 3)
                };
 
-            model._options.startValue = options.startValue;
-            model._options.endValue = options.endValue;
+            model._state.startValue = options.startValue;
+            model._state.endValue = options.endValue;
             model.update(options);
 
             assert.isNull(model.startValue);
@@ -51,7 +51,7 @@ define([
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
-               assert.isUndefined(model._options[field]);
+               assert.isUndefined(model._state[field]);
             });
 
             it(`should not update ${field} if value did not changed`, function() {
@@ -68,7 +68,7 @@ define([
 
                assert.strictEqual(model[field], value);
                assert(callback.notCalled, `${field}Changed callback called ${callback.callCount} times`);
-               assert.strictEqual(model._options[field], value);
+               assert.strictEqual(model._state[field], value);
             });
          });
       });

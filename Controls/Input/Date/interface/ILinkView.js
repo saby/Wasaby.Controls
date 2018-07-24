@@ -1,7 +1,6 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(types, DateUtil) {
+   'WS.Data/Type/descriptor'
+], function(types) {
    'use strict';
 
    /**
