@@ -67,5 +67,12 @@
 <Controls.Button style="linkMain" caption="Document"/>
 </ws:template>
 
+<ws:template name="activity">
+<Controls.Input.Dropdown source="{{item.source}}"
+                         bind:selectedKeys="item.selectedKeys"
+                         keyProperty="key"
+/>
+</ws:template>
+
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

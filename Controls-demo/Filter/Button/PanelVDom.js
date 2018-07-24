@@ -90,6 +90,18 @@ define('Controls-demo/Filter/Button/PanelVDom',
          }
       };
 
+      var sourceActivity = {
+         module: 'WS.Data/Source/Memory',
+         options: {
+            data: [
+               {key: 1, title: 'Activity for the last month'},
+               {key: 2, title: 'Activity for the last quarter'},
+               {key: 3, title: 'Activity for the last year'}
+            ],
+            idProperty: 'key'
+         }
+      };
+
       var itemsSimple = [
          {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod},
          {id: 'state', value: [1], resetValue: [1], source: sourceState},
@@ -115,12 +127,13 @@ define('Controls-demo/Filter/Button/PanelVDom',
          {id: 'responsible', value: '', resetValue: '', visibility: false},
          {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
          {id: 'operation', value: '', resetValue: '', visibility: false},
-         {id: 'group', value: [1], resetValue: [1], source: sourceGroup, visibility: false},
+         {id: 'group', value: [1], resetValue: '', source: sourceGroup, visibility: false},
          {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false},
          {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
          {id: 'own', value: [2], resetValue: '', textValue: 'On department', source: sourceOwner, visibility: false},
          {id: 'our organisation', value: '', resetValue: '', visibility: false},
-         {id: 'document', value: '', resetValue: '', visibility: false}
+         {id: 'document', value: '', resetValue: '', visibility: false},
+         {id: 'activity', value: [1], resetValue: '', source: sourceActivity, selectedKeys: [1], visibility: false}
       ];
 
       var PanelVDom = Control.extend({

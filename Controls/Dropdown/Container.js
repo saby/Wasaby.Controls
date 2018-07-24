@@ -88,7 +88,6 @@ define('Controls/Dropdown/Container',
             });
             return instance._sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
-               instance._selectedItems = [];
                _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
                return items;
             });

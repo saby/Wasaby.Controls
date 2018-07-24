@@ -79,5 +79,12 @@
                         attr:class="panel-demo-input"/>
 </ws:template>
 
+<ws:template name="activity">
+<Controls.Filter.Button.Panel.FilterDropdown
+        source="{{item.source}}"
+        keyProperty="key"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

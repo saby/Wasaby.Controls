@@ -20,6 +20,17 @@ define('Controls/Filter/Button/Panel', [
     */
 
    /**
+    * @css @width_FilterPanel_default Width filter panel
+    * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
+    * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
+    * @css @spacing_FilterPanel-between-resetButton-filterButton Spacing between button "By default" and button "Selected".
+    * @css @margin_FilterPanel__PropertyGrid Margin for the block "Selected".
+    * @css @margin_FilterPanel-AdditionalParams Margin for the block "Possible to select".
+    * @css @spacing_FilterPanel-header-topTemplate Margin for the template in the header of the panel .
+    * @css @height_FilterPanel-header Height header of the panel.
+    */
+
+   /**
     * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
     */
 
