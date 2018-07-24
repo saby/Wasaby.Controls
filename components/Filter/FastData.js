@@ -189,7 +189,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
                         if (item[opts.idProperty] === structure.internalValueField) {
                            item.text = structure.caption;
                            item.selectedKeys = structure.value instanceof Array ? structure.value : [structure.value];
-                           item.className = (item.className || '') + isEqual(structure.value, structure.resetValue) ? ' controls-DropdownList__hideCross' : '';
+                           item.className = (item.className || '') + (isEqual(structure.value, structure.resetValue) ? ' controls-DropdownList__hideCross' : '');
                         }
                      });
                   }
