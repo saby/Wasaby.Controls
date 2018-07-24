@@ -533,6 +533,7 @@ node('controls') {
                 sh returnStdout: true, script: script
                 echo "Изменения были в файлах: ${changed_files}"
                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}| tr '\n' ' '"
+                echo "tests_files=${tests_files}="
                 if ( test_files ) {
                     echo "Будут запущены ${tests_files}"
                     tests_for_run = "--files_to_start ${tests_files}"
