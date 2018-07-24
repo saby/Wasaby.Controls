@@ -534,7 +534,10 @@ node('controls') {
 
         )
     }
-} finally {
+} catch (err) {
+    echo "${err}"
+
+}finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
