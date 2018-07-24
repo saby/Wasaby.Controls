@@ -1,10 +1,11 @@
 <div class="controls-MasterDetail">
    <ws:partial
-      template="_options.master"
+      template="{{_options.master}}"
       attr:class="controls-MasterDetail__masterContainer"
       bind:selectedMasterField="_selected"/>
+   <div class="controls-MasterDetail__separator"></div>
    <ws:partial
-      template="_options.detail"
+      template="{{_options.detail}}"
       attr:class="controls-MasterDetail__detailContainer"
       selectedMasterField="{{_selected}}"/>
 </div>
