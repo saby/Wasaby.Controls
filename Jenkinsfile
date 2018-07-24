@@ -100,7 +100,7 @@ node('controls') {
 			branch_engine = props["engine"]
 		}
 
-        if ("${env.BUILD_NUMBER}" == "1" && !coverage){
+        if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
             unit = true
@@ -487,14 +487,7 @@ node('controls') {
         def tests_for_run = ""
         if ( quick_int ) {
             dir("./controls/tests/") {
-                def url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
-                script = """
-                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-                    echo "result.json exitsts"; cp -fr tmp_result.json result.json
-                    else rm -f result.json
-                fi
-                """
-                sh returnStdout: true, script: script
+                copyArtifacts(projectName: 'coverage_3.18.400/coverage_new_3.18.400', filter: '**/result.json', selector: 'lastCompleted', target: '.')
                 echo "Изменения были в файлах: ${changed_files}"
                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}| tr '\n' ' '"
                 echo "tests_files=${tests_files}="
