@@ -6,7 +6,7 @@ define('Controls/Container/MasterList', [
    return Control.extend({
       _template: template,
       _itemClickHandler: function(event, item) {
-         this._notify('selectedMasterFieldChanged', [item], {bubbling: true});
+         this._notify('selectedMasterValueChanged', [item.get(this._options.selectedField)], {bubbling: true});
       }
    });
 });
