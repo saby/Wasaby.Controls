@@ -1,3 +1,4 @@
+
 define('Controls/Button', [
    'Core/Control',
    'Controls/Button/Classes',
