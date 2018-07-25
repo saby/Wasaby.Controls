@@ -79,7 +79,7 @@ define('Controls/Input/ComboBox',
          },
 
          _setText: function(selectedItems) {
-            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null;
+            this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null || selectedItems[0] === null;
             if (this._isEmptyItem) {
                this._value = '';
                this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);

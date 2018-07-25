@@ -11,7 +11,7 @@ define('Controls-demo/Label/Label',
          _template: template,
 
          _labelClickHandler: function(event, inputName) {
-            this._children[inputName].focus();
+            this._children[inputName].activate();
          }
       });
 
