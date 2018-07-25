@@ -100,7 +100,7 @@ define(['SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'], function (SearchMi
       
       });
    
-      describe('.textChangedHandler', function () {
+      describe('.textChangedHandler startCharacter: 3', function () {
          var self = {};
    
          self._onResetIsFired = true;
@@ -118,6 +118,26 @@ define(['SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'], function (SearchMi
             assert.isFalse(self._onResetIsFired);
          });
          
+      });
+   
+      describe('.textChangedHandler startCharacter: null', function () {
+         var self = {};
+      
+         self._onResetIsFired = false;
+         self._options = {
+            startCharacter: null
+         };
+      
+         it('.textChangedHandler empty text', function() {
+            SearchMixinUtil.textChangedHandler(self, '');
+            assert.isFalse(self._onResetIsFired);
+         });
+      
+         it('.textChangedHandler text length 4', function() {
+            SearchMixinUtil.textChangedHandler(self, 'test');
+            assert.isFalse(self._onResetIsFired);
+         });
+      
       });
       
    });

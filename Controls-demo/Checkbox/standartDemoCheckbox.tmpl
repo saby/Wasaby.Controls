@@ -1,22 +1,25 @@
-<div on:changeValue="checkEvent()" style="margin-top: 30px;">
-    <div attr:class="demo-Checkbox__TestBlock_wrapper">
-        <h2>View mode</h2>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
-    </div>
-    <div attr:class="demo-Checkbox__TestBlock_wrapper">
-        <h2>Read mode</h2>
+<div on:changeValue="checkEvent()">
+    <div attr:class="demo-Checkbox__TestBlock_wrapper_additional">
         <div attr:class="demo-Checkbox__TestBlock_inline">
-            <h3>Selected value</h3>
-            <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{true}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+            <h2>View mode</h2>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
         </div>
         <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
-            <h3>Not selected value</h3>
-            <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{false}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+            <h2>Read mode</h2>
+            <div>
+                <h3>Selected value</h3>
+                <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{true}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+            </div>
+            <div>
+                <h3>Not selected value</h3>
+                <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{false}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+            </div>
         </div>
     </div>
     <div attr:class="demo-Checkbox__TestBlock_wrapper">
         <h2>Long caption</h2>
-        <Controls.Toggle.Checkbox attr:class="demo-Checkbox_smallWidth" readOnly="{{false}}" bind:value="_value2" caption="very long caption" tooltip="Tooltip"/>
+        <Controls.Toggle.Checkbox attr:class="demo-Checkbox_smallWidth" readOnly="{{false}}" bind:value="_value2"
+                                  caption="if you need a very long headline, it should be transferred like this" tooltip="Tooltip"/>
     </div>
     <div attr:class="demo-Checkbox__TestBlock_wrapper">
         <h2>Different content in caption</h2>

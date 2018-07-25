@@ -54,6 +54,14 @@ define('Controls/List/DialogMover', [
          this._children.mover.moveItems(items, target, position);
       },
 
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         return this._notify('afterItemsMove', [items, target, position, result]);
+      },
+
       moveItemsWithDialog: function(items) {
          this._children.moveDialogOpener.open({
             templateOptions: {

@@ -1,0 +1,21 @@
+.controls-OperationsButton {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   color: @controls-OperationsPanelButton-color;
+   cursor: pointer;
+   width: 24px;
+   height: 24px;
+   font-size: 18px;
+   font-family: @icon-font;
+
+   &:hover {
+      color: @controls-OperationsPanelButton-active-icon-color;
+   }
+}
+.controls-OperationsButton_readonly {
+   color: @color_OperationsPanelButton_state_disabled;
+   &:hover {
+      color: @color_OperationsPanelButton_state_disabled;
+   }
+}

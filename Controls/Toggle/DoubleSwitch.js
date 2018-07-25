@@ -11,6 +11,10 @@ define('Controls/Toggle/DoubleSwitch', [
    /**
     * Double switch (switch between two values).
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Toggle/DoubleSwitch
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable

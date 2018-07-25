@@ -1,6 +1,8 @@
 define('Controls/Operations/Button', [
-   'Core/Control'
-], function(Control) {
+   'Core/Control',
+   'tmpl!Controls/Operations/Button/Button',
+   'css!Controls/Operations/Button/Button'
+], function(Control, template) {
    'use strict';
 
    /**
@@ -13,5 +15,11 @@ define('Controls/Operations/Button', [
     * @public
     */
 
-   return Control.extend({});
+   return Control.extend({
+      _template: template,
+
+      _onClick: function() {
+         this._notify('expandedChanged', [!this._options.expanded]);
+      }
+   });
 });

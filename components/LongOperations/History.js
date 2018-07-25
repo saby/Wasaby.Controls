@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/LongOperations/History',
                   },
                   {
                      key : true,
-                     title : rk('C ошибками')
+                     title : rk('С ошибками', 'ДлительныеОперации')
                   }
                ]
             }],
