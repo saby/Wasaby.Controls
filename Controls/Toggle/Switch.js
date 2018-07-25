@@ -21,6 +21,9 @@ define('Controls/Toggle/Switch', [
     * @public
     * @category Toggle
     * @demo Controls-demo/Switch/SwitchDemo
+    *
+    * @mixes Controls/Toggle/Switch/SwitchStyles
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
     */
 
    /**

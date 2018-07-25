@@ -1,6 +1,6 @@
-<div class="demo-RadioGroup__Wrapper">
-    <div class="demo-RadioGroup__TestBlock">
-        <h2>Верстка по умолчанию. Задан displayProperty.</h2>
+<div>
+    <div attr:class="exampleBlock">
+        <h2>Radio group</h2>
         <Controls.Toggle.Radio
                 attr:id="radioGroup1"
                 attr:class="demo-RadioGroup"
@@ -8,65 +8,54 @@
                 keyProperty="id"
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
-                direction="horizontal"
-                readOnly="{{false}}">
+                direction="{{_selectedDirection}}"
+                readOnly="{{_readOnly}}"
+                itemTemplateProperty="{{_itemTemplatePropertyFlag ? 'templateTwo' : ''}}">
             <ws:itemTemplate>
                 <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
                             item="{{item}}"
                             readOnly="{{readOnly}}"
                             selected="{{selected}}"
-                            displayProperty="caption"
-                />
+                            displayProperty="{{_displayProperty}}"
+                            contentTemplate="{{_contentTemplate}}"/>
             </ws:itemTemplate>
         </Controls.Toggle.Radio>
     </div>
-    <div class="demo-RadioGroup__TestBlock">
-        <h2>Для каждого элемента используется верстка по умолчанию. В режиме чтения.</h2>
+    <div attr:class="optionsBlock">
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly"/>
+        <br/>
+        <Controls.Label caption="Direction:"/>
         <Controls.Toggle.Radio
-                attr:id="radioGroup2"
-                on:selectedKeyChanged="changeKey()"
-                attr:class="demo-RadioGroup"
-                keyProperty="id"
-                selectedKey="{{_selectKey}}"
-                source="{{_source}}"
-                direction="vertical"
-                readOnly="{{true}}"/>
-    </div>
-    <div class="demo-RadioGroup__TestBlock">
-        <h2>Задан ws:contentTemplate. Для каждого заголовка используется верстка заданная в опциях.</h2>
-        <Controls.Toggle.Radio
-                attr:id="radioGroup3"
-                attr:class="demo-RadioGroup"
-                on:selectedKeyChanged="changeKey()"
-                keyProperty="id"
-                selectedKey="{{_selectKey}}"
-                source="{{_source}}"
+                on:selectedKeyChanged="changeDirection()"
+                keyProperty="title"
+                selectedKey="{{_selectedDirection}}"
+                source="{{_directionSource}}"
                 direction="horizontal"
-                readOnly="{{false}}">
-            <ws:itemTemplate>
-                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
-                            item="{{item}}"
-                >
-                    <ws:contentTemplate>
-                        <div style="padding: 4px;">
-                            <div style="font-size: 11px; color: grey">{{itemTemplate.item.get('title')}}</div>
-                        </div>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:itemTemplate>
-        </Controls.Toggle.Radio>
-    </div>
-    <div class="demo-RadioGroup__TestBlock">
-        <h2>Для каждого элемента используется верстка по умолчанию. Для 3 элемента (itemTemplateProperty === 'templateTwo') задана персональная верстка. В режиме чтения.</h2>
+                readOnly="{{false}}"/>
+        <Controls.Label caption="Source:"/>
         <Controls.Toggle.Radio
-                attr:id="radioGroup4"
-                on:selectedKeyChanged="changeKey()"
-                attr:class="demo-RadioGroup"
-                keyProperty="id"
-                selectedKey="{{_selectKey}}"
-                source="{{_source}}"
-                direction="vertical"
-                readOnly="{{true}}"
-                itemTemplateProperty="templateTwo"/>
+                on:selectedKeyChanged="changeSource()"
+                keyProperty="title"
+                selectedKey="{{_selectedSource}}"
+                source="{{_sourceOfSource}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+        <br/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
+        <br/>
+        <Controls.Label caption="Content template:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeContentTemplate()"
+                keyProperty="title"
+                selectedKey="{{_selectedContentTemplate}}"
+                source="{{_sourceContentTemplate}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+    </div>
+    <div class="eventBlock">
+        <span>Event that surfaced:</span>
+        <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+        <br/>
+        <span>{{_eventName}}</span>
     </div>
 </div>

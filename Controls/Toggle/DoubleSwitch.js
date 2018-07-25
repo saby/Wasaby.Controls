@@ -22,6 +22,11 @@ define('Controls/Toggle/DoubleSwitch', [
     * @control
     * @public
     * @category Toggle
+    *
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/Toggle/Switch/SwitchStyles
+    *
+    * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
     */
 
    /**
