@@ -22,7 +22,7 @@
     &.controls-ListView__item__marked {
       background-color: @background-color_MasterList_item-selected;
       &:before {
-        .selectet-item-border();
+        .selected-item-border();
         height: 100%;
       }
       &:after {
@@ -38,8 +38,8 @@
     &.controls-Grid__row-cell_withSelectionMarker {
       background-color: @background-color_MasterList_item-selected;
       &:before {
-        .selectet-item-border();
-        //Верхняя граница грида - 1px
+        .selected-item-border();
+        //Верхняя граница элемента грида - 1px
         height: ~'calc(100% + 1px)';
       }
       &:after {
@@ -59,7 +59,7 @@
   }
 }
 
-.selectet-item-border() {
+.selected-item-border() {
   content: '';
   z-index: 2;
   box-sizing: border-box;
