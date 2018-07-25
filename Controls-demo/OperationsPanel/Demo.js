@@ -75,7 +75,7 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _selectionChangeHandler: function(selection) {
+      _selectionChangeHandler: function(event, selection) {
          this._selection = selection;
          this._panelSource = this._getPanelSource(selection.selected);
          this._forceUpdate();
