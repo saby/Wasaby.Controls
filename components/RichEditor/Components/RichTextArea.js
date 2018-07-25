@@ -2554,8 +2554,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             _onKeyUpCallback2: function(e) {
                this._typeInProcess = false;
-               if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
-                  this._updateTextByTiny();
+               if (
+                  !(e.keyCode === cConstants.key.enter && e.ctrlKey) && // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  !(e.altKey && e.location === e.DOM_KEY_LOCATION_NUMPAD) // Не нужно обрабатывать (по отдельности) набор цифр номера символа на цифровой клавиатуре
+               ) {
+                  // Выполнить асинхронно, так как при вводе на цифровой клавиатуре значение измениться чуть позже события
+                  // 1175412577 https://online.sbis.ru/opendoc.html?guid=062947fb-7ed8-48e1-8079-014c10e813fc
+                  runDelayed(this._updateTextByTiny.bind(this));
                }
                this._tinyLastRng = this.getTinyEditor().selection.getRng();
             },
