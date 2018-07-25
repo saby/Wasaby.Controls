@@ -18,6 +18,16 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             margin: Math.floor(-(additionalHeight / 2 - margin)) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px ' + Math.floor(-(additionalHeight / 2 - margin) - titleHeight) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px'
          };
       },
+      calcTitleDimensions: function(item) {
+         var
+            boundingClientRect = item.get(0).getBoundingClientRect(),
+            offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 26 : 0),
+            margin = (Math.floor(item.outerHeight(true)) - Math.floor(boundingClientRect.height)) / 2;
+         return {
+            'padding-bottom': offset,
+            'margin-bottom': -(offset - margin)
+         };
+      },
       getMargin: function(item) {
          var itemRect = item.get(0).getBoundingClientRect();
          return Math.round(item.outerWidth(true) - itemRect.width) / 2;
