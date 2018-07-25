@@ -5,7 +5,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
-   'tmpl!Controls-demo/RadioGroup/resources/UnionItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/DefaultItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate',
    'css!Controls-demo/RadioGroup/RadioGroupDemo',
@@ -15,7 +14,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
              MemorySource,
              CustomItemTemplate,
              SingleItemTemplate,
-             UnionItemTemplate,
              DefaultItemTemplate
 ) {
    'use strict';
@@ -143,8 +141,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
 
    var RadioGroupDemo = Control.extend({
       _template: template,
-      _customItemTemplate: CustomItemTemplate,
-      _unionItemTemplate: UnionItemTemplate,
       _source: source,
       _sourceOfSource: sourceOfSource,
       _selectKey: null,
