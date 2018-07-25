@@ -222,7 +222,14 @@ define('Controls/Filter/Container',
        * @name Controls/Container/Filter#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
-      
+
+      /**
+       * @name Controls/Container/Filter#filterMode
+       * @cfg {String} Mode of forming a filter.
+       * @variant onlyChanges - only changed fields
+       * @variant full - all fields
+       */
+
       var Container = Control.extend({
          
          _template: template,

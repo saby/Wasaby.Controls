@@ -1,5 +1,5 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
-                                                attr:class="controls-PanelFilter controls-PanelFilter__{{_options.size}}">
+                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
 
@@ -18,26 +18,28 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div class="{{!_options.historyId ? 'controls-FilterPanel__wrapper'}}">
-         <Controls.PropertyGrid items="{{_items}}"
-                                itemTemplate="{{_options.itemTemplate}}"
-                                itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                                on:valueChanged="_valueChangedHandler()"
-                                on:visibilityChanged="_visibilityChangedHandler()"
-                                attr:class="controls-FilterPanel__PropertyGrid"/>
-         <ws:if data="{{_hasAdditionalParams}}">
-            <Controls.Filter.Button.Panel.AdditionalParams
-                    items="{{_items}}"
-                    itemTemplate="{{_options.additionalTemplate}}"
-                    itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                    on:valueChanged="_valueChangedHandler()"
-                    attr:class="controls-FilterPanel__AdditionalParams"/>
-         </ws:if>
-      </div>
-      <ws:if data="{{_options.historyId}}">
+      <div class="{{_options.panelStyle ? 'controls-FilterPanel__column'}}">
+         <div class="{{!_options.historyId ? 'controls-FilterPanel__wrapper'}}">
+            <Controls.PropertyGrid items="{{_items}}"
+                                   itemTemplate="{{_options.itemTemplate}}"
+                                   itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                   on:valueChanged="_valueChangedHandler()"
+                                   on:visibilityChanged="_visibilityChangedHandler()"
+                                   attr:class="controls-FilterPanel__PropertyGrid"/>
+            <ws:if data="{{_hasAdditionalParams}}">
+               <Controls.Filter.Button.Panel.AdditionalParams
+                       items="{{_items}}"
+                       itemTemplate="{{_options.additionalTemplate}}"
+                       itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+                       on:valueChanged="_valueChangedHandler()"
+                       attr:class="controls-FilterPanel__AdditionalParams"/>
+            </ws:if>
+         </div>
+         <ws:if data="{{_options.historyId}}">
             <Controls.Filter.Button.History.List
                     historyId="{{_options.historyId}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>
+      </div>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
