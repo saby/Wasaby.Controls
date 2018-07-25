@@ -106,7 +106,7 @@ define('Controls/Filter/Button',
                   onResult: self._onFilterChanged
                }
             };
-            
+
             if (options.orientation === 'left') {
                self._popupOptions.corner = {
                   vertical: 'top',
@@ -117,7 +117,7 @@ define('Controls/Filter/Button',
                };
             }
          },
-         
+
          requireDeps: function(self) {
             if (!self._depsDeferred) {
                self._depsDeferred = new Deferred();
