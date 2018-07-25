@@ -491,6 +491,7 @@ node('controls') {
             dir("./controls/tests/int/coverage") {
                 def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
                 if ( tests_files ) {
+                    tests_files = tests_files.replace('\n', '')
                     echo "Будут запущены ${tests_files}"
                     tests_for_run = "--files_to_start ${tests_files}"
                 } else {
