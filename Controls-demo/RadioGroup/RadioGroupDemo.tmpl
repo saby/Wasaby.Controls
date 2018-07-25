@@ -12,7 +12,12 @@
                 readOnly="{{_readOnly}}"
                 itemTemplateProperty="{{_itemTemplatePropertyFlag ? 'templateTwo' : ''}}">
             <ws:itemTemplate>
-                <ws:partial template="{{_itemTemplate}}" _contentTemplate="{{_contentTemplate}}" _contentTemplateFlag="{{_contentTemplateFlag}}"/>
+                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
+                            item="{{item}}"
+                            readOnly="{{readOnly}}"
+                            selected="{{selected}}"
+                            displayProperty="{{_displayProperty}}"
+                            contentTemplate="{{_contentTemplate}}"/>
             </ws:itemTemplate>
         </Controls.Toggle.Radio>
     </div>
@@ -38,15 +43,6 @@
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
         <br/>
-        <Controls.Label caption="Item template:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeItemTemplate()"
-                keyProperty="title"
-                selectedKey="{{_selectedItemTemplate}}"
-                source="{{_sourceItemTemplate}}"
-                direction="horizontal"
-                readOnly="{{false}}"/>
-        <br/>
         <Controls.Label caption="Content template:"/>
         <Controls.Toggle.Radio
                 on:selectedKeyChanged="changeContentTemplate()"
@@ -58,6 +54,7 @@
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
+        <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
         <br/>
         <span>{{_eventName}}</span>
     </div>

@@ -5,16 +5,15 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
-   'tmpl!Controls-demo/RadioGroup/resources/DefaultItemTemplate',
    'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate',
    'css!Controls-demo/RadioGroup/RadioGroupDemo',
+   'css!Controls-demo/Headers/resetButton',
    'WS.Data/Collection/RecordSet'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
 ], function(Control,
              template,
              MemorySource,
              CustomItemTemplate,
-             SingleItemTemplate,
-             DefaultItemTemplate
+             SingleItemTemplate
 ) {
    'use strict';
    var source = new MemorySource({
@@ -73,14 +72,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
          {
             id: '4',
             title: 'Header4'
-         },
-         {
-            id: '5',
-            title: 'Header5'
-         },
-         {
-            id: '6',
-            title: 'Header6'
          }
       ]
    });
@@ -89,11 +80,11 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'Source',
+            title: 'source',
             source: source
          },
          {
-            title: 'Source2',
+            title: 'source2',
             source: source2
          }
       ]
@@ -111,20 +102,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       ]
    });
 
-   var sourceItemTemplate = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default',
-            template: 'tmpl!Controls-demo/RadioGroup/resources/DefaultItemTemplate'
-         },
-         {
-            title: 'custom',
-            template: 'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate'
-         }
-      ]
-   });
-
    var sourceContentTemplate = new MemorySource({
       idProperty: 'title',
       data: [
@@ -133,7 +110,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             template: ''
          },
          {
-            title: 'custom(only with item template === default)',
+            title: 'custom',
             template: 'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate'
          }
       ]
@@ -144,13 +121,9 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       _source: source,
       _sourceOfSource: sourceOfSource,
       _selectKey: null,
-      _selectedSource: 'Source',
+      _selectedSource: 'source',
       _selectedDirection: 'vertical',
       _directionSource: directionSource,
-      _itemTemplatePropertyFlag: false,
-      _sourceItemTemplate: sourceItemTemplate,
-      _selectedItemTemplate: 'default',
-      _itemTemplate: DefaultItemTemplate,
       _sourceContentTemplate: sourceContentTemplate,
       _selectedContentTemplate: 'default',
       _contentTemplate: '',
@@ -171,14 +144,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       changeDirection: function(e, key) {
          this._selectedDirection = key;
       },
-      changeItemTemplate: function(e, key) {
-         this._selectedItemTemplate = key;
-         var self = this;
-         sourceItemTemplate.read(key).addCallback(function(model) {
-            self._itemTemplate = model.get('template');
-            self._forceUpdate();
-         });
-      },
       changeContentTemplate: function(e, key) {
          this._selectedContentTemplate = key;
          var self = this;
@@ -186,6 +151,9 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             self._contentTemplate = model.get('template');
             self._forceUpdate();
          });
+      },
+      reset: function() {
+         this._eventName = 'no event';
       }
    });
    return RadioGroupDemo;

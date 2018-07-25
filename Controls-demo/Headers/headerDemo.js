@@ -3,7 +3,8 @@ define('Controls-demo/Headers/headerDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Headers/headerDemo',
    'WS.Data/Collection/RecordSet',
-   'css!Controls-demo/Headers/headerDemo'
+   'css!Controls-demo/Headers/headerDemo',
+   'css!Controls-demo/Headers/resetButton'
 ], function (Control,
              MemorySource,
              template) {
@@ -203,6 +204,9 @@ define('Controls-demo/Headers/headerDemo', [
 
          backChangeSize: function(e, key) {
             this._backSelectedSize = key;
+         },
+         reset: function() {
+            this._eventName = 'no event';
          }
       });
    return ModuleClass;

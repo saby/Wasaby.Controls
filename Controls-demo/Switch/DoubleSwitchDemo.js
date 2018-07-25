@@ -2,6 +2,7 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Switch/DoubleSwitchDemo',
+   'css!Controls-demo/Headers/resetButton',
    'css!Controls-demo/Switch/UnionSwitchDemo'
 ], function(Control, MemorySource, template) {
    'use strict';
@@ -34,6 +35,9 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
          changeValue: function(e, value) {
             this._value = value;
             this._eventName = 'valueChanged';
+         },
+         reset: function() {
+            this._eventName = 'no event';
          }
       });
    return ModuleClass;
