@@ -43,16 +43,26 @@ define('Controls/Input/Mask',
        *    <li>x - letter or digit.</li>
        * </ol>
        * delimeters and quantifiers +, *, ?, {n[, m]}.
-       * Quantifiers should be preceded with "\".
+       * Quantifiers should be preceded with \\.
        * Quantifiers should be applied to keys.
        * Format is similar to regular expressions.
        *
        * @example
-       * <pre>
-       *    1. 'dd.dd' - the input mask time.
-       *    2. 'dd.dd.dddd' - the input mask date.
-       *    3. 'd\{1,3}l\{1,3}'.
-       *    4. 'd\*' - the input mask infinity number of digits.
+       * The input mask time:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd"/>
+       * </pre>
+       * The input mask date:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd.dddd"/>
+       * </pre>
+       * The input mask from 1-3 digits followed by 1-3 letters.
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\{1,3}l\{1,3}"/>
+       * </pre>
+       * The input mask infinity number of digits:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\*"/>
        * </pre>
        */
 
@@ -65,7 +75,7 @@ define('Controls/Input/Mask',
        *
        * @example
        * <pre>
-       *    For example, mask='dd.dd', replacer=' ', value='12.34'.
+       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */

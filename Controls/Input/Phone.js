@@ -14,9 +14,10 @@ define('Controls/Input/Phone',
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
+       * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public

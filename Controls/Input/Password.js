@@ -38,8 +38,7 @@ define('Controls/Input/Password',
 
          _passwordVisible: false,
 
-         constructor: function(options) {
-            PasswordInput.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
             this._simpleViewModel = new BaseViewModel({
                value: options.value
             });
