@@ -198,21 +198,24 @@ define('Controls/Filter/Container',
        * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
        *
        * @class Controls/Container/Filter
+       * @mixes Controls/interface/IFilter
        * @extends Core/Control
        * @control
        * @public
        */
-      
+   
       /**
        * @name Controls/Container/Filter#filterButtonSource
-       * @cfg {Array|Function} FilterButton structure
+       * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
+       * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Button#items
        */
-      
+   
       /**
        * @name Controls/Container/Filter#fastFilterSource
-       * @cfg {Array|Function} FastFilter structure
-       * @see Controls/Filter/FastFilter#items
+       * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
+       * @remark if the historyId option is setted, function will recive filter history
+       * @see Controls/Filter/Fast#items
        */
       
       /**

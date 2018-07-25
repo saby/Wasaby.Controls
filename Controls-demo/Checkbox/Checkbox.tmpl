@@ -1,25 +1,28 @@
-<div on:changeValue="checkEvent()" style="margin-top: 30px;">
-    включенный чекбокс с заголовком и состоянием не определен (readOnly=false triState=true tooltip="Podskazka" caption="caption")
-    <br/>
-    <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="caption" triState="{{true}}" tooltip="Podskazka" attr:test_name="box"/>
-    <br/>
-    выключенный чекбокс c заголовком и с состоянием не определен (readOnly=true triState=true tooltip="Podskazka" caption="caption")
-    <br/>
-    <Controls.Toggle.Checkbox caption="caption" readOnly="{{true}}" bind:value="_value" triState="{{true}}" tooltip="Podskazka" attr:test_name="disabled_box"/>
-    <br/>
-    включенный чекбокс без заголовка (readOnly=false triState=false tooltip="Podskazka")
-    <br/>
-    <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" tooltip="Podskazka"/>
-    <br/>
-    выключенный чекбокс без заголовка и с базовой линией (readOnly=true triState=false tooltip="Podskazka")
-    <br/>
-    <div>
-        base line
-        <Controls.Toggle.Checkbox readOnly="{{true}}" bind:value="_value" tooltip="Podskazka"/>
-        base line
+<div attr:class="demo-Checkbox__wrapper">
+    <div attr:class="demo-CheckBox__exampleBlock">
+        <h3>Example</h3>
+        <Controls.Toggle.Checkbox on:valueChanged="changeValue()"
+                                  attr:class="demo-Checkbox_width"
+                                  value="{{_value}}"
+                                  readOnly="{{_readOnly}}"
+                                  caption="{{_caption}}"
+                                  triState="{{_triState}}"
+                                  tooltip="{{_tooltip}}"/>
     </div>
-    <br/>
-    включенный чекбокс с длинным заголовком и фиксированной шириной(100px) (readOnly=false triState=false tooltip="Podskazka" caption="first word, second word")
-    <br/>
-    <Controls.Toggle.Checkbox attr:style="width: 100px;" readOnly="{{false}}" bind:value="_value" caption="first word, second word" tooltip="Podskazka"/>
+    <div attr:class="demo-CheckBox__optionsBlock">
+        <h3>Options header</h3>
+        <Controls.Label caption="caption"/>
+        <Controls.Input.Text bind:value="_caption"/>
+        <Controls.Label caption="tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip"/>
+        <br/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+        <br/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_triState" caption="triState"/>
+    </div>
+    <div class="eventBlock">
+        <span>Event that surfaced:</span>
+        <br/>
+        <span>{{_eventName}}</span>
+    </div>
 </div>

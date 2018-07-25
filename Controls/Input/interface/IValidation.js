@@ -10,7 +10,7 @@ define('Controls/Input/interface/IValidation', [
 
    /**
     * @name Controls/Input/interface/IValidation#validationErrors
-    * @cfg {String} List of validation errors.
+    * @cfg {String[]} List of validation errors.
     */
 
 });

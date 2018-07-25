@@ -7,8 +7,12 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
-   'css!Controls-demo/FilterSearch/FilterSearch'
-], function(Control, tempalte, MemorySource, memorySourceData, memorySourceFilter) {
+   'css!Controls-demo/FilterSearch/FilterSearch',
+   'Controls/Container/List',
+   'Controls/Search/Input/Container',
+   'Controls/Filter/Button/Container',
+   'Controls/Filter/Fast/Container'
+], function(Control, template, MemorySource, memorySourceData, memorySourceFilter) {
    
    'use strict';
    
@@ -68,12 +72,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    }];
    
    var SearchContainer = Control.extend({
-      _template: tempalte,
-      _source: new MemorySource({
-         data: memorySourceData,
-         filter: memorySourceFilter('firstName'),
-         idProperty: 'id'
-      }),
+      _template: template,
       _navigation: {
          source: 'page',
          view: 'page',
@@ -86,7 +85,15 @@ define('Controls-demo/FilterSearch/FilterSearch', [
       _filter: {},
       _searchValue: '',
       _fastFilterData: filterData,
-      _filterButtonData: filterButtonData
+      _filterButtonData: filterButtonData,
+      
+      _beforeMount: function() {
+         this._source = new MemorySource({
+            data: memorySourceData,
+            filter: memorySourceFilter('firstName'),
+            idProperty: 'id'
+         });
+      }
    });
    
    return SearchContainer;

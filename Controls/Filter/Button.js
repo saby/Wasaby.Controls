@@ -18,10 +18,10 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
-       * <a href="/materials/demo-ws4-filter-container">Демо-пример c кнопкой фильтров</a>.
-       * <a href="/materials/demo-ws4-filter-search">Демо-пример c кнопкой фильтров и строкой поиска</a>.
-       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * <a href="/materials/demo-ws4-filter-button">Demo with Filter/Button</a>.
+       * <a href="/materials/demo-ws4-filter-button-panel">Demo with Filter/Button/Panel</a>.
+       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
@@ -29,7 +29,24 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
-       * @demo Controls-demo/FilterButton/FilterButton
+       */
+
+      /**
+       * @css @height_FilterButton Height of button.
+       * @css @color_FilterButton-icon Color of button icon.
+       * @css @color_FilterButton-icon_hover Color of button icon when hovering.
+       * @css @color_FilterButton-icon_disabled Color icon unavailable button.
+       * @css @spacing_FilterButton-between-icon-text Spacing between the filter icon and the filter string.
+       * @css @color_FilterButton-text Color of filter string.
+       * @css @color_FilterButton-text_hover Color of filter string when hovering.
+       * @css @color_FilterButton-text_disabled Color of filter string of unavailable button.
+       * @css @font-size_FilterButton-text The font size of the filter string.
+       * @css @color_FilterButton-arrow Color of icon 'arrow'.
+       * @css @color_FilterButton-arrow_disabled Color of icon 'arrow' of unavailable button.
+       * @css @color_FilterButton-clear Color of icon 'cross'.
+       * @css @font-size_FilterButton-icon Size of filter button icon.
+       * @css @font-family_FilterButton-icon Font family of filter button icon.
+       * @css @icon-size_FilterButton-text-icon Size of icon icon 'arrow' and icon 'cross'.
        */
 
       'use strict';
@@ -59,8 +76,8 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue') &&
-                  Utils.getItemPropertyValue(item, 'visibility')
+               if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) &&
+                  (Utils.getItemPropertyValue(item, 'visibility') === undefined || Utils.getItemPropertyValue(item, 'visibility'))
                ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
@@ -109,9 +126,9 @@ define('Controls/Filter/Button',
                });
             }
             return self._depsDeferred;
-
+            
          },
-
+         
          resetItems: function(self, items) {
             Chain(items).each(function(item) {
                Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));

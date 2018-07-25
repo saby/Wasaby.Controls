@@ -3,12 +3,32 @@ define('Controls/Container/Data',
       'Core/Control',
       'tmpl!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
-      'Controls/Container/Data/ContextOptions',
-      'Core/core-clone'
+      'Controls/Container/Data/ContextOptions'
    ],
    
-   function(Control, template, getPrefetchSource, ContextOptions, clone) {
+   function(Control, template, getPrefetchSource, ContextOptions) {
+   
+      /**
+       * Container component that provides a context field "dataOptions" with necessary data for child containers.
+       *
+       * @class Controls/Container/Filter
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
+       * @extends Core/Control
+       * @control
+       * @public
+       */
       
+      /**
+       * @name Controls/Container/Data#source
+       * @cfg Object that implements ISource interface for data access.
+       */
+   
+      /**
+       * @name Controls/Container/Data#keyProperty
+       * @cfg {String} Name of the item property that uniquely identifies collection item.
+       */
+   
       'use strict';
       
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];

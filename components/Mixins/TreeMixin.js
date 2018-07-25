@@ -1366,10 +1366,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
-         setSelectedItemsAll: function(parentFn) {
+         _getAllItemsForSelect: function(parentFn) {
             var
-               self = this,
+               result,
                keys = [],
+               self = this,
                items = this.getItems(),
                nodeProperty = this._options.nodeProperty;
             if (items && this._isSearchMode && this._isSearchMode()) {
@@ -1378,10 +1379,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                      keys.push(rec.getId())
                   }
                });
-               this.setSelectedKeys(keys);
+               result = keys;
             } else {
-               parentFn.call(this);
+               result = parentFn.call(this);
             }
+            return result;
          }
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
