@@ -9,6 +9,6 @@
             on:transitionend="_animated()"
             on:resize="_update()">
     </ws:partial>
-    <Controls.Event.Emitter event="resize" on:resize="_update()"/>
+    <Controls.Event.Emitter event="resize" on:resize="_delayedUpdate()"/>
     <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
 </div>

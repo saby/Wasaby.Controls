@@ -47,6 +47,10 @@ define('Controls/Popup/Manager/Container',
 
          _popupDeactivated: function(event, popupId) {
             this._notify('popupDeactivated', [popupId], { bubbling: true });
+         },
+
+         _overlayClickHandler: function(event) {
+            event.preventDefault();
          }
       });
 

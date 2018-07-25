@@ -16,3 +16,7 @@
     justify-content: space-between;
     padding: 8px 0;
 }
+
+.controls-demo__Layouts_filter {
+    display: flex;
+}

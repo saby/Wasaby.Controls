@@ -8,6 +8,7 @@
         emptyText="{{_options.emptyText}}"
         corner="{{_corner}}"
         width="{{_width}}"
+        marker="{{false}}"
         className="controls-ComboBox-popup"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
@@ -20,7 +21,7 @@
               size="{{_options.size}}"
               tagStyle="{{_options.tagStyle}}"
               viewModel="{{_simpleViewModel}}"
-              placeholder="{{_placeholder}}"
+              placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               validationErrors="{{_options.validationErrors}}"
               class="controls-ComboBox-InputRender">
 
@@ -32,7 +33,7 @@
          </ws:content>
 
          <ws:afterFieldWrapper>
-            <Controls.Button.ButtonSeparator bind:value="_isOpen"/>
+            <Controls.Button.ButtonSeparator if="{{!_options.readOnly}}" bind:value="_isOpen"/>
          </ws:afterFieldWrapper>
 
       </Controls.Input.resources.InputRender.InputRender>

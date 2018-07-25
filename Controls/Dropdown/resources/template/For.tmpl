@@ -6,6 +6,7 @@
             template="{{itemTemplate || defaultItemTemplate}}"
             itemData="{{listModel.getEmptyItem()}}"
             resultHandler="{{resultHandler}}"
+            marker="{{marker}}"
             showClose="{{showClose}}"
             class="controls-DropdownList__emptyItem"/>
    </ws:if>
@@ -23,6 +24,7 @@
             template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"
             itemData="{{listModel.getCurrent()}}"
             resultHandler="{{resultHandler}}"
+            marker="{{marker}}"
             showClose="{{showClose}}"
             parentProperty="{{parentProperty}}"
             iconPadding="{{iconPadding}}"/>

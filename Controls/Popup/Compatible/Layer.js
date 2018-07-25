@@ -131,46 +131,35 @@ define('Controls/Popup/Compatible/Layer', [
          }),
          data = {};
 
-      if (window && window.userInfo) {
-         data = window.userInfo;
+      //Получение данных из контекста
+
+      var opt = document.querySelector('html').controlNodes;
+
+      for (var i = 0, len = opt.length; i < len; i++) {
+         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+            data = opt[i].control._getChildContext().userInfoField.userInfo;
+            break;
+         }
+      }
+
+      return expandUserInfo(data);
+
+      function expandUserInfo(data) {
+         var deferred;
+
          data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
          data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] == '__сбис__физики') {
-            return profileSource.call('ЕстьЛиУМеняАккаунтПомимФизика').addCallback(function(res) {
+         if (data['КлассПользователя'] === '__сбис__физики') {
+            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
                data.hasMoreAccounts = res.getScalar();
                return data;
             });
          } else {
-            return Deferred.success(data);
+            deferred = Deferred.success(data);
          }
-      } else {
-         return userSource.call('GetCurrentUserInfo', {}).addCallback(function(res) {
-            var
-               deferred,
-               result = res.getRow();
-            if (result) {
-               result.each(function(k, v) {
-                  data[k] = v;
-               });
-            }
-            data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
-            data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-            if (data['КлассПользователя'] == '__сбис__физики') {
-               deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
-                  data.hasMoreAccounts = res.getScalar();
-                  return data;
-               });
-            } else {
-               deferred = Deferred.success(data);
-            }
-
-            return deferred;
-         }).addErrback(function(e) {
-            IoC.resolve('ILogger').error('User info', 'Transport error', e);
-            return {};
-         });
+         return deferred;
       }
    }
 

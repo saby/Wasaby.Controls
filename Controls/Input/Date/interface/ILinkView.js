@@ -1,7 +1,6 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(types, DateUtil) {
+   'WS.Data/Type/descriptor'
+], function(types) {
    'use strict';
 
    /**
@@ -18,8 +17,6 @@ define('Controls/Input/Date/interface/ILinkView', [
    return {
       getDefaultOptions: function() {
          return {
-            startValue: DateUtil.getStartOfMonth(new Date()),
-            endValue: DateUtil.getEndOfMonth(new Date()),
 
             /**
              * @name Controls/Input/Date/interface/ILinkView#style

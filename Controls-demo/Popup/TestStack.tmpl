@@ -12,6 +12,11 @@
                         <ws:componentOptions type="stack"/>
                     </ws:popupOptions>
                 </Controls.Popup.Opener.Stack>
+                <Controls.Popup.Opener.Dialog name="modalDialog">
+                    <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
+                        <ws:templateOptions type="dialog"/>
+                    </ws:popupOptions>
+                </Controls.Popup.Opener.Dialog>
                 <Controls.Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
                 <br/>
                 <Controls.Button caption="Открыть через OpenEditDialog (TestStack, dialog)" on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'dialog')"/>
@@ -28,6 +33,8 @@
 
                 <br/>
                 <Controls.Button caption="Открыть через OpenEditDialog (FormController, dialog)" on:click="_openOldPanel('Controls-demo/Popup/resources/SimpleListEditDialog', 'dialog')"/>
+                <br/>
+                <Controls.Button caption="Открыть modalDialog" on:click="_openModalDialog()"/>
 
             </div>
         </ws:contentArea>

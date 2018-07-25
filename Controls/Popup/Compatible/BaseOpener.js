@@ -32,6 +32,10 @@ function(cMerge,
             _compoundId: randomId('compound-')
          };
 
+         if (cfg.hoverTarget) {
+            cfg.templateOptions.hoverTarget = cfg.hoverTarget;
+         }
+
          if (cfg.target) {
             // нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
             // причем работают с jquery объектом
@@ -62,7 +66,8 @@ function(cMerge,
             if (cfg.context instanceof Context) {
                cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
             } else {
-               cfg.templateOptions.context = Context.createContext(destroyDef, cfg.context ? cfg.context : {}, null);
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+               cfg.templateOptions.context.setContextData(cfg.context);
             }
 
             if (!cfg.templateOptions.handlers) {
@@ -216,6 +221,9 @@ function(cMerge,
 
          if (newCfg.target) {
             newCfg.dialogOptions.target = $(newCfg.target);
+            if (cfg.mode === 'floatArea') {
+               newCfg.dialogOptions.fitWindow = true;
+            }
          }
 
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {

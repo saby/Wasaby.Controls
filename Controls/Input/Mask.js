@@ -1,19 +1,22 @@
 define('Controls/Input/Mask',
    [
+      'Core/IoC',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
       'tmpl!Controls/Input/Mask/Mask',
+
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
       'use strict';
 
       /**
        * Input for entering text with a specified format.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
        * @extends Core/Control
@@ -21,6 +24,7 @@ define('Controls/Input/Mask',
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
@@ -39,25 +43,39 @@ define('Controls/Input/Mask',
        *    <li>x - letter or digit.</li>
        * </ol>
        * delimeters and quantifiers +, *, ?, {n[, m]}.
-       * Quantifiers should be preceded with "\".
+       * Quantifiers should be preceded with \\.
        * Quantifiers should be applied to keys.
        * Format is similar to regular expressions.
        *
        * @example
-       * <pre>
-       *    1. 'dd.dd' - the input mask time.
-       *    2. 'dd.dd.dddd' - the input mask date.
-       *    3. 'd\{1,3}l\{1,3}'.
-       *    4. 'd\*' - the input mask infinity number of digits.
+       * The input mask time:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd"/>
+       * </pre>
+       * The input mask date:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd.dddd"/>
+       * </pre>
+       * The input mask from 1-3 digits followed by 1-3 letters.
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\{1,3}l\{1,3}"/>
+       * </pre>
+       * The input mask infinity number of digits:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\*"/>
        * </pre>
        */
 
       /**
        * @name Controls/Input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
+       *
+       * @remark If quantifiers are used in the mask, the replacer cannot be set.
+       * Correct operation is not supported.
+       *
        * @example
        * <pre>
-       *    For example, mask='dd.dd', replacer=' ', value='12.34'.
+       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */
@@ -70,6 +88,8 @@ define('Controls/Input/Mask',
 
       var
          _private = {
+            regExpQuantifiers: /\\({.*?}|.)/,
+
             findLastUserEnteredCharPosition: function(value, replacer) {
                var position;
 
@@ -96,6 +116,21 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
+            },
+            validateReplacer: function(replacer, mask) {
+               var validation;
+
+               if (replacer && _private.regExpQuantifiers.test(mask)) {
+                  validation = false;
+                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+               } else {
+                  validation = true;
+               }
+
+               return validation;
+            },
+            calcReplacer: function(replacer, mask) {
+               return _private.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
          Mask = Control.extend({
@@ -103,13 +138,11 @@ define('Controls/Input/Mask',
 
             _viewModel: null,
 
-            constructor: function(options) {
-               Mask.superclass.constructor.call(this, options);
-
+            _beforeMount: function(options) {
                this._viewModel = new ViewModel({
                   value: options.value,
                   mask: options.mask,
-                  replacer: options.replacer,
+                  replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
                });
             },
@@ -124,7 +157,7 @@ define('Controls/Input/Mask',
                   this._viewModel.updateOptions({
                      value: newOptions.value,
                      mask: newOptions.mask,
-                     replacer: newOptions.replacer,
+                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
                      formatMaskChars: newOptions.formatMaskChars
                   });
                }

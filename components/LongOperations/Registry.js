@@ -6,6 +6,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/emptyHTMLTpl',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
       'css!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
+      'i18n!SBIS3.CONTROLS/LongOperations/Registry',
       'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'SBIS3.CONTROLS/Browser',
       'SBIS3.CONTROLS/SearchForm',
@@ -19,12 +20,12 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
       'use strict';
 
       var FILTER_STATUSES = {
-         'null': rk('В любом состоянии'),
-         'running': rk('В процессе'),
-         'suspended': rk('Приостановленные'),
-         'ended': rk('Завершенные'),
-         'success-ended': rk('Успешно'),
-         'error-ended': rk('С ошибками')
+         'null': rk('В любом состоянии', 'ДлительныеОперации'),
+         'running': rk('В процессе', 'ДлительныеОперации'),
+         'suspended': rk('Приостановленные', 'ДлительныеОперации'),
+         'ended': rk('Завершенные', 'ДлительныеОперации'),
+         'success-ended': rk('Успешно', 'ДлительныеОперации'),
+         'error-ended': rk('С ошибками', 'ДлительныеОперации')
       };
 
       /**
@@ -42,7 +43,23 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
             _options: {
                className: '',
                userId: null,
-               useGroupByEasyGroup: true
+               useGroupByEasyGroup: true,
+               /**
+                * @cfg {string} Имя домена (для отбора данных)
+                */
+               domain: undefined,
+               /**
+                * @cfg {boolean} Использовать ли фильтр пользователей (когда права позволяют видеть не только свои операции)
+                */
+               useUsersFilter: null,
+               /**
+                * @cfg {string} Имя компонента фильтра пользователей
+                */
+               usersFilterComponent: null,
+               /**
+                * @cfg {object} Опции компонента фильтра пользователей
+                */
+               usersFilterParams: null
             },
 
             _longOpList: null,
@@ -52,8 +69,12 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
          $constructor: function () {
             var context = this.getLinkedContext();
             context.setValue('filter', {status:null, period:null, duration:null});
-            if ('userId' in this._options) {
+            var options = this._options;
+            if ('userId' in options) {
                context.setValue('filter/UserId', this._options.userId);
+            }
+            if ('domain' in options && options.domain !== undefined) {
+               context.setValue('filter/Domain', options.domain);
             }
          },
 
@@ -76,7 +97,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
 
          _modifyOptions: function () {
             var options = LongOperationsRegistry.superclass._modifyOptions.apply(this, arguments);
-            options.hideStaffFilter = !!options.userId || !(RightsManager.getRights(['Long_requests_config'])['Long_requests_config'] & RightsManager.ADMIN_MASK);
+            options.useUsersFilter = !options.userId && !!(RightsManager.getRights(['Long_requests_config'])['Long_requests_config'] & RightsManager.ADMIN_MASK);
             return options;
          },
 

@@ -13,7 +13,21 @@ define('Controls/Dropdown/resources/template/DropdownList',
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
       //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
-
+   
+   
+      var _private = {
+         setPopupOptions: function(self) {
+            self._popupOptions = {
+               corner: {
+                  horizontal: 'right'
+               },
+               eventHandlers: {
+                  onResult: self.resultHandler
+               }
+            };
+         }
+      };
+      
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Popup/Opener/Menu
@@ -41,8 +55,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
-         _controlName: 'Controls/Dropdown/resources/template/DropdownList',
          _hasHierarchy: false,
+         
          constructor: function(config) {
             var self = this;
             var sizes = ['small', 'medium', 'large'];
@@ -94,25 +108,24 @@ define('Controls/Dropdown/resources/template/DropdownList',
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
-            this._popupOptions = {
-               corner: {
-                  horizontal: 'right'
-               },
-               eventHandlers: {
-                  onResult: this.resultHandler
-               }
-            };
+            _private.setPopupOptions(this, newOptions);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.rootKey !== this._options.rootKey) {
+            var rootChanged = newOptions.rootKey !== this._options.rootKey,
+               itemsChanged = newOptions.items !== this._options.items;
+            
+            if (rootChanged) {
                this._listModel.setRootKey(newOptions.rootKey);
-               this._hasHierarchy = this._listModel.hasHierarchy();
             }
-            if (newOptions.items !== this._options.items) {
+            
+            if (itemsChanged) {
                this._listModel.setItems(newOptions);
-               this._hasHierarchy = this._listModel.hasHierarchy();
                this._children.subDropdownOpener.close();
+            }
+   
+            if (rootChanged || itemsChanged) {
+               this._hasHierarchy = this._listModel.hasHierarchy();
             }
          },
 
@@ -181,6 +194,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _toggleExpanded: function() {
             this._expanded = !this._expanded;
             this._listModel.toggleExpanded(this._expanded);
+            this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();
          },
          _getChildContext: function() {
@@ -189,7 +203,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          }
       });
-
+   
+      Menu._private = _private;
+      
       Menu.getDefaultOptions = function() {
          return {
             menuStyle: 'defaultHead',

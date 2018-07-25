@@ -1,5 +1,6 @@
 define('Controls/Input/Number', [
    'Core/Control',
+   'Controls/Utils/tmplNotify',
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
@@ -10,18 +11,61 @@ define('Controls/Input/Number', [
    'tmpl!Controls/Input/resources/input'
 ], function(
    Control,
+   tmplNotify,
    template,
    types,
    NumberViewModel,
    inputHelper,
    runDelayed) {
 
-   'use strict';
-   var
-      _private,
-      NumberInput;
+   /**
+    * Number input.
+    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+    *
+    * @class Controls/Input/Number
+    * @extends Core/Control
+    * @mixes Controls/Input/interface/IInputNumber
+    * @mixes Controls/Input/interface/IInputPlaceholder
+    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/Input/interface/IInputTag
+    * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+    * @control
+    * @public
+    * @category Input
+    * @author Баранов М.А.
+    * @demo Controls-demo/Input/Number/Number
+    */
 
-   _private = {
+   /**
+    * @name Controls/Input/Number#precision
+    * @cfg {Number} Number of characters in decimal part.
+    */
+
+   /**
+    * @name Controls/Input/Number#onlyPositive
+    * @cfg {Boolean} Allow only positive numbers.
+    */
+
+   /**
+    * @name Controls/Input/Number#integersLength
+    * @cfg {Number} Maximum integer part length.
+    */
+
+   /**
+    * @name Controls/Input/Number#showEmptyDecimals
+    * @cfg {Boolean} Show zeros when decimal part wasn't entered.
+    */
+
+   /**
+    * @name Controls/Input/Number#textAlign
+    * @cfg {String} Text align.
+    * @variant 'left' default
+    * @variant 'right'
+    */
+
+   'use strict';
+
+   var _private = {
       trimEmptyDecimals: function(self) {
          if (!self._options.showEmptyDecimals) {
             var
@@ -31,58 +75,14 @@ define('Controls/Input/Number', [
       }
    };
 
-   NumberInput = Control.extend({
-
-      /**
-       * Number input.
-       *
-       * @class Controls/Input/Number
-       * @extends Core/Control
-       * @mixes Controls/Input/interface/IInputNumber
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
-       * @control
-       * @public
-       * @category Input
-       * @author Баранов М.А.
-       * @demo Controls-demo/Input/Number/Number
-       */
-
-      /**
-       * @name Controls/Input/Number#precision
-       * @cfg {Number} Number of characters in decimal part.
-       */
-
-      /**
-       * @name Controls/Input/Number#onlyPositive
-       * @cfg {Boolean} Allow only positive numbers.
-       */
-
-      /**
-       * @name Controls/Input/Number#integersLength
-       * @cfg {Number} Maximum integer part length.
-       */
-
-      /**
-       * @name Controls/Input/Number#showEmptyDecimals
-       * @cfg {Boolean} Show zeros when decimal part wasn't entered.
-       */
-
-      /**
-       * @name Controls/Input/Number#textAlign
-       * @cfg {String} Text align.
-       * @variant 'left' default
-       * @variant 'right'
-       */
-
+   var NumberInput = Control.extend({
       _template: template,
 
       _caretPosition: null,
 
-      constructor: function(options) {
-         NumberInput.superclass.constructor.apply(this, arguments);
+      _notifyHandler: tmplNotify,
 
+      _beforeMount: function(options) {
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
@@ -121,10 +121,6 @@ define('Controls/Input/Number', [
 
       _inputCompletedHandler: function(event, value) {
          this._notify('inputCompleted', [this._getNumericValue(value)]);
-      },
-
-      _notifyHandler: function(event, value) {
-         this._notify(value);
       },
 
       _valueChangedHandler: function(e, value) {
