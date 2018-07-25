@@ -1,14 +1,17 @@
 .controls-MasterList {
-  margin-right: @border-width_MasterList-right;
   position: relative;
+  background-color: #f8f8f8;
+  margin-right: @border-width_MasterList-right;
+  height: 100%;
 
   &:after {
     content: '';
     z-index: 0;
     width: @border-width_MasterList-right;
+    background-color: @border-color_MasterList;
     height: 100%;
     position: absolute;
-    right: 0;
+    right: -@border-width_MasterList-right;
     top: 0;
   }
 
@@ -34,8 +37,8 @@
       &:after {
         content: '';
         z-index: 1;
-        height: ~'calc(100% + @{border-width_MasterList-right})';
-        top: -1px;
+        height: 100%;
+        top: 0;
         width: @border-width_MasterList-right;
         position: absolute;
         right: -@border-width_MasterList-right;
