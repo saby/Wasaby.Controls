@@ -390,9 +390,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          var container,
             monthContainer,
             scrollContainerOffset;
-         // Хак для ie\edge. Выпилисть как перестанем поддерживать ie и edge меньше 16 которые не поддерживают position: sticky
-         // Панели с месяцами фиксируем через position: fixed и top, а их видимостью управляем через стили.
-         if (detection.isIE) {
+
+         // Хак для ie\edge и chrome под winXP. Выпилить как перестанем поддерживать ie и edge меньше 16
+         // которые не поддерживают position: sticky. Панели с месяцами фиксируем через position: fixed и top,
+         // а их видимостью управляем через стили.
+         if (detection.isIE || (detection.isWinXP && detection.chrome)) {
             container = this.getContainer();
             scrollContainerOffset = container.closest('.controls-ScrollContainer__content')[0].getBoundingClientRect().top;
             monthContainer = container.find('.controls-DateRangeBigChoose-DateRangePickerItem__months');

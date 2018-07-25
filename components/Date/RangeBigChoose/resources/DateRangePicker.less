@@ -102,7 +102,8 @@ body.ws-is-desktop-platform .controls-DateRangeBigChoose__dates-dates-wrapper::-
     width: 0;
 }
 
-.ws-is-ie {
+.ws-is-ie,
+.ws-is-windows-xp.ws-is-chrome {
    .controls-DateRangeBigChoose-DateRangePickerItem__months {
       position: fixed;
       visibility: hidden;
@@ -115,6 +116,9 @@ body.ws-is-desktop-platform .controls-DateRangeBigChoose__dates-dates-wrapper::-
    .controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates {
       margin-left: @width_DateRangeBigChoose-dates-header-year;
    }
+}
+
+.ws-is-ie {
    .controls-ScrollContainer.controls-DateRangeBigChoose__dates-dates-wrapper .controls-ScrollContainer__content {
       // Иначе ломается position: fixed; в edge
       transform: none;
