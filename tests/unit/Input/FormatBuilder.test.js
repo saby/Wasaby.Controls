@@ -58,6 +58,45 @@ define(
             });
          });
 
+         describe('_private.getReplacingKeyFn', function() {
+            it('Test_01', function() {
+               result = FormatBuilder._private.getReplacingKeyFn({
+                  'L': '[А-ЯA-ZЁ]',
+                  'l': '[а-яa-zё]',
+                  'd': '[0-9]',
+                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+               }, '');
+
+               assert.isFunction(result);
+               assert.equal(result('d', ''), '[0-9]?');
+               assert.equal(result('d', '*'), '(?:[0-9]*)?');
+            });
+            it('Test_02', function() {
+               result = FormatBuilder._private.getReplacingKeyFn({
+                  'L': '[А-ЯA-ZЁ]',
+                  'l': '[а-яa-zё]',
+                  'd': '[0-9]',
+                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+               }, ' ');
+
+               assert.isFunction(result);
+               assert.equal(result('d', ''), '(?:[0-9]| )');
+               assert.equal(result('d', '*'), '(?:[0-9]| )*');
+            });
+            it('Test_03', function() {
+               result = FormatBuilder._private.getReplacingKeyFn({
+                  'L': '[А-ЯA-ZЁ]',
+                  'l': '[а-яa-zё]',
+                  'd': '[0-9]',
+                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+               }, '*');
+
+               assert.isFunction(result);
+               assert.equal(result('d', ''), '(?:[0-9]|\\*)');
+               assert.equal(result('d', '*'), '(?:[0-9]|\\*)*');
+            });
+         });
+
          describe('_private.getRegExpSearchingMaskChar', function() {
             it('Test_01', function() {
                result = FormatBuilder._private.getRegExpSearchingMaskChar('', '', '');
