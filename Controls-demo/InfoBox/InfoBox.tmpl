@@ -1,26 +1,28 @@
 <div>
-   <Controls.Popup.InfoBox showMode="all">
+   <Controls.Popup.InfoBox>
       <ws:content>
-         <div>Наведите курсор(showMode = all)</div>
+         <div>Наведите или нажмите</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
-   <Controls.Popup.InfoBox showMode="click">
+   <Controls.Popup.InfoBox>
       <ws:content>
-         <div>Наведите курсор(showMode = click)</div>
+         <div>Нажмите</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
       </ws:template>
+      <ws:triggers click="{{true}}"/>
    </Controls.Popup.InfoBox>
-   <Controls.Popup.InfoBox showMode="hover">
+   <Controls.Popup.InfoBox>
       <ws:content>
-         <div>Наведите курсор(showMode = hover)</div>
+         <div>Наведите</div>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка.</div>
       </ws:template>
+      <ws:triggers hover="{{true}}"/>
    </Controls.Popup.InfoBox>
 </div>

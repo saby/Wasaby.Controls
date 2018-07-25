@@ -1,15 +1,15 @@
 <div>
-   <ws:if data="{{_options.showMode === 'all'}}">
+   <ws:if data="{{_options.triggers.click && _options.triggers.hover}}">
       <ws:partial template="{{_options.content}}"
                   on:mousedown="_contentMousedownHandler()"
                   on:mouseenter="_contentMouseenterHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:if>
-   <ws:else data="{{_options.showMode === 'click'}}">
+   <ws:else data="{{_options.triggers.click}}">
       <ws:partial template="{{_options.content}}"
                   on:mousedown="_contentMousedownHandler()"/>
    </ws:else>
-   <ws:else data="{{_options.showMode === 'hover'}}">
+   <ws:else data="{{_options.triggers.hover}}">
       <ws:partial template="{{_options.content}}"
                   on:mouseenter="_contentMouseenterHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
