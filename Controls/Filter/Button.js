@@ -18,10 +18,10 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
-       * <a href="/materials/demo-ws4-filter-container">Демо-пример c кнопкой фильтров</a>.
-       * <a href="/materials/demo-ws4-filter-search">Демо-пример c кнопкой фильтров и строкой поиска</a>.
-       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * <a href="/materials/demo-ws4-filter-button">Demo with Filter/Button</a>.
+       * <a href="/materials/demo-ws4-filter-button-panel">Demo with Filter/Button/Panel</a>.
+       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
@@ -29,7 +29,6 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
-       * @demo Controls-demo/FilterButton/FilterButton
        */
 
       /**

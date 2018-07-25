@@ -8,17 +8,12 @@ define('Controls-demo/Search/Container', [
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Search/Container'
-], function(Control, tempalte, MemorySource, memorySourceData, memorySourceFilter) {
+], function(Control, template, MemorySource, memorySourceData, memorySourceFilter) {
    
    'use strict';
    
    var SearchContainer = Control.extend({
-      _template: tempalte,
-      _source: new MemorySource({
-         data: memorySourceData,
-         filter: memorySourceFilter('firstName'),
-         idProperty: 'id'
-      }),
+      _template: template,
       _navigation: {
          source: 'page',
          view: 'page',
@@ -30,7 +25,15 @@ define('Controls-demo/Search/Container', [
       },
       _filter: {},
       _searchValue: '',
-      _searchDelay: 500
+      _searchDelay: 500,
+      
+      _beforeMount: function() {
+         this._source = new MemorySource({
+            data: memorySourceData,
+            filter: memorySourceFilter('firstName'),
+            idProperty: 'id'
+         });
+      }
    });
    
    return SearchContainer;
