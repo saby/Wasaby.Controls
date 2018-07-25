@@ -148,7 +148,7 @@ define('Controls/Filter/Button/Panel', [
       return {
          title: rk('Отбираются'),
          styleHeader: 'primary',
-         size: 'default'
+         size: 'm'
       };
    };
 

@@ -20,14 +20,7 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#items
     * @cfg {FilterPanelItems[]} Properties for editing or showing.
     */
-   
-   /**
-    * @name Controls/interface/IFilterButton#filterMode
-    * @cfg {String} Mode of forming a filter.
-    * @variant onlyChanges - only changed fields
-    * @variant full - all fields
-    */
-   
+
    /**
     * @name Controls/interface/IFilterButton#lineSpaceTemplate
     * @cfg {Function} Template for the space between the filter button and the string.
