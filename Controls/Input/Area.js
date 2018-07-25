@@ -42,9 +42,10 @@ define('Controls/Input/Area', [
 
    /**
     * @name Controls/Input/Area#newLineKey
-    * @cfg {String} New line key.
-    * @variant enter When user presses Enter.
-    * @variant ctrlEnter When user presses Ctrl + Enter.
+    * @cfg {String} The behavior of creating a new line.
+    * * enter When user presses Enter.
+    * * ctrlEnter When user presses Ctrl + Enter.
+    * @default enter
     */
 
    var _private = {

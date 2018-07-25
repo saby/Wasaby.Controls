@@ -10,6 +10,7 @@ define('Controls-demo/Example/Input',
       'Controls-demo/Example/Input/Password',
       'Controls-demo/Example/Input/Phone',
       'Controls-demo/Example/Input/Suggest',
+      'Controls-demo/Example/Input/Tag',
       'Controls-demo/Example/Input/Text'
    ],
    function(Control, template) {
