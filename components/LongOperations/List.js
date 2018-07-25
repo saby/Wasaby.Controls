@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
       'css!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
+      'i18n!SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStateTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStartTimeTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
@@ -26,13 +27,13 @@ define('SBIS3.CONTROLS/LongOperations/List',
        * Минимальное отображаемое изменение прогресса операций (в процентах)
        * @type {number}
        */
-      var PROGRESS_MIN_PERCENT = 1.5;
+      var PROGRESS_MIN_PERCENT = 0.75;
 
       /**
        * Минимальный интервал времени между отображением прогресса операций (в мсек)
        * @type {number}
        */
-      var PROGRESS_MIN_DELAY = 1500;
+      var PROGRESS_MIN_DELAY = 750;
 
       /**
        * Интервал обновления времени выполнения операции
