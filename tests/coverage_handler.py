@@ -82,5 +82,6 @@ if __name__ == '__main__':
     if args.changelist:
         test = Test()
         test.search(args.changelist)
-        print(' '.join(set(test.result)))
+        if test.result:
+            print(' '.join(set(test.result)))
 

@@ -489,12 +489,12 @@ node('controls') {
             step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_new_${version}", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
             echo "Изменения были в файлах: ${changed_files}"
             dir("./controls/tests/int/coverage") {
-                def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}| tr '\n' ' '"
-                if ( tests_files != " " ) {
+                def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
+                if ( tests_files ) {
                     echo "Будут запущены ${tests_files}"
                     tests_for_run = "--files_to_start ${tests_files}"
                 } else {
-                    echo "Тесты для запуска не найдены по внесенным изменениям. Будут запущены все тесты."
+                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                 }
             }
 
