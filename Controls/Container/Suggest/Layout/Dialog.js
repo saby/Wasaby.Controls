@@ -32,6 +32,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
             this._scrollData = new ScrollData({pagingVisible: false});
             
             //TODO временное решение, контекст должен долетать от Application'a, удалить, как будет сделано (Шипин делает)
+            //https://online.sbis.ru/opendoc.html?guid=91b2abcb-ca15-46ea-8cdb-7b1f51074c65
             this._searchData = new SearchContextField(null);
          },
          
