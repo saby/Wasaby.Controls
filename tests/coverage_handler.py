@@ -14,7 +14,7 @@ RESULT_JSON = 'result.json'
 class Coverage:
     """Составляет исходный json файл с названиями тестов и их зависимостями"""
     path_result = {}
-    result = {}
+    build_result = {}
 
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
@@ -41,7 +41,7 @@ class Coverage:
                     for k in d:
                         coverage_result.append(k)
             s_result = sorted(set(coverage_result))
-            self.result[item] = s_result
+            self.build_result[item] = s_result
 
         # записываем результаты в файл
         mode = 'a+'
@@ -50,7 +50,7 @@ class Coverage:
 
         with open(os.path.join(path, RESULT_JSON), mode=mode, encoding='utf-8') as f:
             f.seek(0)
-            f.write(json.dumps(self.result, indent=2))
+            f.write(json.dumps(self.build_result, indent=2))
             f.truncate()
 
 
