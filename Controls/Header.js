@@ -1,3 +1,4 @@
+
 define('Controls/Header', [
    'Core/Control',
    'tmpl!Controls/Header/Header',
