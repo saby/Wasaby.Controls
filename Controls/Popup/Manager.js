@@ -38,7 +38,8 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
-               element.controller.elementCreated(element, this.getItemContainer(id), id);
+               element.controller.elementCreated(element, this._private.getItemContainer(id), id);
+               this._notify('popupChanged', [element, this._popupItems], {bubbling: true});
                return true;
             }
             return false;
@@ -47,7 +48,8 @@ define('Controls/Popup/Manager',
          popupUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.controller.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               element.controller.elementUpdated(element, this._private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               this._notify('popupChanged', [element, this._popupItems], {bubbling: true});
                return true;
             }
             return false;
@@ -56,7 +58,8 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.controller.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               element.controller.popupDeactivated(element, this._private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               this._notify('popupChanged', [element, this._popupItems], {bubbling: true});
             }
             return false;
          },
@@ -67,14 +70,15 @@ define('Controls/Popup/Manager',
          },
 
          popupClose: function(id) {
-            ManagerController.remove(id, this.getItemContainer(id));
+            ManagerController.remove(id, this._private.getItemContainer(id));
+            this._notify('popupChanged', [null, this._popupItems], {bubbling: true});
             return false;
          },
 
          popupAnimated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               return element.controller.elementAnimated(element, this.getItemContainer(id));
+               return element.controller.elementAnimated(element, this._private.getItemContainer(id));
             }
             return false;
          },
@@ -197,7 +201,7 @@ define('Controls/Popup/Manager',
 
          _eventHandler: function(event, actionName) {
             var args = Array.prototype.slice.call(arguments, 2);
-            var actionResult = _private[actionName].apply(_private, args);
+            var actionResult = _private[actionName].apply(this, args);
             if (actionResult === true) {
                _private.redrawItems(this._popupItems);
             }
