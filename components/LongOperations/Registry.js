@@ -44,9 +44,21 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
                className: '',
                userId: null,
                useGroupByEasyGroup: true,
-
+               /**
+                * @cfg {string} Имя домена (для отбора данных)
+                */
+               domain: undefined,
+               /**
+                * @cfg {boolean} Использовать ли фильтр пользователей (когда права позволяют видеть не только свои операции)
+                */
                useUsersFilter: null,
+               /**
+                * @cfg {string} Имя компонента фильтра пользователей
+                */
                usersFilterComponent: null,
+               /**
+                * @cfg {object} Опции компонента фильтра пользователей
+                */
                usersFilterParams: null
             },
 
@@ -57,8 +69,12 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
          $constructor: function () {
             var context = this.getLinkedContext();
             context.setValue('filter', {status:null, period:null, duration:null});
-            if ('userId' in this._options) {
+            var options = this._options;
+            if ('userId' in options) {
                context.setValue('filter/UserId', this._options.userId);
+            }
+            if ('domain' in options && options.domain !== undefined) {
+               context.setValue('filter/Domain', options.domain);
             }
          },
 
