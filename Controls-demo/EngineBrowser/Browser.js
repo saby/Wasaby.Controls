@@ -7,7 +7,11 @@ define('Controls-demo/EngineBrowser/Browser', [
    'Controls/EngineBrowser',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate',
-   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate'
+   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate',
+   'Controls/Container/List',
+   'Controls/Search/Input/Container',
+   'Controls/Filter/Button/Container',
+   'Controls/Filter/Fast/Container'
 ], function(Control, Memory, template, MemorySourceFilter) {
    'use strict';
 

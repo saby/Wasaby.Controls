@@ -7,7 +7,11 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
-   'css!Controls-demo/FilterSearch/FilterSearch'
+   'css!Controls-demo/FilterSearch/FilterSearch',
+   'Controls/Container/List',
+   'Controls/Search/Input/Container',
+   'Controls/Filter/Button/Container',
+   'Controls/Filter/Fast/Container'
 ], function(Control, template, MemorySource, memorySourceData, memorySourceFilter) {
    
    'use strict';

@@ -6,7 +6,11 @@ define('Controls-demo/Filter/Container', [
    'tmpl!Controls-demo/Filter/Container',
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceData',
-   'css!Controls-demo/Filter/Container'
+   'css!Controls-demo/Filter/Container',
+   'Controls/Container/List',
+   'Controls/Search/Input/Container',
+   'Controls/Filter/Button/Container',
+   'Controls/Filter/Fast/Container'
 ], function(Control, template, MemorySource, memorySourceData) {
    
    'use strict';
