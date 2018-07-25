@@ -60,11 +60,11 @@ class Test:
     def search(self, change_files):
         with open(RESULT_JSON, encoding='utf-8') as f:
             data = json.loads(f.read(), encoding='utf-8')
-            for name in data:
-                for source in data[name]:
+            for test_name in data:
+                for source in data[test_name]:
                     for file in change_files:
                         if file in source:
-                            self.result.append(name)
+                            self.result.append(test_name)
 
 
 if __name__ == '__main__':
