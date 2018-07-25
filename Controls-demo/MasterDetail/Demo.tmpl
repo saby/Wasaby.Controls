@@ -37,4 +37,47 @@
          </Controls.Container.Scroll>
       </ws:detail>
    </Controls.Container.MasterDetail>
+
+   <br/>
+   <br/>
+
+   <Controls.Container.MasterDetail attr:class="masterDetail">
+      <ws:master>
+         <Controls.Container.Scroll attr:class="master">
+            <Controls.Container.MasterList>
+               <Controls.List
+                       keyProperty="id"
+                       source="{{_masterSource}}"
+               >
+                  <ws:itemTemplate>
+                     <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                        <ws:contentTemplate>
+                           <div>{{itemTemplate.itemData.item.name}}</div>
+                        </ws:contentTemplate>
+                     </ws:partial>
+                  </ws:itemTemplate>
+               </Controls.List>
+            </Controls.Container.MasterList>
+         </Controls.Container.Scroll>
+      </ws:master>
+      <ws:detail>
+         <Controls.Container.Scroll>
+            <Controls.List
+                    keyProperty="id"
+                    source="{{_detail[detail.selectedMasterField.sourceType] || _detail['incoming']}}"
+            >
+               <ws:itemTemplate>
+                  <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                     <ws:contentTemplate>
+                        <ws:partial
+                                item="{{itemTemplate.itemData.item}}"
+                                template="tmpl!Controls-demo/MasterDetail/itemTemplates/TaskItemTemplate"
+                        />
+                     </ws:contentTemplate>
+                  </ws:partial>
+               </ws:itemTemplate>
+            </Controls.List>
+         </Controls.Container.Scroll>
+      </ws:detail>
+   </Controls.Container.MasterDetail>
 </div>

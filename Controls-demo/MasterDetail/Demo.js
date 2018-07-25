@@ -5,7 +5,6 @@ define('Controls-demo/MasterDetail/Demo', [
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
-   'tmpl!Controls-demo/MasterDetail/itemTemplates/masterItem',
    'css!Controls-demo/MasterDetail/Demo'
 ], function(Control, template, data, cClone, Memory, itemTemplate) {
    return Control.extend({

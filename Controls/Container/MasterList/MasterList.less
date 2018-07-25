@@ -1,6 +1,6 @@
 .controls-MasterList {
   position: relative;
-  background-color: #f8f8f8;
+  background-color: @background-color_MasterList;
   margin-right: @border-width_MasterList-right;
   height: 100%;
 
@@ -15,34 +15,35 @@
     top: 0;
   }
 
-  .controls-ListView__itemV .controls-Grid__row-cell {
+  //Стили для листа
+  .controls-ListView__itemV {
+    position: relative;
+
+    &.controls-ListView__item__marked {
+      background-color: @background-color_MasterList_item-selected;
+      &:before {
+        .selectet-item-border();
+        height: 100%;
+      }
+      &:after {
+        .selected-item-clear-border();
+      }
+    }
+  }
+
+  //Стили для гридов
+  .controls-Grid__row-cell {
     position: relative;
 
     &.controls-Grid__row-cell_withSelectionMarker {
-      background-color: #fff;
+      background-color: @background-color_MasterList_item-selected;
       &:before {
-        content: '';
-        z-index: 2;
-        box-sizing: border-box;
-        border-top: 1px solid #c2d0de;
-        border-bottom: 1px solid #9cb3ca;
+        .selectet-item-border();
+        //Верхняя граница грида - 1px
         height: ~'calc(100% + 1px)';
-        width: ~'calc(100% + @{border-width_MasterList-right})';
-        position: absolute;
-        box-shadow: -4px 0 8px rgba(0, 0, 0, .15);
-        bottom: 0;
-        left: 0;
-        pointer-events: none;
       }
       &:after {
-        content: '';
-        z-index: 1;
-        height: 100%;
-        top: 0;
-        width: @border-width_MasterList-right;
-        position: absolute;
-        right: -@border-width_MasterList-right;
-        background-color: #fff;
+        .selected-item-clear-border();
       }
     }
   }
@@ -50,10 +51,35 @@
 
 .ws-is-no-touch:not(.ws-is-mobile-platform) {
   .controls-MasterList {
-    .controls-ListView__itemV .controls-Grid__row-cell {
+    .controls-Grid__row-cell, .controls-ListView__itemV {
       &:hover {
-        background-color: #fff;
+        background-color: @hover-color_MasterList_item;
       }
     }
   }
+}
+
+.selectet-item-border() {
+  content: '';
+  z-index: 2;
+  box-sizing: border-box;
+  border-top: 1px solid @border-color-top_MasterList_item-selected;
+  border-bottom: 1px solid @border-color-bottom_MasterList_item-selected;
+  box-shadow: @box-shadow_MasterList_item-selected;
+  width: ~'calc(100% + @{border-width_MasterList-right})';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.selected-item-clear-border() {
+  content: '';
+  z-index: 1;
+  height: 100%;
+  top: 0;
+  width: @border-width_MasterList-right;
+  position: absolute;
+  right: -@border-width_MasterList-right;
+  background-color: @default-bg-color;
 }
