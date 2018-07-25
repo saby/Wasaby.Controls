@@ -89,7 +89,7 @@ define('Controls/Filter/Fast',
 
             //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
             return pDef.done().getResult().addCallback(function() {
-               self._getText();
+               self._setText();
                self._forceUpdate();
             });
          },
@@ -109,7 +109,7 @@ define('Controls/Filter/Fast',
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
-            this._getText();
+            this._setText();
          },
 
          onResult: function(result) {
@@ -169,7 +169,7 @@ define('Controls/Filter/Fast',
             this._children.DropdownOpener.open(config, this);
          },
 
-         _getText: function() {
+         _setText: function() {
             var self = this;
             Chain(this._configs).each(function(config, index) {
                var sKey = getPropValue(self._items.at(index), 'value');
@@ -186,7 +186,7 @@ define('Controls/Filter/Fast',
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
-            this._getText();
+            this._setText();
          }
       });
 
