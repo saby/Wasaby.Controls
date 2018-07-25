@@ -12,10 +12,16 @@ define('Controls/Operations/Panel', [
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/List/interface/IHierarchy
-    * @mixes Controls/List/interface/IExpandable
+    * @mixes Controls/interface/IExpandable
     * @control
     * @public
     * @demo Controls-demo/OperationsPanel/Panel
+    *
+    * @css @background-color_OperationsPanel
+    * @css @height_OperationsPanel Height of panel.
+    * @css @spacing_OperationsPanel__item-between-icon-caption Spacing between icon and caption in items.
+    * @css @spacing_OperationsPanel-between-items Spacing between items.
+    * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
     */
 
    /**
