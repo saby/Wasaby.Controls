@@ -1,22 +1,22 @@
-.controls-VLabel {
+.controls-LabelV {
    padding: @padding_Label;
    height:  @height_Label;
 }
-.controls-VLabel__caption {
+.controls-Label__captionV {
    height: 100%;
 }
-.controls-VLabel__caption_required:after {
+.controls-Label__caption_requiredV:after {
    content: ' *';
 }
-.controls-VLabel__caption_enabled {
+.controls-Label__caption_enabledV {
    color: @color_Label-caption_enabled;
 }
-.controls-VLabel__caption_enabled:after {
+.controls-Label__caption_enabledV:after {
    color: @color_Label-caption-after_enabled;
 }
-.controls-VLabel__caption_disabled {
+.controls-Label__caption_disabledV {
    color: @color_Label-caption_disabled;
 }
-.controls-VLabel when not (@font-size_Label = 0) {
+.controls-LabelV when not (@font-size_Label = 0) {
    font-size: @font-size_Label;
 }
