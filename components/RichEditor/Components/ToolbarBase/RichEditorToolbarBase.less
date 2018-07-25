@@ -51,14 +51,24 @@
 
 .ws-is-windows-8, .ws-is-firefox {
    .controls-RichEditorToolbar__smilesPicker {
-      width: 210px;
       &.controls-Menu {
          .controls-ListView__item {
-            font-size: 24px;
-            width: 33px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
+           font-size: 21px;
+           padding: 1px 3px 1px 5px;
          }
       }
    }
+}
+
+.ws-is-windows-10.ws-is-firefox {
+  .controls-RichEditorToolbar__smilesPicker {
+    &.controls-Menu {
+      .controls-ListView__item {
+        font-size: 20px;
+        padding: 1px 6px 1px 2px;
+      }
+    }
+  }
 }
 
 .controls-RichEditorToolbarMenu {
