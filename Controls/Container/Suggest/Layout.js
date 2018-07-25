@@ -7,9 +7,10 @@ define('Controls/Container/Suggest/Layout',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
+      'Core/core-clone',
       'css!Controls/Container/Suggest/Layout/Suggest'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone) {
       
       'use strict';
       
@@ -94,7 +95,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          updateFilter: function(self, searchValue, tabId) {
-            var filter = {};
+            var filter = clone(self._options.filter) || {};
             if (tabId) {
                filter.currentTab = tabId;
             }
