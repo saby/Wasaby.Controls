@@ -6,10 +6,10 @@
 
 import os
 import json
-from pprint import pprint
 import argparse
 
 RESULT_JSON = 'result.json'
+
 
 class Coverage:
     """Составляет исходный json файл с названиями тестов и их зависимостями"""
