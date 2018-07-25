@@ -1,6 +1,6 @@
 <div>
     <div attr:class="exampleBlock">
-        <h2>Верстка по умолчанию. Задан displayProperty.</h2>
+        <h2>Radio group</h2>
         <Controls.Toggle.Radio
                 attr:id="radioGroup1"
                 attr:class="demo-RadioGroup"
@@ -10,19 +10,9 @@
                 source="{{_source}}"
                 direction="{{_selectedDirection}}"
                 readOnly="{{_readOnly}}"
-                itemTemplateProperty="templateTwo">
+                itemTemplateProperty="{{_itemTemplatePropertyFlag ? 'templateTwo' : ''}}">
             <ws:itemTemplate>
-                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
-                            item="{{item}}"
-                            readOnly="{{readOnly}}"
-                            selected="{{selected}}"
-                            displayProperty="caption">
-                    <ws:contentTemplate>
-                        <div style="padding: 4px;">
-                            <div style="font-size: 11px; color: grey">{{itemTemplate.item.get('title')}}</div>
-                        </div>
-                    </ws:contentTemplate>
-                </ws:partial>
+                <ws:partial template="{{_itemTemplate}}" _contentTemplate="{{_contentTemplate}}" _contentTemplateFlag="{{_contentTemplateFlag}}"/>
             </ws:itemTemplate>
         </Controls.Toggle.Radio>
     </div>
@@ -37,7 +27,7 @@
                 source="{{_directionSource}}"
                 direction="horizontal"
                 readOnly="{{false}}"/>
-        <Controls.Label caption="Caption position:"/>
+        <Controls.Label caption="Source:"/>
         <Controls.Toggle.Radio
                 on:selectedKeyChanged="changeSource()"
                 keyProperty="title"
@@ -45,5 +35,30 @@
                 source="{{_sourceOfSource}}"
                 direction="horizontal"
                 readOnly="{{false}}"/>
+        <br/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
+        <br/>
+        <Controls.Label caption="Item template:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeItemTemplate()"
+                keyProperty="title"
+                selectedKey="{{_selectedItemTemplate}}"
+                source="{{_sourceItemTemplate}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+        <br/>
+        <Controls.Label caption="Content template:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeContentTemplate()"
+                keyProperty="title"
+                selectedKey="{{_selectedContentTemplate}}"
+                source="{{_sourceContentTemplate}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+    </div>
+    <div class="eventBlock">
+        <span>Event that surfaced:</span>
+        <br/>
+        <span>{{_eventName}}</span>
     </div>
 </div>
