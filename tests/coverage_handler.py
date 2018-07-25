@@ -35,6 +35,7 @@ class Coverage:
             print(ts, 'Name: ', item)
             for fname in self.path_result[item]:
                 with open(fname, encoding='utf-8', mode='r') as f:
+                    print('File: ', fname)
                     d = json.loads(f.read(), encoding='utf-8')
                     # получаем зависимости
                     for k in d:
