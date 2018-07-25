@@ -18,7 +18,7 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div class="{{!_options.historyId ? 'controls-FilterPanel__wrapper'}}">
+      <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
          <Controls.PropertyGrid items="{{_items}}"
                                 itemTemplate="{{_options.itemTemplate}}"
                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
@@ -34,9 +34,9 @@
                     attr:class="controls-FilterPanel__AdditionalParams"/>
          </ws:if>
       </div>
-      <ws:if data="{{_options.historyId}}">
+      <ws:if data="{{_historyId}}">
             <Controls.Filter.Button.History.List
-                    historyId="{{_options.historyId}}"
+                    historyId="{{_historyId}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>
    </ws:contentArea>
