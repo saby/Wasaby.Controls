@@ -48,11 +48,13 @@ define('Controls/Search/Container',
       /**
        * Container for content that can be filtered by Controls/Input/Search.
        *
+       * <a href="/materials/demo-ws4-search-container">Demo with Input/Search</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button and Input/Search</a>.
+       *
        * @class Controls/Search/Container
        * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
        * @author Герасимов Александр
-       * @demo Controls-demo/Search/Container
        * @control
        * @public
        */

@@ -12,12 +12,13 @@ define('Controls-demo/EngineBrowser/Browser', [
    'use strict';
 
    var countries = [
-      {key: 1, title: 'USA'},
-      {key: 2, title: 'Russia'},
-      {key: 3, title: 'UK'},
-      {key: 4, title: 'Japan'},
-      {key: 5, title: 'China'},
-      {key: 6, title: 'Australia'}
+      {key: 1, title: 'Все страны'},
+      {key: 2, title: 'USA'},
+      {key: 3, title: 'Russia'},
+      {key: 4, title: 'UK'},
+      {key: 5, title: 'Japan'},
+      {key: 6, title: 'China'},
+      {key: 7, title: 'Australia'}
    ];
 
    var sourceData = [
@@ -90,8 +91,8 @@ define('Controls-demo/EngineBrowser/Browser', [
       },
       {
          id: 'country',
-         resetValue: 'USA',
-         value: 'USA',
+         resetValue: 'Все страны',
+         value: 'Все страны',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -108,7 +109,7 @@ define('Controls-demo/EngineBrowser/Browser', [
    var items = [
       {
          id: 'title',
-         value: 'Sasha',
+         value: '',
          resetValue: '',
          textValue: 'Name',
          source: new Memory({
@@ -126,8 +127,8 @@ define('Controls-demo/EngineBrowser/Browser', [
       },
       {
          id: 'country',
-         value: 'USA',
-         resetValue: 'USA',
+         value: 'Все страны',
+         resetValue: 'Все страны',
          textValue: 'country',
          visibility: false,
          source: new Memory({
