@@ -435,8 +435,7 @@ define('Controls/List/Grid/GridViewModel', [
                //records have defined method nextVersion, groups haven't
                if (this.item.getVersion) {
                   return this.item.getVersion();
-               }
-               else {
+               } else {
                   return this.item;
                }
             };
