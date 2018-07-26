@@ -160,7 +160,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * @variant outside Размеры плитки увеличивается относительно центра элемента
              * @variant '' Размеры плитки не увеличивается.
              */
-            hoverMode: '',
+            hoverMode: 'outside',
             /**
              * @cfg {Boolean} Устанавливает режим фиксирования элементов по ховеру
              * @remark
