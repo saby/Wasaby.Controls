@@ -75,6 +75,7 @@ define('Controls/Input/Mask/FormatBuilder',
              * @return {Function} функция замены ключа.
              */
             getReplacingKeyFn: function(formatMaskChars, replacer) {
+               //Need to escape the replacer in case it is a special regular expression character
                replacer = _private.escapeRegSpecialChars(replacer);
 
                return replacer ? _private.getReplacingKeyAsValueAndReplacer.bind(this, formatMaskChars, replacer) : _private.getReplacingKeyAsValue.bind(this, formatMaskChars);
