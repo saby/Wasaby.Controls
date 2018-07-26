@@ -1156,7 +1156,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var name = names[i];
                      if (name in formats) {
                         if (formats[name] !== formatter.match(name)) {
-                           editor.execCommand(name);
+                           this.execCommand(name);
                         }
                         hasOther = formats[name] || hasOther;
                      }
@@ -1191,10 +1191,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var pairFormatName = formatName === 'underline' ? 'strikethrough' : 'underline';
                   var pairCssValue = pairFormatName === 'underline' ? pairFormatName : 'line-through';
                   if (cssValue === pairCssValue) {
-                     dom.setAttrib(elem, 'data-mce-complex-text-decoration', '1');
+                     dom.setAttrib(elem, 'data-ws-text-decoration', 'complex');
                      runDelayed(function () {
                         var node = this._getCurrentFormatNode();
-                        if (dom.getAttrib(node, 'data-mce-complex-text-decoration')) {
+                        node = dom.getAttrib(node, 'data-ws-text-decoration') ? node : dom.getParent(node, '[data-ws-text-decoration]');
+                        if (node) {
                            dom.setStyle(node, 'text-decoration-line', 'underline line-through');
                         }
                      }.bind(this));
@@ -1323,7 +1324,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var pairFormatName = isA.strikethrough ? 'underline' : 'strikethrough';
                      if (formatter.match(pairFormatName)) {
                         var elem = this._getCurrentFormatNode();
-                        elem.removeAttribute('data-mce-complex-text-decoration');
+                        elem.removeAttribute('data-ws-text-decoration');
                         editor.dom.setStyle(elem, 'text-decoration', isA.strikethrough ? 'underline' : 'line-through');
                         editor.undoManager.add();
                         return;
