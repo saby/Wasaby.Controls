@@ -7,14 +7,12 @@ define('Controls/Application/Core',
       'tmpl!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'Core/css-resolve',
       'native-css'
    ],
    function(Control,
       template,
       AppData,
-      HeadDataContext,
-      cssResolve) {
+      HeadDataContext) {
 
       'use strict';
 
