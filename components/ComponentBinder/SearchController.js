@@ -178,6 +178,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
             filter = view.getFilter();
 
          delete(filter[this._options.searchParamName]);
+         delete(filter.usePages);
          this._reloadView(view, filter);
       },
 
@@ -209,6 +210,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
          
          this._lastDepth = null;
          delete(filter[this._options.searchParamName]);
+         delete(filter.usePages);
          //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
