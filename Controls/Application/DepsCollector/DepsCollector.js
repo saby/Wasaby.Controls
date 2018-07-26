@@ -1,7 +1,7 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
-   'Core/IoC',
+   'View/Logger',
    'Core/core-extend'
-], function(IoC, coreExtend) {
+], function(Logger, coreExtend) {
 
    var DEPTYPES = {
       BUNDLE: 1,
@@ -50,7 +50,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundlesRoute[key];
             if (bundleName) {
-               IoC.resolve('ILogger').info('Module ' + key + ' in bundle ' + bundleName);
+               Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
                packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
             }
