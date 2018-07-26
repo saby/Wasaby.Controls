@@ -16,7 +16,7 @@ define('Controls/Input/Text',
 
       /**
        * Single-line text input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Text
        * @extends Core/Control
@@ -24,6 +24,7 @@ define('Controls/Input/Text',
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
@@ -40,32 +41,33 @@ define('Controls/Input/Text',
       /**
        * @name Controls/Input/Text#trim
        * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
-       * @variant true Remove whitespaces.
-       * @variant false Do not remove whitespaces.
+       * * true Remove whitespaces.
+       * * false Do not remove whitespaces.
        * @default false
        */
 
       /**
        * @name Controls/Input/Text#selectOnClick
        * @cfg {Boolean} If true, text is selected when input is clicked.
-       * @variant true Select text on click.
-       * @variant false Do not select text on click.
+       * * true Select text on click.
+       * * false Do not select text on click.
+       * @default true
        */
 
       /**
        * @name  Controls/Input/Text#constraint
        * @cfg {String} Regular expression for input filtration.
        * @remark
-       * Every entered character is checked with a given regular expression. If symbol does not
-       * comply with the expression, if will not be entered.
+       * Every entered character is checked with a given regular expression.
+       * If symbol does not match with the expression, then he will not be entered.
        * @example
        * Allow only digits:
        * <pre class="brush:xml">
-       *     <option name="constraint">[0-9]</option>
+       *    <Controls.Input.Text constraint="[0-9]"/>
        * </pre>
        * Allow only cyrillic letters:
        * <pre class="brush:xml">
-       *     <option name="constraint">[а-яА-ЯёЁ]</option>
+       *    <Controls.Input.Text constraint="[а-яА-ЯёЁ]"/>
        * </pre>
        */
 

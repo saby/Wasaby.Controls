@@ -1,12 +1,12 @@
 <div class="example-Area">
-   <Controls-demo.Example.resource.BaseDemoInput title="Multiline input field">
+   <Controls-demo.Example.resource.BaseDemoInput title="Multiline input field" blocker="{{true}}">
       <ws:contents>
          <ws:Array>
             <ws:Object>
                <ws:template>
                   <div>
                      <div class="example-Base__specify">Dynamic height</div>
-                     <Controls.Input.Area placeholder="Helpful tip"
+                     <Controls.Input.Area placeholder="Helpful tooltip"
                                           maxLines="{{7}}"
                                           bind:value="_value1"/>
                   </div>
@@ -16,7 +16,7 @@
                <ws:template>
                   <div>
                      <div class="example-Base__specify">Fixed height</div>
-                     <Controls.Input.Area placeholder="Helpful tip"
+                     <Controls.Input.Area placeholder="Helpful tooltip"
                                           minLines="{{4}}"
                                           maxLines="{{4}}"
                                           bind:value="_value2"/>

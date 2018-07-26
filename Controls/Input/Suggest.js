@@ -3,14 +3,14 @@ define('Controls/Input/Suggest',
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Text/ViewModel',
       'css!Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, BaseViewModel) {
       
       /**
        * Input that suggests options as you are typing.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Suggest
        * @extends Controls/Input/Text
@@ -19,6 +19,8 @@ define('Controls/Input/Suggest',
        * @mixes Controls/interface/IFilter
        * @mixes Controls/Input/interface/ISuggest
        * @mixes Controls/interface/INavigation
+       * @mixes Controls/Input/Suggest/SuggestStyles
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
@@ -29,9 +31,14 @@ define('Controls/Input/Suggest',
       
       var _private = {
          initViewModel: function(self, options) {
-            self._simpleViewModel = new BaseViewModel({
-               value: options.value
-            });
+            self._simpleViewModel = new BaseViewModel(this.getViewModelOptions(options));
+         },
+         
+         getViewModelOptions: function(options) {
+            return {
+               value: options.value,
+               maxLength: options.maxLength
+            };
          }
       };
       
@@ -51,9 +58,7 @@ define('Controls/Input/Suggest',
          },
          
          _beforeUpdate: function(newOptions) {
-            this._simpleViewModel.updateOptions({
-               value: newOptions.value
-            });
+            this._simpleViewModel.updateOptions(_private.getViewModelOptions(newOptions));
          },
          
          // </editor-fold>

@@ -345,7 +345,6 @@ define('SBIS3.CONTROLS/Filter/Button',
                    side: isRightAlign ? 'left' : 'right'
                 },
                 context: this._pickerContext,
-                locationStrategy: detection.isMobilePlatform ? 'bodyBounds' : null,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
                 componentOptions: this._getAreaOptions(),
                 handlers: {

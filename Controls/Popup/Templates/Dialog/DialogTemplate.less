@@ -5,7 +5,7 @@
    flex-shrink: 1;
    box-sizing: border-box;
    height: 100%;
-   background-color: @default-bg-color;
+   background-color: @background-color_dialogTemplate-content;
    position: relative;
    overflow: hidden;
    .box-shadow(0 0 12px 0 rgba(0,0,0,.4));
@@ -13,6 +13,7 @@
 }
 
 .controls-DialogTemplate__top-area {
+   background-color: @background-color_dialogTemplate-top-area;
    display: flex;
    flex-shrink: 0;
    min-height: 44px; //todo themes
@@ -32,7 +33,7 @@
    flex-shrink: 1;
    display: flex;
    align-items: baseline;
-   margin: @spacing_stackTemplate_head;
+   margin: @margin_dialogTemplate_head;
    overflow: hidden;
 }
 
@@ -43,7 +44,7 @@
 }
 
 .controls-DialogTemplate__caption {
-   color: #313F78;
+   color: @color_DialogTemplate-caption;
    font-size: @font-size_stackTemplate_head;
    font-weight: 700 !important;
    max-width: 50%;

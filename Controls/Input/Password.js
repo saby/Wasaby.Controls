@@ -13,7 +13,7 @@ define('Controls/Input/Password',
 
    /**
     * Password input.
-    * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Password
     * @extends Core/Control
@@ -21,7 +21,8 @@ define('Controls/Input/Password',
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/interface/PasswordDocs
+    * @mixes Controls/Input/Password/PasswordStyles
+    * @mixes Controls/Input/resources/InputRender/InputRenderStyles
     * @control
     * @public
     * @category Input
@@ -37,8 +38,7 @@ define('Controls/Input/Password',
 
          _passwordVisible: false,
 
-         constructor: function(options) {
-            PasswordInput.superclass.constructor.apply(this, arguments);
+         _beforeMount: function(options) {
             this._simpleViewModel = new BaseViewModel({
                value: options.value
             });

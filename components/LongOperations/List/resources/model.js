@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                }*/
             }
          }
-         return spent.length ? spent.join(' ') : '0 сек.';
+         return spent.length ? spent.join(' ') : '0 ' + rk('сек.', 'ДлительныеОперации');
       };
 
       /**

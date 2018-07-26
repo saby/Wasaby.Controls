@@ -12,7 +12,7 @@ define('Controls-demo/Menu/MenuVdom', [
    'Core/Deferred',
    'WS.Data/Adapter/Sbis',
    'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
-   'tmpl!Controls-Demo/Menu/DemoGroupTemplate',
+   'tmpl!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom'
 ], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants,Query, Deferred, SbisAdapter) {
    'use strict';
@@ -76,7 +76,7 @@ define('Controls-demo/Menu/MenuVdom', [
                }
                return item.get('group');
             },
-            template: 'tmpl!Controls-Demo/Menu/DemoGroupTemplate',
+            template: 'tmpl!Controls-demo/Menu/DemoGroupTemplate',
          },
          _itemsGroup: {
             method: function(item) {
