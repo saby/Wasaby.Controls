@@ -22,12 +22,12 @@ define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstr
             _this.fileLink = fileLink;
             _this._meta = _meta;
             _this._info = _info;
-            _this._fileInfo = _this._fileInfo || {};
-            if (!_this._fileInfo.name) {
+            _this._info = _this._info || {};
+            if (!_this._info.name) {
                 /*
                  * Для ссылки на локальный файл, именем является часть пути до него после последнего слеша
                  */
-                _this._fileInfo.name = fileLink.replace(/.*(\\|\/)/, "");
+                _this._info.name = fileLink.replace(/.*(\\|\/)/, "");
             }
             return _this;
         }
