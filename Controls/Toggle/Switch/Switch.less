@@ -1,4 +1,4 @@
-.controls-Switch__wrapper {
+.controls-Switch__toggle__wrapper {
    .inline-flexbox();
    .align-items(center);
    .justify-content(center);
@@ -34,8 +34,12 @@
    background-color: @background-color_Switch-line_disabled;
 }
 
-.controls-Switch__text {
+.controls-Switch__text_rightCaption {
    margin-left: @margin_Switch-text;
+}
+
+.controls-Switch__text_leftCaption {
+   margin-right: @margin_Switch-text;
 }
 
 .controls-Switch__text_enabled_unselected {
@@ -54,6 +58,14 @@
    .controls-SwitchCircle__borderCircle_enabled {
       fill: @fill_RadioGroup_borderCircle_enabled_hovered;
    }
+}
+
+.controls-Switch__toggle_leftCaption {
+   -webkit-transform: rotate(-180deg);
+   -moz-transform: rotate(-180deg);
+   -ms-transform: rotate(-180deg);
+   -o-transform: rotate(-180deg);
+   transform: rotate(-180deg);
 }
 
 .ws-is-no-touch {

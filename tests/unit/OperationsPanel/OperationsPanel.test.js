@@ -1,4 +1,4 @@
-define(['Controls/OperationsPanel/MultiSelector'], function(MultiSelector) {
+define(['Controls/Operations/MultiSelector'], function(MultiSelector) {
    'use strict';
    describe('Controls.OperationsPanel.MultiSelector', function() {
       it('_updateSelection', function() {
@@ -24,11 +24,11 @@ define(['Controls/OperationsPanel/MultiSelector'], function(MultiSelector) {
          };
          instance._updateSelection(selection);
          assert.equal(instance._multiSelectStatus, null);
-         assert.equal(instance._menuCaption, 'Отмечено (2)');
+         assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
       it('_getHierarchyMenuItems', function() {
          var instance = new MultiSelector();
-         var menuSource = instance._getHierarchyMenuItems();
+         var menuSource = instance._getMenuSource();
          assert.equal(menuSource._$data.length, 3);
       });
       it('_onCheckBoxClick', function() {

@@ -1,7 +1,6 @@
 define('Controls-demo/Input/VDomInputs/VDomInputs', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/VDomInputs/VDomInputs',
-   'WS.Data/Source/Memory'
+   'tmpl!Controls-demo/Input/VDomInputs/VDomInputs'
 ], function(Control, template) {
 
    'use strict';
@@ -10,6 +9,5 @@ define('Controls-demo/Input/VDomInputs/VDomInputs', [
       _template: template
 
    });
-
    return VDomListView;
 });

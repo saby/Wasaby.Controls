@@ -6,7 +6,7 @@ define('Controls-demo/DragNDrop/List', [
    'Controls-demo/DragNDrop/DemoData',
    'tmpl!Controls-demo/DragNDrop/List/List',
    'css!Controls-demo/DragNDrop/List/List',
-   'Controls/DragNDrop/Avatar'
+   'Controls/DragNDrop/DraggingTemplate'
 ], function(BaseControl, cClone, Memory, ListEntity, DemoData, template) {
    'use strict';
 
@@ -30,9 +30,15 @@ define('Controls-demo/DragNDrop/List', [
          this._items = items;
       },
 
+      _dragEnd: function(event, items, target, position) {
+         this._children.listMover.moveItems(items, target, position);
+      },
+
       _dragStart: function(event, items) {
          var
-            hasBadItems = false;
+            hasBadItems = false,
+            firstItem = this._items.getRecordById(items[0]);
+
          items.forEach(function(item) {
             if (item === 0) {
                hasBadItems = true;
@@ -40,7 +46,9 @@ define('Controls-demo/DragNDrop/List', [
          });
          return hasBadItems ? false : new ListEntity({
             items: items,
-            firstItem: this._items.getRecordById(items[0])
+            mainText: firstItem.get('title'),
+            image: firstItem.get('image'),
+            additionalText: firstItem.get('additional')
          });
       }
    });

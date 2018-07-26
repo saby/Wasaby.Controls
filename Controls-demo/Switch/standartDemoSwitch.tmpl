@@ -1,0 +1,60 @@
+<div class="demo__wrapper">
+    <h1>Switchers</h1>
+    <h2>Single switcher</h2>
+    <div class="demo__block">
+        <Controls.Toggle.Switch attr:class="demo__element" bind:value="value" caption="State"/>
+        <Controls.Toggle.Switch attr:class="demo__element" bind:value="value1" captionPosition="left" caption="State"/>
+    </div>
+    <h2>Horizontal double switcher</h2>
+    <div class="demo__block">
+        <Controls.Toggle.DoubleSwitch attr:class="demo__element" bind:value="value2" captions="{{['State1', 'State2']}}"/>
+    </div>
+    <h2>Vertical double switcher</h2>
+    <div class="demo__block">
+        <Controls.Toggle.DoubleSwitch attr:class="demo__element" bind:value="value3" orientation="vertical" captions="{{['State1', 'State2']}}" />
+    </div>
+    <h2>Horizontal radio group</h2>
+    <div class="demo__block">
+        <Controls.Toggle.Radio
+                attr:class="demo__element horizontal__element"
+                on:selectedKeyChanged="changeKey(1)"
+                keyProperty="id"
+                selectedKey="{{_selectKey}}"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
+    </div>
+    <h2>Vertical radio group</h2>
+    <div class="demo__block_inline">
+        <Controls.Toggle.Radio
+                attr:class="demo__element vertical__element"
+                on:selectedKeyChanged="changeKey(2)"
+                keyProperty="id"
+                selectedKey="{{_selectKey2}}"
+                source="{{_source}}"
+                direction="vertical"
+                readOnly="{{false}}"/>
+    </div>
+    <div class="demo__block_inline">
+        <Controls.Toggle.Radio
+                attr:class="demo__element vertical__element"
+                on:selectedKeyChanged="changeKey(3)"
+                keyProperty="id"
+                selectedKey="{{_selectKey3}}"
+                source="{{_source}}"
+                direction="vertical"
+                readOnly="{{false}}"/>
+    </div>
+    <h2>readOnly state</h2>
+    <div class="demo__block">
+        <Controls.Toggle.Switch attr:class="demo__element" readOnly="{{true}}" value="{{value4}}" caption="State"/>
+        <Controls.Toggle.DoubleSwitch attr:class="demo__element" readOnly="{{true}}" value="{{value5}}" captions="{{['State1', 'State2']}}"/>
+        <Controls.Toggle.Radio
+                attr:class="demo__element horizontal__element"
+                keyProperty="id"
+                selectedKey="1"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{true}}"/>
+    </div>
+</div>

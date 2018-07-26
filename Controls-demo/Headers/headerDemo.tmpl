@@ -1,11 +1,11 @@
 <div class="demoWrapper">
     <div class="testBlock" test_name="BackButtonCapture">
         <div class="exampleBlock">
-            <h2>Кнопка назад</h2>
-            <Controls.Button.Back style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}" attr:test_name="BackButton"/>
+            <h2>Back button</h2>
+            <Controls.Button.Back on:click="clickHandler(1)" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}" attr:test_name="BackButton"/>
         </div>
         <div class="optionsBlock">
-            <h3>Опции</h3>
+            <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style:"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="backChangeStyle()"
@@ -27,30 +27,40 @@
             <Controls.Label name="myLabel1" caption="caption"/>
             <Controls.Input.Text bind:value="_backCaption"/>
         </div>
+        <div class="eventBlock">
+            <span>Component will be clicked:</span>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+            <br/>
+            <span>{{_clickedComponent}}</span>
+            <br/>
+            <span>Event that surfaced:</span>
+            <br/>
+            <span>{{_eventName}}</span>
+        </div>
     </div>
     <div class="testBlock" test_name="HeaderCapture">
         <div class="exampleBlock">
             <h2>Заголовок</h2>
             <div class="wrapper">
                 <ws:if data="{{_showButtonSeparator}}">
-                    <Controls.Button.ButtonSeparator on:click="clickIcon()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}" attr:test_name="ButtonSeparator"/>
+                    <Controls.Button.ButtonSeparator on:click="clickHandler(2)" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}" attr:test_name="ButtonSeparator"/>
                 </ws:if>
                 <div class="wrapperCounterCaption">
                     <ws:if data="{{_showCaption}}">
-                        <Controls.Header caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
+                        <Controls.Header on:click="clickHandler(3)" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
                     </ws:if>
                     <ws:if data="{{_showCounter}}">
-                        <Controls.Header.Counter attr:class="counter" value="{{_counterValue}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}" attr:test_name="HeaderCounter"/>
+                        <Controls.Header.Counter on:click="clickHandler(4)" attr:class="counter" value="{{_counterValue}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}" attr:test_name="HeaderCounter"/>
                     </ws:if>
                 </div>
                 <ws:if data="{{_showSeparator}}">
-                    <Controls.Header.Separator style="{{_iconSelectedStyle}}" attr:test_name="HeaderSeparator"/>
+                    <Controls.Header.Separator on:click="clickHandler(3)" style="{{_iconSelectedStyle}}" attr:test_name="HeaderSeparator"/>
                 </ws:if>
             </div>
         </div>
         <div class="optionsBlock">
-            <h3>Опции заголовка</h3>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCaption" caption="Показывать заголовок" attr:test_name="ShowCaption"/>
+            <h3>Header options</h3>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCaption" caption="Show header" attr:test_name="ShowCaption"/>
             <Controls.Label name="myLabel1" caption="size:"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="changeSize()"
@@ -71,8 +81,8 @@
                     direction="horizontal"
                     readOnly="{{false}}"
 					attr:test_name="CaptionStyle"/>
-            <h3>Опции счетчика</h3>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCounter" caption="Показывать счетчик" attr:test_name="ShowCounter"/>
+            <h3>Counter options</h3>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showCounter" caption="Show counter" attr:test_name="ShowCounter"/>
             <Controls.Label name="myLabel1" caption="value"/>
             <Controls.Input.Number bind:value="_counterValue"/>
             <Controls.Label name="myLabel1" caption="style:"/>
@@ -93,8 +103,8 @@
                     direction="horizontal"
                     readOnly="{{false}}"
 					attr:test_name="CounterSize"/>
-            <h3>Опции кнопки-разделителя</h3>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showButtonSeparator" caption="Показывать кнопку-разделитель" attr:test_name="ShowButtonSeparator"/>
+            <h3>Button-separator options</h3>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showButtonSeparator" caption="Show button-separator" attr:test_name="ShowButtonSeparator"/>
             <Controls.Label name="myLabel1" caption="style:"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="separatorChangeStyle()"
@@ -106,8 +116,8 @@
 					attr:test_name="IconStyle"/>
             <br/>
             <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
-            <h3>Опции иконки</h3>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showSeparator" caption="Показывать иконку у заголовка" attr:test_name="ShowHeaderSeparator"/>
+            <h3>Header-separator options</h3>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_showSeparator" caption="Show header-separator" attr:test_name="ShowHeaderSeparator"/>
             <Controls.Label name="myLabel1" caption="style(только для тем carry и presto):"/>
             <Controls.Toggle.Radio
                     on:selectedKeyChanged="iconChangeStyle()"

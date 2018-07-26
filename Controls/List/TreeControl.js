@@ -21,7 +21,7 @@ define('Controls/List/TreeControl', [
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
             nodeKey = ItemsUtil.getPropertyValue(dispItem.getContents(), self._options.keyProperty);
-         if (!self._loadedNodes[nodeKey]) {
+         if (!self._loadedNodes[nodeKey] && !dispItem.isRoot()) {
             filter[self._options.parentProperty] = nodeKey;
             self._children.baseControl.getSourceController().load(filter, self._sorting).addCallback(function(list) {
                if (self._options.uniqueKeys) {
@@ -88,30 +88,29 @@ define('Controls/List/TreeControl', [
       constructor: function(cfg) {
          this._loadedNodes = {};
          this._hierarchyRelation =  new HierarchyRelation({
-            idProperty: cfg.keyProperty || 'id',
-            parentProperty: cfg.parentProperty || 'Раздел',
-            nodeProperty: cfg.nodeProperty || 'Раздел@'
+            idProperty: cfg.keyProperty,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty
          });
          return TreeControl.superclass.constructor.apply(this, arguments);
+      },
+      _beforeUpdate: function(newOptions) {
+         var
+            filter;
+         if (this._options.root !== newOptions.root) {
+            filter = cClone(this._options.filter || {});
+            filter[this._options.parentProperty] = newOptions.root;
+            this.reload(filter);
+            this._children.baseControl.getViewModel().setRoot(newOptions.root);
+         }
+         TreeControl.superclass._beforeUpdate.apply(this, arguments);
       },
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
-      removeItems: function(items) {
-         this._children.baseControl.removeItems(items);
-      },
-      moveItemUp: function(item) {
-         this._children.baseControl.moveItemUp(item);
-      },
-      moveItemDown: function(item) {
-         this._children.baseControl.moveItemDown(item);
-      },
-      moveItems: function(items, target, position) {
-         this._children.baseControl.moveItems(items, target, position);
-      },
-      reload: function() {
+      reload: function(filter) {
          this._loadedNodes = {};
-         this._children.baseControl.reload();
+         this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
          this._children.baseControl.editItem(options);

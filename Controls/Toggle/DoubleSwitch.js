@@ -11,6 +11,10 @@ define('Controls/Toggle/DoubleSwitch', [
    /**
     * Double switch (switch between two values).
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Toggle/DoubleSwitch
     * @extends Core/Control
     * @mixes Controls/Toggle/interface/ICheckable
@@ -18,6 +22,11 @@ define('Controls/Toggle/DoubleSwitch', [
     * @control
     * @public
     * @category Toggle
+    *
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/Toggle/Switch/SwitchStyles
+    *
+    * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
     */
 
    /**

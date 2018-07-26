@@ -2,7 +2,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'Lib/TabMessage/TabMessage',
+      'Lib/Tab/Message',
       'WS.Data/Source/DataSet',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Chain'
@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
           * @param {string} tabKey Ключ текущей вкладки
           * @param {function} router Функция для получения объектов вызова по имени
           * @param {function} [packer] Функция для упаковки отправляемых объектов (опционально)
-          * @param {Lib/TabMessage/TabMessage} [channel] Канал событий (опционально)
+          * @param {Lib/Tab/Message} [channel] Канал событий (опционально)
           */
          constructor: function (tabKey, router, packer, channel) {
             if (!tabKey || typeof tabKey !== 'string') {
@@ -59,7 +59,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
             this._packer = packer || null;
             /**
              * @protected
-             * @type {Lib/TabMessage/TabMessage}
+             * @type {Lib/Tab/Message}
              */
             this._channel = channel ? channel : new TabMessage();
             /**

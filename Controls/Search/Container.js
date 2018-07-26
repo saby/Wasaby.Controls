@@ -33,8 +33,8 @@ define('Controls/Search/Container',
          
          searchCallback: function(self, result, filter) {
             self._searchMode = true;
-            self._notify('itemsChanged', [result.data], {bubbling: true});
             self._notify('filterChanged', [filter], {bubbling: true});
+            self._notify('itemsChanged', [result.data], {bubbling: true});
          },
          
          abortCallback: function(self, filter) {
@@ -44,6 +44,20 @@ define('Controls/Search/Container',
             }
          }
       };
+   
+      /**
+       * Container for content that can be filtered by Controls/Input/Search.
+       *
+       * <a href="/materials/demo-ws4-search-container">Demo with Input/Search</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button and Input/Search</a>.
+       *
+       * @class Controls/Search/Container
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/ISearch
+       * @author Герасимов Александр
+       * @control
+       * @public
+       */
       
       var Container = Control.extend({
          
@@ -53,8 +67,13 @@ define('Controls/Search/Container',
             this._dataOptions = context.dataOptions;
          },
    
-         _beforeUpdate: function(options, context) {
+         _beforeUpdate: function(newOptions, context) {
+            var currentOptions = this._dataOptions;
             this._dataOptions = context.dataOptions;
+            
+            if (currentOptions.filter !== this._dataOptions.filter || this._options.searchDelay !== newOptions.searchDelay) {
+               this._searchController = null;
+            }
          },
          
          _search: function(event, value) {

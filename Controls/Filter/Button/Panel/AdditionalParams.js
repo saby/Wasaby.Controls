@@ -8,10 +8,20 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
 ], function(Control, Utils, isEqual, Clone, template, Chain) {
 
+   /**
+    * @css @max-height_FilterPanel-items Maximum height of the folded block.
+    * @css @font-size_FilterPanel-caption Font size of the header.
+    * @css @color_FilterPanel-caption Color of the header.
+    * @css @height_FilterPanel-caption Height of the header.
+    * @css @margin_AdditionalParams-items Indent to the left of the edge for the elements.
+    * @css @color_AdditionalParams-item Color of item in the block.
+    * @css @height_AdditionalParams-item Height of item in the block.
+    * @css @height_AdditionalParams-arrow Height of the arrow to unfold the block.
+    */
+
    'use strict';
 
    var MAX_NUMBER_ITEMS = 10;
-   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
    var _private = {
 
@@ -23,10 +33,10 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          }
       },
 
-      countItems: function(items) {
+      countItems: function(self, items) {
          var result = 0;
          Chain(items).each(function(elem) {
-            if (!getPropValue(elem, 'visibility')) {
+            if (!self._isItemVisible(elem)) {
                result++;
             }
          });
@@ -34,7 +44,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       },
 
       onResize: function(self) {
-         self._arrowVisible = _private.countItems(self._options.items) > MAX_NUMBER_ITEMS;
+         self._arrowVisible = _private.countItems(self, self._options.items) > MAX_NUMBER_ITEMS;
          
          if (!self._arrowVisible) {
             self._isMaxHeight = true;
@@ -63,6 +73,11 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          }
       },
 
+      _isItemVisible: function(item) {
+         return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
+            Utils.getItemPropertyValue(item, 'visibility');
+      },
+
       _clickItemHandler: function(event, index) {
          if (!this._options.items[index].source) {
             this._options.items[index].visibility = true;
@@ -72,12 +87,10 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       },
 
       _valueChangedHandler: function(event, index, value) {
-         if (!isEqual(this._options.items[index].value, value)) {
-            this._options.items[index].value = value;
-            this._options.items[index].visibility = true;
-            this._notify('valueChanged');
-            _private.onResize(this);
-         }
+         this._options.items[index].value = value;
+         this._options.items[index].visibility = true;
+         this._notify('valueChanged');
+         _private.onResize(this);
       },
 
       _clickSeparatorHandler: function() {

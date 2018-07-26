@@ -296,16 +296,19 @@ define('Controls/List/EditInPlace', [
                this.editItem({
                   item: record
                });
-               this._clientX = originalEvent.nativeEvent.clientX;
-               this._clientY = originalEvent.nativeEvent.clientY;
+               this._clickItemInfo = {
+                  clientX: originalEvent.nativeEvent.clientX,
+                  clientY: originalEvent.nativeEvent.clientY,
+                  item: record
+               };
             }
          }
       },
 
       _afterUpdate: function() {
          var target, fakeElement, targetStyle, offset, currentWidth, previousWidth, lastLetterWidth, hasHorizontalScroll;
-         if (this._clientX && this._clientY) {
-            target = document.elementFromPoint(this._clientX, this._clientY);
+         if (this._clickItemInfo && this._clickItemInfo.item === this._originalItem) {
+            target = document.elementFromPoint(this._clickItemInfo.clientX, this._clickItemInfo.clientY);
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
                fakeElement = document.createElement('div');
                fakeElement.innerText = '';
@@ -319,9 +322,9 @@ define('Controls/List/EditInPlace', [
                нужно рассчитывать от левого края, т.к. текст гарантированно прижат к нему.
                */
                if (targetStyle.textAlign === 'right' && !hasHorizontalScroll) {
-                  offset = target.getBoundingClientRect().right - this._clientX;
+                  offset = target.getBoundingClientRect().right - this._clickItemInfo.clientX;
                } else {
-                  offset = this._clientX - target.getBoundingClientRect().left;
+                  offset = this._clickItemInfo.clientX - target.getBoundingClientRect().left;
                }
                typographyStyles.forEach(function(prop) {
                   fakeElement.style[prop] = targetStyle[prop];
@@ -361,8 +364,7 @@ define('Controls/List/EditInPlace', [
 
                target.scrollLeft = 0;
             }
-            this._clientX = null;
-            this._clientY = null;
+            this._clickItemInfo = null;
          }
       },
 

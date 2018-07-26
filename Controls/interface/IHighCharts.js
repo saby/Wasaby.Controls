@@ -3,7 +3,7 @@ define('Controls/interface/IHighCharts', [], function() {
    /**
     * Interface for HighCharts.
     *
-    * @mixin Controls/interface/IHighCharts
+    * @interface Controls/interface/IHighCharts
     * @public
     */
 

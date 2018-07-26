@@ -21,22 +21,23 @@ define('Controls/Date/model/DateRange', [
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
       _startValue: null,
       _endValue: null,
+      _state: null,
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
-         this._options = {};
+         this._state = {};
       },
 
       update: function(options) {
          var changed = false;
-         if (!DateUtil.isDatesEqual(options.startValue, this._options.startValue)) {
+         if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
             this._startValue = options.startValue;
-            this._options.startValue = options.startValue;
+            this._state.startValue = options.startValue;
             changed = true;
          }
-         if (!DateUtil.isDatesEqual(options.endValue, this._options.endValue)) {
+         if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
             this._endValue = options.endValue;
-            this._options.endValue = options.endValue;
+            this._state.endValue = options.endValue;
             changed = true;
          }
          return changed;

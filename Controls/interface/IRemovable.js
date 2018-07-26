@@ -4,7 +4,7 @@ define('Controls/interface/IRemovable', [], function() {
    /**
     * Interface for item removal in collections.
     *
-    * @mixin Controls/interface/IRemovable
+    * @interface Controls/interface/IRemovable
     * @public
     */
 
@@ -23,7 +23,8 @@ define('Controls/interface/IRemovable', [], function() {
     */
 
    /**
-    * @function Controls/interface/IRemovable#removeItems Removes items from the data source by identifiers of the items in the collection.
+    * Removes items from the data source by identifiers of the items in the collection.
+    * @function Controls/interface/IRemovable#removeItems
     * @param {Array} items Array with the identifiers of the items in the collection.
     */
 

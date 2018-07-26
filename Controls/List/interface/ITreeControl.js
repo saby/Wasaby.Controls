@@ -4,7 +4,7 @@ define('Controls/List/interface/ITreeControl', [
    /**
     * Interface for tree-like lists.
     *
-    * @mixin Controls/List/interface/ITreeControl
+    * @interface Controls/List/interface/ITreeControl
     * @public
     */
 

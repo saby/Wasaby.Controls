@@ -1,0 +1,55 @@
+<div class="example-Tag">
+   <Controls-demo.Example.resource.BaseDemoInput title="Input field with tag" blocker="{{true}}">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Text tagStyle="primary"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value1"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="done"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value2"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="attention"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value3"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="error"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value4"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Text tagStyle="info"
+                                       textAlign="right"
+                                       placeholder="Tooltip"
+                                       on:tagClick="_showInfoBox()"
+                                       bind:value="_value5"/>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+
+   <Controls.Popup.Opener.InfoBox name="infoBox"/>
+</div>

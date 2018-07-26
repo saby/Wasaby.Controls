@@ -2,14 +2,14 @@ define('Controls/DragNDrop/Container',
    [
       'Core/Control',
       'tmpl!Controls/DragNDrop/Container/Container',
-      'Controls/DragNDrop/Avatar'
+      'Controls/DragNDrop/DraggingTemplate'
    ],
 
    function(Control, template) {
       return Control.extend({
          _template: template,
-         _avatarOptions: undefined,
-         _avatarTemplate: undefined,
+         _draggingTemplateOptions: undefined,
+         _draggingTemplate: undefined,
 
          _documentDragStart: function(event, dragObject) {
             this._children.dragStartDetect.start(dragObject);
@@ -17,13 +17,13 @@ define('Controls/DragNDrop/Container',
 
          _documentDragEnd: function(event, dragObject) {
             this._children.dragEndDetect.start(dragObject);
-            this._avatarTemplate = null;
-            this._avatarOptions = null;
+            this._draggingTemplate = null;
+            this._draggingTemplateOptions = null;
          },
 
-         _updateDragAvatar: function(event, avatarOptions, avatarTemplate) {
-            this._avatarOptions = avatarOptions;
-            this._avatarTemplate = avatarTemplate;
+         _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
+            this._draggingTemplateOptions = draggingTemplateOptions;
+            this._draggingTemplate = draggingTemplate;
          }
       });
    });

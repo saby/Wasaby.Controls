@@ -14,6 +14,9 @@ define('Controls/Input/Search',
       /**
        * Search input.
        *
+       * <a href="/materials/demo-ws4-search-container">Demo with Input/Search</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button and Input/Search</a>.
+       *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch

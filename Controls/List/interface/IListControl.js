@@ -4,7 +4,7 @@ define('Controls/List/interface/IListControl', [
    /**
     * Interface for lists.
     *
-    * @mixin Controls/List/interface/IListControl
+    * @interface Controls/List/interface/IListControl
     * @public
     */
 

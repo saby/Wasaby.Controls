@@ -22,10 +22,14 @@ define('Controls/Popup/Manager',
             var self = this;
             return element.strategy.elementDestroyed(element, container, id).addCallback(function() {
                self._popupItems.remove(element);
-               var indices = self._popupItems.getIndicesByValue('isModal', true);
-               ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+               _private.updateOverlay.call(self);
                return element;
             });
+         },
+
+         updateOverlay: function() {
+            var indices = this._popupItems.getIndicesByValue('isModal', true);
+            ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
          },
 
          popupCreated: function(id) {
@@ -117,7 +121,7 @@ define('Controls/Popup/Manager',
                id: randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
-               position: strategy.getDefaultPosition(),
+               position: strategy.getDefaultPosition(options),
                popupOptions: options
             };
             _private.addElement.call(this, element);
@@ -136,6 +140,7 @@ define('Controls/Popup/Manager',
             if (element) {
                element.popupOptions = options;
                element.strategy.elementUpdated(element, _private.getItemContainer(id));
+               _private.updateOverlay.call(this);
                this._redrawItems();
                return id;
             }
@@ -173,6 +178,15 @@ define('Controls/Popup/Manager',
                element = this._popupItems.at(index);
             }
             return element;
+         },
+
+         /**
+          * Переиндексировать набор попапов, например после изменения конфигурации
+          * одного из них
+          * @function Controls/Popup/Manager#reindex
+          */
+         reindex: function() {
+            this._popupItems._reindex();
          },
 
          /**

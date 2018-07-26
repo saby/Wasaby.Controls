@@ -78,6 +78,8 @@
 @color_DropdownList-header:              #313E78;
 @color-Dropdown-emptyItem:               #CCCCCC;
 @padding_DropdownList-content:           2px 0;
+@color_DropdownList-group-separator:     #EAEAEA;
+@color_DropdownList-group-text:          #8991A9;
 
 //FieldLink_Link
 @color_FieldLink-Link_enabled:             #8991A9;
@@ -296,16 +298,23 @@
 @color_Paging_arrow-icon:                @default-color;
 @color_Paging_arrow-icon_disabled:       @disabled-color;
 
-//VDOM DragNDrop.Avatar
-@background-color_Avatar:                 #FFFFFF;
-@border-color_Avatar:                     #CCCCCC;
-@box-shadow-color_Avatar:                 rgba(0, 0, 0, 0.25);
-@color_Avatar-icon:                       #CCCCCC;
-@color_Avatar-mainText:                   #313E78;
-@color_Avatar-additionalText:             #000000;
-@background-color_Avatar-counter:         #0055BB;
-@color_Avatar-counter:                    #FFFFFF;
+//VDOM DragNDrop.DraggingTemplate
+@background-color_DraggingTemplate:                 #FFFFFF;
+@border-color_DraggingTemplate:                     #CCCCCC;
+@box-shadow-color_DraggingTemplate:                 rgba(0, 0, 0, 0.25);
+@color_DraggingTemplate-icon:                       #CCCCCC;
+@color_DraggingTemplate-mainText:                   #313E78;
+@color_DraggingTemplate-additionalText:             #000000;
+@background-color_DraggingTemplate-counter:         #0055BB;
+@color_DraggingTemplate-counter:                    #FFFFFF;
 
+//VDOM Operations.Panel
+@background-color_OperationsPanel:                 #e5ecf5;
+
+//VDOM Operations.Button
+@color_OperationsButton__icon:                           #587AB0;
+@color_OperationsButton__icon_hovered:                   #313E78;
+@color_OperationsButton__icon_readonly:                  @disabled-color;
 
 //VDOM Switcher
 @border-color_Switch:                              #E4E4E4;
@@ -359,9 +368,10 @@
 @color_CheckBox__iconBox_disabled:              #e4e4e4;
 @color_CheckBox-iconBox:                        #999999;
 @color_CheckBox_disabled:                       #313E78;
-@color_CheckBox___caption_disabled:             #CCCCCC;
+@color_CheckBox__caption_disabled:             #CCCCCC;
 @color_CheckBox-caption_enabled:                @default-text-color;
-@color_CheckBox-icon_enabled:                   @primary-color;
+@color_CheckBox__caption_enabled:               @default-text-color;
+@color_CheckBox__icon_enabled:                   @primary-color;
 //Icon
 @color-IconButtonBordered_default:             #587AB0;
 @color-IconButtonBordered_default_hovered:     #313E78;
@@ -434,13 +444,17 @@
 @color_swipe_title:                          #313E78;
 @color_swipe_icon:                           #313E78;
 //FilterButton
+@height_FilterButton:                    @default-height;
 @color_FilterButton-icon:                @color_primary;
 @color_FilterButton-icon_hover:          @icon-color-primary-hover;
+@color_FilterButton-icon_disabled:        @icon-color-disabled;
 @color_FilterButton-clear:               #ccc;
 @color_FilterButton-arrow:               @color_primary;
+@color_FilterButton-arrow_disabled:      @icon-color-disabled;
 @color_FilterButton-icon-arrow_hover:    @icon-color-primary-hover;
 @color_FilterButton-text:                #0055bb;
 @color_FilterButton-text_hover:          #313E78;
+@color_FilterButton-text_disabled:       @default-color-disabled;
 
 //Lookup
 @color_Lookup_item-cross:                      #CCCCCC;
@@ -493,7 +507,7 @@
 @fill_RadioGroup_borderCircle_enabled:           #CCCCCC;
 @fill_RadioGroup_borderCircle_disabled:          #e4e4e4;
 @fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
-@color_RadioItem_caption_selected_size-m:          #000000;
+@color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_selected_size-l:          #313E78;
 @color_RadioItem_caption_unselected_disabled:      #CCCCCC;
 @color_RadioItem_caption_unselected_enabled:       #999999;
@@ -508,6 +522,9 @@
 @color_FilterPanel-caption:                  #313e78;
 //AdditionalParams
 @color_AdditionalParams-item:                 #313E78;
+//HistoryList
+@background-color_HistoryList:               #F4F4F4;
+@color_HistoryList-item:                 #313E78;
 //toggleButton
 @background_ToggleButton_state-on:              #F3F3F3;
 @background_ToggleButton:                       transparent;
@@ -532,6 +549,12 @@
 @color_ListView-group-text_hovered: @color_ListView-GroupBy_text_hovered;
 @color_ListView-group-separator: @color_ListView-GroupBy_separator;
 @color_ListView-group-results: #ccc;
+
+//dialog template
+@background-color_dialogTemplate-content:       #ffffff;
+@background-color_dialogTemplate-top-area:      #ffffff;
+@color_DialogTemplate-caption:                  #313E78;
+
 //VDOM TreeGridView
 @color_TreeGridView-nodeExpander: #313E78;
 @color_TreeGridView-nodeExpander_hover: #0055BB;

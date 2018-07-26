@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ItemsViewModel',
-   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Source/ISource', 'Controls/Constants'],
-   function(BaseViewModel, ItemsUtil, cInstance, ISource, ControlsConstants) {
+   ['Controls/List/BaseViewModel', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Controls/Constants'],
+   function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants) {
 
       /**
        *
@@ -155,28 +155,6 @@ define('Controls/List/ItemsViewModel',
             return this._display ? ItemsUtil.getDisplayItemById(this._display, id, keyProperty) : undefined;
          },
 
-         moveItems: function(movedItems, target, position) {
-            var
-               itemIndex,
-               targetIndex,
-               items = this._items;
-            movedItems.forEach(function(movedItem) {
-               itemIndex = items.getIndex(movedItem);
-               if (itemIndex === -1) {
-                  items.add(movedItem);
-                  itemIndex = items.getCount() - 1;
-               }
-
-               targetIndex = items.getIndex(target);
-               if (position === ISource.MOVE_POSITION.after && targetIndex < itemIndex) {
-                  targetIndex = (targetIndex + 1) < items.getCount() ? targetIndex + 1 : items.getCount();
-               } else if (position === ISource.MOVE_POSITION.before && targetIndex > itemIndex) {
-                  targetIndex = targetIndex !== 0  ? targetIndex - 1 : 0;
-               }
-               items.move(itemIndex, targetIndex);
-            });
-         },
-
          getCount: function() {
             return this._display ? this._display.getCount() : 0;
          },
@@ -224,16 +202,6 @@ define('Controls/List/ItemsViewModel',
 
          at: function(index) {
             return this._display ? this._display.at(index) : undefined;
-         },
-
-         removeItems: function(items) {
-            var item;
-            this._items.setEventRaising(false, true);
-            for (var i = 0; i < items.length; i++) {
-               item = this._items.getRecordById(items[i]);
-               item && this._items.remove(item);
-            }
-            this._items.setEventRaising(true, true);
          },
 
          destroy: function() {

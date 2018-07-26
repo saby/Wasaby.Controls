@@ -4,13 +4,14 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "Core/UserInfo",
       'Core/Deferred',
       'Core/EventBus',
-      'Lib/TabMessage/TabMessage',
+      'Lib/Tab/Message',
       "SBIS3.CONTROLS/NotificationPopup",
       'SBIS3.CONTROLS/LongOperations/Entry',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/contentTemplate",
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/footerTemplate",
       "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup",
+      "i18n!SBIS3.CONTROLS/LongOperations/Popup",
       'SBIS3.CONTROLS/LongOperations/Registry'
    ],
    function (cMerge, UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
@@ -36,9 +37,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
        * @type {object}
        */
       var RESULT_BUTTON_TITLES = {
-         download: rk('Скачать'),
-         open:     rk('Открыть'),
-         viewLog:  rk('Журнал')
+         download: rk('Скачать', 'ДлительныеОперации'),
+         open:     rk('Открыть', 'ДлительныеОперации'),
+         viewLog:  rk('Журнал', 'ДлительныеОперации')
       };
 
       /**
@@ -495,7 +496,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             $tasks[needMsg ? 'removeClass' : 'addClass']('ws-hidden');
             if (needMsg) {
                $tasks.text(
-                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций')
+                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций', 'ДлительныеОперации')
                );
             }
             this.getContainer().find('.controls-LongOperationsPopup__footer_progress').text(Math.floor(100*current/total) + '%');

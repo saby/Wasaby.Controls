@@ -27,7 +27,7 @@
    margin: 0;
    &:before {
       height: 0;
-      line-height: @default-text-size;
+      line-height: @line-height_DoubleSwitch_vertical;
    }
 }
 
@@ -64,43 +64,6 @@
 .controls-DoubleSwitch__line_disabled {
    background-color: @background-color_Switch-line_disabled;
    display: inline-block;
-}
-
-.controls-DoubleSwitch__marker {
-   width: @size_Switch-marker;
-   height: @size_Switch-marker;
-   border-style: solid;
-   border-width: @border-width_Switch-marker;
-   border-radius: 100%;
-   box-sizing: border-box;
-   position: relative;
-}
-
-.controls-DoubleSwitch__marker_enabled {
-   border-color: @border-color_Switch-marker_enabled;
-}
-
-.controls-DoubleSwitch__marker_disabled {
-   border-color: @border-color_Switch-marker_disabled;
-}
-
-.controls-DoubleSwitch__marker:before {
-   content: '';
-   width: @size_Switch-dot;
-   height: @size_Switch-dot;
-   border-radius: 100%;
-   display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
-   //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
-   position: absolute;
-   margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
-}
-
-.controls-DoubleSwitch__marker_enabled:before {
-   background: @background_Switch-dot_enabled;
-}
-
-.controls-DoubleSwitch__marker_disabled:before {
-   background: @background_Switch-dot_disabled;
 }
 
 .controls-DoubleSwitch__text_vertical {

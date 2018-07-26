@@ -432,6 +432,7 @@
 // Checkbox //
 // -------- //
 @height_CheckBox:                               24px;
+@line-height_Checkbox:                          @height_CheckBox;
 @width_CheckBox:                                @height_CheckBox;
 @check-box-icon-successful-size:                18px;
 @check-box-font-size:                           @default-text-size;
@@ -445,6 +446,7 @@
 @check-box-checked-disabled-color:              @blue-dark-color;
 @check-box-icon-successful-top-ie:              0;
 @check-box-caption-line-height:                 18px;
+@line-height_Checkbox__caption:                 @check-box-caption-line-height;
 @spacing_CheckBox-between-icon-caption:         3px 0;
 @margin-left-CheckBox__icon_size:               @width_CheckBox;
 @font-size__checkBox:                           @default-text-size;
@@ -1316,6 +1318,7 @@
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       @warning-color;
 @controls-InformationPopup-border-width:                      3px 0 0 0;
+@controls-InformationPopup-window-spacing:                    0 8px;
 @controls-InformationPopup-closeButton-top:                   6px;
 @controls-InformationPopup-closeButton-right:                 5px;
 @controls-InformationPopup-closeButton-width:                 24px;
@@ -1577,6 +1580,8 @@
 @long-operations-popup-foot-color: #999999;
 @long-operations-popup-foot-accent-color: #333333;
 @long-operations-popup-foot-but-hover-color: #313E78 !important;
+@long-operations-list-avatar_width: 40px;
+@long-operations-list-avatar_height: 40px;
 @long-operations-reg-filter-width: 150px;
 @long-operations-reg-filter-height: 30px;
 @long-operations-reg-filter-title-height: 24px;
@@ -1852,7 +1857,7 @@
 //  Popup   //
 //----------------//
 @controls-Popup-animate-duration:         0.2s;
-@controls-Popup-stack-shadow:             -4px -8px 12px -4px rgba(0, 0, 0, 0.4);
+@controls-Popup-stack-shadow:             12px -8px 12px 12px rgba(0, 0, 0, 0.4);
 @controls-Popup-stack-shadow-padding:     8px;
 
 //-----------------//

@@ -8,10 +8,19 @@ define('Controls/Header/Counter', [
 
    /**
     * Control showing the counter.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Header/Counter
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @demo Controls-demo/Headers/headerDemo
+    *
+    * @mixes Controls/Header/Counter/CounterStyles
     */
 
    /**

@@ -2,13 +2,20 @@ define(['Controls/List/TreeGridView/TreeGridView'], function(TreeGridView) {
    describe('Controls.List.TreeGridView.TreeGridView', function() {
       it('TreeGridView._onNodeExpanderClick', function() {
          var
+            stopImmediatePropagationCalled = true,
             treeGridView = new TreeGridView(),
-            callNotify = false;
+            event = {
+               stopImmediatePropagation: function() {
+                  stopImmediatePropagationCalled = true;
+               }
+            },
+            notifyCalled = false;
          treeGridView._notify = function() {
-            callNotify = true;
+            notifyCalled = true;
          };
-         treeGridView._onNodeExpanderClick();
-         assert.isTrue(callNotify, 'Incorrect notify by "_onNodeExpanderClick()".');
+         treeGridView._onNodeExpanderClick(event);
+         assert.isTrue(notifyCalled, 'Incorrect notify by "_onNodeExpanderClick()".');
+         assert.isTrue(stopImmediatePropagationCalled, 'Incorrect call "stopImmediatePropagation" by "_onNodeExpanderClick()".');
       });
    });
 });

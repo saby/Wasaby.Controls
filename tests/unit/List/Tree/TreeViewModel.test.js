@@ -99,7 +99,10 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilterTree(item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
+               expandedNodes: treeViewModel._expandedNodes,
+               keyProperty: treeViewModel._options.keyProperty
+            }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
@@ -162,6 +165,12 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 4; //3
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
+         });
+
+         it('setRoot', function() {
+            treeViewModel.setRoot('testRoot');
+            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandNodes" after setRoot("testRoot").');
+            assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
          });
       });
    });

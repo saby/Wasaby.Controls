@@ -657,6 +657,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._dateRangePicker.setRange(startValue, endValue, true);
          }
 
+         // Убираем выбеление с годов если период изменили на период не кратный годам.
+         if (this.getRangeSelectionType() === selectionTypes.years &&
+               (!startValue || !endValue || startValue.getMonth() !== 0 || endValue.getMonth() !== 11)) {
+            this._setRangeSelectionType();
+            this._clearYearsBarSelection();
+         }
          if (this.getRangeSelectionType() === selectionTypes.years) {
             year = parseInt(endValue.getFullYear(), 10);
             this._setCurrentYear(year);
@@ -857,12 +863,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       setEndValue: function (end, silent) {
          // Выделение происходит разными периодами а интерфейс должен возвращать выделение днями,
          // поэтому всегда устанавливаем конец на последний день этого периода.
-         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
-            switch(this.getRangeSelectionType()) {
-               case selectionTypes.years:
-                  end = new Date(end.getFullYear() + 1, 0, 0);
-                  break;
-            }
+         if (this.isSelectionProcessing() &&
+               this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range &&
+               this.getRangeSelectionType() === selectionTypes.years) {
+            end = new Date(end.getFullYear() + 1, 0, 0);
          }
          this.getChildControlByName('DateRangeHeader').setEndValue(end);
          return DateRangeBigChoose.superclass.setEndValue.call(this, end, silent);
@@ -1071,13 +1075,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _getYearRange: function (startDate, endDate, quantum) {
-         var date = new Date(startDate);
          if (startDate <= endDate) {
-            date.setYear(date.getFullYear() + quantum - 1);
-            return [endDate, date]
+            return [endDate, new Date(startDate.getFullYear() + quantum, 0, 0)];
          } else {
-            date.setYear(date.getFullYear() - quantum + 1);
-            return [date, endDate]
+            return [new Date(startDate.getFullYear() + quantum + 1, 0, 1), endDate];
          }
       },
 

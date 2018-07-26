@@ -132,9 +132,32 @@ define('Controls-demo/Layouts/SearchLayout', [
       }
    };
 
+   var sourceId = {
+      module: 'WS.Data/Source/Memory',
+      options: {
+         data: [
+            {key: 0, title: 'все id'},
+            {key: 1, title: '1'},
+            {key: 2, title: '2'},
+            {key: 3, title: '3'}
+         ],
+         idProperty: 'key'
+      }
+   };
+
    var filterSourceData = [
-      {id: 'firstName', resetValue: '', value: '', textValue: ''},
-      {id: 'id', resetValue: null, value: null, textValue: ''}
+      {id: 'FIO', value: '', resetValue: '', visibility: false},
+      {id: 'firstName', value: '', resetValue: '', visibility: false},
+      {id: 'Test1', value: [0], resetValue: [0], source: sourceDropdown, textValue: '', visibility: false},
+      {id: 'checked', value: false, resetValue: false, textValue: 'checked', visibility: false},
+      {id: 'id', value: [2], resetValue: [2], source: sourceId, visibility: false},
+      {id: 'Test2', value: false, resetValue: false, textValue: 'Test2', visibility: false},
+      {id: 'Test3', value: false, resetValue: false, textValue: 'Test3', visibility: false},
+      {id: 'Test4', value: false, resetValue: false, textValue: 'Test4', visibility: false},
+      {id: 'Test5', value: false, resetValue: false, textValue: 'FilterText', visibility: false},
+      {id: 'Test6', value: false, resetValue: false, textValue: 'Test6', visibility: false},
+      {id: 'Test7', value: false, resetValue: false, textValue: 'Test7', visibility: false},
+      {id: 'Test8', value: false, resetValue: false, textValue: 'Test8'}
    ];
 
    var ModuleClass = BaseControl.extend(
@@ -151,7 +174,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: filterData
          }),
-         _navigation:{
+         _navigation: {
             source: 'page',
             view: 'page',
             sourceConfig: {
@@ -160,9 +183,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                mode: 'totalCount'
             }
          },
-         _fastFilterData: filterData,
-         sourceDropdown: sourceDropdown,
-         _value: 3
+         _fastFilterData: filterData
       });
    return ModuleClass;
 });

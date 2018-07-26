@@ -1,0 +1,81 @@
+<ws:template name="sender">
+   <Controls.Button style="linkMain" caption="Sender"/>
+</ws:template>
+
+<ws:template name="responsible">
+<Controls.Button style="linkMain" caption="Responsible"/>
+</ws:template>
+
+<ws:template name="tagging">
+<Controls.Button style="linkMain" caption="Marks"/>
+</ws:template>
+
+
+<ws:template name="operation">
+<Controls.Button style="linkMain" caption="Operation (stage)"/>
+</ws:template>
+
+<ws:template name="group">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key"
+        bind:textValue="item.textValue">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{1}}" value="My"/>
+         <ws:Object key="{{2}}" value="My department"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:template>
+
+<ws:template name="unread">
+<Controls.Button style="linkMain" caption="Unread"/>
+</ws:template>
+
+<ws:template name="loose">
+<Controls.Button style="linkMain" caption="Loose"/>
+</ws:template>
+
+<ws:template name="limit">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key"
+        bind:textValue="item.textValue">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{1}}" value="Due date"/>
+         <ws:Object key="{{2}}" value="Overdue"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:template>
+
+<ws:template name="own">
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key"
+        bind:textValue="item.textValue">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{1}}" value="On me"/>
+         <ws:Object key="{{2}}" value="On department"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
+</ws:template>
+
+<ws:template name="our organisation">
+<Controls.Button style="linkMain" caption="Our company"/>
+</ws:template>
+
+<ws:template name="document">
+<Controls.Button style="linkMain" caption="Document"/>
+</ws:template>
+
+<ws:template name="activity">
+<Controls.Input.Dropdown source="{{item.source}}"
+                         bind:selectedKeys="item.selectedKeys"
+                         keyProperty="key"
+/>
+</ws:template>
+
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

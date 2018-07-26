@@ -173,6 +173,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                            config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
                            config.componentOptions._initCompoundArea = function(compoundArea) {
                               var dialog = self._dialog;
+                              if (dialog._recalcPosition) {
+                                 dialog._recalcPosition();
+                              }
                               dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                            };
                         }
@@ -238,6 +241,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area'); //Клик может быть в стики шапку, она лежит выше .ws-float-area
          if (floatArea.length) {
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
+         }
+
+         //todo Compatible
+         var compoundArea = $(target).closest('.controls-CompoundArea');
+         if (compoundArea.length) {
+            var opener = compoundArea[0].controlNodes[0].control.getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               var openerContainer = opener.getOpener && opener.getOpener() && opener.getOpener().getContainer();
+               compoundArea = openerContainer && $(openerContainer).closest('.controls-CompoundArea');
+               opener = compoundArea && compoundArea[0] && compoundArea[0].controlNodes[0].control;
+            }
          }
 
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно

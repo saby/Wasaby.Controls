@@ -8,23 +8,32 @@ define('Controls/Button/ButtonSeparator', [
 
    /**
     * Control showing the separator button.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Button/ButtonSeparator
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @demo Controls-demo/Headers/headerDemo
+    *
+    * @mixes Controls/Button/ButtonSeparator/ButtonSeparatorStyles
     */
 
    /**
     * @name Controls/Button/ButtonSeparator#style
     * @cfg {String} Icon display style.
-    * @variant Accent Icon will be default.
-    * @variant Additional Icon will be non accented.
-    * @variant Main Icon will be accented.
+    * @variant accent Icon will be default.
+    * @variant additional Icon will be non accented.
+    * @variant main Icon will be accented.
     */
 
    /**
     * @name Controls/Button/ButtonSeparator#value
-    * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
+    * @cfg {Boolean} Current state.
     */
 
    /**
@@ -58,9 +67,9 @@ define('Controls/Button/ButtonSeparator', [
       return {
          bold: types(Boolean),
          style: types(String).oneOf([
-            'Accent',
-            'Additional',
-            'Main'
+            'accent',
+            'additional',
+            'main'
          ]),
          value: types(Boolean)
       };
@@ -68,7 +77,7 @@ define('Controls/Button/ButtonSeparator', [
 
    ButtonSeparator.getDefaultOptions = function() {
       return {
-         style: 'Accent',
+         style: 'accent',
          value: false,
          bold: false
       };

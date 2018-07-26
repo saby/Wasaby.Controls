@@ -4,13 +4,13 @@ define('Controls/Input/interface/IInputPlaceholder', [
    /**
     * Interface for input placeholder.
     *
-    * @mixin Controls/Input/interface/IInputPlaceholder
+    * @interface Controls/Input/interface/IInputPlaceholder
     * @public
     */
 
    /**
     * @name Controls/Input/interface/IInputPlaceholder#placeholder
-    * @cfg {String} Input's placeholder text.
+    * @cfg {Function|String} Input's placeholder text.
     */
 
 });

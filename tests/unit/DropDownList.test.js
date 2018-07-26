@@ -7,7 +7,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       {
          id: 1,
          parent: null,
-         '@parent': true
+         '@parent': false
       },
       {
          id: 2,
@@ -21,13 +21,15 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       },
       {
          id: 4,
-         parent: 1,
+         parent: null,
+         isAdditional: true,
          '@parent': true
       },
       {
          id: 5,
          parent: 1,
-         '@parent': false
+         isAdditional: true,
+         '@parent': true
       }
    ];
    
@@ -44,22 +46,29 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       };
    };
    
+   var getDropDownListWithConfig = function(config) {
+      var dropDownList = new DropdownList(config);
+      dropDownList.saveOptions(config);
+      return dropDownList;
+   };
+   
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
       
       describe('DropdownList::_beforeUpdate', function() {
          
          it('check hierarchy', function() {
             var dropDownConfig, dropDownList;
-            
+   
             dropDownConfig = getDropDownConfig();
-            dropDownList = new DropdownList(dropDownConfig);
-            dropDownList.saveOptions(dropDownConfig);
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
    
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
    
             assert.isTrue(dropDownList._hasHierarchy);
    
+            /**** CHANGE ROOT *******************/
+            
             dropDownConfig = getDropDownConfig();
             dropDownConfig.rootKey = 1;
             dropDownList._beforeUpdate(dropDownConfig);
@@ -71,6 +80,24 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             dropDownList._beforeUpdate(dropDownConfig);
    
             assert.isFalse(dropDownList._hasHierarchy);
+            
+            /******************************/
+   
+            /**** CHANGE EXPAND *******************/
+            
+            dropDownConfig = getDropDownConfig();
+            dropDownConfig.additionalProperty = 'isAdditional';
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+   
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig);
+   
+            assert.isFalse(dropDownList._hasHierarchy);
+            
+            dropDownList._toggleExpanded();
+            assert.isTrue(dropDownList._hasHierarchy);
+            
+            /*************************************/
          });
          
       });

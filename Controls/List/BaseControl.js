@@ -364,13 +364,12 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IRemovable
     * @mixes Controls/interface/IEditInPlace
     * @control
     * @public
@@ -400,10 +399,6 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
-
-      constructor: function(cfg) {
-         BaseControl.superclass.constructor.apply(this, arguments);
-      },
 
       _beforeMount: function(newOptions, context, receivedState) {
          _private.bindHandlers(this);
@@ -551,18 +546,6 @@ define('Controls/List/BaseControl', [
          }
       },
 
-      removeItems: function(items) {
-         this._children.removeControl.removeItems(items);
-      },
-
-      _beforeItemsRemove: function(event, items) {
-         return this._notify('beforeItemsRemove', [items]);
-      },
-
-      _afterItemsRemove: function(event, items, result) {
-         this._notify('afterItemsRemove', [items, result]);
-      },
-
       _showIndicator: function(event, direction) {
          _private.showIndicator(this, direction);
          event.stopPropagation();
@@ -573,8 +556,10 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function() {
-         return _private.reload(this, this._options.filter, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function(filter) {
+         var
+            reloadFilter = filter || this._options.filter;
+         return _private.reload(this, reloadFilter, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
@@ -653,26 +638,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      moveItemUp: function(item) {
-         this._children.moveControl.moveItemUp(item);
-      },
-
-      moveItemDown: function(item) {
-         this._children.moveControl.moveItemDown(item);
-      },
-
-      moveItems: function(items, target, position) {
-         this._children.moveControl.moveItems(items, target, position);
-      },
-
-      _beforeItemsMove: function(event, items, target, position) {
-         return this._notify('beforeItemsMove', [items, target, position]);
-      },
-
-      _afterItemsMove: function(event, items, target, position, result) {
-         this._notify('afterItemsMove', [items, target, position, result]);
-      },
-
       _onItemActionsClick: function(e, action, item) {
          this._notify('itemActionsClick', [action, item]);
       },
@@ -712,8 +677,8 @@ define('Controls/List/BaseControl', [
             dragTarget = this._listViewModel.getDragTargetItem(),
             targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget && this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]) !== false) {
-            this._children.moveControl.moveItems(items, dragTarget.item, targetPosition.position);
+         if (dragTarget) {
+            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
          }
       },
 

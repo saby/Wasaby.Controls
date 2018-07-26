@@ -178,6 +178,7 @@
 @width_OperationsPanelButton-separator:                         0;
 //CheckBox
 @height_CheckBox:                               round(48px * @multiplier);
+@line-height_Checkbox:                          @height_CheckBox;
 @width_CheckBox:                                round(64px * @multiplier);
 @check-box-icon-successful-size:                round(42px * @multiplier);
 @check-box-icon-successful-top:                 0;
@@ -321,6 +322,17 @@
 @font-size_Paging-button:                         round(40px * @multiplier);
 @padding_Paging-button:                           11px 4px;
 @border-width_ScrollPaging:                       0;
+
+//VDOM Operations.Panel
+@height_OperationsPanel:                              round(58px * @multiplier);
+@spacing_OperationsPanel__item-between-icon-caption:  round(16px * @multiplier);
+@margin_OperationsPanel__rightTemplate:               0 round(32px * @multiplier) 0 0;
+@spacing_OperationsPanel-between-items:               round(32px * @multiplier);
+
+//VDOM Operations.Button
+@height_OperationsButton:                             round(78px * @multiplier);
+@width_OperationsButton:                              round(78px * @multiplier);
+@font-size_OperationsButton__icon:                    round(42px * @multiplier);
 
 //VDOM Switcher
 @width_Switch:                                      round(100px * @multiplier);
@@ -615,7 +627,7 @@
 @top-space_stackTemplate_close-button:          round(11px * @multiplier);
 
 //DialogTemplate
-@padding_dialogTemplate_content:                round(11px * @multiplier) round(8px * @multiplier);
+@margin_dialogTemplate_head:                   0 round(94px * @multiplier) 0 round(24px * @multiplier);
 
 //Search
 @icon-size_Search:                              @default-icon-size-medium;
@@ -638,6 +650,9 @@
 @size_Switcher-btn-before:                      ceil(14px * @multiplier);
 //Label
 @height_Label:                                  round(46px * @multiplier);
+@padding_Label:                                 round(16px * @multiplier) round(16px * @multiplier) round(16px * @multiplier) 0;
+@font-size_Label:                               @huge-text-size;
+
 //Tabs/Buttons
 @height_Tabs-separator:                  round(54px * @multiplier);
 @line-height_Tabs-baselineFix:           round(96px * @multiplier);
@@ -699,17 +714,17 @@
 @icon-size_FastFilter:                      round(42px * @multiplier);
 @spacing_FastFilter-item:                   0 round(8px * @multiplier) 0 0;
 @height_FastFilter-iconArrow:               round(24px * @multiplier);
-@width_FastFilter-iconArrow:                round(24px * @multiplier);
-@spacing_FastFilter-between-icon-text:      0 round(4px *@multiplier) 0 round(4px *@multiplier);
+@width_FastFilter-iconArrow:                round(42px * @multiplier);
 
 //FilterPanel
+@width_FilterPanel_default:                 800px * @multiplier;
 @spacing_FilterPanel-between-filterButton-closeButton:          round(8px * @multiplier);
-@margin_FilterPanel-resetButton-title:      0 auto 0 round(24px * @multiplier);
+@spacing_FilterPanel-between-resetButton-filterButton:      0 auto 0 round(24px * @multiplier);
 @margin_FilterPanel__PropertyGrid:          round(11px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @spacing_FilterPanel-header-topTemplate:    0;
 @height_FilterPanel-header:                 round(100px * @multiplier);
 //PropertyGrid
-@height_PropertyGrid-item:                  round(89px * @multiplier);
+@height_PropertyGrid-item:                  round(78px * @multiplier);
 //VDOM ListView
 @height_ListView-group: round(50px * @multiplier);
 @spacing_ListView-group-between-text-separator: round(24px * @multiplier);

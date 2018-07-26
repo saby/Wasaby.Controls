@@ -4,7 +4,7 @@ define('Controls/interface/ISingleSelectable', [
    /**
     * Interface for item selection from collection.
     *
-    * @mixin Controls/interface/ISingleSelectable
+    * @interface Controls/interface/ISingleSelectable
     * @public
     */
 

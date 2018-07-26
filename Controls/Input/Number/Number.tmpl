@@ -8,6 +8,8 @@
    placeholder="{{_options.placeholder}}"
    validationErrors="{{_options.validationErrors}}"
    textAlign="{{ _options.textAlign }}"
+   on:tagClick="_notifyHandler('tagClick')"
+   on:tagHover="_notifyHandler('tagHover')"
    on:valueChanged="_valueChangedHandler()"
    on:inputCompleted="_inputCompletedHandler()"
    on:focusin="_focusinHandler()"

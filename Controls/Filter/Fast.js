@@ -19,6 +19,12 @@ define('Controls/Filter/Fast',
 
       /**
        * Control "Fast Filter"
+       *
+       * <a href="/materials/demo-ws4-filter-container">Демо-пример c быстрым фильтром</a>.
+       * <a href="/materials/demo-ws4-filter-search">Демо-пример c кнопкой фильтров и строкой поиска</a>.
+       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       *
        * @class Controls/Filter/FastFilter
        * @extends Core/Control
        * @control

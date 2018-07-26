@@ -4,7 +4,7 @@ define('Controls/Input/interface/ISuggest', [
    /**
     * Interface for Input.Suggest.
     *
-    * @mixin Controls/Input/interface/ISuggest
+    * @interface Controls/Input/interface/ISuggest
     * @public
     */
    

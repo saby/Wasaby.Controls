@@ -19,7 +19,7 @@ define('Controls/Popup/InfoBox',
        * @public
        * @demo Controls-demo/InfoBox/InfoBox
        *
-       * @mixin Controls/interface/IStickyOpener
+       * @interface Controls/interface/IStickyOpener
        *
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.
@@ -41,7 +41,9 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.template
+                  content: self._options.template,
+                  contentTemplateName: self._options.templateName,
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }

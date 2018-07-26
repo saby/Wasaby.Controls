@@ -5,6 +5,8 @@
 //@long-operations-list-group-title-color: #999999;
 //@long-operations-list-time-ctr-f-size: inherit;//12px
 //@long-operations-list-state-ctr-margin-lf: 10px;
+//@long-operations-list-avatar_width: 40px;
+//@long-operations-list-avatar_height 40px;
 
 
 
@@ -31,13 +33,13 @@
 .controls-LongOperationsList__user_image {
     float: left;
     border-radius: 6px;
-    width: 34px;
-    height: 34px;
+    width: @long-operations-list-avatar_width;
+    height: @long-operations-list-avatar_height;
 }
 
 .controls-LongOperationsList__user_userNameContainer {
-    line-height: 32px;
-    margin-left: 4px;
+    line-height: @long-operations-list-avatar_height;
+    margin-left: 8px;
 }
 
 .controls-LongOperationsList__groupTpl_separator {

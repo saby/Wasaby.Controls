@@ -1,7 +1,6 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'WS.Data/Type/descriptor',
-   'SBIS3.CONTROLS/Utils/DateUtil'
-], function(types, DateUtil) {
+   'WS.Data/Type/descriptor'
+], function(types) {
    'use strict';
 
    /**
@@ -11,15 +10,13 @@ define('Controls/Input/Date/interface/ILinkView', [
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
       NOT_SELECTED: rk('Не выбран'),
-      WITHOUT_DUE_DATE: rk('Бессрочно'),
+      WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
       ALL_TIME: rk('Весь период')
    };
 
    return {
       getDefaultOptions: function() {
          return {
-            startValue: DateUtil.getStartOfMonth(new Date()),
-            endValue: DateUtil.getEndOfMonth(new Date()),
 
             /**
              * @name Controls/Input/Date/interface/ILinkView#style
