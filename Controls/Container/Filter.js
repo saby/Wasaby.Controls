@@ -42,17 +42,7 @@ define('Controls/Container/Filter',
 
          getHistorySource: function(self, hId) {
             if (!self._historySource) {
-               self._historySource = new HistorySource({
-                  originSource: new Memory({
-                     idProperty: 'id',
-                     data: []
-                  }),
-                  historySource: new HistoryService({
-                     historyId: hId,
-                     pinned: true,
-                     dataLoaded: true
-                  })
-               });
+               self._historySource = historyUtils.getHistorySource(hId);
             }
             return self._historySource;
          },

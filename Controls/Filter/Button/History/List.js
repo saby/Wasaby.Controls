@@ -84,8 +84,8 @@ define('Controls/Filter/Button/History/List', [
             self._forceUpdate();
          });
       },
-      _contentClick: function(event, data) {
-         var items = _private.getHistorySource(this).getDataObject(data.item.get('ObjectData'));
+      _contentClick: function(event, item) {
+         var items = _private.getHistorySource(this).getDataObject(item.get('ObjectData'));
          this._notify('applyHistoryFilter', [items]);
       },
 
