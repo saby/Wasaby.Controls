@@ -1,0 +1,27 @@
+<div class="PageWrap" style="padding-top: 50px;">
+   <div class="PageBlock">
+      <div class="PageBlock__title">Controls.Calendar.PeriodSimpleDialog</div>
+      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; flex-wrap: wrap; align-items: flex-start;">
+         <Controls.Input.Date.RangeLinkLite
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               year="{{_year}}"
+               chooseHalfyears="{{false}}"
+               chooseQuarters="{{false}}"
+            >
+            <ws:captionFormatter type="function">Controls-demo/Input/Date/RangeLinkLiteCustom:prototype.captionFormatter</ws:captionFormatter>
+            <ws:itemTemplate>
+               <ws:partial template="{{itemTemplate.defaultTemplate}}">
+                  <ws:monthCaptionTemplate>
+                     <ws:if data="{{monthCaptionTemplate.month.getMonth() % 2 === 0}}">
+                        <div class="controls-PeriodLiteDialog__vLayoutItem-caption" style="{{ (monthCaptionTemplate.month.getMonth() % 4 === 0) ? 'color: red;' }}">
+                           {{ monthCaptionTemplate.formatDate(monthCaptionTemplate.month, "MMMM") }} !
+                        </div>
+                     </ws:if>
+                   </ws:monthCaptionTemplate>
+               </ws:partial>
+            </ws:itemTemplate>
+         </Controls.Input.Date.RangeLinkLite>
+      </div>
+   </div>
+</div>

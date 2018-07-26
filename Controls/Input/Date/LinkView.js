@@ -1,6 +1,5 @@
 define('Controls/Input/Date/LinkView', [
    'Core/Control',
-   'Core/helpers/Date/getFormattedDateRange',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
@@ -8,7 +7,6 @@ define('Controls/Input/Date/LinkView', [
    'css!Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
-   getFormattedDateRange,
    CalendarControlsUtils,
    DateRangeModel,
    IDateLinkView,
@@ -45,25 +43,10 @@ define('Controls/Input/Date/LinkView', [
       _updateCaption: function(self, options) {
          var opt = options || self._options;
 
-         self._caption = _private._getCaption(
+         self._caption = opt.captionFormatter(
             self._rangeModel.startValue,
             self._rangeModel.endValue,
             opt.emptyCaption
-         );
-      },
-
-      _getCaption: function(startValue, endValue, emptyCaption) {
-         // As an empty value, use the non-breaking space @nbsp; ('\ xA0') that would not make layout
-         return getFormattedDateRange(
-            startValue,
-            endValue,
-            {
-               contractToMonth: true,
-               fullNameOfMonth: true,
-               contractToQuarter: true,
-               contractToHalfYear: true,
-               emptyPeriodTitle: emptyCaption || '\xA0'
-            }
          );
       }
    };
