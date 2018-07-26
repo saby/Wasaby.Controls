@@ -250,7 +250,10 @@ define('SBIS3.CONTROLS/DataGridView',
             }
             return rowData;
          },
-         prepareHeadData = function(cfg) {
+         // isFoot - решение не хорошее, но чтобы разделить сбор конфига для шапки и футера,
+         // возможно надо будет править прикладной код, в котором могли заложиться на некоторые опции.
+         // Оставляем до VDOM.
+         prepareHeadData = function(cfg, isFoot) {
             var
                headData = {
                   columns: coreClone(cfg.columns),
@@ -276,7 +279,7 @@ define('SBIS3.CONTROLS/DataGridView',
                columnTop = headData.content[0][i];
                column = headData.content[1][i];
 
-               if (columnTop) {
+               if (columnTop && headData.countRows > 1) {
                   if (columnTop.rowspan > 1) {
                      if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
                         columnTop.value = getSortingColumnTpl(columnTop, cfg);
@@ -292,7 +295,8 @@ define('SBIS3.CONTROLS/DataGridView',
 
                //TODO здесь получается верстка, которая отдается в шаблонизатор.
                //лучше прокинуть сам шаблон, чтобы он потом там позвался
-               if (column.sorting) {
+               //В футере никогда нет сортировки
+               if (column.sorting && !isFoot) {
                   column.value = getSortingColumnTpl(column, cfg);
                }
                else if (column.headTemplate) {
@@ -997,7 +1001,7 @@ define('SBIS3.CONTROLS/DataGridView',
       },
 
       _redrawFoot: function(){
-         var footData = prepareHeadData(this._options),
+         var footData = prepareHeadData(this._options, true),
              newTFoot = $(this._options._footTpl(footData));
 
          if (this._tfoot && this._tfoot.length){
