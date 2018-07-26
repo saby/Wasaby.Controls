@@ -160,7 +160,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
              * @variant outside Размеры плитки увеличивается относительно центра элемента
              * @variant '' Размеры плитки не увеличивается.
              */
-            hoverMode: 'outside',
+            hoverMode: '',
             /**
              * @cfg {Boolean} Устанавливает режим фиксирования элементов по ховеру
              * @remark
@@ -320,7 +320,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                this._hasItemsActions().addCallback(function(hasItemsActions) {
                   item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
                });
-            } else {
+            } else if (this._options.tileMode) {
                this._calculateHoveredStyles(item, {
                   fixedMode: this._options.fixedMode,
                   hoverMode: this._options.hoverMode
