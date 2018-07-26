@@ -11,7 +11,7 @@ define('Controls/Container/Data',
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
-       * @class Controls/Container/Filter
+       * @class Controls/Container/Data
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control

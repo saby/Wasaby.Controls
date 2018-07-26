@@ -15,7 +15,7 @@ define('Controls/EngineBrowser', [
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/INavigation
-    * @demo
+    * @demo Controls-demo/EngineBrowser/BrowserApplication
     * @author Герасимов Александр
     * @control
     * @public
@@ -31,7 +31,7 @@ define('Controls/EngineBrowser', [
    /**
     * @name Controls/EngineBrowser#fastFilterSource
     * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
-    * @remark if the historyId option is setted, function will recive filter history
+    * @remark if the historyId option is setted, function will receive filter history
     * @see Controls/Filter/FastFilter#items
     */
    

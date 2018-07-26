@@ -67,8 +67,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    var filterButtonData = [{
       id: 'lastName',
       resetValue: '0',
-      value: '0',
-      visibility: true,
+      value: '0'
    }];
    
    var SearchContainer = Control.extend({
@@ -90,9 +89,14 @@ define('Controls-demo/FilterSearch/FilterSearch', [
       _beforeMount: function() {
          this._source = new MemorySource({
             data: memorySourceData,
-            filter: memorySourceFilter('firstName'),
+            filter: this._filterFunc,
             idProperty: 'id'
          });
+      },
+   
+      _filterFunc: function(item, query) {
+         var filter = memorySourceFilter('firstName');
+         return filter(item, query);
       }
    });
    
