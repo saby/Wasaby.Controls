@@ -10,6 +10,13 @@
             </div>
          </ws:for>
       </div>
+      <ws:if data="{{_arrowVisible}}">
+         <div class="controls-FilterPanel__separator">
+            <Controls.Button.BigSeparator
+                    value="{{!_isMaxHeight}}"
+                    on:click="_clickSeparatorHandler()"/>
+         </div>
+      </ws:if>
    </div>
 </ws:if>
 <ws:else>

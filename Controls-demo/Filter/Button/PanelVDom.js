@@ -5,6 +5,8 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'WS.Data/Chain',
       'tmpl!Controls-demo/Filter/Button/PanelVDom',
       'Controls/Filter/Button/Panel',
+      'WS.Data/Di',
+      'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
       'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
@@ -20,7 +22,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
 
-   function(Control, MemorySource, Chain, template) {
+   function(Control, MemorySource, Chain, template, Di, demoSource) {
 
       /**
        * @class Controls/Container/Search
@@ -147,9 +149,9 @@ define('Controls-demo/Filter/Button/PanelVDom',
 
          _itemsSimple: itemsSimple,
          _itemsTemplate: itemsTemplate,
-         _items: items
+         _items: items,
+         _itemsHistory: items
 
       });
-
       return PanelVDom;
    });

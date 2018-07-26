@@ -1,12 +1,13 @@
 <ws:template name="period">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            bind:textValue="item.textValue"
                             keyProperty="key"
                             source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
-                         bind:text="item.textValue"
+                         bind:textValue="item.textValue"
                          keyProperty="key"
                          source="{{item.source}}"/>
 </ws:template>
@@ -15,7 +16,7 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
@@ -51,7 +52,7 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
@@ -67,7 +68,7 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 

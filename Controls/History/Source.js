@@ -11,7 +11,8 @@ define('Controls/History/Source', [
    'WS.Data/Entity/Model',
    'WS.Data/Source/DataSet',
    'WS.Data/Chain',
-   'WS.Data/Collection/Factory/RecordSet'
+   'WS.Data/Collection/Factory/RecordSet',
+   'WS.Data/Di'
 ], function(CoreExtend,
    OptionsMixin,
    ISource,
@@ -21,7 +22,8 @@ define('Controls/History/Source', [
    Model,
    DataSet,
    Chain,
-   recordSetFactory) {
+   recordSetFactory,
+   Di) {
    /**
     * Source
     * Proxy source adding history data to the original source
@@ -390,6 +392,6 @@ define('Controls/History/Source', [
    });
 
    Source._private = _private;
-
+   Di.register('sourceHistory', Source);
    return Source;
 });
