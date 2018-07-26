@@ -370,11 +370,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       
       _saveAutoHideState: function(meta, config) {
-         this._openedPanelConfig = {
-            autoHide: config.autoHide !== undefined ? config.autoHide : true,
-            mode: meta.mode
-         };
-         config.autoHide = false;
+         if (!this._options.closeByFocusOut) {
+            this._openedPanelConfig = {
+               autoHide: config.autoHide !== undefined ? config.autoHide : true,
+               mode: meta.mode
+            };
+            config.autoHide = false;
+         }
       },
 
       _finishExecuteDeferred: function(error) {
