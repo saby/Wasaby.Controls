@@ -432,7 +432,13 @@ define('Controls/List/Grid/GridViewModel', [
             current.rowSpacing = this._options.rowSpacing;
 
             current.getVersion = function() {
-               return this.item.getVersion();
+               //records have defined method nextVersion, groups haven't
+               if (this.item.getVersion) {
+                  return this.item.getVersion();
+               }
+               else {
+                  return this.item;
+               }
             };
             
             if (current.multiSelectVisibility) {
