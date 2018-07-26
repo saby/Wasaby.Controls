@@ -414,7 +414,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var div = document.createElement('div');
                      div.innerHTML = text;
                      self._options.json = domToJson(div).slice(1);
-                     self._notify('onJsonChange', self._options.json);
+                     self._notify('onJsonChange', [self._options.json]);
                   });
                }
                this._updateDataReview(this.getText());
