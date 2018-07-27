@@ -357,6 +357,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   options = cMerge(options, componentOptions);
                }
                var editor = this.getLinkedEditor();
+               if (!editor) {
+                  throw new Error('Не установлена опция linkedEditor');
+               }
                options = cMerge(options, {
                   parent: editor,
                   opener: editor
