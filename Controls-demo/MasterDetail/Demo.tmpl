@@ -4,16 +4,15 @@
       <ws:master>
          <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
                <Controls.Container.MasterList selectedField="sourceType">
-                  <Controls.TreeGrid
+                  <Controls.Grid
                           source="{{_masterSource}}"
                           keyProperty="id"
                           parentProperty="Раздел"
-                          leftPadding="xs"
-                          rightPadding="xs"
+                          style="master"
                           nodeProperty="Раздел@"
                           columns="{{gridColumns}}"
                   >
-                  </Controls.TreeGrid>
+                  </Controls.Grid>
                </Controls.Container.MasterList>
          </Controls.Container.Scroll>
       </ws:master>
@@ -46,6 +45,7 @@
          <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
             <Controls.Container.MasterList selectedField="sourceType">
                <Controls.List
+                       style="master"
                        keyProperty="id"
                        source="{{_masterSource}}"
                >

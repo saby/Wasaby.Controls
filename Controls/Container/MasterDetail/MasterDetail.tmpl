@@ -1,10 +1,8 @@
-<div class="controls-MasterDetail">
+<div>
    <ws:partial
       template="{{_options.master}}"
-      attr:class="controls-MasterDetail__masterContainer"
       bind:selectedMasterValue="_selected"/>
    <ws:partial
       template="{{_options.detail}}"
-      attr:class="controls-MasterDetail__detailContainer"
       selectedMasterValue="{{_selected}}"/>
 </div>

@@ -26,6 +26,9 @@ define('Controls/List/Grid/GridViewModel', [
                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftPadding || 'default');
             }
 
+            // Стиль колонки
+            preparedClasses += ' controls-Grid__cell_' + params.style;
+
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.rightPadding || 'default');
@@ -73,6 +76,7 @@ define('Controls/List/Grid/GridViewModel', [
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: current.columns,
+                  style: current.style,
                   columnIndex: current.columnIndex,
                   multiSelectVisibility: current.multiSelectVisibility,
                   leftPadding: current.leftPadding,
@@ -85,7 +89,8 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (current.isSelected) {
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker';
+                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + current.style;
+                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + current.style;
                }
             }
 
@@ -461,6 +466,7 @@ define('Controls/List/Grid/GridViewModel', [
                var
                   currentColumn = {
                      item: current.item,
+                     style: current.style,
                      dispItem: current.dispItem,
                      keyProperty: current.keyProperty,
                      displayProperty: current.displayProperty,

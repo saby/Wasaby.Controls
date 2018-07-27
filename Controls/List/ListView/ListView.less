@@ -1,3 +1,20 @@
+.controls-ListView_master {
+   position: relative;
+   background-color: @background-color_MasterList;
+   margin-right: @border-width_MasterList-right;
+
+   &:after {
+      content: '';
+      z-index: 0;
+      width: @border-width_MasterList-right;
+      background-color: @border-color_MasterList;
+      height: 100%;
+      position: absolute;
+      right: -@border-width_MasterList-right;
+      top: 0;
+   }
+}
+
 .controls-ListView__itemV {
    border-left: 3px solid transparent;
    cursor: pointer;
@@ -6,6 +23,17 @@
 
 .controls-ListView__item__marked {
    border-left: 3px solid @color_ListView-marker;
+}
+
+.controls-ListView__item__marked_master {
+   background-color: @background-color_MasterList_item-selected;
+   &:before {
+      .selected-item-border();
+      height: 100%;
+   }
+   &:after {
+      .selected-item-clear-border();
+   }
 }
 
 .controls-ListView__checkbox {
@@ -24,14 +52,14 @@
 }
 
 .controls-ListView__item_active {
-  background-color: @default-bg-color-hovered-item;
+   background-color: @default-bg-color-hovered-item;
 }
 
 .controls-ListView__item_editing {
-  background-color: @controls-editInPlace-editing-item-bg;
-  >.controls-itemActionsV {
-     display: inline-block;
-  }
+   background-color: @controls-editInPlace-editing-item-bg;
+   > .controls-itemActionsV {
+      display: inline-block;
+   }
 }
 
 .controls-ListView__item_dragging {
@@ -41,28 +69,35 @@
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-no-touch:not(.ws-is-mobile-platform) {
-  .controls-ListView__item_showActions {
-    &:hover {
-      >.controls-itemActionsV {
-         display: inline-block;
+   .controls-ListView__item_showActions {
+      &:hover {
+         > .controls-itemActionsV {
+            display: inline-block;
+         }
       }
-    }
-  }
-  .controls-ListView__itemV {
-    &:hover {
-      background-color: @default-bg-color-hovered-item;
-    }
-  }
-  .controls-ListView__item_editing {
-    &:hover {
-      background-color: @controls-editInPlace-editing-item-bg;
-    }
-  }
+   }
+   .controls-ListView__item_default {
+      &:hover {
+         background-color: @default-bg-color-hovered-item;
+      }
+   }
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @hover-color_MasterList_item;
+      }
+   }
+   .controls-ListView__item_editing {
+      &:hover {
+         background-color: @controls-editInPlace-editing-item-bg;
+      }
+   }
 }
+
 .controls-ListView__groupContent {
    display: flex;
    align-items: baseline;
 }
+
 .controls-ListView__groupSeparator-left, .controls-ListView__groupSeparator-right {
    height: @height_ListView-group / 2;
    margin-bottom: @height_ListView-group / 2;
@@ -70,6 +105,7 @@
    width: 100%;
    font-size: @font-size_ListView-group-expander;
 }
+
 .controls-ListView__groupContent-text {
    display: inline-block;
    padding: 0 @spacing_ListView-group-between-text-separator;
@@ -80,25 +116,56 @@
    flex-shrink: 0;
    user-select: none;
 }
+
 .controls-ListView__groupExpander {
    cursor: pointer;
 }
+
 .controls-ListView__groupExpander:before {
    width: @width_ListView-group-expander;
    font-size: @font-size_ListView-group-expander;
    padding: 0 @spacing_ListView-group-between-text-expander 0 0;
    content: '\e000';
 }
+
 .controls-ListView__groupExpander:hover {
    color: @color_ListView-group-text_hovered;
 }
+
 .controls-ListView__groupExpander_collapsed:before {
    content: '\e013';
 }
+
 .controls-ListView__groupHidden {
    display: none;
 }
+
 .controls-ListView__groupContent-rightTemplate {
    padding-left: @spacing_ListView-group-between-rightTemplate-separator;
    flex-shrink: 0;
+}
+
+.selected-item-border() {
+   content: '';
+   z-index: 2;
+   box-sizing: border-box;
+   border-top: 1px solid @border-color-top_MasterList_item-selected;
+   border-bottom: 1px solid @border-color-bottom_MasterList_item-selected;
+   box-shadow: @box-shadow_MasterList_item-selected;
+   width: ~'calc(100% + @{border-width_MasterList-right})';
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   pointer-events: none;
+}
+
+.selected-item-clear-border() {
+   content: '';
+   z-index: 1;
+   height: 100%;
+   top: 0;
+   width: @border-width_MasterList-right;
+   position: absolute;
+   right: -@border-width_MasterList-right;
+   background-color: @default-bg-color;
 }
