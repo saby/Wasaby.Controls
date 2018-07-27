@@ -7,7 +7,12 @@ define(
       'use strict';
 
       describe('Controls.Input.Mask.ViewModel', function() {
-         var viewModel = new ViewModel({}), result;
+         var viewModel = new ViewModel({
+               mask: '',
+               value: '',
+               replacer: '',
+               formatMaskChars: {}
+            }), result;
 
          describe('updateOptions', function() {
             it('test_01', function() {
@@ -26,11 +31,11 @@ define(
                assert.deepEqual(result, {
                   replacer: options.replacer,
                   format: {
-                     "searchingGroups": "((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))",
-                     "delimiterGroups": {
-                        "1": {
-                           "value": ".",
-                           "type": "single"
+                     'searchingGroups': '((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))',
+                     'delimiterGroups': {
+                        '1': {
+                           'value': '.',
+                           'type': 'single'
                         }
                      }
                   }

@@ -1,5 +1,6 @@
 /// <amd-module name="File/LocalFileLink" />
-import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
+import {ResourceAbstract} from 'File/ResourceAbstract';
+import {FileInfo} from 'File/IResource';
 /**
  * Класс - обёртка над ссылкой на локальный файл
  * @class
@@ -9,7 +10,6 @@ import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
  * @author Заляев А.В.
  */
 class LocalFileLink extends ResourceAbstract {
-    private readonly _fileInfo: Partial<FileInfo>;
     /**
      * @param {String} fileLink Ссылка на файл
      * @param {*} [_meta] Дополнительные мета-данные
@@ -23,12 +23,12 @@ class LocalFileLink extends ResourceAbstract {
         protected _info?: FileInfo
     ) {
         super();
-        this._fileInfo = this._fileInfo || {};
-        if (!this._fileInfo.name) {
+        this._info = this._info || {};
+        if (!this._info.name) {
             /*
              * Для ссылки на локальный файл, именем является часть пути до него после последнего слеша
              */
-            this._fileInfo.name = fileLink.replace(/.*(\\|\/)/, "");
+            this._info.name = fileLink.replace(/.*(\\|\/)/, "");
         }
     }
     /**
@@ -41,4 +41,4 @@ class LocalFileLink extends ResourceAbstract {
         return this.fileLink;
     }
 }
-export  = LocalFileLink;
+export = LocalFileLink;
