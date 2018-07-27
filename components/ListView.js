@@ -2003,6 +2003,11 @@ define('SBIS3.CONTROLS/ListView',
                             }
                          }
                          else {
+                            if(self._touchSupport && this.getHoveredItem().key !== id) {
+                               /* Клик по записи отличной от текущей засвайпленой
+                                  на touch устройствах должен скрывать ховер и операции. */
+                               self._mouseLeaveHandler();
+                            }
                             self.setSelectedKey(id);
                          }
                       }
