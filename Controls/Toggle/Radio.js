@@ -8,11 +8,9 @@ define('Controls/Toggle/Radio', [
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
-    * Radio button switch.
+    * Radio button with support two direction.
     *
     * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
-    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
     *
     * @class Controls/Toggle/Radio
     * @extends Core/Control
@@ -30,7 +28,7 @@ define('Controls/Toggle/Radio', [
    /**
     * @name Controls/Toggle/Radio#direction
     * @cfg {string} Direction of RadioGroup.
-    * @variant horizontal RadioGroup is a row of RadioButton.
+    * @variant horizontal RadioGroup is a row of RadioButton. It is default value.
     * @variant vertical RadioGroup is a column of RadioButton.
     */
 

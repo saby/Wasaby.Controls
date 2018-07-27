@@ -1,4 +1,4 @@
-define('Controls/Button/ButtonSeparator/ButtonSeparatorStyles',
+define('Controls/Button/Separator/SeparatorStyles',
    [
    ],
    function() {
@@ -6,7 +6,7 @@ define('Controls/Button/ButtonSeparator/ButtonSeparatorStyles',
 
    /**
     *
-    * @mixin Controls/Button/ButtonSeparator/ButtonSeparatorStyles
+    * @mixin Controls/Button/Separator/SeparatorStyles
     * @public
     *
     * @css @size-Separator__icon Size of icon.

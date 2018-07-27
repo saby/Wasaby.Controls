@@ -16,7 +16,7 @@ define('Controls/Button/BigSeparator', [
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#value
+    * @name Controls/Button/Separator#value
     * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
