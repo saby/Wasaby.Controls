@@ -17,13 +17,36 @@ define('Controls/Filter/Button',
       /**
        * Component for data filtering.
        * Uses property grid for editing filter fields.
+       *
+       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       *
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
+       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDomApplication
+       * @demo Controls-demo/Filter/Button/PanelVDomApplication
        * @control
        * @public
        * @author Герасимов Александр
-       * @demo Controls-demo/FilterButton/FilterButton
+       */
+
+      /**
+       * @css @height_FilterButton Height of button.
+       * @css @color_FilterButton-icon Color of button icon.
+       * @css @color_FilterButton-icon_hover Color of button icon when hovering.
+       * @css @color_FilterButton-icon_disabled Color icon unavailable button.
+       * @css @spacing_FilterButton-between-icon-text Spacing between the filter icon and the filter string.
+       * @css @color_FilterButton-text Color of filter string.
+       * @css @color_FilterButton-text_hover Color of filter string when hovering.
+       * @css @color_FilterButton-text_disabled Color of filter string of unavailable button.
+       * @css @font-size_FilterButton-text The font size of the filter string.
+       * @css @color_FilterButton-arrow Color of icon 'arrow'.
+       * @css @color_FilterButton-arrow_disabled Color of icon 'arrow' of unavailable button.
+       * @css @color_FilterButton-clear Color of icon 'cross'.
+       * @css @font-size_FilterButton-icon Size of filter button icon.
+       * @css @font-family_FilterButton-icon Font family of filter button icon.
+       * @css @icon-size_FilterButton-text-icon Size of icon icon 'arrow' and icon 'cross'.
        */
 
       'use strict';
@@ -53,7 +76,9 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue')) {
+               if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) &&
+                  (Utils.getItemPropertyValue(item, 'visibility') === undefined || Utils.getItemPropertyValue(item, 'visibility'))
+               ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
 
                   if (textValue) {
@@ -71,6 +96,44 @@ define('Controls/Filter/Button',
             if (self._options.filterTemplate && self._filterCompatible) {
                self._filterCompatible.updateFilterStructure(items);
             }
+         },
+         setPopupOptions: function(self, options) {
+            self._popupOptions = {
+               closeByExternalClick: true,
+               eventHandlers: {
+                  onResult: self._onFilterChanged
+               }
+            };
+
+            if (options.orientation === 'left') {
+               self._popupOptions.corner = {
+                  vertical: 'top',
+                  horizontal: 'right'
+               };
+               self._popupOptions.horizontalAlign = {
+                  side: 'left'
+               };
+            }
+         },
+
+         requireDeps: function(self) {
+            if (!self._depsDeferred) {
+               self._depsDeferred = new Deferred();
+               requirejs([self._options.templateName], function() {
+                  self._depsDeferred.callback();
+               });
+            }
+            return self._depsDeferred;
+            
+         },
+         
+         resetItems: function(self, items) {
+            Chain(items).each(function(item) {
+               Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
+               if (Utils.getItemPropertyValue(item, 'visibility') !== undefined) {
+                  Utils.setItemPropertyValue(item, 'visibility', false);
+               }
+            });
          }
       };
 
@@ -80,12 +143,15 @@ define('Controls/Filter/Button',
          _oldPanelOpener: null,
          _text: '',
          _historyId: null,
+         _popupOptions: null,
+         _depsDeferred: null,
 
          _beforeMount: function(options) {
             if (options.items) {
                _private.resolveItems(this, options.items);
             }
             this._onFilterChanged = this._onFilterChanged.bind(this);
+            _private.setPopupOptions(this, options);
          },
 
          _beforeUpdate: function(options) {
@@ -103,11 +169,15 @@ define('Controls/Filter/Button',
                _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
                   panelOpener.clearFilter();
                });
+            } else {
+               _private.resetItems(this, this._items);
+               this._notify('itemsChanged', [this._items]);
             }
             this._text = '';
          },
 
          _openFilterPanel: function() {
+            var self = this;
             if (!this._options.readOnly) {
                /* if template - show old component */
                if (this._options.filterTemplate) {
@@ -115,14 +185,17 @@ define('Controls/Filter/Button',
                      panelOpener.showFilterPanel();
                   });
                } else {
-                  this._children.filterStickyOpener.open({
-                     templateOptions: {
-                        template: this._options.templateName,
-                        items: this._options.items,
-                        historyId: this._options.historyId
-                     },
-                     template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-                     target: this._children.panelTarget
+                  _private.requireDeps(this).addCallback(function(res) {
+                     self._children.filterStickyOpener.open({
+                        templateOptions: {
+                           template: self._options.templateName,
+                           items: self._options.items,
+                           historyId: self._options.historyId
+                        },
+                        template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+                        target: self._children.panelTarget
+                     });
+                     return res;
                   });
                }
             }
@@ -136,7 +209,7 @@ define('Controls/Filter/Button',
 
       FilterButton.getDefaultOptions = function() {
          return {
-            filterAlign: 'right'
+            orientation: 'left'
          };
       };
 

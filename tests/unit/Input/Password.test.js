@@ -1,6 +1,8 @@
 define(
    [
-      'Controls/Input/Password'
+      'Controls/Input/Password',
+
+      'Controls/Input/Password/PasswordStyles'
    ],
    function(Password) {
 

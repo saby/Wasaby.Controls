@@ -1,37 +1,14 @@
-<div class="controls-PeriodLiteDialog-item">
-   <ws:for data="halfYearIndex as halfYear in _months">
-      <div class="controls-PeriodLiteDialog-item__halfYear">
-         <div class="controls-PeriodLiteDialog__item-background-hovered{{ _halfyearHovered !== halfYearIndex ? ' ws-hidden'}}"></div>
-         <ws:for data="quarter in halfYear.quarters">
-            <div class="controls-PeriodLiteDialog-item__quarter">
-               <div class="controls-PeriodLiteDialog__item-background-hovered{{ _quarterHovered !== quarter.number ? ' ws-hidden'}}"></div>
-               <div class="controls-PeriodLiteDialog-item__month-wrapper{{ _yearHovered || _halfyearHovered === halfYearIndex ? ' controls-PeriodLiteDialog__background-transparent'}}">
-                  <ws:for data="month in quarter.months">
-                     <div class="controls-PeriodLiteDialog-item__month-caption controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
-                          on:click="_onMonthClick(month.number)">
-                        <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
-                           <div class="controls-PeriodLiteDialog-item__checkBox icon-16 icon-Yes icon-done"></div>
-                        </ws:if>
-                        {{ month.name }}
-                     </div>
-                  </ws:for>
-               </div>
-               <div class="controls-PeriodLiteDialog-item__quarter-caption{{ _yearHovered || _quarterHovered === quarter.number || _halfyearHovered === halfYearIndex ? ' controls-PeriodLiteDialog__background-transparent'}}"
-                  on:click="_onQuarterClick(quarter.number)"
-                  on:mouseenter="_onQuarterMouseEnter(quarter.number)"
-                  on:mouseleave="_onQuarterMouseLeave()"
-               >
-                  {{ quarter.name }}
-               </div>
-            </div>
-         </ws:for>
-         <div class="controls-PeriodLiteDialog-item__halfYear-caption{{ _yearHovered || _halfyearHovered === halfYearIndex ? ' controls-PeriodLiteDialog__background-transparent'}}"
-            on:click="_onHalfYearClick(halfYearIndex)"
-            on:mouseenter="_onHalfYearMouseEnter(halfYearIndex)"
-            on:mouseleave="_onHalfYearMouseLeave()"
-         >
-            {{ halfYear.name }}
-         </div>
-      </div>
-   </ws:for>
-</div>
+<ws:partial
+   template="{{_itemTmplByType}}"
+   monthCaptionTemplate="{{monthCaptionTemplate}}"
+   _options="{{_options}}"
+   _year="{{_year}}"
+   _months="{{_months}}"
+   _yearHovered="{{_yearHovered}}"
+   _quarterHovered="{{_quarterHovered}}"
+   _halfyearHovered="{{_halfyearHovered}}"
+   _onMonthClick="{{_onMonthClick}}"
+   checkedStart="{{checkedStart}}"
+   checkedEnd="{{checkedStart}}"
+   formatDate="{{formatDate}}"
+/>

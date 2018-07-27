@@ -8,10 +8,19 @@ define('Controls/Button/ButtonSeparator', [
 
    /**
     * Control showing the separator button.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Button/ButtonSeparator
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @demo Controls-demo/Headers/headerDemo
+    *
+    * @mixes Controls/Button/ButtonSeparator/ButtonSeparatorStyles
     */
 
    /**
@@ -24,7 +33,7 @@ define('Controls/Button/ButtonSeparator', [
 
    /**
     * @name Controls/Button/ButtonSeparator#value
-    * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
+    * @cfg {Boolean} Current state.
     */
 
    /**

@@ -18,9 +18,12 @@ define('Controls/Header', [
     * @public
     * @demo Controls-demo/Headers/headerDemo
     *
+    *
     * @css controls-Header_Counter__clickable Class for highlighting the header and counter on the hover.
     * @css controls-Header_all__clickable Class for highlighting the header, counter, button-separator and header-separator on the hover.
     * @css controls-Header_Separator__clickable Class for highlighting the headers and header-separator on the hover.
+    *
+    * @mixes Controls/Header/HeaderStyles
     */
 
    /**

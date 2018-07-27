@@ -1,0 +1,5 @@
+<ws:if data="{{month.getMonth() % 2 === 0}}">
+   <div class="controls-PeriodLiteDialog__vLayoutItem-caption" style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+      {{ formatDate(month, "MMMM") }} !
+   </div>
+</ws:if>

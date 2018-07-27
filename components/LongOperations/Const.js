@@ -6,7 +6,9 @@
  * @public
  */
 define('SBIS3.CONTROLS/LongOperations/Const',
-   [],
+   [
+      'i18n!SBIS3.CONTROLS/LongOperations/Const'
+   ],
 
    function () {
       'use strict';

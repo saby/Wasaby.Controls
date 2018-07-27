@@ -3,7 +3,8 @@ define('Controls-demo/Headers/headerDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Headers/headerDemo',
    'WS.Data/Collection/RecordSet',
-   'css!Controls-demo/Headers/headerDemo'
+   'css!Controls-demo/Headers/headerDemo',
+   'css!Controls-demo/Headers/resetButton'
 ], function (Control,
              MemorySource,
              template) {
@@ -152,6 +153,7 @@ define('Controls-demo/Headers/headerDemo', [
          _showSeparator: true,
          _bold: true,
          _clickedComponent: 'no component',
+         _eventName: 'no event',
 
          clickIcon: function(e) {
             this._iconValue = !this._iconValue;
@@ -166,12 +168,13 @@ define('Controls-demo/Headers/headerDemo', [
                   this._clickedComponent = 'button-separator';
                   break;
                case 3:
-                  this._clickedComponent = 'header or header-separator';
+                  this._clickedComponent = 'header/header-separator';
                   break;
                case 4:
                   this._clickedComponent = 'counter';
                   break;
             }
+            this._eventName = 'click';
          },
 
          changeSize: function(e, key) {
@@ -203,6 +206,9 @@ define('Controls-demo/Headers/headerDemo', [
 
          backChangeSize: function(e, key) {
             this._backSelectedSize = key;
+         },
+         reset: function() {
+            this._eventName = 'no event';
          }
       });
    return ModuleClass;

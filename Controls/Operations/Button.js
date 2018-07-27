@@ -1,6 +1,8 @@
 define('Controls/Operations/Button', [
-   'Core/Control'
-], function(Control) {
+   'Core/Control',
+   'tmpl!Controls/Operations/Button/Button',
+   'css!Controls/Operations/Button/Button'
+], function(Control, template) {
    'use strict';
 
    /**
@@ -8,10 +10,23 @@ define('Controls/Operations/Button', [
     *
     * @class Controls/Operations/Button
     * @extends Core/Control
-    * @mixes Controls/List/interface/IExpandable
+    * @mixes Controls/interface/IExpandable
     * @control
     * @public
+    *
+    * @css @width_OperationsButton
+    * @css @height_OperationsButton
+    * @css @color_OperationsButton__icon
+    * @css @color_OperationsButton__icon_hovered
+    * @css @color_OperationsButton__icon_readonly
+    * @css @font-size_OperationsButton__icon
     */
 
-   return Control.extend({});
+   return Control.extend({
+      _template: template,
+
+      _onClick: function() {
+         this._notify('expandedChanged', [!this._options.expanded]);
+      }
+   });
 });

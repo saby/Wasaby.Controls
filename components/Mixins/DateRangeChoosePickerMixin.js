@@ -92,7 +92,30 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
              *
              * @see updateIcons
              */
-            iconsHandler: null
+            iconsHandler: null,
+
+            /**
+             * @cfg {Function} Функция форматирования заголовка.
+             */
+            captionFormatter: null,
+
+            /**
+             * @cfg {String} Шаблон года. В качестве параметра может принимать опцию monthCaptionTemplate - шаблон
+             * заголовка месяца. В шаблон заголовка месяца передается дата первого числа рисуемого месяца и функция
+             * форматирования дат {@link Core/helpers/Date/format}
+             * @example
+             * <ws:itemTemplate>
+             *    <ws:partial
+             *       template="tmpl!SBIS3.CONTROLS/Date/RangeChoose/Year"
+             *       monthCaptionTemplate="tmpl!Examples/DateRangeSlider/MyDateRangeSlider/month"/>
+             * </ws:itemTemplate>
+             *
+             * Examples/DateRangeSlider/MyDateRangeSlider/month.tmpl
+             * <div class="controls-DateRangeChoose__month-caption" style="{{ (month.getMonth() % 2 === 0) ? 'color: red;' }}">
+             *    {{ formatDate(month, "MMMM") }}
+             * </div>
+             */
+            itemTemplate: null
          },
 
          _chooserControl: null
@@ -129,8 +152,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
                element = $(['<div class="', this._cssRangeSlider.pickerContainer, '"></div>'].join(' '));
 
             this._picker.getContainer().empty();
-            // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
-            self._chooserControl = new DateRangeChoose({
+            var opts = {
                parent: this._picker,
                element: element,
                startValue: this.getStartValue(),
@@ -148,8 +170,15 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
                uncheckedIconCssClass: this._options.uncheckedIconCssClass,
                checkedIconTitle: this._options.checkedIconTitle,
                uncheckedIconTitle: this._options.uncheckedIconTitle,
-               iconsHandler: this._options.iconsHandler
-            });
+               iconsHandler: this._options.iconsHandler,
+               captionFormatter: this._options.captionFormatter
+            };
+            if (this._options.itemTemplate) {
+               opts.itemTemplate = this._options.itemTemplate;
+            }
+
+            // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
+            self._chooserControl = new DateRangeChoose(opts);
 
             // Добавляем в пикер
             this._picker.getContainer().append(element);

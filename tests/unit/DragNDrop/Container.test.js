@@ -31,13 +31,13 @@ define([
          assert.isTrue(endDetected);
       });
 
-      it('updateAvatar', function() {
+      it('updateDraggingTemplate', function() {
          var
-            avatarOptions = 'avatarOptions',
-            avatarTemplate = 'avatarTemplate';
-         container._updateDragAvatar(null, avatarOptions, avatarTemplate);
-         assert.equal(container._avatarOptions, avatarOptions);
-         assert.equal(container._avatarTemplate, avatarTemplate);
+            draggingTemplateOptions = 'draggingTemplateOptions',
+            draggingTemplate = 'draggingTemplate';
+         container._updateDraggingTemplate(null, draggingTemplateOptions, draggingTemplate);
+         assert.equal(container._draggingTemplateOptions, draggingTemplateOptions);
+         assert.equal(container._draggingTemplate, draggingTemplate);
       });
    });
 });

@@ -14,40 +14,17 @@
             <!--</div>-->
             <span class="controls-DateRangeChoose__year-next"></span>
          </div>
-         <div class="controls-DateRangeChoose__main-wrapper">
-            <ws:for data="halfYearIndex as halfYear in _months">
-               <div class="controls-DateRangeChoose__halfYear" data-range-id="{{ halfYearIndex }}">
-                  <div class="controls-DateRangeChoose__border"></div>
-                  <ws:for data="quarterIndex as quarter in halfYear.quarters">
-                     <div class="controls-DateRangeChoose__quarter" data-range-id="{{ halfYearIndex*2 + quarterIndex }}">
-                        <div class="controls-DateRangeChoose__border"></div>
-                        <ws:if data="{{ !showMonths && (checkedStart || checkedEnd || iconsHandler) }}">
-                           <div class="controls-DateRangeChoose__checkBox controls-DateRangeChoose__quarter-checkBox icon-16 icon-Yes"></div>
-                        </ws:if>
-                        <div class="controls-DateRangeChoose__month-wrapper">
-                           <ws:for data="monthIndex as month in quarter.months">
-                              <div class="controls-DateRangeChoose__month" data-range-id="{{ halfYearIndex*6 + quarterIndex*3 + monthIndex}}">
-                                 <div class="controls-DateRangeChoose__border"></div>
-                                 <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
-                                    <div class="controls-DateRangeChoose__checkBox controls-DateRangeChoose__month-checkBox icon-16 icon-Yes"></div>
-                                 </ws:if>
-                                 <div class="controls-DateRangeChoose__month-caption">
-                                    {{ month }}
-                                 </div>
-                              </div>
-                           </ws:for>
-                        </div>
-                        <div class="controls-DateRangeChoose__quarter-caption">
-                           {{ quarter.name }} <span class="controls-DateRangeChoose__quarter-caption-text">{{ rk('квартал') }}</span>
-                        </div>
-                     </div>
-                  </ws:for>
-                  <div class="controls-DateRangeChoose__halfYear-caption">
-                     {{ halfYear.name }}
-                  </div>
-               </div>
-            </ws:for>
-         </div>
+         <ws:partial
+            template="{{ itemTemplate }}"
+            defaultTemplate="tmpl!SBIS3.CONTROLS/Date/RangeChoose/Year"
+            monthCaptionTemplate="{{ monthCaptionTemplate }}"
+            _months="{{ _months }}"
+            _formatDate="{{ _formatDate }}"
+            showMonths="{{showMonths}}"
+            checkedStart="{{checkedStart}}"
+            checkedEnd="{{checkedEnd}}"
+            iconsHandler="{{iconsHandler}}"
+         />
       </div>
       <ws:if data="{{showUndefined}}">
          <div  class="controls-DateRangeChoose__extended-period controls-DateRangeChoose__undefined-period">

@@ -1,46 +1,47 @@
-<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
-   <div style="padding: 3em; background-color: rgba(38,59,74,0.22); {{_hide ? 'display: none;' : ''}}">
-      <h2>Area</h2>
-      <Controls.Label name="myLabel1" caption="Пример"/>
+<Controls-demo.Wrapper.Wrapper title="Area">
+   <ws:componentClass>
+      <Controls.Popup.Opener.InfoBox name="infoBoxArea"/>
       <Controls.Input.Area
-                           attr:id="main_field"
-                           bind:value="_text1"
-                           placeholder="{{_placeholder}}"
-                           constraint="{{_constraint}}"
-                           validationErrors="{{_validationErrors}}"
-                           trim="{{_trim}}"
-                           maxLength="{{_maxLength}}"
-                           minLines="{{_minLines}}"
-                           maxLines="{{_maxLines}}"
-                           tagStyle="{{_tagStyle}}"
-                           readOnly="{{_readOnly}}"
-                           on:valueChanged="_eventHandler()"
-                           on:inputCompleted="_eventHandler()"
+         attr:id="main_field"
+         bind:value="_text1"
+         name="textArea"
+         placeholder="{{_placeholder}}"
+         constraint="{{_constraint}}"
+         trim="{{_trim}}"
+         maxLength="{{_maxLength}}"
+         minLines="{{_minLines}}"
+         maxLines="{{_maxLines}}"
+         tagStyle="{{_tagStyle}}"
+         readOnly="{{_readOnly}}"
+         selectOnClick="{{_selectOnClick}}"
+         validationErrors="{{_validationErrors}}"
+         on:valueChanged="_eventHandler()"
+         on:inputCompleted="_eventHandler()"
+         attr:class="demo-TextBox"
+         on:tagHover="_tagStyleHandler()"
+         on:tagClick="_tagStyleClickHandler()"
       />
-   </div>
-   <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
-      <h3>Задайте опции:</h3>
+   </ws:componentClass>
+   <ws:componentProperty>
       <Controls.Label name="myLabel1" caption="placeholder"/>
-      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder"/>
-      <Controls.Label name="myLabel1" caption="tagStyle(варианты: attention, done, error, primary, info)"
-                      attr:style="height: auto;"/>
-      <Controls.Input.Text attr:id="tagStyle" bind:value="_tagStyle"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="constraint"/>
-      <Controls.Input.Text attr:id="constraint" bind:value="_constraint"/>
+      <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint" source="{{_items}}"
+                                      attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="maxLength"/>
-      <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength"/>
+      <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="minLines"/>
-      <Controls.Input.Number attr:id="minLines" bind:value="_minLines" precision="{{0}}"/>
+      <Controls.Input.Number attr:id="minLines" bind:value="_minLines" precision="{{0}}" attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="maxLines"/>
-      <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines" precision="{{0}}"/>
+      <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines" precision="{{0}}" attr:class="demo-TextBox"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
-         <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()" readOnly="{{false}}"
-                                      bind:value="_validationErrorsValue" caption="validationErrors"/>
-         <br/>
-         <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
-         <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_hide" caption="hide"/>
+         <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
+                                      bind:readOnlyValue="_readOnly"
+                                      on:validationErrorsValueChanged="_validationChangedHandler()"
+                                      bind:validationErrorsValue="_validationErrorsValue"/>
       </div>
-   </div>
-   <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
-</div>
+   </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

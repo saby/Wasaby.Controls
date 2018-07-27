@@ -1,79 +1,58 @@
+/* global define, describe, it, assert */
 define([
-   'Core/i18n',
+   'Core/core-merge',
+   'Controls/Utils/Date',
    'SBIS3.CONTROLS/Date/RangeChoose'
-   ], function (
-      i18n,
-      DateRangeChoose
-   ) {
+], function (
+   coreMerge,
+   DateUtils,
+   DateRangeChoose
+) {
    'use strict';
 
    describe('SBIS3.CONTROLS/Date/RangeChoose', function () {
       describe('._modifyOptions', function () {
-         describe('localization', function () {
-            let saveI18nEnabled = i18n.isEnabled(),
-               saveI18nLang = i18n.getLang();
-
-            before(function() {
-               i18n.setEnable(true);
-            });
-
-            after(function() {
-               i18n.setLang(saveI18nLang);
-               i18n.setEnable(saveI18nEnabled);
-            });
-
-            let locales = {
-               'ru-RU': [
-                  {
+         it('should create correct month model', function() {
+            const year = (new Date()).getFullYear(),
+               opts = DateRangeChoose.prototype._modifyOptions({}),
+               data = [{
+                  name: 'I',
+                  quarters: [{
                      name: 'I',
-                     quarters: [
-                        {name: 'I', months: ['Январь', 'Февраль', 'Март']},
-                        {name: 'II', months: ['Апрель', 'Май', 'Июнь']}
-                     ]
-                  },
-                  {
+                     months: [ new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1) ]
+                  }, {
                      name: 'II',
-                     quarters: [
-                        {name: 'III', months: ['Июль', 'Август', 'Сентябрь']},
-                        {name: 'IV', months: ['Октябрь', 'Ноябрь', 'Декабрь']}
-                     ]
+                     months: [ new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1) ]
+                  }]
+               }, {
+                  name: 'II',
+                  quarters: [{
+                     name: 'III',
+                     months: [ new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1) ]
+                  }, {
+                     name: 'IV',
+                     months: [ new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1) ]
+                  }]
+               }];
+
+            // Compare all but months.
+            assert.deepEqual(
+               coreMerge({}, opts._months, { ignoreRegExp: /^months$/, clone: true }),
+               coreMerge({}, data, { ignoreRegExp: /^months$/, clone: true })
+            );
+
+            // And now let's check the month.
+            for (let [halhyearIndex, halhyear] of data.entries()) {
+               for (let [quarterIndex, quarter] of halhyear.quarters.entries()) {
+                  for (let [monthIndex, month] of quarter.months.entries()) {
+                     assert(
+                        DateUtils.isDatesEqual(
+                           opts._months[halhyearIndex].quarters[quarterIndex].months[monthIndex], month
+                        )
+                     );
                   }
-               ],
-               'en-US': [
-                  {
-                     name: 'I',
-                     quarters: [
-                        {name: 'I', months: ['January', 'February', 'March']},
-                        {name: 'II', months: ['April', 'May', 'June']}
-                     ]
-                  },
-                  {
-                     name: 'II',
-                     quarters: [
-                        {name: 'III', months: ['July', 'August', 'September']},
-                        {name: 'IV', months: ['October', 'November', 'December']}
-                     ]
-                  }
-               ]
-            };
-            Object.keys(locales).forEach(function(locale) {
-               context('for locale"' + locale + '"', function () {
-                  before(function() {
-                     if (i18n.isEnabled()) {
-                        i18n.setLang(locale);
-                        if (i18n.getLang() !== locale) {
-                           this.skip();
-                        }
-                     } else {
-                        this.skip();
-                     }
-                  });
-                  it('should set proper month names', function () {
-                     let opts = DateRangeChoose.prototype._modifyOptions({});
-                     assert.deepEqual(opts._months, locales[locale]);
-                  });
-               });
-            });
+               }
+            }
          });
       });
 

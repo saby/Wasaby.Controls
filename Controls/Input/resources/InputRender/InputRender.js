@@ -1,22 +1,22 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-
       'WS.Data/Type/descriptor',
+      'Controls/Utils/tmplNotify',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, template, RenderHelper, cDetection) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection) {
 
       'use strict';
 
       /**
        * @class Controls.Input.resources.InputRender.InputRender
        * @extends Core/Control
-       * @mixes Controls/Input/resources/InputRender/InputRenderDocs
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @private
        * @category Input
@@ -61,6 +61,8 @@ define('Controls/Input/resources/InputRender/InputRender',
       var InputRender = Control.extend({
 
          _template: template,
+
+         _notifyHandler: tmplNotify,
 
          _inputHandler: function(e) {
             var
@@ -112,10 +114,6 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._notify('inputCompleted', [this._options.viewModel.getValue()]);
          },
 
-         _notifyHandler: function(e, value) {
-            this._notify(value);
-         },
-
          _getInputState: function() {
             var
                result;
@@ -146,36 +144,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _focusoutHandler: function(e) {
             e.target.scrollLeft = 0;
-         },
-
-         /**
-          * Метод вставляет строку text вместо текущего выделенного текста в инпуте
-          * Если текст не выделен, то просто вставит text на позицию каретки
-          * @param text
-          * @param selectionStart
-          * @param selectionEnd
-          * @returns {Number} позиция каретки.
-          */
-         paste: function(text, selectionStart, selectionEnd) {
-            var
-               displayValue = this._options.viewModel.getDisplayValue(),
-               processedData = this._options.viewModel.handleInput({
-                  before: displayValue.slice(0, selectionStart),
-                  insert: text,
-                  after: displayValue.slice(selectionEnd, displayValue.length)
-               }, 'insert');
-
-            if (displayValue !== this._options.viewModel.getValue()) {
-               this._notify('valueChanged', [this._options.viewModel.getValue()]);
-            }
-
-            this._selection = {
-               selectionStart: selectionStart + text.length,
-               selectionEnd: selectionStart + text.length
-            };
-
-            //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
-            return processedData.position;
          }
       });
 

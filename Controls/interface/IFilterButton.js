@@ -34,12 +34,12 @@ define('Controls/interface/IFilterButton', [
     */
    
    /**
-    * @name Controls/interface/IFilterButton#template
-    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: (@link Controls/interface/IFilterPanel).
+    * @name Controls/interface/IFilterButton#templateName
+    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: {@link Controls/interface/IFilterPanel}.
     */
    
    /**
-    * @name Controls/interface/IFilterButton#filterAlign
+    * @name Controls/interface/IFilterButton#orientation
     * @cfg {String} Sets the direction in which the popup panel will open.
     * @variant right The panel opens to the left.
     * @variant left The panel opens to the right.

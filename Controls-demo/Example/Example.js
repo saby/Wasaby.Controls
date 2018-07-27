@@ -8,7 +8,14 @@ define('Controls-demo/Example/Example',
       'use strict';
 
       var data = [
-         {name: 'Input/Password', title: 'Password'}
+         {name: 'Input/Area', title: 'Area'},
+         {name: 'Input/Mask', title: 'Mask'},
+         {name: 'Input/Number', title: 'Number'},
+         {name: 'Input/Password', title: 'Password'},
+         {name: 'Input/Phone', title: 'Phone'},
+         {name: 'Input/Suggest', title: 'Suggest'},
+         {name: 'Input/Tag', title: 'Tag'},
+         {name: 'Input/Text', title: 'Text'}
       ];
 
       var Example = Control.extend({

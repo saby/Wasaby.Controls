@@ -8,10 +8,19 @@ define('Controls/Header/Separator', [
 
    /**
     * Control showing the right arrow icon.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Header/Separator
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @demo Controls-demo/Headers/headerDemo
+    *
+    * @mixes Controls/Header/Separator/SeparatorStyles
     */
 
    /**

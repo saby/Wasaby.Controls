@@ -133,8 +133,12 @@ define('Controls/Container/Filter',
       /**
        * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
        *
+       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       *
        * @class Controls/Container/Filter
        * @extends Core/Control
+       * @author Герасимов Александр
        * @control
        * @public
        */

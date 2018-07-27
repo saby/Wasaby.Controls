@@ -29,8 +29,13 @@
         </div>
         <div class="eventBlock">
             <span>Component will be clicked:</span>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
             <br/>
             <span>{{_clickedComponent}}</span>
+            <br/>
+            <span>Event that surfaced:</span>
+            <br/>
+            <span>{{_eventName}}</span>
         </div>
     </div>
     <div class="testBlock" test_name="HeaderCapture">

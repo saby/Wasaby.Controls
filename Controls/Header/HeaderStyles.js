@@ -1,4 +1,4 @@
-define('Controls/Header/HeaderStyles.js',
+define('Controls/Header/HeaderStyles',
    [
    ],
    function() {
@@ -10,7 +10,7 @@ define('Controls/Header/HeaderStyles.js',
     * @public
     *
     * @css @font-size_Header__caption_size-s S size of header text.
-    * @css @font-size_Header__caption_size-default Default size of header text.
+    * @css @font-size_Header__caption_size-default M size of header text.
     * @css @font-size_Header__caption_size-l L size of header text.
     * @css @font-size_Header__caption_size-xl Xl size of header text.
     *

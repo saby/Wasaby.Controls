@@ -10,6 +10,10 @@ define('Controls/Toggle/Radio', [
    /**
     * Radio button switch.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
+    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    *
     * @class Controls/Toggle/Radio
     * @extends Core/Control
     * @mixes Controls/interface/ISource
@@ -18,6 +22,9 @@ define('Controls/Toggle/Radio', [
     * @public
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemo
+    *
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/Toggle/Radio/RadioStyles
     */
 
    /**

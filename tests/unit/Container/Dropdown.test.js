@@ -47,9 +47,15 @@ define(
             rawData: items
          });
 
+         let selectItem = null;
+
          let config = {
             selectedKeys: '[2]',
             keyProperty: 'id',
+            emptyText: true,
+            dataLoadCallback: function(items) {
+               selectItem = items[0];
+            },
             source: new Memory({
                idProperty: 'id',
                data: items
@@ -177,6 +183,24 @@ define(
                })
             });
             assert.equal(dropdownLazyLoad._items, null);
+         });
+
+         it('before update new key', () => {
+            dropdownContainer._beforeUpdate({
+               selectedKeys: '[6]',
+               keyProperty: 'id',
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            });
+            assert.deepEqual(dropdownContainer._selectedItems[0].getRawData(), items[5]);
+         });
+
+         it('check empty item update', () => {
+            dropdownContainer._selectedItems = [];
+            Dropdown._private.updateSelectedItems(dropdownContainer, [null], 'id');
+            assert.deepEqual(dropdownContainer._selectedItems, [null]);
          });
 
          it('open lazyLoad', () => {

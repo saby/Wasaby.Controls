@@ -208,6 +208,7 @@ define('Controls/List/ListViewModel',
          _updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
             this._nextVersion();
+            this._notify('onListChange');
          },
 
          getActiveItem: function() {
