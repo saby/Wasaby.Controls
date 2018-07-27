@@ -22,12 +22,6 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @typedef {Object} Triggers
-       * @property {Boolean} [click=true] Opening by click on the content. Closing by click not on the content or template.
-       * @property {Boolean} [hover=true] Opening by hover on the content. Closing by hover or click not on the content or template.
-       */
-
-      /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.
        */
@@ -48,8 +42,11 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @name Controls/Popup/InfoBox#triggers
-       * @cfg {Object.<Triggers>} Event names. They trigger the opening or closing of the template.
+       * @name Controls/Popup/InfoBox#trigger
+       * @cfg {String} Event name trigger the opening or closing of the template.
+       * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
+       * @default hover
        */
 
       var _private = {
@@ -136,7 +133,7 @@ define('Controls/Popup/InfoBox',
                   this._closeId = null;
                   break;
                case 'mouseleave':
-                  if (this._options.triggers.hover) {
+                  if (this._options.trigger === 'hover') {
                      this._contentMouseleaveHandler();
                   }
                   break;
@@ -152,10 +149,7 @@ define('Controls/Popup/InfoBox',
             position: 'tl',
             showDelay: 300,
             hideDelay: 300,
-            triggers: {
-               click: true,
-               hover: true
-            }
+            trigger: 'hover'
          };
       };
 
