@@ -23,6 +23,7 @@
       <h4>The template for the block "Selected" is specified using the option "itemTemplate".</h4>
       <div>
          <Controls.Filter.Button attr:class="panel-demo-filterButton"
+                                 on:filterChanged="_filterChangedHandler()"
                                  templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_items">
          </Controls.Filter.Button>

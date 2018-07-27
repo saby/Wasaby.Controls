@@ -18,55 +18,57 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       'use strict';
 
       var items = [
-         {
-            id: '1',
-            title: 'Запись 1',
-            parent: null,
-            '@parent': false
-         },
-         {
-            id: '2',
-            title: 'Запись 2',
-            parent: null,
-            '@parent': false
-         },
-         {
-            id: '3',
-            title: 'Запись 3',
-            parent: null,
-            '@parent': true,
-            icon: 'icon-medium icon-Doge icon-primary'
-         },
-         {
-            id: '4',
-            title: 'Запись 4',
-            parent: null,
-            '@parent': false
-         },
-         {
-            id: '5',
-            title: 'Запись 5',
-            parent: null,
-            '@parent': false
-         },
-         {
-            id: '6',
-            title: 'Запись 6',
-            parent: null,
-            '@parent': false
-         },
-         {
-            id: '7',
-            title: 'Запись 7',
-            parent: '3',
-            '@parent': false
-         },
-         {
-            id: '8',
-            title: 'Запись 8',
-            parent: null,
-            '@parent': false
-         }
+         {id: 'period', value: [1], resetValue: [1]},
+         {id: 'state', value: [1], resetValue: [1]},
+         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', visibility: false},
+         {id: 'sender', value: '', resetValue: '', visibility: false},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: ''},
+         {id: 'responsible', value: '', resetValue: '', visibility: false},
+         {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
+         {id: 'operation', value: '', resetValue: '', visibility: false},
+         {id: 'group', value: [1], resetValue: '', visibility: false},
+         {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false},
+         {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
+         {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false},
+         {id: 'our organisation', value: '', resetValue: '', visibility: false},
+         {id: 'document', value: '', resetValue: '', visibility: false},
+         {id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false}
+      ];
+
+      var items1 = [
+         {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
+         {id: 'state', value: [1], resetValue: [1]},
+         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', visibility: false},
+         {id: 'sender', value: '', resetValue: '', visibility: false},
+         {id: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', resetValue: ''},
+         {id: 'responsible', value: '', resetValue: '', visibility: false},
+         {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
+         {id: 'operation', value: '', resetValue: '', visibility: false},
+         {id: 'group', value: [1], resetValue: '', visibility: false},
+         {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false},
+         {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
+         {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false},
+         {id: 'our organisation', value: '', resetValue: '', visibility: false},
+         {id: 'document', value: '', resetValue: '', visibility: false},
+         {id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false}
+      ];
+
+      var items2 = [
+         {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
+         {id: 'state', value: [1], resetValue: [1]},
+         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date'},
+         {id: 'sender', value: [1], resetValue: '', textValue: 'Petrov B.B'},
+         {id: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', resetValue: ''},
+         {id: 'responsible', value: '', resetValue: '', visibility: false},
+         {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
+         {id: 'operation', value: '', resetValue: '', visibility: false},
+         {id: 'group', value: [1], resetValue: '', visibility: false},
+         {id: 'unread', value: true, resetValue: false, textValue: 'Unread'},
+         {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
+         {id: 'own', value: [2], resetValue: '', textValue: 'On department'},
+         {id: 'our organisation', value: '', resetValue: '', visibility: false},
+         {id: 'document', value: '', resetValue: '', visibility: false},
+         {id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false}
       ];
 
       var config = {
@@ -84,7 +86,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          _type: 'recordset',
          d: [
             [
-               '5', 'History 1', 'TEST_HISTORY_ID_V1'
+               '5', JSON.stringify(items1, new Serializer().serialize), 'TEST_HISTORY_ID_V1'
             ]
          ],
          s: [
@@ -116,7 +118,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          _type: 'recordset',
          d: [
             [
-               '8', 'History 8', 'TEST_HISTORY_ID_V1'
+               '8', JSON.stringify(items2, new Serializer().serialize), 'TEST_HISTORY_ID_V1'
             ]
          ],
          s: [
@@ -172,44 +174,6 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
          },
 
-         update: function(data, meta) {
-            var self = this;
-            var serData, item;
-
-            if (meta.hasOwnProperty('$_pinned')) {
-               if (data.get('pinned')) {
-                  data.set('pinned', false);
-               } else {
-                  data.set('pinned', true);
-               }
-            }
-            if (meta.hasOwnProperty('$_addFromData')) {
-
-               serData = JSON.stringify(data, function() {
-                  if (!self._serialize) {
-                     self._serialize = new Serializer();
-                  }
-                  return self._serialize;
-               }.serialize);
-
-               return getSourceByMeta(meta).update(serData, meta).addCallback(function(dataSet) {
-                  updateRecent(
-                     self,
-                     new Model({
-                        rawData: {
-                           d: [ dataSet.getRawData(), serData, 'DEMO_HISTORY_ID'],
-                           s: [
-                              {n: 'ObjectId', t: 'Строка'},
-                              {n: 'ObjectData', t: 'Строка'},
-                              {n: 'HistoryId', t: 'Строка'}
-                           ]
-                        },
-                        adapter: self._history.recent.getAdapter()
-                     }));
-               });
-            }
-            return getSourceByMeta(this, meta).update(data, meta);
-         },
 
          query: function() {
             var def = new Deferred();

@@ -1,34 +1,66 @@
 <ws:template name="period">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
                             bind:textValue="item.textValue"
-                            keyProperty="key"
-                            source="{{item.source}}" />
+                            keyProperty="key">
+   <ws:source module='WS.Data/Source/Memory'>
+      <ws:options idProperty="key">
+         <ws:data>
+            <ws:Array>
+               <ws:Object key="{{1}}" title='All time' ></ws:Object>
+               <ws:Object key="{{2}}" title='Today' ></ws:Object>
+               <ws:Object key="{{3}}" title='Past month' ></ws:Object>
+               <ws:Object key="{{4}}" title='Past 6 month' ></ws:Object>
+               <ws:Object key="{{5}}" title='Past year' ></ws:Object>
+            </ws:Array>
+         </ws:data>
+      </ws:options>
+   </ws:source>
+   </Controls.Input.Dropdown>
 </ws:template>
 
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
-                         keyProperty="key"
-                         source="{{item.source}}"/>
+                         keyProperty="key">
+<ws:source module='WS.Data/Source/Memory'>
+   <ws:options idProperty="key">
+      <ws:data>
+         <ws:Array>
+            <ws:Object key="{{1}}" title='All state' ></ws:Object>
+            <ws:Object key="{{2}}" title='In progress' ></ws:Object>
+            <ws:Object key="{{3}}" title='Done' ></ws:Object>
+            <ws:Object key="{{4}}" title='Not done' ></ws:Object>
+            <ws:Object key="{{5}}" title='Deleted' ></ws:Object>
+         </ws:Array>
+      </ws:data>
+   </ws:options>
+</ws:source>
+</Controls.Input.Dropdown>
 </ws:template>
 
 <ws:template name="limit">
 <Controls.Filter.Button.Panel.FilterDropdown
-        source="{{item.source}}"
         keyProperty="key"
-        bind:selectedKeys="item.value"/>
+        bind:selectedKeys="item.value">
+<ws:source module='WS.Data/Source/Memory'>
+   <ws:options>
+      <ws:data>
+         <ws:Array>
+            <ws:Object key="{{1}}" title='Due date' ></ws:Object>
+            <ws:Object key="{{2}}" title='Overdue' ></ws:Object>
+         </ws:Array>
+      </ws:data>
+   </ws:options>
+</ws:source>
+</Controls.Filter.Button.Panel.FilterDropdown>
 </ws:template>
 
 <ws:template name="sender">
-   <Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
-   <Controls.Input.Text bind:value="item.value"
-                        attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Sender"/>
 </ws:template>
 
 <ws:template name="author">
-   <Controls.Button style="linkMain"  caption="Author" attr:class="panel-demo-text"/>
-   <Controls.Input.Text bind:value="item.value"
-                        attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Author"/>
 </ws:template>
 
 <ws:template name="responsible">
@@ -42,17 +74,25 @@
 </ws:template>
 
 <ws:template name="operation">
-   <Controls.Button style="linkMain"  caption="Operation" attr:class="panel-demo-text"/>
-   <Controls.Input.Text bind:value="item.value"
-                        attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Sender"/>
 </ws:template>
 
 <ws:template name="group">
 <Controls.Filter.Button.Panel.FilterDropdown
-        source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
-        bind:selectedKeys="item.value"/>
+        bind:selectedKeys="item.value">
+<ws:source module='WS.Data/Source/Memory'>
+   <ws:options>
+      <ws:data>
+         <ws:Array>
+            <ws:Object key="{{1}}" title='My' ></ws:Object>
+            <ws:Object key="{{2}}" title='My department' ></ws:Object>
+         </ws:Array>
+      </ws:data>
+   </ws:options>
+</ws:source>
+</Controls.Filter.Button.Panel.FilterDropdown>
 </ws:template>
 
 <ws:template name="unread">
@@ -65,30 +105,47 @@
 
 <ws:template name="own">
 <Controls.Filter.Button.Panel.FilterDropdown
-        source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
-        bind:selectedKeys="item.value"/>
+        bind:selectedKeys="item.value">
+<ws:source module='WS.Data/Source/Memory'>
+   <ws:options>
+      <ws:data>
+         <ws:Array>
+            <ws:Object key="{{1}}" title='On me' ></ws:Object>
+            <ws:Object key="{{2}}" title='On department' ></ws:Object>
+         </ws:Array>
+      </ws:data>
+   </ws:options>
+</ws:source>
+</Controls.Filter.Button.Panel.FilterDropdown>
 </ws:template>
 
 <ws:template name="our organisation">
-   <Controls.Button style="linkMain"  caption="Our company" attr:class="panel-demo-text"/>
-   <Controls.Input.Text bind:value="item.value"
-                        attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Our company"/>
 </ws:template>
 
 <ws:template name="document">
-   <Controls.Button style="linkMain"  caption="Document" attr:class="panel-demo-text"/>
-   <Controls.Input.Text bind:value="item.value"
-                        attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Document"/>
 </ws:template>
 
 <ws:template name="activity">
 <Controls.Filter.Button.Panel.FilterDropdown
-        source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
-        bind:selectedKeys="item.value"/>
+        bind:selectedKeys="item.value">
+<ws:source module='WS.Data/Source/Memory'>
+   <ws:options idProperty="key">
+      <ws:data>
+         <ws:Array>
+            <ws:Object key="{{1}}" title='Activity for the last month' ></ws:Object>
+            <ws:Object key="{{2}}" title='Activity for the last quarter' ></ws:Object>
+            <ws:Object key="{{3}}" title='Activity for the last year' ></ws:Object>
+         </ws:Array>
+      </ws:data>
+   </ws:options>
+</ws:source>
+</Controls.Filter.Button.Panel.FilterDropdown>
 </ws:template>
 
 
