@@ -312,8 +312,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       },
 
       getStylesPanel: function(button, formats) {
-         var stylesPanel = this._stylesPanel,
-            returnDef = new Deferred();
+         var stylesPanel = this._stylesPanel;
+
          var fontSizes;
          var fontSize = formats ? formats.fontsize : null;
          if (fontSize &&
@@ -329,10 +329,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          }
 
          if (!stylesPanel) {
-            var editor = this.getLinkedEditor();
             var options = {
-               parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
-               opener: editor,
                target: button.getContainer(),
                corner: 'tl',
                verticalAlign: {
@@ -354,23 +351,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             } catch (ex) {
             }
 
+            var returnDef = new Deferred();
             requirejs(["SBIS3.CONTROLS/StylesPanelNew"], function(StylesPanel) {
-               var needOpts = componentOptions &&
-               typeof componentOptions === 'object' ? cMerge(options, componentOptions) : options;
-
-               this._stylesPanel = new StylesPanel(needOpts);
+               if (componentOptions && typeof componentOptions === 'object') {
+                  options = cMerge(options, componentOptions);
+               }
+               var editor = this.getLinkedEditor();
+               options = cMerge(options, {
+                  parent: editor,
+                  opener: editor
+               });
+               this._stylesPanel = new StylesPanel(options);
 
                this.subscribeTo(this._stylesPanel, 'changeFormat', function() {
                   this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
                }.bind(this));
 
                returnDef.callback(this._stylesPanel);
-
             }.bind(this));
-         } else {
-            returnDef.callback(this._stylesPanel);
+            return returnDef;
          }
-         return returnDef;
+         else {
+            return Deferred.success(this._stylesPanel);
+         }
       },
 
       _execCommand: function(name) {
