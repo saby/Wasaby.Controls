@@ -209,21 +209,21 @@ define('Controls/Filter/Controller',
        */
    
       /**
-       * @name Controls/Filter/Container#filterButtonSource
+       * @name Controls/Filter/Controller#filterButtonSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Button#items
        */
    
       /**
-       * @name Controls/Filter/Container#fastFilterSource
+       * @name Controls/Filter/Controller#fastFilterSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Fast#items
        */
       
       /**
-       * @name Controls/Filter/Container#historyId
+       * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
       
