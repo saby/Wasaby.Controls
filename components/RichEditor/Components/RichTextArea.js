@@ -2909,7 +2909,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
+                  this._container[0].scrollIntoView(evt.alignToTop);
                }
             },
             _getAdjacentTextNodesValue: function(node, toEnd) {
