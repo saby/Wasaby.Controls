@@ -1,7 +1,7 @@
-define('Controls/Filter/Container',
+define('Controls/Filter/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Container',
+      'tmpl!Controls/Filter/Controller',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',
@@ -200,7 +200,7 @@ define('Controls/Filter/Container',
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
-       * @class Controls/Filter/Container
+       * @class Controls/Filter/Controller
        * @extends Core/Control
        * @mixes Controls/interface/IFilter
        * @control
