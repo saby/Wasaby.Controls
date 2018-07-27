@@ -1183,6 +1183,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
                      this._setFontSize(formats.fontsize);
                   }
+                  editor.undoManager.add();
                   this._updateTextByTiny();
                }
             },
