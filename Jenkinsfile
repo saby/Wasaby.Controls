@@ -76,7 +76,7 @@ node('controls') {
         deleteDir()
 
 		echo "Назначаем переменные"
-        def server_address="http://usd-comp91:4445/wd/hub"
+        def server_address="http://autotest100:9999/wd/hub"
 		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
