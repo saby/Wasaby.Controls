@@ -56,16 +56,16 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       var items2 = [
          {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
          {id: 'state', value: [1], resetValue: [1]},
-         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date'},
-         {id: 'sender', value: [1], resetValue: '', textValue: 'Petrov B.B'},
+         {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', visibility: true},
+         {id: 'sender', value: '', resetValue: '', textValue: 'Petrov B.B', visibility: true},
          {id: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', resetValue: ''},
          {id: 'responsible', value: '', resetValue: '', visibility: false},
          {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
          {id: 'operation', value: '', resetValue: '', visibility: false},
          {id: 'group', value: [1], resetValue: '', visibility: false},
-         {id: 'unread', value: true, resetValue: false, textValue: 'Unread'},
+         {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: true},
          {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
-         {id: 'own', value: [2], resetValue: '', textValue: 'On department'},
+         {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: true},
          {id: 'our organisation', value: '', resetValue: '', visibility: false},
          {id: 'document', value: '', resetValue: '', visibility: false},
          {id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false}
@@ -85,9 +85,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       var pinnedData = {
          _type: 'recordset',
          d: [
-            [
-               '5', JSON.stringify(items1, new Serializer().serialize), 'TEST_HISTORY_ID_V1'
-            ]
+
          ],
          s: [
             {n: 'ObjectId', t: 'Строка'},
@@ -118,7 +116,10 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          _type: 'recordset',
          d: [
             [
-               '8', JSON.stringify(items2, new Serializer().serialize), 'TEST_HISTORY_ID_V1'
+               '8', JSON.stringify(items2, new Serializer().serialize), 'TEST_HISTORY_ID_2'
+            ],
+            [
+               '5', JSON.stringify(items1, new Serializer().serialize), 'TEST_HISTORY_ID_1'
             ]
          ],
          s: [
@@ -146,23 +147,6 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          idProperty: 'ObjectId'
       });
 
-      var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
-
-      function getSourceByMeta(meta) {
-         for (var i in meta) {
-            if (meta.hasOwnProperty(i)) {
-               if (historyMetaFields.indexOf(i) !== -1) {
-                  return config.historySource;
-               }
-            }
-         }
-         return config.originSource;
-      }
-
-      function updateRecent(self, item) {
-
-      }
-
       config.historySource.saveHistory = function() {};
 
       var histSource = Control.extend({
@@ -174,6 +158,18 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
          },
 
+         update: function(dataHistory, meta) {
+            data = new DataSet({
+               rawData: {
+                  frequent: createRecordSet(frequentData),
+                  pinned: createRecordSet(pinnedData),
+                  recent: createRecordSet(recentData)
+               },
+               itemsProperty: '',
+               idProperty: 'ObjectId'
+            });
+            return {};
+         },
 
          query: function() {
             var def = new Deferred();

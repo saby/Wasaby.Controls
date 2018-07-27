@@ -75,7 +75,7 @@ define('Controls/Filter/Button/History/List', [
       _historySource: null,
       _isMaxHeight: true,
 
-      _onActionClick: function(event, action, item) {
+      _onPinClick: function(event, item) {
          _private.getHistorySource(this).update(item, {
             $_pinned: !item.get('pinned')
          });

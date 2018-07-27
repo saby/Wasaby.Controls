@@ -6,7 +6,7 @@
             <div class="controls-HistoryList__itemWrapper">
                <div class="controls-HistoryList__item" on:click="_contentClick(item)">{{_getText(item)}}</div>
                <span class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
-                     on:click="_onActionClick('action', item)"></span>
+                     on:click="_onPinClick(item)"></span>
             </div>
          </ws:for>
       </div>
