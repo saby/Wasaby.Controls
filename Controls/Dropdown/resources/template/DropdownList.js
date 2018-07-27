@@ -18,6 +18,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var _private = {
          setPopupOptions: function(self) {
             self._popupOptions = {
+               autofocus: false,
                corner: {
                   horizontal: 'right'
                },
