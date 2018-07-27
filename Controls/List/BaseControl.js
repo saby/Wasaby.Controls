@@ -271,6 +271,10 @@ define('Controls/List/BaseControl', [
          }
       },
 
+      needScrollCalculation: function(navigationOpt) {
+         return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
       /**
        * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
        * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
@@ -393,6 +397,7 @@ define('Controls/List/BaseControl', [
       _itemTemplate: null,
       _multiSelectTpl: multiSelectTpl,
 
+      _needScrollCalculation: false,
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
@@ -412,6 +417,8 @@ define('Controls/List/BaseControl', [
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
             itemsCount: 0
          });
+
+         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
@@ -447,8 +454,9 @@ define('Controls/List/BaseControl', [
       },
 
       _afterMount: function() {
-         _private.startScrollEmitter(this);
-
+         if (this._needScrollCalculation) {
+            _private.startScrollEmitter(this);
+         }
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);
@@ -463,13 +471,12 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
+         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (sourceChanged) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }
-
-            //TODO обработать смену фильтров и т.д. позвать релоад если надо
 
             this._sourceController = new SourceController({
                source: newOptions.source,
