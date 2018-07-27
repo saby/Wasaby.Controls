@@ -149,10 +149,15 @@ define('Controls/Input/Number/InputProcessor',
                         splitValue.insert = '';
                         shift += splitValue.after.indexOf('.') + 1;
 
-                        return {
-                           value: _private.getValueWithDelimiters(splitValue),
-                           position: _private.getCursorPosition(splitValue, shift)
-                        };
+                        /**
+                         * if you enter a '.' in front of the '.' then nothing else is needed
+                         */
+                        if (splitValue.after[0] === '.') {
+                           return {
+                              value: _private.getValueWithDelimiters(splitValue),
+                              position: _private.getCursorPosition(splitValue, shift)
+                           };
+                        }
                      }
                   }
 
