@@ -283,7 +283,7 @@ node('controls') {
                     sh "mkdir ${workspace}/WIS-git-temp2"
                     sh "${python_ver} ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
                     echo "Добавляем в items"
-                    items = items + ", ws:${workspace}/WIS-git-temp2"
+                    items = items + ", ws:${workspace}/WIS-git-temp2, view:${workspace}/WIS-git-temp2, ws_deprecated:${workspace}/WIS-git-temp2, ws_core:${workspace}/WIS-git-temp2"
                 }
                 echo "Собираем ws.data только когда указан сторонний бранч"
                 if ("${params.ws_data_revision}" != "sdk"){
