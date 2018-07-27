@@ -16,6 +16,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Mixins/Selectable",
        "SBIS3.CONTROLS/Mixins/ActiveSelectable",
        "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
+       "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
        "tmpl!SBIS3.CONTROLS/FieldLink/FieldLink",
        "tmpl!SBIS3.CONTROLS/FieldLink/afterFieldWrapper",
        "tmpl!SBIS3.CONTROLS/FieldLink/beforeFieldWrapper",
@@ -27,6 +28,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
        "SBIS3.CONTROLS/Action/SelectorAction",
+       "Core/core-merge",
        "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
        "SBIS3.CONTROLS/Utils/TemplateUtil",
        "SBIS3.CONTROLS/Button/IconButton",
@@ -74,7 +76,8 @@ define('SBIS3.CONTROLS/FieldLink',
         List,
         ItemsSelectionUtil,
         objectFind,
-        SelectorAction
+        SelectorAction,
+        wsCoreMerge
     ) {
 
        'use strict';
