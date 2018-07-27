@@ -12,10 +12,14 @@ define('Controls/Filter/Fast/Container',
    function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * Container component for FastFilter
+       * Container component for Controls/Filter/Fast
        * Receives props from context and pass to FastFilter.
-       * Should be located inside Controls/Container/Filter.
-       * @class Controls/Container/Filter/Fast
+       * Should be located inside Controls/Filter/Container.
+       *
+       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button, Filter/Fast and List component</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       *
+       * @class Controls/Filter/Fast/Container
        * @extends Core/Control
        * @author Герасимов Александр
        * @control

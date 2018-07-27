@@ -197,7 +197,7 @@ define('Controls/Filter/Container',
       /**
        * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
        *
-       * @class Controls/Container/Filter
+       * @class Controls/Filter/Container
        * @mixes Controls/interface/IFilter
        * @extends Core/Control
        * @control

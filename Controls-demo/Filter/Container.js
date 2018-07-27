@@ -88,8 +88,7 @@ define('Controls-demo/Filter/Container', [
    var filterButtonData = [{
       id: 'lastName',
       resetValue: '0',
-      value: '0',
-      visibility: true,
+      value: '0'
    }];
    
    

@@ -136,7 +136,7 @@ define('Controls/Filter/Button/Panel', [
             if (getPropValue(item, 'visibility') === undefined) {
                setPropValue(item, 'value', getPropValue(item, 'resetValue'));
             }
-            if (getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
          });
