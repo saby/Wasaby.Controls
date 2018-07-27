@@ -17,7 +17,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          setPopupOptions: function(self) {
             self._popupOptions = {
 
-               // submenu don't catch focus, because parent menu can accept click => submenu will deactivating and closing
+               // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,
                corner: {
                   horizontal: 'right'
