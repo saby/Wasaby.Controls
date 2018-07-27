@@ -3,7 +3,7 @@
         <div class="controls-demo__filterSearch-container">
             <h3>Custom layout with Input/Search and List</h3>
             <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_search">
-                <Controls.Search.Container searchParam="department">
+                <Controls.Search.Controller searchParam="department">
                     <div>
                         <div class="controls-demo__filterSearch-topWrapper">
                             <Controls.Search.Input.Container>
@@ -25,15 +25,15 @@
                             </Controls.List>
                         </Controls.List.Container>
                     </div>
-                </Controls.Search.Container>
+                </Controls.Search.Controller>
             </Controls.Container.Data>
         </div>
 
         <div class="controls-demo__filterSearch-container">
             <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List</h3>
-            <Controls.Filter.Container bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+            <Controls.Filter.Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                 <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-                    <Controls.Search.Container searchParam="department">
+                    <Controls.Search.Controller searchParam="department">
                         <div>
                             <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
                                 <div class="controls-demo__filterSearch-topWrapper">
@@ -66,15 +66,15 @@
                                 </Controls.List>
                             </Controls.List.Container>
                         </div>
-                    </Controls.Search.Container>
+                    </Controls.Search.Controller>
                 </Controls.Container.Data>
-            </Controls.Filter.Container>
+            </Controls.Filter.Controller>
         </div>
     </div>
     <div class="demo-filterSearch__secondCol">
         <div class="controls-demo__filterSearch-container">
             <h3>Custom layout with Filter/Button, Filter/Fast and List</h3>
-            <Controls.Filter.Container bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+            <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                 <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
                     <div>
                         <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
@@ -104,15 +104,15 @@
                         </Controls.List.Container>
                     </div>
                 </Controls.Container.Data>
-            </Controls.Filter.Container>
+            </Controls.Filter.Controller>
         </div>
 
         <div class="controls-demo__filterSearch-container">
             <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List.</h3>
             <h3>Filters are located in the tabs.</h3>
-            <Controls.Filter.Container bind:filter="_filterSearchTabs" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+            <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                 <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-                    <Controls.Search.Container searchParam="firstName">
+                    <Controls.Search.Controller searchParam="firstName">
                         <div>
                             <Controls.Tabs.Buttons
                                     bind:selectedKey='_tabSelectedKey'
@@ -151,9 +151,9 @@
                                 </Controls.List>
                             </Controls.List.Container>
                         </div>
-                    </Controls.Search.Container>
+                    </Controls.Search.Controller>
                 </Controls.Container.Data>
-            </Controls.Filter.Container>
+            </Controls.Filter.Controller>
         </div>
     </div>
 </div>

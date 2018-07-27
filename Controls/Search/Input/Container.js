@@ -9,7 +9,7 @@ define('Controls/Search/Input/Container',
       /**
        * Container component for Input
        * Notify bubbling event "search".
-       * Should be located inside Controls/Search/Container.
+       * Should be located inside Controls/Search/Controller.
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *

@@ -1,7 +1,7 @@
-define('Controls/Filter/Container',
+define('Controls/Filter/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Container',
+      'tmpl!Controls/Filter/Controller',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',
@@ -200,7 +200,7 @@ define('Controls/Filter/Container',
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
-       * @class Controls/Filter/Container
+       * @class Controls/Filter/Controller
        * @extends Core/Control
        * @mixes Controls/interface/IFilter
        * @control
@@ -209,21 +209,21 @@ define('Controls/Filter/Container',
        */
    
       /**
-       * @name Controls/Filter/Container#filterButtonSource
+       * @name Controls/Filter/Controller#filterButtonSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Button#items
        */
    
       /**
-       * @name Controls/Filter/Container#fastFilterSource
+       * @name Controls/Filter/Controller#fastFilterSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Fast#items
        */
       
       /**
-       * @name Controls/Filter/Container#historyId
+       * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
       
