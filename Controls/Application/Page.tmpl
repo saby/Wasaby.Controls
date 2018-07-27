@@ -1,6 +1,5 @@
-<ws:template name="body">
+<ws:template name="serverBody">
    <Controls.Application.TouchDetector name="touchDetector">
-      <Controls.DragNDrop.Container name="dragNDropContainer">
          <body
                  class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
                  id="body"
@@ -64,7 +63,6 @@
          </ws:else>
          <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
          </body>
-      </Controls.DragNDrop.Container>
    </Controls.Application.TouchDetector>
 </ws:template>
 
@@ -77,7 +75,9 @@
                   <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                         <Controls.Popup.Manager>
-                           <ws:partial template="body"/>
+                           <Controls.DragNDrop.Container name="dragNDropContainer">
+                              <ws:partial template="serverBody"/>
+                           </Controls.DragNDrop.Container>
                         </Controls.Popup.Manager>
                      </Controls.Event.Listener>
                   </Controls.Event.Listener>
@@ -88,23 +88,27 @@
    </Controls.Event.Listener>
 </ws:template>
 
+<ws:template name="body">
+   <ws:if data="{{_isClient}}">
+      <ws:partial template="clientBody"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="serverBody"/>
+   </ws:else>
+</ws:template>
+
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application"
       attr:class="{{ stopEvents ? 'pre-load' : '' }}">
 <Controls.Application._Head
-   wsRoot="{{ wsRoot }}"
-   resourceRoot="{{ resourceRoot }}"
-   appRoot="{{ appRoot }}"
-   compat="{{ compat }}"
-   head="{{ _options.head }}"
-   title="{{ title }}"
-   buildnumber="{{ buildnumber }}"
-   servicesPath="{{ servicesPath }}">
+        wsRoot="{{ wsRoot }}"
+        resourceRoot="{{ resourceRoot }}"
+        appRoot="{{ appRoot }}"
+        compat="{{ compat }}"
+        head="{{ _options.head }}"
+        title="{{ title }}"
+        buildnumber="{{ buildnumber }}"
+        servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
-<ws:if data="{{_isClient}}">
-   <ws:partial template="clientBody"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="body"/>
-</ws:else>
+<ws:partial template="body"/>
 </html>
