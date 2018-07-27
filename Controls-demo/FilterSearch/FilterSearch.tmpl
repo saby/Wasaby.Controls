@@ -1,7 +1,7 @@
 <div class="controls-demo__filterSearch-container">
-    <Controls.Filter.Container bind:filter="_filter" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+    <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
         <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-            <Controls.Search.Container searchParam="firstName">
+            <Controls.Search.Controller searchParam="firstName">
                 <div>
                     <div class="controls-demo__filterSearch-topWrapper">
                         <Controls.Search.Input.Container>
@@ -34,7 +34,7 @@
                         </Controls.List>
                     </Controls.List.Container>
                 </div>
-            </Controls.Search.Container>
+            </Controls.Search.Controller>
         </Controls.Container.Data>
-    </Controls.Filter.Container>
+    </Controls.Filter.Controller>
 </div>

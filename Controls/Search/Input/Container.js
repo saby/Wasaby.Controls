@@ -9,7 +9,7 @@ define('Controls/Search/Input/Container',
       /**
        * Container component for Input
        * Notify bubbling event "search".
-       * Should be located inside Controls/Search/Container.
+       * Should be located inside Controls/Search/Controller.
        * @class Controls/Search/Input/Container
        * @extends Core/Control
        * @author Герасимов Александр

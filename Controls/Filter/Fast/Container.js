@@ -14,7 +14,7 @@ define('Controls/Filter/Fast/Container',
       /**
        * Container component for Controls/Filter/Fast
        * Receives props from context and pass to FastFilter.
-       * Should be located inside Controls/Filter/Container.
+       * Should be located inside Controls/Filter/Controller.
        *
        * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button, Filter/Fast and List component</a>.
        * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
