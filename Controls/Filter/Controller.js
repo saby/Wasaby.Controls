@@ -1,7 +1,7 @@
-define('Controls/Filter/Container',
+define('Controls/Filter/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Container',
+      'tmpl!Controls/Filter/Controller',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',
@@ -197,7 +197,7 @@ define('Controls/Filter/Container',
       /**
        * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
        *
-       * @class Controls/Filter/Container
+       * @class Controls/Filter/Controller
        * @mixes Controls/interface/IFilter
        * @extends Core/Control
        * @control

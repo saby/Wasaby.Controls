@@ -11,7 +11,7 @@ define('Controls/Filter/Button/Container',
       /**
        * Container component for FilterButton
        * Receives props from context and pass to FilterButton.
-       * Should be located inside Controls/Filter/Container.
+       * Should be located inside Controls/Filter/Controller.
        *
        * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
        * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.

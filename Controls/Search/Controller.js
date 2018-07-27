@@ -1,7 +1,7 @@
-define('Controls/Search/Container',
+define('Controls/Search/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Search/Container',
+      'tmpl!Controls/Search/Controller',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
       'Controls/Controllers/_SearchController'
@@ -52,7 +52,7 @@ define('Controls/Search/Container',
        * <a href="/materials/demo-ws4-search-container">Demo with Input/Search</a>.
        * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button and Input/Search</a>.
        *
-       * @class Controls/Search/Container
+       * @class Controls/Search/Controller
        * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
        * @author Герасимов Александр
