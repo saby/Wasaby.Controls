@@ -1,4 +1,4 @@
-<ws:template name="defaultBody">
+<ws:template name="commonBody">
    <Controls.Application.TouchDetector name="touchDetector">
       <body
               class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
@@ -76,7 +76,7 @@
                      <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                         <Controls.Popup.Manager>
                            <Controls.DragNDrop.Container name="dragNDropContainer">
-                              <ws:partial template="defaultBody"/>
+                              <ws:partial template="commonBody"/>
                            </Controls.DragNDrop.Container>
                         </Controls.Popup.Manager>
                      </Controls.Event.Listener>
@@ -105,6 +105,6 @@
    <ws:partial template="clientBody"/>
 </ws:if>
 <ws:else>
-   <ws:partial template="defaultBody"/>
+   <ws:partial template="commonBody"/>
 </ws:else>
 </html>
