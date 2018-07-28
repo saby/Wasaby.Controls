@@ -3,12 +3,14 @@ define('Controls/Toggle/Button/Classes', ['Core/IoC'], function(IoC) {
    var classesOfButton = {
       iconButtonBordered: {
          style: 'iconButtonBordered',
-         type: 'iconButtonBordered'
+         type: 'iconButtonBordered',
+         toggled: true
       },
 
       linkMain: {
          style: 'link-main_toggled',
-         type: 'link_toggled'
+         type: 'link_toggled',
+         toggled: true
       },
 
       buttonLinkMain: {

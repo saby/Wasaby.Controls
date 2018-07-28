@@ -77,6 +77,7 @@ define('Controls/Button', [
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._icon = options.icon;
+         self._isTransparent = !!currentButtonClass.transparent;
       }
    };
    var Button = Control.extend({

@@ -58,9 +58,9 @@ define('Controls/Toggle/Button', [
          self._type = currentButtonClass.type;
          self._typeWithSize = self._type + '_size-' + options.size;
          self._styleWithIconStyle = self._style + '_iconStyle-' + options.iconStyle;
-         self._state = (options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
-         self._caption = (options.captions ? (options.value && options.captions[1] ? options.captions[0] : options.captions[1]) : '');
-         self._icon = (options.icons ? (options.value &&  options.icons[1] ? options.icons[0] : options.icons[1]) : '');
+         self._state = (options.value && currentButtonClass.toggled ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
+         self._icon = (options.icons ? (!options.value &&  options.icons[1] ? options.icons[1] : options.icons[0]) : '');
       }
    };
    var ToggleButton = Control.extend({
