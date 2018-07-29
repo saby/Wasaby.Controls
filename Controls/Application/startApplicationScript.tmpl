@@ -3,7 +3,7 @@
       <script key="init_script">
          require(['Controls/Application/AppData'], function(AppData){
             window.startContextData = {AppData: new AppData({})};
-            require(['Core/app']);
+            require(['Core/app2'], function(app) { app(); });
          });
       </script>
    </ws:if>
