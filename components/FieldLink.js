@@ -1205,7 +1205,7 @@ define('SBIS3.CONTROLS/FieldLink',
              при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
              поэтому при перевороте проскролим вниз автодополнение */
           _scrollListToBottom: function() {
-             if(this._picker && this._isSuggestPickerRevertedVertical()) {
+             if(this._picker && this._isSuggestPickerRevertedVertical() && !cInstance.instanceOfMixin(this.getList(), 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                 var pickerContainer = this._picker.getContainer(),
                     list = this.getList(),
                     newIndex;
