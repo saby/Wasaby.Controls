@@ -1,14 +1,19 @@
 <div>
-   <ws:partial template="{{_options.content}}"
-               on:mousedown="_contentMousedownHandler()"
-               on:mouseenter="_contentMouseenterHandler()"
-               on:mouseleave="_contentMouseleaveHandler()"/>
+   <ws:if data="{{_options.trigger === 'click'}}">
+      <ws:partial template="{{_options.content}}"
+                  on:mousedown="_contentMousedownHandler()"/>
+      <ws:if data="{{_opened}}">
+         <Controls.Event.Emitter event="mousedown" on:mousedown="_mousedownHandler()"/>
+      </ws:if>
+   </ws:if>
+   <ws:else data="{{_options.trigger === 'hover'}}">
+      <ws:partial template="{{_options.content}}"
+                  on:mouseenter="_contentMouseenterHandler()"
+                  on:mouseleave="_contentMouseleaveHandler()"/>
+   </ws:else>
    <Controls.Popup.Opener.InfoBox name="openerInfoBox">
       <ws:popupOptions>
          <ws:eventHandlers onResult="{{_resultHandler}}"/>
       </ws:popupOptions>
    </Controls.Popup.Opener.InfoBox>
-   <ws:if data="{{_opened}}">
-      <Controls.Event.Emitter event="mousedown" on:mousedown="_mousedownHandler()"/>
-   </ws:if>
 </div>
