@@ -1,8 +1,18 @@
-<Controls.Popup.InfoBox>
-   <ws:content>
-      <div>Наведите курсор</div>
-   </ws:content>
-   <ws:template>
-      <div>Это всплывающая подсказка.</div>
-   </ws:template>
-</Controls.Popup.InfoBox>
+<div>
+   <Controls.Popup.InfoBox trigger="hover">
+      <ws:content>
+         <div>Наведите</div>
+      </ws:content>
+      <ws:template>
+         <div>Это всплывающая подсказка.</div>
+      </ws:template>
+   </Controls.Popup.InfoBox>
+   <Controls.Popup.InfoBox trigger="click">
+      <ws:content>
+         <div>Нажмите</div>
+      </ws:content>
+      <ws:template>
+         <div>Это всплывающая подсказка.</div>
+      </ws:template>
+   </Controls.Popup.InfoBox>
+</div>
