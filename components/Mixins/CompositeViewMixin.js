@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'Core/constants',
    'Core/Deferred',
-   'Core/compatibility',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -18,7 +17,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'Core/core-instance',
    'SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil',
    'SBIS3.CONTROLS/Link'
-], function(constants, Deferred, coreCompatibility, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
+], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
             ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance, DimensionsUtil) {
    'use strict';
    /**
