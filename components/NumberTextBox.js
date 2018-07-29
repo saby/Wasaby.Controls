@@ -292,6 +292,22 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          }
       },
 
+      /**
+       * Задает отображение разделителей триад
+       * @param {Boolean} flag
+       */
+      setDelimiters: function(flag) {
+         this._options.delimiters = flag;
+      },
+
+      /**
+       * Задает режим отображения нулевой дробной части
+       * @param {Boolean} flag
+       */
+      setHideEmptyDecimals: function(flag) {
+         this._options.hideEmptyDecimals = flag;
+      },
+
       _hideEmptyDecimals: function () {
          var value = this._getInputValue();
          if(value) {

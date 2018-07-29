@@ -16,22 +16,37 @@ define('Controls/Popup/InfoBox',
        *
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
+       * @mixin Controls/interface/IStickyOpener
        * @public
        * @demo Controls-demo/InfoBox/InfoBox
-       *
-       * @mixin Controls/interface/IStickyOpener
-       *
+       */
+
+      /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.
-       *
+       */
+
+      /**
        * @name Controls/Popup/InfoBox#showDelay
        * @cfg {Number} Delay before opening after mouse enters.
-       *
+       */
+
+      /**
        * @name Controls/Popup/InfoBox#content
-       * @cfg {Content} The content to which the logic of opening and closing the template is added.
-       *
+       * @cfg {Function} The content to which the logic of opening and closing the template is added.
+       */
+
+      /**
        * @name Controls/Popup/InfoBox#template
-       * Popup template
+       * @cfg {Function} Popup template
+       */
+
+      /**
+       * @name Controls/Popup/InfoBox#trigger
+       * @cfg {String} Event name trigger the opening or closing of the template.
+       * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
+       * @default hover
        */
 
       var _private = {
@@ -41,7 +56,9 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                templateOptions: {
-                  content: self._options.template
+                  content: self._options.template,
+                  contentTemplateName: self._options.templateName,
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
@@ -116,7 +133,9 @@ define('Controls/Popup/InfoBox',
                   this._closeId = null;
                   break;
                case 'mouseleave':
-                  this._contentMouseleaveHandler();
+                  if (this._options.trigger === 'hover') {
+                     this._contentMouseleaveHandler();
+                  }
                   break;
                case 'mousedown':
                   event.stopPropagation();
@@ -129,7 +148,8 @@ define('Controls/Popup/InfoBox',
          return {
             position: 'tl',
             showDelay: 300,
-            hideDelay: 300
+            hideDelay: 300,
+            trigger: 'hover'
          };
       };
 

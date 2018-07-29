@@ -11,7 +11,8 @@ define('Controls-demo/Menu/MenuVdom', [
    'WS.Data/Query/Query',
    'Core/Deferred',
    'WS.Data/Adapter/Sbis',
-   'tmpl!Controls-demo/List/DemoGroupTemplate',
+   'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
+   'tmpl!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom'
 ], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants,Query, Deferred, SbisAdapter) {
    'use strict';
@@ -68,6 +69,15 @@ define('Controls-demo/Menu/MenuVdom', [
    var ModuleClass = Control.extend(
       {
          _template: template,
+         _itemsGroupText: {
+            method: function(item) {
+               if (item.get('group') === 'hidden' || !item.get('group')) {
+                  return ControlsConstants.view.hiddenGroup;
+               }
+               return item.get('group');
+            },
+            template: 'tmpl!Controls-demo/Menu/DemoGroupTemplate',
+         },
          _itemsGroup: {
             method: function(item) {
                if (item.get('group') === 'hidden' || !item.get('group')) {
@@ -100,7 +110,7 @@ define('Controls-demo/Menu/MenuVdom', [
             },
             {
                id: '6',
-               title: 'Запись 6 группа 2'
+               title: 'Запись 6'
             },
             {
                id: '7',
@@ -112,7 +122,7 @@ define('Controls-demo/Menu/MenuVdom', [
             },
             {
                id: '9',
-               title: 'Запись 9 группа 2'
+               title: 'Запись 9'
             },
             {
                id: '10',
@@ -128,19 +138,19 @@ define('Controls-demo/Menu/MenuVdom', [
             },
             {
                id: '13',
-               title: 'Запись 13 группа 3'
+               title: 'Запись 13'
             },
             {
                id: '14',
-               title: 'Запись 14 группа 3'
+               title: 'Запись 14'
             },
             {
                id: '15',
-               title: 'Запись 15 группа 4'
+               title: 'Запись 15'
             },
             {
                id: '16',
-               title: 'Запись 16 группа 4'
+               title: 'Запись 16'
             },
          ],
          _createMemory: function(items) {
@@ -187,22 +197,22 @@ define('Controls-demo/Menu/MenuVdom', [
          _getHierarchyMenuItems: function() {
             var items = cClone(this._defaultItems);
             var hierConfig = [
-               { parent: null, '@parent': false, icon: 'icon-medium icon-Author icon-primary'},
-               { parent: null, '@parent': false},
-               { parent: null, '@parent': false},
-               { parent: null, '@parent': false},
-               { parent: null, '@parent': false},
-               {group: 'group_2', parent: null, '@parent': false, icon: 'icon-medium icon-Author icon-primary'},
+               {parent: null, '@parent': false, icon: 'icon-medium icon-Author icon-primary'},
                {parent: null, '@parent': false},
-               { parent: null, '@parent': false},
-               {group: 'group_2', parent: null, '@parent': true},
+               {parent: null, '@parent': false},
+               {parent: null, '@parent': false},
+               {parent: null, '@parent': false},
+               {group: 'Group 1', '@parent': false},
+               {parent: null, '@parent': false},
+               {parent: null, '@parent': false},
+               {group: 'Group 1', '@parent': true},
                {parent: '9', '@parent': true, icon: 'icon-medium icon-Author icon-primary'},
                {parent: '10', '@parent': false},
                {parent: '10', '@parent': false},
-               {group: 'group_3', parent: null, '@parent': false},
-               {group: 'group_3', parent: null, '@parent': false},
-               {group: 'group_4', parent: null, '@parent': false},
-               {group: 'group_4', parent: null, '@parent': false}
+               {group: 'Group 2', parent: null, '@parent': false},
+               {group: 'Group 2', parent: null, '@parent': false},
+               {group: 'Group 3', parent: null, '@parent': false},
+               {group: 'Group 3', parent: null, '@parent': false}
             ];
             for (var i = 0; i < items.length; i++) {
                items[i].parent = hierConfig[i].parent;

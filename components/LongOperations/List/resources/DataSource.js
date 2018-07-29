@@ -117,6 +117,9 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                if (filter.UserId) {
                   where.userId = filter.UserId;
                }
+               if (filter.Domain) {
+                  where.domain = filter.Domain;
+               }
                if (Object.keys(where).length) {
                   options.where = where;
                }

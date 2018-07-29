@@ -243,6 +243,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
 
+         //todo Compatible
+         var compoundArea = $(target).closest('.controls-CompoundArea');
+         if (compoundArea.length) {
+            var opener = compoundArea[0].controlNodes[0].control.getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               var openerContainer = opener.getOpener && opener.getOpener() && opener.getOpener().getContainer();
+               compoundArea = openerContainer && $(openerContainer).closest('.controls-CompoundArea');
+               opener = compoundArea && compoundArea[0] && compoundArea[0].controlNodes[0].control;
+            }
+         }
+
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
@@ -356,11 +370,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       
       _saveAutoHideState: function(meta, config) {
-         this._openedPanelConfig = {
-            autoHide: config.autoHide !== undefined ? config.autoHide : true,
-            mode: meta.mode
-         };
-         config.autoHide = false;
+         if (!this._options.closeByFocusOut) {
+            this._openedPanelConfig = {
+               autoHide: config.autoHide !== undefined ? config.autoHide : true,
+               mode: meta.mode
+            };
+            config.autoHide = false;
+         }
       },
 
       _finishExecuteDeferred: function(error) {

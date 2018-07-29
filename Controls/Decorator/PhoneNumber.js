@@ -18,7 +18,7 @@ define('Controls/Decorator/PhoneNumber',
        * for another Russian numbers +7(****) **-**-** or +7(*****) *-**-** depends on city code
        * for foreign numbers +foreigncode restdigits
        *
-       * @class Controls/Decorators/PhoneNumber
+       * @class Controls/Decorator/PhoneNumber
        * @extends Core/Control
        * @control
        * @public
@@ -26,7 +26,7 @@ define('Controls/Decorator/PhoneNumber',
        */
 
       /**
-       * @name Controls/Decorators/PhoneNumber#number
+       * @name Controls/Decorator/PhoneNumber#number
        * @cfg {String} Number for beautifying
        */
 

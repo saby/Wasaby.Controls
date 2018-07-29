@@ -86,6 +86,9 @@
 @top-space_stackTemplate_close-button:          5px;
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
+//DialogTemplate
+@margin_dialogTemplate_head:                   0 48px 0 12px;
+
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
 @border-width_FieldLink-picker:                 @default-border-width;
@@ -273,6 +276,11 @@
 @top_DropdownList_picker_marker:       13px;
 @right-DropdownList-cross:             5px;
 @top-DropdownList-cross:               7px;
+@margin_DropdownList-group:                           4px 12px;
+@thickness_DropdownList-group-separator:              1px;
+@spacing_DropdownList-group-between-text-separator:   12px;
+@font-size_DropdownList-group-text:                   12px;
+
 //Marker
 @background-size_Marker:                                  3px;
 //ListView
@@ -486,6 +494,7 @@
 //Label
 @height_Label:                           @default-height;
 @padding_Label:                          0 8px 0 0;
+@font-size_Label:                        0;
 //ReportBrowser
 @height_ReportBrowser-top-content:       44px;
 //Tabs/Buttons
@@ -592,7 +601,7 @@
 @spacing_FastFilter-item:                   0;
 @height_FastFilter-iconArrow:               9px;
 @width_FastFilter-iconArrow:                16px;
-@spacing_FastFilter-between-icon-text:      0 2px 0 2px;
+@margin-bottom_FastFilter-popup:            2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 2px @color-IconButton__shadow;
 @height-IconButton_size-m:               24px;
@@ -607,22 +616,27 @@
 //FilterPanel
 @width_FilterPanel_default:                                    400px;
 @font-size_FilterPanel-caption:                                15px;
-@spacing_FilterPanel-between-filterButton-closeButton:         4px;
-@margin_FilterPanel-resetButton-title:                         0 16px 0 0;
-@margin_FilterPanel__PropertyGrid:                             0 12px 2px 34px;
+@margin_FilterPanel-resetButton-title:                         0 16px 0 auto;
+@margin_FilterPanel__PropertyGrid:                             0 12px 6px 34px;
+@margin_FilterPanel-AdditionalParams:                          6px 12px;
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @height_FilterPanel-item:                                      24px;
-@spacing-bottom_FilterPanel:                                   6px;
+@margin_FilterPanel-blockParams:                               12px;
+@padding_FilterPanel-history:                                  6px 12px 12px 12px;
+@spacing_FilterPanel-items:                                    22px;
+@margin_FilterPanel-caption:                                   6px 0;
 //PropertyGrid
-@height_PropertyGrid-item:                                     28px;
-@spacing_PropertyGrid-dropdownList:         0px;
+@height_PropertyGrid-item:                                     24px;
+@spacing_PropertyGrid-between-items:                           4px;
 //AdditionalParams
 @max-height_FilterPanel-items:              120px;
-@spacing_AdditionalParams-items:            0 12px 0 34px;
 @height_AdditionalParams-arrow:             26px;
-@margin_AdditionalParams:                   6px;
-@margin_AdditionalParams-caption:           6px 0 6px 12px;
+//HistoryList
+@height_HistoryList-item:                   24px;
+@icon-size_HistoryList-iconPin:             16px;
+@spacing_HistoryList-between-icon-text:     12px;
+@font-size_HistoryList-item:                14px;
 //toggleButton
 @border-width_ToggleButton:               1px;
 @border-radius-ToggleButton:              2px;

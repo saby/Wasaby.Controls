@@ -26,6 +26,9 @@ define('Controls-demo/Popup/TestStack',
                });
             }
          },
+         _openModalDialog: function() {
+            this._children.modalDialog.open();
+         },
          _openOldPanel: function (event, tplName, mode, isStack) {
             require([tplName], function () {
                new OpenEditDialog().execute({

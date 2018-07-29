@@ -4,7 +4,7 @@
    <script key="ws-config">
       window.wsConfig = {
          wsRoot: '/sbis3-ws/ws/',
-         resourceRoot: '/components',
+         resourceRoot: '/',
          compat: false
       };
    </script>
@@ -22,7 +22,7 @@
 </head>
 <body key="1_2_">
 <script>
-   require(['Core/app']);
+   require(['Core/app2'], function(app) { app(); });
 </script>
 
 </body>

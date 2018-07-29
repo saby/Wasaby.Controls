@@ -36,8 +36,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
 
             return {
-               top: targetCoords.top,
-               right: window.innerWidth - targetCoords.right
+               top: Math.max(targetCoords.top, 0),
+               right: Math.max(window.innerWidth - targetCoords.right, 0)
             };
          },
          elementDestroyed: function(instance, element) {
@@ -91,7 +91,8 @@ define('Controls/Popup/Opener/Stack/StackController',
          _canUpdate: function(container) {
             // if container contains waiting class then animation wasn't over
             // if container contains closing class then popup destroying
-            return !container.classList.contains('controls-Stack__waiting') || container.classList.contains('controls-Stack__close');
+            // todo https://online.sbis.ru/opendoc.html?guid=85b389eb-205e-4a7b-b333-12f5cdc2523e
+            return !container.classList.contains('controls-Stack__waiting') && !container.classList.contains('controls-Stack__close');
          },
 
          elementDestroyed: function(element, container) {
@@ -121,6 +122,18 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item, index) {
                item.position = self._getItemPosition(index);
             });
+         },
+
+         getDefaultPosition: function(popupOptions) {
+            var baseCoord = { top: 0, right: 0 };
+            var position = StackStrategy.getPosition(baseCoord, { popupOptions: popupOptions });
+
+            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+            return {
+               top: -10000,
+               left: -10000,
+               width: position.width || undefined
+            };
          },
 
          _getItemPosition: function(index) {
