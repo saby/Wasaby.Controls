@@ -1172,6 +1172,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
                      //this._setFontSize(formats.fontsize);
                   }
+                  editor.undoManager.add();
                   this._updateTextByTiny();
                }
             },
@@ -2923,7 +2924,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
+                  this._container[0].scrollIntoView(evt.alignToTop);
                }
             },
             _getAdjacentTextNodesValue: function(node, toEnd) {
