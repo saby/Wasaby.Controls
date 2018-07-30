@@ -28,8 +28,7 @@
             <ws:partial template="tmpl!Controls/List/ItemTemplate">
                <ws:contentTemplate>
                   <div class="demo-browser-list">
-                     <div>{{itemTemplate.itemData.item.get('title')}}</div>
-                     <div>{{itemTemplate.itemData.item.get('country')}}</div>
+                     <div><span class="demo-FilterSearch__department">{{itemTemplate.itemData.item.get('department')}}</span><span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span></div>
                   </div>
                </ws:contentTemplate>
             </ws:partial>
