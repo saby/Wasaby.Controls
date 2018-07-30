@@ -16,8 +16,7 @@ define('Controls/Filter/Fast/Container',
        * Receives props from context and pass to FastFilter.
        * Should be located inside Controls/Filter/Container.
        *
-       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button, Filter/Fast and List component</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Fast/Container
        * @extends Core/Control
@@ -28,7 +27,7 @@ define('Controls/Filter/Fast/Container',
       
       'use strict';
       
-      var FilterComponents = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Filter/Fast/Container.prototype */{
          
          _template: template,
          
@@ -50,12 +49,12 @@ define('Controls/Filter/Fast/Container',
             this._notify('filterItemsChanged', [this._items], {bubbling: true});
          }
       });
-      
-      FilterComponents.contextTypes = function() {
+   
+      Container.contextTypes = function() {
          return {
             filterLayoutField: FilterContextField
          };
       };
       
-      return FilterComponents;
+      return Container;
    });
