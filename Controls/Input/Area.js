@@ -18,7 +18,16 @@ define('Controls/Input/Area', [
    'use strict';
 
    /**
-    * Multiline text input with autoheight.
+    * A component for entering multi-line text. When you input text, when it lacks space in width, it is moved to the next line.
+    * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
+    * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
+    * You can move the text to the next line by yourself using {@link newLineKey hotkeys}.
+    * You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
+    * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
+    * If this is not enough, use {@link tagStyle tags}.
+    * You can make the entry field {@link readOnly inactive}. In this case, the text input will be prohibited and the appearance of the field will be changed.
+    * You may want to restrict user input to a limited define of characters. In this case, you should use the option {@link constraint}.
+    * You can {@link trim remove extra spaces} at the beginning and end when the {@link inputCompleted input is completed}.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Area
@@ -26,8 +35,9 @@ define('Controls/Input/Area', [
     * @control
     * @public
     * @category Input
-    * @author Степин Павел Владимирович
     * @demo Controls-demo/Input/Area/Area
+    *
+    * @author Журавлев Максим Сергеевич
     */
 
    /**
@@ -43,8 +53,8 @@ define('Controls/Input/Area', [
    /**
     * @name Controls/Input/Area#newLineKey
     * @cfg {String} The behavior of creating a new line.
-    * * enter When user presses Enter.
-    * * ctrlEnter When user presses Ctrl + Enter.
+    * @variant enter When user presses Enter.
+    * @variant ctrlEnter When user presses Ctrl + Enter.
     * @default enter
     */
 

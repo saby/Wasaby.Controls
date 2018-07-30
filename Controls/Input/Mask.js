@@ -15,7 +15,13 @@ define('Controls/Input/Mask',
       'use strict';
 
       /**
-       * Input for entering text with a specified format.
+       * A component for entering text in a {@link mask specific format}.
+       * Characters that are not yet entered to fill in the field can be replaced by another {@link replacer character}.
+       * If the input character does not fit the format specified, then input is not entering to happen.
+       * You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
+       * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
+       * If this is not enough, use {@link tagStyle tags}. You can make the entry field {@link readOnly inactive}.
+       * In this case, the text input will be prohibited and the appearance of the field will be changed.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
@@ -29,6 +35,8 @@ define('Controls/Input/Mask',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
       /**
@@ -64,6 +72,8 @@ define('Controls/Input/Mask',
        * <pre class="brush:xml">
        *    <Controls.Input.Mask mask="d\*"/>
        * </pre>
+       *
+       * @see formatMaskChars
        */
 
       /**

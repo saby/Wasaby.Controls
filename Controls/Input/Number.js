@@ -19,7 +19,13 @@ define('Controls/Input/Number', [
    runDelayed) {
 
    /**
-    * Number input.
+    * A component for entering number text.
+    * To control the format of the input numbers, there is a {@link integersLength restriction of the integer part},
+    * the {@link precision number of characters} and the {@link showEmptyDecimals display of useless zeros} in the fractional part.
+    * You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
+    * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
+    * If this is not enough, use {@link tagStyle tags}.
+    * You can make the entry field {@link readOnly inactive}. In this case, the text input will be prohibited and the appearance of the field will be changed.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Number
@@ -32,8 +38,9 @@ define('Controls/Input/Number', [
     * @control
     * @public
     * @category Input
-    * @author Баранов М.А.
     * @demo Controls-demo/Input/Number/Number
+    *
+    * @author Журавлев Максим Сергеевич
     */
 
    /**
@@ -43,7 +50,7 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#onlyPositive
-    * @cfg {Boolean} Allow only positive numbers.
+    * @cfg {Boolean} Determines whether allowing only positive numbers.
     */
 
    /**
@@ -53,14 +60,15 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#showEmptyDecimals
-    * @cfg {Boolean} Show zeros when decimal part wasn't entered.
+    * @cfg {Boolean} Determines whether useless zeros are shown in the fractional part.
     */
 
    /**
     * @name Controls/Input/Number#textAlign
     * @cfg {String} Text align.
-    * @variant 'left' default
-    * @variant 'right'
+    * @variant left
+    * @variant right
+    * @default left
     */
 
    'use strict';

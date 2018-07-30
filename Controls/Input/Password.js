@@ -12,7 +12,12 @@ define('Controls/Input/Password',
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
    /**
-    * Password input.
+    *  A component for entering password. The inputted characters are replaced in the field by *.
+    *  If you want to show the password, you need to click on the appropriate icon.
+    *  You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
+    * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
+    * If this is not enough, use {@link tagStyle tags}.
+    * You can make the entry field {@link readOnly inactive}. In this case, the text input will be prohibited and the appearance of the field will be changed.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Password
@@ -26,7 +31,7 @@ define('Controls/Input/Password',
     * @control
     * @public
     * @category Input
-    * @author Золотова Э.Е.
+    * @author Журавлев Максим Сергеевич
     */
 
       'use strict';
