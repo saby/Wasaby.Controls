@@ -31,12 +31,12 @@ define('Controls/Button/Separator', [
 
    /**
     * @name Controls/Button/Separator#value
-    * @cfg {Boolean} Current state.
+    * @cfg {Boolean} Determines the current state.
     */
 
    /**
     * @name Controls/Button/Separator#bold
-    * @cfg {Boolean} Double separator thickness.
+    * @cfg {Boolean} Determines the double separator thickness.
     */
 
    var _private = {

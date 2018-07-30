@@ -21,7 +21,6 @@ define('Controls/Toggle/Switch', [
     * @demo Controls-demo/Switch/SwitchDemo
     *
     * @mixes Controls/Toggle/Switch/SwitchStyles
-    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
     */
 
    /**
@@ -31,7 +30,7 @@ define('Controls/Toggle/Switch', [
 
    /**
     * @name Controls/Toggle/Switch#captionPosition
-    * @cfg {Boolean} Caption position.
+    * @cfg {Boolean} Determines the position of the caption.
     * @variant left Caption before toggle.
     * @variant right Toggle before caption. It is default value.
     */

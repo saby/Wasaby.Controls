@@ -22,7 +22,6 @@ define('Controls/Toggle/Radio', [
     * @demo Controls-demo/RadioGroup/RadioGroupDemo
     *
     * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
-    * @mixes Controls/Toggle/Radio/RadioStyles
     */
 
    /**

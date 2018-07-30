@@ -22,7 +22,6 @@ define('Controls/Toggle/DoubleSwitch', [
     * @category Toggle
     *
     * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
-    * @mixes Controls/Toggle/Switch/SwitchStyles
     *
     * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
     */
@@ -34,7 +33,7 @@ define('Controls/Toggle/DoubleSwitch', [
 
    /**
     * @name Controls/Toggle/DoubleSwitch#orientation
-    * @cfg {String} Display type.
+    * @cfg {String} Double switch orientation in space.
     * @variant horizontal Horizontal orientation. It is default value.
     * @variant vertical Vertical orientation.
     */

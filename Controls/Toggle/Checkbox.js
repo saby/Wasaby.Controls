@@ -6,7 +6,7 @@ define('Controls/Toggle/Checkbox', [
 ], function(Control, template, types) {
 
    /**
-    * Basic checkbox.
+    * Checkbox with support undefined state(options tristate) and tooltip. Tooltip should be used if the icon instead of the caption.
     *
     * <a href="/materials/demo-ws4-checkbox">Демо-пример</a>.
     *
@@ -24,7 +24,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#triState
-    * @cfg {Boolean} Enable three-state mode.
+    * @cfg {Boolean} Determines whether the state of the tristate.
     */
 
    /**
@@ -37,7 +37,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @event Controls/Toggle/Checkbox#valueChanged Occurs when state changes.
-    * @param {Boolean|null} value New state.
+    * @param {Boolean|null} value New value.
     */
 
    var _private = {

@@ -4,8 +4,40 @@ define('Controls-demo/Checkbox/Checkbox', [
    'WS.Data/Source/Memory',
    'Controls/Toggle/Checkbox',
    'css!Controls-demo/Checkbox/Checkbox',
-], function(Control, template) {
+], function(Control, template, MemorySource) {
    'use strict';
+
+   var source = new MemorySource({
+      idProperty: 'title',
+      data: [
+         {
+            title: 'true',
+            value: true
+         },
+         {
+            title: 'false',
+            value: false
+         }
+      ]
+   });
+
+   var tristateSource = new MemorySource({
+      idProperty: 'title',
+      data: [
+         {
+            title: 'true',
+            value: true
+         },
+         {
+            title: 'false',
+            value: false
+         },
+         {
+            title: 'null',
+            value: null
+         }
+      ]
+   });
 
 
    var ModuleClass = Control.extend(
@@ -17,9 +49,24 @@ define('Controls-demo/Checkbox/Checkbox', [
          _tooltip: 'tooltip',
          _value: false,
          _eventName: 'no event',
-         changeValue: function(e, value) {
-            this._value = value;
-            this._eventName = 'valueChanged';
+         _source: source,
+         reset: function() {
+            this._eventName = 'no event';
+         },
+         changeValue: function(e, key) {
+            this._selectedValue = key;
+            var self = this;
+            this._source.read(key).addCallback(function(item) {
+               self._value = item.get('value');
+               self._eventName = 'valueChanged';
+            });
+         },
+         setTristate: function(e, value) {
+            if (value) {
+               this._source = tristateSource;
+            } else {
+               this._source = source;
+            }
          }
       });
    return ModuleClass;
