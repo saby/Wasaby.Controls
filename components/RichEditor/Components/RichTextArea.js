@@ -3530,18 +3530,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //метод показа плейсхолдера по значению//
             //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
             _togglePlaceholder: function(value) {
-               var curValue = value || this.getText();
-               var _tiny = this.getTinyEditor();
-               var _currentContent = _tiny ? $(_tiny.getBody()).html() : this._inputControl.html();
-               var isEmptyCurValue = curValue === '' || curValue === undefined || curValue === null;
-               var bodyNotHasTags = _currentContent.indexOf('</li>') < 0 &&
-                  _currentContent.indexOf('<p>&nbsp;') < 0 &&
-                  _currentContent.indexOf('<p><br>&nbsp;') < 0 &&
-                  _currentContent.indexOf('<blockquote>') < 0;
-
-               var _toggle = isEmptyCurValue && bodyNotHasTags;
-
-               this.getContainer().toggleClass('controls-RichEditor__empty', _toggle);
+               var isEmpty;
+               if (this._sourceContainer.hasClass('ws-hidden')) {
+                  isEmpty = !(value || this.getText());
+                  if (isEmpty) {
+                     var editor = this.getTinyEditor();
+                     var $content = editor ? $(editor.getBody()) : this._inputControl;
+                     isEmpty = !$content.text().trim() && !$content.find('img,table').length;
+                  }
+               }
+               else {
+                  isEmpty = !this._sourceArea.val().trim();
+               }
+               this.getContainer().toggleClass('controls-RichEditor__empty', isEmpty);
             },
 
             _replaceSmilesToCode: function(text) {
