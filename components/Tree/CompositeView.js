@@ -353,7 +353,9 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
       _calculateHoveredStyles: function(item) {
          if (item.hasClass('controls-ListView__item-type-node')) {
             if (this._options.tileMode === TILE_MODE.DYNAMIC) {
-               this._setStaticHoveredStyles(item);
+               TreeCompositeView.superclass._calculateHoveredStyles.call(this, item, {
+                  fixedMode: this._options.fixedMode
+               });
             }
          } else {
             TreeCompositeView.superclass._calculateHoveredStyles.apply(this, arguments);

@@ -176,6 +176,7 @@ function(cMerge,
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
+         cfg.border = false;
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;

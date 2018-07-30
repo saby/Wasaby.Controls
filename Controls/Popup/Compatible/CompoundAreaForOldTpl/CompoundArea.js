@@ -129,6 +129,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;
+
+            /**
+             * Поведение если вызвали через ENGINE/MiniCard.
+             */
+            var _this = this;
+
+            if (this._options.hoverTarget) {
+               this._options.hoverTarget.on('mouseenter', function() {
+                  clearTimeout(_this._hoverTimer);
+                  _this._hoverTimer = null;
+               });
+               this._options.hoverTarget.on('mouseleave', function() {
+                  _this._hoverTimer = setTimeout(function() {
+                     _this.hide();
+                  }, 1000);
+               });
+            }
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -165,6 +182,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             moduleStubs.require([this._templateName]).addCallback(function(result) {
                self._createCompoundControl(result[0]);
             });
+
             return this._compoundControlCreated;
          },
 

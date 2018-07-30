@@ -12,12 +12,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
-      //TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
-   
-   
+      // TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
       var _private = {
          setPopupOptions: function(self) {
             self._popupOptions = {
+
+               // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
+               autofocus: false,
                corner: {
                   horizontal: 'right'
                },
@@ -27,7 +28,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          }
       };
-      
+
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Popup/Opener/Menu
@@ -56,7 +57,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _hasHierarchy: false,
-         
+
          constructor: function(config) {
             var self = this;
             var sizes = ['small', 'medium', 'large'];
@@ -73,7 +74,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._headConfig = config.headConfig || {};
                this._headConfig.caption = this._headConfig.caption || config.caption;
                this._headConfig.icon = this._headConfig.icon || config.icon;
-               this._headConfig.menuStyle =  this._headConfig.menuStyle || 'defaultHead';
+               this._headConfig.menuStyle = this._headConfig.menuStyle || 'defaultHead';
 
                if (this._headConfig.icon) {
                   sizes.forEach(function(size) {
@@ -90,7 +91,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
 
-            this._scrollData = new ScrollData({pagingVisible: false});
+            this._scrollData = new ScrollData({ pagingVisible: false });
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -114,16 +115,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _beforeUpdate: function(newOptions) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
                itemsChanged = newOptions.items !== this._options.items;
-            
+
             if (rootChanged) {
                this._listModel.setRootKey(newOptions.rootKey);
             }
-            
+
             if (itemsChanged) {
                this._listModel.setItems(newOptions);
                this._children.subDropdownOpener.close();
             }
-   
+
             if (rootChanged || itemsChanged) {
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
@@ -160,7 +161,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
-         _itemClickHandler: function(event, item, pinClicked) { //todo нужно обсудить
+         _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             var result = {
                action: pinClicked ? 'pinClicked' : 'itemClick',
                event: event,
@@ -187,7 +188,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._notify('close');
          },
          _mousemoveHandler: function(emitterEvent, event) {
-            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { //Если увели курсор мимо - закрываемся
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { // Если увели курсор мимо - закрываемся
                this._notify('close');
             }
          },
@@ -203,9 +204,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          }
       });
-   
+
       Menu._private = _private;
-      
+
       Menu.getDefaultOptions = function() {
          return {
             menuStyle: 'defaultHead',
@@ -214,5 +215,4 @@ define('Controls/Dropdown/resources/template/DropdownList',
       };
 
       return Menu;
-   }
-);
+   });

@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'Core/core-instance',
       'Core/constants',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove',
+      'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
    ],
    function (ListMove, DialogMixin, format, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
