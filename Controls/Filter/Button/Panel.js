@@ -17,9 +17,7 @@ define('Controls/Filter/Button/Panel', [
     * @mixes Controls/interface/IFilterPanel
     * @control
     * @public
-    */
-
-   /**
+    *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
     * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
@@ -103,9 +101,9 @@ define('Controls/Filter/Button/Panel', [
          this._isChanged = _private.isChangedValue(this._items);
       },
 
-      _beforeUpdate: function(newOptions) {
+      _beforeUpdate: function() {
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = newOptions.additionalTemplate && _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
       },
 
       _valueChangedHandler: function() {
@@ -136,7 +134,7 @@ define('Controls/Filter/Button/Panel', [
             if (getPropValue(item, 'visibility') === undefined) {
                setPropValue(item, 'value', getPropValue(item, 'resetValue'));
             }
-            if (getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
          });

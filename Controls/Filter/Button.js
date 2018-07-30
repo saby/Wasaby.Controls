@@ -29,9 +29,7 @@ define('Controls/Filter/Button',
        * @control
        * @public
        * @author Герасимов Александр
-       */
-
-      /**
+       *
        * @css @height_FilterButton Height of button.
        * @css @color_FilterButton-icon Color of button icon.
        * @css @color_FilterButton-icon_hover Color of button icon when hovering.

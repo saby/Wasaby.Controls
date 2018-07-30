@@ -9,6 +9,12 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 ], function(Control, Utils, isEqual, Clone, template, Chain) {
 
    /**
+    * Control "Additional params". Used in the filter panel.
+    * @class Controls/Filter/Button/Panel/AdditionalParams
+    * @extends Core/Control
+    * @control
+    * @public
+    *
     * @css @max-height_FilterPanel-items Maximum height of the folded block.
     * @css @font-size_FilterPanel-caption Font size of the header.
     * @css @color_FilterPanel-caption Color of the header.
