@@ -54,19 +54,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
       }
-      function setReadOnly(compoundControl, isReadOnly) {
-         var isEnabled = !isReadOnly;
-         var childControls = compoundControl.getImmediateChildControls(),
-            control;
-         for (var i = 0, len = childControls.length; i < len; ++i) {
-            control = childControls[i];
-            if (typeof (control.setReadOnly) === 'function') {
-               control.setReadOnly(!isEnabled);
-            } else {
-               control.setEnabled(isEnabled);
-            }
-         }
-      }
 
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
@@ -550,10 +537,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          setReadOnly: function(isReadOnly) {
             this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
-               setReadOnly(this._compoundControl, isReadOnly);
+               this._setEnabledForChildControls(!isReadOnly);
             } else {
                this._compoundControlCreated.addCallback(function() {
-                  setReadOnly(this._compoundControl, isReadOnly);
+                  this._setEnabledForChildControls(!isReadOnly);
                }.bind(this));
             }
          },
@@ -987,7 +974,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          getImmediateChildControls: function() {
-            return [this._compoundControl];
+            // Контрол могут создавать внутри панели в коде так: new Control({ parent: this.getTopParent() })
+            // Тогда родителем оказывается CompoundArea, и этот контрол попадает в this._childControls
+            var filtered = [];
+            for (var i = 0; i < this._childControls.length; i++) {
+               if (this._childControls[i]) {
+                  filtered.push(this._childControls[i]);
+               }
+            }
+            return filtered;
          },
 
          /**
