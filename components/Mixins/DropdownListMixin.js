@@ -80,7 +80,7 @@ function(TemplateUtil) {
          var self = this;
          this._picker.getContainer().on('tap', function(e) {
             //Чекбоксы появляются по ховеру. если ткнуть в место, где был чекбокс, то ничего не выберется, т.к. ховера еще не было
-            if (!this._options.multiselect) {
+            if (!self._options.multiselect) {
                self._tapEvent = true;
                self._clickItemHandler(e);
             }
