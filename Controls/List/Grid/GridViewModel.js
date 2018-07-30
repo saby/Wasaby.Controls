@@ -588,6 +588,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          _updateSelection: function(selectedKeys) {
             this._model._updateSelection(selectedKeys);
+            this._nextVersion();
          },
 
          setDragTargetItem: function(itemData) {
