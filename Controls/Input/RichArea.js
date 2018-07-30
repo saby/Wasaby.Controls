@@ -23,6 +23,7 @@ define('Controls/Input/RichArea', [
       _beforeMount: function(opts) {
          if (opts.json) {
             this._htmlJson = new HtmlJson();
+
             // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
             this._htmlJson.setJson = function(json) {
                this._options.json = json;
