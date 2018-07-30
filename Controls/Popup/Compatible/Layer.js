@@ -36,7 +36,6 @@ define('Controls/Popup/Compatible/Layer', [
    }
 
    function loadDataProviders(parallelDef) {
-
       parallelDef.push(ExtensionsManager.loadExtensions().addErrback(function(err) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
          return err;
@@ -85,7 +84,7 @@ define('Controls/Popup/Compatible/Layer', [
          IoC.resolve('ILogger').error('Layer', 'Can\'t load user license', err);
       }));
 
-      //globalClientConfig
+      // globalClientConfig
       // параметры пользователськие, клиенстские, глобальные. причем они в session или localStorage могут быть
       // параметры нужно положить в контекст (белый список)
       // parallelDef.push(readGlobalClientConfig().addCallbacks(function(globalClientConfig) {
@@ -94,13 +93,13 @@ define('Controls/Popup/Compatible/Layer', [
       //    IoC.resolve('ILogger').error('Layer', 'Can\'t load global client config', err);
       // }));
 
-      //cachedMethods
+      // cachedMethods
       window.cachedMethods = [];
 
-      //product
+      // product
       window.product = 'продукт никому не нужен?';
 
-      //активность???
+      // активность???
    }
 
    // function viewSettingsData() {
@@ -131,7 +130,7 @@ define('Controls/Popup/Compatible/Layer', [
          }),
          data = {};
 
-      //Получение данных из контекста
+      // Получение данных из контекста
 
       var opt = document.querySelector('html').controlNodes;
 
@@ -166,7 +165,7 @@ define('Controls/Popup/Compatible/Layer', [
    function getUserLicense() {
       var def = new Deferred();
 
-      new SbisService({endpoint: 'Биллинг'}).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
+      new SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
          if (record && record.getRow().get('ПараметрыЛицензии')) {
             var data = Chain(record.getRow().get('ПараметрыЛицензии')).toObject();
             def.callback(data);
@@ -201,11 +200,10 @@ define('Controls/Popup/Compatible/Layer', [
       var coreControl = require('Core/Control'),
          controlCompatible = require('Lib/Control/Control.compatible');
       moduleStubs.require(['Core/core-extensions', 'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
-
          // частично поддерживаем старое API. поддержка gedId
          coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
          coreControl.prototype.getId = controlCompatible.getId;
-         
+
          loadDeferred.callback(result);
       }, function(e) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
@@ -220,7 +218,7 @@ define('Controls/Popup/Compatible/Layer', [
 
    return {
       load: function(deps, force) {
-         if (!isNewEnvironment() && !force) { //Для старого окружения не грузим слои совместимости
+         if (!isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
@@ -294,9 +292,13 @@ define('Controls/Popup/Compatible/Layer', [
                });
             });
 
+            return loadDeferred;
          }
-         return loadDeferred;
+         var fakeDeferred = new Deferred();
+         loadDeferred.addCallback(function() {
+            fakeDeferred.callback();
+         });
+         return fakeDeferred;
       }
    };
 });
-
