@@ -16,10 +16,6 @@ define('Controls/Input/Text',
 
       /**
        * A component for entering single-line text.
-       * You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
-       * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
-       * If this is not enough, use {@link tagStyle tags}.
-       * You can make the entry field {@link readOnly inactive}. In this case, the text input will be prohibited and the appearance of the field will be changed.
        * You may want to restrict user input to a limited define of characters. In this case, you should use the option {@link constraint}.
        * You can {@link trim remove extra spaces} at the beginning and end when the {@link inputCompleted input is completed}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.

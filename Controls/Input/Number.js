@@ -22,10 +22,6 @@ define('Controls/Input/Number', [
     * A component for entering number text.
     * To control the format of the input numbers, there is a {@link integersLength restriction of the integer part},
     * the {@link precision number of characters} and the {@link showEmptyDecimals display of useless zeros} in the fractional part.
-    * You can {@link validationErrors validate} the inputed text. If the text does not pass validation, the input field will change its appearance.
-    * If you want a hint of what text is expected in the input field, you can use {@link Controls/Label labels} or {@link placeholder placeholder}.
-    * If this is not enough, use {@link tagStyle tags}.
-    * You can make the entry field {@link readOnly inactive}. In this case, the text input will be prohibited and the appearance of the field will be changed.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Number
