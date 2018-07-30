@@ -23,7 +23,12 @@ define('Controls/Input/RichArea', [
       _beforeMount: function(opts) {
          if (opts.json) {
             this._htmlJson = new HtmlJson();
-            opts.value = this.jsonToHtml(opts.json);
+
+            // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
+            this._htmlJson.setJson = function(json) {
+               this._options.json = json;
+            };
+            opts.value = this._jsonToHtml(opts.json);
          }
          this._simpleViewModel = new RichModel({
             value: opts.value
@@ -50,7 +55,7 @@ define('Controls/Input/RichArea', [
 
       _onTextChanged: function(e, value) {
          if (this._options.json) {
-            this._notify('jsonChanged', [this.valueToJson(value)]);
+            this._notify('jsonChanged', [this._valueToJson(value)]);
          } else {
             this._notify('valueChanged', [value]);
          }
@@ -99,16 +104,17 @@ define('Controls/Input/RichArea', [
             this._children.previewContainer.innerHTML = this._simpleViewModel.getValue();
          }
       },
-      valueToJson: function(newValue) {
+      _valueToJson: function(newValue) {
          if (newValue[0] !== '<') {
             newValue = '<p>' + newValue + '</p>';
          }
          var span = document.createElement('span');
          span.innerHTML = newValue;
-         this._htmlJson._options.json = domToJson(span).slice(1);
-         return this._htmlJson._options.json;
+         var json = domToJson(span).slice(1);
+         this._htmlJson.setJson(json);
+         return json;
       },
-      jsonToHtml: function(json) {
+      _jsonToHtml: function(json) {
          this._htmlJson._options.json = json;
          return this._htmlJson.render();
       },
