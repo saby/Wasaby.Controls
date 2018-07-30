@@ -46,10 +46,16 @@ define('Controls/Search/Container',
       };
    
       /**
-       * Container for content that can be filtered by Controls/Input/Search.
-       * You can specify a delay before searching, number of characters to initiate search and search parameter.
+       * The search controller allows you to search data in a {@link Controls/List}
+       * using any component with {@link Controls/Input/interface/IInputText} interface.
+       * Search controller allows you:
+       * 1) set delay before searching
+       * 2) set number of characters
+       * 3) set search parameter
+       * 4) change the keyboard layout for an unsuccessful search
+       * Note: Component with {@link Controls/Input/interface/IInputText} interface must be located in {@link Controls/Search/Input/Container}.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * @class Controls/Search/Container
        * @extends Core/Control

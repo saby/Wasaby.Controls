@@ -9,11 +9,12 @@ define('Controls/Filter/Button/Container',
    function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * Container component for FilterButton
-       * Receives props from context and pass to FilterButton.
-       * Should be located inside Controls/Filter/Container.
+       * Special container for {@link Controls/Filter/Button}.
+       * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
+       * Receives props from context and pass to {@link Controls/Filter/Button}.
+       * NOTE: Must be located inside Controls/Filter/Container.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Button/Container
        * @extends Core/Control

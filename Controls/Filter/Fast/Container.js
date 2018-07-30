@@ -12,11 +12,12 @@ define('Controls/Filter/Fast/Container',
    function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * Container component for Controls/Filter/Fast
-       * Receives props from context and pass to FastFilter.
-       * Should be located inside Controls/Filter/Container.
+       * Special container for {@link Controls/Filter/Fast}.
+       * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
+       * Receives props from context and pass to {@link Controls/Filter/Fast}.
+       * NOTE: Must be located inside Controls/Filter/Container.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Fast/Container
        * @extends Core/Control
