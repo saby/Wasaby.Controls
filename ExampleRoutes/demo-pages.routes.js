@@ -131,7 +131,7 @@ module.exports = function(Component) {
          }, []);
       },
 
-      // Демо-пример: Переключатели
+      // Демо-пример: Кнопки
       '/demo-ws4-switchers': function(req, res) {
          requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
          res.render('tmpl!Controls/Application/Route', {
