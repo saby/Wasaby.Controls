@@ -3,7 +3,7 @@
    <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
       <ws:master>
          <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
-               <Controls.Container.MasterList selectedField="sourceType">
+               <Controls.Container.Master selectedField="sourceType">
                   <Controls.Grid
                           source="{{_masterSource}}"
                           keyProperty="id"
@@ -13,7 +13,7 @@
                           columns="{{gridColumns}}"
                   >
                   </Controls.Grid>
-               </Controls.Container.MasterList>
+               </Controls.Container.Master>
          </Controls.Container.Scroll>
       </ws:master>
       <ws:detail>
@@ -43,7 +43,7 @@
    <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
       <ws:master>
          <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
-            <Controls.Container.MasterList selectedField="sourceType">
+            <Controls.Container.Master selectedField="sourceType">
                <Controls.List
                        style="master"
                        keyProperty="id"
@@ -57,7 +57,47 @@
                      </ws:partial>
                   </ws:itemTemplate>
                </Controls.List>
-            </Controls.Container.MasterList>
+            </Controls.Container.Master>
+         </Controls.Container.Scroll>
+      </ws:master>
+      <ws:detail>
+         <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_detail">
+            <Controls.List
+                    keyProperty="id"
+                    source="{{_detail[detail.selectedMasterValue]}}"
+            >
+               <ws:itemTemplate>
+                  <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                     <ws:contentTemplate>
+                        <ws:partial
+                                item="{{itemTemplate.itemData.item}}"
+                                template="tmpl!Controls-demo/MasterDetail/itemTemplates/TaskItemTemplate"
+                        />
+                     </ws:contentTemplate>
+                  </ws:partial>
+               </ws:itemTemplate>
+            </Controls.List>
+         </Controls.Container.Scroll>
+      </ws:detail>
+   </Controls.Container.MasterDetail>
+
+   <br/>
+   <br/>
+
+   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
+      <ws:master>
+         <Controls.Container.Scroll attr:class="controls-demo_MasterDetail_master">
+            <Controls.Container.Master selectedField="sourceType">
+               <Controls.TreeGrid
+                       source="{{_masterSource}}"
+                       keyProperty="id"
+                       parentProperty="Раздел"
+                       style="master"
+                       nodeProperty="Раздел@"
+                       columns="{{gridColumns}}"
+               >
+               </Controls.TreeGrid>
+            </Controls.Container.Master>
          </Controls.Container.Scroll>
       </ws:master>
       <ws:detail>

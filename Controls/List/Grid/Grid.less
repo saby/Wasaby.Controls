@@ -48,23 +48,6 @@
    width: 100%;
 }
 
-.controls-Grid_master {
-   position: relative;
-   background-color: @background-color_MasterList;
-   margin-right: @border-width_MasterList-right;
-
-   &:after {
-      content: '';
-      z-index: 0;
-      width: @border-width_MasterList-right;
-      background-color: @border-color_MasterList;
-      height: 100%;
-      position: absolute;
-      right: -@border-width_MasterList-right;
-      top: 0;
-   }
-}
-
 .controls-Grid__header {
    display: contents;
    color: @color_Grid-header;
@@ -161,9 +144,6 @@
    .controls-Grid__row_default:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
-   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
-      background-color: @hover-color_MasterList_item;
-   }
    .controls-Grid__row:hover .controls-itemActionsV {
       display: inline-block;
    }
@@ -197,18 +177,6 @@
 
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
-}
-
-.controls-Grid__row-cell_withSelectionMarker_master {
-   background-color: @background-color_MasterList_item-selected;
-   &:before {
-      .selected-item-border();
-      //Верхняя граница элемента грида - 1px
-      height: ~'calc(100% + 1px)';
-   }
-   &:after {
-      .selected-item-clear-border();
-   }
 }
 
 .controls-Grid__row-cell__content_withLadder {
@@ -353,27 +321,3 @@
    align-items: baseline;
 }
 
-.selected-item-border() {
-   content: '';
-   z-index: 2;
-   box-sizing: border-box;
-   border-top: 1px solid @border-color-top_MasterList_item-selected;
-   border-bottom: 1px solid @border-color-bottom_MasterList_item-selected;
-   box-shadow: @box-shadow_MasterList_item-selected;
-   width: ~'calc(100% + @{border-width_MasterList-right})';
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   pointer-events: none;
-}
-
-.selected-item-clear-border() {
-   content: '';
-   z-index: 1;
-   height: 100%;
-   top: 0;
-   width: @border-width_MasterList-right;
-   position: absolute;
-   right: -@border-width_MasterList-right;
-   background-color: @default-bg-color;
-}

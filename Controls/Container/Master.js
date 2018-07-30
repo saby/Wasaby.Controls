@@ -1,6 +1,7 @@
-define('Controls/Container/MasterList', [
+define('Controls/Container/Master', [
    'Core/Control',
-   'tmpl!Controls/Container/MasterList/MasterList'
+   'tmpl!Controls/Container/Master/Master',
+   'css!Controls/Container/Master/Master'
 ], function(Control, template) {
    return Control.extend({
       _template: template,

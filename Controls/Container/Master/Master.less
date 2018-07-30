@@ -1,0 +1,99 @@
+//-----Border mixins-------//
+
+.selected-item-border() {
+   content: '';
+   z-index: 2;
+   box-sizing: border-box;
+   border-top: 1px solid @border-color-top_MasterList_item-selected;
+   border-bottom: 1px solid @border-color-bottom_MasterList_item-selected;
+   box-shadow: @box-shadow_MasterList_item-selected;
+   width: ~'calc(100% + @{border-width_MasterList-right})';
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   pointer-events: none;
+}
+
+.selected-item-clear-border() {
+   content: '';
+   z-index: 1;
+   height: 100%;
+   top: 0;
+   width: @border-width_MasterList-right;
+   position: absolute;
+   right: -@border-width_MasterList-right;
+   background-color: @default-bg-color;
+}
+
+.master-container-border() {
+   content: '';
+   z-index: 0;
+   width: @border-width_MasterList-right;
+   background-color: @border-color_MasterList;
+   height: 100%;
+   position: absolute;
+   right: 0;
+   top: 0;
+}
+
+//-----Master container mixin-------//
+
+.master-container() {
+   position: relative;
+   background-color: @background-color_MasterList;
+   padding-right: @border-width_MasterList-right;
+   box-sizing: border-box;
+
+   &:after {
+      .master-container-border();
+   }
+}
+
+//-----Master item selected mixin-------//
+
+.master-item-selected(@height) {
+   background-color: @background-color_MasterList_item-selected;
+   &:before {
+      .selected-item-border();
+      height: @height;
+   }
+   &:after {
+      .selected-item-clear-border();
+   }
+}
+
+//-----Styles for ListView-------//
+
+.controls-ListView_master {
+   .master-container();
+}
+
+.controls-ListView__item__marked_master {
+   .master-item-selected(100%);
+}
+
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @hover-color_MasterList_item;
+      }
+   }
+}
+
+//-----Styles for GridView-------//
+
+.controls-Grid_master {
+   .master-container();
+}
+
+.controls-Grid__row-cell_withSelectionMarker_master {
+   //Top border of grid element is 1px;
+   .master-item-selected(~'calc(100% + 1px)');
+}
+
+.ws-is-no-touch {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
+      background-color: @hover-color_MasterList_item;
+   }
+}
+

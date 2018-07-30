@@ -435,6 +435,8 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
+            current.style = this._options.style;
+
 
             if (current.multiSelectVisibility) {
                current.columns = [{}].concat(this._columns);
