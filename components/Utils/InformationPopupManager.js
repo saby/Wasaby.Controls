@@ -1,12 +1,13 @@
 define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    [
-   "Core/core-merge",
-   "SBIS3.CONTROLS/SubmitPopup",
-   "SBIS3.CONTROLS/NotificationPopup",
-   "browser!SBIS3.CONTROLS/Utils/NotificationStackManager",
-   "Core/constants",
-   "Core/helpers/Function/runDelayed"
-],
+      'Core/core-merge',
+      'Controls/Popup/Opener/Notification',
+      'SBIS3.CONTROLS/SubmitPopup',
+      'SBIS3.CONTROLS/NotificationPopup',
+      'browser!SBIS3.CONTROLS/Utils/NotificationStackManager',
+      'Core/constants',
+      'Core/helpers/Function/runDelayed'
+   ],
 
    /**
     * Класс интерфейса для работы с нотификационными уведомлениями (см. {@link SBIS3.CONTROLS/NotificationPopup}) и окнами (см. {@link SBIS3.CONTROLS/SubmitPopup}).
@@ -29,15 +30,16 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     * @author Степин П.В.
     * @public
     */
-   function( cMerge,
-             SubmitPopup,
-             NotificationPopup,
-             NotificationManager,
-             constants,
-             runDelayed){
+   function(cMerge,
+      NotificationVDOM,
+      SubmitPopup,
+      NotificationPopup,
+      NotificationManager,
+      constants,
+      runDelayed) {
       'use strict';
 
-      var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
+      var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler) {
          if (config.message && config.status === 'error') {
             config.message = config.message.toString().replace('Error: ', '');
          }
@@ -46,21 +48,21 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
             isModal: true
          }));
 
-         popup.subscribeOnceTo(popup, 'onChoose', function(e, res){
+         popup.subscribeOnceTo(popup, 'onChoose', function(e, res) {
             var handler;
-            switch(res){
+            switch (res) {
                case true: handler = positiveHandler; break;
                case false: handler = negativeHandler; break;
                default: handler = cancelHandler; break;
             }
 
-            if(handler && typeof handler === 'function'){
+            if (handler && typeof handler === 'function') {
                handler.call(popup);
             }
          });
 
          if (constants.browser.isIE) {
-            runDelayed(function () {
+            runDelayed(function() {
                popup.show();
                popup.setActive(true);
             });
@@ -98,7 +100,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showNotification
           * @see showCustomNotification
           */
-         showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
+         showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler) {
             return showSubmitDialog(cMerge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
@@ -123,7 +125,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showNotification
           * @see showCustomNotification
           */
-         showMessageDialog: function(config, handler){
+         showMessageDialog: function(config, handler) {
             return showSubmitDialog(config, null, null, handler);
          },
 
@@ -148,14 +150,36 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showConfirmDialog
           * @see showMessageDialog
           */
-         showNotification: function(config, notHide){
-            var popup = new NotificationPopup(cMerge({
-               element: $('<div></div>')
-            }, config));
+         showNotification: function(config, notHide) {
+            if (NotificationVDOM.isNewEnvironment()) {
+               if (!this._notificationVDOM) {
+                  this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
+                  this._styles = {
+                     success: 'done',
+                     error: 'error',
+                     warning: 'warning'
+                  };
+               }
 
-            NotificationManager.showNotification(popup, notHide);
+               this._notificationVDOM.open({
+                  template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                  templateOptions: {
+                     iconClose: true,
+                     autoClose: !notHide,
+                     text: config.caption,
+                     icon: config.icon,
+                     style: this._styles[config.status]
+                  }
+               });
+            } else {
+               var popup = new NotificationPopup(cMerge({
+                  element: $('<div></div>')
+               }, config));
 
-            return popup;
+               NotificationManager.showNotification(popup, notHide);
+
+               return popup;
+            }
          },
 
          /**
@@ -166,7 +190,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showConfirmDialog
           * @see showMessageDialog
           */
-         showCustomNotification: function(inst, notHide){
+         showCustomNotification: function(inst, notHide) {
             NotificationManager.showNotification(inst, notHide);
             return inst;
          }
