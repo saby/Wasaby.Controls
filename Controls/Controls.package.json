@@ -71,7 +71,15 @@
   "include": [
     "Controls/Popup/*"
   ],
+  "exclude": [
+    "Controls/Popup/Compatible/*"
+  ],
   "output": "controls-popup.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Compatible/*"
+  ],
+  "output": "controls-popup-compat.package.js"
 }, {
   "include": [
     "Controls/Render/*"

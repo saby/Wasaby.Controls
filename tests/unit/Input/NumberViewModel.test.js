@@ -276,6 +276,22 @@ define(
                   inputType: 'insert'
                },
                {
+                  testName: 'Transfer of a position on a dot.',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '0',
+                     insert: '.',
+                     after: '.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '0.0',
+                     position: 2
+                  },
+                  inputType: 'insert'
+               },
+               {
                   testName: 'Second dot is not allowed',
                   controlConfig: {
                   },

@@ -1,14 +1,14 @@
 /**
  * @author Коновалова А.И.
  */
-define('Controls-demo/FilterButton/Panel/resources/FBPanel', // Устанавливаем имя, по которому демо-компонент будет доступен в других компонентах
+define('Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel', // Устанавливаем имя, по которому демо-компонент будет доступен в других компонентах
    [ // Массив зависимостей компонента
       'Lib/Control/CompoundControl/CompoundControl', // Подключаем базовый компонент, от которого далее будем наследовать свой демо-компонент
-      'tmpl!Controls-demo/FilterButton/Panel/resources/FBPanel', // Подключаем вёрстку диалога с фильтрами
+      'tmpl!Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel', // Подключаем вёрстку диалога с фильтрами
       'SBIS3.CONTROLS/ComboBox', // Подключаем контрол "Выпадающий список"
       'SBIS3.CONTROLS/TextBox', 
       'SBIS3.CONTROLS/Filter/Button/Text',
-      'css!Controls-demo/FilterButton/Panel/resources/FBPanel' // Подключаем CSS-файл со стилями, которые будут использованы в вёрстке диалога
+      'css!Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel' // Подключаем CSS-файл со стилями, которые будут использованы в вёрстке диалога
    ],
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
       CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js

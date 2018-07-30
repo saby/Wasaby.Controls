@@ -40,7 +40,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
             return {
                searchLayoutField: this._searchData,
                ScrollData: this._scrollData,
-               filterLayoutField: new FilterContextField({filter: this._options.filter}),
+               filterLayoutField: new FilterContextField({filter: this._options.filter})
             };
          },
          
