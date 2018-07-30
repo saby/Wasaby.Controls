@@ -32,14 +32,25 @@
   min-width: 200px;
   flex-shrink: 0;
   height: 100%;
+  &_search {
+     padding: 12px;
+     border-bottom: 1px solid #eaeaea;
+  }
 }
 
 .controls-demo_MasterDetail_detail {
   flex-grow: 1;
+   &_search {
+      padding: 12px;
+      border-bottom: 1px solid #eaeaea;
+      &_input {
+         margin-right: 8px;
+      }
+   }
 }
 
 .controls-demo_MasterDetail {
-  min-height: 300px;
+  height: 300px;
   border-bottom: 1px solid #EAEAEA;
   border-top: 1px solid #EAEAEA;
   display: flex;

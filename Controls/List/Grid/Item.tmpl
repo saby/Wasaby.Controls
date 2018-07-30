@@ -1,4 +1,4 @@
-<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
+<div attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style}}" attr:key="{{itemData.item.getId()}}">
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}" swipeTemplate="{{swipeTemplate}}" multiSelectTpl="{{multiSelectTpl}}"/>
    </ws:if>
