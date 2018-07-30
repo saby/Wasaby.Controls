@@ -126,17 +126,17 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       var PanelVDom = Control.extend({
          _template: template,
          _itemTemplate: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel'},
-         _addTemplate: {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'},
-         _itemsSimple: items,
+         _addTemplate: null,
+         _itemsSimple: itemsSimple,
          _hasItemTemplateProperty: false,
 
          valueChangedHandler: function(event, value) {
             if (value) {
-               this._itemsSimple = itemsSimple;
-               this._addTemplate = null;
-            } else {
                this._itemsSimple = items;
                this._addTemplate = {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
+            } else {
+               this._itemsSimple = itemsSimple;
+               this._addTemplate = null;
             }
          },
 
