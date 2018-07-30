@@ -139,6 +139,15 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+
+      // Демо-пример: Переключатели
+      '/demo-ws4-buttons': function(req, res) {
+         requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
+            initDependencies: false
+         }, []);
+      },
    
       // Демо-пример: с поиском
       '/demo-ws4-search-container': function(req, res) {
