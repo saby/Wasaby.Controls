@@ -2,7 +2,27 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
 ], function() {
    'use strict';
    //Высота title без наведения. 18px height + 4px*2 padding + 1px border top
-   var TITLE_HEIGHT = 27;
+   var
+      TITLE_HEIGHT = 27,
+      scaleCoefficient = 1.5;
+
+   var _private = {
+      getTitleHeight: function(item, increaseSize) {
+         var
+            result,
+            title = $('.controls-CompositeView__tileTitle', item);
+
+         //Увеличиваем размер title чтобы правильно посчитать высоту, т.к. без увеличения title может быть в 2 строки,
+         //а после увеличения влезть в одну, тогда мы неправильно посчитаем размер плитки.
+         if (increaseSize) {
+            title.css('width', 100 * scaleCoefficient + '%');
+         }
+         result =  $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
+         title.css('width', '');
+         return result;
+      }
+   };
+
    return {
       calcOutsideDimensions: function(item) {
          var
@@ -10,12 +30,21 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             additionalWidth = Math.floor(itemRect.width / 2),
             margin = Math.floor(item.outerWidth(true) / 2 - additionalWidth),
             additionalHeight = Math.floor(itemRect.height / 2),
-            title = $('.controls-CompositeView__tileTitle', item),
-            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
+            titleHeight = _private.getTitleHeight(item, true);
 
          return {
             padding: Math.ceil(additionalHeight / 2) + 'px ' + Math.ceil(additionalWidth / 2) + 'px ' + Math.ceil(additionalHeight / 2 + titleHeight) + 'px ' + Math.ceil(additionalWidth / 2) + 'px',
             margin: Math.floor(-(additionalHeight / 2 - margin)) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px ' + Math.floor(-(additionalHeight / 2 - margin) - titleHeight) + 'px ' + Math.floor(-(additionalWidth / 2 - margin)) + 'px'
+         };
+      },
+      calcTitleDimensions: function(item) {
+         var
+            offset = _private.getTitleHeight(item),
+            boundingClientRect = item.get(0).getBoundingClientRect(),
+            margin = (Math.floor(item.outerHeight(true)) - Math.floor(boundingClientRect.height)) / 2;
+         return {
+            'padding-bottom': offset,
+            'margin-bottom': -(offset - margin)
          };
       },
       getMargin: function(item) {
@@ -39,8 +68,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/DimensionsUtil', [
             marginBottom,
             paddingVertical = Math.ceil(additionalHeight / 2),
             paddingHorizontal = Math.ceil(additionalWidth / 2),
-            title = $('.controls-CompositeView__tileTitle', item),
-            titleHeight = title.outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? TITLE_HEIGHT : 0);
+            titleHeight = _private.getTitleHeight(item, true);
 
          marginTop = marginBottom = Math.floor(-(additionalHeight / 2 - margin));
          marginLeft = marginRight = Math.floor(-(additionalWidth / 2 - margin));

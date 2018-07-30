@@ -7,14 +7,15 @@ define('Controls/Container/Suggest/Layout',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
+      'Core/core-clone',
       'css!Controls/Container/Suggest/Layout/Suggest'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone) {
       
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper'];
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll'];
       
       var _private = {
          hasMore: function(searchResult) {
@@ -32,7 +33,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          close: function(self) {
-            self._orient = null;
+            this.resetSizesState(self);
             this.suggestStateNotify(self, false);
          },
          
@@ -41,6 +42,13 @@ define('Controls/Container/Suggest/Layout',
                _private.suggestStateNotify(self, true);
             });
          },
+         
+         getSizes: function(self) {
+            return {
+               suggest: self._children.suggestionsContainer.getBoundingClientRect(),
+               container: self._container.getBoundingClientRect()
+            };
+         },
    
          calcOrient: function(self, win) {
             /* calculate algorithm:
@@ -48,13 +56,18 @@ define('Controls/Container/Suggest/Layout',
                - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
                - bottom of suggest on screen -> default orient (-down)
              */
-            var suggestHeight = self._children.suggestionsContainer.offsetHeight,
-               containerRect = self._container.getBoundingClientRect(),
-               needToRevert = suggestHeight + containerRect.bottom > (win || window).innerHeight,
+            var sizes = _private.getSizes(self),
+               suggestHeight = sizes.suggest.height,
+               containerSize = sizes.container,
+               needToRevert = suggestHeight + containerSize.bottom > (win || window).innerHeight,
                newOrient;
             
             if (needToRevert && self._options.suggestStyle !== 'overInput') {
-               newOrient = '-up';
+               if (containerSize.top - suggestHeight > 0) {
+                  newOrient = '-up';
+               } else {
+                  newOrient = '-down';
+               }
             } else {
                if (self._orient === '-up') {
                   newOrient = self._orient;
@@ -64,6 +77,36 @@ define('Controls/Container/Suggest/Layout',
             }
             
             return newOrient;
+         },
+   
+         /**
+          * calculate height of suggestions container by orient and suggestions container sizes
+          * @param self
+          * @param currentOrient orient of suggestions container
+          * @param sizes size of suggestions container and input container
+          * @param win window
+          * @returns {string}
+          */
+         calcHeight: function(self, currentOrient, win) {
+            var sizes = _private.getSizes(self);
+            var windowHeight = (win || window).innerHeight;
+            var suggestSize = sizes.suggest;
+            var containerSize = sizes.container;
+            var containerOptionToGet = {
+               '-up': 'top',
+               '-down': 'bottom'
+            };
+            var height = self._height;
+            var optionValue = containerSize[containerOptionToGet[currentOrient]];
+            var suggestBottomSideCoord = optionValue + (currentOrient === '-up' ? -suggestSize.height : suggestSize.height);
+            
+            if (suggestBottomSideCoord < 0) {
+               height = suggestSize.height + suggestBottomSideCoord + 'px';
+            } else if (suggestBottomSideCoord > windowHeight) {
+               height = suggestSize.height - (suggestBottomSideCoord - windowHeight) + 'px';
+            }
+            
+            return height;
          },
    
          shouldSearch: function(self, value) {
@@ -94,7 +137,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          updateFilter: function(self, searchValue, tabId) {
-            var filter = {};
+            var filter = clone(self._options.filter) || {};
             if (tabId) {
                filter.currentTab = tabId;
             }
@@ -125,6 +168,15 @@ define('Controls/Container/Suggest/Layout',
                self._dependenciesDeferred = mStubs.require(deps);
             }
             return self._dependenciesDeferred;
+         },
+         
+         resetSizesState: function(self) {
+            self._orient = null;
+            this.resetHeight(self);
+         },
+         
+         resetHeight: function(self) {
+            self._height = 'auto';
          }
       };
    
@@ -154,6 +206,9 @@ define('Controls/Container/Suggest/Layout',
          _searchDelay: null,
          _dependenciesDeferred: null,
          _loading: false,
+   
+         _orient: null,
+         _height: 'auto',
          
          // <editor-fold desc="LifeCycle">
          
@@ -174,7 +229,7 @@ define('Controls/Container/Suggest/Layout',
          
          _beforeUpdate: function(newOptions) {
             if (!newOptions.suggestState) {
-               this._orient = null;
+               _private.resetSizesState(this);
             }
          },
    
@@ -183,8 +238,20 @@ define('Controls/Container/Suggest/Layout',
                2) do not change orientation of suggest, if suggest already showed or data loading now */
             if (this._options.suggestState && this._children.suggestionsContainer && !this._loading) {
                var orient = _private.calcOrient(this);
-               if (this._orient !== orient) {
+               var height = _private.calcHeight(this, orient, _private.getSizes(this));
+               var orientChanged = this._orient !== orient;
+               var heightChanged = this._height !== height;
+               var needUpdate = orientChanged || heightChanged;
+               
+               if (orientChanged) {
                   this._orient = orient;
+               }
+               
+               if (heightChanged) {
+                  this._height = height;
+               }
+   
+               if (needUpdate) {
                   this._forceUpdate();
                }
             }
@@ -257,6 +324,7 @@ define('Controls/Container/Suggest/Layout',
          _searchEnd: function(result) {
             this._loading = false;
             this._searchDelay = this._options.searchDelay;
+            _private.resetHeight(this);
             _private.precessResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();
