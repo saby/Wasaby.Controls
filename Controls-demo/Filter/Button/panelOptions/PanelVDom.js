@@ -12,6 +12,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
@@ -154,6 +155,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          _selectedKeyStyle: 'primary',
 
          _additionalBlock: false,
+         _historyBlock: false,
 
          _items: items
 
