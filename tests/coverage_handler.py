@@ -25,12 +25,10 @@ class Coverage:
         for tdir in test_path:
             path_list = []
             root = os.path.join(path, tdir)
-            for top, d, f in os.walk(root):
-                for i in d:
-                    file_path = os.path.join(top, i)
-                    file_name = os.path.join(file_path, 'coverage.json')
-                    if os.path.exists(file_name):
-                        path_list.append(file_name)
+            for top, directory, files in os.walk(root):
+                for f in files:
+                    if f.endswith('-coverage.json') :
+                        path_list.append(os.path.join(top, f))
             self.path_result[tdir] = path_list
 
         for ts, item in enumerate(self.path_result):
@@ -78,4 +76,3 @@ if __name__ == '__main__':
         coverage.get_tests(args.changelist)
         if coverage.test_result:
             print(' '.join(set(coverage.test_result)))
-
