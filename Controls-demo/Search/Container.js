@@ -36,7 +36,7 @@ define('Controls-demo/Search/Container', [
       },
       
       _filterFunc: function(item, query) {
-         var filter = memorySourceFilter('firstName');
+         var filter = memorySourceFilter('department');
          return filter(item, query);
       }
    });

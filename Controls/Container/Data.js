@@ -11,12 +11,15 @@ define('Controls/Container/Data',
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       *
        * @class Controls/Container/Data
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control
        * @control
        * @public
+       * @author A.M. Gerasimov
        */
       
       /**
@@ -36,7 +39,7 @@ define('Controls/Container/Data',
       var _private = {
          createOptionsObject: function(self) {
             function reducer(result, optName) {
-               if (optName === 'source') {
+               if (optName === 'source' && self._source) {
                   //TODO: При построении на сервере в сериализованом состоянии в компонент приходят prefetchSource и
                   //source изначально заданный в опциях. prefetchSource содержит в себе source из опций, но так как
                   //это 2 разных парамтра, при десериализации получаем 2 разных source. Один десериализуется внутри
@@ -78,7 +81,7 @@ define('Controls/Container/Data',
          }
       };
       
-      var Data =  Control.extend({
+      var Data =  Control.extend(/** @lends Controls/Container/Data.prototype */{
          
          _template: template,
          
@@ -87,7 +90,7 @@ define('Controls/Container/Data',
             _private.resolveOptions(this, options);
             if (receivedState) {
                _private.resolvePrefetchSourceResult(this, receivedState);
-            } else {
+            } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
 
@@ -105,7 +108,17 @@ define('Controls/Container/Data',
          },
          
          _beforeUpdate: function(newOptions) {
+            var self = this;
+            
             _private.resolveOptions(this, newOptions);
+            
+            if (this._options.source !== newOptions.source) {
+               _private.createPrefetchSource(this).addCallback(function(result) {
+                  _private.resolvePrefetchSourceResult(self, result);
+                  self._forceUpdate();
+                  return result;
+               });
+            }
          },
    
          _filterChanged: function(event, filter) {
@@ -117,6 +130,7 @@ define('Controls/Container/Data',
             var self = this;
             _private.createPrefetchSource(this, items).addCallback(function(result) {
                _private.resolvePrefetchSourceResult(self, result);
+               self._forceUpdate();
                return result;
             });
          },

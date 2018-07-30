@@ -10,6 +10,9 @@ define('Controls/Search/Input/Container',
        * Container component for Input
        * Notify bubbling event "search".
        * Should be located inside Controls/Search/Container.
+       *
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       *
        * @class Controls/Search/Input/Container
        * @extends Core/Control
        * @author Герасимов Александр
@@ -19,7 +22,7 @@ define('Controls/Search/Input/Container',
       
       'use strict';
       
-      var SearchContainer = Control.extend({
+      var SearchContainer = Control.extend(/** @lends Controls/Search/Input/Container.prototype */{
          
          _template: template,
          _value: '',

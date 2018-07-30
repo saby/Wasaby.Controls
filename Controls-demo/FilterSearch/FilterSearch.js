@@ -18,45 +18,21 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    
    var filterData = [
       {
-         id: 'id',
-         resetValue: 0,
-         value: 0,
-         properties: {
-            keyProperty: 'id',
-            displayProperty: 'title',
-            source: {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {id: 0, title: 'По id'},
-                     {id: 1, title: '1'},
-                     {id: 2, title: '2'},
-                     {id: 3, title: '3'},
-                     {id: 4, title: '4'},
-                     {id: 5, title: '5'},
-                     {id: 6, title: '6'},
-                     {id: 7, title: '7'}
-                  ]
-               }
-            }
-         }
-      },
-      {
-         id: 'lastName',
+         id: 'owner',
          resetValue: '0',
          value: '0',
          properties: {
-            keyProperty: 'lastName',
+            keyProperty: 'owner',
             displayProperty: 'title',
             source: {
                module: 'WS.Data/Source/Memory',
                options: {
                   data: [
-                     {id: 0, title: 'По фамилии', lastName: '0'},
-                     {id: 1, title: 'Gerasimov', lastName: 'Gerasimov'},
-                     {id: 2, title: 'Avramenko', lastName: 'Avramenko'},
-                     {id: 3, title: 'Такой нет', lastName: '...'},
-                     {id: 4, title: 'UzeUvolen', lastName: 'UzeUvolen'},
+                     {id: 0, title: 'По ответственному', owner: '0'},
+                     {id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.'},
+                     {id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.'},
+                     {id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.'},
+                     {id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.'},
                   ]
                }
             }
@@ -64,11 +40,67 @@ define('Controls-demo/FilterSearch/FilterSearch', [
       }
    ];
    
+   var filterDepData = [
+      {
+         id: 'owner',
+         resetValue: '0',
+         value: '0',
+         properties: {
+            keyProperty: 'owner',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По ответственному', owner: '0'},
+                     {id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.'},
+                     {id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.'},
+                     {id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.'},
+                     {id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.'},
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'department',
+         resetValue: 'По департаменту',
+         value: 'По департаменту',
+         properties: {
+            keyProperty: 'title',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По департаменту'},
+                     {id: 1, title: 'Разработка'},
+                     {id: 2, title: 'Продвижение СБИС'},
+                     {id: 3, title: 'Федеральная клиентская служка'},
+                     {id: 4, title: 'Служба эксплуатации'},
+                     {id: 5, title: 'Технологии и маркетинг'},
+                     {id: 6, title: 'Федеральный центр продаж. Call-центр Ярославль'},
+                     {id: 7, title: 'Сопровождение информационных систем'}
+                  ]
+               }
+            }
+         }
+      }
+   ]
+   
    var filterButtonData = [{
-      id: 'lastName',
+      id: 'owner',
       resetValue: '0',
       value: '0'
    }];
+   
+   var tabData = [
+      {
+         id: 'employees',
+         title: 'Сотрудники',
+         align: 'right'
+      }
+   ];
    
    var SearchContainer = Control.extend({
       _template: template,
@@ -82,21 +114,41 @@ define('Controls-demo/FilterSearch/FilterSearch', [
          }
       },
       _filter: {},
+      _search: {},
+      _filterSearch: {},
+      _filterSearchTabs: {},
       _searchValue: '',
       _fastFilterData: filterData,
+      _fullFastFilterData: filterDepData,
       _filterButtonData: filterButtonData,
+      _tabSelectedKey: 'employees',
+      _searchValueWithFilters: '',
+      _searchValueWithFiltersTabs: '',
       
       _beforeMount: function() {
          this._source = new MemorySource({
             data: memorySourceData,
-            filter: this._filterFunc,
+            idProperty: 'id'
+         });
+         
+         this._sourceWithoutFilter = new MemorySource({
+               data: memorySourceData,
+               idProperty: 'id'
+            });
+   
+         this._tabSource = new MemorySource({
+            data: tabData,
             idProperty: 'id'
          });
       },
-   
-      _filterFunc: function(item, query) {
-         var filter = memorySourceFilter('firstName');
-         return filter(item, query);
+      
+      _afterMount: function() {
+         this._source = new MemorySource({
+            data: memorySourceData,
+            filter: memorySourceFilter('firstName'),
+            idProperty: 'id'
+         });
+         this._forceUpdate();
       }
    });
    

@@ -68,7 +68,7 @@ define('Controls/EngineBrowser', [
    
    'use strict';
 
-   var Browser = BaseControl.extend({
+   var Browser = BaseControl.extend(/** @lends Controls/EngineBrowser.prototype */{
       _template: template
    });
 

@@ -45,4 +45,10 @@ define('Controls/interface/IFilterButton', [
     * @variant left The panel opens to the right.
     */
    
+   /**
+    * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} filter New filter.
+    */
+   
 });

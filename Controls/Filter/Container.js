@@ -196,34 +196,38 @@ define('Controls/Filter/Container',
       
       /**
        * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
+       * Controls/Filter/Button and Controls/Filter/FastFilter should be located inside.
+       *
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Container
-       * @mixes Controls/interface/IFilter
        * @extends Core/Control
+       * @mixes Controls/interface/IFilter
        * @control
        * @public
+       * @author Герасимов Александр
        */
    
       /**
-       * @name Controls/Container/Filter#filterButtonSource
+       * @name Controls/Filter/Container#filterButtonSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Button#items
        */
    
       /**
-       * @name Controls/Container/Filter#fastFilterSource
+       * @name Controls/Filter/Container#fastFilterSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Fast#items
        */
       
       /**
-       * @name Controls/Container/Filter#historyId
+       * @name Controls/Filter/Container#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
       
-      var Container = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
          
          _template: template,
          _historySource: null,
