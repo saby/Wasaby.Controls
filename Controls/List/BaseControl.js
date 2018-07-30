@@ -712,7 +712,8 @@ define('Controls/List/BaseControl', [
    BaseControl._private = _private;
    BaseControl.getDefaultOptions = function() {
       return {
-         uniqueKeys: true
+         uniqueKeys: true,
+         multiSelectVisibility: 'hidden'
       };
    };
    return BaseControl;
