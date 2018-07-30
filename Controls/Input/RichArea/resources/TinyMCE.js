@@ -180,7 +180,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             _afterMount: function(opts) {
                var self = this;
 
-               moduleStabs.require([cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10/tinymce' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce']).addCallback(function() {
+               moduleStabs.require([cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce.min']).addCallback(function() {
                   self._value = opts.value ? opts.value : '';
                   _private.tinyInit(self);
                });
