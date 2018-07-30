@@ -9,6 +9,8 @@ define('Controls/Button', [
    /**
     * Basic button.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    *
     * @class Controls/Button
     * @extends Core/Control
     * @mixes Controls/Button/interface/IHref

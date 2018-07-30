@@ -8,6 +8,8 @@ define('Controls/Toggle/Button', [
    /**
     * Button that switches between different states.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    *
     * @class Controls/Toggle/Button
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
@@ -66,7 +68,6 @@ define('Controls/Toggle/Button', [
    var ToggleButton = Control.extend({
       _template: template,
       _beforeMount: function(options) {
-         this._type = 'toggle';
          _private.optionsGeneration(this, options);
       },
       _clickHandler: function() {
