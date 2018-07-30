@@ -13,11 +13,14 @@ RESULT_JSON = 'result.json'
 
 class Coverage:
     """Составляет исходный json файл с названиями тестов и их зависимостями"""
+
     path_result = {}
     build_result = {}
+    test_result = []
 
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
+
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -36,7 +39,7 @@ class Coverage:
             for fname in self.path_result[item]:
                 with open(fname, encoding='utf-8', mode='r') as f:
                     print('File: ', fname)
-                    d = json.loads(f.read(), encoding='utf-8')
+                    d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
                         coverage_result.append(k)
@@ -44,28 +47,19 @@ class Coverage:
             self.build_result[item] = s_result
 
         # записываем результаты в файл
-        mode = 'a+'
-        if os.path.exists(RESULT_JSON) :
-            mode = 'r+'
-
-        with open(os.path.join(path, RESULT_JSON), mode=mode, encoding='utf-8') as f:
-            f.seek(0)
+        with open(os.path.join(path, RESULT_JSON), mode='a+', encoding='utf-8') as f:
             f.write(json.dumps(self.build_result, indent=2))
-            f.truncate()
 
+    def get_tests(self, change_files):
+        """Возвращает список файлов, которые нужно запустить"""
 
-class Test:
-    """Возвращает список тестов по зависимостям"""
-    result = []
-
-    def search(self, change_files):
         with open(RESULT_JSON, encoding='utf-8') as f:
-            data = json.loads(f.read(), encoding='utf-8')
+            data = json.load(f, encoding='utf-8')
             for test_name in data:
                 for source in data[test_name]:
                     for file in change_files:
                         if file in source:
-                            self.result.append(test_name)
+                            self.test_result.append(test_name)
 
 
 if __name__ == '__main__':
@@ -75,14 +69,13 @@ if __name__ == '__main__':
     action = parser.add_argument_group('action')
     action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
     args = parser.parse_args()
+    coverage = Coverage()
     if args.source_path:
         print('Собираем покрытие', args.source_path)
-        coverage = Coverage()
         coverage.build(args.source_path)
 
     if args.changelist:
-        test = Test()
-        test.search(args.changelist)
-        if test.result:
-            print(' '.join(set(test.result)))
+        coverage.get_tests(args.changelist)
+        if coverage.test_result:
+            print(' '.join(set(coverage.test_result)))
 
