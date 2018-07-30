@@ -294,8 +294,14 @@ define('Controls/Popup/Compatible/Layer', [
                });
             });
 
+            return loadDeferred;
+         } else {
+            var fakeDeferred = new Deferred();
+            loadDeferred.addCallback(function () {
+               fakeDeferred.callback();
+            });
+            return fakeDeferred;
          }
-         return loadDeferred;
       }
    };
 });
