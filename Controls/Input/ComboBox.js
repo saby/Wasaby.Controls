@@ -17,6 +17,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IDropdown
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
@@ -29,7 +30,7 @@ define('Controls/Input/ComboBox',
        */
 
       /**
-       * @name Controls/Dropdown/Container#displayProperty
+       * @name Controls/Input/ComboBox#displayProperty
        * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 

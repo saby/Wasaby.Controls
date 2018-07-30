@@ -18,6 +18,7 @@ define('Controls/Dropdown/Container',
        * @class Controls/Dropdown/Container
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
