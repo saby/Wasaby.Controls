@@ -16,9 +16,11 @@
         <Controls.Label caption="tooltip"/>
         <Controls.Input.Text bind:value="_tooltip"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readonly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_triState" caption="triState"/>
+        <br/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>

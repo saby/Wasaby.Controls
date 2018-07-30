@@ -12,7 +12,7 @@ define('Controls-demo/Checkbox/Checkbox', [
       {
          _template: template,
          _readOnly: false,
-         _caption: 'no caption',
+         _caption: 'default caption',
          _triState: false,
          _tooltip: 'tooltip',
          _value: false,
