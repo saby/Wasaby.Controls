@@ -8,6 +8,8 @@ define('Controls/Toggle/Button', [
    /**
     * Button that switches between different states.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    *
     * @class Controls/Toggle/Button
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
@@ -41,8 +43,13 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#caption
-    * @cfg {String} Button text.
+    * @name Controls/Toggle/Button#icons
+    * @cfg {Array} Set of icons.
+    */
+
+   /**
+    * @name Controls/Toggle/Button#captions
+    * @cfg {Array} Set of captions.
     */
 
    var _private = {
@@ -53,13 +60,14 @@ define('Controls/Toggle/Button', [
          self._type = currentButtonClass.type;
          self._typeWithSize = self._type + '_size-' + options.size;
          self._styleWithIconStyle = self._style + '_iconStyle-' + options.iconStyle;
-         self._state = (options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._state = (options.value && currentButtonClass.toggled ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
+         self._icon = (options.icons ? (!options.value &&  options.icons[1] ? options.icons[1] : options.icons[0]) : '');
       }
    };
    var ToggleButton = Control.extend({
       _template: template,
       _beforeMount: function(options) {
-         this._type = 'toggle';
          _private.optionsGeneration(this, options);
       },
       _clickHandler: function() {

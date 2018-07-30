@@ -131,11 +131,20 @@ module.exports = function(Component) {
          }, []);
       },
 
-      // Демо-пример: Переключатели
+      // Демо-пример: Кнопки
       '/demo-ws4-switchers': function(req, res) {
          requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
          res.render('tmpl!Controls/Application/Route', {
             application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Переключатели
+      '/demo-ws4-buttons': function(req, res) {
+         requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
             initDependencies: false
          }, []);
       },

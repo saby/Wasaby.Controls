@@ -9,6 +9,8 @@ define('Controls/Button', [
    /**
     * Basic button.
     *
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    *
     * @class Controls/Button
     * @extends Core/Control
     * @mixes Controls/Button/interface/IHref
@@ -75,6 +77,9 @@ define('Controls/Button', [
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
+         self._caption = options.caption;
+         self._icon = options.icon;
+         self._isTransparent = !!currentButtonClass.transparent;
       }
    };
    var Button = Control.extend({
