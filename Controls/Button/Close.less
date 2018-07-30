@@ -9,15 +9,15 @@
   }
 }
 
-.controls-Button__close_background_default {
+.controls-Button__close_default {
    background-color: @background-color_CloseButton_default;
 }
 
-.controls-Button__close_background_primary {
+.controls-Button__close_primary {
    background-color: @background-color_CloseButton_primary;
 }
 
-.controls-Button__close_default {
+.controls-Button__close_default, .controls-Button__close_primary {
   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
   border: solid @border-color_CloseButton;
@@ -48,12 +48,11 @@
 }
 
 .ws-is-no-touch{
-   .controls-Button__close_default:hover {
+   .controls-Button__close_default:hover, .controls-Button__close_primary:hover {
       border-color: @default-border-color-second;
-   }
-   .controls-Button__close_default:hover {
       color: @color_CloseButton-icon_hover;
    }
+
    .controls-Button__close_light:hover {
       color: @color_CloseButton-light-icon_hover;
    }
