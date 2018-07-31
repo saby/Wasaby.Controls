@@ -259,7 +259,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       _inputFocusInHandler: function() {
          var
             text = this._getInputValue(),
-            integersCount;
+            dotPosition;
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
@@ -270,11 +270,11 @@ define('SBIS3.CONTROLS/NumberTextBox', [
                //По стандарту, если фокус пришёл не по клику, то курсор должен вставать либо перед точкой,
                //либо после неё, в зависимости от количества цифр в целой части.
                //Поэтому если фокус пришёл не по клику, то подвинем курсор в нужное место.
-               integersCount = NumberTextBoxUtil._getIntegersCount(this._options.text);
-               if (this._options.integers === integersCount) {
-                  this._setCaretPosition(integersCount + 1);
+               dotPosition = this._options.text.indexOf('.');
+               if (this._options.integers === NumberTextBoxUtil._getIntegersCount(this._options.text)) {
+                  this._setCaretPosition(dotPosition + 1);
                } else {
-                  this._setCaretPosition(integersCount);
+                  this._setCaretPosition(dotPosition);
                }
             }
          }
