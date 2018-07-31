@@ -183,7 +183,8 @@ define('Controls/List/TreeControl', [
    TreeControl.getDefaultOptions = function() {
       return {
          uniqueKeys: true,
-         filter: {}
+         filter: {},
+         multiSelectVisibility: 'hidden'
       };
    };
 

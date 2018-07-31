@@ -71,5 +71,11 @@ define('Controls/Explorer', [
 
    Explorer._private = _private;
 
+   Explorer.getDefaultOptions = function() {
+      return {
+         multiSelectVisibility: 'hidden'
+      };
+   };
+
    return Explorer;
 });
