@@ -10,8 +10,7 @@ define('Controls/Button/Close', [
 
    CloseButton.getDefaultOptions = function() {
       return {
-         style: 'default',
-         backgroundStyle: 'default'
+         style: 'default'
       };
    };
 
