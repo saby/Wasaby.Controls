@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
    'Core/deprecated',
    "Core/core-instance",
    "SBIS3.CONTROLS/Menu/MenuLink",
-   "Lib/Control/Dialog/Dialog",
+   "SBIS3.CONTROLS/Action/OpenDialog",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
@@ -170,10 +170,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
       },
       _processMassOperations:function(title){
          var numOfRecords = this._getView().getItems().getCount(),
-            self = this;
+            self = this,
+            dialog = new Dialog();
 
          //Показать диалог выбора записей
-         new Dialog ({
+         dialog.execute({
             opener : this,
             template: 'SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
             caption : title,
