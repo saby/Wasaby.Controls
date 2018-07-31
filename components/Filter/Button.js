@@ -12,7 +12,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/IoC",
    "Core/helpers/Function/once",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
-   "Core/detection",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
    "i18n!SBIS3.CONTROLS/Filter/Button",
@@ -30,8 +29,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         TemplateUtil,
         IoC,
         once,
-        FilterPanelUtils,
-        detection
+        FilterPanelUtils
     ) {
 
        'use strict';

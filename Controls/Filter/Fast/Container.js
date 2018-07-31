@@ -12,10 +12,14 @@ define('Controls/Filter/Fast/Container',
    function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * Container component for FastFilter
-       * Receives props from context and pass to FastFilter.
-       * Should be located inside Controls/Container/Filter.
-       * @class Controls/Container/Filter/Fast
+       * Special container for {@link Controls/Filter/Fast}.
+       * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
+       * Receives props from context and pass to {@link Controls/Filter/Fast}.
+       * NOTE: Must be located inside Controls/Filter/Container.
+       *
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
+       * @class Controls/Filter/Fast/Container
        * @extends Core/Control
        * @author Герасимов Александр
        * @control
@@ -24,7 +28,7 @@ define('Controls/Filter/Fast/Container',
       
       'use strict';
       
-      var FilterComponents = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Filter/Fast/Container.prototype */{
          
          _template: template,
          
@@ -46,12 +50,12 @@ define('Controls/Filter/Fast/Container',
             this._notify('filterItemsChanged', [this._items], {bubbling: true});
          }
       });
-      
-      FilterComponents.contextTypes = function() {
+   
+      Container.contextTypes = function() {
          return {
             filterLayoutField: FilterContextField
          };
       };
       
-      return FilterComponents;
+      return Container;
    });

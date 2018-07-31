@@ -18,14 +18,13 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
-       * <a href="/materials/demo-ws4-filter-button">Demo with Filter/Button</a>.
-       * <a href="/materials/demo-ws4-filter-button-panel">Demo with Filter/Button/Panel</a>.
-       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
+       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDom
+       * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
        * @author Герасимов Александр
@@ -84,8 +83,6 @@ define('Controls/Filter/Button',
 
                   if (textValue) {
                      textArr.push(textValue);
-                  } else {
-                     textArr.push(Utils.getItemPropertyValue(item, 'value'));
                   }
                }
             });
@@ -140,7 +137,7 @@ define('Controls/Filter/Button',
          }
       };
 
-      var FilterButton = Control.extend({
+      var FilterButton = Control.extend(/** @lends Controls/Filter/Button.prototype */{
 
          _template: template,
          _oldPanelOpener: null,

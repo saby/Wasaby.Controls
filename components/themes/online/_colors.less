@@ -275,12 +275,14 @@
 @color_listAddButton_enabled:             #8991A9;
 @color_listAddButton_disabled:           @disabled-color;
 //CloseButton
-@background-color_CloseButton:           transparent;
+@background-color_CloseButton_primary:           #F8F8F8;
+@background-color_CloseButton_default: transparent;
 @border-color_CloseButton:               @border-color_IconButton_bordered;
 @box-shadow_CloseButton:                 @box-shadow-IconButton;
 @box-shadow_CloseButton_active:          @box-shadow-IconButton_activated;
 @border-color_CloseButton_hover:         @border-color_IconButton_bordered_standard_hovered;
-@background-color_CloseButton_hover:     transparent;
+@background-color_CloseButton_primary_hover: #F8F8F8;
+@background-color_CloseButton_default_hover: transparent;
 
 @color_CloseButton-icon:                 #587AB0;
 @color_CloseButton-icon_hover:           #313E78;
@@ -318,8 +320,8 @@
 
 //VDOM Switcher
 @border-color_Switch:                              #E4E4E4;
-@background-color_Switch-line_enabled:             #CCC;
-@background-color_Switch-line_disabled:            #E4E4E4;
+@background-color_Switch-track_enabled:             #CCC;
+@background-color_Switch-track_disabled:            #E4E4E4;
 @border-color_Switch-marker_enabled:               #CCC;
 @border-color_Switch_marker_enabled_hover:         #FF7033;
 @background_Switch-dot_enabled:                    #FF7033;
@@ -367,7 +369,7 @@
 @color_CheckBox__iconBox:                       #999999;
 @color_CheckBox__iconBox_disabled:              #e4e4e4;
 @color_CheckBox-iconBox:                        #999999;
-@color_CheckBox_disabled:                       #313E78;
+@color_CheckBox__icon_disabled:                 #313E78;
 @color_CheckBox__caption_disabled:             #CCCCCC;
 @color_CheckBox-caption_enabled:                @default-text-color;
 @color_CheckBox__caption_enabled:               @default-text-color;
@@ -408,7 +410,9 @@
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
 @border-color-IconButton_toggled:                 @color_primary;
 @background-color-IconButton:                     none;
+@background-color-IconButton_transparent:         #F8F8F8;
 @background-color-IconButton_hovered:             none;
+@background-color-IconButton_transparent_hovered: @background-color-IconButton_transparent;
 @color_Button-style-addButton-icon:            #000000;
 @color_Button-icon:                       @color_primary;
 @color_Button-icon_primary:               @color_hover;
@@ -473,21 +477,21 @@
 @color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-primary_hovered;
 @color_Header__caption_style-default_hovered:  #FF7033;
 @color_Header__caption_style-primary_hovered:  #0055BB;
-@color_HeaderCounter_style-default_hovered:    @color_Header__caption_style-default_hovered;
-@color_HeaderCounter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
-@color_HeaderCounter_style-primary:            @color_Header__caption_style-primary;
-@color_HeaderCounter_style-default:            @color_Header__caption_style-default;
-@color_HeaderCounter_style-disabled:           #999999;
+@color_Counter_style-default_hovered:    @color_Header__caption_style-default_hovered;
+@color_Counter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
+@color_Counter_style-primary:            @color_Header__caption_style-primary;
+@color_Counter_style-default:            @color_Header__caption_style-default;
+@color_Counter_style-disabled:           #999999;
 @color-Separator__icon_style-Accent:              #587AB0;
 @color-Separator__icon_style-Additional:          #8991A9;
 @color-Separator__icon_style-Main:                #D94700;
 @color-Separator__icon_style-Accent_hovered:      #313E78;
 @color-Separator__icon_style-Main_hovered:        #FF7033;
 @color-Separator__icon_style-Additional_hovered:  #313E78;
-@fill_HeaderSeparator_default:                     #729EE6;
-@fill_HeaderSeparator_primary:                     #729EE6;
-@fill_HeaderSeparator_default_hovered:             #729EE6;
-@fill_HeaderSeparator_primary_hovered:             #729EE6;
+@color_HeaderSeparator_default:                     #729EE6;
+@color_HeaderSeparator_primary:                     #729EE6;
+@color_HeaderSeparator_default_hovered:             #729EE6;
+@color_HeaderSeparator_primary_hovered:             #729EE6;
 @color_BigSeparator-icon:                         #8991A9;
 @color_BigSeparator-icon_hovered:                 #313E78;
 
@@ -500,13 +504,13 @@
 @background-color_Path-backButtonArrow:            @default-bg-color;
 
 //radioGroup
-@fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
-@fill_RadioGroup_innerCircle_selected_disabled:    #313E78;
-@fill_RadioGroup_innerCircle_unselected:           none;
+@color_ToggleCircle_innerCircle_selected_enabled:     #FF7033;
+@color_ToggleCircle_innerCircle_selected_disabled:    #313E78;
+@color_ToggleCircle_innerCircle_unselected:           none;
 @fill_RadioGroup_borderCircle:                     none;
-@fill_RadioGroup_borderCircle_enabled:           #CCCCCC;
-@fill_RadioGroup_borderCircle_disabled:          #e4e4e4;
-@fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
+@color_ToggleCircle_outerCircle_enabled:           #CCCCCC;
+@color_ToggleCircle_outerCircle_disabled:          #e4e4e4;
+@color_ToggleCircle_outerCircle_enabled_hovered:   #FF7033;
 @color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_selected_size-l:          #313E78;
 @color_RadioItem_caption_unselected_disabled:      #CCCCCC;

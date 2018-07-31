@@ -44,8 +44,6 @@
    cursor: pointer;
    position: relative;
    box-sizing: border-box;
-   height: @standart-line-height_PeriodLiteDialog;
-   line-height: @standart-line-height_PeriodLiteDialog;
    border: solid @border-width_PeriodLiteDialog_hovered transparent;
 
    ~ .controls-PeriodLiteDialog__vLayoutItem {
@@ -61,6 +59,11 @@
    &:active {
       border-color: @border-color_PeriodLiteDialog_hovered;
    }
+}
+
+.controls-PeriodLiteDialog__vLayoutItem-caption {
+   height: @standart-line-height_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered * 2;
+   line-height: @standart-line-height_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered * 2;
 }
 
 .controls-PeriodLiteDialog__item-background-hovered {

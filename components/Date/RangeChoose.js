@@ -1,19 +1,38 @@
 define('SBIS3.CONTROLS/Date/RangeChoose',[
-   'Core/constants',
    "Core/Deferred",
    'Core/detection',
    "Core/IoC",
+   'Core/helpers/Date/format',
    "Lib/Control/CompoundControl/CompoundControl",
    "tmpl!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose",
+   'tmpl!SBIS3.CONTROLS/Date/RangeChoose/Year',
+   'tmpl!SBIS3.CONTROLS/Date/RangeChoose/Month',
    "SBIS3.CONTROLS/Mixins/RangeMixin",
    "SBIS3.CONTROLS/Mixins/DateRangeMixin",
+   'Controls/Calendar/Utils',
    'Core/dom/wheel',
    'Core/helpers/Date/getCurrentPeriod',
-   'Core/helpers/Date/getFormattedDateRange',
+    'View/Runner/Text/markupGeneratorCompatible',
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Link",
    'css!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose'
-], function (constants, Deferred, detection, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, wheel, getCurrentPeriod, getFormattedDateRange) {
+], function (
+    Deferred,
+    detection,
+    IoC,
+    formatDate,
+    CompoundControl,
+    dotTplFn,
+    itemTmpl,
+    monthTmpl,
+    RangeMixin,
+    DateRangeMixin,
+    dateControlsUtils,
+    wheel,
+    getCurrentPeriod,
+    markupGeneratorCompatible
+) {
+
    'use strict';
     /**
      * @class SBIS3.CONTROLS/Date/RangeChoose
@@ -104,7 +123,35 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
              *
              * @see updateIcons
              */
-            iconsHandler: null
+            iconsHandler: null,
+
+            /**
+             * @cfg {Function} Функция форматирования заголовка.
+             */
+            captionFormatter: null,
+
+            /**
+             * @cfg {String} Шаблон года. В качестве параметра может принимать опцию monthCaptionTemplate - шаблон
+             * заголовка месяца. В шаблон заголовка месяца передается дата первого числа рисуемого месяца и функция
+             * форматирования дат {@link Core/helpers/Date/format}
+             * @example
+             * <ws:itemTemplate>
+             *    <ws:partial
+                    template="{{itemTemplate.defaultTemplate}}"
+                    monthCaptionTemplate="tmpl!Examples/DateRangeSlider/MyDateRangeSlider/month"/>
+             * </ws:itemTemplate>
+             *
+             * Examples/DateRangeSlider/MyDateRangeSlider/month.tmpl
+             * <div
+             *       if="{{month.getMonth() % 2 === 0}}"
+             *       class="controls-DateRangeChoose__month-caption"
+             *       style="{{ (month.getMonth() % 2 === 0) ? 'color: red;' }}">
+             *    {{ formatDate(month, "MMMM") }}
+             * </div>
+             */
+            itemTemplate: itemTmpl,
+
+            _formatDate: formatDate
          },
          _cssDateRangeChoose: {
             selected: 'controls-DateRangeChoose__selected',
@@ -135,8 +182,9 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
       },
 
       _modifyOptions: function() {
-         var longMonths = constants.Date.longMonths,
-            opts = DateRangeChoose.superclass._modifyOptions.apply(this, arguments);
+         var opts = DateRangeChoose.superclass._modifyOptions.apply(this, arguments);
+         opts.monthCaptionTemplate = monthTmpl;
+         opts.captionFormatter = opts.captionFormatter || dateControlsUtils.formatDateRangeCaption;
          if (!opts.year) {
             opts.year = this._getDefaultYear(opts);
             if (!opts.year) {
@@ -150,23 +198,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
                opts.emptyCaption = rk('Не указан');
             }
          }
-         // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
-         opts._months = [
-            {
-               name: 'I',
-               quarters: [
-                  {name: 'I', months: longMonths.slice(0, 3)},
-                  {name: 'II', months: longMonths.slice(3, 6)}
-               ]
-            },
-            {
-               name: 'II',
-               quarters: [
-                  {name: 'III', months: longMonths.slice(6, 9)},
-                  {name: 'IV', months: longMonths.slice(9)}
-               ]
-            }
-         ];
+         opts._months = this._getMonthModel(opts.year);
          return opts;
       },
 
@@ -219,7 +251,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          container.on('click', '.controls-DateRangeChoose__yearsMode-next', this._onPrevYearBtnClick.bind(this));
          wheel(container.find(['.', this._cssDateRangeChoose.yearsModeWrapper].join('')), this._onMouseWheel.bind(this));
 
-         container.find(['.', this._cssDateRangeChoose.month].join('')).click(this._onMonthClick.bind(this));
+         container.on('click', ['.', this._cssDateRangeChoose.month].join(''), this._onMonthClick.bind(this));
 
          // На IOS события click проходят только со второго раза, подписываемся на touchEnd
          eventName = detection.isMobileIOS ? 'touchend' : 'click';
@@ -238,12 +270,55 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          this._updateYears();
       },
 
+      _getMonthModel: function(year) {
+         return [{
+            name: 'I',
+            quarters: [{
+               name: 'I',
+               months: [ new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1) ]
+            }, {
+               name: 'II',
+               months: [ new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1) ]
+            }]
+         }, {
+            name: 'II',
+            quarters: [{
+               name: 'III',
+               months: [ new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1) ]
+            }, {
+               name: 'IV',
+               months: [ new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1) ]
+            }]
+         }];
+      },
+
+      _updateView: function() {
+         this.getContainer().find('.controls-DateRangeChoose__main-wrapper').remove();
+         this.getContainer().find('.controls-DateRangeChoose__yearWrapper').after(
+            markupGeneratorCompatible.resolver(
+                this._options.itemTemplate,
+                {
+                   monthCaptionTemplate: this._options.monthCaptionTemplate,
+                   defaultTemplate: itemTmpl,
+                   _months: this._getMonthModel(this._options.year),
+                   _formatDate: this._options._formatDate,
+                   showMonths: this._options.showMonths,
+                   checkedStart: this._options.checkedStart,
+                   checkedEnd: this._options.checkedEnd,
+                   iconsHandler: this._options.iconsHandler
+                },
+                {}
+             )
+         );
+      },
+
       /**
        * Устнавливает текущий год
        * @param year
        */
       setYear: function (year) {
          this._options.year = year;
+         this._updateView();
          this._updateYearView();
          this._updateYears();
          this.updateIcons();
@@ -411,17 +486,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
          this.getContainer().find(
             ['.', this._cssDateRangeChoose.currentValue].join('')
          ).text(
-            getFormattedDateRange(
-               this.getStartValue(),
-               this.getEndValue(),
-               {
-                  contractToMonth: true,
-                  fullNameOfMonth: true,
-                  contractToQuarter: true,
-                  contractToHalfYear: true,
-                  emptyPeriodTitle: this._options.emptyCaption
-               }
-            )
+            this._options.captionFormatter(this.getStartValue(), this.getEndValue(), this._options.emptyCaption)
          );
       },
 

@@ -7,41 +7,40 @@ define('Controls/Header/Counter', [
    'use strict';
 
    /**
-    * Control showing the counter.
+    * Counter with support three display styles and three size. Can be used to display complex headers
+    * along with a header, a header-separator and a button-separator.
     *
     * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
-    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
     *
     * @class Controls/Header/Counter
     * @extends Core/Control
     * @control
     * @public
     *
-    * @demo Controls-demo/Headers/headerDemo
+    * @demo Controls-demo/Headers/Counter/counterDemo
     *
     * @mixes Controls/Header/Counter/CounterStyles
     */
 
    /**
     * @name Controls/Header/Counter#value
-    * @cfg {String} Value of Counter.
+    * @cfg {String} Current state.
     */
 
    /**
     * @name Controls/Header/Counter#size
     * @cfg {String} Size of Counter.
-    * @variant l Counter has large size.
-    * @variant m Counter has middle size.
-    * @variant s Counter has small size.
+    * @variant l Large counter size.
+    * @variant m Medium counter size. It is default value.
+    * @variant s Small counter size.
     */
 
    /**
     * @name Controls/Header/Counter#style
     * @cfg {String} Counter displaying style.
-    * @variant primary Counter will be accented.
-    * @variant default Counter will be default.
-    * @variant disabled Counter will be disabled.
+    * @variant primary Primary counter style.
+    * @variant default Default counter style. It is default value.
+    * @variant disabled Disabled counter style.
     */
 
    var Counter = Control.extend({

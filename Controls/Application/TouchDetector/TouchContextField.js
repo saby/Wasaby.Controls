@@ -5,6 +5,10 @@ define('Controls/Application/TouchDetector/TouchContextField', [
       isTouch: null,
       constructor: function(touch) {
          this.isTouch = touch;
+      },
+      setIsTouch: function(touch) {
+         this.isTouch = touch;
+         this.updateConsumers();
       }
    });
 });

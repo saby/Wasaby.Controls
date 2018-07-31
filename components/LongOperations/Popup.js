@@ -496,7 +496,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             $tasks[needMsg ? 'removeClass' : 'addClass']('ws-hidden');
             if (needMsg) {
                $tasks.text(
-                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций', 'ДлительныеОперации')
+                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операции(-й,-й)', 'ДлительныеОперации', total)
                );
             }
             this.getContainer().find('.controls-LongOperationsPopup__footer_progress').text(Math.floor(100*current/total) + '%');

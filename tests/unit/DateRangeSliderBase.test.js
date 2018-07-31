@@ -1,6 +1,11 @@
+/* global define, describe, it, assert */
 define([
+   'Controls/Calendar/Utils',
    'SBIS3.CONTROLS/Date/RangeSliderBase'
-], function (DateRangeSliderBase) {
+], function (
+   dateControlsUtils,
+   DateRangeSliderBase
+) {
    'use strict';
 
    describe('SBIS3.CONTROLS/Date/RangeSliderBase', function () {
@@ -27,15 +32,21 @@ define([
          });
 
          it('should return emptyCaption option value if options passed as parameter and range dont specified.', function () {
-            let emptyStr = '...';
-            assert.strictEqual(DateRangeSliderBase.prototype._getCaption({emptyCaption: emptyStr, showUndefined: true}), emptyStr);
+            let emptyStr = '...',
+               opts = {
+                  emptyCaption: emptyStr,
+                  showUndefined: true,
+                  captionFormatter: dateControlsUtils.formatDateRangeCaption
+               };
+            assert.strictEqual(DateRangeSliderBase.prototype._getCaption(opts), emptyStr);
          });
          it('should return range string value if options passed as parameter and emptyCaption option and range dont specified.', function () {
-            let opts =  {
+            let opts = {
                   emptyCaption: '...',
                   showUndefined: true,
                   startValue: new Date(2017, 0, 1),
-                  endValue: new Date(2017, 0, 1)
+                  endValue: new Date(2017, 0, 1),
+                  captionFormatter: dateControlsUtils.formatDateRangeCaption
                };
             assert.strictEqual(DateRangeSliderBase.prototype._getCaption(opts), "1 января'17");
          });

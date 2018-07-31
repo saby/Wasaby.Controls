@@ -252,19 +252,38 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          //Сбрасываем CTRL_KEY и SHIFT_KEY так как keyUp не отработает при потере фокуса
          //Ошибка: https://online.sbis.ru/opendoc.html?guid=2891bd28-e697-4866-be9a-ab7612eaa901
          this._CTRL_KEY = this._SHIFT_KEY = false;
+         this._clicked = false;
          NumberTextBox.superclass._focusOutHandler.apply(this, arguments);
       },
 
       _inputFocusInHandler: function() {
-         var text = this._getInputValue();
+         var
+            text = this._getInputValue(),
+            dotPosition;
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
             if(text !== this._options.text) {
                this._setInputValue(this._options.text);
             }
+            if (!this._clicked) {
+               //По стандарту, если фокус пришёл не по клику, то курсор должен вставать либо перед точкой,
+               //либо после неё, в зависимости от количества цифр в целой части.
+               //Поэтому если фокус пришёл не по клику, то подвинем курсор в нужное место.
+               dotPosition = this._options.text.indexOf('.');
+               if (this._options.integers === NumberTextBoxUtil._getIntegersCount(this._options.text)) {
+                  this._setCaretPosition(dotPosition + 1);
+               } else {
+                  this._setCaretPosition(dotPosition);
+               }
+            }
          }
          NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
+      },
+
+      _inputClickHandler: function() {
+         this._clicked = true;
+         NumberTextBox.superclass._inputClickHandler.apply(this, arguments);
       },
 
       _setText: function(text){
@@ -365,12 +384,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       },
 
       /**
-       * Установить количество знаков после запятой
-       * @param decimals Количество знаков после запятой
+       * Установить количество знаков до запятой
+       * @param integers Количество знаков до запятой
        */
       setIntegers: function(integers) {
          if (typeof integers === 'number') {
             this._options.integers = integers;
+            this.setText(this._options.text);
          }
       },
       /**

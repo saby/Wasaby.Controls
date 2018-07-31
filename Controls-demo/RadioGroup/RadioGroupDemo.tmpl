@@ -22,7 +22,7 @@
         </Controls.Toggle.Radio>
     </div>
     <div attr:class="optionsBlock">
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" attr:test_name="readOnly" caption="ReadOnly"/>
         <br/>
         <Controls.Label caption="Direction:"/>
         <Controls.Toggle.Radio
@@ -31,6 +31,7 @@
                 selectedKey="{{_selectedDirection}}"
                 source="{{_directionSource}}"
                 direction="horizontal"
+				attr:test_name="direction"
                 readOnly="{{false}}"/>
         <Controls.Label caption="Source:"/>
         <Controls.Toggle.Radio
@@ -41,7 +42,7 @@
                 direction="horizontal"
                 readOnly="{{false}}"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" attr:test_name="item_tmpl" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
         <br/>
         <Controls.Label caption="Content template:"/>
         <Controls.Toggle.Radio
@@ -50,7 +51,26 @@
                 selectedKey="{{_selectedContentTemplate}}"
                 source="{{_sourceContentTemplate}}"
                 direction="horizontal"
-                readOnly="{{false}}"/>
+                readOnly="{{false}}"
+				attr:test_name="content_tmpl"/>
+        <Controls.Label caption="Display property:"/>
+        <Controls.Toggle.DoubleSwitch on:valueChanged="changedDisplayProperty()" captions="{{['caption', 'title']}}" bind:value="_displayPropertyValue"/>
+        <Controls.Label caption="Selected key:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeSelectedKey()"
+                keyProperty="id"
+                selectedKey="{{_selectKey}}"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{false}}">
+            <ws:itemTemplate>
+                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
+                            item="{{item}}"
+                            readOnly="{{readOnly}}"
+                            selected="{{selected}}"
+                            displayProperty="id"/>
+            </ws:itemTemplate>
+        </Controls.Toggle.Radio>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>

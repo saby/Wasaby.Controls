@@ -4,7 +4,9 @@ define('Controls-demo/Input/Mask/Mask',
       'tmpl!Controls-demo/Input/Mask/Mask',
       'Controls/Input/Mask/Formatter',
       'WS.Data/Source/Memory',
-      'Controls/Input/Mask'
+      'Controls/Input/Mask',
+      'css!Controls-demo/Input/resources/VdomInputs'
+
    ],
    function(Control, template, Formatter, Memory) {
 
@@ -12,7 +14,7 @@ define('Controls-demo/Input/Mask/Mask',
 
       var Mask = Control.extend({
          _template: template,
-         _mask:'',
+         _mask: '',
          _placeholder: 'Input value',
          _replacer: '-',
          _tagStyle: 'attention',
