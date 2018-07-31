@@ -184,6 +184,9 @@ define('Controls/List/Grid/GridViewModel', [
                self._nextVersion();
                self._notify('onListChange');
             });
+            this._model.subscribe('onMarkedKeyChanged', function(event, item) {
+               self._notify('onMarkedKeyChanged', item);
+            });
             this._columns = this._prepareColumns(this._options.columns);
             this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover');

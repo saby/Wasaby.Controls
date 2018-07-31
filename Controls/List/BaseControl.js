@@ -700,6 +700,10 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 

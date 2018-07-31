@@ -112,6 +112,10 @@ define('Controls/List', [
 
       _dragEnd: function(event, items, target, position) {
          return this._notify('dragEnd', [items, target, position]);
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 

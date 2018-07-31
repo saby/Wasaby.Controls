@@ -6,7 +6,10 @@ define('Controls/Container/Master', [
    return Control.extend({
       _template: template,
       _itemClickHandler: function(event, item) {
-         this._notify('selectedMasterValueChanged', [item.get(this._options.selectedField)], {bubbling: true});
+         if (item) {
+            this._notify('selectedMasterValueChanged', [item && item.get(this._options.selectedField)], {bubbling: true});
+         }
+
       }
    });
 });
