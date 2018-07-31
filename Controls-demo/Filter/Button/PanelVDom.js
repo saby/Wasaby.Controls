@@ -4,7 +4,6 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
       'tmpl!Controls-demo/Filter/Button/PanelVDom',
-      'WS.Data/Di',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
@@ -21,7 +20,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
 
-   function(Control, MemorySource, Chain, template, Di, demoSource) {
+   function(Control, MemorySource, Chain, template) {
 
       /**
        * @class Controls/Container/Search
