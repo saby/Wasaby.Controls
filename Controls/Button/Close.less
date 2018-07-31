@@ -10,12 +10,19 @@
 }
 
 .controls-Button__close_default {
+   background-color: @background-color_CloseButton_default;
+}
+
+.controls-Button__close_primary {
+   background-color: @background-color_CloseButton_primary;
+}
+
+.controls-Button__close_default, .controls-Button__close_primary {
   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
   border: solid @border-color_CloseButton;
   border-width: @border-width_CloseButton;
   border-radius: @border-radius_CloseButton;
-  background-color: @background-color_CloseButton;
   font-size: @font-size_CloseButton_default;
   font-family: @font-family_CloseButton_default;
   color: @color_CloseButton-icon;
@@ -27,7 +34,6 @@
     color: @color_CloseButton-icon_hover;
     box-shadow: none;
   }
-
 }
 
 .controls-Button__close_light {
@@ -36,18 +42,17 @@
   height: @height_CloseButton_small;
   color: @color_CloseButton-light-icon;
   font-size: @font-size_CloseButton_light;
-  &:hover {
+  &:active {
     color: @color_CloseButton-light-icon_hover;
   }
 }
 
 .ws-is-no-touch{
-   .controls-Button__close_default:hover {
+   .controls-Button__close_default:hover, .controls-Button__close_primary:hover {
       border-color: @default-border-color-second;
-   }
-   .controls-Button__close_default:hover {
       color: @color_CloseButton-icon_hover;
    }
+
    .controls-Button__close_light:hover {
       color: @color_CloseButton-light-icon_hover;
    }
