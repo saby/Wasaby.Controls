@@ -25,6 +25,7 @@ define('Controls/Popup/Manager',
             return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
                _private.updateOverlay.call(self);
+               self._notify('popupChanged', [null, self._popupItems], {bubbling: true});
                return element;
             });
          },
@@ -71,7 +72,6 @@ define('Controls/Popup/Manager',
 
          popupClose: function(id) {
             ManagerController.remove(id, this._private.getItemContainer(id));
-            this._notify('popupChanged', [null, this._popupItems], {bubbling: true});
             return false;
          },
 
