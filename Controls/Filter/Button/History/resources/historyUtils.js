@@ -15,7 +15,7 @@ define('Controls/Filter/Button/History/resources/historyUtils',
                idProperty: 'id',
                data: []
             }),
-            historySource: Di.isRegistered('sourceHistory') ? Di.resolve('sourceHistory', {
+            historySource: Di.isRegistered('demoSourceHistory') ? Di.resolve('demoSourceHistory', {
                historyId: hId,
                pinned: true,
                dataLoaded: true

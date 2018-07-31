@@ -183,7 +183,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          }
       });
 
-      Di.register('sourceHistory', histSource);
+      Di.register('demoSourceHistory', histSource);
 
       return histSource;
    });
