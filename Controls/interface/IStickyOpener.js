@@ -67,7 +67,7 @@ define('Controls/interface/IStickyOpener', [], function() {
 
    /**
     * @name Controls/interface/IStickyOpener#popupOptions.corner
-    * @cfg {HorizontalAlign} Sets the popup build point
+    * @cfg {CornerEnum} Sets the popup build point
     */
 
    /**

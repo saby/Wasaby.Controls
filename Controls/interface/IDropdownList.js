@@ -4,6 +4,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * Interface for dropdown lists.
     *
     * @interface Controls/interface/IDropdownList
+    * @mixes Controls/interface/IStickyOpener
     * @public
     */
 
@@ -57,11 +58,6 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {typeShadow} typeShadow Specifies the type of shadow around the popup
     * @property {emptyText} emptyText Add an empty item to the list with the given text
     * @property {Boolean} marker Determines whether the marker is displayed around the selected item
-    */
-
-   /**
-    * @name Controls/interface/IDropdownList#templateOptions
-    * @cfg {templateOptions} Options for template of drop-down list.
     */
 
 });

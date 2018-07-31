@@ -7,30 +7,23 @@ define('Controls/interface/IOpener', [], function() {
     * @public
     */
 
-
    /**
-    * @name Controls/interface/IOpener#templateOptions
-    * @cfg {Object} Options for the template component
-    */
-
-   /**
-    * @name Controls/interface/IOpener#popupOptions.template
-    * @cfg {String|Function} Popup template
-    */
-
-   /**
-    * @name Controls/interface/IOpener#popupOptions.closeByExternalClick
-    * @cfg {Boolean} Close popup by click on external node
-    */
-
-   /**
-    * @name Controls/interface/IOpener#popupOptions.opener
-    * @cfg {Object} The component that opened the popup. Used to establish a logical connection
+    * @typedef {Object} popupOptions
+    * @property {Boolean} closeByExternalClick Close popup by click on external node
+    * @property {String|Function} template Popup template
+    * @property {templateOptions} templateOptions  Options for the template component
+    * @property {Object} eventHandlers
+    * @property {Object} opener The component that opened the popup. Used to establish a logical connection
     */
 
    /**
     * @name Controls/interface/IOpener#closePopupBeforeUnmount
-    * @cfg {Boolean} Close popup when opener destroyed.
+    * @cfg {Boolean} Close the pop-up window when the opener was destroyed.
     * Default value: true
+    */
+
+
+   /** @name Controls/interface/IDropdownList#popupOptions
+    * @cfg {popupOptions} Options for pop-up
     */
 });
