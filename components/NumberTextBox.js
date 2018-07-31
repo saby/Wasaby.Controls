@@ -365,12 +365,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       },
 
       /**
-       * Установить количество знаков после запятой
-       * @param decimals Количество знаков после запятой
+       * Установить количество знаков до запятой
+       * @param integers Количество знаков до запятой
        */
       setIntegers: function(integers) {
          if (typeof integers === 'number') {
             this._options.integers = integers;
+            this.setText(this._options.text);
          }
       },
       /**
