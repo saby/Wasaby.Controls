@@ -428,6 +428,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._template;
          },
 
+         setEnabled: function(enabled) {
+            if (this._compoundControl) {
+               this._compoundControl.setEnabled(enabled);
+            } else {
+               this.subscribe('onReady', this.setEnabled.bind(this, enabled));
+            }
+         },
+
          /* start RecordFloatArea */
          getRecord: function() {
             return this._record || this._options.record || this._options.templateOptions && this._options.templateOptions.record;
