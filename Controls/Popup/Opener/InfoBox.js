@@ -129,9 +129,11 @@ define('Controls/Popup/Opener/InfoBox',
       });
 
       InfoBox.getDefaultOptions = function() {
-         return {
-            closeOnTargetScroll: true
-         };
+         var options = Base.getDefaultOptions();
+
+         options.closeOnTargetScroll = true;
+
+         return options;
       };
 
       return InfoBox;
