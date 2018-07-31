@@ -4,7 +4,6 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
       'tmpl!Controls-demo/Filter/Button/panelOptions/PanelVDom',
-      'Controls/Filter/Button/Panel',
 
       'tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',

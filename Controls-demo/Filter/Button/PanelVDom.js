@@ -4,7 +4,6 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
       'tmpl!Controls-demo/Filter/Button/PanelVDom',
-      'Controls/Filter/Button/Panel',
       'WS.Data/Di',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
