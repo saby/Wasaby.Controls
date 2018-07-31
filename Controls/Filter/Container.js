@@ -195,10 +195,10 @@ define('Controls/Filter/Container',
       };
       
       /**
-       * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
-       * Controls/Filter/Button and Controls/Filter/FastFilter should be located inside.
+       * The filter controller allows you to filter data in a {@link Controls/List}using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * @class Controls/Filter/Container
        * @extends Core/Control

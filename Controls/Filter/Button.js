@@ -23,8 +23,8 @@ define('Controls/Filter/Button',
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
-       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDomApplication
-       * @demo Controls-demo/Filter/Button/PanelVDomApplication
+       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDom
+       * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
        * @author Герасимов Александр

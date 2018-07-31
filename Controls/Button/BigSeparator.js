@@ -8,15 +8,22 @@ define('Controls/Button/BigSeparator', [
    'use strict';
 
    /**
-    * Control showing the big separator button.
+    * Big separator button.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    *
     * @class Controls/Button/BigSeparator
     * @extends Core/Control
     * @control
     * @public
+    *
+    * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
+    *
+    * @mixes Controls/Button/BigSeparator/BigSeparatorStyles
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#value
+    * @name Controls/Button/Separator#value
     * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
