@@ -9,14 +9,14 @@ define('Controls/Header/Separator/SeparatorStyles',
     * @mixin Controls/Header/Separator/SeparatorStyles
     * @public
     *
-    * @css @width-HeaderSeparator Width of header-separator.
-    * @css @height-HeaderSeparator Height of header-separator.
-    * @css @padding-left_HeaderSeparator Spacing between header-separator and header(counter).
+    * @css @width-HeaderSeparator Header-separator width.
+    * @css @height-HeaderSeparator Header-separator height.
+    * @css @spacing-HeaderSeparator_between_headerSeparator_Header Spacing between header-separator and header or counter.
     *
-    * @css @fill_HeaderSeparator_default Icon color at default style.
-    * @css @fill_HeaderSeparator_primary Icon color at primary style.
+    * @css @color_HeaderSeparator_default Default icon color.
+    * @css @color_HeaderSeparator_primary Primary icon color.
     *
-    * @css @fill_HeaderSeparator_default_hovered Icon color at primary style in hovered and activated state.
-    * @css @fill_HeaderSeparator_primary_hovered Icon color at default style in hovered and activated state.
+    * @css @color_HeaderSeparator_default_hovered Primary icon color in hovered and activated state.
+    * @css @color_HeaderSeparator_primary_hovered Default icon color in hovered and activated state.
     */
 );

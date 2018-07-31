@@ -1,7 +1,7 @@
-define('Controls-demo/Headers/headerDemo', [
+define('Controls-demo/Buttons/BackButton/backDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/headerDemo',
+   'tmpl!Controls-demo/Buttons/BackButton/backDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -10,25 +10,7 @@ define('Controls-demo/Headers/headerDemo', [
              template) {
    'use strict';
 
-   var headerSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         },
-         {
-            title: 'xl'
-         }
-      ]
-   });
-
-   var headerStyleSource = new MemorySource({
+   var backStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
          {
@@ -40,26 +22,41 @@ define('Controls-demo/Headers/headerDemo', [
       ]
    });
 
+   var backSizeSource = new MemorySource({
+      idProperty: 'title',
+      data: [
+         {
+            title: 's'
+         },
+         {
+            title: 'm'
+         },
+         {
+            title: 'l'
+         }
+      ]
+   });
+
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _selectedSize: 'm',
-         _selectedStyle: 'primary',
-         _headerSizeSource: headerSizeSource,
-         _headerStyleSource: headerStyleSource,
-         _caption: 'test',
+         _backSelectedStyle: 'default',
+         _backSelectedSize: 'm',
+         _backStyleSource: backStyleSource,
+         _backSizeSource: backSizeSource,
+         _backCaption: 'Back',
          _eventName: 'no event',
 
          clickHandler: function(e) {
             this._eventName = 'click';
          },
 
-         changeSize: function(e, key) {
-            this._selectedSize = key;
+         backChangeStyle: function(e, key) {
+            this._backSelectedStyle = key;
          },
 
-         changeStyle: function(e, key) {
-            this._selectedStyle = key;
+         backChangeSize: function(e, key) {
+            this._backSelectedSize = key;
          },
          reset: function() {
             this._eventName = 'no event';

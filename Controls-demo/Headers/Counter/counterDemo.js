@@ -1,7 +1,7 @@
-define('Controls-demo/Headers/headerDemo', [
+define('Controls-demo/Headers/Counter/counterDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/headerDemo',
+   'tmpl!Controls-demo/Headers/Counter/counterDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -10,7 +10,7 @@ define('Controls-demo/Headers/headerDemo', [
              template) {
    'use strict';
 
-   var headerSizeSource = new MemorySource({
+   var counterSizeSource = new MemorySource({
       idProperty: 'title',
       data: [
          {
@@ -21,14 +21,11 @@ define('Controls-demo/Headers/headerDemo', [
          },
          {
             title: 'l'
-         },
-         {
-            title: 'xl'
          }
       ]
    });
 
-   var headerStyleSource = new MemorySource({
+   var counterStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
          {
@@ -36,6 +33,9 @@ define('Controls-demo/Headers/headerDemo', [
          },
          {
             title: 'primary'
+         },
+         {
+            title: 'disabled'
          }
       ]
    });
@@ -43,24 +43,25 @@ define('Controls-demo/Headers/headerDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _selectedSize: 'm',
-         _selectedStyle: 'primary',
-         _headerSizeSource: headerSizeSource,
-         _headerStyleSource: headerStyleSource,
-         _caption: 'test',
+         _counterSelectedSize: 'l',
+         _counterSelectedStyle: 'default',
+         _counterSizeSource: counterSizeSource,
+         _counterStyleSource: counterStyleSource,
+         _counterValue: 12,
          _eventName: 'no event',
 
          clickHandler: function(e) {
             this._eventName = 'click';
          },
 
-         changeSize: function(e, key) {
-            this._selectedSize = key;
+         counterChangeSize: function(e, key) {
+            this._counterSelectedSize = key;
          },
 
-         changeStyle: function(e, key) {
-            this._selectedStyle = key;
+         counterChangeStyle: function(e, key) {
+            this._counterSelectedStyle = key;
          },
+
          reset: function() {
             this._eventName = 'no event';
          }

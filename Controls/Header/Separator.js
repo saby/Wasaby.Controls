@@ -7,18 +7,16 @@ define('Controls/Header/Separator', [
    'use strict';
 
    /**
-    * Control showing the right arrow icon.
+    * Header separator with support two display styles.
     *
     * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
-    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
     *
     * @class Controls/Header/Separator
     * @extends Core/Control
     * @control
     * @public
     *
-    * @demo Controls-demo/Headers/headerDemo
+    * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
     *
     * @mixes Controls/Header/Separator/SeparatorStyles
     */
@@ -26,8 +24,8 @@ define('Controls/Header/Separator', [
    /**
     * @name Controls/Header/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
-    * @variant primary Icon-separator will be accented.
-    * @variant default Icon-separator will be default.
+    * @variant primary Primary display style.
+    * @variant default Default display style. It is default value.
     */
 
    var Separator = Control.extend({

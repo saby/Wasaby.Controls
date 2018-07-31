@@ -22,24 +22,24 @@
 
 .controls-Switch__line {
    display: inline-block;
-   height: @height_Switch-line;
-   width: @width_Switch-line - @size_Switch-marker;
+   height: @thickness_Switch-track;
+   width: @length_Switch-track - @size_Switch-marker;
 }
 
 .controls-Switch__line_enabled {
-   background-color: @background-color_Switch-line_enabled;
+   background-color: @background-color_Switch-track_enabled;
 }
 
 .controls-Switch__line_disabled {
-   background-color: @background-color_Switch-line_disabled;
+   background-color: @background-color_Switch-track_disabled;
 }
 
 .controls-Switch__text_rightCaption {
-   margin-left: @margin_Switch-text;
+   margin-left: @spacing_Switch-between-toggle-text;
 }
 
 .controls-Switch__text_leftCaption {
-   margin-right: @margin_Switch-text;
+   margin-right: @spacing_Switch-between-toggle-text;
 }
 
 .controls-Switch__text_enabled_unselected {
@@ -56,7 +56,7 @@
 
 .controls-Switch:active {
    .controls-SwitchCircle__borderCircle_enabled {
-      fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+      fill: @color_ToggleCircle_outerCircle_enabled_hovered;
    }
 }
 
@@ -74,7 +74,7 @@
    }
    .controls-Switch:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+         fill: @color_ToggleCircle_outerCircle_enabled_hovered;
       }
    }
 }
