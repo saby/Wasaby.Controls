@@ -354,7 +354,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return false;
          },
          _getCommandHandler: function(commandName) {
-            return this._compoundControl.getUserData('commandStorage')[commandName];
+            var commandStorage = this._compoundControl.getUserData('commandStorage');
+            if (commandStorage) {
+               return commandStorage[commandName];
+            }
+            return null;
          },
          sendCommand: function(commandName) {
             var args = Array.prototype.slice.call(arguments, 1);
