@@ -1,26 +1,32 @@
 define('Controls/Date/PeriodLiteDialog', [
    'Core/Control',
    'Core/core-merge',
-   'Core/helpers/Date/getFormattedDateRange',
+   'Core/helpers/Date/format',
    'Core/helpers/Date/getCurrentPeriod',
-   'Core/helpers/i18n/locales',
    'Controls/Date/interface/IPeriodLiteDialog',
+   'Controls/Utils/Date',
    'tmpl!Controls/Date/PeriodLiteDialog/PeriodLiteDialog',
    'tmpl!Controls/Date/PeriodLiteDialog/Item',
+   'tmpl!Controls/Date/PeriodLiteDialog/ItemFull',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemMonths',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemQuarters',
+   'tmpl!Controls/Date/PeriodLiteDialog/ItemWrapper',
+   'tmpl!Controls/Date/PeriodLiteDialog/MonthCaption',
    'css!Controls/Date/PeriodLiteDialog/PeriodLiteDialog'
 ], function(
    BaseControl,
    coreMerge,
-   getFormattedDateRange,
+   formatDate,
    getCurrentPeriod,
-   locales,
    IPeriodSimpleDialog,
+   dateUtils,
    componentTmpl,
    itemTmpl,
-   itemTmplMonths,
-   itemTmplQuarters
+   itemFullTmpl,
+   itemMonthsTmpl,
+   itemQuartersTmpl,
+   ItemWrapper,
+   monthCaptionTemplate
 ) {
 
    'use strict';
@@ -65,47 +71,33 @@ define('Controls/Date/PeriodLiteDialog', [
          }
       },
 
-      _getCaption: function(startValue, endValue, emptyCaption) {
-         return getFormattedDateRange(
-            startValue,
-            endValue,
-            {
-               contractToMonth: true,
-               fullNameOfMonth: true,
-               contractToQuarter: true,
-               contractToHalfYear: true,
-               emptyPeriodTitle: emptyCaption
-            }
-         );
-      },
       getQuarterData: function(quarterNumber, monthName, monthIndex) {
          return {
             number: quarterNumber * 3 + monthIndex,
             name: monthName
          };
       },
-      getYearModel: function() {
-         var longMonths = locales.current.config.longMonths;
+      getYearModel: function(year) {
          return [{
             name: 'I',
             quarters: [{
                name: 'I',
-               months: longMonths.slice(0, 3).map(_private.getQuarterData.bind(this, 0)),
+               months: [ new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1) ],
                number: 0
             }, {
                name: 'II',
-               months: longMonths.slice(3, 6).map(_private.getQuarterData.bind(this, 1)),
+               months: [ new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1) ],
                number: 1
             }]
          }, {
             name: 'II',
             quarters: [{
                name: 'III',
-               months: longMonths.slice(6, 9).map(_private.getQuarterData.bind(this, 2)),
+               months: [ new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1) ],
                number: 2
             }, {
                name: 'IV',
-               months: longMonths.slice(9).map(_private.getQuarterData.bind(this, 3)),
+               months: [ new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1) ],
                number: 3
             }]
          }];
@@ -114,12 +106,16 @@ define('Controls/Date/PeriodLiteDialog', [
 
    var Component = BaseControl.extend({
       _template: componentTmpl,
-      _itemTmpl: null,
+      _defaultItemTemplate: itemTmpl,
+      _itemTmplByType: null,
+      _monthCaptionTemplate: null,
 
       _year: null,
 
       _yearHovered: false,
       _halfyearHovered: false,
+
+      _formatDate: formatDate,
 
       // constructor: function() {
       //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -128,12 +124,14 @@ define('Controls/Date/PeriodLiteDialog', [
 
       _beforeMount: function(options) {
 
+         this._monthCaptionTemplate = monthCaptionTemplate;
+
          if (options.chooseHalfyears && options.chooseQuarters && options.chooseMonths) {
-            this._itemTmpl = itemTmpl;
+            this._itemTmplByType = itemFullTmpl;
          } else if (options.chooseMonths) {
-            this._itemTmpl = itemTmplMonths;
+            this._itemTmplByType = itemMonthsTmpl;
          } else if (options.chooseQuarters) {
-            this._itemTmpl = itemTmplQuarters;
+            this._itemTmplByType = itemQuartersTmpl;
          }
 
          if (options.year instanceof Date) {
@@ -153,9 +151,9 @@ define('Controls/Date/PeriodLiteDialog', [
             }
          }
 
-         this._caption = _private._getCaption(options.startValue, options.endValue, options.emptyCaption);
+         this._caption = options.captionFormatter(options.startValue, options.endValue, options.emptyCaption);
 
-         this._months = _private.getYearModel();
+         this._months = _private.getYearModel(this._year);
       },
 
       _beforeUpdate: function(options) {
@@ -168,6 +166,7 @@ define('Controls/Date/PeriodLiteDialog', [
        */
       setYear: function(year) {
          this._year = year;
+         this._months = _private.getYearModel(this._year);
          this._notify('yearChanged', [year]);
       },
 
@@ -249,9 +248,7 @@ define('Controls/Date/PeriodLiteDialog', [
       },
 
       _onMonthClick: function(event, month) {
-         var start = new Date(this._year, month, 1),
-            end = new Date(this._year, month + 1, 0);
-         this._notify('sendResult', [start, end], { bubbling: true });
+         this._notify('sendResult', [month, dateUtils.getEndOfMonth(month)], { bubbling: true });
       },
 
       _getWidthCssClass: function() {
@@ -282,7 +279,9 @@ define('Controls/Date/PeriodLiteDialog', [
    Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
    Component.getDefaultOptions = function() {
-      return coreMerge({}, IPeriodSimpleDialog.getDefaultOptions());
+      return coreMerge({
+         itemTemplate: ItemWrapper
+      }, IPeriodSimpleDialog.getDefaultOptions());
    };
 
    Component.getOptionTypes = function() {

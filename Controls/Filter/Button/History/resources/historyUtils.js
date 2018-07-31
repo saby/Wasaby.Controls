@@ -30,4 +30,5 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       return {
          getHistorySource: getHistorySource
       };
-   });
+   }
+);

@@ -101,7 +101,7 @@
 //checkbox Vdom
 @color_CheckBox__iconBox:                       rgba(109, 141, 176, .6);
 @color_CheckBox__iconBox_disabled:              #CCCCCC;
-@color_CheckBox_disabled:                       #313E78;
+@color_CheckBox__icon_disabled:                       #313E78;
 @color_CheckBox__caption_disabled:             #CCCCCC;
 @color_CheckBox__caption_enabled:                #000000;
 @color_CheckBox__icon_enabled:                   #FF7033;
@@ -271,13 +271,13 @@
 @border-color_Button-Vdom_readOnly:        transparent;
 
 //radioGroup
-@fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
-@fill_RadioGroup_innerCircle_selected_disabled:    #313E78;
-@fill_RadioGroup_innerCircle_unselected:           none;
+@color_ToggleCircle_innerCircle_selected_enabled:     #FF7033;
+@color_ToggleCircle_innerCircle_selected_disabled:    #313E78;
+@color_ToggleCircle_innerCircle_unselected:           none;
 @fill_RadioGroup_borderCircle:                     none;
-@fill_RadioGroup_borderCircle_enabled:           #8991A9;
-@fill_RadioGroup_borderCircle_disabled:          #CCCCCC;
-@fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
+@color_ToggleCircle_outerCircle_enabled:           #8991A9;
+@color_ToggleCircle_outerCircle_disabled:          #CCCCCC;
+@color_ToggleCircle_outerCircle_enabled_hovered:   #FF7033;
 @color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_selected_size-l:          #000000;
 @color_RadioItem_caption_unselected_disabled:      #CCCCCC;
@@ -293,11 +293,11 @@
 @color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-default_hovered;
 @color_Header__caption_style-default_hovered:  #FF7033;
 @color_Header__caption_style-primary_hovered:  #2D68B5;
-@color_HeaderCounter_style-default_hovered:    @color_Header__caption_style-default_hovered;
-@color_HeaderCounter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
-@color_HeaderCounter_style-primary:            @color_Header__caption_style-primary;
-@color_HeaderCounter_style-default:            @color_Header__caption_style-default;
-@color_HeaderCounter_style-disabled:           #CCCCCC;
+@color_Counter_style-default_hovered:    @color_Header__caption_style-default_hovered;
+@color_Counter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
+@color_Counter_style-primary:            @color_Header__caption_style-primary;
+@color_Counter_style-default:            @color_Header__caption_style-default;
+@color_Counter_style-disabled:           #CCCCCC;
 @color-Separator__icon_style-Accent:              #313E78;
 @color-Separator__icon_style-Main:                #D94700;
 @color-Separator__icon_style-Additional:          #8991A9;
@@ -308,10 +308,10 @@
 @fill-HeaderSeparator__icon_style-default:     #313E78;
 @fill-HeaderSeparator__icon_style-primary_hovered:     #FF7033;
 @fill-HeaderSeparator__icon_style-default_hovered:     #2D68B5;
-@fill_HeaderSeparator_default:                     #313E78;
-@fill_HeaderSeparator_primary:                     #D94700;
-@fill_HeaderSeparator_default_hovered:             #2D68B5;
-@fill_HeaderSeparator_primary_hovered:             #FF7033;
+@color_HeaderSeparator_default:                     #313E78;
+@color_HeaderSeparator_primary:                     #D94700;
+@color_HeaderSeparator_default_hovered:             #2D68B5;
+@color_HeaderSeparator_primary_hovered:             #FF7033;
 @background-image-BackButton_style-primary:                                                                                              url('img/BackArrowOrangeCarry.svg');
 @background-image-BackButton_style-default:                                                                                              url('img/BackArrowOrangeCarry.svg');
 @background-image-BackButton_style-primary_hovered:                                                                                      url('img/BackArrowHoveredCarry.svg');
@@ -322,7 +322,9 @@
 @border-color-IconButton:                        rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
 @background-color-IconButton:                     #F2F2F2;
+@background-color-IconButton_transparent:         @background-color-IconButton;
 @background-color-IconButton_hovered:             #EAEAEA;
+@background-color-IconButton_transparent_hovered: @background-color-IconButton_hovered;
 
 //Toggle button
 @border-color_ToggleButton:               @default-color;

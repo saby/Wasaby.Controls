@@ -1,9 +1,10 @@
 define('Controls-demo/Input/Password/Password',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Password/Password'
+      'tmpl!Controls-demo/Input/Password/Password',
+      'css!Controls-demo/Input/resources/VdomInputs'
    ],
-   function (Control, template) {
+   function(Control, template) {
 
       'use strict';
 
@@ -13,19 +14,19 @@ define('Controls-demo/Input/Password/Password',
          passwordValue: '',
          _tagStyle: 'attention',
          _placeholder: 'Password',
-         _tagStyleHandler: function (){
+         _tagStyleHandler: function() {
             this._children.infoBoxPassword.open({
                target: this._children.textPassword._container,
-               message: "Hover"
+               message: 'Hover'
             });
          },
-         _tagStyleClickHandler: function (){
+         _tagStyleClickHandler: function() {
             this._children.infoBoxPassword.open({
                target: this._children.textPassword._container,
-               message: "Click"
+               message: 'Click'
             });
          },
-         _validationChangedHandler: function () {
+         _validationChangedHandler: function() {
             if (this._validationErrorsValue) {
                this._validationErrors = ['Some error'];
             } else {

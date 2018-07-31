@@ -52,19 +52,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
       }
-      function setReadOnly(compoundControl, isReadOnly) {
-         var isEnabled = !isReadOnly;
-         var childControls = compoundControl.getImmediateChildControls(),
-            control;
-         for (var i = 0, len = childControls.length; i < len; ++i) {
-            control = childControls[i];
-            if (typeof (control.setReadOnly) === 'function') {
-               control.setReadOnly(!isEnabled);
-            } else {
-               control.setEnabled(isEnabled);
-            }
-         }
-      }
 
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
@@ -127,6 +114,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._commandHandler = this._commandHandler.bind(this);
             this._commandCatchHandler = this._commandCatchHandler.bind(this);
             this._templateName = this._options.template;
+
+            /**
+             * Поведение если вызвали через ENGINE/MiniCard.
+             */
+            var _this = this;
+
+            if (this._options.hoverTarget) {
+               this._options.hoverTarget.on('mouseenter', function() {
+                  clearTimeout(_this._hoverTimer);
+                  _this._hoverTimer = null;
+               });
+               this._options.hoverTarget.on('mouseleave', function() {
+                  _this._hoverTimer = setTimeout(function() {
+                     _this.hide();
+                  }, 1000);
+               });
+            }
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -163,6 +167,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             moduleStubs.require([this._templateName]).addCallback(function(result) {
                self._createCompoundControl(result[0]);
             });
+
             return this._compoundControlCreated;
          },
 
@@ -349,7 +354,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return false;
          },
          _getCommandHandler: function(commandName) {
-            return this._compoundControl.getUserData('commandStorage')[commandName];
+            var commandStorage = this._compoundControl.getUserData('commandStorage');
+            if (commandStorage) {
+               return commandStorage[commandName];
+            }
+            return null;
          },
          sendCommand: function(commandName) {
             var args = Array.prototype.slice.call(arguments, 1);
@@ -430,6 +439,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          getTemplateName: function() {
             return this._template;
+         },
+
+         setEnabled: function(enabled) {
+            if (this._compoundControl) {
+               this._compoundControl.setEnabled(enabled);
+            } else {
+               this.subscribe('onReady', this.setEnabled.bind(this, enabled));
+            }
          },
 
          /* start RecordFloatArea */
@@ -530,10 +547,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          setReadOnly: function(isReadOnly) {
             this._isReadOnly = isReadOnly;
             if (this._compoundControl) {
-               setReadOnly(this._compoundControl, isReadOnly);
+               this._setEnabledForChildControls(!isReadOnly);
             } else {
                this._compoundControlCreated.addCallback(function() {
-                  setReadOnly(this._compoundControl, isReadOnly);
+                  this._setEnabledForChildControls(!isReadOnly);
                }.bind(this));
             }
          },
@@ -967,7 +984,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          getImmediateChildControls: function() {
-            return [this._compoundControl];
+            // Контрол могут создавать внутри панели в коде так: new Control({ parent: this.getTopParent() })
+            // Тогда родителем оказывается CompoundArea, и этот контрол попадает в this._childControls
+            var filtered = [];
+            for (var i = 0; i < this._childControls.length; i++) {
+               if (this._childControls[i]) {
+                  filtered.push(this._childControls[i]);
+               }
+            }
+            return filtered;
          },
 
          /**

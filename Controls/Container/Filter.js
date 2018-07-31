@@ -9,13 +9,13 @@ define('Controls/Container/Filter',
       'Core/helpers/Object/isEqual',
       'Controls/History/FilterSource',
       'Controls/History/Service',
+      'Controls/Filter/Button/History/resources/historyUtils',
       'WS.Data/Source/Memory',
       'Controls/Controllers/SourceController',
-      'Controls/Filter/Button/History/resources/historyUtils',
       'Core/helpers/Object/isEmpty'
    ],
    
-   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, historyUtils, isEmptyObject) {
+   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, historyUtils, Memory, SourceController, isEmptyObject) {
       
       'use strict';
       

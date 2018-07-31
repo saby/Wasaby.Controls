@@ -27,6 +27,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
        "SBIS3.CONTROLS/Action/SelectorAction",
+       "Core/core-merge",
        "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
        "SBIS3.CONTROLS/Utils/TemplateUtil",
        "SBIS3.CONTROLS/Button/IconButton",
@@ -74,7 +75,8 @@ define('SBIS3.CONTROLS/FieldLink',
         List,
         ItemsSelectionUtil,
         objectFind,
-        SelectorAction
+        SelectorAction,
+        wsCoreMerge
     ) {
 
        'use strict';
@@ -1205,7 +1207,7 @@ define('SBIS3.CONTROLS/FieldLink',
              при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
              поэтому при перевороте проскролим вниз автодополнение */
           _scrollListToBottom: function() {
-             if(this._picker && this._isSuggestPickerRevertedVertical()) {
+             if(this._picker && this._isSuggestPickerRevertedVertical() && !cInstance.instanceOfMixin(this.getList(), 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                 var pickerContainer = this._picker.getContainer(),
                     list = this.getList(),
                     newIndex;

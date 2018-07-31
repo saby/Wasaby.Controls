@@ -1,8 +1,9 @@
 define('Controls-demo/Input/Number/Number', [
    'Core/Control',
    'tmpl!Controls-demo/Input/Number/Number',
-   'WS.Data/Source/Memory'
-], function (Control, template, Memory) {
+   'WS.Data/Source/Memory',
+   'css!Controls-demo/Input/resources/VdomInputs'
+], function(Control, template, Memory) {
 
    'use strict';
 
@@ -23,32 +24,32 @@ define('Controls-demo/Input/Number/Number', [
          {title: 'left'},
          {title: 'right'}
       ],
-      _tagStyleHandler: function (){
+      _tagStyleHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
-      _tagStyleClickHandler: function (){
+      _tagStyleClickHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
-            message: "Click"
+            message: 'Click'
          });
       },
-      valueChangedHandler: function () {
+      valueChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {
             this._validationErrors = null;
          }
       },
-      _createMemory: function () {
+      _createMemory: function() {
          return new Memory({
             idProperty: 'title',
             data: this._items
          });
       },
-      _eventHandler: function (e, value) {
+      _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
    });

@@ -1,6 +1,10 @@
 define('Controls/Date/interface/IPeriodLiteDialog', [
-   'WS.Data/Type/descriptor'
-], function(types) {
+   'WS.Data/Type/descriptor',
+   'Controls/Calendar/Utils'
+], function(
+   types,
+   dateControlsUtils
+) {
    'use strict';
 
    /**
@@ -95,7 +99,7 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
              * @cfg {String} A hint that will be displayed on the unselected icons. By default, there is no tooltip.
              * @noshow
              */
-            uncheckedIconTitle: undefined
+            uncheckedIconTitle: undefined,
 
             /**
              * @name Controls/Date/interface/IPeriodLiteDialog#iconsHandler
@@ -120,6 +124,35 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
              * @noshow
              */
             // iconsHandler: undefined,
+
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#itemTemplate
+             * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
+             * of the month. The date of the first day of the month and date formatting function are passed
+             * to the template of the month {@link Core/helpers/Date/format}.
+             * @example
+             * <ws:itemTemplate>
+             *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *       <ws:monthCaptionTemplate>
+             *          <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                {{ formatDate(month, "MMMM") }} !
+             *             </div>
+             *          </ws:if>
+             *        </ws:monthCaptionTemplate>
+             *    </ws:partial>
+             * </ws:itemTemplate>
+             */
+            /* That not to drag dependence on a template in all, the default value we set only in the PeriodLiteDialog
+             * itemTemplate: undefined,
+             */
+
+            /**
+             * @name Controls/Date/interface/IPeriodLiteDialog#captionFormatter
+             * @cfg {Function} Caption formatting function.
+             */
+            captionFormatter: dateControlsUtils.formatDateRangeCaption
          };
       },
 
@@ -131,7 +164,8 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
             chooseQuarters: types(Boolean),
             chooseHalfyears: types(Boolean),
             chooseYears: types(Boolean),
-            emptyCaption: types(String)
+            emptyCaption: types(String),
+            captionFormatter: types(Function)
          };
       }
    };

@@ -148,6 +148,16 @@ define('Controls/Input/Number/InputProcessor',
                         //Inserting dot in integers part moves cursor to decimals part
                         splitValue.insert = '';
                         shift += splitValue.after.indexOf('.') + 1;
+
+                        /**
+                         * if you enter a '.' in front of the '.' then nothing else is needed
+                         */
+                        if (splitValue.after[0] === '.') {
+                           return {
+                              value: _private.getValueWithDelimiters(splitValue),
+                              position: _private.getCursorPosition(splitValue, shift)
+                           };
+                        }
                      }
                   }
 

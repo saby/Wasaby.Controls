@@ -392,6 +392,7 @@ define('Controls/History/Source', [
    });
 
    Source._private = _private;
-   Di.register('sourceHistory', Source);
+
+   Di.register('demoSourceHistory', Source);
    return Source;
 });

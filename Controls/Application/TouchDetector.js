@@ -24,7 +24,7 @@ define('Controls/Application/TouchDetector', [
 
       _updateTouchObject: function() {
          if (_private.state !== _private.lastState) {
-            this._touchObjectContext = new TouchContextField(_private.state);
+            this._touchObjectContext.setIsTouch(_private.state);
             _private.lastState = _private.state;
          }
       },

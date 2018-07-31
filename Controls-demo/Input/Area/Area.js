@@ -1,7 +1,8 @@
 define('Controls-demo/Input/Area/Area', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Area/Area'
-], function (Control, template) {
+   'tmpl!Controls-demo/Input/Area/Area',
+   'css!Controls-demo/Input/resources/VdomInputs'
+], function(Control, template) {
 
    'use strict';
 
@@ -24,26 +25,26 @@ define('Controls-demo/Input/Area/Area', [
          {title: '[a-z]', example: 'You can use only lowercase letters'},
          {title: '[A-Z]', example: 'You can use only uppercase letters'}
       ],
-      _tagStyleHandler: function () {
+      _tagStyleHandler: function() {
          this._children.infoBoxArea.open({
             target: this._children.textArea._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
-      _tagStyleClickHandler: function () {
+      _tagStyleClickHandler: function() {
          this._children.infoBoxArea.open({
             target: this._children.textArea._container,
-            message: "Click"
+            message: 'Click'
          });
       },
-      _validationChangedHandler: function () {
+      _validationChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {
             this._validationErrors = null;
          }
       },
-      _eventHandler: function (e, value) {
+      _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       }
    });

@@ -736,9 +736,13 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
+            //https://online.sbis.ru/opendoc.html?guid=f32e80af-8f8f-4377-b86f-38e4e6c11fc2
+            var pickerContainer = this._picker.getContainer()[0];
+            var scrollTop = pickerContainer.scrollTop;
             this._updateList();
             this._picker.getContainer().height('auto');
             this._picker.recalcPosition(true, true);
+            pickerContainer.scrollTop = scrollTop;
          }
       },
 

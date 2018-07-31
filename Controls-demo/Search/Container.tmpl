@@ -1,7 +1,7 @@
 <div class="controls-demo__search-container">
     <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
         <ws:content>
-            <Controls.Search.Container searchParam="firstName">
+            <Controls.Search.Container searchParam="department">
                 <div>
                     <Controls.Search.Input.Container>
                         <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
@@ -13,8 +13,8 @@
                                 <ws:partial template="tmpl!Controls/List/ItemTemplate">
                                     <ws:contentTemplate>
                                         <div style="padding: 4px; display: flex; justify-content: space-between">
-                                            <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>
-                                            <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('lastName')}}</div>
+                                            <div style="width: 300px">{{itemTemplate.itemData.item.get('department')}}</div>
+                                            <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('owner')}}</div>
                                             <div style="font-size: 13px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
                                         </div>
                                     </ws:contentTemplate>

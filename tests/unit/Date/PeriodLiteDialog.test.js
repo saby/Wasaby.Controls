@@ -1,11 +1,16 @@
+/* global define, describe, it, assert */
 define([
+   'Core/core-merge',
    'Controls/Date/PeriodLiteDialog',
+   'Controls/Utils/Date',
    'tests/unit/Calendar/Utils',
-   'tmpl!Controls/Date/PeriodLiteDialog/Item',
+   'tmpl!Controls/Date/PeriodLiteDialog/ItemFull',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemMonths',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemQuarters'
 ], function(
+   coreMerge,
    PeriodLiteDialog,
+   DateUtils,
    calendarTestUtils,
    itemTmpl,
    itemTmplMonths,
@@ -32,60 +37,55 @@ define([
                   chooseMonths: test.chooseMonths
                });
 
-               assert.strictEqual(component._itemTmpl, test.tmpl);
+               assert.strictEqual(component._itemTmplByType, test.tmpl);
             });
          });
 
          it('should create correct month model', function() {
-            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {});
-
-            assert.deepEqual(component._months, [{
-               name: 'I',
-               quarters: [{
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {}),
+               year = (new Date()).getFullYear(),
+               data = [{
                   name: 'I',
-                  months: [{
-                     number: 0, name: 'Январь'
+                  quarters: [{
+                     name: 'I',
+                     months: [ new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1) ],
+                     number: 0
                   }, {
-                     number: 1, name: 'Февраль'
-                  }, {
-                     number: 2, name: 'Март'
-                  }],
-                  number: 0
+                     name: 'II',
+                     months: [ new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1) ],
+                     number: 1
+                  }]
                }, {
                   name: 'II',
-                  months: [{
-                     number: 3, name: 'Апрель'
+                  quarters: [{
+                     name: 'III',
+                     months: [ new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1) ],
+                     number: 2
                   }, {
-                     number: 4, name: 'Май'
-                  }, {
-                     number: 5, name: 'Июнь'
-                  }],
-                  number: 1
-               }]
-            }, {
-               name: 'II',
-               quarters: [{
-                  name: 'III',
-                  months: [{
-                     number: 6, name: 'Июль'
-                  }, {
-                     number: 7, 'name': 'Август'
-                  }, {
-                     number: 8, name: 'Сентябрь'
-                  }],
-                  number: 2
-               }, {
-                  name: 'IV',
-                  months: [{
-                     number: 9, name: 'Октябрь'
-                  }, {
-                     number: 10, name: 'Ноябрь'
-                  }, {
-                     number: 11, name: 'Декабрь'
-                  }],
-                  number: 3
-               }]
-            }]);
+                     name: 'IV',
+                     months: [ new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1) ],
+                     number: 3
+                  }]
+               }];
+
+            // Compare all but months.
+            assert.deepEqual(
+               coreMerge({}, component._months, { ignoreRegExp: /^months$/, clone: true }),
+               coreMerge({}, data, { ignoreRegExp: /^months$/, clone: true })
+            );
+
+            // And now let's check the month.
+            for (let [halhyearIndex, halhyear] of data.entries()) {
+               for (let [quarterIndex, quarter] of halhyear.quarters.entries()) {
+                  for (let [monthIndex, month] of quarter.months.entries()) {
+                     assert(
+                        DateUtils.isDatesEqual(
+                           component._months[halhyearIndex].quarters[quarterIndex].months[monthIndex], month
+                        )
+                     );
+                  }
+               }
+            }
          });
       });
 
@@ -133,7 +133,7 @@ define([
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(PeriodLiteDialog, {year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
-            component._onMonthClick(null, 0);
+            component._onMonthClick(null, new Date(2000, 0, 1));
 
             sinon.assert.calledWith(
                component._notify, 'sendResult', [new Date(2000, 0, 1), new Date(2000, 0, 31)], { bubbling: true });

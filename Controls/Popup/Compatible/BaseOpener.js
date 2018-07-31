@@ -141,11 +141,13 @@ function(cMerge,
             }
          }
 
-         cfg.corner = cfg.corner || {};
-         if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = 'right';
+         if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
+            cfg.corner = {};
+            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+               cfg.direction = 'right';
+            }
+            cfg.corner.horizontal = revertPosition[cfg.direction];
          }
-         cfg.corner.horizontal = revertPosition[cfg.direction];
 
          if (cfg.hasOwnProperty('border')) {
             cfg.templateOptions.hideCross = !cfg.border;
@@ -176,6 +178,7 @@ function(cMerge,
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
+         cfg.border = false;
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;

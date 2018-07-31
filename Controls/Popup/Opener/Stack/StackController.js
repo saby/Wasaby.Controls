@@ -81,6 +81,11 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementUpdated: function(item, container) {
             if (this._canUpdate(container)) {
+               if (HAS_ANIMATION) {
+                  // todo https://online.sbis.ru/opendoc.html?guid=85b389eb-205e-4a7b-b333-12f5cdc2523e
+                  item.popupOptions.className = _private.removeAnimationClasses(item.popupOptions.className);
+                  item.popupOptions.className += ' controls-Stack__open';
+               }
                if (this._checkContainer(item, container)) {
                   _private.prepareSizes(item, container);
                   this._update();
