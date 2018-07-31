@@ -1,0 +1,20 @@
+<div>
+   <b><u>Controls/Input/RichArea, работающий через json:</u></b>
+   <Controls.Input.RichArea
+         name="richArea"
+         json="{{json}}"
+         on:jsonChanged="changeJson()"
+         autoHeight="{{true}}"
+         maximalHeight="{{250}}"
+         minimalHeight="{{200}}"
+   />
+   <br />
+   <b><u>Core/HtmlJson, построенный на том же json, для проверки поимки события:</u></b>
+   <br />
+   <Core.HtmlJson
+         json="{{json}}"
+   />
+   <br />
+   <b><u>Cам json:</u></b>
+   <div class="real-json">{{ jsonStringify }}</div>
+</div>
