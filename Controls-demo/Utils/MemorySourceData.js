@@ -6,27 +6,12 @@ define('Controls-demo/Utils/MemorySourceData', function() {
    'use strict';
    
    return [
-      { id: 1, firstName: 'Sasha', lastName: 'Gerasimov' },
-      { id: 2, firstName: 'Dmitry', lastName: 'Kraynov' },
-      { id: 3, firstName: 'Andrey', lastName: 'Begunov' },
-      { id: 4, firstName: 'Aleksey', lastName: 'Avramenko' },
-      { id: 5, firstName: 'Sasha', lastName: 'Gerasimov' },
-      { id: 6, firstName: 'Ivan', lastName: 'Uvarov'},
-      { id: 7, firstName: 'Petr', lastName: 'UzeUvolen'},
-      { id: 8, firstName: 'Roman', lastName: 'UzeUvolen'},
-      { id: 9, firstName: 'Maxim', lastName: 'Zuravlev'},
-      { id: 10, firstName: 'Andrey', lastName: 'Krasilnikov'},
-      { id: 12, firstName: 'Sasha', lastName: 'Gerasimov'},
-      { id: 13, firstName: 'Aleksandr', lastName: 'Gerasimov'},
-      { id: 14, firstName: 'Sasha', lastName: 'Gerasimov'},
-      { id: 15, firstName: 'Aleksandr', lastName: 'Gerasimov'},
-      { id: 16, firstName: 'Sasha', lastName: 'Molodez'},
-      { id: 17, firstName: 'Sasha', lastName: 'Gerasimov'},
-      { id: 18, firstName: 'Dmitry', lastName: 'Zuev'},
-      { id: 19, firstName: 'Andrey', lastName: 'Krasilnikov'},
-      { id: 20, firstName: 'Aleksey', lastName: 'Avramenko'},
-      { id: 21, firstName: 'Sasha', lastName: 'Molodez'},
-      { id: 22, firstName: 'Ivan', lastName: 'Uvarov'},
-      { id: 23, firstName: 'Petr', lastName: 'UzeUvolen' }
+      { id: 1, department: 'Разработка', owner: 'Новиков Д.В.' },
+      { id: 2, department: 'Продвижение СБИС', owner: 'Кошелев А.Е.' },
+      { id: 3, department: 'Федеральная клиентская служка', owner: 'Мануйлова Ю.А.' },
+      { id: 4, department: 'Служба эксплуатации', owner: 'Субботин А.В.' },
+      { id: 5, department: 'Технологии и маркетинг', owner: 'Чеперегин А.С.' },
+      { id: 6, department: 'Федеральный центр продаж. Call-центр Ярославль', owner: 'Кошелев А.Е.'},
+      { id: 7, department: 'Сопровождение информационных систем', owner: 'Кошелев А.Е.'}
    ];
 });

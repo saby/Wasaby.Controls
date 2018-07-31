@@ -228,6 +228,7 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
                      self._toggleItemsEventRaising(false);
                      /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                      if (self._getTimer().getTime() > INDICATOR_DELAY) {
+                        view._showLoadingOverlay();
                         view._showIndicator();
                      }
                      self._getTimer().stop();

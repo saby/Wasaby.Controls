@@ -18,13 +18,10 @@ define('Controls/Filter/Fast',
       'use strict';
 
       /**
-       * Control "Fast Filter"
+       * Control "Fast Filter".
+       * Use dropDown lists for filter data.
        *
-       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Filter/Fast, Input/Search and List component</a>.
-       *
-       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Fast
        * @extends Core/Control
@@ -34,17 +31,23 @@ define('Controls/Filter/Fast',
        */
 
       /**
-       * @event Controls/Filter/FastFilter#filterChanged Occurs when the filter changes.
+       * @event Controls/Filter/Fast#filterChanged Occurs when the filter changes.
        */
 
       /**
-       * @name Controls/Filter/FastFilter#source
+       * @name Controls/Filter/Fast#source
        * @cfg {WS.Data/Source/ISource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
        */
 
       /**
-       * @name Controls/Filter/FastFilter#items
+       * @name Controls/Filter/Fast#items
        * @cfg {WS.Data/Collection/IList} Sets a set of initial data to build the mapping.
+       */
+   
+      /**
+       * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {Object} filter New filter.
        */
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -125,13 +128,13 @@ define('Controls/Filter/Fast',
          }
       };
 
-      var FastData = Control.extend({
+      var Fast = Control.extend(/** @lends Controls/Filter/Fast.prototype */{
          _template: template,
          _configs: null,
          _items: null,
 
          constructor: function() {
-            FastData.superclass.constructor.apply(this, arguments);
+            Fast.superclass.constructor.apply(this, arguments);
 
             this._configs = {};
             this._items = [];
@@ -188,8 +191,8 @@ define('Controls/Filter/Fast',
             this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
       });
-
-      FastData._private = _private;
-      return FastData;
+   
+      Fast._private = _private;
+      return Fast;
    }
 );

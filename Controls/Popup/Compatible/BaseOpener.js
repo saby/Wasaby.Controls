@@ -141,11 +141,13 @@ function(cMerge,
             }
          }
 
-         cfg.corner = cfg.corner || {};
-         if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-            cfg.direction = 'right';
+         if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
+            cfg.corner = {};
+            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
+               cfg.direction = 'right';
+            }
+            cfg.corner.horizontal = revertPosition[cfg.direction];
          }
-         cfg.corner.horizontal = revertPosition[cfg.direction];
 
          if (cfg.hasOwnProperty('border')) {
             cfg.templateOptions.hideCross = !cfg.border;

@@ -13,8 +13,7 @@ define('Controls/Filter/Button/Container',
        * Receives props from context and pass to FilterButton.
        * Should be located inside Controls/Filter/Container.
        *
-       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Button/Container
        * @extends Core/Control
@@ -33,7 +32,7 @@ define('Controls/Filter/Button/Container',
          }
       };
       
-      var Container = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Filter/Button/Container.prototype */{
          
          _template: template,
    

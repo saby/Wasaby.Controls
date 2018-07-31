@@ -6,7 +6,10 @@ define('Controls/Button/Back', [
 ], function(Control, template, types) {
 
    /**
-    * Button "Back".
+    * Back button with support two display styles and three size.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    *
     * @class Controls/Button/Back
     * @extends Core/Control
     * @mixes Controls/Button/interface/ICaption
@@ -14,26 +17,30 @@ define('Controls/Button/Back', [
     * @control
     * @public
     * @category Button
+    *
+    * @mixes Controls/Button/BackButton/BackStyles
+    *
+    * @demo Controls-demo/Buttons/BackButton/backDemo
     */
 
    /**
     * @name Controls/Button/Back#style
-    * @cfg {String} Button display style.
-    * @variant primary Button will be accented.
-    * @variant default Button will be default.
+    * @cfg {String} Back button display style.
+    * @variant primary Primary display style.
+    * @variant default Default display style. It is the default value.
     */
 
    /**
     * @name Controls/Button/Back#size
-    * @cfg {String} Button size
-    * @variant s Button has small size.
-    * @variant m Button has middle size.
-    * @variant l Button has large size.
+    * @cfg {String} Back button size.
+    * @variant s Small button size.
+    * @variant m Medium button size. It is the default value.
+    * @variant l Large button size.
     */
 
    /**
     * @name Controls/Button#caption
-    * @cfg {String} Text of caption.
+    * @cfg {String} Caption text.
     */
 
    var BackButton = Control.extend({

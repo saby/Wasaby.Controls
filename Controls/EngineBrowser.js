@@ -15,7 +15,7 @@ define('Controls/EngineBrowser', [
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/INavigation
-    * @demo Controls-demo/EngineBrowser/BrowserApplication
+    * @demo Controls-demo/EngineBrowser/Browser
     * @author Герасимов Александр
     * @control
     * @public
@@ -68,7 +68,7 @@ define('Controls/EngineBrowser', [
    
    'use strict';
 
-   var Browser = BaseControl.extend({
+   var Browser = BaseControl.extend(/** @lends Controls/EngineBrowser.prototype */{
       _template: template
    });
 

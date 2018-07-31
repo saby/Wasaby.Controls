@@ -247,8 +247,8 @@ define('SBIS3.CONTROLS/TextBox', [
                   self.setText(newText);
                }
             })
-            .on('focusin', this._inputFocusInHandler.bind(this))
-            .on('click', this._inputClickHandler.bind(this));
+            .on('click', this._inputClickHandler.bind(this))
+            .on('focusin', this._inputFocusInHandler.bind(this));
          
          /* На Ipad'e при вставке текста из т9/autocorrect'a стреляет только событие input.
             Проверить, что это была вставка, можно по опции текст, т.к. в остальных случаях,

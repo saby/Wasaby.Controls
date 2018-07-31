@@ -53,7 +53,7 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
               MTB.setText(1.234);
               MTB._setCaretPosition(3);
               MTB._inputFocusInHandler();
-              assert.deepEqual(MTB._getCaretPosition(), [3,3]);
+              assert.deepEqual(MTB._getCaretPosition(), [1,1]);
            });
         });
         afterEach(function () {

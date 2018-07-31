@@ -1,7 +1,7 @@
-define(['Controls/Button/ButtonSeparator'], function(Separator) {
+define(['Controls/Button/Separator'], function(Separator) {
    'use strict';
    var separator;
-   describe('Controls/Button/ButtonSeparator', function() {
+   describe('Controls/Button/Separator', function() {
       function destroySeparator() {
          separator.destroy();
          separator = undefined;

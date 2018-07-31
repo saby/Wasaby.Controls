@@ -2,6 +2,12 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
 
    'use strict';
    var classesOfButton = {
+      iconButtonBorderedTransparent: {
+         style: 'iconButtonBordered',
+         type: 'iconButtonBordered',
+         transparent: true
+      },
+
       iconButtonBordered: {
          style: 'iconButtonBordered',
          type: 'iconButtonBordered'

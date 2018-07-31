@@ -49,8 +49,7 @@ define('Controls/Search/Container',
        * Container for content that can be filtered by Controls/Input/Search.
        * You can specify a delay before searching, number of characters to initiate search and search parameter.
        *
-       * <a href="/materials/demo-ws4-search-container">Demo with Input/Search</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button and Input/Search</a>.
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Search/Container
        * @extends Core/Control
@@ -60,7 +59,7 @@ define('Controls/Search/Container',
        * @public
        */
       
-      var Container = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Search/Container.prototype */{
          
          _template: template,
          

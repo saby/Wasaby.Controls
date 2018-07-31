@@ -1,44 +1,42 @@
-define('Controls/Button/ButtonSeparator', [
+define('Controls/Button/Separator', [
    'Core/Control',
-   'tmpl!Controls/Button/ButtonSeparator/ButtonSeparator',
+   'tmpl!Controls/Button/Separator/Separator',
    'WS.Data/Type/descriptor',
-   'css!Controls/Button/ButtonSeparator/ButtonSeparator'
+   'css!Controls/Button/Separator/Separator'
 ], function(Control, template, types) {
    'use strict';
 
    /**
-    * Control showing the separator button.
+    * Button separator with support three display style and can be bold.
     *
     * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
-    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
     *
-    * @class Controls/Button/ButtonSeparator
+    * @class Controls/Button/Separator
     * @extends Core/Control
     * @control
     * @public
     *
-    * @demo Controls-demo/Headers/headerDemo
+    * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
     *
-    * @mixes Controls/Button/ButtonSeparator/ButtonSeparatorStyles
+    * @mixes Controls/Button/Separator/SeparatorStyles
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#style
-    * @cfg {String} Icon display style.
-    * @variant accent Icon will be default.
-    * @variant additional Icon will be non accented.
-    * @variant main Icon will be accented.
+    * @name Controls/Button/Separator#style
+    * @cfg {String} Separator display style.
+    * @variant accent Accent display style. It is default value.
+    * @variant additional Additional display style.
+    * @variant main Main display style.
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#value
-    * @cfg {Boolean} Current state.
+    * @name Controls/Button/Separator#value
+    * @cfg {Boolean} Determines the current state.
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#bold
-    * @cfg {Boolean} If value is true, that icon is bold, else icon isn't bold.
+    * @name Controls/Button/Separator#bold
+    * @cfg {Boolean} Determines the double separator thickness.
     */
 
    var _private = {
