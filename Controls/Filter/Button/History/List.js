@@ -12,33 +12,14 @@ define('Controls/Filter/Button/History/List', [
    'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
    'WS.Data/Utils',
+   'Controls/Filter/Button/History/resources/historyUtils',
    'css!Controls/Filter/Button/History/List'
-], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet, Chain, Utils) {
+], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet, Chain, Utils, historyUtils) {
    'use strict';
 
+   var MAX_NUMBER_ITEMS = 5;
+
    var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-
-   var actionType = {
-
-      //show only in Menu
-      PINNED: 0,
-
-      //show in Menu and Toolbar
-      UNPINNED: 1
-   };
-
-   var _itemsAction = [
-      {
-         id: 0,
-         icon: 'icon-PinNull',
-         showType: 2
-      },
-      {
-         id: 1,
-         icon: 'icon-PinOff',
-         showType: 2
-      }
-   ];
 
    var _private = {
       loadItems: function(instance, source) {
@@ -59,27 +40,9 @@ define('Controls/Filter/Button/History/List', [
 
       getHistorySource: function(self, hId) {
          if (!self._historySource) {
-            self._historySource = new HistorySource({
-               originSource: new MemorySource({
-                  idProperty: 'id',
-                  data: []
-               }),
-               historySource: new HistoryService({
-                  historyId: hId,
-                  pinned: true,
-                  dataLoaded: true
-               })
-            });
+            self._historySource = historyUtils.getHistorySource(hId);
          }
          return self._historySource;
-      },
-
-      createHistoryMemory: function(items) {
-         return new MemorySource({
-            idProperty: 'ObjectId',
-            adapter: new SbisAdapter(),
-            data: items.getRawData()
-         });
       },
 
       getStringHistoryFromItems: function(items) {
@@ -97,40 +60,32 @@ define('Controls/Filter/Button/History/List', [
          return text.join(', ');
       },
 
-      updateItems: function(self) {
-         var historySource = this.getHistorySource(self);
-         self._listMemory = this.createHistoryMemory(historySource.getItems());
+      onResize: function(self) {
+         self._arrowVisible = self._listItems.getCount() > MAX_NUMBER_ITEMS;
+
+         if (!self._arrowVisible) {
+            self._isMaxHeight = true;
+         }
+         self._forceUpdate();
       }
    };
 
    var HistoryList = BaseControl.extend({
-      _items: null,
-      _historySource: null,
-      _listMemory: null,
-
-      _showAction: function(action, item) {
-         if (item.get('pinned') === true) {
-            if (action.id === actionType.PINNED) {
-               return false;
-            }
-         } else {
-            if (action.id === actionType.UNPINNED) {
-               return false;
-            }
-         }
-         return true;
-      },
-      _itemActions: _itemsAction,
       _template: template,
+      _historySource: null,
+      _isMaxHeight: true,
 
-      _onItemActionsClick: function(event, action, item) {
+      _onPinClick: function(event, item) {
          _private.getHistorySource(this).update(item, {
             $_pinned: !item.get('pinned')
          });
-         _private.updateItems(this);
+         var self = this;
+         return _private.loadItems(this, _private.getHistorySource(this, this._options.historyId)).addCallback(function() {
+            self._forceUpdate();
+         });
       },
-      _contentClick: function(event, data) {
-         var items = _private.getHistorySource(this).getDataObject(data.item.get('ObjectData'));
+      _contentClick: function(event, item) {
+         var items = _private.getHistorySource(this).getDataObject(item.get('ObjectData'));
          this._notify('applyHistoryFilter', [items]);
       },
 
@@ -145,6 +100,14 @@ define('Controls/Filter/Button/History/List', [
          }
       },
 
+      _afterMount: function() {
+         _private.onResize(this);
+      },
+
+      _afterUpdate: function() {
+         _private.onResize(this);
+      },
+
       _getText: function(item) {
          var text = '';
          var items = JSON.parse(item.get('ObjectData'));
@@ -152,6 +115,10 @@ define('Controls/Filter/Button/History/List', [
             text = _private.getStringHistoryFromItems(items);
          }
          return text;
+      },
+
+      _clickSeparatorHandler: function() {
+         this._isMaxHeight = !this._isMaxHeight;
       },
 
       destroy: function() {
