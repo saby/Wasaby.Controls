@@ -1,5 +1,5 @@
 <div key="scripts">
-   <ws:if data="{{!compat}}">
+   <ws:if data="{{!compat && onServer}}">
       <script key="init_script">
          require(['Controls/Application/AppData'], function(AppData){
             window.startContextData = {AppData: new AppData({})};

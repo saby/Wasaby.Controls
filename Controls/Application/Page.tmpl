@@ -1,6 +1,6 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application"
-      attr:class="{{ stopEvents ? 'pre-load' : '' }}">
+      attr:class="{{ onServer ? 'pre-load' : '' }}">
 <Controls.Application._Head
    wsRoot="{{ wsRoot }}"
    resourceRoot="{{ resourceRoot }}"
@@ -79,7 +79,8 @@
                                     <ws:partial template="tmpl!Controls/Application/startApplicationScript"
                                                 compat="{{compat}}"
                                                 appRoot="{{ appRoot }}"
-                                                _options="{{_options}}"/>
+                                                _options="{{_options}}"
+                                                onServer="{{ onServer }}"/>
                                  </div>
                               </ws:else>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
