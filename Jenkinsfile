@@ -176,7 +176,7 @@ node('controls') {
                                 ])
                             }
                         },
-						checkout_engine: {
+						checkout_navigation: {
                             echo " Выкачиваем Navigation"
                             dir("./controls/tests"){
                                 checkout([$class: 'GitSCM',
