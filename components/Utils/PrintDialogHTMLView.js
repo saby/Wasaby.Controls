@@ -20,26 +20,37 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          options = cfg || {},
          minWidth = cfg.minWidth || 398;
 
-      //Устанавливаем неустановленные опции в дефолтные значения
-      cMerge(options, {
-         resizable: false,
-         visible: false,
-         isStack: true,
-         task_1174068748: true,
-         template: 'SBIS3.CONTROLS/PrintDialogTemplate',
-         minWidth: minWidth,
-         componentOptions: {
-            minWidth: minWidth,
-            htmlText: options.htmlText
-         }
-      }, {preferSource: true});
-
-      return moduleStubs.require(['Lib/Control/Dialog/Dialog']).addCallback(function(result) {
+      return moduleStubs.require(['SBIS3.CONTROLS/Action/OpenDialog']).addCallback(function(result) {
          var
             def = new Deferred(),
-            dlg = new result[0](options);
+            action;
 
-         def.dependOn(dlg.getReadyDeferred());
+         //Устанавливаем неустановленные опции в дефолтные значения
+         cMerge(options, {
+            resizable: false,
+            visible: false,
+            isStack: true,
+            task_1174068748: true,
+            template: 'SBIS3.CONTROLS/PrintDialogTemplate',
+            minWidth: minWidth,
+            componentOptions: {
+               minWidth: minWidth,
+               htmlText: options.htmlText,
+               handlers: {
+                  onAfterShow: function() {
+                     def.callback();
+                  }
+               }
+            }
+         }, {preferSource: true});
+
+         action = new result[0]({
+            template: options.template,
+            dialogOptions: options,
+            componentOptions: options.componentOptions
+         });
+
+         action.execute();
          return def;
       });
    }
