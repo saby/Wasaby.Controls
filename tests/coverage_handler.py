@@ -25,10 +25,9 @@ class Coverage:
         for tdir in test_path:
             path_list = []
             root = os.path.join(path, tdir)
-            for top, _, files in os.walk(root):
-                for f in files:
-                    if f.endswith('-coverage.json') :
-                        path_list.append(os.path.join(top, f))
+            for file in os.listdir(root):
+                if file.endswith('-coverage.json') :
+                    path_list.append(os.path.join(root, file))
             self.path_result[tdir] = path_list
 
         for ts, item in enumerate(self.path_result):
