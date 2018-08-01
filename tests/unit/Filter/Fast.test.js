@@ -4,8 +4,8 @@ define(
       'WS.Data/Source/Memory',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function (FastData, Memory, SyntheticEvent) {
-      describe('FastFilterVDom', function () {
+   function(FastData, Memory, SyntheticEvent) {
+      describe('FastFilterVDom', function() {
          var items = [
             [{key: 0, title: 'все страны'},
                {key: 1, title: 'Россия'},
@@ -47,10 +47,10 @@ define(
             },
             {
                id: 'third',
-               value: 'все страны',
-               resetValue: 'все страны',
+               value: 0,
+               resetValue: 0,
                properties: {
-                  keyProperty: 'title',
+                  keyProperty: 'key',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -106,37 +106,27 @@ define(
             open: setTrue.bind(this, assert)
          };
 
-         it('load config', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+         it('load config', function(done) {
+            FastData._private.reload(fastData).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
             });
          });
 
-         it('load config from items', function (done) {
-            FastData._private.reload(fastDataItems).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+         it('load config from items', function(done) {
+            FastData._private.reload(fastDataItems).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
             });
          });
 
-         it('update text', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
-                  var text = fastData._getText(fastData._items.at(0), 0);
-                  assert.equal(text, items[0][1].title);
-                  done();
-               });
-            });
-         });
-
-         it('get filter', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+         it('get filter', function(done) {
+            FastData._private.reload(fastData).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   var result = FastData._private.getFilter(fastData._items);
                   assert.deepEqual(result, {'first': fastData._items.at(0).get('value')});
                   done();
@@ -144,12 +134,12 @@ define(
             });
          });
 
-         it('on result', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+         it('on result', function(done) {
+            FastData._private.reload(fastData).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
-                  isFilterChanged =false;
+                  isFilterChanged = false;
                   selectedKey = null;
                   fastData._onResult({data: [fastData._configs[0]._items.at(2)]});
                   assert.isTrue(isSelected);
@@ -160,9 +150,22 @@ define(
             });
          });
 
-         it('reset', function (done) {
-            FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+         it('getText', function(done) {
+            FastData._private.reload(fastData).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function(items) {
+                  fastData._setText();
+                  assert.equal(fastData._configs[0].text, 'США');
+                  assert.equal(fastData._configs[1].text, 'фэнтези');
+                  assert.equal(fastData._configs[2].text, 'все страны');
+                  assert.equal(fastData._configs[3].text, 'все страны');
+                  done();
+               });
+            });
+         });
+
+         it('reset', function(done) {
+            FastData._private.reload(fastData).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   fastData._container = {children: []};
                   isSelected = false;
@@ -175,10 +178,10 @@ define(
             });
          });
 
-         it('open dropdown', function () {
+         it('open dropdown', function() {
             var event = {target: {}};
-            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData._open(new SyntheticEvent(null, event), fastData._items.at(0), 0);
                });
             });

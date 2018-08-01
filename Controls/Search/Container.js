@@ -4,10 +4,11 @@ define('Controls/Search/Container',
       'tmpl!Controls/Search/Container',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
-      'Controls/Controllers/_SearchController'
+      'Controls/Controllers/_SearchController',
+      'Core/helpers/Object/isEqual'
    ],
    
-   function(Control, template, DataOptions, clone, _SearchController) {
+   function(Control, template, DataOptions, clone, _SearchController, isEqual) {
       
       'use strict';
    
@@ -42,6 +43,15 @@ define('Controls/Search/Container',
                self._searchMode = false;
                self._notify('filterChanged', [filter], {bubbling: true});
             }
+         },
+         
+         needUpdateSearchController: function(options, newOptions) {
+            return !isEqual(options.filter, newOptions.filter) ||
+                   !isEqual(options.navigation, newOptions.navigation) ||
+                   options.searchDelay !== newOptions.searchDelay ||
+                   options.source !== newOptions.source ||
+                   options.searchParam !== newOptions.searchParam ||
+                   options.minSearchLength !== newOptions.minSearchLength;
          }
       };
    
@@ -68,6 +78,8 @@ define('Controls/Search/Container',
       var Container = Control.extend(/** @lends Controls/Search/Container.prototype */{
          
          _template: template,
+         _dataOptions: null,
+         _searchMode: false,
          
          _beforeMount: function(options, context) {
             this._dataOptions = context.dataOptions;
@@ -77,13 +89,21 @@ define('Controls/Search/Container',
             var currentOptions = this._dataOptions;
             this._dataOptions = context.dataOptions;
             
-            if (currentOptions.filter !== this._dataOptions.filter || this._options.searchDelay !== newOptions.searchDelay) {
+            if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
                this._searchController = null;
             }
          },
          
          _search: function(event, value) {
             _private.getSearchController(this).search(value);
+         },
+   
+         _beforeUnmount: function() {
+            if (this._searchController) {
+               this._searchController.abort();
+               this._searchController = null;
+            }
+            this._dataOptions = null;
          }
          
       });
@@ -100,6 +120,8 @@ define('Controls/Search/Container',
             searchDelay: 500
          };
       };
+   
+      Container._private = _private;
       
       return Container;
       
