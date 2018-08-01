@@ -18,7 +18,7 @@ define('Controls/Input/Area', [
    'use strict';
 
    /**
-    * A component for entering a multi-line text.
+    * A component for entering multi-line text.
     * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
     * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
     * You can move the text to the next line using {@link newLineKey hotkeys}.

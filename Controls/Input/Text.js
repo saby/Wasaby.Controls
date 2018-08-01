@@ -15,7 +15,7 @@ define('Controls/Input/Text',
       'use strict';
 
       /**
-       * A component for entering a single-line text.
+       * A component for entering single-line text.
        * You may want to restrict user input to a limited define of characters. In this case, you should use the option {@link constraint}.
        * You can {@link trim remove extra spaces} at the beginning and end when the {@link inputCompleted input is completed}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
