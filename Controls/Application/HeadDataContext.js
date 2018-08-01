@@ -2,8 +2,27 @@ define('Controls/Application/HeadDataContext', [
    'Core/DataContext',
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
-   'Core/cookie'
-], function(DataContext, DepsCollector, Deferred, cookie) {
+   'Core/cookie',
+   'View/Runner/common',
+   'Core/Serializer'
+
+], function(DataContext, DepsCollector, Deferred, cookie, common, Serializer) {
+
+   function getDepsFromSerializer(slr) {
+      var moduleInfo;
+      var deps = {};
+      var modules = slr._linksStorage;
+      for (var key in modules) {
+         if (modules.hasOwnProperty(key)) {
+            moduleInfo = modules[key];
+            if (moduleInfo.module) {
+               deps[moduleInfo.module] = true;
+            }
+         }
+      }
+      return deps;
+   }
+
 
    var bundles, modDeps, contents;
    try {
@@ -20,17 +39,41 @@ define('Controls/Application/HeadDataContext', [
 
    return DataContext.extend({
       _version: 0,
+      needObjects: true,
       pushDepComponent: function(componentName) {
          this.depComponentsMap[componentName] = true;
       },
+      serializeReceivedStates: function() {
+         var slr = new Serializer();
+         var serializedMap = {};
+         var allRecStates = this.receivedStateObjectsArray;
+         for (var key in allRecStates) {
+            var receivedState = allRecStates[key];
+            var serializedState = JSON.stringify(receivedState, slr.serialize);
+            common.componentOptsReArray.forEach(function(re) {
+               serializedState = serializedState.replace(re.toFind, re.toReplace);
+            });
+            serializedMap[key] = serializedState;
+         }
+         return {
+            serializedMap: serializedMap,
+            additionalDepsMap: getDepsFromSerializer(slr)
+         };
+      },
       addReceivedState: function(key, receivedState) {
-         this.receivedStateArr[key] = receivedState;
+         this.receivedStateObjectsArray[key] = receivedState;
       },
       pushWaiterDeferred: function(def) {
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, this.buildNumber);
          var self = this;
-         this.waiterDef = def;
-         this.waiterDef.addCallback(function() {
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber);
+         self.waiterDef = def;
+         self.waiterDef.addCallback(function() {
+            var rcsData = self.serializeReceivedStates();
+            for (var key in rcsData.additionalDepsMap) {
+               if (rcsData.additionalDepsMap.hasOwnProperty(key)) {
+                  self.depComponentsMap[key] = true;
+               }
+            }
             var components = Object.keys(self.depComponentsMap);
             if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
                var files = depsCollector.collectDependencies(components);
@@ -45,7 +88,9 @@ define('Controls/Application/HeadDataContext', [
                jsLinks: self.jsLinks || [],
                cssLinks: self.cssLinks || [],
                errorState: self.err,
-               receivedStateArr: self.receivedStateArr
+               receivedStateArr: rcsData.serializedMap,
+               additionalDeps: Object.keys(rcsData.additionalDepsMap)
+
             });
          });
       },
@@ -53,7 +98,9 @@ define('Controls/Application/HeadDataContext', [
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
+         this.receivedStateObjectsArray = {};
          this.receivedStateArr = {};
+         this.additionalDeps = {};
          this.buildNumber = buildNumber;
          this.cssLinks = cssLinks;
       },

@@ -3,7 +3,8 @@
       <script key="init_script">
          require(['Controls/Application/AppData'], function(AppData){
             window.startContextData = {AppData: new AppData({})};
-            require(['Core/app2'], function(app) { app(); });
+            var deps = eval("{{ getDeps() }}".replace(/&quot;/g, '"'));
+            require(['Core/app2'].concat(deps), function(app) { app(); });
          });
       </script>
    </ws:if>
