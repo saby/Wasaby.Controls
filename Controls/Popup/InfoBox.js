@@ -51,7 +51,7 @@ define('Controls/Popup/InfoBox',
       var _private = {
          getCfg: function(self, event) {
             return {
-               opener: this,
+               opener: self,
                target: event.currentTarget || event.target,
                template: OpenerTemplate,
                position: self._options.position,
