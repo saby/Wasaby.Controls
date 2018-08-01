@@ -15,6 +15,7 @@
       checked="{{!!style['font-weight']}}"
       icon="sprite:icon-16 icon-Bold icon-primary"
       cssClassName="controls-ToggleButton__square"
+      tooltip="{[БТР@@Полужирный]}"
    />
    <SBIS3.CONTROLS.WSControls.Buttons.ToggleButton
       name="Italic"
@@ -22,6 +23,7 @@
       checked="{{!!style['font-style']}}"
       cssClassName="controls-ToggleButton__square"
       icon="sprite:icon-16 icon-Italic icon-primary"
+      tooltip="{[БТР@@Курсив]}"
    />
    <SBIS3.CONTROLS.WSControls.Buttons.ToggleButton
       name="Underline"
@@ -29,6 +31,7 @@
       cssClassName="controls-ToggleButton__square"
       icon="sprite:icon-16 icon-Underline icon-primary"
       checked="{{style['text-decoration'] && style['text-decoration'].indexOf('underline') !== -1}}"
+      tooltip="{[БТР@@Подчеркнутый]}"
    />
    <SBIS3.CONTROLS.WSControls.Buttons.ToggleButton
       name="Strikethrough"
@@ -36,5 +39,6 @@
       cssClassName="controls-ToggleButton__square"
       icon="sprite:icon-16 icon-Stroked icon-primary"
       checked="{{style['text-decoration'] && style['text-decoration'].indexOf('line-through') !== -1}}"
+      tooltip="{[БТР@@Перечеркнутый]}"
    />
 </div>

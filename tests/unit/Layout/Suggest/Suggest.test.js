@@ -133,12 +133,13 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
       it('Suggest::_private.calcOrient', function() {
          var self = getComponentObject();
+         var suggestHeight = 200;
    
          self._children = {
             suggestionsContainer: {
                getBoundingClientRect: function() {
                   return {
-                     height: 200
+                     height: suggestHeight
                   };
                },
                offsetHeight: 200 //suggestHeight
@@ -161,6 +162,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          self._options.suggestStyle = 'overInput';
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 900}), '-down');
          assert.equal(Suggest._private.calcOrient(self, {innerHeight: 400}), '-down');
+         
+         /* a special case, when suggest must opened down */
+         suggestHeight = 400;
+         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 500}), '-down');
       });
    
       it('Suggest::_private.calcHeight', function() {
