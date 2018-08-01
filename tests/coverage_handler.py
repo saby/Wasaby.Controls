@@ -41,7 +41,7 @@ class Coverage:
                     d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
-                        # обрезаем пути, переменная береться из сборки
+                        # обрезаем пути, переменная берется из сборки
                         env = os.environ["WORKSPACE"]
                         k = k.replace(env, '')
                         coverage_result.append(k)
