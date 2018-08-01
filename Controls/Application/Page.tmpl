@@ -68,26 +68,6 @@
    </Controls.Application.TouchDetector>
 </ws:template>
 
-<ws:template name="clientBody">
-   <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
-      <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
-         <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
-            <Controls.Event.Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
-               <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
-                  <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
-                     <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.Popup.Manager>
-                           <ws:partial template="body"/>
-                        </Controls.Popup.Manager>
-                     </Controls.Event.Listener>
-                  </Controls.Event.Listener>
-               </Controls.Event.Listener>
-            </Controls.Event.Listener>
-         </Controls.Event.Listener>
-      </Controls.Event.Listener>
-   </Controls.Event.Listener>
-</ws:template>
-
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application"
       attr:class="{{ stopEvents ? 'pre-load' : '' }}">
@@ -102,7 +82,23 @@
    servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <ws:if data="{{_isClient}}">
-   <ws:partial template="clientBody"/>
+<Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
+      <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
+         <Controls.Event.Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
+            <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
+               <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
+                  <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+                     <Controls.Popup.Manager>
+                        <ws:partial template="body"/>
+                     </Controls.Popup.Manager>
+                  </Controls.Event.Listener>
+               </Controls.Event.Listener>
+            </Controls.Event.Listener>
+         </Controls.Event.Listener>
+      </Controls.Event.Listener>
+   </Controls.Event.Listener>
+</Controls.Event.Listener>
 </ws:if>
 <ws:else>
    <ws:partial template="body"/>
