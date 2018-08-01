@@ -162,6 +162,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                }
 
                this._notificationVDOM.open({
+                  opener: this._notificationVDOM,
                   template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
                   templateOptions: {
                      iconClose: true,
