@@ -48,8 +48,8 @@ define(['SBIS3.CONTROLS/NumberTextBox/resources/FormatText'], function(FormatTex
          it('maxLength = 6: 12345.789 -> 12345.78', function() {
             assert.equal(FormatText.formatText('12345.789', '123', false, 9, 3, false, false, 6, true), '123.789');
          });
-         it('maxLength = 19: 1234567891234567.78 -> 123 (because max value 2^53)', function() {
-            assert.equal(FormatText.formatText('1234567891234567.78', '123', false, 3, 20, false, false, 19, true), '123');
+         it('maxLength = 19: 1234567891234567.78 -> 1234567891234567.78', function() {
+            assert.equal(FormatText.formatText('1234567891234567.78', '1234567891234567.78', false, 3, 20, false, false, 19, true), '1234567891234567.78');
          });
          it('onlyPositive = true: -123.45 -> 123.45', function() {
             assert.equal(FormatText.formatText('123.45', '123', false, 4, 5, false, true, 16, true), '123.45');
