@@ -41,6 +41,9 @@ class Coverage:
                     d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
+                        # обрезаем пути, переменная береться из сборки
+                        env = os.environ["WORKSPACE"]
+                        k = k.replace(env, '')
                         coverage_result.append(k)
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
