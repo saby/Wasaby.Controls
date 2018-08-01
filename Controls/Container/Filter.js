@@ -89,7 +89,7 @@ define('Controls/Container/Filter',
             if (fastFilterItems) {
                processItems(fastFilterItems);
             }
-
+            
             return filter;
          },
          

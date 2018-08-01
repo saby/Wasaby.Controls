@@ -2,7 +2,8 @@
    <div>
       <Controls.Filter.Button attr:class="panel-demo-filterButton"
                               orientation="{{_selectedKeyAlign}}"
-                              bind:items="_itemsSimple">
+                              bind:items="_itemsSimple"
+                              historyId="{{_historyBlock ? 'DEMO_HISTORY_ID' : false}}">
          <ws:templateName>
             <ws:partial template="tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions"
                         title="{{_title}}"
@@ -27,10 +28,14 @@
       <Controls.Input.Text attr:id="title" bind:value="_title"/>
 
       <Controls.Toggle.Checkbox attr:id="add" on:valueChanged="valueChangedHandler()"
-                                bind:value="_additionalBlock" caption="Without block additional"/>
+                                bind:value="_additionalBlock" caption="With block additional params"/>
+
+      <Controls.Toggle.Checkbox attr:id="history"
+                                bind:value="_historyBlock" caption="With history block"/>
 
       <Controls.Toggle.Checkbox attr:id="property" on:valueChanged="valueChangedHandler2()"
-                                bind:value="_hasItemTemplateProperty" caption="Filter 'author' from block 'Selected' is specified using the option 'templateItem'"/>
+                                bind:value="_hasItemTemplateProperty"
+                                caption="Filter 'author' from block 'Selected' is specified using the option 'templateItem'"/>
    </div>
 
 </div>

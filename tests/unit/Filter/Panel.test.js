@@ -29,6 +29,7 @@ define(
             ];
          config.items = items;
          config.itemTemplate = template;
+         config.additionalTemplate = template;
 
          var panel = new FilterPanel(config);
          panel._options = config;
@@ -52,7 +53,7 @@ define(
          it('before update', function() {
             panel._items[2].visibility = false;
             panel._beforeMount(config);
-            panel._beforeUpdate();
+            panel._beforeUpdate(config);
             assert.isTrue(panel._isChanged);
             assert.isTrue(panel._hasAdditionalParams);
          });
@@ -97,9 +98,10 @@ define(
                }),
                options = {};
             options.items = rs;
+            options.additionalTemplate = template;
             var panel2 = new FilterPanel(options);
             panel2._beforeMount(options);
-            panel2._beforeUpdate();
+            panel2._beforeUpdate(options);
             assert.isTrue(panel2._isChanged);
             assert.isTrue(panel2._hasAdditionalParams);
          });

@@ -4,7 +4,6 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
       'tmpl!Controls-demo/Filter/Button/panelOptions/PanelVDom',
-      'Controls/Filter/Button/Panel',
 
       'tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
@@ -12,6 +11,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
@@ -125,17 +125,17 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       var PanelVDom = Control.extend({
          _template: template,
          _itemTemplate: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel'},
-         _addTemplate: {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'},
-         _itemsSimple: items,
+         _addTemplate: null,
+         _itemsSimple: itemsSimple,
          _hasItemTemplateProperty: false,
 
          valueChangedHandler: function(event, value) {
             if (value) {
-               this._itemsSimple = itemsSimple;
-               this._addTemplate = null;
-            } else {
                this._itemsSimple = items;
                this._addTemplate = {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
+            } else {
+               this._itemsSimple = itemsSimple;
+               this._addTemplate = null;
             }
          },
 
@@ -154,6 +154,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          _selectedKeyStyle: 'primary',
 
          _additionalBlock: false,
+         _historyBlock: false,
 
          _items: items
 

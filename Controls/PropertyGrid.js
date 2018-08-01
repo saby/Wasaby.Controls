@@ -16,9 +16,7 @@ define('Controls/PropertyGrid', [
     * @control
     * @public
     * @author Золотова Э.Е.
-    */
-
-   /**
+    *
     * @css @height_PropertyGrid-item Height of item in the block.
     * @css @spacing_PropertyGrid-between-items Spacing between items.
     */
