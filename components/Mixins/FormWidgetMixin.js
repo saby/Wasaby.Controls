@@ -342,15 +342,18 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
          this._createErrorMessage(message);
          if (showInfoBox === true) {
             this._getInfoBox().addCallback(function(){
-               target = this._getExtendedTooltipTarget()[0];
-               if (this._infobox.getCurrentTarget() !== target){
-                  this._infobox.show({
-                     control: target,
-                     message: this._alterTooltipText(),
-                     delay: 0,
-                     modifiers: 'ws-infobox-type-error',
-                     hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
-                  });
+               //контрол може задестроиться до ответа деферреда, например в результате быстрого переключения вкладки
+               if (!this.isDestroyed()) {
+                  target = this._getExtendedTooltipTarget()[0];
+                  if (this._infobox.getCurrentTarget() !== target) {
+                     this._infobox.show({
+                        control: target,
+                        message: this._alterTooltipText(),
+                        delay: 0,
+                        modifiers: 'ws-infobox-type-error',
+                        hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
+                     });
+                  }
                }
             }.bind(this));
          }
@@ -404,13 +407,16 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
             this._container.removeClass('ws-validation-error');
             this._errorMessage = '';
             this._getInfoBox().addCallback(function () {
-               // Если на нас сейчас висит подсказка
-               if (this._infobox.hasTarget() && this._infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
-                  // надо или поменять текст (убрать ошибки валидации), или убрать совсем (если текста помощи нет)
-                  if (this._isCanShowExtendedTooltip()) {
-                     this._showExtendedTooltip(true);
-                  } else {
-                     this._infobox.hide(0);
+               //контрол може задестроиться до ответа деферреда, например в результате быстрого переключения вкладки
+               if (!this.isDestroyed()) {
+                  // Если на нас сейчас висит подсказка
+                  if (this._infobox.hasTarget() && this._infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
+                     // надо или поменять текст (убрать ошибки валидации), или убрать совсем (если текста помощи нет)
+                     if (this._isCanShowExtendedTooltip()) {
+                        this._showExtendedTooltip(true);
+                     } else {
+                        this._infobox.hide(0);
+                     }
                   }
                }
             }.bind(this));
