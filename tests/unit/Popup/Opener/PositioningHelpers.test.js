@@ -7,9 +7,10 @@ define(
       'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Dialog/DialogController',
+      'Core/Deferred'
    ],
 
-   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController) {
+   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, Deferred) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -312,6 +313,7 @@ define(
 
             it('stack state', function() {
                let itemConfig = {
+                  id: '22',
                   popupOptions: item.popupOptions
                };
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
@@ -340,6 +342,7 @@ define(
                assert.isTrue(itemConfig.stackState === 'destroying' || itemConfig.stackState === 'destroyed');
 
                itemConfig.stackState = 'destroying';
+               StackController._destroyDeferred[itemConfig.id] = new Deferred();
                StackController.elementAnimated(itemConfig, {});
                //Зависит от того где запускаем тесты, под нодой или в браузере
                assert.equal(itemConfig.stackState, 'destroyed');
