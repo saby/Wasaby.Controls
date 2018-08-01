@@ -3488,17 +3488,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             /**
              * Убрать пустые строки из начала и конца текста
-             * @returns {*} текст без пустх строк вначале и конце
+             * @returns {*} текст без пустых строк вначале и конце
              */
             _trimText: function(text) {
                if (!text) {
                   return '';
                }
                var regs = {
-                  regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
-                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
-                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
-                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+                  regShiftLine1: /^<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,       // регулярка пустой строки через shift+ enter и space
+                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>$/gi,   // регулярка пустой строки через space и shift+ enter
+                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,                     // регулярка начала строки
+                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i                        // регулярка конца строки
                };
                var substitutes = {
                   regShiftLine1: '<p>',
