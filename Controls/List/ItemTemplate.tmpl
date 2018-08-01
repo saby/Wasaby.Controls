@@ -10,12 +10,12 @@
 
     <ws:if data="{{contentTemplate}}">
         <ws:partial
-                attr:class="controls-ListView__itemContent"
+                attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}"
                 template="{{contentTemplate}}"
                 itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">

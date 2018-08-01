@@ -16,9 +16,15 @@
    margin: @padding_List-checkbox;
 }
 
+.controls-ListView__itemContent_withCheckboxes {
+   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
+}
+
+.controls-ListView__itemContent_withoutCheckboxes {
+   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @padding_List-left;
+}
+
 .controls-ListView__itemContent {
-   margin: 0 0 0 @spacing-List-between-checkbox-content + @width_CheckBox;
-   padding: @spacing_List-item_default 0;
    z-index: 1;
 }
 
