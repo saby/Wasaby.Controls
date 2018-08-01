@@ -1,11 +1,14 @@
 .controls-ListView__itemV {
-   border-left: 3px solid transparent;
    cursor: pointer;
    position: relative;
 }
 
-.controls-ListView__item__marked {
-   border-left: 3px solid @color_ListView-marker;
+.controls-ListView__itemV_supportMarker {
+   border-left: @width_ListView_marker solid transparent;
+}
+
+.controls-ListView__itemV_withMarker {
+   border-left-color: @color_ListView-marker;
 }
 
 .controls-ListView__checkbox {

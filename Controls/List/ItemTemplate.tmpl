@@ -1,4 +1,4 @@
-<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? ' controls-ListView__item__marked'}}
+<div attr:class="controls-ListView__itemV{{marker !== false ? ' controls-ListView__itemV_supportMarker'}}{{marker !== false && itemData.isSelected ? ' controls-ListView__item_withMarker'}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
     {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
