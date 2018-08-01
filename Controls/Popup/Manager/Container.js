@@ -17,7 +17,7 @@ define('Controls/Popup/Manager/Container',
           * @control
           * @private
           * @category Popup
-          * @author Лощинин Дмитрий
+          * @author Красильников Андрей
           */
 
          _template: template,

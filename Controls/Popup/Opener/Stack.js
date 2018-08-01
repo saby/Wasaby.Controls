@@ -1,14 +1,8 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/BaseOpener',
-      'Core/constants'
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(Base, cConstants) {
-      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
-      var POPUP_CLASS = 'controls-Stack';
-      if (HAS_ANIMATION) {
-         POPUP_CLASS += ' controls-Stack__waiting';
-      }
+   function(BaseOpener) {
 
       /**
        * Действие открытия стековой панели.
@@ -21,9 +15,9 @@ define('Controls/Popup/Opener/Stack',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Popup/Opener/Base
+       * @extends Controls/Popup/Opener/BaseOpener
        */
-      var Stack = Base.extend({
+      var Stack = BaseOpener.extend({
 
          /**
           * Открыть стек-панель
@@ -31,9 +25,8 @@ define('Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            config.className = (config.className || '') + ' ' + POPUP_CLASS;
             this._setCompatibleConfig(config);
-            return Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
+            return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
          },
 
          _setCompatibleConfig: function(config) {
