@@ -7,6 +7,7 @@
 import os
 import json
 import argparse
+from collections import OrderedDict
 
 RESULT_JSON = 'result.json'
 
@@ -45,7 +46,7 @@ class Coverage:
 
         # записываем результаты в файл
         with open(os.path.join(path, RESULT_JSON), mode='a+', encoding='utf-8') as f:
-            f.write(json.dumps(self.build_result, indent=2))
+            f.write(json.dumps(OrderedDict(self.build_result), indent=2))
 
     def get_tests(self, change_files):
         """Возвращает список файлов, которые нужно запустить"""
