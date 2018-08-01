@@ -1,12 +1,13 @@
 <ws:template name="period">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
+                            bind:textValue="item.textValue"
                             keyProperty="key"
                             source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
-                         bind:text="item.textValue"
+                         bind:textValue="item.textValue"
                          keyProperty="key"
                          source="{{item.source}}"/>
 </ws:template>
@@ -15,26 +16,20 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
 <ws:template name="sender">
-<Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Sender"/>
 </ws:template>
 
 <ws:template name="author">
-<Controls.Button style="linkMain"  caption="Author" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Author"/>
 </ws:template>
 
 <ws:template name="responsible">
-<Controls.Button style="linkMain"  caption="Responsible" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Responsible"/>
 </ws:template>
 
 <ws:template name="tagging">
@@ -42,16 +37,15 @@
 </ws:template>
 
 <ws:template name="operation">
-<Controls.Button style="linkMain"  caption="Operation" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Operation"/>
+
 </ws:template>
 
 <ws:template name="group">
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
@@ -67,20 +61,16 @@
 <Controls.Filter.Button.Panel.FilterDropdown
         source="{{item.source}}"
         keyProperty="key"
-        bind:text="item.textValue"
+        bind:textValue="item.textValue"
         bind:selectedKeys="item.value"/>
 </ws:template>
 
 <ws:template name="our organisation">
-<Controls.Button style="linkMain"  caption="Our company" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Our company"/>
 </ws:template>
 
 <ws:template name="document">
-<Controls.Button style="linkMain"  caption="Sender" attr:class="panel-demo-text"/>
-<Controls.Input.Text bind:value="item.value"
-                     attr:class="panel-demo-input"/>
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue" caption="Document"/>
 </ws:template>
 
 

@@ -11,23 +11,24 @@ define('Controls/Input/Password',
 
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
-   /**
-    * Password input.
-    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
-    *
-    * @class Controls/Input/Password
-    * @extends Core/Control
-    * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/Password/PasswordStyles
-    * @mixes Controls/Input/resources/InputRender/InputRenderStyles
-    * @control
-    * @public
-    * @category Input
-    * @author Золотова Э.Е.
-    */
+      /**
+       *  A component for entering a password. Entered characters are replaced by *.
+       *  If you want to show the password, you need to click on the corresponding icon.
+       *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/Input/Password
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/interface/IValidation
+       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/Password/PasswordStyles
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @control
+       * @public
+       * @category Input
+       * @author Журавлев Максим Сергеевич
+       */
 
       'use strict';
 
