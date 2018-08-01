@@ -93,7 +93,15 @@ define('Controls/List/ItemsViewModel',
                   index: this._display.getIndex(dispItem),
                   item: dispItem.getContents(),
                   dispItem: dispItem,
-                  key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)
+                  key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
+                  getVersion: function() {
+                     //records have defined method nextVersion, groups haven't
+                     if (this.item.getVersion) {
+                        return this.item.getVersion();
+                     } else {
+                        return this.item;
+                     }
+                  }
                };
             if (this._options.itemsGroup) {
                if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {

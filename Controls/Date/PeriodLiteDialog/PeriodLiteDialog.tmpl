@@ -23,17 +23,27 @@
             <span class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></span>
          </div>
          <ws:partial
-            template="{{_itemTmpl}}"
-            _options="{{_options}}"
-            _year="{{_year}}"
-            _months="{{_months}}"
-            _yearHovered="{{_yearHovered}}"
-            _quarterHovered="{{_quarterHovered}}"
-            _halfyearHovered="{{_halfyearHovered}}"
-            checkedStart="{{_options.checkedStart}}"
-            checkedEnd="{{_options.checkedEnd}}"
-            on:wheel="_onWheel()"
-         />
+               template="{{_options.itemTemplate}}"
+               monthCaptionTemplate="{{_monthCaptionTemplate}}"
+               on:wheel="_onWheel()">
+            <ws:defaultTemplate>
+               <ws:partial
+                  template="{{_defaultItemTemplate}}"
+                  monthCaptionTemplate="{{defaultTemplate.monthCaptionTemplate}}"
+                  _itemTmplByType="{{_itemTmplByType}}"
+                  _options="{{_options}}"
+                  _year="{{_year}}"
+                  _months="{{_months}}"
+                  _yearHovered="{{_yearHovered}}"
+                  _quarterHovered="{{_quarterHovered}}"
+                  _halfyearHovered="{{_halfyearHovered}}"
+                  _onMonthClick="{{_onMonthClick}}"
+                  checkedStart="{{_options.checkedStart}}"
+                  checkedEnd="{{_options.checkedEnd}}"
+                  formatDate="{{_formatDate}}"
+               />
+            </ws:defaultTemplate>
+         </ws:partial>
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
@@ -44,6 +54,7 @@
          <ws:for data="value in [0, 1, 2, 3, 4]">
             <div  class="controls-PeriodLiteDialog-item-years
                            controls-PeriodLiteDialog__vLayoutItem
+                           controls-PeriodLiteDialog__vLayoutItem-caption
                            {{_year - value !== _options.startValue.getFullYear() ? 'controls-PeriodLiteDialog__vLayoutItem-clickable'}}
                            {{_year - value === _options.startValue.getFullYear() ? ' controls-PeriodLiteDialog__selectedYear'}}"
                on:click="_onYearClick(_year - value)">

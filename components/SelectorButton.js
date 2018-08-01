@@ -312,7 +312,8 @@ define('SBIS3.CONTROLS/SelectorButton',
                (По словам Шипина, в AreaAbstract это починить очень дорого). */
             this._selectorAction = new SelectorAction({
                mode: this._getOption('selectMode'),
-               visible: false
+               visible: false,
+               closeByFocusOut: true
             });
          }
          return this._selectorAction;

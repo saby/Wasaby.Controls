@@ -185,6 +185,13 @@
 @color_Paging_arrow-icon:                @color_Paging-digit-text;
 @color_Paging_arrow-icon_disabled:       #8991a9;
 
+//VDOM Operations.Panel
+@background-color_OperationsPanel:                       transparent;
+
+//VDOM Operations.Button
+@color_OperationsButton__icon:                           #FFFFFF;
+@color_OperationsButton__icon_hovered:                   #FFFFFF;
+
 //Switcher VDOM.
 @color_switcher_line:                     #839EBC;
 @switcher-disabled-color:                 #4B688B;
@@ -196,8 +203,8 @@
 
 //VDOM Switcher
 @border-color_Switch:                                   rgba(109,141,176, .4);
-@background-color_Switch-line_enabled:                  #839EBC;
-@background-color_Switch-line_disabled:                 #4B688B;
+@background-color_Switch-track_enabled:                  #839EBC;
+@background-color_Switch-track_disabled:                 #4B688B;
 @border-color_Switch-marker_enabled:                    #839EBC;
 @border-color_Switch-marker_disabled:                   #4B688B;
 @background_Switch-dot_disabled:                        #B9E9FF;
@@ -219,7 +226,7 @@
 @radio-button-disabled-text-color_checked:#e4e4e4;
 //menu
 @background-color_Menu-header:                    #6080A4;
-@color_Menu-header:              @default-text-color;
+@color_Menu-header:                       @white-color;;
 @background-color_Menu:                     #405A77;
 @shadow_Menu:                             0 0 25px 1px rgba(0, 0, 0, 0.45);
 @border-color_Menu:                       transparent;
@@ -351,11 +358,13 @@
 //FloatArea
 @background-color_FloatArea:                      @basic-block-bg-color;
 //CloseButton
-@background-color_CloseButton:           #405A77;
+@background-color_CloseButton_default:           #405A77;
+@background-color_CloseButton_primary: #405A77;
 @border-color_CloseButton:               transparent;
 @box-shadow_CloseButton:                 0 1px 4px rgba(0, 0, 0, .5);
 @box-shadow_CloseButton_active:          @box-shadow_CloseButton;
-@background-color_CloseButton_hover:     #3D5571;
+@background-color_CloseButton_default_hover:     #3D5571;
+@background-color_CloseButton_primary_hover: #3D5571;
 
 @color_CloseButton-icon:                 #8991A9;
 @color_CloseButton-icon_hover:           @color_CloseButton-icon;
@@ -419,6 +428,14 @@
 @color_FastFilter-iconArrow:                    #26B8FF;
 @color_FastFilter-iconArrow_hover:         #B9E9FF;
 @color_FastFilter-iconReset:               #CCCCCC;
+
+//FilterPanel
+@color_FilterPanel-caption:                  #fff;
+
+//dialog template
+@background-color_dialogTemplate-top-area:     #39506A;
+@background-color_dialogTemplate-content:      #273749;
+@color_DialogTemplate-caption:                 #FFCC99;
 //VDOM TreeGridView
 @color_TreeGridView-nodeExpander: #839EBC;
 @color_TreeGridView-nodeExpander_hover: #B9E9FF;

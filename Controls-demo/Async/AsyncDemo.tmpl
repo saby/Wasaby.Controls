@@ -2,8 +2,23 @@
    <ws:for data="key, value in data">
       <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}">
          <div>
-            <ws:partial template="{{ value }}" caption="knopka" value="text"></ws:partial>
+            <ws:partial template="{{ value }}" caption="{{is_OK}}" value="{{is_OK}}"></ws:partial>
          </div>
       </Controls.Container.Async>
    </ws:for>
+   <script>
+      var arr = document.getElementsByTagName('script');
+      var is_ok = false;
+      var isDebug = true;
+      for(var i = 0; i < arr.length; i++) {
+         if(isDebug && /scripts_[0-9]+/g.test(arr[i].attributes.key)) {
+            isDebug = false;
+         }
+         if(!isDebug && /controls-button/ig.test(arr[i].src)) {
+            is_ok = true;
+            break;
+         }
+      }
+      window.$is_OK$ = is_ok || isDebug;
+   </script>
 </div>

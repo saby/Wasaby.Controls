@@ -1,7 +1,9 @@
 <div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsPosition}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
-    <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
-    <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-    <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+    <ws:if data="{{_needScrollCalculation}}">
+        <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
+        <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
+        <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+    </ws:if>
 
    <ws:template name="withDragNDrop">
       <Controls.DragNDrop.Controller
@@ -99,11 +101,15 @@
         <ws:partial template="{{_options.footerTemplate}}"/>
     </ws:if>
 
-    <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
-    <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
-    <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger"></div>
+    <ws:if data="{{_needScrollCalculation}}">
+        <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
+        <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
+        <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger"></div>
+    </ws:if>
 
-    <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+    <ws:if data="{{_needScrollCalculation}}">
+        <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+    </ws:if>
 
     <ws:if data="{{_pagingCfg}}">
        <div class="controls-BaseControl__pagingContainer">

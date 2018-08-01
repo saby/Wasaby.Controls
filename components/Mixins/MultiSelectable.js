@@ -340,8 +340,12 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
          if (this._selectorController) {
             this._selectorController.setSelectedItemsAll();
          } else {
-            this.setSelectedKeys(this._convertToKeys(this.getItems()));
+            this.setSelectedKeys(this._getAllItemsForSelect());
          }
+      },
+
+      _getAllItemsForSelect: function() {
+         return this._convertToKeys(this.getItems());
       },
 
       /**
@@ -608,7 +612,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
          if (this._selectorController) {
             this._selectorController.toggleItemsSelectionAll();
          } else {
-            this.toggleItemsSelection(this._convertToKeys(this.getItems()));
+            this.toggleItemsSelection(this._getAllItemsForSelect());
          }
       },
 

@@ -18,6 +18,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
     * @class SBIS3.CONTROLS/OperationsPanel/Unload
     * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @author Сухоручкин А.С.
+    * @deprecated Используйте {@link SBIS3.CONTROLS/Action/Save}.
     * @control
     * @public
     */

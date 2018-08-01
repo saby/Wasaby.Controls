@@ -1,88 +1,53 @@
 .controls-CustomRadioItem__caption {
-   font-size: @font-size_RadioItem_size-l;
+   font-size: 14px;
    font-weight: bold;
-   padding-left: @spacing-between-radioItem-icon-caption;
+   padding-left: 6px;
 }
-
 .controls-CustomRadioItem__caption_selected_disabled {
-   color: @color_RadioItem_caption_selected_size-l_disabled;
+   color: #CCCCCC;
 }
-
 .controls-CustomRadioItem__caption_selected_enabled {
-   color: @color_RadioItem_caption_selected_size-l;
+   color: #313E78;
 }
-
 .controls-CustomRadioItem__caption_unselected_disabled {
-   color: @color_RadioItem_caption_unselected_disabled;
+   color: #CCCCCC;
 }
-
 .controls-CustomRadioItem__caption_unselected_enabled {
-   color: @color_RadioItem_caption_unselected_enabled;
+   color: #999999;
 }
-
 .controls-SingleRadioItem__caption {
-   font-size: @font-size_RadioItem_size-l;
+   font-size: 14px;
    font-weight: bold;
-   padding: @spacing-between-radioItem-icon-caption;
+   padding: 6px;
    border-style: solid;
    border-radius: 2px;
+   width: 32px;
 }
-
 .controls-SingleRadioItem__caption_selected_disabled {
    color: dimgrey;
    border-color: dimgrey;
 }
-
 .controls-SingleRadioItem__caption_selected_enabled {
    color: darkred;
    border-color: darkred;
 }
-
 .controls-SingleRadioItem__caption_unselected_disabled {
    color: darkgrey;
    border-color: darkgrey;
 }
-
 .controls-SingleRadioItem__caption_unselected_enabled {
    color: darkgreen;
    border-color: darkgreen;
 }
-
 .controls-UnionRadioGroupDemo__wrapper {
    display: inline-flex;
    align-items: center;
 }
-
 .controls-UnionRadioItem__caption {
-   font-size: @font-size_RadioItem_size-l;
+   font-size: 14px;
    font-weight: bold;
-   padding-left: @spacing-between-radioItem-icon-caption;
+   padding-left: 6px;
 }
-
-.controls-UnionRadioItem__icon_selected {
-   color: #000;
-}
-
-.controls-UnionRadioItem__icon_unselected {
-   color: grey;
-}
-
-.controls-UnionRadioItem__caption_selected_disabled {
-   color: grey;
-}
-
-.controls-UnionRadioItem__caption_selected_enabled {
-   color: grey;
-}
-
-.controls-UnionRadioItem__caption_unselected_disabled {
-   color: black;
-}
-
-.controls-UnionRadioItem__caption_unselected_enabled {
-   color: black;
-}
-
 .ws-is-no-touch {
    .controls-CustomRadioItem_wrapper:hover {
       .controls-CustomRadioItem__caption_unselected_enabled {
@@ -90,11 +55,32 @@
       }
    }
 }
-
 .demo-RadioGroup__TestBlock {
    display: block;
 }
-
 .demo-RadioGroup {
    padding: 20px;
+}
+.exampleBlock, .optionsBlock, .eventBlock {
+   width: 600px;
+   padding: 3em;
+}
+.exampleBlock {
+   margin: 2% 10% 0 10%;
+   background-color: #e0f6ff;
+}
+.optionsBlock {
+   margin: 0 10% 2% 10%;
+   background-color: #e4ecff;
+}
+.eventBlock {
+   margin: 2% 10% 2% 10%;
+   background: rgba(103, 185, 255, 0.17);
+}
+.demo-Radio__contentTemplate_padding {
+   padding: 4px;
+}
+.demo-Radio__contentTemplate__caption {
+   font-size: 11px;
+   color: grey;
 }

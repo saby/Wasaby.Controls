@@ -263,7 +263,12 @@ define('Controls/Filter/Button/OldPanelOpener',
                   },
                   onCommandCatch: function(event, commandName) {
                      if (commandName === 'resizeYourself' && self._picker) {
+                        //PopupMixin при пересчете размеров убирает style.height, чтобы получить размеры контента
+                        //В этом случае скролл пропадает (т.к. высота по контенту). Восстанавливаем скролл после перепозиционирования
+                        var scroll = self._picker.getChildControlByName('FilterButtonScroll');
+                        var scrollTop = scroll._getScrollTop();
                         self._picker.recalcPosition(true);
+                        scroll._scrollTo(scrollTop);
                      }
                   }
                }

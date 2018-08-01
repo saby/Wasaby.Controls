@@ -6,6 +6,7 @@ define('Controls/Input/Mask',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
       'tmpl!Controls/Input/Mask/Mask',
+
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
@@ -14,8 +15,10 @@ define('Controls/Input/Mask',
       'use strict';
 
       /**
-       * Input for entering text with a specified format.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * A component for entering text in a {@link mask specific format}.
+       * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
+       * If the input character does not fit the format, then character won't be added.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask
        * @extends Core/Control
@@ -23,10 +26,13 @@ define('Controls/Input/Mask',
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
       /**
@@ -41,17 +47,29 @@ define('Controls/Input/Mask',
        *    <li>x - letter or digit.</li>
        * </ol>
        * delimeters and quantifiers +, *, ?, {n[, m]}.
-       * Quantifiers should be preceded with "\".
+       * Quantifiers should be preceded with \\.
        * Quantifiers should be applied to keys.
        * Format is similar to regular expressions.
        *
        * @example
-       * <pre>
-       *    1. 'dd.dd' - the input mask time.
-       *    2. 'dd.dd.dddd' - the input mask date.
-       *    3. 'd\{1,3}l\{1,3}'.
-       *    4. 'd\*' - the input mask infinity number of digits.
+       * The input mask time:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd"/>
        * </pre>
+       * The input mask date:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="dd.dd.dddd"/>
+       * </pre>
+       * The input mask from 1-3 digits followed by 1-3 letters.
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\{1,3}l\{1,3}"/>
+       * </pre>
+       * The input mask infinity number of digits:
+       * <pre class="brush:xml">
+       *    <Controls.Input.Mask mask="d\*"/>
+       * </pre>
+       *
+       * @see formatMaskChars
        */
 
       /**
@@ -63,7 +81,7 @@ define('Controls/Input/Mask',
        *
        * @example
        * <pre>
-       *    For example, mask='dd.dd', replacer=' ', value='12.34'.
+       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */

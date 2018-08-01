@@ -2,53 +2,47 @@ define('Controls-demo/EngineBrowser/Browser', [
    'Core/Control',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/EngineBrowser/Browser',
+   'Controls-demo/Utils/MemorySourceFilter',
+   'Controls-demo/Utils/MemorySourceData',
    'css!Controls-demo/EngineBrowser/Browser',
    'Controls/EngineBrowser',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelAddItemsTemplate',
    'tmpl!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate',
-   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate'
-], function(Control, Memory, template) {
+   'tmpl!Controls-demo/EngineBrowser/resources/filterButtonEngineTemplate',
+   'Controls/Container/List',
+   'Controls/Search/Input/Container',
+   'Controls/Filter/Button/Container',
+   'Controls/Filter/Fast/Container'
+], function(Control, Memory, template, MemorySourceFilter, MemorySourceData) {
    'use strict';
-
-   var countries = [
-      {key: 1, title: 'USA'},
-      {key: 2, title: 'Russia'},
-      {key: 3, title: 'UK'},
-      {key: 4, title: 'Japan'},
-      {key: 5, title: 'China'},
-      {key: 6, title: 'Australia'}
-   ];
-
-   var sourceData = [
-      {id: 1, title: 'Sasha', country: 'USA'},
-      {id: 2, title: 'Dmitry', country: 'Russia'},
-      {id: 3, title: 'Andrey', country: 'UK'},
-      {id: 4, title: 'Aleksey', country: 'China'},
-      {id: 5, title: 'Sasha', country: 'UK'},
-      {id: 6, title: 'Ivan', country: 'USA'},
-      {id: 7, title: 'Petr', country: 'Japan'},
-      {id: 8, title: 'Roman', country: 'China'},
-      {id: 9, title: 'Maxim', country: 'Japan'},
-      {id: 10, title: 'Andrey', country: 'UK'},
-      {id: 12, title: 'Sasha', country: 'Russia'},
-      {id: 13, title: 'Sasha', country: 'Japan'},
-      {id: 14, title: 'Sasha', country: 'USA'},
-      {id: 15, title: 'Sasha', country: 'Japan'},
-      {id: 16, title: 'Sasha', country: 'Japan'},
-      {id: 17, title: 'Sasha', country: 'Russia'},
-      {id: 18, title: 'Dmitry', country: 'UK'},
-      {id: 19, title: 'Andrey', country: 'USA'},
-      {id: 20, title: 'Aleksey', country: 'China'},
-      {id: 21, title: 'Sasha', country: 'Russia'},
-      {id: 22, title: 'Ivan', country: 'USA'},
-      {id: 23, title: 'Petr', country: 'USA'}
-   ];
-
-   var fastFilterData = [
+   
+   
+   var filterDepData = [
       {
-         id: 'title',
-         resetValue: 'По имени',
-         value: 'По имени',
+         id: 'owner',
+         resetValue: '0',
+         value: '0',
+         properties: {
+            keyProperty: 'owner',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По ответственному', owner: '0'},
+                     {id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.'},
+                     {id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.'},
+                     {id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.'},
+                     {id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.'},
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'department',
+         resetValue: 'По департаменту',
+         value: 'По департаменту',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -56,96 +50,49 @@ define('Controls-demo/EngineBrowser/Browser', [
                module: 'WS.Data/Source/Memory',
                options: {
                   data: [
-                     {id: 0, title: 'По имени'},
-                     {id: 1, title: 'Sasha'},
-                     {id: 2, title: 'Petr'},
-                     {id: 4, title: 'Ivan'},
-                     {id: 5, title: 'Andrey'}
+                     {id: 0, title: 'По департаменту'},
+                     {id: 1, title: 'Разработка'},
+                     {id: 2, title: 'Продвижение СБИС'},
+                     {id: 3, title: 'Федеральная клиентская служка'},
+                     {id: 4, title: 'Служба эксплуатации'},
+                     {id: 5, title: 'Технологии и маркетинг'},
+                     {id: 6, title: 'Федеральный центр продаж. Call-центр Ярославль'},
+                     {id: 7, title: 'Сопровождение информационных систем'}
                   ]
                }
             }
          }
-      },
-      {
-         id: 'id',
-         resetValue: 0,
-         value: 0,
-         properties: {
-            keyProperty: 'id',
-            displayProperty: 'title',
-            source: {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {id: 0, title: 'По id'},
-                     {id: 1, title: '1'},
-                     {id: 2, title: '2'},
-                     {id: 3, title: '3'},
-                     {id: 4, title: '4'}
-                  ]
-               }
-            }
-         }
-      },
-      {
-         id: 'country',
-         resetValue: 'USA',
-         value: 'USA',
-         properties: {
-            keyProperty: 'title',
-            displayProperty: 'title',
-            source: {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: countries
-               }
-            }
-         }
       }
-   ];
-
-   var items = [
-      {
-         id: 'title',
-         value: 'Sasha',
-         resetValue: '',
-         textValue: 'Name',
-         source: new Memory({
-            idProperty: 'id',
-            data: sourceData
-         }),
-         visibility: true
-      },
-      {
-         id: 'FIO',
-         value: '',
-         resetValue: '',
-         textValue: 'Ser name',
-         visibility: true
-      },
-      {
-         id: 'country',
-         value: 'USA',
-         resetValue: 'USA',
-         textValue: 'country',
-         visibility: false,
-         source: new Memory({
-            idProperty: 'title',
-            data: countries
-         })
-      }
-   ];
+   ]
+   
+   var filterButtonData = [{
+      id: 'owner',
+      resetValue: '0',
+      value: '0'
+   }];
 
    var ModuleClass = Control.extend(
       {
          _template: template,
-
-         _source: new Memory({
-            idProperty: 'id',
-            data: sourceData
-         }),
-         _fastFilterSource: fastFilterData,
-         _items: items
+         _fastFilterSource: filterDepData,
+         _items: filterButtonData,
+         _source: null,
+         
+         _beforeMount: function() {
+            this._source = new Memory({
+               idProperty: 'id',
+               data: MemorySourceData
+            });
+         },
+         
+         _afterMount: function() {
+            this._source = new Memory({
+               idProperty: 'id',
+               data: MemorySourceData,
+               filter: MemorySourceFilter('title')
+            });
+            this._forceUpdate();
+         }
       });
    return ModuleClass;
 });

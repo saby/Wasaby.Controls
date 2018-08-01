@@ -18,16 +18,20 @@ define('Controls/Input/Area', [
    'use strict';
 
    /**
-    * Multiline text input with autoheight.
-    * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+    * A component for entering multi-line text.
+    * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
+    * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
+    * You can move the text to the next line using {@link newLineKey hotkeys}.
+    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Area
     * @extends Controls/Input/Text
     * @control
     * @public
     * @category Input
-    * @author Степин Павел Владимирович
     * @demo Controls-demo/Input/Area/Area
+    *
+    * @author Журавлев Максим Сергеевич
     */
 
    /**
@@ -42,9 +46,10 @@ define('Controls/Input/Area', [
 
    /**
     * @name Controls/Input/Area#newLineKey
-    * @cfg {String} New line key.
+    * @cfg {String} The behavior of creating a new line.
     * @variant enter When user presses Enter.
     * @variant ctrlEnter When user presses Ctrl + Enter.
+    * @default enter
     */
 
    var _private = {

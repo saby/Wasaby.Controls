@@ -176,6 +176,64 @@ define([
       });
 
 
+      it('_needScrollCalculation', function() {
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var dataLoadFired = false;
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {}
+         };
+
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         assert.isFalse(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
+
+         cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {
+               view: 'infinity'
+            }
+         };
+         ctrl._beforeUpdate(cfg);
+         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after updating');
+
+         ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
+      });
+
       it('loadToDirection down', function(done) {
 
          var source = new MemorySource({

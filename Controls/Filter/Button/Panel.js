@@ -2,27 +2,35 @@ define('Controls/Filter/Button/Panel', [
    'Core/Control',
    'WS.Data/Chain',
    'WS.Data/Utils',
-   'Core/helpers/Object/isEqual',
    'Core/core-clone',
+   'Core/helpers/Object/isEqual',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'tmpl!Controls/Filter/Button/Panel/Panel',
    'css!Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, isEqual, Clone, _FilterPanelOptions, template) {
+], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
 
    /**
     * Control "Filter panel"
     * @class Controls/Filter/Button/Panel
     * @extends Core/Control
-    * @mixes Controls/Filter/Button/interface/IFilterPanel
+    * @mixes Controls/interface/IFilterPanel
     * @control
     * @public
+    *
+    * @css @width_FilterPanel_default Width filter panel
+    * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
+    * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
+    * @css @spacing_FilterPanel-between-resetButton-filterButton Spacing between button "By default" and button "Selected".
+    * @css @margin_FilterPanel__PropertyGrid Margin for the block "Selected".
+    * @css @margin_FilterPanel-AdditionalParams Margin for the block "Possible to select".
+    * @css @spacing_FilterPanel-header-topTemplate Margin for the template in the header of the panel .
+    * @css @height_FilterPanel-header Height header of the panel.
     */
 
    /**
     * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
     */
-
 
    'use strict';
 
@@ -62,8 +70,8 @@ define('Controls/Filter/Button/Panel', [
       isChangedValue: function(items) {
          var isChanged = false;
          Chain(items).each(function(item) {
-            if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
-               (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
+            if ((!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
+               getPropValue(item, 'visibility') === undefined) || getPropValue(item, 'visibility')) {
                isChanged = true;
             }
          });
@@ -88,7 +96,8 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
-         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
+         this._historyId = options.historyId || (this._contextOptions && this._contextOptions.historyId);
+         this._hasAdditionalParams = options.additionalTemplate && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
@@ -122,7 +131,9 @@ define('Controls/Filter/Button/Panel', [
       _resetFilter: function() {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
          Chain(this._items).each(function(item) {
-            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            if (getPropValue(item, 'visibility') === undefined) {
+               setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            }
             if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
@@ -135,7 +146,7 @@ define('Controls/Filter/Button/Panel', [
       return {
          title: rk('Отбираются'),
          styleHeader: 'primary',
-         size: 'default'
+         size: 'm'
       };
    };
 

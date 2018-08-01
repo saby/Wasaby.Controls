@@ -14,6 +14,7 @@ define('Controls-demo/Example/Example',
          {name: 'Input/Password', title: 'Password'},
          {name: 'Input/Phone', title: 'Phone'},
          {name: 'Input/Suggest', title: 'Suggest'},
+         {name: 'Input/Tag', title: 'Tag'},
          {name: 'Input/Text', title: 'Text'}
       ];
 

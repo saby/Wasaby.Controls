@@ -68,7 +68,8 @@ define('Controls/List/ListControl', [
 
    ListControl.getDefaultOptions = function() {
       return {
-         uniqueKeys: true
+         uniqueKeys: true,
+         multiSelectVisibility: 'hidden'
       };
    };
 

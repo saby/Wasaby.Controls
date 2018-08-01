@@ -21,13 +21,12 @@
 }
 
 .controls-RadioItem__caption {
-    font-size: @font-size_RadioItem_size-m;
     padding-left: @spacing-between-radioItem-icon-caption;
  }
 
 .controls-RadioItem__caption_selected_disabled,
 .controls-RadioItem__caption_selected_enabled {
-   color: @color_RadioItem_caption_selected_size-m;
+   color: @color_RadioItem_caption_selected;
 }
 
 .controls-RadioItem__caption_unselected_disabled {
@@ -51,7 +50,7 @@
 .ws-is-no-touch {
    .controls-RadioItem__wrapper:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+         fill: @color_ToggleCircle_outerCircle_enabled_hovered;
       }
 
       .controls-RadioItem__caption_unselected_enabled {

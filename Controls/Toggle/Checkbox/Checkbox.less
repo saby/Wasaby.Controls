@@ -1,12 +1,20 @@
 .controls-Checkbox {
    display: inline-block;
 }
+.controls-Checkbox__disabled {
+   cursor: default;
+}
+.controls-Checkbox__enabled {
+   cursor: pointer;
+}
+.controls-Checkbox__wrapper:before {
+   content: '\200b';
+}
 .controls-Checkbox__wrapper {
-   cursor:pointer;
    display: inline-flex;
    font-size: @font-size__checkBox;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @height_CheckBox;
+   line-height: @line-height_Checkbox;
 }
 .controls-Checkbox__icon-border-color__enabled {
    color: @color_CheckBox__iconBox;
@@ -15,25 +23,22 @@
    color: @color_CheckBox__iconBox_disabled;
 }
 .controls-Checkbox__caption-color__enabled{
-   color: @color_CheckBox-caption_enabled;
+   color: @color_CheckBox__caption_enabled;
 }
 .controls-Checkbox__caption-color__disabled{
-   color: @color_CheckBox___caption_disabled;
+   color: @color_CheckBox__caption_disabled;
 }
 .controls-Checkbox__caption {
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @check-box-caption-line-height;
+   line-height: @line-height_Checkbox__caption;
 }
 .controls-Checkbox__icon {
    position: relative;
    .checkbox-border-size();
    .checkbox();
    flex-shrink: 0;
-}
-.controls-Checkbox__icon:before {
-   content: '';
 }
 .controls-Checkbox__icon-checked {
    .checkbox-checked-size();
@@ -42,14 +47,14 @@
    .checkbox-null-size();
 }
 .controls-Checkbox__icon-tristate-color__disabled:after{
-   background-color: @color_CheckBox_disabled;
+   background-color: @color_CheckBox__icon_disabled;
 }
 .controls-Checkbox__icon-tristate-color__enabled:after{
-   background-color: @color_CheckBox-icon_enabled;
+   background-color: @color_CheckBox__icon_enabled;
 }
 .controls-Checkbox__icon-checked-color__enabled:after{
-   color: @color_CheckBox-icon_enabled;
+   color: @color_CheckBox__icon_enabled;
 }
 .controls-Checkbox__icon-checked-color__disabled:after{
-   color: @color_CheckBox_disabled;
+   color: @color_CheckBox__icon_disabled;
 }

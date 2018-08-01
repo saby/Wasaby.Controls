@@ -15,8 +15,10 @@ define('Controls/Input/Text',
       'use strict';
 
       /**
-       * Single-line text input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * A component for entering single-line text.
+       * You may want to restrict user input to a limited define of characters. In this case, you should use the option {@link constraint}.
+       * You can {@link trim remove extra spaces} at the beginning and end when the {@link inputCompleted input is completed}.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Text
        * @extends Core/Control
@@ -24,11 +26,13 @@ define('Controls/Input/Text',
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
-       * @author Журавлев Максим Сергеевич
        * @demo Controls-demo/Input/Text/Text
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
 
@@ -39,33 +43,29 @@ define('Controls/Input/Text',
 
       /**
        * @name Controls/Input/Text#trim
-       * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
-       * @variant true Remove whitespaces.
-       * @variant false Do not remove whitespaces.
-       * @default false
+       * @cfg {Boolean} Determines whether removes white spaces from both sides of a string when input is completed.
        */
 
       /**
        * @name Controls/Input/Text#selectOnClick
-       * @cfg {Boolean} If true, text is selected when input is clicked.
-       * @variant true Select text on click.
-       * @variant false Do not select text on click.
+       * @cfg {Boolean} Determines whether text is selected when input is clicked.
+       * @default true
        */
 
       /**
        * @name  Controls/Input/Text#constraint
        * @cfg {String} Regular expression for input filtration.
        * @remark
-       * Every entered character is checked with a given regular expression. If symbol does not
-       * comply with the expression, if will not be entered.
+       * Every entered character is checked with a given regular expression.
+       * If symbol does not match with the expression, then he will not be entered.
        * @example
        * Allow only digits:
        * <pre class="brush:xml">
-       *     <option name="constraint">[0-9]</option>
+       *    <Controls.Input.Text constraint="[0-9]"/>
        * </pre>
        * Allow only cyrillic letters:
        * <pre class="brush:xml">
-       *     <option name="constraint">[а-яА-ЯёЁ]</option>
+       *    <Controls.Input.Text constraint="[а-яА-ЯёЁ]"/>
        * </pre>
        */
 

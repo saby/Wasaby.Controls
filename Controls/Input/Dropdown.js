@@ -19,6 +19,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/interface/ITextValue
        * @control
        * @public
        * @category Input
@@ -51,11 +52,12 @@ define('Controls/Input/Dropdown',
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._icon = items[0].get('icon');
+            this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
          _setText: function(items) {
-            this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null;
+            this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null || items[0] === null;
             if (this._isEmptyItem) {
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {

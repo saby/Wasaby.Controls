@@ -15,7 +15,7 @@
 }
 
 .controls-DoubleSwitch__toggle_horizontal {
-   margin: 0 @margin_Switch-text;
+   margin: 0 @spacing_Switch-between-toggle-text;
    width: @width_Switch;
    height: @height_Switch;
 }
@@ -27,7 +27,7 @@
    margin: 0;
    &:before {
       height: 0;
-      line-height: @default-text-size;
+      line-height: @line-height_DoubleSwitch_vertical;
    }
 }
 
@@ -38,17 +38,17 @@
 .controls-DoubleSwitch__textBlock {
    .inline-flexbox();
    .flex-direction(column);
-   margin-left: @margin_Switch-text;
+   margin-left: @spacing_Switch-between-toggle-text;
 }
 
 .controls-DoubleSwitch__line_horizontal {
-   height: @height_Switch-line;
-   width: @width_Switch-line - @size_Switch-marker;
+   height: @thickness_Switch-track;
+   width: @length_Switch-track - @width_ToggleCircle;
 }
 
 .controls-DoubleSwitch__line_vertical {
-   height: @width_Switch-line - @size_Switch-marker;
-   width: @height_Switch-line;
+   height: @length_Switch-track - @height_ToggleCircle;
+   width: @thickness_Switch-track;
 }
 
 .controls-DoubleSwitch__line_vertical_checked {
@@ -57,50 +57,13 @@
 }
 
 .controls-DoubleSwitch__line_enabled {
-   background-color: @background-color_Switch-line_enabled;
+   background-color: @background-color_Switch-track_enabled;
    display: inline-block;
 }
 
 .controls-DoubleSwitch__line_disabled {
-   background-color: @background-color_Switch-line_disabled;
+   background-color: @background-color_Switch-track_disabled;
    display: inline-block;
-}
-
-.controls-DoubleSwitch__marker {
-   width: @size_Switch-marker;
-   height: @size_Switch-marker;
-   border-style: solid;
-   border-width: @border-width_Switch-marker;
-   border-radius: 100%;
-   box-sizing: border-box;
-   position: relative;
-}
-
-.controls-DoubleSwitch__marker_enabled {
-   border-color: @border-color_Switch-marker_enabled;
-}
-
-.controls-DoubleSwitch__marker_disabled {
-   border-color: @border-color_Switch-marker_disabled;
-}
-
-.controls-DoubleSwitch__marker:before {
-   content: '';
-   width: @size_Switch-dot;
-   height: @size_Switch-dot;
-   border-radius: 100%;
-   display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
-   //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
-   position: absolute;
-   margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
-}
-
-.controls-DoubleSwitch__marker_enabled:before {
-   background: @background_Switch-dot_enabled;
-}
-
-.controls-DoubleSwitch__marker_disabled:before {
-   background: @background_Switch-dot_disabled;
 }
 
 .controls-DoubleSwitch__text_vertical {
@@ -120,7 +83,7 @@
 
 .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
    .controls-SwitchCircle__borderCircle_enabled {
-      fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+      fill: @color_ToggleCircle_outerCircle_enabled_hovered;
    }
 }
 

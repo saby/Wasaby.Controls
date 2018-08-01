@@ -81,6 +81,11 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementUpdated: function(item, container) {
             if (this._canUpdate(container)) {
+               if (HAS_ANIMATION) {
+                  // todo https://online.sbis.ru/opendoc.html?guid=85b389eb-205e-4a7b-b333-12f5cdc2523e
+                  item.popupOptions.className = _private.removeAnimationClasses(item.popupOptions.className);
+                  item.popupOptions.className += ' controls-Stack__open';
+               }
                if (this._checkContainer(item, container)) {
                   _private.prepareSizes(item, container);
                   this._update();
@@ -122,6 +127,18 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item, index) {
                item.position = self._getItemPosition(index);
             });
+         },
+
+         getDefaultPosition: function(popupOptions) {
+            var baseCoord = { top: 0, right: 0 };
+            var position = StackStrategy.getPosition(baseCoord, { popupOptions: popupOptions });
+
+            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+            return {
+               top: -10000,
+               left: -10000,
+               width: position.width || undefined
+            };
          },
 
          _getItemPosition: function(index) {

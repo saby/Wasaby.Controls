@@ -9,18 +9,23 @@ define('Controls/Input/Phone',
       'use strict';
 
       /**
-       * Phone input.
-       * <a href="https://wi.sbis.ru/materials/demo-ws4-input">Демо-пример</a>.
+       * A component for entering a phone number. Depending on the characters you enter, the phone number format changes.
+       * This behavior is described in the {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html standard}.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Phone
        * @extends Core/Control
+       * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
        * @demo Controls-demo/Input/Phone/Phone
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
       var Phone = Control.extend({

@@ -709,7 +709,7 @@
   border-width: @border-width_CloseButton;
   border-color: @border-color_CloseButton;
   border-radius: @border-radius_CloseButton;
-  background-color: @background-color_CloseButton;
+  background-color: @background-color_CloseButton_default;
   &:before {
     color: @color_CloseButton-icon;
     text-shadow: @text-shadow_Button;
@@ -721,7 +721,7 @@
 
 .closeButton__popup_standard_hover() {
   &:hover, &:active {
-    background-color: @background-color_CloseButton_hover;
+    background-color: @background-color_CloseButton_default_hover;
     box-shadow: @box-shadow_CloseButton_active;
     border-color: @border-color_CloseButton_hover;
     &:before {

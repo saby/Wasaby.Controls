@@ -4,11 +4,12 @@ define(
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Controls/Popup/Opener/Notification/NotificationStrategy',
       'Controls/Popup/Opener/Dialog/DialogStrategy',
+      'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Dialog/DialogController',
    ],
 
-   function(Stack, Sticky, Notification, Dialog, StickyController, DialogController) {
+   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -298,6 +299,13 @@ define(
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
+            });
+
+            it('stack default position', function() {
+               var position = StackController.getDefaultPosition(item.popupOptions);
+               assert.equal(position.top, -10000);
+               assert.equal(position.left, -10000);
+               assert.equal(position.width, 800 + stackShadowWidth);
             });
 
             it('stack from target container', function() {

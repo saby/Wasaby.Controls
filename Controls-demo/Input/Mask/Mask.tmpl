@@ -1,28 +1,36 @@
-<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
-   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
-      <h2>Mask</h2>
-      <Controls.Label caption="Пример"/>
-      <Controls.Input.Mask name="example"
-                           placeholder="{{_mask}}"
+<Controls-demo.Wrapper.Wrapper title="Mask">
+   <ws:componentClass>
+      <Controls.Popup.Opener.InfoBox name="infoBoxMask"/>
+      <Controls.Input.Mask name="textMask"
+                           placeholder="{{_placeholder}}"
                            mask="{{_mask}}"
                            replacer="{{_replacer}}"
                            tagStyle="{{_tagStyle}}"
+                           attr:test_name="example"
                            bind:value="_value"
-						   attr:test_name="example"
+                           readOnly="{{ _readOnly }}"
+                           selectOnClick="{{_selectOnClick}}"
+                           validationErrors="{{_validationErrors}}"
+                           on:tagHover="_tagStyleHandler()"
+                           on:tagClick="_tagStyleClickHandler()"
+                           attr:class="demo-TextBox"
       />
-   </div>
-   <div style="padding: 3em; background-color: rgba(81,81,81,0.11)">
-      <h3>Задайте опции:</h3>
+   </ws:componentClass>
+   <ws:componentProperty>
       <Controls.Label caption="replacer"/>
-      <Controls.Input.Text attr:test_name="replacer" name="replacer" on:inputCompleted="_setValue()" bind:value="_replacer"/>
+      <Controls.Input.Text attr:test_name="replacer" name="replacer" on:inputCompleted="_setValue()"
+                           bind:value="_replacer" attr:class="demo-TextBox"/>
+      <Controls.Label name="myLabel1" caption="placeholder"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
       <Controls.Label caption="mask"/>
-      <Controls.Input.Text attr:test_name="mask" name="mask" on:inputCompleted="_setValue()" bind:value="_mask"/>
-      <Controls.Label caption="tagStyle(варианты: attention, done, error, primary, info)"
-                      attr:style="height: auto;"/>
-      <Controls.Input.Text bind:value="_tagStyle"/>
-      <Controls.Label caption="dd.dd.dd" on:click="_setConfig('dd.dd.dd', ' ')"/>
-      <Controls.Label caption="(ddd(ddd)ddd)" on:click="_setConfig('(ddd(ddd)ddd)', '')"/>
-      <Controls.Label caption="d{1,3}l{1,3}" on:click="_setConfig('d\{1,3}l\{1,3}', '')"/>
-      <Controls.Label caption="d\*" on:click="_setConfig('d\*', '')"/>
-   </div>
-</div>
+      <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_mask" source="{{_items}}"
+                                      on:suggestValueChanged="_setValue()" attr:class="demo-TextBox"
+									  attr:test_name="mask"/>
+      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
+      <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
+                                   bind:readOnlyValue="_readOnly"
+                                   on:validationErrorsValueChanged="_validationChangedHandler()"
+                                   bind:validationErrorsValue="_validationErrorsValue"/>
+   </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

@@ -20,29 +20,28 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#items
     * @cfg {FilterPanelItems[]} Properties for editing or showing.
     */
-   
-   /**
-    * @name Controls/interface/IFilterButton#filterMode
-    * @cfg {String} Mode of forming a filter.
-    * @variant onlyChanges - only changed fields
-    * @variant full - all fields
-    */
-   
+
    /**
     * @name Controls/interface/IFilterButton#lineSpaceTemplate
     * @cfg {Function} Template for the space between the filter button and the string.
     */
    
    /**
-    * @name Controls/interface/IFilterButton#template
-    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: (@link Controls/interface/IFilterPanel).
+    * @name Controls/interface/IFilterButton#templateName
+    * @cfg {String} Template for the pop-up panel. The description of the filter panel options: {@link Controls/interface/IFilterPanel}.
     */
    
    /**
-    * @name Controls/interface/IFilterButton#filterAlign
+    * @name Controls/interface/IFilterButton#orientation
     * @cfg {String} Sets the direction in which the popup panel will open.
     * @variant right The panel opens to the left.
     * @variant left The panel opens to the right.
+    */
+   
+   /**
+    * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} filter New filter.
     */
    
 });

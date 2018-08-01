@@ -86,6 +86,9 @@
 @top-space_stackTemplate_close-button:          5px;
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
+//DialogTemplate
+@margin_dialogTemplate_head:                   0 48px 0 12px;
+
 //FieldLink
 @icon-size_FieldLink-button:                    @default-icon-size;
 @border-width_FieldLink-picker:                 @default-border-width;
@@ -272,7 +275,7 @@
 @font-size_DropDownList:               @default-text-size;
 @top_DropdownList_picker_marker:       13px;
 @right-DropdownList-cross:             5px;
-@top-DropdownList-cross:               7px;
+@top-DropdownList-cross:               6px;
 @margin_DropdownList-group:                           4px 12px;
 @thickness_DropdownList-group-separator:              1px;
 @spacing_DropdownList-group-between-text-separator:   12px;
@@ -419,7 +422,18 @@
 @padding_DraggingTemplate-counter:               0 6px;
 @font-size_DraggingTemplate-counter:             14px;
 
-//VDOM Switch
+//VDOM Operations.Panel
+@height_OperationsPanel:                              30px;
+@spacing_OperationsPanel__item-between-icon-caption:  6px;
+@margin_OperationsPanel__rightTemplate:               0 8px 0 0;
+@spacing_OperationsPanel-between-items:               12px;
+
+//VDOM Operations.Button
+@height_OperationsButton:                             24px;
+@width_OperationsButton:                              24px;
+@font-size_OperationsButton__icon:                    18px;
+
+   //VDOM Switch
 @width_Switch:                     46px;
 @height_Switch:                    24px;
 @border-width_Switch:              @default-border-width;
@@ -427,9 +441,10 @@
 @size_Switch-marker:               12px;
 @border-width_Switch-marker:       2px;
 @size_Switch-dot:                  6px;
-@margin_Switch-text:               6px;
-@height_Switch-line:               2px;
-@width_Switch-line:                34px;
+@spacing_Switch-between-toggle-text:               6px;
+@thickness_Switch-track:               2px;
+@length_Switch-track:                34px;
+@line-height_DoubleSwitch_vertical: @default-text-size;
 
 //PasswordInput
 @font-size_PasswordInput-showPassword:         @default-icon-size-medium;
@@ -519,12 +534,18 @@
 //List
 @spacing-List-between-checkbox-content:  0;
 @padding_List-checkbox:                  3px 0 0 0;
-@spacing_List-item_default:              6px;
+@spacing_List-item_default:              12px;
+@padding_List-left:                      12px;
+@padding_List-right:                     12px;
 //Scroll
 @height-gradient_Scroll-shadow:          8px;
 //FilterButton
-@font-size_FilterButton-icon:            @icon-size_default_medium;
-@font-size_FilterButton-text:            @default-text-size;
+@spacing_FilterButton-between-icon-text:           @default-padding;
+@spacing_FilterButton-between-spaceTemplate-text:  @default-padding;
+@font-size_FilterButton-icon:                      @icon-size_default_medium;
+@font-family_FilterButton-icon:                    @default-icon-medium-font;
+@font-size_FilterButton-text:                      @default-text-size;
+@icon-size_FilterButton-text-icon:                 @icon-size_default;
 
 //Lookup
 @spacing_Lookup-item:                    4px;
@@ -553,31 +574,30 @@
 @width-HeaderSeparator:                6px;
 @height-HeaderSeparator:               10px;
 @size-Separator__icon:                 16px;
-@padding-left_HeaderSeparator:         10px;
+@spacing-HeaderSeparator_between_headerSeparator_Header:         10px;
 @size-BigSeparator__icon:              26px;
 //backButton
-@width-BackButton_size-l:              10px;
-@height-BackButton_size-l:             14px;
-@width-BackButton_size-default:        9px;
-@height-BackButton_size-default:       12px;
-@width-BackButton_size-s:              9px;
-@height-BackButton_size-s:             11px;
+@width-BackButton__icon_size-l:              10px;
+@height-BackButton__icon_size-l:             14px;
+@width-BackButton__icon_size-m:        9px;
+@height-BackButton__icon_size-m:       12px;
+@width-BackButton__icon_size-s:              9px;
+@height-BackButton__icon_size-s:             11px;
 @spacing-BackButton-between-icon-text: 3px;
 @spacing-BackButton-between-icon-text_big: 2px;
-@spacing-Separator-between-icon-text:     4px;
+@padding-Separator:     4px;
 @font-size_BackButton-arrow:           @default-icon-size;
 @height-BackButton:                    24px;
 
 //radioGroup
 @height_RadioItem:                        24px;
-@font-size_RadioItem_size-l:              14px;
-@font-size_RadioItem_size-m:              15px;
+@font-size_RadioItem:              14px;
 @stroke-width_RadioGroup_borderCircle:    2px;
 @spacing-between-radioItems_horizontal:   12px;
 @spacing-between-radioItems_vertical:     8px;
 @spacing-between-radioItem-icon-caption:  6px;
-@width_RadioItem_svg:                     12px;
-@height_RadioItem_svg:                    12px;
+@width_ToggleCircle:                     12px;
+@height_ToggleCircle:                    12px;
 
 //Path
 @font-size_Path-backButtonArrow:                      @default-icon-size;
@@ -611,24 +631,34 @@
 @box-shadow-IconButton_activated:        none;
 
 //FilterPanel
-@width_FilterPanel_default:                                    400px;
-@font-size_FilterPanel-caption:                                15px;
+@width_FilterPanel_size-m:                                     400px;
+@width_FilterPanel_size-l:                                     600px;
+@width_FilterPanel_size-xl:                                    800px;
 @spacing_FilterPanel-between-filterButton-closeButton:         4px;
-@margin_FilterPanel-resetButton-title:                         0 16px 0 0;
-@margin_FilterPanel__PropertyGrid:                             0 12px 2px 34px;
+@spacing_FilterPanel-between-resetButton-filterButton:         16px;
+@margin_FilterPanel__PropertyGrid:                             0 12px 6px 34px;
+@margin_FilterPanel-AdditionalParams:                          6px 12px;
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
-@height_FilterPanel-item:                                      24px;
-@spacing-bottom_FilterPanel:                                   6px;
+@spacing-bottom_FilterPanel:                                   12px;
+@padding_FilterPanel-history:                                  6px 12px 12px 12px;
+@spacing_FilterPanel-items:                                    22px;
 //PropertyGrid
-@height_PropertyGrid-item:                                     28px;
-@spacing_PropertyGrid-dropdownList:         0px;
+@height_PropertyGrid-item:                                     24px;
+@spacing_PropertyGrid-between-items:                           4px;
 //AdditionalParams
 @max-height_FilterPanel-items:              120px;
-@spacing_AdditionalParams-items:            0 12px 0 34px;
+@height_AdditionalParams-item:              24px;
+@height_FilterPanel-caption:                24px;
+@font-size_FilterPanel-caption:             15px;
 @height_AdditionalParams-arrow:             26px;
-@margin_AdditionalParams:                   6px;
-@margin_AdditionalParams-caption:           6px 0 6px 12px;
+//FilterText
+@height_FilterText:                       24px;
+//HistoryList
+@height_HistoryList-item:                   24px;
+@icon-size_HistoryList-iconPin:             16px;
+@spacing_HistoryList-between-icon-text:     12px;
+@font-size_HistoryList-item:                14px;
 //toggleButton
 @border-width_ToggleButton:               1px;
 @border-radius-ToggleButton:              2px;

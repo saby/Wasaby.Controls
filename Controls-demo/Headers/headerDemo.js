@@ -3,7 +3,8 @@ define('Controls-demo/Headers/headerDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Headers/headerDemo',
    'WS.Data/Collection/RecordSet',
-   'css!Controls-demo/Headers/headerDemo'
+   'css!Controls-demo/Headers/headerDemo',
+   'css!Controls-demo/Headers/resetButton'
 ], function (Control,
              MemorySource,
              template) {
@@ -39,139 +40,18 @@ define('Controls-demo/Headers/headerDemo', [
       ]
    });
 
-   var counterSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
-   var counterStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         },
-         {
-            title: 'disabled'
-         }
-      ]
-   });
-
-   var separatorStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'accent'
-         },
-         {
-            title: 'additional'
-         },
-         {
-            title: 'main'
-         }
-      ]
-   });
-
-   var iconStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var backStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var backSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
          _selectedSize: 'm',
          _selectedStyle: 'primary',
-         _counterSelectedSize: 'l',
-         _counterSelectedStyle: 'default',
-         _separatorSelectedStyle: 'accent',
-         _iconSelectedStyle: 'default',
-         _backSelectedStyle: 'default',
-         _backSelectedSize: 'm',
-         _backStyleSource: backStyleSource,
-         _backSizeSource: backSizeSource,
-         _iconStyleSource: iconStyleSource,
-         _separatorStyleSource: separatorStyleSource,
          _headerSizeSource: headerSizeSource,
          _headerStyleSource: headerStyleSource,
-         _counterSizeSource: counterSizeSource,
-         _counterStyleSource: counterStyleSource,
          _caption: 'test',
-         _type: 'commonHeader',
-         _counterValue: 12,
-         _backCaption: 'Back',
-         _showCaption: true,
-         _showCounter: true,
-         _showButtonSeparator: true,
-         _showSeparator: true,
-         _bold: true,
-         _clickedComponent: 'no component',
+         _eventName: 'no event',
 
-         clickIcon: function(e) {
-            this._iconValue = !this._iconValue;
-         },
-
-         clickHandler: function(e, indexOfComponent) {
-            switch (indexOfComponent) {
-               case 1:
-                  this._clickedComponent = 'back-button';
-                  break;
-               case 2:
-                  this._clickedComponent = 'button-separator';
-                  break;
-               case 3:
-                  this._clickedComponent = 'header or header-separator';
-                  break;
-               case 4:
-                  this._clickedComponent = 'counter';
-                  break;
-            }
+         clickHandler: function(e) {
+            this._eventName = 'click';
          },
 
          changeSize: function(e, key) {
@@ -181,28 +61,8 @@ define('Controls-demo/Headers/headerDemo', [
          changeStyle: function(e, key) {
             this._selectedStyle = key;
          },
-         counterChangeSize: function(e, key) {
-            this._counterSelectedSize = key;
-         },
-
-         counterChangeStyle: function(e, key) {
-            this._counterSelectedStyle = key;
-         },
-
-         separatorChangeStyle: function(e, key) {
-            this._separatorSelectedStyle = key;
-         },
-
-         iconChangeStyle: function(e, key) {
-            this._iconSelectedStyle = key;
-         },
-
-         backChangeStyle: function(e, key) {
-            this._backSelectedStyle = key;
-         },
-
-         backChangeSize: function(e, key) {
-            this._backSelectedSize = key;
+         reset: function() {
+            this._eventName = 'no event';
          }
       });
    return ModuleClass;

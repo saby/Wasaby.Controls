@@ -2,8 +2,9 @@ define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
    'Controls/Constants',
-   'Core/core-clone'
-], function(BaseViewModel, ListViewModel, ControlsConstants, cClone) {
+   'Core/core-clone',
+   'Core/detection'
+], function(BaseViewModel, ListViewModel, ControlsConstants, cClone, cDetection) {
 
    'use strict';
 
@@ -210,7 +211,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                result = [];
             for (var i = 0; i < columns.length; i++) {
-               result.push(this._prepareCrossBrowserColumn(columns[i]));
+               result.push(this._prepareCrossBrowserColumn(columns[i], cDetection.isNotFullGridSupport));
             }
             return result;
          },
@@ -438,6 +439,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
+            current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
             current.style = this._options.style;
 
 
@@ -590,6 +592,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          _updateSelection: function(selectedKeys) {
             this._model._updateSelection(selectedKeys);
+            this._nextVersion();
          },
 
          setDragTargetItem: function(itemData) {

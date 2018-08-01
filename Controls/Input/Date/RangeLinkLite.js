@@ -74,7 +74,10 @@ define('Controls/Input/Date/RangeLinkLite', [
                chooseHalfyears: this._options.chooseHalfyears,
                chooseYears: this._options.chooseYears,
 
-               emptyCaption: this._options.emptyCaption
+               emptyCaption: this._options.emptyCaption,
+
+               itemTemplate: this._options.itemTemplate,
+               captionFormatter: this._options.captionFormatter
             }
          });
       },
