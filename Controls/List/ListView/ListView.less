@@ -3,12 +3,14 @@
    position: relative;
 }
 
-.controls-ListView__itemV_supportMarker {
-   border-left: @width_ListView_marker solid transparent;
-}
-
-.controls-ListView__itemV_withMarker {
-   border-left-color: @color_ListView-marker;
+.controls-ListView__itemV_withMarker:after {
+   content: '\200b';
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: @width_ListView_marker;
+   background-color: @color_ListView-marker;
 }
 
 .controls-ListView__checkbox {
