@@ -1,0 +1,13 @@
+<ws:partial template="tmpl!Controls/Dropdown/resources/template/itemTemplate"
+            itemData="{{itemData}}"
+            marker="{{false}}"
+            multiLine="{{true}}">
+   <ws:contentTemplate>
+      <div class="demo-ddl-myTemplate">
+         {{itemData.getPropValue(itemData.item, 'title')}}
+         <div class="demo-ddl-comment">
+            {{itemData.getPropValue(itemData.item, 'comment')}}
+         </div>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

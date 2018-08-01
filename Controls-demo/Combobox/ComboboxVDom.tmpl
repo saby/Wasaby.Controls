@@ -1,0 +1,58 @@
+<div>
+   <div class="combobox-demo-wrapper">
+      <h3>Simple</h3>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               bind:selectedKey="_selectedKey"
+                               attr:class="combobox-demo-control"/>
+   </div>
+   <div class="combobox-demo-wrapper">
+      <h3>With the option of selecting an empty value</h3>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+                               keyProperty="id"
+                               emptyText="{{true}}"
+                               displayProperty="title"
+                               bind:selectedKey="_selectedKey3"
+                               attr:class="combobox-demo-control"/>
+   </div>
+   <div class="combobox-demo-wrapper">
+      <h3>With scroll</h3>
+      <Controls.Input.ComboBox source="{{_getMultiData()}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               bind:selectedKey="_selectedKey2"
+                               attr:class="combobox-demo-control"/>
+   </div>
+
+   <div class="combobox-demo-wrapper">
+      <h3>With application styles and comment</h3>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               itemTemplate="tmpl!Controls-demo/Combobox/itemTemplateCombobox"
+                               bind:selectedKey="_selectedKey4"
+                               attr:class="combobox-demo-control"/>
+   </div>
+
+   <div class="combobox-demo-wrapper">
+      <h3>With application styles and a comment and a null value</h3>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
+                               keyProperty="id"
+                               emptyText="{{true}}"
+                               displayProperty="title"
+                               itemTemplate="tmpl!Controls-demo/Combobox/itemTemplateCombobox"
+                               bind:selectedKey="_selectedKey5"
+                               attr:class="combobox-demo-control"/>
+   </div>
+
+   <div class="combobox-demo-wrapper">
+      <h3>With multi-line items</h3>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsWorkers)}}"
+                               keyProperty="id"
+                               displayProperty="title"
+                               multiLine="{{true}}"
+                               bind:selectedKey="_selectedKey6"
+                               attr:class="combobox-demo-controlBig"/>
+   </div>
+</div>
