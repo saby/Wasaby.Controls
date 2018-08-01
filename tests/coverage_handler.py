@@ -26,7 +26,7 @@ class Coverage:
             path_list = []
             root = os.path.join(path, tdir)
             for file in os.listdir(root):
-                if file.endswith('-coverage.json') :
+                if file.endswith('-coverage.json'):
                     path_list.append(os.path.join(root, file))
             self.path_result[tdir] = path_list
 
