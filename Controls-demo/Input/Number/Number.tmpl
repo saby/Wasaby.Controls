@@ -14,6 +14,7 @@
          precision="{{_precision}}"
          integersLength="{{_integersLength}}"
          selectOnClick="{{_selectOnClick}}"
+         tooltip="{{_tooltip}}"
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
       />
@@ -30,6 +31,8 @@
       <Controls.Input.Number attr:id="integersLength" bind:value="_integersLength" attr:class="test_integersLength"/>
       <Controls.Label name="myLabel1" caption="precision"/>
       <Controls.Input.Number attr:id="precision" bind:value="_precision" attr:class="test_precision"/>
+      <Controls.Label caption="tooltip"/>
+      <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="enabled" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
          <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive" caption="onlyPositive"/>
