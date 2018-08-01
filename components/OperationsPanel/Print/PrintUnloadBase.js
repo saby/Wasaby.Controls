@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
    'Core/deprecated',
    "Core/core-instance",
    "SBIS3.CONTROLS/Menu/MenuLink",
-   "Lib/Control/Dialog/Dialog",
+   "SBIS3.CONTROLS/Action/OpenDialog",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
@@ -170,29 +170,31 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
       },
       _processMassOperations:function(title){
          var numOfRecords = this._getView().getItems().getCount(),
-            self = this;
-
-         //Показать диалог выбора записей
-         new Dialog ({
-            opener : this,
-            template: 'SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
-            caption : title,
-            cssClassName: 'controls-MassAmountSelector',
-            handlers: {
-               onBeforeShow: function(){
-                  //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
-                  //TODO Но пришлось сделать так:
-                  this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
-               }
-            },
-            componentOptions: {
-                handlers: {
-                    onApply: function(event, pageSize){
+            self = this,
+            action = new Dialog({
+               template: 'SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
+               dialogOptions: {
+                  opener: this,
+                  caption: title,
+                  cssClassName: 'controls-MassAmountSelector',
+                  handlers: {
+                     onBeforeShow: function(){
+                        //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
+                        //TODO Но пришлось сделать так:
+                        this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
+                     }
+                  }
+               },
+               componentOptions: {
+                  handlers: {
+                     onApply: function(event, pageSize){
                         self.processSelectedPageSize(pageSize);
-                    }
-                }
-            }
-         });
+                     }
+                  }
+               }
+            });
+
+         action.execute();
       },
 
       /**
