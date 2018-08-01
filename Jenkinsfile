@@ -39,6 +39,10 @@ node('controls') {
                 defaultValue: props["engine"],
                 description: '',
                 name: 'branch_engine'),
+			string(
+                defaultValue: props["navigation"],
+                description: '',
+                name: 'branch_navigation'),
             string(
                 defaultValue: "",
                 description: '',
@@ -95,6 +99,13 @@ node('controls') {
 			branch_engine = params.branch_engine
 		} else {
 			branch_engine = props["engine"]
+		}
+		
+		def branch_navigation
+		if (params.branch_navigation) {
+			branch_navigation = params.branch_navigation
+		} else {
+			branch_navigation = props["navigation"]
 		}
 
         if ("${env.BUILD_NUMBER}" == "1"){
@@ -162,6 +173,23 @@ node('controls') {
                                     userRemoteConfigs: [[
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
+                        },
+						checkout_engine: {
+                            echo " Выкачиваем Navigation"
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_navigation]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "NAVIGATION"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
                                 ])
                             }
                         }
