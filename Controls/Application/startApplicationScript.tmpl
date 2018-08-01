@@ -1,8 +1,8 @@
 <div key="scripts">
    <ws:if data="{{!compat}}">
       <script key="init_script">
-         require(['Controls/Application/AppData'], function(AppData){
-            window.startContextData = {AppData: new AppData({})};
+         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
+            window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
             require(['Core/app2'], function(app) { app(); });
          });
       </script>
