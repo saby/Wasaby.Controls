@@ -69,6 +69,9 @@ define(['SBIS3.CONTROLS/NumberTextBox/resources/FormatText'], function(FormatTex
          it('value = 123.0 type of number: 123 -> 123.0000', function() {
             assert.equal(FormatText.formatText(123.0, '123', false, 4, 5, false, false, 16, false), '123.0000');
          });
+         it('0.0000001 -> 0.0000001', function() {
+            assert.equal(FormatText.formatText(0.0000001, '0.0000001', false, -1, 5, false, false, 16, false), '0.0000001');
+         });
 
       });
       afterEach(function() {

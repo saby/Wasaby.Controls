@@ -4,10 +4,11 @@ define('Controls/Search/Container',
       'tmpl!Controls/Search/Container',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
-      'Controls/Controllers/_SearchController'
+      'Controls/Controllers/_SearchController',
+      'Core/helpers/Object/isEqual'
    ],
    
-   function(Control, template, DataOptions, clone, _SearchController) {
+   function(Control, template, DataOptions, clone, _SearchController, isEqual) {
       
       'use strict';
    
@@ -42,14 +43,29 @@ define('Controls/Search/Container',
                self._searchMode = false;
                self._notify('filterChanged', [filter], {bubbling: true});
             }
+         },
+         
+         needUpdateSearchController: function(options, newOptions) {
+            return !isEqual(options.filter, newOptions.filter) ||
+                   !isEqual(options.navigation, newOptions.navigation) ||
+                   options.searchDelay !== newOptions.searchDelay ||
+                   options.source !== newOptions.source ||
+                   options.searchParam !== newOptions.searchParam ||
+                   options.minSearchLength !== newOptions.minSearchLength;
          }
       };
    
       /**
-       * Container for content that can be filtered by Controls/Input/Search.
-       * You can specify a delay before searching, number of characters to initiate search and search parameter.
+       * The search controller allows you to search data in a {@link Controls/List}
+       * using any component with {@link Controls/Input/interface/IInputText} interface.
+       * Search controller allows you:
+       * 1) set delay before searching
+       * 2) set number of characters
+       * 3) set search parameter
+       * 4) change the keyboard layout for an unsuccessful search
+       * Note: Component with {@link Controls/Input/interface/IInputText} interface must be located in {@link Controls/Search/Input/Container}.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * @class Controls/Search/Container
        * @extends Core/Control
@@ -62,6 +78,8 @@ define('Controls/Search/Container',
       var Container = Control.extend(/** @lends Controls/Search/Container.prototype */{
          
          _template: template,
+         _dataOptions: null,
+         _searchMode: false,
          
          _beforeMount: function(options, context) {
             this._dataOptions = context.dataOptions;
@@ -71,13 +89,21 @@ define('Controls/Search/Container',
             var currentOptions = this._dataOptions;
             this._dataOptions = context.dataOptions;
             
-            if (currentOptions.filter !== this._dataOptions.filter || this._options.searchDelay !== newOptions.searchDelay) {
+            if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
                this._searchController = null;
             }
          },
          
          _search: function(event, value) {
             _private.getSearchController(this).search(value);
+         },
+   
+         _beforeUnmount: function() {
+            if (this._searchController) {
+               this._searchController.abort();
+               this._searchController = null;
+            }
+            this._dataOptions = null;
          }
          
       });
@@ -94,6 +120,8 @@ define('Controls/Search/Container',
             searchDelay: 500
          };
       };
+   
+      Container._private = _private;
       
       return Container;
       

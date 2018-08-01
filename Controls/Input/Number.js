@@ -19,7 +19,9 @@ define('Controls/Input/Number', [
    runDelayed) {
 
    /**
-    * Number input.
+    * A component are used to let the user enter a number.
+    * To control the format of the input numbers, there is a {@link integersLength restriction of the integer part},
+    * the {@link precision number of characters} and the {@link showEmptyDecimals display of useless zeros} in the fractional part.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Number
@@ -32,8 +34,9 @@ define('Controls/Input/Number', [
     * @control
     * @public
     * @category Input
-    * @author Баранов М.А.
     * @demo Controls-demo/Input/Number/Number
+    *
+    * @author Журавлев Максим Сергеевич
     */
 
    /**
@@ -43,7 +46,7 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#onlyPositive
-    * @cfg {Boolean} Allow only positive numbers.
+    * @cfg {Boolean} Determines whether only positive numbers can be entered in the field.
     */
 
    /**
@@ -53,14 +56,15 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#showEmptyDecimals
-    * @cfg {Boolean} Show zeros when decimal part wasn't entered.
+    * @cfg {Boolean} Determines whether trailing zeros are shown in the fractional part.
     */
 
    /**
     * @name Controls/Input/Number#textAlign
     * @cfg {String} Text align.
-    * @variant 'left' default
-    * @variant 'right'
+    * @variant left
+    * @variant right
+    * @default left
     */
 
    'use strict';

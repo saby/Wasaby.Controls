@@ -9,7 +9,8 @@ define('Controls/Input/Suggest',
    function(Control, template, types, BaseViewModel) {
       
       /**
-       * Input that suggests options as you are typing.
+       * Input that suggests options as you are typing. Options are available for selection through the drop-down list.
+       * Once selected, the selected value is displayed in the field. The field can be cleared by clicking on the appropriate icon.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Suggest
@@ -25,6 +26,8 @@ define('Controls/Input/Suggest',
        * @public
        * @category Input
        * @demo Controls-demo/Suggest/SuggestApplication
+       *
+       * @author Журавлев Максим Сергеевич
        */
       
       'use strict';

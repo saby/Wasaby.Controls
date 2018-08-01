@@ -16,11 +16,12 @@
         <Controls.Label caption="tooltip"/>
         <Controls.Input.Text bind:value="_tooltip"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readonly"/>
         <br/>
-        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState"/>
+        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
         <Controls.Label name="myLabel1" caption="value:"/>
         <Controls.Toggle.Radio
+				attr:test_name="value"
                 on:selectedKeyChanged="changeValue()"
                 keyProperty="title"
                 selectedKey="{{_selectedValue}}"

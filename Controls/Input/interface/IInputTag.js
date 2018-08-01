@@ -10,7 +10,7 @@ define('Controls/Input/interface/IInputTag', [
 
    /**
     * @name Controls/Input/interface/IInputTag#tagStyle
-    * @cfg {String | undefined} Tag style (colored indicator).
+    * @cfg {String} Tag style (colored indicator).
     * @variant primary
     * @variant done
     * @variant attention
