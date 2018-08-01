@@ -1,4 +1,4 @@
-define(['Controls/Search/Container', 'WS.Data/Source/Memory', 'Core/core-instance'], function(Search, Memory, cInstance) {
+define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instance'], function(Search, Memory, cInstance) {
    
    var data = [
       {
@@ -40,20 +40,20 @@ define(['Controls/Search/Container', 'WS.Data/Source/Memory', 'Core/core-instanc
       }
    };
    
-   var getSearchContainer = function() {
-      var container = new Search(defaultOptions);
-      container.saveOptions(defaultOptions);
-      return container;
+   var getSearchController = function() {
+      var controller = new Search(defaultOptions);
+      controller.saveOptions(defaultOptions);
+      return controller;
    };
    
-   describe('Controls.Search.Container', function() {
+   describe('Controls.Search.Controller', function() {
       
       it('_private.searchCallback', function() {
-         var container = getSearchContainer();
+         var controller = getSearchController();
          var filterChanged = false;
          var itemsChanged = false;
    
-         container._notify = function(eventName) {
+         controller._notify = function(eventName) {
             if (eventName = 'filterChanged') {
                filterChanged = true;
             }
@@ -63,28 +63,28 @@ define(['Controls/Search/Container', 'WS.Data/Source/Memory', 'Core/core-instanc
             }
          };
          
-         Search._private.searchCallback(container, {});
+         Search._private.searchCallback(controller, {});
          
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
-         assert.isTrue(container._searchMode);
+         assert.isTrue(controller._searchMode);
       });
    
       it('_private.abortCallback', function() {
-         var container = getSearchContainer();
-         container._searchMode = true;
+         var controller = getSearchController();
+         controller._searchMode = true;
          var filterChanged = false;
    
-         container._notify = function(eventName) {
+         controller._notify = function(eventName) {
             if (eventName = 'filterChanged') {
                filterChanged = true;
             }
          };
    
-         Search._private.abortCallback(container);
+         Search._private.abortCallback(controller);
    
          assert.isTrue(filterChanged);
-         assert.isFalse(container._searchMode);
+         assert.isFalse(controller._searchMode);
       });
    
       it('_private.needUpdateSearchController', function() {
@@ -93,24 +93,24 @@ define(['Controls/Search/Container', 'WS.Data/Source/Memory', 'Core/core-instanc
       });
    
       it('_private.getSearchController', function() {
-         var searchContainer = getSearchContainer();
-         searchContainer._dataOptions = defaultOptions;
-         assert.isTrue(cInstance.instanceOfModule(Search._private.getSearchController(searchContainer), 'Controls/Controllers/_SearchController'));
+         var searchController = getSearchController();
+         searchController._dataOptions = defaultOptions;
+         assert.isTrue(cInstance.instanceOfModule(Search._private.getSearchController(searchController), 'Controls/Controllers/_SearchController'));
       });
       
       it('_search', function() {
-         var searchContainer = getSearchContainer();
+         var searchController = getSearchController();
          var value;
-         searchContainer._dataOptions = defaultOptions;
+         searchController._dataOptions = defaultOptions;
          //initialize searchController
-         Search._private.getSearchController(searchContainer);
+         Search._private.getSearchController(searchController);
          
          //moch method
-         searchContainer._searchController.search = function(searchVal) {
+         searchController._searchController.search = function(searchVal) {
             value = searchVal;
          };
    
-         searchContainer._search(null, 'test');
+         searchController._search(null, 'test');
          
          assert.equal(value, 'test');
       });
