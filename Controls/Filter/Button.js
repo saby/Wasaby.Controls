@@ -34,6 +34,7 @@ define('Controls/Filter/Button',
        * @css @color_FilterButton-icon_hover Color of button icon when hovering.
        * @css @color_FilterButton-icon_disabled Color icon unavailable button.
        * @css @spacing_FilterButton-between-icon-text Spacing between the filter icon and the filter string.
+       * @css @spacing_FilterButton-between-spaceTemplate-text Spacing between the line space template and the filter string.
        * @css @color_FilterButton-text Color of filter string.
        * @css @color_FilterButton-text_hover Color of filter string when hovering.
        * @css @color_FilterButton-text_disabled Color of filter string of unavailable button.

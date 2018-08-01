@@ -27,6 +27,17 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
 
       'use strict';
 
+      var spaceTemplateSource = {
+         module: 'WS.Data/Source/Memory',
+         options: {
+            data: [
+               {key: 1, title: 'It is space line template'},
+               {key: 2, title: 'Second line'}
+            ],
+            idProperty: 'key'
+         }
+      };
+
       var alignFilterSource = {
          module: 'WS.Data/Source/Memory',
          options: {
@@ -150,9 +161,11 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          _title: 'Отбираются',
 
          _alignFilterSource: alignFilterSource,
-         _selectedKeyAlign: 'left',
+         _selectedKeyOrientation: 'left',
          _selectedKeyStyle: 'primary',
-
+         _spaceTemplateKeys: [1],
+         _spaceTemplateSource: spaceTemplateSource,
+         _spaceTemplate: false,
          _additionalBlock: false,
          _historyBlock: false,
 

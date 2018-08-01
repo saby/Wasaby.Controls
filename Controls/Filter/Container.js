@@ -226,9 +226,16 @@ define('Controls/Filter/Container',
        * @name Controls/Filter/Container#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
-      
+
+      /**
+       * @name Controls/Filter/Container#filterMode
+       * @cfg {String} Mode of forming a filter.
+       * @variant onlyChanges - only changed fields
+       * @variant full - all fields
+       */
+
       var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
-         
+
          _template: template,
          _historySource: null,
          _filter: null,

@@ -6,10 +6,20 @@ define('SBIS3.CONTROLS/NumberTextBox/resources/FormatText', [
       return {
 
          formatText: function(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
+            var lastZeroPos;
+            if ((value + '').indexOf('e') !== -1 && !isNaN(parseFloat(value + '')) && isFinite(value + '')) {
+               //по спецификации 0.0000001 преобразуется к 1e-7, превращаем такие числа в нормальные строки
+               value = value.toFixed(20);
+               lastZeroPos = value.length;
+               while (value.charAt(lastZeroPos - 1) === '0') {
+                  --lastZeroPos;
+               }
+               value = value.substr(0, lastZeroPos);
+            }
             // Вырезаем переносы строк и теги.
-            value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
+            value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value + '';
             var decimals = onlyInteger ? 0 : decimals,
-               dotPos = (value = (value + '')).indexOf('.'),
+               dotPos = value.indexOf('.'),
                parsedVal = dotPos != -1 ? '.' + value.substr(dotPos + 1).replace(/[^0-9]/g, '') : '0',
                isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
                decimalsPart;
