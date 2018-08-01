@@ -34,35 +34,29 @@ define([
 
       describe('_dayClickHandler', function() {
          it('should generate "itemClick" event', function() {
-            let onItemClick = sinon.spy(),
+            let sandbox = sinon.sandbox.create(),
                item = 'item',
                mv = calendarTestUtils.createComponent(MonthView, config);
 
-            mv.subscribe('itemClick', onItemClick);
+            sandbox.stub(mv, '_notify');
             mv._dayClickHandler({}, item);
 
-            // TODO: почему то в тестах вне браузера события не генерируются.. Разобраться с этим
-            if (typeof $ !== 'undefined') {
-               assert(onItemClick.calledOnce, `onItemClick called ${onItemClick.callCount}`);
-               assert.strictEqual(item, onItemClick.args[0][1][0], `wrong parameter ${onItemClick.args[0][1]}`);
-            }
+            sinon.assert.calledWith(mv._notify, 'itemClick', [item]);
+            sandbox.restore();
          });
       });
 
       describe('_mouseEnterHandler', function() {
          it('should generate "itemMouseEnter" event', function() {
-            let onItemMouseEnter = sinon.spy(),
+            let sandbox = sinon.sandbox.create(),
                item = 'item',
                mv = calendarTestUtils.createComponent(MonthView, config);
 
-            mv.subscribe('itemMouseEnter', onItemMouseEnter);
+            sandbox.stub(mv, '_notify');
             mv._mouseEnterHandler({}, item);
 
-            // TODO: почему то в тестах вне браузера события не генерируются.. Разобраться с этим
-            if (typeof $ !== 'undefined') {
-               assert(onItemMouseEnter.calledOnce, `itemMouseEnter called ${onItemMouseEnter.callCount}`);
-               assert.strictEqual(item, onItemMouseEnter.args[0][1][0], `wrong parameter ${onItemMouseEnter.args[0][1]}`);
-            }
+            sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
+            sandbox.restore();
          });
       });
    });
