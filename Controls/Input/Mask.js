@@ -16,8 +16,8 @@ define('Controls/Input/Mask',
 
       /**
        * A component for entering text in a {@link mask specific format}.
-       * Characters that are not yet entered to fill in the field can be replaced by another {@link replacer character}.
-       * If the input character does not fit the format specified, then input is not entering to happen.
+       * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
+       * If the input character does not fit the format, then character won't be added.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Mask

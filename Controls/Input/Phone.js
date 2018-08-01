@@ -9,7 +9,7 @@ define('Controls/Input/Phone',
       'use strict';
 
       /**
-       * A component for entering phone number. Depending on the characters you enter, the phone number format changes.
+       * A component for entering a phone number. Depending on the characters you enter, the phone number format changes.
        * This behavior is described in the {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html standard}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *

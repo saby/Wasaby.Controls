@@ -12,8 +12,8 @@ define('Controls/Input/Password',
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
       /**
-       *  A component for entering password. The inputted characters are replaced in the field by *.
-       *  If you want to show the password, you need to click on the appropriate icon.
+       *  A component for entering a password. Entered characters are replaced by *.
+       *  If you want to show the password, you need to click on the corresponding icon.
        *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Password
