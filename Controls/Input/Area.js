@@ -36,12 +36,12 @@ define('Controls/Input/Area', [
 
    /**
     * @name Controls/Input/Area#minLines
-    * @cfg {Number} Minimum number of lines (min height).
+    * @cfg {Number} Minimum number of lines.
     */
 
    /**
     * @name Controls/Input/Area#maxLines
-    * @cfg {Number} Maximum number of lines (max height).
+    * @cfg {Number} Maximum number of lines.
     */
 
    /**

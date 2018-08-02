@@ -5,38 +5,38 @@ define('Controls/Input/resources/InputRender/InputRenderStyles',
    function() {
       /**
        * @interface Controls/Input/resources/InputRender/InputRenderStyles
-       * @css @height_InputRender_m Высота контейнера поля ввода при указанном размере "m".
-       * @css @height_InputRender_l Высота контейнера поля ввода при указанном размере "l".
-       * @css @height_InputRender_default Высота контейнера поля ввода при размере "по умолчанию". Значение "по умолчанию", в зависимости от темы, указывает на один из доступных размеров (например, "m" или "l").
-       * @css @font-size_InputRender_m Размер шрифта поля ввода при указанном размере "m".
-       * @css @font-size_InputRender_l Размер шрифта поля ввода при указанном размере "l".
-       * @css @font-size_InputRender_default Размер шрифта поля ввода при размере "по умолчанию". Значение "по умолчанию", в зависимости от темы, указывает на один из доступных размеров (например, "m" или "l").
-       * @css @font-size_InputRender_style_header Размер шрифта поля ввода при опции style в значении "header".
-       * @css @font-size_InputRender_style_accentHeader Размер шрифта поля ввода при опции style в значении "accentHeader".
-       * @css @padding_InputRender Отступы в поле ввода.
-       * @css @border-width_InputRender Ширина границы поля ввода.
-       * @css @width_InputRender-tagStyle Ширина информационной иконки.
-       * @css @height_InputRender-tagStyle Высота информационной иконки.
-       * @css @line-height_InputRender_m Межстрочный интервал в многострочных полях ввода при указанном размере "m".
-       * @css @line-height_InputRender_l Межстрочный интервал в многострочных полях ввода при указанном размере "l".
-       * @css @line-height_InputRender_default Межстрочный интервал в многострочных полях ввода при размере "по умолчанию". Значение "по умолчанию", в зависимости от темы, указывает на один из доступных размеров (например, "m" или "l").
-       * @css @border-color_InputRender Цвет границы поля ввода.
-       * @css @border-color_InputRender_hover Цвет границы поля ввода при наведении (состояние hover).
-       * @css @border-color_InputRender_active Цвет границы поля ввода при активации (состояние active).
-       * @css @border-color_InputRender_disabled Цвет границы поля ввода в состоянии "только для чтения" (состояние read-only).
-       * @css @border-color_InputRender_error Цвет границы поля ввода c ошибкой.
-       * @css @background-color_InputRender Фон поля ввода.
-       * @css @background-color_InputRender_error Фон поля ввода с ошибкой.
-       * @css @background-color_InputRender_disabled Фон поля ввода в состоянии "только для чтения".
-       * @css @color_InputRender-placeholder Цвет подсказки в поле ввода.
-       * @css @color_InputRender Цвет текста в поле ввода.
-       * @css @color_InputRender_style_header Цвет текста в поле ввода при опции style в значении "header".
-       * @css @color_InputRender_style_accentHeader Цвет текста в поле ввода при опции style в значении "accentHeader".
-       * @css @color_InputRender-tagStyle_attention Цвет информационной иконки.
-       * @css @border-right-color_InputRender-tagStyle_done Цвет информационной иконки.
-       * @css @border-right-color_InputRender-tagStyle_error Цвет информационной иконки.
-       * @css @border-right-color_InputRender-tagStyle_primary Цвет информационной иконки.
-       * @css @border-right-color_InputRender-tagStyle_disabled Цвет информационной иконки.
+       * @css @height_InputRender_m The middle height of the input field container.
+       * @css @height_InputRender_l The large height of the input field container.
+       * @css @height_InputRender_default The default height of the input field container.
+       * @css @font-size_InputRender_m The middle font size of the input field.
+       * @css @font-size_InputRender_l The large font size of the input field.
+       * @css @font-size_InputRender_default The default font size of the input field.
+       * @css @font-size_InputRender_style_header The font size of the input field with the style option set to "header".
+       * @css @font-size_InputRender_style_accentHeader The font size of the input field with the style option set to "accentHeader".
+       * @css @padding_InputRender Input padding.
+       * @css @border-width_InputRender The size of the border of the input field.
+       * @css @width_InputRender-tagStyle The width of the information icon.
+       * @css @height_InputRender-tagStyle The height of the information icon.
+       * @css @line-height_InputRender_m The middle line height of the multi-line input field.
+       * @css @line-height_InputRender_l The large line height of the multi-line input field.
+       * @css @line-height_InputRender_default The default line height of the multi-line input field.
+       * @css @border-color_InputRender The color of the border of the input field.
+       * @css @border-color_InputRender_hover The color of the border of the input field at hover.
+       * @css @border-color_InputRender_active The color of the border of the input field at active.
+       * @css @border-color_InputRender_disabled The color of the border of the input field at disable.
+       * @css @border-color_InputRender_error The color of the border of the input field at error.
+       * @css @background-color_InputRender The background of the input field.
+       * @css @background-color_InputRender_error The background of the input field at error.
+       * @css @background-color_InputRender_disabled The background of the input field at disable.
+       * @css @color_InputRender-placeholder The tooltip color of the input field.
+       * @css @color_InputRender The text color of the input field.
+       * @css @color_InputRender_style_header The text color of the input field with the style option set to "header".
+       * @css @color_InputRender_style_accentHeader The text color of the input field with the style option set to "accentHeader".
+       * @css @color_InputRender-tagStyle_attention The information icon color of the input field at attention.
+       * @css @border-right-color_InputRender-tagStyle_done The information icon color of the input field at done.
+       * @css @border-right-color_InputRender-tagStyle_error The information icon color of the input field at error.
+       * @css @border-right-color_InputRender-tagStyle_primary The information icon color of the input field at primary.
+       * @css @border-right-color_InputRender-tagStyle_disabled The information icon color of the input field at disable.
        * @public
        * @author Зайцев А.С.
        */
