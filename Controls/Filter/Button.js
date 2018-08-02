@@ -18,6 +18,9 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
+       * The component is used in combination with other components for filters.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Button
