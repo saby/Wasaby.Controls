@@ -25,6 +25,7 @@ define('Controls-demo/Input/Area/Area', [
          {title: '[a-z]', example: 'You can use only lowercase letters'},
          {title: '[A-Z]', example: 'You can use only uppercase letters'}
       ],
+      _tooltip: '',
       _tagStyleHandler: function() {
          this._children.infoBoxArea.open({
             target: this._children.textArea._container,

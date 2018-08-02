@@ -6,7 +6,8 @@
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
    {{ _options.readOnly && !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
-     title="{{tooltip}}">
+     title="{{_tooltip}}"
+   on:mouseenter="_mouseEnterHandler()">
    <div
       class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
 
@@ -15,7 +16,9 @@
       </ws:if>
 
       <ws:if data="{{_options.content}}">
+         <!-- TODO: перенести name на partial с input после исправления ошибки https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a -->
          <div
+                 name="input"
             class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
 
             <ws:partial

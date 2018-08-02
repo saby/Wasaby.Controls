@@ -15,6 +15,7 @@
          precision="{{_precision}}"
          integersLength="{{_integersLength}}"
          selectOnClick="{{_selectOnClick}}"
+         tooltip="{{_tooltip}}"
          on:valueChanged="_eventHandler()"
          on:tagHover="_tagStyleHandler()"
          on:tagClick="_tagStyleClickHandler()"
@@ -36,6 +37,8 @@
       <Controls.Label name="myLabel1" caption="textAlign"/>
       <Controls.Input.ComboBox source="{{_createMemory()}}" keyProperty="title" displayProperty="title"
                                bind:selectedKey="_textAlign" attr:class="demo-TextBox"/>
+       <Controls.Label caption="tooltip"/>
+       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="onlyPositive" readOnly="{{false}}" bind:value="_onlyPositive"
                                    caption="onlyPositive"/>
