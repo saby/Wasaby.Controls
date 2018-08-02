@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Toggle/Radio',
+      'Controls/Toggle/RadioGroup',
       'WS.Data/Entity/Model',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],
    function(RadioGroup, Model, MemorySource, RecordSet) {
       'use strict';
-      describe('Controls/Toggle/Radio', function () {
+      describe('Controls/Toggle/RadioGroup', function () {
          it('change selected key', function() {
             var radio = new RadioGroup();
             var keyChanged = false;

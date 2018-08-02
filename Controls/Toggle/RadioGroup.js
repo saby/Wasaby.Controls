@@ -12,7 +12,7 @@ define('Controls/Toggle/RadioGroup', [
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
-    * @class Controls/Toggle/Radio
+    * @class Controls/Toggle/RadioGroup
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
@@ -26,7 +26,7 @@ define('Controls/Toggle/RadioGroup', [
     */
 
    /**
-    * @name Controls/Toggle/Radio#direction
+    * @name Controls/Toggle/RadioGroup#direction
     * @cfg {string} Arrangement of elements in the container.
     * @variant horizontal RadioGroup is a row of RadioButton. It is default value.
     * @variant vertical RadioGroup is a column of RadioButton.
