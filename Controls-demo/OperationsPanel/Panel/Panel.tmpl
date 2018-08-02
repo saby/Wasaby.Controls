@@ -13,6 +13,9 @@
                        nodeProperty="@parent"
                        rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
                        keyProperty="id"
+                       on:activated="_eventHandler()"
+                       on:deactivated="_eventHandler()"
+                       on:itemClick="_eventHandler()"
                />
             </Controls.Container.MultiSelector>
          </Controls.Container.Data>
@@ -32,6 +35,12 @@
          <Controls.Toggle.Checkbox test_name="multiSelectorVisibility" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
          <Controls.Label caption="rightTemplate:"/>
          <Controls.Toggle.Checkbox test_name="rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
+      </div>
+      <div class="eventBlock">
+         <span>Event that surfaced:</span>
+         <Controls.Button attr:class="demo-ResetButton" on:click="_reset()" style="linkMain3" caption="reset"/>
+         <br/>
+         <span>{{_eventName}}</span>
       </div>
    </div>
 </div>
