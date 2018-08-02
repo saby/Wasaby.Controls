@@ -29,7 +29,7 @@ define('Controls/Input/ComboBox',
        */
 
       /**
-       * @name Controls/Dropdown/Container#displayProperty
+       * @name Controls/Dropdown/Controller#displayProperty
        * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
