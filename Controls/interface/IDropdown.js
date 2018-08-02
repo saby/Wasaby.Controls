@@ -27,24 +27,4 @@ define('Controls/interface/IDropdown', [], function() {
     * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
-   // /**
-   //  * @name Controls/interface/IDropdownList#templateOptions.headTemplate
-   //  * @cfg {Function} Template for folder render.
-   //  */
-
-   // /**
-   //  * @name Controls/interface/IDropdownList#templateOptions.footerTemplate
-   //  * @cfg {Function} Footer template.
-   //  */
-   //
-   // /**
-   //  * @name Controls/interface/IDropdownList#templateOptions.showHeader
-   //  * @cfg {Boolean} Indicates whether folders should be displayed.
-   //  */
-
-   // /**
-   //  * @name Controls/interface/IDropdownList#templateOptions.selectedKeys
-   //  * @cfg {String|Array} Selected items' keys.
-   //  */
-
 });

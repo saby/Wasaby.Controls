@@ -8,12 +8,18 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
+    * @typedef {Object} eventHandlers
+    * @property {Function} onResult Occurs when the pop-up notify 'sendResult'. More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/openers/#_8/'> here</a>
+    * @property {Function} onClose Occurs when the pop-up is closed.
+    */
+
+   /**
     * @typedef {Object} popupOptions
-    * @property {Boolean} closeByExternalClick Close popup by click on external node
-    * @property {String|Function} template Popup template
-    * @property {templateOptions} templateOptions  Options for the template component
-    * @property {Object} eventHandlers
-    * @property {Object} opener The component that opened the popup. Used to establish a logical connection
+    * @property {Boolean} closeByExternalClick Close popup by click on external node.
+    * @property {String|Function} template Popup template.
+    * @property {templateOptions} templateOptions Options for the template component.
+    * @property {eventHandlers} eventHandlers Handlers for pop-up event.
+    * @property {Object} opener The component that opened the popup. Used to establish a logical connection.
     */
 
    /**
@@ -23,7 +29,7 @@ define('Controls/interface/IOpener', [], function() {
     */
 
 
-   /** @name Controls/interface/IDropdownList#popupOptions
-    * @cfg {popupOptions} Options for pop-up
+   /** @name Controls/interface/IOpener#popupOptions
+    * @cfg {popupOptions} Options for pop-up.
     */
 });

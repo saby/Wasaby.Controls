@@ -32,13 +32,19 @@ define('Controls/Dropdown/Container',
        */
 
       /**
+       * @typedef ItemsGroup
+       * @property {Function} method
+       * @property {Function} template
+       */
+
+      /**
        * @name Controls/Dropdown/Container#nodeProperty
        * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
        */
 
       /**
        * @name Controls/Dropdown/Container#parentProperty
-       * @cfg {String} Name of the field that contains information about parent node.
+       * @cfg {String} Name of the field that contains item's parent identifier.
        */
 
       /**
@@ -63,23 +69,41 @@ define('Controls/Dropdown/Container',
 
       /**
        * @name Controls/Dropdown/Container#headConfig
-       * @cfg {Object} Menu style menuStyle
-       * @variant defaultHead The head with icon and caption
-       * @variant duplicateHead The icon set under first item
+       * @cfg {Object} Menu style menuStyle.
+       * @variant defaultHead The head with icon and caption.
+       * @variant duplicateHead The icon set under first item.
        */
 
       /**
        * @name Controls/Dropdown/Container#showHeader
-       * @cfg {Boolean} Display the header
-       * @variant true The header is displayed.
-       * @variant false The header is not displayed.
+       * @cfg {Boolean} Indicates whether folders should be displayed.
        */
 
       /**
        * @name Controls/Dropdown/Container#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
-       * @variant default Default shadow
-       * @variant suggestionsContainer Shadow on the right, left, bottom
+       * @variant default Default shadow.
+       * @variant suggestionsContainer Shadow on the right, left, bottom.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#marker
+       * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#showClose
+       * @cfg {Boolean} Determines whether the cross is displayed.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#additionalProperty
+       * @cfg {String} Name of the item property that determines whether the item is added.
+       */
+
+      /**
+       * @name Controls/Dropdown/Container#itemsGroup
+       * @cfg {ItemsGroup} Name of the item property that determines whether the item is added.
        */
 
       var _private = {

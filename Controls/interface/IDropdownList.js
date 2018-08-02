@@ -4,7 +4,6 @@ define('Controls/interface/IDropdownList', [], function() {
     * Interface for dropdown lists.
     *
     * @interface Controls/interface/IDropdownList
-    * @mixes Controls/interface/IStickyOpener
     * @public
     */
 
@@ -15,7 +14,7 @@ define('Controls/interface/IDropdownList', [], function() {
     */
 
    /**
-    * @typedef {String} itemsGroup
+    * @typedef {Object} itemsGroup
     * @property method
     * @property template Template
     */
@@ -46,18 +45,17 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {String} nodeProperty Name of the item property that identifies item type (list, node, hidden node)
     * @property {String} itemTemplateProperty Name of the item property that contains template for item render. If not set, itemTemplate is used instead
     * @property {Function} itemTemplate Template for item render
-    * @property {Function} headTemplate Template for folder render
-    * @property {Function} contentTemplate Template for item's contents render
-    * @property {Function} footerTemplate Footer template
-    * @property {Boolean} showHeader Indicates whether folders should be displayed
-    * @property {String} dropdownClassName
+    * @property {Function} headTemplate Template that will be rendered above the list.
+    * @property {Function} contentTemplate Template that will be render the list.
+    * @property {Function} footerTemplate Template that will be rendered below the list.
+    * @property {Boolean} showHeader Indicates whether folders should be displayed.
     * @property {itemsGroup} itemsGroup
-    * @property {String} additionalProperty Name of the item property that determines whether the item is added
+    * @property {String} additionalProperty Name of the item property that determines whether the item is added.
     * @property {Boolean} showClose Determines whether the cross is displayed.
-    * @property {Array} selectedKeys Selected items' keys
-    * @property {typeShadow} typeShadow Specifies the type of shadow around the popup
-    * @property {emptyText} emptyText Add an empty item to the list with the given text
-    * @property {Boolean} marker Determines whether the marker is displayed around the selected item
+    * @property {Array} selectedKeys Array of selected items' keys.
+    * @property {typeShadow} typeShadow Specifies the type of shadow around the popup.
+    * @property {emptyText} emptyText Add an empty item to the list with the given text.
+    * @property {Boolean} marker Determines whether the marker is displayed around the selected item.
     */
 
 });

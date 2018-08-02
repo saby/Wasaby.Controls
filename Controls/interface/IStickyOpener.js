@@ -14,7 +14,7 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
    /**
     * @typedef {Object} VerticalAlign
-    * @property {VerticalAlignEnum} side Type of vertical alignment
+    * @property {VerticalAlignEnum} side Type of vertical alignment.
     * @property {Number} offset Sets vertical indentation in pixels relative to the point where the popup is drawn.
     */
 
@@ -25,19 +25,19 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
    /**
     * @typedef {Object} HorizontalAlign
-    * @property {HorizontalAlignEnum} side Type of horizontal alignment
+    * @property {HorizontalAlignEnum} side Type of horizontal alignment.
     * @property {Number} offset Sets horizontal indentation in pixels relative to the point where the popup is drawn.
     */
 
    /**
     * @typedef {Object} cornerVerticalEnum
-    * @variant top Positioning to the top of the target
-    * @variant bottom Positioning to the bottom of the target
+    * @variant top Positioning to the top of the target.
+    * @variant bottom Positioning to the bottom of the target.
     */
    /**
     * @typedef {Object} cornerHorizontalEnum
-    * @variant left Positioning to the left of the target
-    * @variant right Positioning to the right of the target
+    * @variant left Positioning to the left of the target.
+    * @variant right Positioning to the right of the target.
     */
 
    /**
@@ -46,37 +46,28 @@ define('Controls/interface/IStickyOpener', [], function() {
     * @property {cornerHorizontalEnum} horizontal Angle of horizontal positioning.
     */
 
-
    /**
-    * @name Controls/interface/IStickyOpener#popupOptions.verticalAlign
-    * @cfg {VerticalAlign} Sets the vertical alignment of the popup.
-    */
-
-   /**
-    * @name Controls/interface/IStickyOpener#popupOptions.locationStrategy
-    * @cfg {String} A method of adjusting the popup panel to the free space next to the target.
+    * @typedef {String} LocationStrategy
     * @variant fixed the popup bar does not move relative to the target.
     * @variant fixedCorner the popup panel container is limited to the edge of the screen if it does not fit into the screen.
     * @variant auto
     */
 
    /**
-    * @name Controls/interface/IStickyOpener#popupOptions.horizontalAlign
-    * @cfg {HorizontalAlign} Sets the horizontal alignment of the popup.
-    */
-
-   /**
-    * @name Controls/interface/IStickyOpener#popupOptions.corner
-    * @cfg {CornerEnum} Sets the popup build point
+    * @typedef {Object} popupOptions
+    * @property {VerticalAlign} verticalAlign Sets the vertical alignment of the popup.
+    * @property {LocationStrategy} locationStrategy A method of adjusting the popup panel to the free space next to the target.
+    * @property {HorizontalAlign} horizontalAlign Sets the horizontal alignment of the popup.
+    * @property {CornerEnum} corner Sets the popup build point.
     */
 
    /**
     * @name Controls/interface/IStickyOpener#targetTracking
-    * @cfg {Boolean} Popup follows the target
+    * @cfg {Boolean} Popup follows the target.
     */
 
    /**
     * @name Controls/interface/IStickyOpener#closeOnTargetScroll
-    * @cfg {Boolean} Close popup on scroll
+    * @cfg {Boolean} Close popup on scroll.
     */
 });
