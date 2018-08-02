@@ -14,7 +14,7 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @typedef {Object} popupOptions
+    * @typedef {Object} PopupOptions
     * @property {Boolean} closeByExternalClick Close popup by click on external node.
     * @property {String|Function} template Popup template.
     * @property {templateOptions} templateOptions Options for the template component.
@@ -30,6 +30,6 @@ define('Controls/interface/IOpener', [], function() {
 
 
    /** @name Controls/interface/IOpener#popupOptions
-    * @cfg {popupOptions} Options for pop-up.
+    * @cfg {PopupOptions} Options for pop-up.
     */
 });

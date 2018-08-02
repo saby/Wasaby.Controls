@@ -8,23 +8,38 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @name Controls/interface/IDropdown#itemTemplateProperty
-    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
+    * @name Controls/interface/IDropdown#nodeProperty
+    * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
     */
 
    /**
-    * @name Controls/interface/IDropdown#itemTemplate
-    * @cfg {Function} Template for item render.
+    * @name Controls/interface/IDropdown#parentProperty
+    * @cfg {String} Name of the field that contains item's parent identifier.
+    */
+
+   /**
+    * @name Controls/interface/IDropdown#headTemplate
+    * @cfg {Function} Template that will be rendered above the list.
     */
 
    /**
     * @name Controls/interface/IDropdown#contentTemplate
-    * @cfg {Function} Template for item's contents render.
+    * @cfg {Function} Template that will be render the list.
     */
 
    /**
-    * @name Controls/interface/IDropdown#keyProperty
-    * @cfg {String} Name of the item property that uniquely identifies collection item.
+    * @name Controls/interface/IDropdown#footerTemplate
+    * @cfg {Function} Template that will be rendered below the list.
+    */
+
+   /**
+    * @name Controls/interface/IDropdown#selectedKeys
+    * @cfg {Array} Array of selected items' keys.
+    */
+
+   /**
+    * @name Controls/interface/IDropdown#showHeader
+    * @cfg {Boolean} Indicates whether folders should be displayed.
     */
 
 });

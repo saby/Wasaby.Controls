@@ -22,6 +22,7 @@ define('Controls/Dropdown/Container',
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/interface/IGroupedView
        * @author Золотова Э.Е.
        * @control
        * @public
@@ -32,45 +33,10 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @name Controls/Dropdown/Container#nodeProperty
-       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#parentProperty
-       * @cfg {String} Name of the field that contains item's parent identifier.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#headTemplate
-       * @cfg {Function} Template that will be rendered above the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#contentTemplate
-       * @cfg {Function} Template that will be render the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#footerTemplate
-       * @cfg {Function} Template that will be rendered below the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#selectedKeys
-       * @cfg {Array} Array of selected items' keys.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#headConfig
+       * @name Controls/interface/IDropdown#headConfig
        * @cfg {Object} Menu style menuStyle.
        * @variant defaultHead The head with icon and caption.
        * @variant duplicateHead The icon set under first item.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#showHeader
-       * @cfg {Boolean} Indicates whether folders should be displayed.
        */
 
       /**
@@ -88,11 +54,6 @@ define('Controls/Dropdown/Container',
       /**
        * @name Controls/Dropdown/Container#showClose
        * @cfg {Boolean} Determines whether the cross is displayed.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#additionalProperty
-       * @cfg {String} Name of the item property that determines whether the item is added.
        */
 
       var _private = {

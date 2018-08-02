@@ -8,32 +8,32 @@ define('Controls/interface/IDropdownList', [], function() {
     */
 
    /**
-    * @typedef {String} typeShadow
+    * @typedef {String} TypeShadow
     * @variant default Default shadow
     * @variant suggestionsContainer Shadow on the right, left, bottom
     */
 
    /**
-    * @typedef {Object} headConfig
-    * @property {menuStyle} menuStyle
+    * @typedef {String} MenuStyle
     * @variant defaultHead The head with icon and caption
     * @variant duplicateHead The icon set under first item
     */
 
    /**
-    * @typedef {String} menuStyle
+    * @typedef {Object} HeadConfig
+    * @property {MenuStyle} menuStyle
     * @variant defaultHead The head with icon and caption
     * @variant duplicateHead The icon set under first item
     */
 
    /**
-    * @typedef {String|Boolean} emptyText
+    * @typedef {String|Boolean} EmptyText
     * @variant true Add empty item with text 'Не выбрано'
     */
 
    /**
     * @typedef {Object} templateOptions
-    * @property {headConfig} headConfig Configuration for folder render
+    * @property {HeadConfig} headConfig Configuration for folder render
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item
     * @property {String} parentProperty Name of the field that contains item's parent identifier
     * @property {String} nodeProperty Name of the item property that identifies item type (list, node, hidden node)
@@ -43,10 +43,11 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {Function} contentTemplate Template that will be render the list.
     * @property {Function} footerTemplate Template that will be rendered below the list.
     * @property {Boolean} showHeader Indicates whether folders should be displayed.
+    * @property {Object} itemsGroup Configuration for item grouping. Includes grouping function and group template
     * @property {Boolean} showClose Determines whether the cross is displayed.
     * @property {Array} selectedKeys Array of selected items' keys.
-    * @property {typeShadow} typeShadow Specifies the type of shadow around the popup.
-    * @property {emptyText} emptyText Add an empty item to the list with the given text.
+    * @property {TypeShadow} typeShadow Specifies the type of shadow around the popup.
+    * @property {EmptyText} emptyText Add an empty item to the list with the given text.
     * @property {Boolean} marker Determines whether the marker is displayed around the selected item.
     */
 

@@ -17,8 +17,9 @@ define('Controls/Input/Dropdown',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/interface/ISingleSelectable
+       * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public

@@ -30,7 +30,7 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
 
    /**
-    * @typedef {Object} cornerVerticalEnum
+    * @typedef {Object} CornerVerticalEnum
     * @variant top Positioning to the top of the target.
     * @variant bottom Positioning to the bottom of the target.
     */
@@ -42,7 +42,7 @@ define('Controls/interface/IStickyOpener', [], function() {
 
    /**
     * @typedef {Object} CornerEnum
-    * @property {cornerVerticalEnum} vertical Angle of vertical positioning.
+    * @property {CornerVerticalEnum} vertical Angle of vertical positioning.
     * @property {cornerHorizontalEnum} horizontal Angle of horizontal positioning.
     */
 
@@ -54,7 +54,7 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
 
    /**
-    * @typedef {Object} popupOptions
+    * @typedef {Object} PopupOptions
     * @property {VerticalAlign} verticalAlign Sets the vertical alignment of the popup.
     * @property {LocationStrategy} locationStrategy A method of adjusting the popup panel to the free space next to the target.
     * @property {HorizontalAlign} horizontalAlign Sets the horizontal alignment of the popup.
