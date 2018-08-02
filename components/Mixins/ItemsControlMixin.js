@@ -1684,7 +1684,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
-         if(!compatibilityMode) {
+         if (!compatibilityMode) {
             Utils.logger.stack('SBIS3.CONTROLS/Mixins/ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._options._items;
