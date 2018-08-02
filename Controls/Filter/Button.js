@@ -60,8 +60,6 @@ define('Controls/Filter/Button',
 
                   if (textValue) {
                      textArr.push(textValue);
-                  } else {
-                     textArr.push(Utils.getItemPropertyValue(item, 'value'));
                   }
                }
             });
@@ -156,5 +154,6 @@ define('Controls/Filter/Button',
          };
       };
 
+      FilterButton._private = _private;
       return FilterButton;
    });
