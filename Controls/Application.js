@@ -137,6 +137,14 @@ define('Controls/Application',
                compat: self.compat
             });
             return def;
+         },
+
+         _openInfoBoxHandler: function(event, config) {
+            this._children.infoBoxOpener.open(config);
+         },
+
+         _closeInfoBoxHandler: function() {
+            this._children.infoBoxOpener.close();
          }
       });
 
