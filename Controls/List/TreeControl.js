@@ -177,6 +177,10 @@ define('Controls/List/TreeControl', [
 
             this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 

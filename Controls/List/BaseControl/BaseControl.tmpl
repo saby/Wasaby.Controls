@@ -26,6 +26,7 @@
          template="{{ _options.content }}"
          scope="{{_options}}"
          listModel="{{_listViewModel}}"
+         on:markedKeyChanged="_markedKeyChangedHandler()"
          on:itemClick="_onItemClick()"
          on:groupClick="_onGroupClick()"
          on:itemContextMenu="_showActionsMenu()"
