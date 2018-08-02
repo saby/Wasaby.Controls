@@ -31,7 +31,9 @@
                                  on:touchmove="_touchmovePage()"
                                  on:touchend="_touchendPage()"
                                  on:mousedown="_mousedownPage()"
-                                 on:mouseup="_mouseupPage()">
+                                 on:mouseup="_mouseupPage()"
+                                 on:openInfoBox="_openInfoBoxHandler()"
+                                 on:closeInfoBox="_closeInfoBoxHandler()">
                               <ws:if data="{{needArea}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
@@ -79,6 +81,7 @@
                                  </div>
                               </ws:else>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
+                              <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>
