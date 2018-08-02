@@ -1,113 +1,100 @@
-<ws:template name="commonBody">
-   <Controls.Application.TouchDetector name="touchDetector">
-      <Controls.DragNDrop.Container name="dragNDropContainer">
-      <body
-              class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
-              id="body"
-              key="1_2_"
-              on:scroll="_scrollPage()"
-              on:resize="_resizePage()"
-              on:mousemove="_mousemovePage()"
-              on:touchmove="_touchmovePage()"
-              on:touchend="_touchendPage()"
-              on:mousedown="_mousedownPage()"
-              on:mouseup="_mouseupPage()"
-              on:openInfoBox="_openInfoBoxHandler()"
-              on:closeInfoBox="_closeInfoBoxHandler()">
-      <ws:if data="{{needArea}}">
-         <div class="ws-focus-in"></div>
-      </ws:if>
-      <ws:if data="{{  _options.content }}">
-         <Controls.Application._Wait>
-            <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
-         </Controls.Application._Wait>
-      </ws:if>
-      <ws:else>
-         <Controls.Application._Wait content="">
-         </Controls.Application._Wait>
-      </ws:else>
+<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
+      attr:component="Controls/Application"
+      attr:class="{{ stopEvents ? 'pre-load' : '' }}">
+<Controls.Application._Head
+   wsRoot="{{ wsRoot }}"
+   resourceRoot="{{ resourceRoot }}"
+   appRoot="{{ appRoot }}"
+   compat="{{ compat }}"
+   head="{{ _options.head }}"
+   title="{{ title }}"
+   buildnumber="{{ buildnumber }}"
+   servicesPath="{{ servicesPath }}">
+</Controls.Application._Head>
+<Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
+      <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
+         <Controls.Event.Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
+            <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
+               <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
+                  <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+                     <Controls.Popup.Manager>
+                        <Controls.Application.TouchDetector name="touchDetector">
+                           <Controls.DragNDrop.Container name="dragNDropContainer">
+                              <body
+                                 class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
+                                 id="body"
+                                 key="1_2_"
+                                 on:scroll="_scrollPage()"
+                                 on:resize="_resizePage()"
+                                 on:mousemove="_mousemovePage()"
+                                 on:touchmove="_touchmovePage()"
+                                 on:touchend="_touchendPage()"
+                                 on:mousedown="_mousedownPage()"
+                                 on:mouseup="_mouseupPage()"
+                                 on:openInfoBox="_openInfoBoxHandler()"
+                                 on:closeInfoBox="_closeInfoBoxHandler()">
+                              <ws:if data="{{needArea}}">
+                                 <div class="ws-focus-in"></div>
+                              </ws:if>
+                              <ws:if data="{{  _options.content }}">
+                                 <Controls.Application._Wait>
+                                    <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
+                                 </Controls.Application._Wait>
+                              </ws:if>
+							  <ws:else>
+                                 <Controls.Application._Wait content="">
+                                 </Controls.Application._Wait>
+                              </ws:else>
 
-      <ws:if data="{{ content.dragAvatarTemplate }}">
-         <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
-      </ws:if>
-      <Controls.Popup.Manager.Container attr:id="popup"
-                                        eventHandler="{{content._managerEventHandler}}"/>
+                              <ws:if data="{{ content.dragAvatarTemplate }}">
+                                 <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
+                              </ws:if>
+                              <Controls.Popup.Manager.Container attr:id="popup"
+                                                                eventHandler="{{content._managerEventHandler}}"/>
 
-      <script key="bundles" type="text/javascript"
-              src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-      <script key="require" type="text/javascript"
-              src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-      <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-      <script key="config" type="text/javascript"
-              src="{{wsRoot}}ext/requirejs/config.js"></script>
+                              <script key="bundles" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                              <script key="require" type="text/javascript"
+                                      src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                              <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+                              <script key="config" type="text/javascript"
+                                      src="{{wsRoot}}ext/requirejs/config.js"></script>
 
-      <ws:if data="{{_options.builder && _options.builderCompatible}}">
-         <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
-                     _options="{{_options}}"/>
-      </ws:if>
-      <ws:if data="{{_options.builder && !_options.builderCompatible}}">
-         <ws:partial template="tmpl!Controls/Application/builderRunner"
-                     _options="{{_options}}"/>
-      </ws:if>
-      <ws:else data="{{!_options.builderCompatible}}">
-         <div>
-            <Controls.Application._JsLinks attr:tabindex="-1"
-                                           appRoot="{{ appRoot }}"/>
-            <ws:if data="{{ _options.scripts }}">
-               <ws:for data="i in _options.scripts">
-                  <ws:partial template="{{ i }}"/>
-               </ws:for>
-            </ws:if>
-            <ws:partial template="tmpl!Controls/Application/startApplicationScript"
-                        compat="{{compat}}"
-                        appRoot="{{ appRoot }}"
-                        _options="{{_options}}"/>
-         </div>
-      </ws:else>
-      <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
-      <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
-      </body>
-      </Controls.DragNDrop.Container>
-   </Controls.Application.TouchDetector>
-</ws:template>
-
-<ws:template name="clientBody">
-   <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
-      <Controls.Event.Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
-         <Controls.Event.Listener name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
-            <Controls.Event.Listener name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
-               <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
-                  <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
-                     <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.Popup.Manager>
-                              <ws:partial template="commonBody"/>
-                        </Controls.Popup.Manager>
-                     </Controls.Event.Listener>
+                              <ws:if data="{{_options.builder && _options.builderCompatible}}">
+                                 <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
+                                             _options="{{_options}}"/>
+                              </ws:if>
+                              <ws:if data="{{_options.builder && !_options.builderCompatible}}">
+                                 <ws:partial template="tmpl!Controls/Application/builderRunner"
+                                             _options="{{_options}}"/>
+                              </ws:if>
+                              <ws:else data="{{!_options.builderCompatible}}">
+                                 <div>
+                                    <Controls.Application._JsLinks attr:tabindex="-1"
+                                                                   appRoot="{{ appRoot }}"/>
+                                    <ws:if data="{{ _options.scripts }}">
+                                       <ws:for data="i in _options.scripts">
+                                          <ws:partial template="{{ i }}"/>
+                                       </ws:for>
+                                    </ws:if>
+                                    <ws:partial template="tmpl!Controls/Application/startApplicationScript"
+                                                compat="{{compat}}"
+                                                appRoot="{{ appRoot }}"
+                                                _options="{{_options}}"/>
+                                 </div>
+                              </ws:else>
+                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
+                              <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+                              </body>
+                           </Controls.DragNDrop.Container>
+                        </Controls.Application.TouchDetector>
+                     </Controls.Popup.Manager>
                   </Controls.Event.Listener>
                </Controls.Event.Listener>
             </Controls.Event.Listener>
          </Controls.Event.Listener>
       </Controls.Event.Listener>
    </Controls.Event.Listener>
-</ws:template>
-
-<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
-      attr:component="Controls/Application"
-      attr:class="{{ stopEvents ? 'pre-load' : '' }}">
-<Controls.Application._Head
-        wsRoot="{{ wsRoot }}"
-        resourceRoot="{{ resourceRoot }}"
-        appRoot="{{ appRoot }}"
-        compat="{{ compat }}"
-        head="{{ _options.head }}"
-        title="{{ title }}"
-        buildnumber="{{ buildnumber }}"
-        servicesPath="{{ servicesPath }}">
-</Controls.Application._Head>
-<ws:if data="{{_isClient}}">
-   <ws:partial template="clientBody"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="commonBody"/>
-</ws:else>
+</Controls.Event.Listener>
 </html>
