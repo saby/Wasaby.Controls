@@ -3,20 +3,21 @@
         <div class="exampleBlock">
             <h2>Button-separator</h2>
             <div class="wrapper">
-                <Controls.Button.Separator on:click="clickIcon()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}" attr:test_name="ButtonSeparator"/>
+                <Controls.Button.Separator on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" on:valueChanged="valueChangedHandler()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}" attr:test_name="ButtonSeparator"/>
             </div>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="separatorChangeStyle()"
-                    keyProperty="title"
-                    selectedKey="{{_separatorSelectedStyle}}"
+            <Controls.Input.ComboBox
                     source="{{_separatorStyleSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="IconStyle"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_separatorSelectedStyle}}"
+                    on:selectedKeyChanged="separatorChangeStyle()"
+            />
             <br/>
             <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
             <br/>

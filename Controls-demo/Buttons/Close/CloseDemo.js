@@ -1,7 +1,7 @@
-define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
+define('Controls-demo/Buttons/Close/CloseDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo',
+   'tmpl!Controls-demo/Buttons/Close/CloseDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -10,14 +10,17 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
              template) {
    'use strict';
 
-   var iconStyleSource = new MemorySource({
+   var closeStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
          {
-            title: 'secondary'
+            title: 'default'
          },
          {
             title: 'primary'
+         },
+         {
+            title: 'light'
          }
       ]
    });
@@ -25,20 +28,16 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _iconSelectedStyle: 'primary',
-         _iconStyleSource: iconStyleSource,
+         _closeSelectedStyle: 'default',
+         _closeStyleSource: closeStyleSource,
          _eventName: 'no event',
 
-         activatedHandler: function(e) {
-            this._eventName = 'activated';
+         clickHandler: function(e) {
+            this._eventName = 'click';
          },
 
-         deactivatedHandler: function(e) {
-            this._eventName = 'deactivated';
-         },
-
-         iconChangeStyle: function(e, key) {
-            this._iconSelectedStyle = key;
+         closeChangeStyle: function(e, key) {
+            this._closeSelectedStyle = key;
          },
 
          reset: function() {

@@ -32,10 +32,10 @@ define('Controls-demo/Headers/headerDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'default'
+            title: 'primary'
          },
          {
-            title: 'primary'
+            title: 'secondary'
          }
       ]
    });
@@ -48,10 +48,15 @@ define('Controls-demo/Headers/headerDemo', [
          _headerSizeSource: headerSizeSource,
          _headerStyleSource: headerStyleSource,
          _caption: 'test',
+         _readOnly: false,
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          changeSize: function(e, key) {

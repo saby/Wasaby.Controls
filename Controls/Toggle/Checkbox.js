@@ -12,7 +12,7 @@ define('Controls/Toggle/Checkbox', [
     *
     * @class Controls/Toggle/Checkbox
     * @extends Core/Control
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/interface/ITooltip
     * @control
     * @public

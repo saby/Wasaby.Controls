@@ -13,7 +13,7 @@
                controls-Switch__text_{{_options.readOnly ? 'disabled' : 'enabled'}}_{{_options.value ? 'selected' : 'unselected'}}" >{{_options.caption}}</span>
 </ws:template>
 
-<span class="controls-Switch" on:click="_clickHandler()">
+<span class="controls-Switch" on:click="_clickHandler()" title="{{_options.tooltip}}">
    <ws:if data="{{_options.captionPosition === 'left'}}">
       <ws:partial template="caption"/>
       <ws:partial template="toggle"/>

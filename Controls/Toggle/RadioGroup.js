@@ -1,16 +1,16 @@
-define('Controls/Toggle/Radio', [
+define('Controls/Toggle/RadioGroup', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Toggle/Radio/Radio',
-   'tmpl!Controls/Toggle/Radio/resources/ItemTemplate',
-   'css!Controls/Toggle/Radio/Radio',
+   'tmpl!Controls/Toggle/RadioGroup/RadioGroup',
+   'tmpl!Controls/Toggle/RadioGroup/resources/ItemTemplate',
+   'css!Controls/Toggle/RadioGroup/RadioGroup',
    'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
-    * Radio button with support two direction.
+    * Radio group with support  vertical and horizontal direction.
     *
-    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/Radio
     * @extends Core/Control
@@ -22,11 +22,12 @@ define('Controls/Toggle/Radio', [
     * @demo Controls-demo/RadioGroup/RadioGroupDemo
     *
     * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/Toggle/RadioGroup/RadioGroupStyles
     */
 
    /**
     * @name Controls/Toggle/Radio#direction
-    * @cfg {string} Direction of RadioGroup.
+    * @cfg {string} Arrangement of elements in the container.
     * @variant horizontal RadioGroup is a row of RadioButton. It is default value.
     * @variant vertical RadioGroup is a column of RadioButton.
     */

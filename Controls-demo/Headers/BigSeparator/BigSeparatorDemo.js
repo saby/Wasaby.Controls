@@ -13,9 +13,9 @@ define('Controls-demo/Headers/BigSeparator/BigSeparatorDemo', [
          _eventName: 'no event',
          _value: false,
 
-         clickIcon: function(e) {
-            this._value = !this._value;
-            this._eventName = 'click';
+         valueChangedHandler: function(e, value) {
+            this._value = value;
+            this._eventName = 'valueChanged';
          },
 
          separatorChangeStyle: function(e, key) {
