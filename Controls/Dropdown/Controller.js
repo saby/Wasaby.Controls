@@ -18,9 +18,11 @@ define('Controls/Dropdown/Controller',
        * @class Controls/Dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Button/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/interface/IGroupedView
        * @author Золотова Э.Е.
        * @control
        * @public
@@ -31,54 +33,27 @@ define('Controls/Dropdown/Controller',
        */
 
       /**
-       * @name Controls/Dropdown/Controller#nodeProperty
-       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#parentProperty
-       * @cfg {String} Name of the field that contains information about parent node.
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#headTemplate
-       * @cfg {Function} Template that will be rendered above the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#contentTemplate
-       * @cfg {Function} Template that will be render the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#footerTemplate
-       * @cfg {Function} Template that will be rendered below the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#selectedKeys
-       * @cfg {Array} Array of selected items' keys.
-       */
-
-      /**
        * @name Controls/Dropdown/Controller#headConfig
-       * @cfg {Object} Menu style menuStyle
-       * @variant defaultHead The head with icon and caption
-       * @variant duplicateHead The icon set under first item
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#showHeader
-       * @cfg {Boolean} Display the header
-       * @variant true The header is displayed.
-       * @variant false The header is not displayed.
+       * @cfg {Object} Menu style menuStyle.
+       * @variant defaultHead The head with icon and caption.
+       * @variant duplicateHead The icon set under first item.
        */
 
       /**
        * @name Controls/Dropdown/Controller#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
-       * @variant default Default shadow
-       * @variant suggestionsContainer Shadow on the right, left, bottom
+       * @variant default Default shadow.
+       * @variant suggestionsContainer Shadow on the right, left, bottom.
+       */
+
+      /**
+       * @name Controls/Dropdown/Controller#marker
+       * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
+       */
+
+      /**
+       * @name Controls/Dropdown/Controller#showClose
+       * @cfg {Boolean} Determines whether the cross is displayed.
        */
 
       var _private = {
