@@ -234,8 +234,8 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                      var name = item.get('name');
                      instance = self.getItemInstance(name);
                      obj.id = name;
-                     obj.icon = instance.getIcon();
-                     obj.caption = instance.getCaption();
+                     obj.icon = instance.getIcon && instance.getIcon();
+                     obj.caption = instance.getCaption && instance.getCaption();
                      obj.instance = instance;
                      obj.className = 'controls-operationsPanel__actionType-' + getItemType(item.get('type'));
                      obj.visible = instance.isVisible();
