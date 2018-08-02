@@ -31,7 +31,10 @@
                                  on:touchmove="_touchmovePage()"
                                  on:touchend="_touchendPage()"
                                  on:mousedown="_mousedownPage()"
-                                 on:mouseup="_mouseupPage()">
+                                 on:mouseup="_mouseupPage()"
+                                 on:openPreviewer="_openPreviewerHandler()"
+                                 on:cancelPreviewer="_cancelPreviewerHandler()"
+                                 on:closePreviewer="_closePreviewerHandler()">
                               <ws:if data="{{needArea}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
@@ -82,6 +85,7 @@
                                                 _options="{{_options}}"/>
                                  </div>
                               </ws:else>
+                              <Controls.Popup.Opener.Previewer name="previewerOpener"/>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
                               </body>
                            </Controls.DragNDrop.Container>
