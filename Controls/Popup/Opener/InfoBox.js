@@ -17,7 +17,6 @@ define('Controls/Popup/Opener/InfoBox',
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @control
-       * @public
        * @category Popup
        * @author Степин Павел Владимирович
        */
@@ -98,6 +97,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
+               eventHandlers: cfg.eventHandlers,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)

@@ -139,6 +139,14 @@ define('Controls/Application',
             return def;
          },
 
+         _openInfoBoxHandler: function(event, config) {
+            this._children.infoBoxOpener.open(config);
+         },
+
+         _closeInfoBoxHandler: function() {
+            this._children.infoBoxOpener.close();
+         },
+
 
          _openPreviewerHandler: function(event, config, type) {
             this._children.previewerOpener.open(config, type);
