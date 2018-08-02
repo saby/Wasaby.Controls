@@ -44,20 +44,28 @@ define('Controls/Application/HeadDataContext', [
          this.depComponentsMap[componentName] = true;
       },
       serializeReceivedStates: function() {
-         var slr = new Serializer();
+         var slr;
          var serializedMap = {};
+         var allAdditionalDeps = {};
          var allRecStates = this.receivedStateObjectsArray;
          for (var key in allRecStates) {
+            slr = new Serializer();
             var receivedState = allRecStates[key];
             var serializedState = JSON.stringify(receivedState, slr.serialize);
             common.componentOptsReArray.forEach(function(re) {
                serializedState = serializedState.replace(re.toFind, re.toReplace);
             });
             serializedMap[key] = serializedState;
+            var addDeps = getDepsFromSerializer(slr);
+            for(var dep in addDeps) {
+               if(addDeps.hasOwnProperty(dep)) {
+                  allAdditionalDeps[dep] = true;
+               }
+            }
          }
          return {
             serializedMap: serializedMap,
-            additionalDepsMap: getDepsFromSerializer(slr)
+            additionalDepsMap: allAdditionalDeps
          };
       },
       addReceivedState: function(key, receivedState) {
