@@ -32,12 +32,6 @@ define('Controls/Dropdown/Container',
        */
 
       /**
-       * @typedef ItemsGroup
-       * @property {Function} method
-       * @property {Function} template
-       */
-
-      /**
        * @name Controls/Dropdown/Container#nodeProperty
        * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
        */
@@ -99,11 +93,6 @@ define('Controls/Dropdown/Container',
       /**
        * @name Controls/Dropdown/Container#additionalProperty
        * @cfg {String} Name of the item property that determines whether the item is added.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#itemsGroup
-       * @cfg {ItemsGroup} Name of the item property that determines whether the item is added.
        */
 
       var _private = {

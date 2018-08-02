@@ -14,12 +14,6 @@ define('Controls/interface/IDropdownList', [], function() {
     */
 
    /**
-    * @typedef {Object} itemsGroup
-    * @property method
-    * @property template Template
-    */
-
-   /**
     * @typedef {Object} headConfig
     * @property {menuStyle} menuStyle
     * @variant defaultHead The head with icon and caption
@@ -49,8 +43,6 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {Function} contentTemplate Template that will be render the list.
     * @property {Function} footerTemplate Template that will be rendered below the list.
     * @property {Boolean} showHeader Indicates whether folders should be displayed.
-    * @property {itemsGroup} itemsGroup
-    * @property {String} additionalProperty Name of the item property that determines whether the item is added.
     * @property {Boolean} showClose Determines whether the cross is displayed.
     * @property {Array} selectedKeys Array of selected items' keys.
     * @property {typeShadow} typeShadow Specifies the type of shadow around the popup.
