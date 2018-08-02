@@ -4,7 +4,7 @@ define('Controls/Input/ComboBox',
       'tmpl!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
-      'Controls/Input/Dropdown/Util',
+      'Controls/Dropdown/Util',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
