@@ -20,7 +20,9 @@ define('Controls/Popup/Manager',
 
          removeElement: function(element, container, id) {
             var self = this;
-            return element.strategy.elementDestroyed(element, container, id).addCallback(function() {
+            var removeDeferred = element.controller.elementDestroyed(element, container, id);
+            _private.redrawItems(self._popupItems);
+            return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
                _private.updateOverlay.call(self);
                return element;
@@ -36,7 +38,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
-               element.strategy.elementCreated(element, this.getItemContainer(id), id);
+               element.controller.elementCreated(element, this.getItemContainer(id), id);
                return true;
             }
             return false;
@@ -45,7 +47,7 @@ define('Controls/Popup/Manager',
          popupUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.strategy.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               element.controller.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
                return true;
             }
             return false;
@@ -54,7 +56,7 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.strategy.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               element.controller.popupDeactivated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
             }
             return false;
          },
@@ -72,7 +74,7 @@ define('Controls/Popup/Manager',
          popupAnimated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.strategy.elementAnimated(element, this.getItemContainer(id));
+               return element.controller.elementAnimated(element, this.getItemContainer(id));
             }
             return false;
          },
@@ -91,6 +93,10 @@ define('Controls/Popup/Manager',
             var popupContainer = ManagerController.getContainer();
             var item = popupContainer && popupContainer._children[id];
             return item && item._container;
+         },
+
+         redrawItems: function(items) {
+            ManagerController.getContainer().setPopupItems(items);
          }
       };
 
@@ -107,26 +113,26 @@ define('Controls/Popup/Manager',
           * @private
           * @singleton
           * @category Popup
-          * @author Лощинин Дмитрий
+          * @author Красильников Андрей
           */
 
          /**
           * Показать всплывающее окно
           * @function Controls/Popup/Manager#show
           * @param options конфигурация попапа
-          * @param strategy стратегия позиционирования попапа
+          * @param controller стратегия позиционирования попапа
           */
-         show: function(options, strategy) {
-            var element = {
+         show: function(options, controller) {
+            var item = {
                id: randomId('popup-'),
                isModal: options.isModal,
-               strategy: strategy,
-               position: strategy.getDefaultPosition(options),
+               controller: controller,
                popupOptions: options
             };
-            _private.addElement.call(this, element);
-            this._redrawItems();
-            return element.id;
+            controller.getDefaultConfig(item);
+            _private.addElement.call(this, item);
+            _private.redrawItems(this._popupItems);
+            return item.id;
          },
 
          /**
@@ -139,9 +145,9 @@ define('Controls/Popup/Manager',
             var element = this.find(id);
             if (element) {
                element.popupOptions = options;
-               element.strategy.elementUpdated(element, _private.getItemContainer(id));
+               element.controller.elementUpdated(element, _private.getItemContainer(id));
                _private.updateOverlay.call(this);
-               this._redrawItems();
+               _private.redrawItems(this._popupItems);
                return id;
             }
             return null;
@@ -159,7 +165,7 @@ define('Controls/Popup/Manager',
             if (element) {
                _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
-                  self._redrawItems();
+                  _private.redrawItems(self._popupItems);
                   return element;
                });
             }
@@ -189,18 +195,11 @@ define('Controls/Popup/Manager',
             this._popupItems._reindex();
          },
 
-         /**
-          * Установить набор попапов
-          * @function Controls/Popup/Manager#_redrawItems
-          */
-         _redrawItems: function() {
-            ManagerController.getContainer().setPopupItems(this._popupItems);
-         },
          _eventHandler: function(event, actionName) {
             var args = Array.prototype.slice.call(arguments, 2);
             var actionResult = _private[actionName].apply(_private, args);
             if (actionResult === true) {
-               this._redrawItems();
+               _private.redrawItems(this._popupItems);
             }
          }
       });
