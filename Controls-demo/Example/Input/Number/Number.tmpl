@@ -1,10 +1,10 @@
 <div class="example-Number">
-   <Controls-demo.Example.resource.BaseDemoInput title="Number input field">
+   <Controls-demo.Example.resource.BaseDemoInput title="Number input field" blocker="{{true}}">
       <ws:contents>
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div>
+                  <div class="ws-flexbox ws-flex-column">
                      <div class="example-Base__specify">With tooltip inside</div>
                      <Controls.Input.Number placeholder="Count"
                                             precision="{{0}}"
@@ -14,7 +14,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <div>
+                  <div class="ws-flexbox ws-flex-column">
                      <div class="example-Base__specify">
                         <p>Input of integers with a set range</p>
                         <p>(0-999)</p>
@@ -22,13 +22,14 @@
                      <Controls.Input.Number placeholder="Count"
                                             precision="{{0}}"
                                             integersLength="{{3}}"
+                                            onlyPositive="{{true}}"
                                             bind:value="_value2"/>
                   </div>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <div>
+                  <div class="ws-flexbox ws-flex-column">
                      <div class="example-Base__specify">Input of integer and fractional part</div>
                      <Controls.Input.Number placeholder="Count"
                                             precision="{{2}}"
