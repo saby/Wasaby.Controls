@@ -2,8 +2,9 @@ define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
    'Controls/Constants',
-   'Core/core-clone'
-], function(BaseViewModel, ListViewModel, ControlsConstants, cClone) {
+   'Core/core-clone',
+   'Core/detection'
+], function(BaseViewModel, ListViewModel, ControlsConstants, cClone, cDetection) {
 
    'use strict';
 
@@ -202,7 +203,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                result = [];
             for (var i = 0; i < columns.length; i++) {
-               result.push(this._prepareCrossBrowserColumn(columns[i]));
+               result.push(this._prepareCrossBrowserColumn(columns[i], cDetection.isNotFullGridSupport));
             }
             return result;
          },
@@ -430,16 +431,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
-
-            current.getVersion = function() {
-               //records have defined method nextVersion, groups haven't
-               if (this.item.getVersion) {
-                  return this.item.getVersion();
-               } else {
-                  return this.item;
-               }
-            };
-            
+            current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
             if (current.multiSelectVisibility) {
                current.columns = [{}].concat(this._columns);
             } else {
@@ -588,6 +580,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          _updateSelection: function(selectedKeys) {
             this._model._updateSelection(selectedKeys);
+            this._nextVersion();
          },
 
          setDragTargetItem: function(itemData) {

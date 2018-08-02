@@ -1625,7 +1625,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
         *     <li>Затем данные будут обновлены новыми, которые получены от источника данных.</li>
         * </ol>
         * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
-        * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
+        * @param {Boolean} noLoad Признак, с помощью которого устанавливается необходимость запроса нового набора данных по установленному источнику.
         * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
         * @example
         * <pre>
@@ -1684,7 +1684,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
-         if(!compatibilityMode) {
+         if (!compatibilityMode) {
             Utils.logger.stack('SBIS3.CONTROLS/Mixins/ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._options._items;

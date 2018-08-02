@@ -238,7 +238,7 @@ define('Controls/Container/Suggest/Layout',
                2) do not change orientation of suggest, if suggest already showed or data loading now */
             if (this._options.suggestState && this._children.suggestionsContainer && !this._loading) {
                var orient = _private.calcOrient(this);
-               var height = _private.calcHeight(this, orient, _private.getSizes(this));
+               var height = _private.calcHeight(this, orient);
                var orientChanged = this._orient !== orient;
                var heightChanged = this._height !== height;
                var needUpdate = orientChanged || heightChanged;

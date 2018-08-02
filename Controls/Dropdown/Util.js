@@ -1,4 +1,4 @@
-define('Controls/Input/Dropdown/Util',
+define('Controls/Dropdown/Util',
    [],
    function() {
 

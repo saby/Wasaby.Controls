@@ -126,16 +126,25 @@ module.exports = function(Component) {
       '/demo-ws4-operations-panel': function(req, res) {
          requirejs('Controls-demo/OperationsPanel/Demo');
          res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/OperationsPanel/Demo',
+            application: 'Controls-demo/OperationsPanel/PanelWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Кнопки
+      '/demo-ws4-switchers': function(req, res) {
+         requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
             initDependencies: false
          }, []);
       },
 
       // Демо-пример: Переключатели
-      '/demo-ws4-switchers': function(req, res) {
-         requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
+      '/demo-ws4-buttons': function(req, res) {
+         requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
          res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
+            application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
             initDependencies: false
          }, []);
       },

@@ -7,9 +7,6 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
      * @public
      */
     function () /** @lends SBIS3.CONTROLS/Utils/NumberTextBoxUtil.prototype */{
-       var
-          MAX_NUMBER_OF_DIGITS = 16,
-          MAX_SAFE_INTEGER = 9007199254740991;
 
        return {
             /**
@@ -20,7 +17,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              */
             checkMaxLength: function (value, maxLength) {
                 var length = this._getValueLength(value);
-                return !(maxLength && length > maxLength) && length <= MAX_NUMBER_OF_DIGITS && (isNaN(parseFloat(value)) || parseFloat(value) <= MAX_SAFE_INTEGER);
+                return !(maxLength && length > maxLength);
             },
             /**
              *
@@ -41,7 +38,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
-                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === MAX_NUMBER_OF_DIGITS,
+                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него

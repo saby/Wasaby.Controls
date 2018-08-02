@@ -27,6 +27,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
        "SBIS3.CONTROLS/Action/SelectorAction",
+       "Core/core-merge",
        "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
        "SBIS3.CONTROLS/Utils/TemplateUtil",
        "SBIS3.CONTROLS/Button/IconButton",
@@ -74,7 +75,8 @@ define('SBIS3.CONTROLS/FieldLink',
         List,
         ItemsSelectionUtil,
         objectFind,
-        SelectorAction
+        SelectorAction,
+        wsCoreMerge
     ) {
 
        'use strict';
@@ -1019,8 +1021,12 @@ define('SBIS3.CONTROLS/FieldLink',
            */
           _dropAllItems: function() {
              this.removeItemsSelectionAll();
-             this._inputField.focus();
-             this._observableControlFocusHandler();
+             //в результате removeItemsSelectionAll стрелется событие и реакцием на него может быть уничтожение компонента
+             //например в FilterPanel так происходит. Надо проверить что компонент еще жив
+             if (!this.isDestroyed()) {
+                this._inputField.focus();
+                this._observableControlFocusHandler();
+             }
           },
 
           setDataSource: function(ds, noLoad) {

@@ -1,7 +1,7 @@
-define('Controls/Filter/Container',
+define('Controls/Filter/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Container',
+      'tmpl!Controls/Filter/Controller',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',
@@ -195,12 +195,12 @@ define('Controls/Filter/Container',
       };
       
       /**
-       * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
-       * Controls/Filter/Button and Controls/Filter/FastFilter should be located inside.
+       * The filter controller allows you to filter data in a {@link Controls/List}using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
-       * @class Controls/Filter/Container
+       * @class Controls/Filter/Controller
        * @extends Core/Control
        * @mixes Controls/interface/IFilter
        * @control
@@ -209,26 +209,33 @@ define('Controls/Filter/Container',
        */
    
       /**
-       * @name Controls/Filter/Container#filterButtonSource
+       * @name Controls/Filter/Controller#filterButtonSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Button#items
        */
    
       /**
-       * @name Controls/Filter/Container#fastFilterSource
+       * @name Controls/Filter/Controller#fastFilterSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @see Controls/Filter/Fast#items
        */
       
       /**
-       * @name Controls/Filter/Container#historyId
+       * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
-      
+
+      /**
+       * @name Controls/Filter/Container#filterMode
+       * @cfg {String} Mode of forming a filter.
+       * @variant onlyChanges - only changed fields
+       * @variant full - all fields
+       */
+
       var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
-         
+
          _template: template,
          _historySource: null,
          _filter: null,

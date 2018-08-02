@@ -4,12 +4,14 @@
          <div class="controls-FastFilter__block"
               on:click="_open(item, index)">
 
-               <svg class="controls-FastFilter__iconArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 9">
-                  <path xmlns="http://www.w3.org/2000/svg"
-                        d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
-               </svg>
+            <svg class="controls-FastFilter__iconArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 9">
+               <path xmlns="http://www.w3.org/2000/svg"
+                     d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
+            </svg>
 
-            <div class="controls-Dropdown__text controls-Dropdown__defaultItem">{{_getText(item, index)}}</div>
+            <div class="controls-Dropdown__text controls-Dropdown__defaultItem"
+                 title="{{_configs[index].text}}">{{_configs[index].text}}
+            </div>
          </div>
          <ws:if data="{{item.value !== item.resetValue}}">
          <span class="controls-FastFilter__iconReset icon-Close"

@@ -1,4 +1,4 @@
-<Controls.Dropdown.Container
+<Controls.Dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
@@ -33,8 +33,8 @@
          </ws:content>
 
          <ws:afterFieldWrapper>
-            <Controls.Button.ButtonSeparator if="{{!_options.readOnly}}" bind:value="_isOpen"/>
+            <Controls.Button.Separator if="{{!_options.readOnly}}" bind:value="_isOpen"/>
          </ws:afterFieldWrapper>
 
       </Controls.Input.resources.InputRender.InputRender>
-</Controls.Dropdown.Container>
+</Controls.Dropdown.Controller>

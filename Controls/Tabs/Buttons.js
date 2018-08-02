@@ -23,32 +23,34 @@ define('Controls/Tabs/Buttons', [
          return instance._sourceController.load().addCallback(function(items) {
             var
                leftOrder = 1,
-               rightOrder = 30;
+               rightOrder = 30,
+               itemsOrder = [];
 
-            // Необходимо обратить внимание на set/get методы тк возможно item будет enumerable
-            // и нужно будет делать через обёртку
             items.each(function(item) {
                if (item.get('align') === 'left') {
-                  item.set('_order', leftOrder++);
+                  itemsOrder.push(leftOrder++);
                } else {
-                  item.set('_order', rightOrder++);
+                  itemsOrder.push(rightOrder++);
                }
             });
 
             //save last right order
             rightOrder--;
             instance._lastRightOrder = rightOrder;
-            return items;
+            return {
+               items: items,
+               itemsOrder: itemsOrder
+            };
          });
       },
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
-      prepareItemClass: function(item, options, lastRightOrder) {
+      prepareItemClass: function(item, order, options, lastRightOrder) {
          var
             classes = ['controls-Tabs__item'];
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
-         if (item.get('_order') === 1 || item.get('_order') === lastRightOrder) {
+         if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
@@ -84,39 +86,38 @@ define('Controls/Tabs/Buttons', [
 
    var TabsButtons = Control.extend({
       _template: TabButtonsTpl,
-      items: [],
-      constructor: function(cfg) {
-         TabsButtons.superclass.constructor.apply(this, arguments);
-      },
+      _items: [],
+      _itemsOrder: [],
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
-            this._items = receivedState;
+            this._items = receivedState.items;
+            this._itemsOrder = receivedState.itemsOrder;
          }
          if (options.source) {
-            return _private.initItems(options.source, this).addCallback(function(items) {
-               this._items = items;
-               return items;
+            return _private.initItems(options.source, this).addCallback(function(result) {
+               this._items = result.items;
+               this._itemsOrder = result.itemsOrder;
+               return result;
             }.bind(this));
          }
       },
       _beforeUpdate: function(newOptions) {
-         var
-            self = this;
          if (newOptions.source && newOptions.source !== this._options.source) {
-            return _private.initItems(newOptions.source, this).addCallback(function(items) {
-               this._items = items;
-               self._forceUpdate();
+            return _private.initItems(newOptions.source, this).addCallback(function(result) {
+               this._items = result.items;
+               this._itemsOrder = result.itemsOrder;
+               this._forceUpdate();
             }.bind(this));
          }
       },
       _onItemClick: function(event, key) {
          this._notify('selectedKeyChanged', [key]);
       },
-      _prepareItemClass: function(item) {
-         return _private.prepareItemClass(item, this._options, this._lastRightOrder);
+      _prepareItemClass: function(item, index) {
+         return _private.prepareItemClass(item, this._itemsOrder[index], this._options, this._lastRightOrder);
       },
-      _prepareItemOrder: function(order) {
-         return _private.prepareItemOrder(order);
+      _prepareItemOrder: function(index) {
+         return _private.prepareItemOrder(this._itemsOrder[index]);
       }
    });
 

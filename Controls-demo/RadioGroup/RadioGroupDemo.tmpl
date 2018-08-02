@@ -53,6 +53,24 @@
                 direction="horizontal"
                 readOnly="{{false}}"
 				attr:test_name="content_tmpl"/>
+        <Controls.Label caption="Display property:"/>
+        <Controls.Toggle.DoubleSwitch on:valueChanged="changedDisplayProperty()" captions="{{['caption', 'title']}}" bind:value="_displayPropertyValue"/>
+        <Controls.Label caption="Selected key:"/>
+        <Controls.Toggle.Radio
+                on:selectedKeyChanged="changeSelectedKey()"
+                keyProperty="id"
+                selectedKey="{{_selectKey}}"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{false}}">
+            <ws:itemTemplate>
+                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
+                            item="{{item}}"
+                            readOnly="{{readOnly}}"
+                            selected="{{selected}}"
+                            displayProperty="id"/>
+            </ws:itemTemplate>
+        </Controls.Toggle.Radio>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>

@@ -1,7 +1,7 @@
 <div class="controls-Tabs">
-    <ws:for data="item in _items">
-        <div attr:class="{{_prepareItemClass(item)}}"
-             attr:style="{{_prepareItemOrder(item.get('_order'))}}"
+    <ws:for data="index, item in _items">
+        <div attr:class="{{_prepareItemClass(item, index)}}"
+             attr:style="{{_prepareItemOrder(index)}}"
              on:click="_onItemClick(item.get(_options.keyProperty))">
              <ws:partial
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : _options.itemTemplate : _options.itemTemplate}}"

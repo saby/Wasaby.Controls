@@ -22,33 +22,33 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       data: [
          {
             id: '1',
-            title: 'Caption1',
+            title: 'Title1',
             caption: 'Additional caption1'
          },
          {
             id: '2',
-            title: 'Caption2',
+            title: 'Title2',
             caption: 'Additional caption2'
          },
          {
             id: '3',
-            title: 'Caption3',
+            title: 'Title3',
             templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
             caption: 'Additional caption3'
          },
          {
             id: '4',
-            title: 'Caption4',
+            title: 'Title4',
             caption: 'Additional caption4'
          },
          {
             id: '5',
-            title: 'Caption5',
+            title: 'Title5',
             caption: 'Additional caption5'
          },
          {
             id: '6',
-            title: 'Caption6',
+            title: 'Title6',
             caption: 'Additional caption6'
          }
       ]
@@ -59,19 +59,23 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       data: [
          {
             id: '1',
-            title: 'Header1'
+            title: 'Header1',
+            caption: 'Caption1'
          },
          {
             id: '2',
-            title: 'Header2'
+            title: 'Header2',
+            caption: 'Caption2'
          },
          {
             id: '3',
-            title: 'Header3'
+            title: 'Header3',
+            caption: 'Caption3'
          },
          {
             id: '4',
-            title: 'Header4'
+            title: 'Header4',
+            caption: 'Caption4'
          }
       ]
    });
@@ -128,6 +132,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       _selectedContentTemplate: 'default',
       _contentTemplate: '',
       _eventName: 'no event',
+      _displayProperty: 'title',
 
       changeKey: function(e, key) {
          this._selectKey = key;
@@ -151,6 +156,12 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             self._contentTemplate = model.get('template');
             self._forceUpdate();
          });
+      },
+      changeSelectedKey: function(e, key) {
+         this._selectKey = key;
+      },
+      changedDisplayProperty: function(e, displayPropertyValue) {
+         this._displayProperty = (displayPropertyValue ? 'caption' : 'title');
       },
       reset: function() {
          this._eventName = 'no event';

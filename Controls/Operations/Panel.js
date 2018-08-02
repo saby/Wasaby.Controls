@@ -17,7 +17,7 @@ define('Controls/Operations/Panel', [
     * @public
     * @demo Controls-demo/OperationsPanel/Panel
     *
-    * @css @background-color_OperationsPanel
+    * @css @background-color_OperationsPanel Background color of the panel.
     * @css @height_OperationsPanel Height of panel.
     * @css @spacing_OperationsPanel__item-between-icon-caption Spacing between icon and caption in items.
     * @css @spacing_OperationsPanel-between-items Spacing between items.

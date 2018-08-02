@@ -1,1 +1,3 @@
-{"extends": "@tensor-corp"}
+{
+   "extends": "@tensor-corp"
+}

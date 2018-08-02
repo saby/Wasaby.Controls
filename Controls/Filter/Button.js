@@ -18,24 +18,26 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
+       * The component is used in combination with other components for filters.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
-       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDomApplication
-       * @demo Controls-demo/Filter/Button/PanelVDomApplication
+       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDom
+       * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
        * @author Герасимов Александр
-       */
-
-      /**
+       *
        * @css @height_FilterButton Height of button.
        * @css @color_FilterButton-icon Color of button icon.
        * @css @color_FilterButton-icon_hover Color of button icon when hovering.
        * @css @color_FilterButton-icon_disabled Color icon unavailable button.
        * @css @spacing_FilterButton-between-icon-text Spacing between the filter icon and the filter string.
+       * @css @spacing_FilterButton-between-spaceTemplate-text Spacing between the line space template and the filter string.
        * @css @color_FilterButton-text Color of filter string.
        * @css @color_FilterButton-text_hover Color of filter string when hovering.
        * @css @color_FilterButton-text_disabled Color of filter string of unavailable button.
@@ -212,5 +214,6 @@ define('Controls/Filter/Button',
          };
       };
 
+      FilterButton._private = _private;
       return FilterButton;
    });

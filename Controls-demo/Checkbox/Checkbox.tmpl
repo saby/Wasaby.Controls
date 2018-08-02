@@ -18,11 +18,21 @@
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readonly"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
+        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
+        <Controls.Label name="myLabel1" caption="value:"/>
+        <Controls.Toggle.Radio
+				attr:test_name="value"
+                on:selectedKeyChanged="changeValue()"
+                keyProperty="title"
+                selectedKey="{{_selectedValue}}"
+                source="{{_source}}"
+                direction="horizontal"
+                readOnly="{{false}}"/>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
         <br/>
         <span>{{_eventName}}</span>
+        <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
     </div>
 </div>
