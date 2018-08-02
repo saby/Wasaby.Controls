@@ -66,6 +66,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
          _notifyHandler: tmplNotify,
+         _tooltip: '',
 
          _mouseEnterHandler: function() {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
