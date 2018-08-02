@@ -144,7 +144,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                   var deps = [];
                   if (isNewEnvironment()) {
                      config._mode = meta.mode;
-                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/Layer'];
+                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', 'Controls/Popup/Compatible/Layer'];
                      if (meta.mode !== 'dialog' && config.isStack === true) {
                         deps.push('Controls/Popup/Opener/Stack/StackController');
                         config._type = 'stack';
@@ -157,11 +157,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         config._type = 'dialog';
                      }
                      deps.push(config.template);
-                     requirejs(deps, function(BaseOpener, CompatibleLayer, Strategy, cfgTemplate) {
+                     requirejs(deps, function(BaseOpener, CompatibleOpener, CompatibleLayer, Strategy, cfgTemplate) {
                         CompatibleLayer.load().addCallback(function() {
                            config._initCompoundArea = function(compoundArea) {
                               self._dialog = compoundArea;
                            };
+                           if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+                              CompatibleOpener._preparePopupCfgFromOldToNew(config, cfgTemplate);
+                           }
                            BaseOpener.showDialog(cfgTemplate, config, Strategy);
                         });
                      });

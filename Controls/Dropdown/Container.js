@@ -5,7 +5,7 @@ define('Controls/Dropdown/Container',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'WS.Data/Chain',
-      'Controls/Input/Dropdown/Util'
+      'Controls/Dropdown/Util'
    ],
 
    function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
