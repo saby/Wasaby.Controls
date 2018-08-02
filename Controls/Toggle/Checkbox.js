@@ -8,7 +8,7 @@ define('Controls/Toggle/Checkbox', [
    /**
     * Checkbox with support undefined state(options tristate) and tooltip. Tooltip should be used if the icon instead of the caption.
     *
-    * <a href="/materials/demo-ws4-checkbox">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
     *
     * @class Controls/Toggle/Checkbox
     * @extends Core/Control

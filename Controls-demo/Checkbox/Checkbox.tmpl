@@ -1,6 +1,6 @@
 <div attr:class="demo-Checkbox__wrapper">
     <div attr:class="demo-CheckBox__exampleBlock">
-        <h3>Example</h3>
+        <h3>Checkbox</h3>
         <Controls.Toggle.Checkbox on:valueChanged="changeValue()"
                                   attr:class="demo-Checkbox_width"
                                   value="{{_value}}"
@@ -20,13 +20,15 @@
         <br/>
         <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
         <Controls.Label name="myLabel1" caption="value:"/>
-        <Controls.Toggle.RadioGroup
-                on:selectedKeyChanged="changeValue()"
-                keyProperty="title"
-                selectedKey="{{_selectedValue}}"
+        <Controls.Input.ComboBox
                 source="{{_source}}"
-                direction="horizontal"
-                readOnly="{{false}}"/>
+                keyProperty="title"
+                placeholder="select"
+                displayProperty="title"
+                emptyText="none"
+                selectedKey="{{_selectedValue}}"
+                on:selectedKeyChanged="changeValue()"
+        />
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
