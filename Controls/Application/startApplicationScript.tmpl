@@ -4,7 +4,7 @@
          require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
             window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
             var deps = eval("{{ getDeps() }}".replace(/&quot;/g, '"'));
-            require(['Core/app2'].concat(deps), function(app) { app(); });
+            require(['Core/app2'], function(app) { app(deps); });
          });
       </script>
    </ws:if>
