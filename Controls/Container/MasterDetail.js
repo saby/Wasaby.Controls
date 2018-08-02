@@ -5,6 +5,10 @@ define('Controls/Container/MasterDetail', [
 ], function(Control, template) {
    return Control.extend({
       _template: template,
-      _selected: null
+      _selected: null,
+      _selectedMasterValueChangedHandler: function(event, value) {
+         this._selected = value;
+         event.stopPropagation();
+      }
    });
 });

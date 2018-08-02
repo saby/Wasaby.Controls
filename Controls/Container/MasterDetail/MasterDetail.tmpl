@@ -2,7 +2,7 @@
    <ws:partial
       attr:class="controls-MasterDetail_master"
       template="{{_options.master}}"
-      bind:selectedMasterValue="_selected"/>
+      on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
    <ws:partial
       template="{{_options.detail}}"
       selectedMasterValue="{{_selected}}"/>
