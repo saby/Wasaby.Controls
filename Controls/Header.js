@@ -45,15 +45,7 @@ define('Controls/Header', [
     */
 
    var Header = Control.extend({
-      _template: template,
-
-      focusHandler: function() {
-         this._notify('activated');
-      },
-
-      blurHandler: function() {
-         this._notify('deactivated');
-      }
+      _template: template
    });
 
    Header.getOptionTypes =  function getOptionTypes() {

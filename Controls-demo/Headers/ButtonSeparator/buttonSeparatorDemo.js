@@ -31,11 +31,23 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
          _separatorSelectedStyle: 'secondary',
          _separatorStyleSource: separatorStyleSource,
          _bold: true,
+         _activeFlag: false,
          _eventName: 'no event',
 
-         clickIcon: function(e) {
-            this._iconValue = !this._iconValue;
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._activeFlag = true;
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
+         },
+
+         valueChangedHandler: function(e, value) {
+            this._iconValue = value;
+            this._eventName = 'valueChanged';
+            if (this._activeFlag) {
+               this._eventName += ' activated';
+            }
          },
 
          separatorChangeStyle: function(e, key) {

@@ -50,8 +50,12 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _counterValue: 12,
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          counterChangeSize: function(e, key) {

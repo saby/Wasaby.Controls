@@ -51,8 +51,12 @@ define('Controls-demo/Headers/headerDemo', [
          _readOnly: false,
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          changeSize: function(e, key) {

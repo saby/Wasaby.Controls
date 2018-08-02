@@ -29,8 +29,12 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
          _iconStyleSource: iconStyleSource,
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          iconChangeStyle: function(e, key) {

@@ -15,6 +15,7 @@ define('Controls/Button/Separator', [
     * @extends Core/Control
     * @control
     * @public
+    * @mixes Controls/Toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
     *
@@ -58,6 +59,10 @@ define('Controls/Button/Separator', [
 
       _beforeUpdate: function(newOptions) {
          _private.iconChangedValue(this, newOptions);
+      },
+
+      clickHandler: function(e) {
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 
