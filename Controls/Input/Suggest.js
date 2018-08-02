@@ -25,7 +25,7 @@ define('Controls/Input/Suggest',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Suggest/Suggest
+       * @demo Controls-demo/Suggest/SuggestApplication
        *
        * @author Журавлев Максим Сергеевич
        */
