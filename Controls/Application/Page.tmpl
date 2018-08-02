@@ -50,7 +50,6 @@
                               </ws:if>
                               <Controls.Popup.Manager.Container attr:id="popup"
                                                                 eventHandler="{{content._managerEventHandler}}"/>
-
                               <script key="bundles" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                               <script key="require" type="text/javascript"
@@ -76,10 +75,7 @@
                                           <ws:partial template="{{ i }}"/>
                                        </ws:for>
                                     </ws:if>
-                                    <ws:partial template="tmpl!Controls/Application/startApplicationScript"
-                                                compat="{{compat}}"
-                                                appRoot="{{ appRoot }}"
-                                                _options="{{_options}}"/>
+                                    <Controls.Application.startApplicationScript compat="{{compat}}" appRoot="{{ appRoot }}" _options="{{_options}}"/>
                                  </div>
                               </ws:else>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
