@@ -57,8 +57,8 @@ define('Controls/Application/HeadDataContext', [
             });
             serializedMap[key] = serializedState;
             var addDeps = getDepsFromSerializer(slr);
-            for(var dep in addDeps) {
-               if(addDeps.hasOwnProperty(dep)) {
+            for (var dep in addDeps) {
+               if (addDeps.hasOwnProperty(dep)) {
                   allAdditionalDeps[dep] = true;
                }
             }
