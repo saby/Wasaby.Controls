@@ -9,7 +9,7 @@
                                          attr:class="controls-demo_MasterDetail_master_search_input"/>
                   <Controls.Button style="linkMain" caption="+Папка"/>
                </div>
-               <Controls.Container.Master selectedField="sourceType">
+               <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.Grid
                           source="{{_masterSource}}"
                           keyProperty="id"
@@ -19,7 +19,7 @@
                           columns="{{gridColumns}}"
                   >
                   </Controls.Grid>
-               </Controls.Container.Master>
+               </Controls.Container.MasterList>
             </div>
          </Controls.Container.Scroll>
       </ws:master>
@@ -61,7 +61,7 @@
                                          attr:class="controls-demo_MasterDetail_master_search_input"/>
                   <Controls.Button style="linkMain" caption="+Папка"/>
                </div>
-               <Controls.Container.Master selectedField="sourceType">
+               <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.List
                           style="master"
                           keyProperty="id"
@@ -75,7 +75,7 @@
                         </ws:partial>
                      </ws:itemTemplate>
                   </Controls.List>
-               </Controls.Container.Master>
+               </Controls.Container.MasterList>
             </div>
          </Controls.Container.Scroll>
       </ws:master>
@@ -117,7 +117,7 @@
                                          attr:class="controls-demo_MasterDetail_master_search_input"/>
                   <Controls.Button style="linkMain" caption="+Папка"/>
                </div>
-               <Controls.Container.Master selectedField="sourceType">
+               <Controls.Container.MasterList selectedField="sourceType">
                   <Controls.TreeGrid
                           source="{{_masterSource}}"
                           keyProperty="id"
@@ -127,7 +127,7 @@
                           columns="{{gridColumns}}"
                   >
                   </Controls.TreeGrid>
-               </Controls.Container.Master>
+               </Controls.Container.MasterList>
             </div>
          </Controls.Container.Scroll>
       </ws:master>
