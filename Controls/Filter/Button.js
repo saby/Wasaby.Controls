@@ -214,5 +214,6 @@ define('Controls/Filter/Button',
          };
       };
 
+      FilterButton._private = _private;
       return FilterButton;
    });
