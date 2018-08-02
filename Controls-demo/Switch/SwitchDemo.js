@@ -25,6 +25,7 @@ define('Controls-demo/Switch/SwitchDemo', [
          _captionPositionSource: captionPositionSource,
          _selectedCaptionPosition: 'left',
          _caption: 'on',
+         _tooltip: '',
          _eventName: 'no event',
 
          changeCaptionPosition: function(e, key) {

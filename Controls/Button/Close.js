@@ -5,7 +5,7 @@ define('Controls/Button/Close', [
 ], function(Control, template) {
 
    /**
-    * Close button with support three display styles.
+    * Specialized type of button for closing windows.
     *
     * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
     *

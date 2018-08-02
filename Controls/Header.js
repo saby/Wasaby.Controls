@@ -7,15 +7,15 @@ define('Controls/Header', [
    'use strict';
 
    /**
-    * Header with support different display styles and sizes. Can be used independently or as part of complex headers
+    * Header with support different display styles and sizes. Can be used independently or as part of complex headers(you can see it in Demo-example)
     * consisting of a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a>
     * and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
-    *  To ensure the standart was implemented some modifiers for complex header:
+    * To ensure the standart was implemented some modifiers for complex header:
     * 1) controls-Header_Counter__clickable Class for highlighting the header and counter on the hover.
     * 2) controls-Header_all__clickable Class for highlighting the header, counter, button-separator and header-separator on the hover.
     * 3) controls-Header_Separator__clickable Class for highlighting the headers and header-separator on the hover.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     *
     * @class Controls/Header

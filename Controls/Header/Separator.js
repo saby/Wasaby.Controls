@@ -7,9 +7,11 @@ define('Controls/Header/Separator', [
    'use strict';
 
    /**
-    * Header separator with support two display styles.
+    * Header separator with support some display styles. Used as part of complex headers(you can see it in Demo-example)
+    * consisting of a <a href="/docs/js/Controls/Header/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>
+    * and a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     * @class Controls/Header/Separator
     * @extends Core/Control
@@ -19,6 +21,7 @@ define('Controls/Header/Separator', [
     * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
     *
     * @mixes Controls/Header/Separator/SeparatorStyles
+    * @mixes Controls/interface/ICaption
     */
 
    /**

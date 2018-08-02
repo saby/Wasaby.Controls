@@ -20,7 +20,7 @@
         <br/>
         <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState"/>
         <Controls.Label name="myLabel1" caption="value:"/>
-        <Controls.Toggle.Radio
+        <Controls.Toggle.RadioGroup
                 on:selectedKeyChanged="changeValue()"
                 keyProperty="title"
                 selectedKey="{{_selectedValue}}"

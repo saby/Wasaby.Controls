@@ -7,9 +7,9 @@ define('Controls/Toggle/Switch', [
 ], function(Control, template, types) {
 
    /**
-    * Switch with one caption and with support two caption positions.
+    * Switch with single caption and with support left and right caption positions.
     *
-    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/Switch
     * @extends Core/Control

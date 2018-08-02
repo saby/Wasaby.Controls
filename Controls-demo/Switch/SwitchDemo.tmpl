@@ -1,7 +1,7 @@
 <div>
     <div class="exampleBlock">
         <h2>Switch</h2>
-        <Controls.Toggle.Switch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" caption="{{_caption}}" captionPosition="{{_selectedCaptionPosition}}"/>
+        <Controls.Toggle.Switch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" bind:tooltip="_tooltip" caption="{{_caption}}" captionPosition="{{_selectedCaptionPosition}}"/>
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
@@ -9,14 +9,18 @@
         <br/>
         <Controls.Label caption="Caption"/>
         <Controls.Input.Text bind:value="_caption"/>
+        <Controls.Label caption="Tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip"/>
         <Controls.Label caption="Caption position:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeCaptionPosition()"
-                keyProperty="title"
-                selectedKey="{{_selectedCaptionPosition}}"
+        <Controls.Input.ComboBox
                 source="{{_captionPositionSource}}"
-                direction="horizontal"
-                readOnly="{{false}}"/>
+                keyProperty="title"
+                placeholder="select"
+                displayProperty="title"
+                emptyText="none"
+                selectedKey="{{_selectedCaptionPosition}}"
+                on:selectedKeyChanged="changeCaptionPosition()"
+        />
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
     </div>

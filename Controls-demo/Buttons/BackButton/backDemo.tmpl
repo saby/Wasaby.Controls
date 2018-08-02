@@ -2,28 +2,30 @@
     <div class="testBlock" test_name="BackButtonCapture">
         <div class="exampleBlock">
             <h2>Back button</h2>
-            <Controls.Button.Back on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}" attr:test_name="BackButton"/>
+            <Controls.Header.BackButton on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}" attr:test_name="BackButton"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="backChangeStyle()"
-                    keyProperty="title"
-                    selectedKey="{{_backSelectedStyle}}"
+            <Controls.Input.ComboBox
                     source="{{_backStyleSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="BackStyle"/>
-            <Controls.Label name="myLabel1" caption="size:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="backChangeSize()"
                     keyProperty="title"
-                    selectedKey="{{_backSelectedSize}}"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_backSelectedStyle}}"
+                    on:selectedKeyChanged="backChangeStyle()"
+            />
+            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.Input.ComboBox
                     source="{{_backSizeSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="BackSize"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_backSelectedSize}}"
+                    on:selectedKeyChanged="backChangeSize()"
+            />
             <Controls.Label name="myLabel1" caption="caption"/>
             <Controls.Input.Text bind:value="_backCaption"/>
         </div>

@@ -11,7 +11,7 @@ define('Controls/Toggle/DoubleSwitch', [
    /**
     * Switch with two captions and with support two orientation.
     *
-    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/DoubleSwitch
     * @extends Core/Control
@@ -31,7 +31,7 @@ define('Controls/Toggle/DoubleSwitch', [
 
    /**
     * @name Controls/Toggle/DoubleSwitch#captions
-    * @cfg {Array.<String>} Array of two captions.
+    * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
     */
 
    /**

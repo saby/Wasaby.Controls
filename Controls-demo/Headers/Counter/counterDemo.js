@@ -47,7 +47,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _counterSelectedStyle: 'primary',
          _counterSizeSource: counterSizeSource,
          _counterStyleSource: counterStyleSource,
-         _counterValue: 12,
+         _counterCaption: '12',
          _eventName: 'no event',
 
          activatedHandler: function(e) {

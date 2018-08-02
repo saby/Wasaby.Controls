@@ -1,7 +1,7 @@
 <div>
     <div class="exampleBlock">
         <h2>DoubleSwitch</h2>
-        <Controls.Toggle.DoubleSwitch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" captions="{{[_caption1, _caption2]}}" orientation="{{_selectedOrientation}}"/>
+        <Controls.Toggle.DoubleSwitch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" bind:tooltip="_tooltip" captions="{{[_caption1, _caption2]}}" orientation="{{_selectedOrientation}}"/>
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
@@ -11,14 +11,18 @@
         <Controls.Input.Text bind:value="_caption1"/>
         <Controls.Label caption="Second caption"/>
         <Controls.Input.Text bind:value="_caption2"/>
+        <Controls.Label caption="Tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip"/>
         <Controls.Label caption="Orientation:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeOrientation()"
-                keyProperty="title"
-                selectedKey="{{_selectedOrientation}}"
+        <Controls.Input.ComboBox
                 source="{{_orientationSource}}"
-                direction="horizontal"
-                readOnly="{{false}}"/>
+                keyProperty="title"
+                placeholder="select"
+                displayProperty="title"
+                emptyText="none"
+                selectedKey="{{_selectedOrientation}}"
+                on:selectedKeyChanged="changeOrientation()"
+        />
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
     </div>
