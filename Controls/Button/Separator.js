@@ -24,9 +24,9 @@ define('Controls/Button/Separator', [
    /**
     * @name Controls/Button/Separator#style
     * @cfg {String} Separator display style.
-    * @variant accent Accent display style. It is default value.
+    * @variant secondary Secondary display style. It is default value.
     * @variant additional Additional display style.
-    * @variant main Main display style.
+    * @variant primary Primary display style.
     */
 
    /**
@@ -65,9 +65,9 @@ define('Controls/Button/Separator', [
       return {
          bold: types(Boolean),
          style: types(String).oneOf([
-            'accent',
+            'secondary',
             'additional',
-            'main'
+            'primary'
          ]),
          value: types(Boolean)
       };
@@ -75,7 +75,7 @@ define('Controls/Button/Separator', [
 
    ButtonSeparator.getDefaultOptions = function() {
       return {
-         style: 'accent',
+         style: 'secondary',
          value: false,
          bold: false
       };

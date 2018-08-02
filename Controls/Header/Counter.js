@@ -38,8 +38,8 @@ define('Controls/Header/Counter', [
    /**
     * @name Controls/Header/Counter#style
     * @cfg {String} Counter displaying style.
-    * @variant primary Primary counter style.
-    * @variant default Default counter style. It is default value.
+    * @variant primary Primary counter style. It is default value.
+    * @variant secondary Secondary counter style.
     * @variant disabled Disabled counter style.
     */
 
@@ -52,7 +52,7 @@ define('Controls/Header/Counter', [
          value: types(Number),
          style: types(String).oneOf([
             'primary',
-            'default',
+            'secondary',
             'disabled'
          ]),
          size: types(String).oneOf([
@@ -65,7 +65,7 @@ define('Controls/Header/Counter', [
 
    Counter.getDefaultOptions = function() {
       return {
-         style: 'default',
+         style: 'primary',
          size: 'm'
       };
    };

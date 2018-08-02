@@ -1,0 +1,26 @@
+<div class="demoWrapper">
+    <div class="testBlock" test_name="BackButtonCapture">
+        <div class="exampleBlock">
+            <h2>Close button</h2>
+            <Controls.Button.Close on:click="clickHandler()" style="{{_closeSelectedStyle}}"/>
+        </div>
+        <div class="optionsBlock">
+            <h3>Options</h3>
+            <Controls.Label name="myLabel1" caption="style:"/>
+            <Controls.Toggle.Radio
+                    on:selectedKeyChanged="closeChangeStyle()"
+                    keyProperty="title"
+                    selectedKey="{{_closeSelectedStyle}}"
+                    source="{{_closeStyleSource}}"
+                    direction="horizontal"
+                    readOnly="{{false}}"
+                    attr:test_name="BackStyle"/>
+        </div>
+        <div class="eventBlock">
+            <span>Event that surfaced:</span>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+            <br/>
+            <span>{{_eventName}}</span>
+        </div>
+    </div>
+</div>

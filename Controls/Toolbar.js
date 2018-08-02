@@ -15,7 +15,7 @@ define('Controls/Toolbar', [
     *
     * @class Controls/Toolbar
     * @extends Core/Control
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip

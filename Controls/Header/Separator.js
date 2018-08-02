@@ -25,7 +25,7 @@ define('Controls/Header/Separator', [
     * @name Controls/Header/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary Primary display style.
-    * @variant default Default display style. It is default value.
+    * @variant secondary Secondary display style. It is default value.
     */
 
    var Separator = Control.extend({
@@ -35,7 +35,7 @@ define('Controls/Header/Separator', [
    Separator.getOptionTypes =  function getOptionTypes() {
       return {
          style: types(String).oneOf([
-            'default',
+            'secondary',
             'primary'
          ])
       };
@@ -43,7 +43,7 @@ define('Controls/Header/Separator', [
 
    Separator.getDefaultOptions = function() {
       return {
-         style: 'default'
+         style: 'secondary'
       };
    };
 

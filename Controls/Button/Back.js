@@ -12,7 +12,7 @@ define('Controls/Button/Back', [
     *
     * @class Controls/Button/Back
     * @extends Core/Control
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public

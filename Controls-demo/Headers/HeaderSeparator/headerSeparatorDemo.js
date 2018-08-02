@@ -14,7 +14,7 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'default'
+            title: 'secondary'
          },
          {
             title: 'primary'
@@ -25,7 +25,7 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _iconSelectedStyle: 'default',
+         _iconSelectedStyle: 'primary',
          _iconStyleSource: iconStyleSource,
          _eventName: 'no event',
 

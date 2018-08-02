@@ -12,7 +12,7 @@ define('Controls/Button/Menu',
        * MenuButton
        * @class Controls/Button/Menu
        * @extends Core/Control
-       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource

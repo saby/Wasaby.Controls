@@ -1,7 +1,7 @@
-define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
+define('Controls-demo/Buttons/Close/CloseDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo',
+   'tmpl!Controls-demo/Buttons/Close/CloseDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -10,17 +10,17 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
              template) {
    'use strict';
 
-   var separatorStyleSource = new MemorySource({
+   var closeStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
          {
-            title: 'secondary'
-         },
-         {
-            title: 'additional'
+            title: 'default'
          },
          {
             title: 'primary'
+         },
+         {
+            title: 'light'
          }
       ]
    });
@@ -28,18 +28,16 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _separatorSelectedStyle: 'secondary',
-         _separatorStyleSource: separatorStyleSource,
-         _bold: true,
+         _closeSelectedStyle: 'default',
+         _closeStyleSource: closeStyleSource,
          _eventName: 'no event',
 
-         clickIcon: function(e) {
-            this._iconValue = !this._iconValue;
+         clickHandler: function(e) {
             this._eventName = 'click';
          },
 
-         separatorChangeStyle: function(e, key) {
-            this._separatorSelectedStyle = key;
+         closeChangeStyle: function(e, key) {
+            this._closeSelectedStyle = key;
          },
 
          reset: function() {
