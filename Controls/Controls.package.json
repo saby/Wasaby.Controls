@@ -17,6 +17,9 @@
     "Controls/StickyHeader",
     "Controls/StickyHeader/*"
   ],
+  "exclude": [
+    "Controls/Container/Scroll/Context"
+  ],
   "output": "controls-container.package.js"
 }, {
   "include": [
