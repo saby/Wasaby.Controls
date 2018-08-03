@@ -17,9 +17,14 @@
       }
    </style>
    <ws:if data="{{ _options.head }}">
-       <ws:for data="i in _options.head">
-           <ws:partial template="{{ i }}"/>
-       </ws:for>
+       <ws:if data="{{ isArrayHead() }}">
+           <ws:for data="i in _options.head">
+               <ws:partial template="{{ i }}"/>
+           </ws:for>
+       </ws:if>
+       <ws:else>
+           <ws:partial template="{{ _options.head }}"/>
+       </ws:else>
    </ws:if>
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
