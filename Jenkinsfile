@@ -39,7 +39,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "4.10/pea/coverage",
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
