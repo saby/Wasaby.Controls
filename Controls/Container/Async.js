@@ -46,7 +46,7 @@ define('Controls/Container/Async',
                self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
                return;
             }
-            context.headData.pushDepComponent(options.templateName);
+            context.headData.pushDepComponent(options.templateName, true);
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
 
          },
