@@ -26,6 +26,7 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
          _selectedOrientation: 'horizontal',
          _caption1: 'on',
          _caption2: 'off',
+         _tooltip: '',
          _eventName: 'no event',
 
          changeOrientation: function(e, key) {

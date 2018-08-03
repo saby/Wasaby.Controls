@@ -330,6 +330,8 @@
 @border-color_Switch-marker_disabled:              #E4E4E4;
 @color_Switch-text_enabled_unselected:             #999;
 @color_Switch-text_disabled_unselected:            #CCC;
+@color_Switch-text_disabled_selected:              @default-text-color;
+@color_Switch-text_enabled_selected:               @default-text-color;
 
 //ToggleButton_square
 @color_ToggleButton-square-icon_hovered: @icon-active-color;
@@ -406,9 +408,9 @@
 @color_Button-style-addButton-icon_hovered:    #313E78;
 @color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
 @color-Button_type-IconButton_readOnly:           #CCCCCC;
-@border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.05);
-@border-color-IconButton:                         rgba(0, 0, 0, 0.05);
-@color-IconButton__shadow:                        rgba(0, 0, 0, 0.15);
+@border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.08);
+@border-color-IconButton:                         rgba(0, 0, 0, 0.08);
+@color-IconButton__shadow:                        rgba(0, 0, 0, 0.05);
 @border-color-IconButton_toggled:                 @color_primary;
 @background-color-IconButton:                     none;
 @background-color-IconButton_transparent:         #F8F8F8;
@@ -472,27 +474,27 @@
 //headers
 @color-BackButton__caption_style-default:      #D94700;
 @color-BackButton__caption_style-primary:      #313E78;
-@color_Header__caption_style-default:          #D94700;
-@color_Header__caption_style-primary:          #313E78;
-@color-BackButton__caption_style-default_hovered: @color_Header__caption_style-default_hovered;
-@color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-primary_hovered;
-@color_Header__caption_style-default_hovered:  #FF7033;
-@color_Header__caption_style-primary_hovered:  #0055BB;
-@color_Counter_style-default_hovered:    @color_Header__caption_style-default_hovered;
+@color_Header__caption_style-primary:          #D94700;
+@color_Header__caption_style-secondary:          #313E78;
+@color-BackButton__caption_style-default_hovered: @color_Header__caption_style-primary_hovered;
+@color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-secondary_hovered;
+@color_Header__caption_style-primary_hovered:  #FF7033;
+@color_Header__caption_style-secondary_hovered:  #0055BB;
 @color_Counter_style-primary_hovered:    @color_Header__caption_style-primary_hovered;
+@color_Counter_style-secondary_hovered:    @color_Header__caption_style-secondary_hovered;
+@color_Counter_style-secondary:            @color_Header__caption_style-secondary;
 @color_Counter_style-primary:            @color_Header__caption_style-primary;
-@color_Counter_style-default:            @color_Header__caption_style-default;
 @color_Counter_style-disabled:           #999999;
-@color-Separator__icon_style-Accent:              #587AB0;
-@color-Separator__icon_style-Additional:          #8991A9;
-@color-Separator__icon_style-Main:                #D94700;
-@color-Separator__icon_style-Accent_hovered:      #313E78;
-@color-Separator__icon_style-Main_hovered:        #FF7033;
-@color-Separator__icon_style-Additional_hovered:  #313E78;
-@color_HeaderSeparator_default:                     #729EE6;
+@color-Separator__icon_style-secondary:              #587AB0;
+@color-Separator__icon_style-additional:          #8991A9;
+@color-Separator__icon_style-primary:                #D94700;
+@color-Separator__icon_style-secondary_hovered:      #313E78;
+@color-Separator__icon_style-primary_hovered:        #FF7033;
+@color-Separator__icon_style-additional_hovered:  #313E78;
+@color_HeaderSeparator_secondary:                     #729EE6;
 @color_HeaderSeparator_primary:                     #729EE6;
-@color_HeaderSeparator_default_hovered:             #729EE6;
 @color_HeaderSeparator_primary_hovered:             #729EE6;
+@color_HeaderSeparator_secondary_hovered:             #729EE6;
 @color_BigSeparator-icon:                         #8991A9;
 @color_BigSeparator-icon_hovered:                 #313E78;
 

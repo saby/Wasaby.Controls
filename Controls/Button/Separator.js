@@ -7,14 +7,17 @@ define('Controls/Button/Separator', [
    'use strict';
 
    /**
-    * Button separator with support three display style and can be bold.
+    * Button separator with support different display styles and can be bold thickness. Can be used independently or as part of complex headers(you can see it in Demo-example)
+    * consisting of a <a href="/docs/js/Controls/Header/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a>
+    * and a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     * @class Controls/Button/Separator
     * @extends Core/Control
     * @control
     * @public
+    * @mixes Controls/Toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
     *
@@ -24,9 +27,9 @@ define('Controls/Button/Separator', [
    /**
     * @name Controls/Button/Separator#style
     * @cfg {String} Separator display style.
-    * @variant accent Accent display style. It is default value.
+    * @variant secondary Secondary display style. It is default value.
     * @variant additional Additional display style.
-    * @variant main Main display style.
+    * @variant primary Primary display style.
     */
 
    /**
@@ -58,6 +61,10 @@ define('Controls/Button/Separator', [
 
       _beforeUpdate: function(newOptions) {
          _private.iconChangedValue(this, newOptions);
+      },
+
+      clickHandler: function(e) {
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 
@@ -65,9 +72,9 @@ define('Controls/Button/Separator', [
       return {
          bold: types(Boolean),
          style: types(String).oneOf([
-            'accent',
+            'secondary',
             'additional',
-            'main'
+            'primary'
          ]),
          value: types(Boolean)
       };
@@ -75,7 +82,7 @@ define('Controls/Button/Separator', [
 
    ButtonSeparator.getDefaultOptions = function() {
       return {
-         style: 'accent',
+         style: 'secondary',
          value: false,
          bold: false
       };

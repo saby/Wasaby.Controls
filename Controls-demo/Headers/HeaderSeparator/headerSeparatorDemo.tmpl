@@ -2,19 +2,20 @@
     <div class="testBlock" test_name="HeaderCapture">
         <div class="exampleBlock">
             <h2>Header-separator</h2>
-            <Controls.Header.Separator on:click="clickHandler()" style="{{_iconSelectedStyle}}"/>
+            <Controls.Header.Separator on:activated="activatedHandler()" on:deactivated="deactivatedHandler()"  style="{{_iconSelectedStyle}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style(только для тем carry и presto):"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="iconChangeStyle()"
-                    keyProperty="title"
-                    selectedKey="{{_iconSelectedStyle}}"
+            <Controls.Input.ComboBox
                     source="{{_iconStyleSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="SeparatorIconStyle"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_iconSelectedStyle}}"
+                    on:selectedKeyChanged="iconChangeStyle()"
+            />
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>
