@@ -11,9 +11,7 @@
                   on:mouseenter="_contentMouseenterHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:else>
-   <Controls.Popup.Opener.InfoBox name="openerInfoBox">
-      <ws:popupOptions>
-         <ws:eventHandlers onResult="{{_resultHandler}}"/>
-      </ws:popupOptions>
-   </Controls.Popup.Opener.InfoBox>
+   <ws:if data="{{!_isNewEnvironment()}}">
+      <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+   </ws:if>
 </div>

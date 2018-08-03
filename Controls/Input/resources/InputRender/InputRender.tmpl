@@ -5,7 +5,7 @@
    {{ _options.readOnly ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
-   {{ _options.readOnly && !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
+   {{ !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
      title="{{_tooltip}}"
    on:mouseenter="_mouseEnterHandler()">
    <div

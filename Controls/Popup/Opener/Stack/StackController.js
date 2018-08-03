@@ -11,7 +11,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
-
+      var STACK_CLASS = 'controls-Stack';
       var _private = {
 
          prepareSizes: function(item, container) {
@@ -40,15 +40,30 @@ define('Controls/Popup/Opener/Stack/StackController',
                right: Math.max(window.innerWidth - targetCoords.right, 0)
             };
          },
-         elementDestroyed: function(instance, element) {
-            instance._stack.remove(element);
-            instance._update();
-            instance._destroyDeferred[element.id].callback();
-            delete instance._destroyDeferred[element.id];
+
+         getItemPosition: function(stack, index) {
+            var targetCoords = _private.getStackParentCoords();
+            var item = stack.at(index);
+            return StackStrategy.getPosition(targetCoords, item);
          },
+
+         elementDestroyed: function(instance, item) {
+            instance._stack.remove(item);
+            instance._update();
+            item.stackState = 'destroyed';
+            instance._destroyDeferred[item.id].callback();
+            delete instance._destroyDeferred[item.id];
+         },
+
          removeAnimationClasses: function(className) {
-            return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '');
-         }
+            return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
+         },
+
+         prepareUpdateClassses: function(className) {
+            className =  _private.removeAnimationClasses(className);
+            className += ' ' + STACK_CLASS;
+            return className;
+         },
       };
 
       /**
@@ -74,18 +89,17 @@ define('Controls/Popup/Opener/Stack/StackController',
                this._stack.add(item, 0);
                if (HAS_ANIMATION) {
                   item.popupOptions.className += ' controls-Stack__open';
+                  item.stackState = 'creating';
+               } else {
+                  item.stackState = 'opened';
                }
                this._update();
             }
          },
 
          elementUpdated: function(item, container) {
-            if (this._canUpdate(container)) {
-               if (HAS_ANIMATION) {
-                  // todo https://online.sbis.ru/opendoc.html?guid=85b389eb-205e-4a7b-b333-12f5cdc2523e
-                  item.popupOptions.className = _private.removeAnimationClasses(item.popupOptions.className);
-                  item.popupOptions.className += ' controls-Stack__open';
-               }
+            if (item.stackState === 'opened') {
+               item.popupOptions.className = _private.prepareUpdateClassses(item.popupOptions.className);
                if (this._checkContainer(item, container)) {
                   _private.prepareSizes(item, container);
                   this._update();
@@ -93,63 +107,53 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
          },
 
-         _canUpdate: function(container) {
-            // if container contains waiting class then animation wasn't over
-            // if container contains closing class then popup destroying
-            // todo https://online.sbis.ru/opendoc.html?guid=85b389eb-205e-4a7b-b333-12f5cdc2523e
-            return !container.classList.contains('controls-Stack__waiting') && !container.classList.contains('controls-Stack__close');
-         },
 
-         elementDestroyed: function(element, container) {
-            this._destroyDeferred[element.id] = new Deferred();
+
+         elementDestroyed: function(item) {
+            this._destroyDeferred[item.id] = new Deferred();
+            item.stackState = 'destroying';
             if (HAS_ANIMATION) {
-               element.popupOptions.className += ' controls-Stack__close';
-               container.classList.add('controls-Stack__close');
-               this._fixTemplateAnimation(element);
+               item.popupOptions.className += ' controls-Stack__close';
+               this._fixTemplateAnimation(item);
             } else {
-               _private.elementDestroyed(this, element);
+               _private.elementDestroyed(this, item);
                return (new Deferred()).callback();
             }
-            return this._destroyDeferred[element.id];
+            return this._destroyDeferred[item.id];
          },
 
-         elementAnimated: function(element, container) {
-            element.popupOptions.className = _private.removeAnimationClasses(element.popupOptions.className);
-            if (this._destroyDeferred[element.id]) {
-               _private.elementDestroyed(this, element);
+         elementAnimated: function(item) {
+            item.popupOptions.className = _private.removeAnimationClasses(item.popupOptions.className);
+            if (item.stackState === 'destroying') {
+               _private.elementDestroyed(this, item);
             } else {
-               container.classList.remove('controls-Stack__waiting', 'controls-Stack__open');
+               item.stackState = 'opened';
+               return true;
             }
          },
 
          _update: function() {
             var self = this;
             this._stack.each(function(item, index) {
-               item.position = self._getItemPosition(index);
+               item.position = _private.getItemPosition(self._stack, index);
             });
          },
 
-         getDefaultPosition: function(popupOptions) {
+         getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
-            var position = StackStrategy.getPosition(baseCoord, { popupOptions: popupOptions });
+            var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
+            item.popupOptions.className += ' controls-Stack';
+            if (HAS_ANIMATION) {
+               item.popupOptions.className += ' controls-Stack__waiting';
+            }
 
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            return {
+            item.position = {
                top: -10000,
                left: -10000,
                width: position.width || undefined
             };
          },
-
-         _getItemPosition: function(index) {
-            var tCoords = _private.getStackParentCoords();
-            var item = this._stack.at(index);
-            return StackStrategy.getPosition(tCoords, item);
-         },
-         _getTemplateContainer: function(container) {
-            return container.getElementsByClassName('controls-Popup__template')[0];
-         },
-
 
          // Метод, который проверяет работу анимации. Если анимация через пол секунды не сообщила о своем завершении -
          // завершает ее вручную. Необходимость вызвана изощренной логикой прикладных разработчиков, которые сами
@@ -163,7 +167,9 @@ define('Controls/Popup/Opener/Stack/StackController',
                   _private.elementDestroyed(self, element);
                }
             }, 500);
-         }
+         },
+
+         _private: _private
       });
 
       return new StackController();

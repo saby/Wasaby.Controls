@@ -123,8 +123,8 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             }
          },
 
-         getDefaultPosition: function() {
-            return {
+         getDefaultConfig: function(item) {
+            item.position = {
                top: -10000,
                left: -10000,
 

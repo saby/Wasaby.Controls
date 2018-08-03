@@ -5,9 +5,7 @@ define('Controls/Popup/Opener/BaseController',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, cDeferred, ManagerController, Utils) {
-      var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
-
+   function(CoreExtend, Deferred, ManagerController, Utils) {
       var _private = {
 
          /*
@@ -33,7 +31,7 @@ define('Controls/Popup/Opener/BaseController',
        * Базовая стратегия
        * @category Popup
        * @class Controls/Popup/Opener/BaseController
-       * @author Лощинин Дмитрий
+       * @author Красильников Андрей
        */
       var BaseController = CoreExtend.extend({
 
@@ -63,15 +61,15 @@ define('Controls/Popup/Opener/BaseController',
           * @param element
           */
          elementDestroyed: function(element) {
-            return new cDeferred().callback();
+            return (new Deferred()).callback();
          },
          popupDeactivated: function(item) {
             if (item.popupOptions.closeByExternalClick) {
                ManagerController.remove(item.id);
             }
          },
-         getDefaultPosition: function() {
-            return {
+         getDefaultConfig: function(item) {
+            item.position = {
                top: -10000,
                left: -10000
             };

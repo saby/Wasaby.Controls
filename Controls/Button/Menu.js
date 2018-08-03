@@ -17,6 +17,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IGroupedView
        * @control
        * @public
        * @category Button

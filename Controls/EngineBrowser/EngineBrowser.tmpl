@@ -1,8 +1,8 @@
-<Controls.Filter.Container filterButtonSource="{{_options.filterButtonSource}}"
+<Controls.Filter.Controller filterButtonSource="{{_options.filterButtonSource}}"
                            fastFilterSource="{{_options.fastFilterSource}}"
                            filter="{{_options.filter}}">
    <Controls.Container.Data source="{{_options.source}}" navigation="{{_options.navigation}}" sorting="{{_options.sorting}}">
-      <Controls.Search.Container searchParam="{{_options.searchParam}}">
+      <Controls.Search.Controller searchParam="{{_options.searchParam}}">
          <div>
             <div class="controls-Browser__header">
                <ws:if data="{{_options.search}}">
@@ -33,6 +33,6 @@
                </Controls.List.Container>
             </ws:if>
          </div>
-      </Controls.Search.Container>
+      </Controls.Search.Controller>
    </Controls.Container.Data>
-</Controls.Filter.Container>
+</Controls.Filter.Controller>

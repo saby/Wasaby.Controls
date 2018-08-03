@@ -9,7 +9,7 @@ define('Controls/Search/Input/Container',
       /**
        * Special container for component with {@link Controls/Input/interface/IInputText}.
        * Listens for child's "valueChanged" event and notify bubbling event "search".
-       * NOTE: must be located inside {@link Controls/Search/Container}.
+       * NOTE: must be located inside {@link Controls/Search/Controller}.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
