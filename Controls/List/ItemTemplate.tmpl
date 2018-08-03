@@ -1,4 +1,4 @@
-<div attr:class="controls-ListView__itemV{{marker != false && itemData.isSelected ? (' controls-ListView__item__marked controls-ListView__item__marked_' + itemData.style)}}
+<div attr:class="controls-ListView__itemV{{marker !== false && itemData.isSelected ? (' controls-ListView__item__marked controls-ListView__item__marked_' + itemData.style)}}
     controls-ListView__item_{{itemData.style}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
@@ -10,10 +10,9 @@
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <ws:partial
-                attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}"
-                template="{{contentTemplate}}"
-                itemData="{{itemData}}"/>
+        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">
+            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+        </div>
     </ws:if>
     <ws:else>
         <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>

@@ -15,7 +15,7 @@ define('Controls/Filter/Fast/Container',
        * Special container for {@link Controls/Filter/Fast}.
        * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
        * Receives props from context and pass to {@link Controls/Filter/Fast}.
-       * NOTE: Must be located inside Controls/Filter/Container.
+       * NOTE: Must be located inside Controls/Filter/Controller.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
@@ -50,7 +50,7 @@ define('Controls/Filter/Fast/Container',
             this._notify('filterItemsChanged', [this._items], {bubbling: true});
          }
       });
-   
+
       Container.contextTypes = function() {
          return {
             filterLayoutField: FilterContextField

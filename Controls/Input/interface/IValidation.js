@@ -3,6 +3,7 @@ define('Controls/Input/interface/IValidation', [
 
    /**
     * Interface for input's invalid state.
+    * Read more about validation on {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/validation/}
     *
     * @interface Controls/Input/interface/IValidation
     * @public

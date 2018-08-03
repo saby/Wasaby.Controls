@@ -1,7 +1,7 @@
-define('Controls/Search/Container',
+define('Controls/Search/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Search/Container',
+      'tmpl!Controls/Search/Controller',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
       'Controls/Controllers/_SearchController',
@@ -67,7 +67,7 @@ define('Controls/Search/Container',
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
-       * @class Controls/Search/Container
+       * @class Controls/Search/Controller
        * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
        * @author Герасимов Александр

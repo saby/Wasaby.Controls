@@ -88,8 +88,23 @@ define('Controls/Input/Mask',
 
       /**
        * @name Controls/Input/Mask#formatMaskChars
-       * @cfg {Object} The key is the mask character, the value is the input characters,
-       * in the form of regular expression.
+       * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
+       *
+       * @example
+       * js:
+       * <pre>
+       *    _beforeMount: function() {
+       *       var formatMaskChars = {
+       *          '+': '[+]',
+       *          'd': '[0-9]'
+       *       }
+       *
+       *       this._formatMaskChars = formatMaskChars;
+       * </pre>
+       * tmpl:
+       * <pre>
+       *    <Controls.Input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       * </pre>
        */
 
       var
