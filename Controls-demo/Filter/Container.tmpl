@@ -1,5 +1,5 @@
 <div class="controls-demo__filter-container">
-    <Controls.Filter.Container bind:filter="_filter" fastFilterSource="{{_filterData}}" filterButtonSource="{{_filterButtonData}}">
+    <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_filterData}}" filterButtonSource="{{_filterButtonData}}">
         <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
             <div>
                 <div class="controls-demo__filter-filtersWrapper">
@@ -28,5 +28,5 @@
                 </Controls.List.Container>
             </div>
         </Controls.Container.Data>
-    </Controls.Filter.Container>
+    </Controls.Filter.Controller>
 </div>

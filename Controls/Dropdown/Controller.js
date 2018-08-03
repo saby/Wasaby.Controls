@@ -1,11 +1,11 @@
-define('Controls/Dropdown/Container',
+define('Controls/Dropdown/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/Container/Container',
+      'tmpl!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'WS.Data/Chain',
-      'Controls/Input/Dropdown/Util'
+      'Controls/Dropdown/Util'
    ],
 
    function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
@@ -15,70 +15,45 @@ define('Controls/Dropdown/Container',
       /**
        * Container for dropdown lists
        *
-       * @class Controls/Dropdown/Container
+       * @class Controls/Dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/Input/interface/IDropdownEmptyText
-       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/interface/IGroupedView
        * @author Золотова Э.Е.
        * @control
        * @public
        */
 
       /**
-       * @event Controls/Dropdown/Container#selectedItemsChanged Occurs when the selected items change.
+       * @event Controls/Dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
        */
 
       /**
-       * @name Controls/Dropdown/Container#nodeProperty
-       * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+       * @name Controls/Dropdown/Controller#headConfig
+       * @cfg {Object} Menu style menuStyle.
+       * @variant defaultHead The head with icon and caption.
+       * @variant duplicateHead The icon set under first item.
        */
 
       /**
-       * @name Controls/Dropdown/Container#parentProperty
-       * @cfg {String} Name of the field that contains information about parent node.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#headTemplate
-       * @cfg {Function} Template that will be rendered above the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#contentTemplate
-       * @cfg {Function} Template that will be render the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#footerTemplate
-       * @cfg {Function} Template that will be rendered below the list.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#selectedKeys
-       * @cfg {Array} Array of selected items' keys.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#headConfig
-       * @cfg {Object} Menu style menuStyle
-       * @variant defaultHead The head with icon and caption
-       * @variant duplicateHead The icon set under first item
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#showHeader
-       * @cfg {Boolean} Display the header
-       * @variant true The header is displayed.
-       * @variant false The header is not displayed.
-       */
-
-      /**
-       * @name Controls/Dropdown/Container#typeShadow
+       * @name Controls/Dropdown/Controller#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
-       * @variant default Default shadow
-       * @variant suggestionsContainer Shadow on the right, left, bottom
+       * @variant default Default shadow.
+       * @variant suggestionsContainer Shadow on the right, left, bottom.
+       */
+
+      /**
+       * @name Controls/Dropdown/Controller#marker
+       * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
+       */
+
+      /**
+       * @name Controls/Dropdown/Controller#showClose
+       * @cfg {Boolean} Determines whether the cross is displayed.
        */
 
       var _private = {

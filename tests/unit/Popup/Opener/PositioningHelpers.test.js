@@ -7,9 +7,10 @@ define(
       'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Dialog/DialogController',
+      'Core/Deferred'
    ],
 
-   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController) {
+   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, Deferred) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -181,9 +182,8 @@ define(
                assert.isTrue(position.left === 390);
             });
             it('Check fixed state', function() {
-               var itemConfig = {
-                  position: StickyController.getDefaultPosition()
-               };
+               var itemConfig = {};
+               StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
                try {
                   StickyController.elementCreated(itemConfig);
@@ -302,10 +302,50 @@ define(
             });
 
             it('stack default position', function() {
-               var position = StackController.getDefaultPosition(item.popupOptions);
-               assert.equal(position.top, -10000);
-               assert.equal(position.left, -10000);
-               assert.equal(position.width, 800 + stackShadowWidth);
+               let itemConfig = {
+                  popupOptions: item.popupOptions
+               };
+               StackController.getDefaultConfig(itemConfig);
+               assert.equal(itemConfig.position.top, -10000);
+               assert.equal(itemConfig.position.left, -10000);
+               assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
+            });
+
+            it('stack state', function() {
+               let itemConfig = {
+                  id: '22',
+                  popupOptions: item.popupOptions
+               };
+               StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+
+               StackController.elementCreated(itemConfig, {});
+               //Зависит от того где запускаем тесты, под нодой или в браузере
+               assert.isTrue(itemConfig.stackState === 'opened' || itemConfig.stackState === 'creating');
+
+               StackController.elementAnimated(itemConfig);
+               assert.equal(itemConfig.stackState, 'opened');
+
+               itemConfig.popupOptions.className = '';
+               StackController.elementUpdated(itemConfig, {});
+               //класс обновился, потому что состояние было opened
+               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === " controls-Stack");
+
+               itemConfig.stackState = 'notOpened';
+               itemConfig.popupOptions.className = '';
+               StackController.elementUpdated(itemConfig, {});
+               //класс не обновился, потому что состояние не opened
+               assert.equal(itemConfig.popupOptions.className, '');
+
+               StackController.elementDestroyed(itemConfig, {});
+               //Зависит от того где запускаем тесты, под нодой или в браузере
+               assert.isTrue(itemConfig.stackState === 'destroying' || itemConfig.stackState === 'destroyed');
+
+               itemConfig.stackState = 'destroying';
+               StackController._destroyDeferred[itemConfig.id] = new Deferred();
+               StackController.elementAnimated(itemConfig, {});
+               //Зависит от того где запускаем тесты, под нодой или в браузере
+               assert.equal(itemConfig.stackState, 'destroyed');
             });
 
             it('stack from target container', function() {

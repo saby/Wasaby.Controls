@@ -29,7 +29,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'default'
+            title: 'secondary'
          },
          {
             title: 'primary'
@@ -44,14 +44,18 @@ define('Controls-demo/Headers/Counter/counterDemo', [
       {
          _template: template,
          _counterSelectedSize: 'l',
-         _counterSelectedStyle: 'default',
+         _counterSelectedStyle: 'primary',
          _counterSizeSource: counterSizeSource,
          _counterStyleSource: counterStyleSource,
-         _counterValue: 12,
+         _counterCaption: '12',
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          counterChangeSize: function(e, key) {

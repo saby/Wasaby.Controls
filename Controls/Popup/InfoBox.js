@@ -3,10 +3,9 @@ define('Controls/Popup/InfoBox',
       'Core/Control',
       'tmpl!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
-
       'Controls/Popup/Opener/InfoBox'
    ],
-   function(Control, template, OpenerTemplate) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener) {
 
       'use strict';
 
@@ -52,9 +51,13 @@ define('Controls/Popup/InfoBox',
       var _private = {
          getCfg: function(self, event) {
             return {
+               opener: self,
                target: event.currentTarget || event.target,
                template: OpenerTemplate,
                position: self._options.position,
+               eventHandlers: {
+                  onResult: self._resultHandler
+               },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
@@ -67,6 +70,8 @@ define('Controls/Popup/InfoBox',
       var InfoBox = Control.extend({
          _template: template,
 
+         _isNewEnvironment: InfoBoxOpener.isNewEnvironment,
+
          _openId: null,
 
          _closeId: null,
@@ -76,7 +81,13 @@ define('Controls/Popup/InfoBox',
          },
 
          _open: function(event) {
-            this._children.openerInfoBox.open(_private.getCfg(this, event));
+            var config = _private.getCfg(this, event);
+
+            if (this._isNewEnvironment()) {
+               this._notify('openInfoBox', [config], {bubbling: true});
+            } else {
+               this._children.infoBoxOpener.open(config);
+            }
 
             clearTimeout(this._openId);
             clearTimeout(this._closeId);
@@ -87,7 +98,11 @@ define('Controls/Popup/InfoBox',
          },
 
          _close: function() {
-            this._children.openerInfoBox.close();
+            if (this._isNewEnvironment()) {
+               this._notify('closeInfoBox', [], {bubbling: true});
+            } else {
+               this._children.infoBoxOpener.close();
+            }
 
             clearTimeout(this._openId);
             clearTimeout(this._closeId);

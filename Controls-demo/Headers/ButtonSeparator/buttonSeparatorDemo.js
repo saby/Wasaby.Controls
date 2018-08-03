@@ -14,13 +14,13 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'accent'
+            title: 'secondary'
          },
          {
             title: 'additional'
          },
          {
-            title: 'main'
+            title: 'primary'
          }
       ]
    });
@@ -28,14 +28,26 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _separatorSelectedStyle: 'accent',
+         _separatorSelectedStyle: 'secondary',
          _separatorStyleSource: separatorStyleSource,
          _bold: true,
+         _activeFlag: false,
          _eventName: 'no event',
 
-         clickIcon: function(e) {
-            this._iconValue = !this._iconValue;
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._activeFlag = true;
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
+         },
+
+         valueChangedHandler: function(e, value) {
+            this._iconValue = value;
+            this._eventName = 'valueChanged';
+            if (this._activeFlag) {
+               this._eventName += ' activated';
+            }
          },
 
          separatorChangeStyle: function(e, key) {

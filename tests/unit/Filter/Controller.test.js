@@ -1,6 +1,6 @@
-define(['Controls/Filter/Container'], function(Filter){
+define(['Controls/Filter/Controller'], function(Filter){
    
-   describe('Controls.Filter.Container', function () {
+   describe('Controls.Filter.Controller', function () {
       
       it('_itemsChanged', function () {
          var filterLayout = new Filter();

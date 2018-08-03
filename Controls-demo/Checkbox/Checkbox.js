@@ -54,11 +54,11 @@ define('Controls-demo/Checkbox/Checkbox', [
             this._eventName = 'no event';
          },
          changeValue: function(e, key) {
+            this._eventName = 'valueChanged';
             this._selectedValue = key;
             var self = this;
             this._source.read(key).addCallback(function(item) {
                self._value = item.get('value');
-               self._eventName = 'valueChanged';
             });
          },
          setTristate: function(e, value) {

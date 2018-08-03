@@ -1,7 +1,7 @@
 <div class="controls-demo__search-container">
     <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
         <ws:content>
-            <Controls.Search.Container searchParam="department">
+            <Controls.Search.Controller searchParam="department">
                 <div>
                     <Controls.Search.Input.Container>
                         <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
@@ -23,7 +23,7 @@
                         </Controls.List>
                     </Controls.List.Container>
                 </div>
-            </Controls.Search.Container>
+            </Controls.Search.Controller>
         </ws:content>
     </Controls.Container.Data>
 </div>

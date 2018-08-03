@@ -3,33 +3,35 @@
         <div class="exampleBlock">
             <h2>Counter</h2>
             <div class="wrapper">
-                <Controls.Header.Counter on:click="clickHandler()" attr:class="counter" value="{{_counterValue}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}" attr:test_name="HeaderCounter"/>
+                <Controls.Header.Counter on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_counterCaption}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}" attr:test_name="HeaderCounter"/>
             </div>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
-            <Controls.Label name="myLabel1" caption="value"/>
-            <Controls.Input.Number bind:value="_counterValue"/>
+            <Controls.Label name="myLabel1" caption="caption"/>
+            <Controls.Input.Number bind:value="_counterCaption"/>
             <Controls.Label name="myLabel1" caption="style:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="counterChangeStyle()"
-                    keyProperty="title"
-                    selectedKey="{{_counterSelectedStyle}}"
+            <Controls.Input.ComboBox
                     source="{{_counterStyleSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="CounterStyle"/>
-            <Controls.Label name="myLabel1" caption="size:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="counterChangeSize()"
                     keyProperty="title"
-                    selectedKey="{{_counterSelectedSize}}"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_counterSelectedStyle}}"
+                    on:selectedKeyChanged="counterChangeStyle()"
+					attr:test_name="CounterStyle"
+            />
+            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.Input.ComboBox
                     source="{{_counterSizeSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-                    attr:test_name="CounterSize"/>
-            <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_counterValue" caption="value"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_counterSelectedSize}}"
+                    on:selectedKeyChanged="counterChangeSize()"
+					attr:test_name="CounterSize"
+            />
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>

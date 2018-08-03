@@ -2,5 +2,5 @@
    <div>{{ error }}</div>
 </ws:if>
 <ws:else>
-   <ws:partial template="{{ _options.content || _options.templateName }}" scope="{{ _options.templateOptions }}"/>
+   <ws:partial template="{{ _options.content || _options.templateName }}" scope="{{ optionsForComponent }}"/>
 </ws:else>
