@@ -83,6 +83,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                         iconSize = size;
                      }
                   });
+               } else if (config.iconPadding[config.parentProperty]) {
+                  this._headConfig.icon = config.iconPadding[config.parentProperty][1];
                }
                if (this._headConfig.menuStyle === 'duplicateHead') {
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;

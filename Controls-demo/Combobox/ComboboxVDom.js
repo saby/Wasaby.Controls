@@ -18,15 +18,15 @@ define('Controls-demo/Combobox/ComboboxVDom',
 
          _itemsRegions: [
             {
-               id: 1,
+               id: '1',
                title: 'Yaroslavl'
             },
             {
-               id: 2,
+               id: '2',
                title: 'Moscow'
             },
             {
-               id: 3,
+               id: '3',
                title: 'St-Petersburg'
             }
          ],
@@ -100,9 +100,9 @@ define('Controls-demo/Combobox/ComboboxVDom',
             return this._createMemory(items);
          },
 
-         _selectedKey: '3',
          _selectedKey7: 'Branch, representative of a foreign legal entity accredited in accordance with ' +
-         'the established procedure in the '
+         'the established procedure in the ',
+         _selectedKeyReadOnly: '1'
       });
 
       return ComboBox;
