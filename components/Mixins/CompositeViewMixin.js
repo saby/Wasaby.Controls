@@ -374,8 +374,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (styles) {
             item.css(styles);
          }
-         var titleHeight = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 26 : 0);
-         $('.controls-CompositeView__tileContainer', item).css('padding-bottom', titleHeight);
+         $('.controls-CompositeView__tileContainer', item).css('padding-bottom', DimensionsUtil.calcTitleDimensions(item)['padding-bottom']);
       },
 
       _createFixedItem: function(item, styles) {
