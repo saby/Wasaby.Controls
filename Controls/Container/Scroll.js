@@ -8,7 +8,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
-      'Controls/Layout/Scroll',
+      'Controls/Container/Scroll/Watcher',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
