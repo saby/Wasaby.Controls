@@ -15,6 +15,7 @@
                     emptyText="none"
                     selectedKey="{{_backSelectedStyle}}"
                     on:selectedKeyChanged="backChangeStyle()"
+					attr:test_name="BackStyle"
             />
             <Controls.Label name="myLabel1" caption="size:"/>
             <Controls.Input.ComboBox
@@ -25,6 +26,7 @@
                     emptyText="none"
                     selectedKey="{{_backSelectedSize}}"
                     on:selectedKeyChanged="backChangeSize()"
+					attr:test_name="BackSize"
             />
             <Controls.Label name="myLabel1" caption="caption"/>
             <Controls.Input.Text bind:value="_backCaption"/>
