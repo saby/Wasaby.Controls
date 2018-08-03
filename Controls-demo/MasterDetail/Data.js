@@ -59,25 +59,25 @@ define('Controls-demo/MasterDetail/Data', [], function() {
          date: '26 авг'
       }],
       master: [{
-         id: 0,
+         id: '0',
          name: 'Входящие',
          'Раздел@': true,
          'Раздел': null,
          sourceType: 'incoming'
       }, {
-         id: 3,
+         id: '3',
          'Раздел@': false,
          'Раздел': 0,
          name: 'Входящие задачи',
          sourceType: 'incomingTasks'
       }, {
-         id: 1,
+         id: '1',
          name: 'Поручения',
          'Раздел@': false,
          'Раздел': null,
          sourceType: 'instructions'
       }, {
-         id: 2,
+         id: '2',
          'Раздел@': null,
          'Раздел': null,
          name: 'Планы',

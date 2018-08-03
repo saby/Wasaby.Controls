@@ -5,8 +5,9 @@ define('Controls-demo/MasterDetail/Demo', [
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
+   'Controls-demo/MasterDetail/DemoSource',
    'css!Controls-demo/MasterDetail/Demo'
-], function(Control, template, data, cClone, Memory, itemTemplate) {
+], function(Control, template, data, cClone, Memory, itemTemplate, DemoSource) {
    return Control.extend({
       _template: template,
 
@@ -14,22 +15,7 @@ define('Controls-demo/MasterDetail/Demo', [
       _beforeMount: function() {
          this._detail = {};
 
-         this._detail.incoming = new Memory({
-            idProperty: 'id',
-            data: cClone(data.incoming)
-         });
-         this._detail.incomingTasks = new Memory({
-            idProperty: 'id',
-            data: cClone(data.incomingTasks)
-         });
-         this._detail.instructions = new Memory({
-            idProperty: 'id',
-            data: cClone(data.instructions)
-         });
-         this._detail.plans = new Memory({
-            idProperty: 'id',
-            data: cClone(data.plans)
-         });
+         this._detailSource = new DemoSource();
 
          this._masterSource = new Memory({
             idProperty: 'id',

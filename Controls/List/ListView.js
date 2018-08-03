@@ -111,8 +111,8 @@ define('Controls/List/ListView', [
             this._notify('itemMouseEnter', [itemData, event]);
          },
 
-         _onMarkedKeyChangedHandler: function(event, item) {
-            this._notify('markedKeyChanged', [item]);
+         _onMarkedKeyChangedHandler: function(event, key) {
+            this._notify('markedKeyChanged', [key]);
          }
       });
 

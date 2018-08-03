@@ -114,8 +114,8 @@ define('Controls/List', [
          return this._notify('dragEnd', [items, target, position]);
       },
 
-      _markedKeyChangedHandler: function(event, item) {
-         this._notify('markedKeyChanged', [item]);
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 

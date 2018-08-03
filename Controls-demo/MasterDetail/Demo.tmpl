@@ -31,8 +31,10 @@
                </div>
                <Controls.List
                        keyProperty="id"
-                       source="{{_detail[detail.selectedMasterValue]}}"
+                       source="{{_detailSource}}"
                >
+                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="tmpl!Controls/List/ItemTemplate">
                         <ws:contentTemplate>
@@ -87,8 +89,9 @@
                </div>
                <Controls.List
                        keyProperty="id"
-                       source="{{_detail[detail.selectedMasterValue]}}"
-               >
+                       source="{{_detailSource}}">
+                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="tmpl!Controls/List/ItemTemplate">
                         <ws:contentTemplate>
@@ -139,8 +142,9 @@
                </div>
                <Controls.List
                        keyProperty="id"
-                       source="{{_detail[detail.selectedMasterValue]}}"
-               >
+                       source="{{_detailSource}}">
+                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="tmpl!Controls/List/ItemTemplate">
                         <ws:contentTemplate>

@@ -127,3 +127,51 @@
    padding-left: @spacing_ListView-group-between-rightTemplate-separator;
    flex-shrink: 0;
 }
+
+//MasterList styles
+
+.controls-ListView_master {
+   padding-right: @border-width_MasterList-right;
+   box-sizing: border-box;
+}
+
+.controls-ListView__item__marked_master {
+   .master-item-selected(100%);
+}
+
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @hover-color_MasterList_item;
+      }
+   }
+}
+
+.master-item-selected(@height) {
+   background-color: @background-color_MasterList_item-selected;
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: 1px 0 1px 0;
+      border-style: solid;
+      border-color: @border-color_MasterList_item-selected;
+      box-shadow: @box-shadow_MasterList_item-selected;
+      width: ~'calc(100% + @{border-width_MasterList-right})';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      height: @height;
+   }
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @border-width_MasterList-right;
+      position: absolute;
+      right: -@border-width_MasterList-right;
+      background-color: @default-bg-color;
+   }
+}

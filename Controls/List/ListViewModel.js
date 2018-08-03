@@ -92,7 +92,7 @@ define('Controls/List/ListViewModel',
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
-            this._notify('onMarkedKeyChanged', this._markedItem && this._markedItem.getContents());
+            this._notify('onMarkedKeyChanged', key);
          },
 
          getSwipeItem: function() {

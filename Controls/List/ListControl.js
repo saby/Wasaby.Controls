@@ -61,8 +61,8 @@ define('Controls/List/ListControl', [
          this._notify('afterItemsRemove', [keys, result]);
       },
 
-      _markedKeyChangedHandler: function(event, item) {
-         this._notify('markedKeyChanged', [item]);
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 
