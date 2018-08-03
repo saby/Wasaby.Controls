@@ -40,8 +40,11 @@ define('Controls/Application/HeadDataContext', [
    return DataContext.extend({
       _version: 0,
       needObjects: true,
-      pushDepComponent: function(componentName) {
+      pushDepComponent: function(componentName, needRequire) {
          this.depComponentsMap[componentName] = true;
+         if(needRequire) {
+            this.additionalDeps[componentName] = true;
+         }
       },
       serializeReceivedStates: function() {
          var slr;
@@ -97,7 +100,7 @@ define('Controls/Application/HeadDataContext', [
                cssLinks: self.cssLinks || [],
                errorState: self.err,
                receivedStateArr: rcsData.serializedMap,
-               additionalDeps: Object.keys(rcsData.additionalDepsMap)
+               additionalDeps: Object.keys(rcsData.additionalDepsMap).concat(Object.keys(self.additionalDeps))
 
             });
          });
