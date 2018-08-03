@@ -10,7 +10,7 @@ define('Controls/Button/BigSeparator', [
    /**
     * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     * @class Controls/Button/BigSeparator
     * @extends Core/Control

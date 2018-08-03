@@ -7,7 +7,7 @@ define('Controls/Button/Close', [
    /**
     * Specialized type of button for closing windows.
     *
-    * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     *
     * @class Controls/Button/Close

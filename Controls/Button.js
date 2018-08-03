@@ -9,7 +9,7 @@ define('Controls/Button', [
    /**
     * Base button with support different display styles, sizes, icon styles.
     *
-    * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     * @class Controls/Button
     * @extends Core/Control
