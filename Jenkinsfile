@@ -12,6 +12,11 @@ def gitlabStatusUpdate() {
     }
 }
 
+@NonCPS
+def getBuildUser() {
+    return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+}
+
 node('controls') {
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
@@ -104,6 +109,14 @@ node('controls') {
             inte = true
             regr = true
             unit = true
+        }
+
+        if ( quick_int ) {
+            def userName = getBuildUser()
+            if ( userName != "ea.proshin") {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} DO NOT USE EXPERIMENTAL OPT"
+                error('Вам не разрешено пользоваться экспериментальной опцией run_quick_int.')
+            }
         }
 
         echo "Выкачиваем хранилища"
