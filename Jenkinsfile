@@ -56,7 +56,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
-            booleanParam(defaultValue: false, description: "EXPERIMENTAL: Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int'),
+            booleanParam(defaultValue: false, description: "EXPERIMENTAL: Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int')
             ]),
         pipelineTriggers([])
     ])
