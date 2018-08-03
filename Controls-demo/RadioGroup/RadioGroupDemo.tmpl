@@ -40,7 +40,8 @@
                 selectedKey="{{_selectedSource}}"
                 source="{{_sourceOfSource}}"
                 direction="horizontal"
-                readOnly="{{false}}"/>
+                readOnly="{{false}}"
+				attr:test_name="changeSource"/>
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" attr:test_name="item_tmpl" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
         <br/>
@@ -54,7 +55,7 @@
                 readOnly="{{false}}"
 				attr:test_name="content_tmpl"/>
         <Controls.Label caption="Display property:"/>
-        <Controls.Toggle.DoubleSwitch on:valueChanged="changedDisplayProperty()" captions="{{['caption', 'title']}}" bind:value="_displayPropertyValue"/>
+        <Controls.Toggle.DoubleSwitch on:valueChanged="changedDisplayProperty()" captions="{{['caption', 'title']}}" bind:value="_displayPropertyValue" attr:test_name="displayProperty"/>
         <Controls.Label caption="Selected key:"/>
         <Controls.Toggle.Radio
                 on:selectedKeyChanged="changeSelectedKey()"
@@ -62,7 +63,8 @@
                 selectedKey="{{_selectKey}}"
                 source="{{_source}}"
                 direction="horizontal"
-                readOnly="{{false}}">
+                readOnly="{{false}}"
+				attr:test_name="selectedKey">
             <ws:itemTemplate>
                 <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
                             item="{{item}}"
@@ -76,6 +78,6 @@
         <span>Event that surfaced:</span>
         <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
         <br/>
-        <span>{{_eventName}}</span>
+        <span id="eventName">{{_eventName}}</span>
     </div>
 </div>
