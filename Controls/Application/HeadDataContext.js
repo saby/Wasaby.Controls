@@ -42,7 +42,7 @@ define('Controls/Application/HeadDataContext', [
       needObjects: true,
       pushDepComponent: function(componentName, needRequire) {
          this.depComponentsMap[componentName] = true;
-         if(needRequire) {
+         if (needRequire) {
             this.additionalDeps[componentName] = true;
          }
       },
