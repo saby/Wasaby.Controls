@@ -153,6 +153,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
          showNotification: function(config, notHide) {
             if (NotificationVDOM.isNewEnvironment()) {
                if (!this._notificationVDOM) {
+                  //TODO: Дима Зуев предлагает перейти на создание через new, но падают ошибки.
+                  //https://online.sbis.ru/opendoc.html?guid=2be2cedb-91ec-4814-a76c-66c0f62431be
                   this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
                   this._styles = {
                      success: 'done',
