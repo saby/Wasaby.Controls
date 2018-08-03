@@ -113,16 +113,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                self = this,
                rebuildDeferred;
 
-            this._childConfig._compoundArea = this;
-            rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(this, arguments);
-
-            if (this._options._initCompoundArea) {
-               this._options._initCompoundArea(this);
-            }
-
-            rebuildDeferred.addCallback(function() {
+            self._childConfig._compoundArea = self;
+            self.once('onAfterLoad', function() {
                self._setCustomHeader();
                cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
+            });
+
+            rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
+            rebuildDeferred.addCallback(function() {
                if (self._container.length) {
                   self._childControl.setActive(true);
                }
@@ -130,6 +128,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._childControl._notifyOnSizeChanged();
                });
             });
+
+            if (self._options._initCompoundArea) {
+               self._options._initCompoundArea(self);
+            }
 
             return rebuildDeferred;
          },
