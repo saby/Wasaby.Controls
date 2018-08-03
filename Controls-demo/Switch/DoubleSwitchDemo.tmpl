@@ -22,6 +22,7 @@
                 emptyText="none"
                 selectedKey="{{_selectedOrientation}}"
                 on:selectedKeyChanged="changeOrientation()"
+				attr:test_name="orientation"
         />
         <br/>
         <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
