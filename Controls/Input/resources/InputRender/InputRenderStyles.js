@@ -23,7 +23,7 @@ define('Controls/Input/resources/InputRender/InputRenderStyles',
        * @css @border-color_InputRender The color of the border of the input field.
        * @css @border-color_InputRender_hover The color of the border of the input field at hover.
        * @css @border-color_InputRender_active The color of the border of the input field at active.
-       * @css @border-color_InputRender_disabled The color of the border of the input field at disable.
+       * @css @border-color_InputRender_disabled The color of the border of the disabled input field.
        * @css @border-color_InputRender_error The color of the border of the input field at error.
        * @css @background-color_InputRender The background of the input field.
        * @css @background-color_InputRender_error The background of the input field at error.
@@ -36,7 +36,7 @@ define('Controls/Input/resources/InputRender/InputRenderStyles',
        * @css @border-right-color_InputRender-tagStyle_done The information icon color of the input field at done.
        * @css @border-right-color_InputRender-tagStyle_error The information icon color of the input field at error.
        * @css @border-right-color_InputRender-tagStyle_primary The information icon color of the input field at primary.
-       * @css @border-right-color_InputRender-tagStyle_disabled The information icon color of the input field at disable.
+       * @css @border-right-color_InputRender-tagStyle_disabled The information icon color of the disabled input field.
        * @public
        * @author Зайцев А.С.
        */
