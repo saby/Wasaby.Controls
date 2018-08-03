@@ -15,6 +15,7 @@
                     emptyText="none"
                     selectedKey="{{_selectedSize}}"
                     on:selectedKeyChanged="changeSize()"
+					attr:test_name="CaptionSize"
             />
             <Controls.Label name="myLabel1" caption="caption"/>
             <Controls.Input.Text bind:value="_caption"/>
@@ -27,6 +28,7 @@
                     emptyText="none"
                     selectedKey="{{_selectedStyle}}"
                     on:selectedKeyChanged="changeStyle()"
+					attr:test_name="CaptionStyle"
             />
             <br/>
             <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
