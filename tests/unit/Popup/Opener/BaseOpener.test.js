@@ -7,20 +7,20 @@ define(
       'use strict';
 
       describe('Controls.Popup.Opener.BaseOpener', function() {
-         it('updatePopupIds', function() {
-            var updatePopupIds = BaseOpener._private.updatePopupIds;
+         it('clearPopupIds', function() {
+            var clearPopupIds = BaseOpener._private.clearPopupIds;
             var popupIds = [1, 2, 3];
 
-            updatePopupIds(popupIds, true, 'multiple');
+            clearPopupIds(popupIds, true, 'multiple');
             assert.deepEqual(popupIds, [1, 2, 3]);
 
-            updatePopupIds(popupIds, false, 'multiple');
+            clearPopupIds(popupIds, false, 'multiple');
             assert.deepEqual(popupIds, [1, 2, 3]);
 
-            updatePopupIds(popupIds, true, 'single');
+            clearPopupIds(popupIds, true, 'single');
             assert.deepEqual(popupIds, [1, 2, 3]);
 
-            updatePopupIds(popupIds, false, 'single');
+            clearPopupIds(popupIds, false, 'single');
             assert.deepEqual(popupIds, []);
          });
       });

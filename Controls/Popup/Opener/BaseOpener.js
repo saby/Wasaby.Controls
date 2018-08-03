@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/BaseOpener',
    function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
 
       var _private = {
-         updatePopupIds: function(popupIds, opened, displayMode) {
+         clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
                popupIds.length = [];
             }
@@ -53,7 +53,7 @@ define('Controls/Popup/Opener/BaseOpener',
             }
             this._isExecuting = true;
 
-            _private.updatePopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
+            _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
@@ -71,7 +71,7 @@ define('Controls/Popup/Opener/BaseOpener',
             this._requireModules(cfg, controller).addCallback(function(result) {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
-               Base.showDialog(result.template, cfg, result.controller, popupId).addCallback(function(result) {
+               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
                   self._isExecuting = false;
                   if (Base.isNewEnvironment()) {
                      self._popupIds.push(result);
