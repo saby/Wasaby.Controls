@@ -103,7 +103,7 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeUpdate: function() {
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = this._options.additionalTemplate && _private.hasAdditionalParams(this._items);
       },
 
       _valueChangedHandler: function() {
