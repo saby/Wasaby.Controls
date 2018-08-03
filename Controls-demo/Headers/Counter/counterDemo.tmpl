@@ -19,6 +19,7 @@
                     emptyText="none"
                     selectedKey="{{_counterSelectedStyle}}"
                     on:selectedKeyChanged="counterChangeStyle()"
+					attr:test_name="CounterStyle"
             />
             <Controls.Label name="myLabel1" caption="size:"/>
             <Controls.Input.ComboBox
@@ -29,6 +30,7 @@
                     emptyText="none"
                     selectedKey="{{_counterSelectedSize}}"
                     on:selectedKeyChanged="counterChangeSize()"
+					attr:test_name="CounterSize"
             />
         </div>
         <div class="eventBlock">

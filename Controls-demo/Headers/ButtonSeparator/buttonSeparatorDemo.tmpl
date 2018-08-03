@@ -17,6 +17,7 @@
                     emptyText="none"
                     selectedKey="{{_separatorSelectedStyle}}"
                     on:selectedKeyChanged="separatorChangeStyle()"
+					attr:test_name="IconStyle"
             />
             <br/>
             <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
