@@ -1,30 +1,13 @@
-define(['Controls/List/TreeControl'], function(TreeControl) {
-   describe('Controls.List.TreeControl', function() {
-      it('TreeControl.reload', function() {
-         var
-            treeControl = new TreeControl({});
-         treeControl._loadedNodes = {
-            1: true,
-            2: true,
-            3: true
-         };
-         treeControl._children = {
-            baseControl: {
-               reload: function() {}
-            }
-         };
-         treeControl.reload();
-         assert.deepEqual({}, treeControl._loadedNodes, 'Incorrect value "_loadedNodes" after call "treeControl.reload()".');
-      });
-
+define(['Controls/List/ListControl'], function(ListControl) {
+   describe('Controls.List.ListControl', function() {
       describe('EditInPlace', function() {
          it('editItem', function(done) {
             var opt = {
                test: '123'
             };
             var
-               treeControl = new TreeControl({});
-            treeControl._children = {
+               listControl = new ListControl({});
+            listControl._children = {
                baseControl: {
                   editItem: function(options) {
                      assert.equal(opt, options);
@@ -32,7 +15,7 @@ define(['Controls/List/TreeControl'], function(TreeControl) {
                   }
                }
             };
-            treeControl.editItem(opt);
+            listControl.editItem(opt);
          });
 
          it('addItem', function(done) {
@@ -40,8 +23,8 @@ define(['Controls/List/TreeControl'], function(TreeControl) {
                test: '123'
             };
             var
-               treeControl = new TreeControl({});
-            treeControl._children = {
+               listControl = new ListControl({});
+            listControl._children = {
                baseControl: {
                   addItem: function(options) {
                      assert.equal(opt, options);
@@ -49,33 +32,33 @@ define(['Controls/List/TreeControl'], function(TreeControl) {
                   }
                }
             };
-            treeControl.addItem(opt);
+            listControl.addItem(opt);
          });
 
          it('cancelEdit', function(done) {
             var
-               treeControl = new TreeControl({});
-            treeControl._children = {
+               listControl = new ListControl({});
+            listControl._children = {
                baseControl: {
                   cancelEdit: function() {
                      done();
                   }
                }
             };
-            treeControl.cancelEdit();
+            listControl.cancelEdit();
          });
 
          it('commitEdit', function(done) {
             var
-               treeControl = new TreeControl({});
-            treeControl._children = {
+               listControl = new ListControl({});
+            listControl._children = {
                baseControl: {
                   commitEdit: function() {
                      done();
                   }
                }
             };
-            treeControl.commitEdit();
+            listControl.commitEdit();
          });
       });
    });
