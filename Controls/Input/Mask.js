@@ -88,7 +88,7 @@ define('Controls/Input/Mask',
 
       /**
        * @name Controls/Input/Mask#formatMaskChars
-       * @cfg {Object} An object whose keys are the mask character, the value is the input characters, in the form of regular expression.
+       * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
        *
        * @example
        * js:
