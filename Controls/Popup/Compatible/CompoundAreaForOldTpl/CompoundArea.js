@@ -253,6 +253,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var self = this;
             runDelayed(function() {
                self._compoundControl._notifyOnSizeChanged();
+               self.setEnabled(self._options.enabled);
             });
          },
          isOpened: function() {
