@@ -76,10 +76,10 @@ define('Controls/interface/IEditInPlace', [
 
    /**
     * @name {Object} Controls/interface/IEditInPlace#editingConfig Configuration for editing in place.
-    * @property {Boolean=false} editingConfig.editOnClick If true, click on list item starts editing in place.
-    * @property {Boolean=false} editingConfig.autoAdd If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
-    * @property {Boolean=false} editingConfig.singleEdit If true, after the end of editing of any list item but the last, editing of the next list item begins automatically.
-    * @property {Boolean=false} editingConfig.showToolbar If true, item actions will be shown while editing.
+    * @property {Boolean} [editingConfig.editOnClick=false] If true, click on list item starts editing in place.
+    * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
+    * @property {Boolean} [editingConfig.singleEdit=false] If true, after the end of editing of any list item but the last, editing of the next list item begins automatically.
+    * @property {Boolean} [editingConfig.showToolbar=false] If true, item actions will be shown while editing.
     * @property {WS.Data/Entity/Record} editingConfig.item If present, editing of this item will begin on first render.
     */
 
