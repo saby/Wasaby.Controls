@@ -3,7 +3,8 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Switch/DoubleSwitchDemo',
    'css!Controls-demo/Headers/resetButton',
-   'css!Controls-demo/Switch/UnionSwitchDemo'
+   'css!Controls-demo/Switch/UnionSwitchDemo',
+   'css!Controls-demo/Switch/DoubleSwitchDemo'
 ], function(Control, MemorySource, template) {
    'use strict';
 
