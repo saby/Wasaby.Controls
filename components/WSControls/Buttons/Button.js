@@ -280,7 +280,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
 
       _registerDefaultButton: function() {
          // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
-         if (this.isVisible()) {
+         if (this.isVisibleWithParents()) {
             // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
             this._unregisterDefaultButton();
 
