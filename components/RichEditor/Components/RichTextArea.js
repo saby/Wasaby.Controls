@@ -2960,7 +2960,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  this._container[0].scrollIntoView(evt.alignToTop);
+                  if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                     this._container[0].scrollIntoView(evt.alignToTop);
+                  }
                }
             },
             _getAdjacentTextNodesValue: function(node, toEnd) {
