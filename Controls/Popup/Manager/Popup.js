@@ -52,6 +52,10 @@ define('Controls/Popup/Manager/Popup',
             }
          },
 
+         _afterUpdate: function() {
+            this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
+         },
+
          /**
           * Закрыть popup
           * @function Controls/Popup/Manager/Popup#_close

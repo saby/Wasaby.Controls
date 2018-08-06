@@ -22,4 +22,9 @@ define('Controls/Input/interface/IInputText', [
     * @event Controls/Input/interface/IInputText#inputCompleted Occurs when input was completed.
     * @param {String} value Field value.
     */
+
+   /**
+    * @name Controls/Input/interface/IInputText#tooltip
+    * @cfg {String} Field tooltip.
+    */
 });

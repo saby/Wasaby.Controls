@@ -18,6 +18,7 @@ define('Controls-demo/Input/Number/Number', [
       _readOnly: false,
       _eventResult: '',
       _selectOnClick: false,
+      _tooltip: '',
 
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;

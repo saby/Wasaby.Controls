@@ -9,6 +9,7 @@
    head="{{ _options.head }}"
    title="{{ title }}"
    buildnumber="{{ buildnumber }}"
+   viewport="{{ _options.viewport }}"
    servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <Controls.Event.Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
@@ -33,7 +34,11 @@
                                  on:mousedown="_mousedownPage()"
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
-                                 on:closeInfoBox="_closeInfoBoxHandler()">
+                                 on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:mouseup="_mouseupPage()"
+                                 on:openPreviewer="_openPreviewerHandler()"
+                                 on:cancelPreviewer="_cancelPreviewerHandler()"
+                                 on:closePreviewer="_closePreviewerHandler()">
                               <ws:if data="{{isCompatible}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
@@ -80,6 +85,7 @@
                                     <Controls.Application.startApplicationScript compat="{{isCompatible}}" appRoot="{{ appRoot }}" scope="{{_options}}" onServer="{{ onServer }}"/>
                                  </div>
                               </ws:else>
+                              <Controls.Popup.Opener.Previewer name="previewerOpener"/>
                               <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               </body>

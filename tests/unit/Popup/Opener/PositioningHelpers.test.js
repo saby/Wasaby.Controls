@@ -185,12 +185,27 @@ define(
                var itemConfig = {};
                StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
-               try {
-                  StickyController.elementCreated(itemConfig);
-               } catch (ex) {
-                  //Упадет в ошибку, потому что не передан параметр container
-                  assert.isTrue(itemConfig.position.position === undefined);
-               }
+
+               StickyController._checkContainer = () => { return false; };
+               StickyController.elementCreated(itemConfig);
+               assert.isTrue(itemConfig.position.position === undefined);
+            });
+
+            it('Sticky state', function() {
+               StickyController._checkContainer = () => { return false; };
+               let itemConfig = {
+                  popupOptions: {}
+               };
+               let result = StickyController.elementAfterUpdated(itemConfig);
+               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
+               assert.equal(result, false);
+
+               StickyController.elementUpdated(itemConfig);
+               assert.equal(itemConfig.stickyState, 'updated');
+
+               StickyController.elementAfterUpdated(itemConfig);
+               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
+               assert.equal(itemConfig.stickyState, 'afterUpdated');
             });
 
             it('Sticky with option locationStrategy=fixed', function() {
