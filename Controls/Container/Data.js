@@ -83,6 +83,27 @@ define('Controls/Container/Data',
                });
             }
          },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.source !== this._options.source) {
+               var self = this;
+               _private.resolveOptions(this, newOptions);
+               return _private.createPrefetchSource(this).addCallback(function(result) {
+                  _private.resolvePrefetchSourceResult(self, result);
+
+                  //TODO: Необходимо чтобы при построении на сервере, prefetchSource сериализовался в правильном состоянии.
+                  //При загрузке данных, prefetchSource проставляет у себя сосотояние query = true и в дальнейшем работант
+                  //в зависимсти от этого состояния. Сейчас проблема в том, что когда мы возвращаем в _beforeMount
+                  //prefetchSource, он сразу сериализуется в строку, а состояние query = true простовляется в дочернем
+                  //компоненте, при вызове метода query. Поэтому на клиент прилетает неправильное состояние и
+                  //первый вызов query возвращает захэшированные данные, а не пытается загрузить актуальные данные.
+                  //Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
+                  result.source._done.query = true;
+                  self._forceUpdate();
+                  return result;
+               });
+            }
+         },
    
          _filterChanged: function(event, filter) {
             this._filter = clone(filter);
