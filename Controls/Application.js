@@ -96,7 +96,7 @@ define('Controls/Application',
             self.onServer = typeof window === 'undefined' && !(cfg.compat || self.compat);
 
             _private.initState(self, receivedState || cfg);
-            self.needArea = cfg.compat || self.compat;
+            self.compat = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
