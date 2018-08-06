@@ -146,10 +146,18 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
       },
 
       $constructor: function() {
-         if (this._options.primary === true) {
-            this._registerDefaultButton();
-         }
          this._contentContainer = this._container.find('.controls-ButtonBase__content');
+      },
+      init: function() {
+         Button.superclass.init.call(this);
+         this.subscribe('onAfterShow', function() {
+            // событие стреляет рано. нужно дождаться, когда предки тоже успеют отобразиться в DOM
+            setTimeout(function () {
+               if (this._options.primary === true) {
+                  this._registerDefaultButton();
+               }
+            }.bind(this), 0);
+         }.bind(this));
       },
 
       setCaption: function(caption) {
