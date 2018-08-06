@@ -404,8 +404,10 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
+      _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
+         this._isServer = !window;
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
