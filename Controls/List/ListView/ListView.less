@@ -1,11 +1,21 @@
 .controls-ListView__itemV {
-   border-left: 3px solid transparent;
    cursor: pointer;
    position: relative;
 }
 
-.controls-ListView__item__marked {
-   border-left: 3px solid @color_ListView-marker;
+.controls-ListView__itemV_withMarker:after {
+   content: '\200b';
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: @width_ListView_marker;
+   background-color: @color_ListView-marker;
+}
+
+// Удалить при закрытии: https://online.sbis.ru/opendoc.html?guid=2525f9fc-8b96-4bc0-ae35-8597290ecdae
+.controls-ListView__checkbox .controls-Checkbox__caption {
+   display: none;
 }
 
 .controls-ListView__checkbox {
@@ -13,9 +23,15 @@
    margin: @padding_List-checkbox;
 }
 
+.controls-ListView__itemContent_withCheckboxes {
+   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
+}
+
+.controls-ListView__itemContent_withoutCheckboxes {
+   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @padding_List-left;
+}
+
 .controls-ListView__itemContent {
-   margin: 0 0 0 @spacing-List-between-checkbox-content + @width_CheckBox;
-   padding: @spacing_List-item_default 0;
    z-index: 1;
 }
 

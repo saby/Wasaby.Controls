@@ -86,6 +86,26 @@ define('Controls/List', [
          this._children.listControl.addItem(options);
       },
 
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.commitEdit();
+         }
+      },
+
       _onBeforeItemAdd: function(e, options) {
          return this._notify('beforeItemAdd', [options]);
       },

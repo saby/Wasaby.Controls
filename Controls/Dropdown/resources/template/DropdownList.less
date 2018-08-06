@@ -30,9 +30,10 @@
    padding-left: @padding_DropdownList-default;
    font-size: @large-text-size;
    box-sizing: border-box;
-   &:hover {
-      background: @background_DropdownList-item_hover;
-   }
+}
+
+.controls-DropdownList__row:active {
+   background: @background_DropdownList-item_hover;
 }
 
 //не удалять, высота необходима, чтобы корректно работал align-items:center в IE
@@ -165,6 +166,10 @@
 }
 
 .ws-is-no-touch {
+   .controls-DropdownList__row:hover {
+      background: @background_DropdownList-item_hover;
+   }
+
    .controls-MenuButton-cross:hover {
       color: @color-Dropdown-cross_hovered;
    }

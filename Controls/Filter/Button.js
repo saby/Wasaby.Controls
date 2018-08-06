@@ -53,7 +53,7 @@ define('Controls/Filter/Button',
             var textArr = [];
 
             Chain(items).each(function(item) {
-               if (Utils.getItemPropertyValue(item, 'value') !== Utils.getItemPropertyValue(item, 'resetValue') &&
+               if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) &&
                   Utils.getItemPropertyValue(item, 'visibility')
                ) {
                   var textValue = Utils.getItemPropertyValue(item, 'textValue');
@@ -154,5 +154,6 @@ define('Controls/Filter/Button',
          };
       };
 
+      FilterButton._private = _private;
       return FilterButton;
    });

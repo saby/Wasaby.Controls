@@ -31,6 +31,16 @@ define('SBIS3.CONTROLS/TextArea', [
       container.className = newClasses;
    }
 
+   var _private = {
+      updateHeight: function(self, hClasses) {
+         modifyHeightClasses(self._inputField.get(0), hClasses, self._options.size);
+         modifyHeightClasses(self._disabledWrapper.get(0), hClasses, self._options.size);
+         if (self._options.maxLinesCount !== self._options.minLinesCount) {
+            self._autosizeTextArea();
+         }
+      }
+   };
+
    /**
     * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.CONTROLS/TextArea
@@ -370,7 +380,7 @@ define('SBIS3.CONTROLS/TextArea', [
          this._inputField.data('minLinesCount', count);
          this._inputField.trigger('autosize.resize');
          var hClasses = generateClassesName(cnt, this._options.maxLinesCount, this._options.size);
-         modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
+         _private.updateHeight(this, hClasses);
       },
 
       /**
@@ -389,7 +399,7 @@ define('SBIS3.CONTROLS/TextArea', [
          this._options.maxLinesCount = cnt;
          this._inputField.trigger('autosize.resize');
          var hClasses = generateClassesName(this._options.minLinesCount, cnt, this._options.size);
-         modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
+         _private.updateHeight(this, hClasses);
       },
 
       _drawText: function(text) {

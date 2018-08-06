@@ -19,6 +19,8 @@ define('Controls-demo/Input/Mask/Mask',
 
          _value: '',
 
+         _tooltip: '',
+
          _setValue: function() {
             var replacer = this._replacer;
 

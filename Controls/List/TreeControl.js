@@ -107,6 +107,27 @@ define('Controls/List/TreeControl', [
       addItem: function(options) {
          this._children.baseControl.addItem(options);
       },
+
+
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.commitEdit();
+         }
+      },
       _onCheckBoxClick: function(e, key, status) {
          var
             parents,

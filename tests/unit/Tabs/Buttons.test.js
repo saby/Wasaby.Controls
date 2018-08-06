@@ -80,15 +80,16 @@ define([
                     idProperty: 'id'
                 });
 
-            TabsButtons._private.initItems(source, tabInstance).addCallback(function(items) {
-                assert.equal(1, items.getRecordById('1').get('_order'), 'incorrect  left order');
-                assert.equal(30, items.getRecordById('2').get('_order'), 'incorrect right order');
-                assert.equal(5, items.getRecordById('12').get('_order'), 'incorrect right order');
-                assert.equal(36, items.getRecordById('11').get('_order'), 'incorrect right order');
+            TabsButtons._private.initItems(source, tabInstance).addCallback(function(result) {
+               var itemsOrder = result.itemsOrder;
+                assert.equal(1, itemsOrder[0], 'incorrect  left order');
+                assert.equal(30, itemsOrder[1], 'incorrect right order');
+                assert.equal(5, itemsOrder[11], 'incorrect right order');
+                assert.equal(36, itemsOrder[10], 'incorrect right order');
                 assert.equal(37, tabInstance._lastRightOrder, 'incorrect last right order');
                 tabInstance.destroy();
                 done();
-            })
+            });
         });
         it('prepareItemClass', function () {
             var
@@ -113,8 +114,8 @@ define([
                 },
                 expected =  'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_additional__item_state_selected controls-Tabs__item_state_selected',
                 expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_type_photo';
-            assert.equal(expected, TabsButtons._private.prepareItemClass(item, options, 144), 'wrong order cross-brwoser styles');
-            assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, options, 144), 'wrong order cross-brwoser styles');
+            assert.equal(expected, TabsButtons._private.prepareItemClass(item, '144', options, 144), 'wrong order cross-brwoser styles');
+            assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, '2', options, 144), 'wrong order cross-brwoser styles');
         });
     })
 });

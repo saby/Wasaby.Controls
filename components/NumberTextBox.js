@@ -256,7 +256,8 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       },
 
       _inputFocusInHandler: function() {
-         var text = this._getInputValue();
+         var
+            text = this._getInputValue();
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
@@ -265,6 +266,18 @@ define('SBIS3.CONTROLS/NumberTextBox', [
             }
          }
          NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
+      },
+
+      _moveCursorAfterActivation: function() {
+         var dotPosition = this._options.text.indexOf('.');
+         //По стандарту, если фокус пришёл не по клику, то курсор должен вставать либо перед точкой,
+         //либо после неё, в зависимости от количества цифр в целой части.
+         //Поэтому если фокус пришёл не по клику, то подвинем курсор в нужное место.
+         if (this._options.integers === NumberTextBoxUtil._getIntegersCount(this._options.text)) {
+            this._setCaretPosition(dotPosition + 1);
+         } else {
+            this._setCaretPosition(dotPosition);
+         }
       },
 
       _setText: function(text){
@@ -365,12 +378,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       },
 
       /**
-       * Установить количество знаков после запятой
-       * @param decimals Количество знаков после запятой
+       * Установить количество знаков до запятой
+       * @param integers Количество знаков до запятой
        */
       setIntegers: function(integers) {
          if (typeof integers === 'number') {
             this._options.integers = integers;
+            this.setText(this._options.text);
          }
       },
       /**

@@ -19,6 +19,7 @@ define('Controls-demo/Input/Area/Area', [
       _maxLines: 1,
       _readOnly: false,
       _hide: false,
+      _tooltip: '',
 
       valueChangedHandler: function () {
          if (this._validationErrorsValue){
