@@ -136,18 +136,6 @@
 }
 
 .controls-ListView__item__marked_master {
-   .master-item-selected(100%);
-}
-
-.ws-is-no-touch:not(.ws-is-mobile-platform) {
-   .controls-ListView__item_master {
-      &:hover {
-         background-color: @hover-color_MasterList_item;
-      }
-   }
-}
-
-.master-item-selected(@height) {
    background-color: @background-color_MasterList_item-selected;
    &:before {
       content: '';
@@ -162,7 +150,7 @@
       bottom: 0;
       left: 0;
       pointer-events: none;
-      height: @height;
+      height: 100%;
    }
    &:after {
       content: '';
@@ -175,3 +163,14 @@
       background-color: @default-bg-color;
    }
 }
+
+//Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
+//TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @hover-color_MasterList_item;
+      }
+   }
+}
+

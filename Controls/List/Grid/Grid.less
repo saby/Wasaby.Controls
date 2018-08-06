@@ -329,17 +329,6 @@
 }
 
 .controls-Grid__row-cell_withSelectionMarker_master {
-   //Top border of grid element is 1px;
-   .master-item-selected(~'calc(100% + 1px)');
-}
-
-.ws-is-no-touch {
-   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
-      background-color: @hover-color_MasterList_item;
-   }
-}
-
-.master-item-selected(@height) {
    background-color: @background-color_MasterList_item-selected;
    &:before {
       content: '';
@@ -354,7 +343,8 @@
       bottom: 0;
       left: 0;
       pointer-events: none;
-      height: @height;
+      //Top border of grid element is 1px;
+      height: ~'calc(100% + 1px)';
    }
    &:after {
       content: '';
@@ -365,5 +355,11 @@
       position: absolute;
       right: -@border-width_MasterList-right;
       background-color: @default-bg-color;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
+      background-color: @hover-color_MasterList_item;
    }
 }
