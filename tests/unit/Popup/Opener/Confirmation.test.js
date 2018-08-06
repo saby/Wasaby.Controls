@@ -13,6 +13,10 @@ define(
 
          beforeEach(function(){
             popupOpener = new PopupOpener();
+
+            //fixme по-идее это значвение должно было проставиться в _beforeMount BaseOpener-а, но этого не произошло
+            popupOpener._popupIds = [];
+
             popupOpener._children.opener = {
                open: function(){
 

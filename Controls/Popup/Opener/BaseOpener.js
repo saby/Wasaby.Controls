@@ -12,7 +12,7 @@ define('Controls/Popup/Opener/BaseOpener',
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
-               popupIds = [];
+               popupIds.length = 0;
             }
          }
       };
