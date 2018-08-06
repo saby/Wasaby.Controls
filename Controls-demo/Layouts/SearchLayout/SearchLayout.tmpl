@@ -1,7 +1,7 @@
-<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" fastFilterSource="{{_fastFilterData}}">
+<Controls.Filter.Controller attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" fastFilterSource="{{_fastFilterData}}">
     <ws:content>
         <div>
-            <Controls.Container.Search
+            <Controls.Search.Controller
                     attr:class="controls-demo__SearchLayout"
                     searchParam="firstName">
                 <ws:content>
@@ -14,12 +14,12 @@
                                     </ws:content>
                                 </Controls.Container.Input.Search>
                                <div class="controls-demo__Layouts_filter">
-                                <Controls.Container.Filter.Fast>
+                                <Controls.Filter.Fast.Container>
                                    <Controls.Filter.Fast bind:value="_value"/>
-                                </Controls.Container.Filter.Fast>
-                                <Controls.Container.Filter.Button>
+                                </Controls.Filter.Fast.Container>
+                                <Controls.Filter.Button.Container>
                                         <Controls.Filter.Button templateName="tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate" />
-                                </Controls.Container.Filter.Button>
+                                </Controls.Filter.Button.Container>
                                </div>
                             </div>
                             <div class="controls-demo__LayoutInner">
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </ws:content>
-            </Controls.Container.Search>
+            </Controls.Search.Controller>
         </div>
     </ws:content>
-</Controls.Container.Filter>
+</Controls.Filter.Controller>
