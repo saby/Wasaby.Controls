@@ -91,7 +91,6 @@ define('Controls/List/Grid/GridViewModel', [
             if (current.isSelected) {
                if (current.columnIndex === 0) {
                   cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + current.style;
-                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + current.style;
                }
             }
 
