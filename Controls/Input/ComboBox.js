@@ -26,6 +26,7 @@ define('Controls/Input/ComboBox',
        * @category Input
        * @author Золотова Э.Е.
        * @demo Controls-demo/Input/ComboBox/ComboBox
+       * @demo Controls-demo/Combobox/ComboboxVDom
        */
 
       /**
