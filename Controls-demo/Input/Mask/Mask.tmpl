@@ -7,6 +7,7 @@
                            mask="{{_mask}}"
                            replacer="{{_replacer}}"
                            tagStyle="{{_tagStyle}}"
+                           tooltip="{{_tooltip}}"
                            bind:value="_value"
 						   attr:test_name="example"
       />
@@ -24,5 +25,7 @@
       <Controls.Label caption="(ddd(ddd)ddd)" on:click="_setConfig('(ddd(ddd)ddd)', '')"/>
       <Controls.Label caption="d{1,3}l{1,3}" on:click="_setConfig('d\{1,3}l\{1,3}', '')"/>
       <Controls.Label caption="d\*" on:click="_setConfig('d\*', '')"/>
+      <Controls.Label caption="tooltip"/>
+      <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
    </div>
 </div>

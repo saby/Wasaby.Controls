@@ -109,7 +109,7 @@ define('Controls/Application',
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
-            context.headData.pushDepComponent(self.application);
+            context.headData.pushDepComponent(self.application, false);
 
 
             if (receivedState && context.AppData) {
