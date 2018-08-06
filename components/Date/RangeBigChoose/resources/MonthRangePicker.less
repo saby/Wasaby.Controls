@@ -284,3 +284,12 @@
       border-color: @border-color_DateRangeBigChoose-MonthRangePickerItem-month;
    }
 }
+
+// Скрываем индикатор загрузки. На слабых машинах сетка с месяцами может рендерится около 700мс.
+// Не смотря на то, что данные грузятся синхронно, индикатор загрузки иногода промаргивает на слабых компьютерах
+// при первоначальной инициализации когда отрисовываются несколько лет(грузятся предыдущий и последующий года).
+.controls-DateRangeBigChoose-MonthRangePicker {
+   .controls-ListView-scrollIndicator {
+      display: none!important;
+   }
+}
