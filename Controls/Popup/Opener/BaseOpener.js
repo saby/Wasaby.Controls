@@ -30,10 +30,6 @@ define('Controls/Popup/Opener/BaseOpener',
          _template: Template,
          _popupIds: undefined,
 
-         _beforeMount: function() {
-            this._popupIds = [];
-         },
-
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
                this._popupIds.forEach(function(popupId) {
@@ -56,6 +52,11 @@ define('Controls/Popup/Opener/BaseOpener',
                return;
             }
             this._isExecuting = true;
+
+            //Если this._popupIds ещё не проинициализирован массивом, то сделаем это
+            if (!(this._popupIds instanceof Array)) {
+               this._popupIds = [];
+            }
 
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
