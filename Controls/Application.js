@@ -93,10 +93,9 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self.onServer = typeof window === 'undefined' && !(cfg.compat || self.compat);
-
+            self.onServer = typeof window === 'undefined';
             _private.initState(self, receivedState || cfg);
-            self.compat = cfg.compat || self.compat;
+            self.isCompatible = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
