@@ -74,8 +74,8 @@ define('Controls-demo/Layouts/SearchLayout', [
       },
       {
          id: 'id',
-         resetValue: 0,
-         value: 0,
+         resetValue: [0],
+         value: [0],
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',
@@ -144,10 +144,10 @@ define('Controls-demo/Layouts/SearchLayout', [
 
    var filterSourceData = [
       {id: 'FIO', value: '', resetValue: '', visibility: false},
-      {id: 'firstName', value: '', resetValue: '', visibility: false},
+      {id: 'firstName', value: 'По имени', resetValue: 'По имени', visibility: false},
       {id: 'Test1', value: [0], resetValue: [0], source: sourceDropdown, textValue: '', visibility: false},
       {id: 'checked', value: false, resetValue: false, textValue: 'checked', visibility: false},
-      {id: 'id', value: [2], resetValue: [2], source: sourceId, visibility: false},
+      {id: 'id', value: [0], resetValue: [0], source: sourceId, visibility: false},
       {id: 'Test2', value: false, resetValue: false, textValue: 'Test2', visibility: false},
       {id: 'Test3', value: false, resetValue: false, textValue: 'Test3', visibility: false},
       {id: 'Test4', value: false, resetValue: false, textValue: 'Test4', visibility: false},
