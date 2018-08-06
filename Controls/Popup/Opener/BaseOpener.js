@@ -30,6 +30,10 @@ define('Controls/Popup/Opener/BaseOpener',
          _template: Template,
          _popupIds: undefined,
 
+         _beforeMount: function() {
+            this._popupIds = [];
+         },
+
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
                this._popupIds.forEach(function(popupId) {
