@@ -81,6 +81,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
          _onCloseHandler: function() {
             this.sendCommand('close', this._result);
+            if (this._options.onCloseHandler) {
+               this._options.onCloseHandler(this._result);
+            }
             this._result = null;
          },
          _onResultHandler: function(event, result) {
