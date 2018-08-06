@@ -59,7 +59,7 @@ define('Controls/Popup/Manager',
          popupAfterUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               return element.controller.elementAfterUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               return element.controller.elementAfterUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
             }
             return false;
          },
