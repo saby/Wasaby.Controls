@@ -3829,8 +3829,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
-                  this._dataReview.html(this._prepareReviewContent(text));
-                  this._decorateAsSVG(text);
+                  var reviewContent = this._prepareReviewContent(text);
+                  this._dataReview.html(reviewContent);
+                  this._decorateAsSVG(reviewContent);
                }
             },
 
