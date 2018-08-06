@@ -720,11 +720,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor && this._tinyReady.isReady()) {
 
-                  this._tinyEditor.off();
                   this._unSubscribeOnScroll();
 
-                  this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
-                  this._tinyEditor.destroy && this._tinyEditor.destroy();
+                  // destroy вызывается автоматически с отпиской всех событий
+                  // destroy также вызывает remove - что есть основное удаление.
                   this._tinyEditor.remove && this._tinyEditor.remove();
 
                   if (this._tinyEditor.theme) {
@@ -3401,6 +3400,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                      tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
+
+                     //правильнее задавать сразу target т.к.
+                     // если указывать selector в памяти остаются закешированные объекты (tiny генерит внутренний кэш)
+                     cfg.target = this.getContainer().find('.controls-RichEditor__editorFrame')[0];
+                     cfg.selector = '';
+
                      tinyMCE.init(cfg);
                   }.bind(this));
                }
