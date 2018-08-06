@@ -28,7 +28,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; // Берем размеры пользовательского шаблона
+            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].clientWidth; // Берем размеры пользовательского шаблона без бордера
          },
 
          getStackParentCoords: function() {
