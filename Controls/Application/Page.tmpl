@@ -39,7 +39,7 @@
                                  on:openPreviewer="_openPreviewerHandler()"
                                  on:cancelPreviewer="_cancelPreviewerHandler()"
                                  on:closePreviewer="_closePreviewerHandler()">
-                              <ws:if data="{{isCompatible}}">
+                              <ws:if data="{{needArea}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>
                               <ws:if data="{{  _options.content }}">
