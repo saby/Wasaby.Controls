@@ -13,7 +13,6 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Input/Text',
    'Controls-demo/Layouts/LayoutFilterComponent',
    'Controls/Filter/Button',
-   'Controls/Container/Input/Search',
    'Controls/Button',
    'Controls/Input/Dropdown',
    'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
