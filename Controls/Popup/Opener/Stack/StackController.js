@@ -65,8 +65,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             return className;
          },
 
-         prepareMaximizedState: function(item) {
-            var canMaximized = StackStrategy.getMaxPanelWidth() > item.popupOptions.minWidth;
+         prepareMaximizedState: function(maxPanelWidth, item) {
+            var canMaximized = maxPanelWidth > item.popupOptions.minWidth;
             if (!canMaximized) {
                //If we can't turn around, we hide the turn button and change the state
                item.popupOptions.templateOptions.showMaximizedButton = false;
@@ -156,10 +156,11 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          _update: function() {
             var self = this;
+            var maxPanelWidth = StackStrategy.getMaxPanelWidth();
             this._stack.each(function(item, index) {
                item.position = _private.getItemPosition(self._stack, index);
                if (StackStrategy.isMaximizedPanel(item)) {
-                  _private.prepareMaximizedState(item);
+                  _private.prepareMaximizedState(maxPanelWidth, item);
                }
             });
          },

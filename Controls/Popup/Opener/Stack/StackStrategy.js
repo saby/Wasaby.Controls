@@ -14,14 +14,11 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
 
          if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
-         }
-         else if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
+         } else if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
             panelWidth = Math.min(item.containerWidth, maxPanelWidthWithOffset); //По ширине контента, но не больше допустимого значения
-         }
-         else if (maxWidth <= maxPanelWidthWithOffset) {
+         } else if (maxWidth <= maxPanelWidthWithOffset) {
             panelWidth = maxWidth;
-         }
-         else if (minWidth > maxPanelWidthWithOffset) { // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
+         } else if (minWidth > maxPanelWidthWithOffset) { // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;
             }
@@ -29,8 +26,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
                tCoords.right = 0; // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
             }
             panelWidth = minWidth;
-         }
-         else {
+         } else {
             panelWidth = maxPanelWidthWithOffset; //Возвращаем допустимую ширину
          }
 
