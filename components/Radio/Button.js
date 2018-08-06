@@ -18,7 +18,6 @@ define('SBIS3.CONTROLS/Radio/Button',
     * Контрол, отображающий стандартную радиокнопку. Работает только в составе группы. В WebGenie не вытаскивается.
     * @class SBIS3.CONTROLS/Radio/Button
     * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
-    * @cssModifier controls-Radio__primary акцентные кнопки
     * @public
     * @author Журавлев М.С.
     *
