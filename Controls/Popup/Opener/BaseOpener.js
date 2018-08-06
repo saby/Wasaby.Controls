@@ -12,7 +12,7 @@ define('Controls/Popup/Opener/BaseOpener',
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
-               popupIds.length = [];
+               popupIds.length = 0;
             }
          }
       };
@@ -28,7 +28,11 @@ define('Controls/Popup/Opener/BaseOpener',
        */
       var Base = Control.extend({
          _template: Template,
-         _popupIds: [],
+         _popupIds: undefined,
+
+         _beforeMount: function() {
+            this._popupIds = [];
+         },
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
