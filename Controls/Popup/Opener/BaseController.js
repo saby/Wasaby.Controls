@@ -62,6 +62,10 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         elementMaximized: function(element, state) {
+
+         },
+
          elementAfterUpdated: function(element, container) {
 
          },
