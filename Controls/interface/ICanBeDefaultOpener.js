@@ -1,7 +1,9 @@
 define('Controls/interface/ICanBeDefaultOpener', [], function() {
 
    /**
-    * Interface for controls what can be default opener.
+    * Interface for controls that can be default opener.
+    * Opener means control that initiates opening of current control. It needs for mechanism of focuses.
+    * For detailed information, refer <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/focus/'>Mechanism of focuses</a>.
     *
     * @interface Controls/interface/ICanBeDefaultOpener
     * @public

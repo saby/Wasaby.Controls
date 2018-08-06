@@ -14,7 +14,7 @@ define('Controls/Popup/Manager/Popup',
          /**
           * Компонент "Всплывающее окно"
           * @class Controls/Popup/Manager/Popup
-          * @mixes Controls/interface/IHasOpener
+          * @mixes Controls/interface/IOpenerOwner
           * @mixes Controls/interface/ICanBeDefaultOpener
           * @extends Core/Control
           * @control
