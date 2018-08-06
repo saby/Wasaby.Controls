@@ -1,33 +1,58 @@
 <div>
     <div class="exampleBlock">
         <h2>Switch</h2>
-        <Controls.Toggle.Switch on:valueChanged="changeValue()" readOnly="{{_readOnly}}" value="{{_value}}" bind:tooltip="_tooltip" caption="{{_caption}}" captionPosition="{{_selectedCaptionPosition}}"/>
+        <Controls.Toggle.Switch 
+            attr:test_name="demo_switch"
+            on:valueChanged="changeValue()" 
+            readOnly="{{_readOnly}}" 
+            value="{{_value}}" 
+            bind:tooltip="_tooltip" 
+            caption="{{_caption}}" 
+            captionPosition="{{_selectedCaptionPosition}}"
+        />
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly"/>
-        <br/>
-        <Controls.Label caption="Caption"/>
-        <Controls.Input.Text bind:value="_caption"/>
-        <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip"/>
-        <Controls.Label caption="Caption position:"/>
-        <Controls.Input.ComboBox
-                source="{{_captionPositionSource}}"
-                keyProperty="title"
-                placeholder="select"
-                displayProperty="title"
-                emptyText="none"
-                selectedKey="{{_selectedCaptionPosition}}"
-                on:selectedKeyChanged="changeCaptionPosition()"
+        <Controls.Toggle.Checkbox 
+            attr:test_name="readOnly"
+            readOnly="{{false}}" 
+            bind:value="_readOnly" 
+            caption="ReadOnly"
         />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
+        <Controls.Label caption="Caption"/>
+        <Controls.Input.Text 
+            attr:test_name="caption"
+            bind:value="_caption"
+        />
+        <Controls.Label caption="Tooltip"/>
+        <Controls.Input.Text 
+            attr:test_name="tooltip"
+            bind:value="_tooltip"
+        />
+        <Controls.Label caption="Caption position:"/>
+        <Controls.Input.ComboBox
+            attr:test_name="changeCaptionPosition"
+            source="{{_captionPositionSource}}"
+            keyProperty="title"
+            placeholder="select"
+            displayProperty="title"
+            emptyText="none"
+            selectedKey="{{_selectedCaptionPosition}}"
+            on:selectedKeyChanged="changeCaptionPosition()"
+        />
+        <br/>
+        <Controls.Toggle.Checkbox 
+            attr:test_name="value"
+            readOnly="{{false}}" 
+            bind:value="_value" 
+            caption="value"
+        />
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
         <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
         <br/>
-        <span>{{_eventName}}</span>
+        <span id="eventName">{{_eventName}}</span>
     </div>
 </div>
