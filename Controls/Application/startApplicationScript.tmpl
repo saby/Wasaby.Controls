@@ -1,9 +1,10 @@
 <div key="scripts">
-   <ws:if data="{{!compat}}">
+   <ws:if data="{{!_options.compat}}">
       <script key="init_script">
-         require(['Controls/Application/AppData'], function(AppData){
-            window.startContextData = {AppData: new AppData({})};
-            require(['Core/app2'], function(app) { app(); });
+         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
+            window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
+            var deps = {{ __setHTMLUnsafe(getDeps()) }};
+            require(['Core/app'], function(app) { app(deps); });
          });
       </script>
    </ws:if>

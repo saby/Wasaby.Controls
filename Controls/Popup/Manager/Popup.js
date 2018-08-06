@@ -18,7 +18,7 @@ define('Controls/Popup/Manager/Popup',
           * @control
           * @private
           * @category Popup
-          * @author Лощинин Дмитрий
+          * @author Красильников Андрей
           */
 
          /**
@@ -50,6 +50,10 @@ define('Controls/Popup/Manager/Popup',
                   this.activate();
                }
             }
+         },
+
+         _afterUpdate: function() {
+            this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
          },
 
          /**

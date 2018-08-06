@@ -17,6 +17,9 @@
     "Controls/StickyHeader",
     "Controls/StickyHeader/*"
   ],
+  "exclude": [
+    "Controls/Container/Scroll/Context"
+  ],
   "output": "controls-container.package.js"
 }, {
   "include": [
@@ -37,7 +40,17 @@
   "include": [
     "Controls/Filter/*"
   ],
+  "exclude": [
+    "Controls/Filter/_FilterCompatible",
+    "Controls/Filter/OldPanelOpener"
+  ],
   "output": "controls-filter.package.js"
+}, {
+  "include": [
+    "Controls/Filter/Button/_FilterCompatible",
+    "Controls/Filter/Button/OldPanelOpener"
+  ],
+  "output": "controls-filter-compatible.package.js"
 }, {
   "include": [
     "Controls/Header/*",

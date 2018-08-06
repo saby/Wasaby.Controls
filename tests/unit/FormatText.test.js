@@ -48,8 +48,8 @@ define(['SBIS3.CONTROLS/NumberTextBox/resources/FormatText'], function(FormatTex
          it('maxLength = 6: 12345.789 -> 12345.78', function() {
             assert.equal(FormatText.formatText('12345.789', '123', false, 9, 3, false, false, 6, true), '123.789');
          });
-         it('maxLength = 19: 1234567891234567.78 -> 123 (because max value 2^53)', function() {
-            assert.equal(FormatText.formatText('1234567891234567.78', '123', false, 3, 20, false, false, 19, true), '123');
+         it('maxLength = 19: 1234567891234567.78 -> 1234567891234567.78', function() {
+            assert.equal(FormatText.formatText('1234567891234567.78', '1234567891234567.78', false, 3, 20, false, false, 19, true), '1234567891234567.78');
          });
          it('onlyPositive = true: -123.45 -> 123.45', function() {
             assert.equal(FormatText.formatText('123.45', '123', false, 4, 5, false, true, 16, true), '123.45');
@@ -68,6 +68,9 @@ define(['SBIS3.CONTROLS/NumberTextBox/resources/FormatText'], function(FormatTex
          });
          it('value = 123.0 type of number: 123 -> 123.0000', function() {
             assert.equal(FormatText.formatText(123.0, '123', false, 4, 5, false, false, 16, false), '123.0000');
+         });
+         it('0.0000001 -> 0.0000001', function() {
+            assert.equal(FormatText.formatText(0.0000001, '0.0000001', false, -1, 5, false, false, 16, false), '0.0000001');
          });
 
       });

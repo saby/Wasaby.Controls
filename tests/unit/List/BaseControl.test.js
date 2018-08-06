@@ -176,6 +176,64 @@ define([
       });
 
 
+      it('_needScrollCalculation', function() {
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var dataLoadFired = false;
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {}
+         };
+
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         assert.isFalse(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
+
+         cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {
+               view: 'infinity'
+            }
+         };
+         ctrl._beforeUpdate(cfg);
+         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after updating');
+
+         ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
+      });
+
       it('loadToDirection down', function(done) {
 
          var source = new MemorySource({
@@ -774,6 +832,80 @@ define([
                }
             };
             ctrl.addItem(opt);
+         });
+
+         it('cancelEdit', function(done) {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  cancelEdit: function() {
+                     done();
+                  }
+               }
+            };
+            ctrl.cancelEdit();
+         });
+
+         it('commitEdit', function(done) {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  commitEdit: function() {
+                     done();
+                  }
+               }
+            };
+            ctrl.commitEdit();
          });
 
          it('_onBeforeItemAdd', function() {

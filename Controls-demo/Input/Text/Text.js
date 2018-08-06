@@ -17,6 +17,7 @@ define('Controls-demo/Input/Text/Text', [
       _maxLength: 100,
       _selectOnClick: false,
       _readOnly: false,
+      _tooltip: '',
 
       valueChangedHandler: function() {
          if (this._validationErrorsValue) {
