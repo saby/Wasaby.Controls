@@ -94,7 +94,7 @@ define('Controls/Application',
                def = new Deferred();
 
             self.onServer = typeof window === 'undefined';
-            self.needArea = cfg.compat || self.compat;
+            self.isCompatible = cfg.compat || self.compat;
             _private.initState(self, receivedState || cfg);
             if (!receivedState) {
                receivedState = {};
