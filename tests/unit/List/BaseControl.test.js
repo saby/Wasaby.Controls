@@ -834,6 +834,80 @@ define([
             ctrl.addItem(opt);
          });
 
+         it('cancelEdit', function(done) {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  cancelEdit: function() {
+                     done();
+                  }
+               }
+            };
+            ctrl.cancelEdit();
+         });
+
+         it('commitEdit', function(done) {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  commitEdit: function() {
+                     done();
+                  }
+               }
+            };
+            ctrl.commitEdit();
+         });
+
          it('_onBeforeItemAdd', function() {
             var opt = {
                test: 'test'
