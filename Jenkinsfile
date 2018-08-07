@@ -134,6 +134,7 @@ node('controls') {
                         """
                         if ( quick_int ) {
                             changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                            echo changed_files
                         }
                     }
                     updateGitlabCommitStatus state: 'running'
