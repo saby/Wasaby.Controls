@@ -5,13 +5,11 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
-      'Controls/Input/Dropdown/Util',
       'Controls/Utils/tmplNotify',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
-
       /**
        * Control "ComboBox"
        * @class Controls/Input/ComboBox
