@@ -50,8 +50,18 @@
    .inline-flexbox();
 }
 
-.controls-InputRender__field:invalid + .controls-Text__placeholder {
-   .inline-flexbox();
+.ws-is-chrome {
+   //Хром обновился и стал вешать :invalid в тех ситуациях, когда количество символов в поле ввода превышает maxlength,
+   //так что в нем будем показывать плейсхолдер так.
+   .controls-InputRender__field:placeholder-shown + .controls-Text__placeholder {
+      display: inline-flex;
+   }
+}
+
+body:not(.ws-is-chrome) {
+   .controls-InputRender__field:invalid + .controls-Text__placeholder {
+      display: inline-flex;
+   }
 }
 
 //В формах для ввода логина и пароля браузеры игнорируют аттрибут autocomplete="off" и вставляют логин\пароль в любом случае.
