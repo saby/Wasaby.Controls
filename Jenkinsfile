@@ -12,7 +12,7 @@ def gitlabStatusUpdate() {
         updateGitlabCommitStatus state: 'success'
     }
 }
-echo "Ветка в GitLab: https://git.sbis.ru/controls/tree/${env.BRANCH_NAME}"
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
 node('controls') {
     LocalDateTime start_time = LocalDateTime.now();
