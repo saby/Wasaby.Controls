@@ -25,6 +25,9 @@ define('Controls/Popup/Opener/Notification',
           * @param {popupOptions} popupOptions конфиг попапа.
           */
          open: function(popupOptions) {
+
+            //Убираем автофокусировку, чтобы не закрывались окна с autoHide true
+            popupOptions.autofocus = false;
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
          }
       });
