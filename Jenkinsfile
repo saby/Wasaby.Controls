@@ -16,6 +16,7 @@ echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_
 
 node('controls') {
     LocalDateTime start_time = LocalDateTime.now();
+    echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
@@ -579,7 +580,8 @@ node('controls') {
         }
     }
 LocalDateTime end_time = LocalDateTime.now();
+echo "Время завершения: ${end_time}"
 Duration duration = Duration.between(end_time, start_time);
 diff_time = Math.abs(duration.toMinutes());
-echo "Время сборки: ${diff_time} минут"
+echo "Время сборки: ${diff_time} мин."
 }
