@@ -300,7 +300,7 @@ define('Controls/Container/Scroll',
                      break;
                }
 
-               this._children.scrollLayout.doScroll(scrollParam);
+               this._children.scrollWatcher.doScroll(scrollParam);
             },
 
             _scrollReachTopHandler: function() {
