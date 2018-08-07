@@ -21,7 +21,7 @@
       "ws": "sbis3-ws",
       "wsModules": {
          "View": "sbis3-ws/View",
-         "Core": "sbis3-ws/Core"
+         "components/Core": "sbis3-ws/Core"
       },
       "resources": "components",
       "tests": "tests/unit",
