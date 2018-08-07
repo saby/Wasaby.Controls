@@ -486,7 +486,7 @@ node('controls') {
         // EXPERIMENTAL
         def tests_for_run = ""
         if ( quick_int ) {
-            step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
+            step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result1.json", selector: [$class: 'LastCompletedBuildSelector']])
             echo "Изменения были в файлах: ${changed_files}"
             dir("./controls/tests/int/coverage") {
                 def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
