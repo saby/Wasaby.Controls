@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 define('Controls-demo/Input/Text/Text', [
    'Core/Control',
    'tmpl!Controls-demo/Input/Text/Text',
@@ -28,13 +27,13 @@ define('Controls-demo/Input/Text/Text', [
       _tagStyleHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
       _tagStyleClickHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Click"
+            message: 'Click'
          });
       },
       valueChangedHandler: function() {

@@ -1,46 +1,98 @@
-<div>
-   <div style="margin: 20px">
-      <Controls.Input.ComboBox source="{{_createMemory()}}"
-                               keyProperty="id"
-                               displayProperty="title"
-                               bind:selectedKey="_selectedKey"
-                               attr:style="width: 400px;"/>
-   </div>
-   <div style="margin: 20px">
-      Не указан selectedKey
-      <Controls.Input.ComboBox source="{{_createMemory()}}"
-                               keyProperty="id"
-                               displayProperty="title"
-                               bind:selectedKey="_selectedKey2"
-                               attr:style="width: 250px;"/>
-   </div>
-   <div style="margin: 20px">
-      С выбором пустого значения(по умолчанию)
-      <Controls.Input.ComboBox source="{{_createMemory()}}"
-                               keyProperty="id"
-                               emptyText="{{true}}"
-                               displayProperty="title"
-                               bind:selectedKey="_selectedKey3"
-                               attr:style="width: 250px;"/>
-   </div>
-   <div style="margin: 20px">
-      С выбором пустого значения(с заданным текстом)
-      <Controls.Input.ComboBox source="{{_createMemory()}}"
-                               keyProperty="id"
-                               emptyText="This is empty"
-                               displayProperty="title"
-                               bind:selectedKey="_selectedKey4"
-                               attr:style="width: 250px;"/>
-   </div>
-
-   <div style="margin: 20px">
-      С readOnly = true
-      <Controls.Input.ComboBox source="{{_createMemory()}}"
-                               keyProperty="id"
-                               displayProperty="title"
-                               readOnly="{{true}}"
-                               bind:selectedKey="_selectedKey5"
-                               attr:style="width: 250px;"/>
-   </div>
-
-</div>
+<Controls-demo.Wrapper.Wrapper title="ComboBox">
+      <ws:componentClass>
+            <Controls.Popup.Opener.InfoBox name="infoBoxComboBox"/>
+            <Controls.Input.ComboBox
+               bind:value="_text1"
+               name="comboBox"
+               itemTemplate="{{_flag==='custom' ? _myTmpl}}"
+               source="{{_source}}"
+               placeholder="{{_placeholder}}"
+               emptyText="{{_emptyText}}"
+               tagStyle="{{_tagStyle}}"
+               readOnly="{{_readOnly}}"
+               displayProperty="{{_displayProperty}}"
+               keyProperty="{{_keyProperty}}"
+               validationErrors="{{_validationErrors}}"
+               on:selectedKeyChanged="_selectedKeyChangedHandler()"
+               on:valueChanged="_valueChangedHandler()"
+               on:inputCompleted="_inputCompletedHandler()"
+               bind:selectedKey="_selectedKey"
+               attr:class="demo-TextBox"
+               on:tagHover="_tagStyleHandler()"
+               on:tagClick="_tagStyleClickHandler()">
+            </Controls.Input.ComboBox>
+          <br/>
+          <h4>Events</h4>
+          <Controls.Container.Scroll
+                  attr:style="height: 60px; border-width:thin"
+                  scrollbarVisible="{{true}}"
+                  shadowVisible="{{true}}">
+              <pre>{{ _events }}</pre>
+          </Controls.Container.Scroll>
+      </ws:componentClass>
+      <ws:componentProperty>
+          <Controls.Label name="myLabel1" caption="value"/>
+          <Controls.Input.Text attr:id="value" bind:value="_text1" readOnly="{{true}}" attr:class="demo-TextBox"/>
+          <Controls.Label name="myLabel1" caption="placeholder"/>
+          <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+          <Controls.Label name="myLabel1" caption="emptyText"/>
+          <Controls.Input.Text attr:id="emptyText" bind:value="_emptyText" attr:class="demo-TextBox"/>
+          <Controls.Label name="myLabel1" caption="selectedKey"/>
+          <Controls.Input.Text attr:id="selectedKey" bind:value="_selectedKey" attr:class="demo-TextBox" on:valueChanged="_selectedKeyChangedHandler()"/>
+          <Controls.Label name="myLabel1" caption="tagStyle"/>
+          <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
+          <Controls.Label name="myLabel1" caption="itemTemplate"/>
+          <Controls.Input.ComboBox source="{{_kindsOfBox()}}" keyProperty="title" displayProperty="title" bind:selectedKey="_flag" />
+          <Controls.Label name="myLabel1" caption="source"/>
+          <Controls.Input.Suggest
+                  bind:value="_resources"
+                  displayProperty="title"
+                  attr:class="demo-TextBox"
+                  searchParam="title"
+                  autoDropDown="{{true}}"
+                  source="{{_mainSource()}}"
+                  minSearchLength="1">
+              <ws:navigation source="page" view="page">
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+              </ws:navigation>
+              <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+                  <ws:templateOptions demoClass="demo-SuggestInputList" />
+              </ws:suggestTemplate>
+          </Controls.Input.Suggest>
+          <Controls.Label name="myLabel1" caption="keyProperty"/>
+          <Controls.Input.Suggest
+                  bind:value="_keyProperty"
+                  displayProperty="title"
+                  attr:class="demo-TextBox"
+                  searchParam="title"
+                  autoDropDown="{{true}}"
+                  source="{{_props()}}"
+                  minSearchLength="1">
+              <ws:navigation source="page" view="page">
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+              </ws:navigation>
+              <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+                  <ws:templateOptions demoClass="demo-SuggestInputList" />
+              </ws:suggestTemplate>
+          </Controls.Input.Suggest>
+          <Controls.Label name="myLabel1" caption="displayProperty"/>
+          <Controls.Input.Suggest
+                  bind:value="_displayProperty"
+                  displayProperty="title"
+                  searchParam="title"
+                  attr:class="demo-TextBox"
+                  autoDropDown="{{true}}"
+                  source="{{_props()}}"
+                  minSearchLength="1">
+              <ws:navigation source="page" view="page">
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+              </ws:navigation>
+              <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+                  <ws:templateOptions demoClass="demo-SuggestInputList" />
+              </ws:suggestTemplate>
+          </Controls.Input.Suggest>
+            <Controls.Toggle.Checkbox attr:id="readOnly" bind:value="_readOnly" caption="readOnly" attr:class="demo-TextBox"/>
+             <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="_validationChangedHandler()"
+                                    bind:value="_validationErrorsValue" caption="validationErrors"/>
+      </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

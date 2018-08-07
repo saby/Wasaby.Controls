@@ -37,7 +37,7 @@ define('Controls-demo/Input/Number/Number', [
             message: 'Click'
          });
       },
-      valueChangedHandler: function() {
+      _valueChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {

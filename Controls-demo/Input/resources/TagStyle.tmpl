@@ -1,9 +1,9 @@
 <Controls.Input.ComboBox
    source="{{_createMemory()}}"
    keyProperty="title"
-   placeholder="select"
+   placeholder="{{_placeholder}}"
    displayProperty="title"
-   emptyText="none"
+   emptyText="{{_empty}}"
    selectedKey="{{_options.tagStyleValue}}"
    on:selectedKeyChanged="_changeStyleHandler()"
 />
