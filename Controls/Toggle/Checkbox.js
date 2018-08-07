@@ -29,7 +29,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#value
-    * @cfg {Boolean|null} Current state.
+    * @cfg {Boolean|null} Current value.
     * @variant True Selected checkbox state.
     * @variant False Unselected checkbox state. It is default state.
     * @variant Null Tristate checkbox state.
