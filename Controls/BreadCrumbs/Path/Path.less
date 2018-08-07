@@ -31,9 +31,6 @@
    background-color: @background-color_Path-backButtonArrow;
    right: 0;
    display: none;
-   &:hover {
-      display: inline-block;
-   }
 }
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
@@ -61,7 +58,12 @@
 .ws-is-no-touch {
    .controls-BreadCrumbsPath__backButtonArrow:hover {
       color: @color_Path-backButtonArrow_hovered;
+      display: inline-block;
    }
+   .controls-BreadCrumbsPath__backButton:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
+      display: inline-block;
+   }
+
 }
 
 //Класс сделан только для удобства замеров
