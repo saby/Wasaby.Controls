@@ -114,6 +114,11 @@ function(cMerge,
             cfg.templateOptions.enabled = cfg.enabled;
          }
 
+         if (!cfg.hasOwnProperty('catchFocus')) {
+            cfg.catchFocus = true;
+         }
+         cfg.templateOptions.catchFocus = cfg.catchFocus;
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
       },

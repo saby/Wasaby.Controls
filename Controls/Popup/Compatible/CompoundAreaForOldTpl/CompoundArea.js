@@ -217,8 +217,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._compoundControlCreated = new cDeferred();
             runDelayed(function() {
                moduleStubs.require([self._templateName]).addCallback(function(result) {
+                  // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
+                  // подразумевается, что фокус уже внутри панели
+                  self.once('onInitComplete', function() {
+                     if (self._options.catchFocus) {
+                        doAutofocus(self._compoundControl._container);
+                     }
+                  });
                   self._createCompoundControl(result[0]);
-                  doAutofocus(self._compoundControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                   runDelayed(function() {
                      self.handle('onResize');
@@ -247,7 +253,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.handle('onInitComplete');
             this.handle('onAfterShow'); // todo здесь надо звать хэндлер который пытается подписаться на onAfterShow, попробуй подключить FormController и словить подпись
             this.handle('onReady');
-            if (this._container.length) {
+
+            // Внутри одного из хэндеров могли активировать compoundControl или какой-то из вложенных компонентов,
+            // в таком случае не нужно переводить активность повторно
+            if (this._container.length && this._options.catchFocus && !this._compoundControl.isActive()) {
                this._compoundControl.setActive(true);
             }
             var self = this;
