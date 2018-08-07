@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/NumberTextBox/resources/FormatText', [
    function (cDefaultRenders, NumberTextBoxUtil) /** @lends SBIS3.CONTROLS/NumberTextBox/resources/FormatText.prototype */{
       return {
 
-         formatText: function(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
+         formatText: function(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals, countMinusInLength){
             var lastZeroPos;
             if ((value + '').indexOf('e') !== -1 && !isNaN(parseFloat(value + '')) && isFinite(value + '')) {
                //по спецификации 0.0000001 преобразуется к 1e-7, превращаем такие числа в нормальные строки
@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/NumberTextBox/resources/FormatText', [
                }
             }
 
-            if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
+            if(!NumberTextBoxUtil.checkMaxLength(value, maxLength, countMinusInLength)){
                return text;
             }
             return value || '';
