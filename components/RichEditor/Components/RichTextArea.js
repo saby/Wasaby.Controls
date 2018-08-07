@@ -756,11 +756,49 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor && this._tinyReady.isReady()) {
 
-                  this._tinyEditor.off();
                   this._unSubscribeOnScroll();
+                  this._tinyEditor.off('keydown');
+                  this._tinyEditor.off('scroll');
+                  this._tinyEditor.off('mousewheel');
+                  this._tinyEditor.off('click');
+                  this._tinyEditor.off('mousedown');
+                  this._tinyEditor.off('touchstart');
+                  this._tinyEditor.off('mouseup');
+                  this._tinyEditor.off('keyup');
+                  this._tinyEditor.off('dblclick');
+                  this._tinyEditor.off('initContentBody');
+                  this._tinyEditor.off('onBeforePaste');
+                  this._tinyEditor.off('Paste');
+                  this._tinyEditor.off('PastePreProcess');
+                  this._tinyEditor.off('PastePostProcess');
+                  this._tinyEditor.off('drop');
+                  this._tinyEditor.off('dragstart');
+                  this._tinyEditor.off('input');
+                  this._tinyEditor.off('keypress');
+                  this._tinyEditor.off('change');
+                  this._tinyEditor.off('cut');
+                  this._tinyEditor.off('resizeEditor');
+                  this._tinyEditor.off('undo');
+                  this._tinyEditor.off('redo');
+                  this._tinyEditor.off('focusout');
+                  this._tinyEditor.off('beforeunload');
+                  this._tinyEditor.off('TypingUndo');
+                  this._tinyEditor.off('AddUndo');
+                  this._tinyEditor.off('ClearUndos');
+                  this._tinyEditor.off('NodeChange');
+                  this._tinyEditor.off('focus');
+                  this._tinyEditor.off('focusin');
+                  this._tinyEditor.off('blur');
+                  this._tinyEditor.off('focusout');
+                  this._tinyEditor.off('scrollIntoView');
+                  this._tinyEditor.off('BeforeSetContent');
+                  this._tinyEditor.off('PreInit');
+                  this._tinyEditor.off('ready');
+                  this._tinyEditor.off('resize');
+                  this._tinyEditor.off('init');
 
-                  this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
-                  this._tinyEditor.destroy && this._tinyEditor.destroy();
+                  // destroy вызывается автоматически с отпиской не от всех событий
+                  // destroy также вызывает remove - что есть основное удаление.
                   this._tinyEditor.remove && this._tinyEditor.remove();
 
                   if (this._tinyEditor.theme) {
@@ -3441,6 +3479,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                      tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
+
+                     //правильнее задавать сразу target т.к.
+                     // если указывать selector в памяти остаются закешированные объекты (tiny генерит внутренний кэш)
+                     cfg.target = this.getContainer().find('.controls-RichEditor__editorFrame')[0];
+                     cfg.selector = '';
+
                      tinyMCE.init(cfg);
                   }.bind(this));
                }
