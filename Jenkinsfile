@@ -490,7 +490,7 @@ node('controls') {
         def tests_for_run = ""
         if ( quick_int ) {
             try {
-                step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result1.json", selector: [$class: 'LastCompletedBuildSelector']])
+                step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result1.json", selector: [$class: 'LastCompletedBuildSelector'], optional: true])
             } catch (err) {
                 echo "Нет результатов покрытия тестами.\n ERROR: ${err}"
                 return
