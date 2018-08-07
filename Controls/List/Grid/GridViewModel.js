@@ -273,6 +273,7 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
+                  style: this._options.style,
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover',
@@ -327,6 +328,7 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__results-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
+                  style: this._options.style,
                   columns: this._resultsColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover',
