@@ -8,7 +8,7 @@
          });
       </script>
    </ws:if>
-   <ws:else>
+   <ws:if data="{{ _options.compat }}">
       <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
-   </ws:else>
+   </ws:if>
 </div>

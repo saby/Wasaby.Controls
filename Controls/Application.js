@@ -93,16 +93,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            try {
-               if (process.domain) {
-                  self.onServer = true;
-               } else {
-                  self.onServer = false;
-               }
-            } catch (e) {
-               self.onServer = false;
-            }
-
+            self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
             _private.initState(self, receivedState || cfg);
             if (!receivedState) {
