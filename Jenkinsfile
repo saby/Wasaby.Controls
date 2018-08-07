@@ -90,7 +90,7 @@ node('controls') {
 		def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
-
+        def run_test_fail = ""
 		def branch_atf
 		if (params.branch_atf) {
 			branch_atf = params.branch_atf
@@ -232,8 +232,6 @@ node('controls') {
                     }
                 }
             )
-        }
-        def run_test_fail = ""
         if ( only_fail ) {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
@@ -260,6 +258,7 @@ node('controls') {
                 error('Нет тестов для перезапуска.')
             }
 
+        }
         }
         stage("Сборка компонент"){
             echo " Определяем SDK"
