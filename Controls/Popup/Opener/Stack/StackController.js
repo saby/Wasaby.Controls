@@ -63,7 +63,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             className =  _private.removeAnimationClasses(className);
             className += ' ' + STACK_CLASS;
             return className;
-         },
+         }
       };
 
       /**
