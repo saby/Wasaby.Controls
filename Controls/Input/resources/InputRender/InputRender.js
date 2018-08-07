@@ -6,10 +6,10 @@ define('Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
-
+      'Controls/Utils/hasHorizontalScroll',
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil) {
 
       'use strict';
 
@@ -54,8 +54,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          setTargetData: function(target, data) {
             target.value = data.value;
             target.setSelectionRange(data.position, data.position);
-         }
+         },
 
+         getTooltip: function(text, tooltip, hasHorizontalScroll) {
+            return hasHorizontalScroll ? text : tooltip;
+         }
       };
 
       var InputRender = Control.extend({
@@ -63,6 +66,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
          _notifyHandler: tmplNotify,
+         _tooltip: '',
+
+         _mouseEnterHandler: function() {
+            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip, hasHorizontalScrollUtil(this._children.input.querySelector('.controls-InputRender__field')));
+         },
 
          _inputHandler: function(e) {
             var
@@ -91,6 +100,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.saveSelection(this, e.target);
 
             this._notify('valueChanged', [this._options.viewModel.getValue()]);
+
+            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip, hasHorizontalScrollUtil(this._children.input.querySelector('.controls-InputRender__field')));
          },
 
          _keyUpHandler: function(e) {
@@ -153,7 +165,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             selectOnClick: false,
             style: 'default',
             inputType: 'Text',
-            autocomplete: true
+            autocomplete: true,
+            tooltip: ''
          };
       };
 
@@ -168,7 +181,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                'error',
                'info'
             ]),
-            autocomplete: types(Boolean)
+            autocomplete: types(Boolean),
+            tooltip: types(String)
          };
       };
 

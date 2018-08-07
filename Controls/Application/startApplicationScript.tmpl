@@ -3,8 +3,8 @@
       <script key="init_script">
          require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
             window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
-            var deps = eval("{{ getDeps() }}".replace(/&quot;/g, '"'));
-            require(['Core/app2'], function(app) { app(deps); });
+            var deps = {{ __setHTMLUnsafe(getDeps()) }};
+            require(['Core/app'], function(app) { app(deps); });
          });
       </script>
    </ws:if>

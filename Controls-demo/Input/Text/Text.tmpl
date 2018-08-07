@@ -12,6 +12,7 @@
                            tagStyle="{{_tagStyle}}"
                            selectOnClick="{{_selectOnClick}}"
                            maxLength="{{_maxLength}}"
+                           tooltip="{{_tooltip}}"
                            on:valueChanged="_eventHandler()"
                            on:inputCompleted="_eventHandler()"
                            readOnly="{{ _readOnly }}"
@@ -28,6 +29,8 @@
       <Controls.Input.Text attr:id="constraint" bind:value="_constraint"/>
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Number attr:id="maxLength" bind:value="_maxLength" precision="{{0}}"/>
+      <Controls.Label caption="tooltip"/>
+      <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
          <Controls.Toggle.Checkbox attr:id="validationErrors" on:valueChanged="valueChangedHandler()"
