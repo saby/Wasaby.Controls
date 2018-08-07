@@ -52,10 +52,10 @@ node('controls') {
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_quick_int')
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
-            booleanParam(defaultValue: false, description: "EXPERIMENTAL: Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int')
+            booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_int'),
             ]),
         pipelineTriggers([])
     ])
@@ -105,9 +105,12 @@ node('controls') {
 		}
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            inte = true
+            quick_int = true
             regr = true
             unit = true
+        }
+        if ( quick_int ) {
+            inte = false
         }
 
         echo "Выкачиваем хранилища"
@@ -305,7 +308,7 @@ node('controls') {
             }
             echo items
         }
-        if ( inte || regr ) {
+        if ( inte || regr || quick_int) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -400,7 +403,7 @@ node('controls') {
                 }
             }
         }
-    if ( inte || regr ) {
+    if ( inte || regr || quick_int) {
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
 			soft_restart = "False"
@@ -488,7 +491,7 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        // EXPERIMENTAL
+
         def tests_for_run = ""
         if ( quick_int ) {
             dir("./controls/tests") {
@@ -520,7 +523,7 @@ node('controls') {
             int_test: {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
-                    if ( inte ){
+                    if ( inte || quick_int ){
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
@@ -566,7 +569,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || inte ){
+    if ( regr || inte || quick_int){
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
