@@ -24,12 +24,12 @@ define('Controls/Application',
     */
 
    function(Base,
-            template,
-            Deferred,
-            BodyClasses,
-            compatibility,
-            AppData,
-            HeadDataContext) {
+      template,
+      Deferred,
+      BodyClasses,
+      compatibility,
+      AppData,
+      HeadDataContext) {
       'use strict';
 
       var _private,
@@ -82,7 +82,7 @@ define('Controls/Application',
          _touchclass: function() {
             //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
             //поэтому сами детектим touch с помощью compatibility
-            return this._children.touchDetector
+            return  this._children.touchDetector
                ? this._children.touchDetector.getClass()
                : compatibility.touch
                   ? 'ws-is-touch'
@@ -94,7 +94,7 @@ define('Controls/Application',
                def = new Deferred();
 
             try {
-               if (process.domain) {
+               if(process.domain) {
                   self.onServer = true;
                } else {
                   self.onServer = false;
