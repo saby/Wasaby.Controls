@@ -9,6 +9,7 @@ define('Controls/Dropdown/Opener',
        *
        * @class Controls/Dropdown/Opener
        * @mixes Controls/interface/IDropdownList
+       * @extends Controls/Popup/Opener/Sticky
        * @control
        * @public
        * @category Popup
