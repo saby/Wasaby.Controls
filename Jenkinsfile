@@ -492,7 +492,7 @@ node('controls') {
         if ( quick_int ) {
             dir("./controls/tests") {
                 echo "Выкачиваем файл с зависимостями"
-                url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result1.json"
                 script = """
 	                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
 		            echo "result.json exitsts"; cp -fr tmp_result.json result.json
