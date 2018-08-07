@@ -4,10 +4,10 @@
       <div
          class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
          tabindex="1"
-         >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
+         >{{!enabled && text ? (_reviewContent|sanitize)}}</div>
       <div
          class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}}"
-         >{{enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize)}}</div>
+         >{{enabled && text ? (_content|sanitize)}}</div>
       <div class="controls-RichEditor__sourceContainer ws-hidden">
          <textarea class="controls-RichEditor__sourceArea"></textarea>
       </div>
@@ -23,11 +23,11 @@
             class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
             tabindex="1"
             style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
-            >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
+            >{{!enabled && text ? (_reviewContent|sanitize)}}</div>
          <div
             class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}}"
             style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
-            >{{enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize)}}</div>
+            >{{enabled && text ? (_content|sanitize)}}</div>
          <div class="controls-RichEditor__sourceContainer ws-hidden">
             <textarea class="controls-RichEditor__sourceArea"></textarea>
          </div>

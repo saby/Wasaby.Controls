@@ -25,6 +25,7 @@ define('Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function(config) {
+            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
             return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
          },

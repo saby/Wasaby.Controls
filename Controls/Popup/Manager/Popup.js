@@ -14,6 +14,8 @@ define('Controls/Popup/Manager/Popup',
          /**
           * Компонент "Всплывающее окно"
           * @class Controls/Popup/Manager/Popup
+          * @mixes Controls/interface/IOpenerOwner
+          * @mixes Controls/interface/ICanBeDefaultOpener
           * @extends Core/Control
           * @control
           * @private
@@ -50,6 +52,10 @@ define('Controls/Popup/Manager/Popup',
                   this.activate();
                }
             }
+         },
+
+         _afterUpdate: function() {
+            this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
          },
 
          /**
