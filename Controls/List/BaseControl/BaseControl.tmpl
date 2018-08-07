@@ -55,8 +55,7 @@
         </ws:else>
     </ws:template>
 
-
-    <ws:if data="{{_listViewModel}}">
+    <ws:template name="serverTemplate">
         <ws:partial template="fullView" name="listView"/>
 
         <Controls.List.EditInPlace
@@ -70,8 +69,11 @@
                 on:afterItemEndEdit="_onAfterItemEndEdit()"
                 listModel="{{_listViewModel}}"
                 source="{{_sourceController}}"/>
+    </ws:template>
+
+    <ws:template name="clientTemplate">
+        <!--TODO: нельзя здесь использовать запись через ws:content="listView" пока не исправят ошибку: https://online.sbis.ru/opendoc.html?guid=4677d32b-5338-4bec-9f9b-c3fffb685b23 -->
         <Controls.List.ItemActions.ItemActionsControl
-                ws:content="listView"
                 on:commitActionClick="_commitEditActionHandler()"
                 on:cancelActionClick="_cancelEditActionHandler()"
                 on:menuActionsClick="_showActionsMenu()"
@@ -82,15 +84,26 @@
                 menuIsShown="{{_menuIsShown}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsPosition="{{_options.itemActionsPosition}}"/>
-        <Controls.List.Swipe.SwipeControl
-                ws:content="listView"
-                on:menuActionsClick="_showActionsMenu()"
-                on:closeSwipe="_closeSwipe()"
-                menuIsShown="{{_menuIsShown}}"
-                listModel="{{_listViewModel}}"
-                itemActions="{{_options.itemActions}}"
-                name="swipeControl"/>
+                itemActionsPosition="{{_options.itemActionsPosition}}">
+            <Controls.List.Swipe.SwipeControl
+                    on:menuActionsClick="_showActionsMenu()"
+                    on:closeSwipe="_closeSwipe()"
+                    menuIsShown="{{_menuIsShown}}"
+                    listModel="{{_listViewModel}}"
+                    itemActions="{{_options.itemActions}}"
+                    name="swipeControl">
+                <ws:partial template="serverTemplate" name="listView"/>
+            </Controls.List.Swipe.SwipeControl>
+        </Controls.List.ItemActions.ItemActionsControl>
+    </ws:template>
+
+    <ws:if data="{{_listViewModel}}">
+        <ws:if data="{{_isServer}}">
+            <ws:partial template="serverTemplate"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="clientTemplate"/>
+        </ws:else>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
