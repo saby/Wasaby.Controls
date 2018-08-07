@@ -59,7 +59,7 @@ define('Controls/Popup/Manager',
          popupMaximized: function(id, state) {
             var element = ManagerController.find(id);
             if (element) {
-               element.controller.elementMaximized(element, this.getItemContainer(id), state);
+               element.controller.elementMaximized(element, _private.getItemContainer(id), state);
                return true;
             }
             return false;
