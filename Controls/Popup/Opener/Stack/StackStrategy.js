@@ -3,7 +3,7 @@
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
    var PANEL_SHADOW_WIDTH = 8; // Отступ контейнера под тень
-   var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
+   var MINIMAL_PANEL_DISTANCE = 20; // минимальный отступ стековой панели от правого края
 
    var _private = {
       getPanelWidth: function(item, tCoords, maxPanelWidth) {
