@@ -113,7 +113,7 @@ define('Controls/Container/Data',
             _private.resolveOptions(this, newOptions);
 
             if (this._options.source !== newOptions.source) {
-               _private.createPrefetchSource(this).addCallback(function(result) {
+               return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
                   self._forceUpdate();
                   return result;
