@@ -57,11 +57,6 @@ define('Controls/Popup/Opener/BaseOpener',
             }
             this._isExecuting = true;
 
-            //Если this._popupIds ещё не проинициализирован массивом, то сделаем это
-            if (!(this._popupIds instanceof Array)) {
-               this._popupIds = [];
-            }
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
