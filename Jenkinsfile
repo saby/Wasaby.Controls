@@ -61,7 +61,7 @@ node('controls') {
     ])
 
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int || params.RUN_ONLY_FAIL_TEST)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
