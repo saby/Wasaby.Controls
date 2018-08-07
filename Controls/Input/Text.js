@@ -110,9 +110,7 @@ define('Controls/Input/Text',
 
             this._notify('inputCompleted', [this._options.value]);
          },
-
-
-          _notifyHandler: tmplNotify,
+         _notifyHandler: tmplNotify,
          paste: function(text) {
             this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
