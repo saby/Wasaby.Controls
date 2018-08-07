@@ -76,6 +76,7 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
+        def only_fail = params.RUN_ONLY_FAIL_TEST
         def changed_files
 
         try {
@@ -231,6 +232,34 @@ node('controls') {
                     }
                 }
             )
+        }
+        def run_test_fail = ""
+        if ( only_fail ) {
+            run_test_fail = "-sf"
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+            script = """python3 -c "import sqlite3;conn=sqlite3.connect('result.db');c=conn.cursor();output=c.execute('''SELECT name FROM sqlite_master WHERE type='table' AND name='FailTest' ''');result = None if not output.fetchone() else c.execute('''SELECT * FROM FailTest''').fetchone();conn.close();print(result)""""
+            dir('./controls/tests/int') {
+                def result = sh returnStdout: true, script: script
+                echo result
+                if ( result ) {
+                    inte = true
+                } else {
+                    inte = false
+                }
+            }
+            dir('./controls/tests/reg') {
+                def result = sh returnStdout: true, script: script
+                echo result
+                if ( result ) {
+                    regr = true
+                } else {
+                    regr = false
+                }
+            }
+            if (!inte || !regr) {
+                error('Нет тестов для перезапуска.')
+            }
+
         }
         stage("Сборка компонент"){
             echo " Определяем SDK"
@@ -486,11 +515,7 @@ node('controls') {
             }
         }
 
-        def run_test_fail = ""
-        if (params.RUN_ONLY_FAIL_TEST == true){
-            run_test_fail = "-sf"
-            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-        }
+
 
         def tests_for_run = ""
         if ( inte ) {
