@@ -15,7 +15,7 @@ define('Controls-demo/MasterDetail/Demo', [
       _beforeMount: function() {
          this._detail = {};
 
-         this._detailSource = new DemoSource();
+         this._detailSource = new DemoSource({idProperty: 'id'});
 
          this._masterSource = new Memory({
             idProperty: 'id',

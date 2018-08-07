@@ -9,19 +9,19 @@ define('Controls-demo/MasterDetail/DemoSource', [
          var arr = null;
          switch (filter._where.myOpt) {
             case '0':
-               arr = new DataSet({rawData: Data.incoming});
+               arr = new DataSet({rawData: Data.incoming, idProperty: 'id'});
                break;
             case '1':
-               arr = new DataSet({rawData: Data.incomingTasks});
+               arr = new DataSet({rawData: Data.incomingTasks, idProperty: 'id'});
                break;
             case '2':
-               arr = new DataSet({rawData: Data.instructions});
+               arr = new DataSet({rawData: Data.instructions, idProperty: 'id'});
                break;
             case '3':
-               arr = new DataSet({rawData: Data.plans});
+               arr = new DataSet({rawData: Data.plans, idProperty: 'id'});
                break;
             default:
-               arr = new DataSet({rawData: []});
+               arr = new DataSet({rawData: [], idProperty: 'id'});
                break;
          }
 
