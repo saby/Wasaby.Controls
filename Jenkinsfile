@@ -1,7 +1,8 @@
 #!groovy
-echo "Задаем параметры сборки"
-def version = "3.18.500"
+import java.time.*
+import java.lang.Math
 
+def version = "3.18.500"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
@@ -13,6 +14,7 @@ def gitlabStatusUpdate() {
 }
 
 node('controls') {
+    LocalDateTime start_time = LocalDateTime.now();
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
@@ -570,4 +572,8 @@ node('controls') {
     gitlabStatusUpdate()
         }
     }
+LocalDateTime end_time = LocalDateTime.now();
+Duration duration = Duration.between(end_time, start_time);
+diff_time = Math.abs(duration.toMinutes());
+echo "Время сборки: ${diff_time} минут"
 }
