@@ -407,7 +407,7 @@ define('Controls/List/BaseControl', [
       _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
-         this._isServer = typeof window !== 'undefined';
+         this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
