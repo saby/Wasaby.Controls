@@ -10,6 +10,8 @@ function(
    'use strict';
    var TagStyle = Base.extend({
       _template: template,
+      _empty: 'none',
+      _placeholder: 'select',
       _items: [
          {title: 'attention'},
          {title: 'done'},

@@ -4,9 +4,10 @@ define('Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Utils/tmplNotify',
       'css!Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, BaseViewModel) {
+   function(Control, template, types, BaseViewModel, tmplNotify) {
       
       /**
        * Input that suggests options as you are typing.
@@ -24,7 +25,7 @@ define('Controls/Input/Suggest',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Suggest/Suggest
+       * @demo Controls-demo/Input/Suggest/Suggest
        */
       
       'use strict';
@@ -40,7 +41,7 @@ define('Controls/Input/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
-         
+         _notifyHandler: tmplNotify,
          _suggestState: false,
          _searchState: false,
          

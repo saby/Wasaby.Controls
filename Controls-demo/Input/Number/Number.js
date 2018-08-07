@@ -23,32 +23,32 @@ define('Controls-demo/Input/Number/Number', [
          {title: 'left'},
          {title: 'right'}
       ],
-      _tagStyleHandler: function (){
+      _tagStyleHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
-      _tagStyleClickHandler: function (){
+      _tagStyleClickHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
-            message: "Click"
+            message: 'Click'
          });
       },
-      valueChangedHandler: function () {
+      _valueChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {
             this._validationErrors = null;
          }
       },
-      _createMemory: function () {
+      _createMemory: function() {
          return new Memory({
             idProperty: 'title',
             data: this._items
          });
       },
-      _eventHandler: function (e, value) {
+      _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
    });

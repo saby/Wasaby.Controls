@@ -1,8 +1,7 @@
-/* eslint-disable quotes */
 define('Controls-demo/Input/Text/Text', [
    'Core/Control',
    'tmpl!Controls-demo/Input/Text/Text'
-], function (Control, template) {
+], function(Control, template) {
 
    'use strict';
 
@@ -23,29 +22,29 @@ define('Controls-demo/Input/Text/Text', [
          {title: '[a-z]', example: 'You can use only lowercase letters'},
          {title: '[A-Z]', example: 'You can use only uppercase letters'}
       ],
-      _tagStyleHandler: function () {
+      _tagStyleHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
-      _tagStyleClickHandler: function () {
+      _tagStyleClickHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Click"
+            message: 'Click'
          });
       },
-      valueChangedHandler: function () {
+      valueChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {
             this._validationErrors = null;
          }
       },
-      _setValue: function (e, record) {
+      _setValue: function(e, record) {
          this._example = record.get('example');
       },
-      _eventHandler: function (e, value) {
+      _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       }
    });

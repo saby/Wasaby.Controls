@@ -25,6 +25,8 @@
             tagStyle="{{_options.tagStyle}}"
             placeholder="{{_options.placeholder}}"
             validationErrors="{{_options.validationErrors}}"
+            on:tagClick="_notifyHandler('tagClick')"
+            on:tagHover="_notifyHandler('tagHover')"
             on:valueChanged="_changeValueHandler()"
             attr:class="controls-SuggestV__inputRender">
         <ws:content>
