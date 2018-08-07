@@ -8,14 +8,15 @@
  */
 
 exports.fix = function (config) {
-   try {
       if (config.wsModules) {
          var fs = require('fs');
          Object.keys(config.wsModules).forEach(function(name) {
-            fs.symlinkSync(process.cwd() + "/" + config.wsModules[name], process.cwd() + "/" + name, 'dir');
+            try {
+               fs.symlinkSync(process.cwd() + "/" + config.wsModules[name], process.cwd() + "/" + name, 'dir');
+            } catch (e) {
+               console.log(e.message);
+            }
          });
       }
-   } catch (e) {
-      console.log(e.message);
-   }
+
 };
