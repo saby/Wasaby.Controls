@@ -139,6 +139,21 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          _addTemplate: null,
          _itemsSimple: itemsSimple,
          _hasItemTemplateProperty: false,
+         _eventNameFilter: 'no event',
+         _eventNameItems: 'no event',
+
+         reset: function() {
+            this._eventNameFilter = 'no event';
+            this._eventNameItems = 'no event';
+         },
+
+         filterChangeHandler: function() {
+            this._eventNameFilter = 'filterChanged';
+         },
+
+         itemsChangeHandler: function() {
+            this._eventNameItems = 'itemsChanged';
+         },
 
          valueChangedHandler: function(event, value) {
             if (value) {
