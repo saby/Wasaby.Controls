@@ -52,16 +52,16 @@ node('controls') {
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_quick_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
-            booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_int')
+            booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
         pipelineTriggers([])
     ])
 
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -72,10 +72,10 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def inte = params.run_int
+        def all_inte = params.run_all_int
         def regr = params.run_reg
         def unit = params.run_unit
-        def quick_int = params.run_quick_int
+        def inte = params.run_int
         def changed_files
 
         try {
@@ -105,12 +105,12 @@ node('controls') {
 		}
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            quick_int = true
+            inte = true
             regr = true
             unit = true
         }
-        if ( quick_int ) {
-            inte = false
+        if ( inte ) {
+            all_inte = false
         }
 
         echo "Выкачиваем хранилища"
@@ -139,7 +139,7 @@ node('controls') {
                         git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
-                        if ( quick_int ) {
+                        if ( inte ) {
                             changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                             echo "Изменения были в файлах: ${changed_files}"
                         }
@@ -308,7 +308,7 @@ node('controls') {
             }
             echo items
         }
-        if ( inte || regr || quick_int) {
+        if ( all_inte || regr || inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -403,7 +403,7 @@ node('controls') {
                 }
             }
         }
-    if ( inte || regr || quick_int) {
+    if ( all_inte || regr || inte) {
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
 			soft_restart = "False"
@@ -493,7 +493,7 @@ node('controls') {
         }
 
         def tests_for_run = ""
-        if ( quick_int ) {
+        if ( inte ) {
             dir("./controls/tests") {
                 echo "Выкачиваем файл с зависимостями"
                 url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
@@ -523,7 +523,7 @@ node('controls') {
             int_test: {
                 echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
-                    if ( inte || quick_int ){
+                    if ( all_inte || inte ){
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
@@ -569,7 +569,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || inte || quick_int){
+    if ( regr || all_inte || inte){
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
