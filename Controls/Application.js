@@ -94,7 +94,7 @@ define('Controls/Application',
                def = new Deferred();
 
             try {
-               if(process.domain) {
+               if (process.domain) {
                   self.onServer = true;
                } else {
                   self.onServer = false;
