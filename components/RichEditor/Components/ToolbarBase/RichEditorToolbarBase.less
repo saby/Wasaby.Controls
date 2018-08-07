@@ -12,7 +12,7 @@
          padding: 2px 4px 0 4px;
          height: 20px;
          vertical-align: bottom;
-         width: 33px; // 25 ширина смайла на 10 ios + 8 отступ
+         width: 31px;
          &:hover {
             color: #313E78
          }
@@ -36,7 +36,6 @@
         &.controls-Menu {
             .controls-ListView__item {
                 font-size: 18px;
-                width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
             }
         }
     }
@@ -44,9 +43,14 @@
 
 // https://online.sbis.ru/opendoc.html?guid=8b0122bc-8e90-4b26-b3c4-46f10ecacd7a
 .ws-is-mobile-android {
-   .controls-RichEditorToolbar__smilesPicker.controls-Menu .controls-ListView__item.controls-MenuItem {
-      font-size: 20px;
-   }
+    .controls-RichEditorToolbar__smilesPicker {
+        &.controls-Menu {
+            .controls-ListView__item.controls-MenuItem {
+                font-size: 20px;
+                width: 33px;
+            }
+        }
+    }
 }
 
 .ws-is-windows-8, .ws-is-firefox {

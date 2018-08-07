@@ -15,7 +15,9 @@ define('Controls/Input/Text',
       'use strict';
 
       /**
-       * Single-line text input.
+       * A component for entering single-line text.
+       * You may want to restrict user input to a limited define of characters. In this case, you should use the option {@link constraint}.
+       * You can {@link trim remove extra spaces} at the beginning and end when the {@link inputCompleted input is completed}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Text
@@ -28,8 +30,9 @@ define('Controls/Input/Text',
        * @control
        * @public
        * @category Input
-       * @author Журавлев Максим Сергеевич
        * @demo Controls-demo/Input/Text/Text
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
 
@@ -40,17 +43,12 @@ define('Controls/Input/Text',
 
       /**
        * @name Controls/Input/Text#trim
-       * @cfg {Boolean} If true, removes whitespaces from both sides of a string when input is completed.
-       * * true Remove whitespaces.
-       * * false Do not remove whitespaces.
-       * @default false
+       * @cfg {Boolean} Determines whether removes white spaces from both sides of a string when input is completed.
        */
 
       /**
        * @name Controls/Input/Text#selectOnClick
-       * @cfg {Boolean} If true, text is selected when input is clicked.
-       * * true Select text on click.
-       * * false Do not select text on click.
+       * @cfg {Boolean} Determines whether text is selected when input is clicked.
        * @default true
        */
 

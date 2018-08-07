@@ -7,11 +7,9 @@ define('Controls/Toggle/Switch', [
 ], function(Control, template, types) {
 
    /**
-    * Switch control.
+    * Switch with single caption and with support left and right caption positions.
     *
-    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
-    * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-    * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/Switch
     * @extends Core/Control
@@ -28,14 +26,14 @@ define('Controls/Toggle/Switch', [
 
    /**
     * @name Controls/Toggle/Switch#caption
-    * @cfg {String} Title.
+    * @cfg {String} Switch caption.
     */
 
    /**
     * @name Controls/Toggle/Switch#captionPosition
-    * @cfg {Boolean} Switch caption has left position.
-    * @variant left Switch has caption before toggle composition.
-    * @variant right Switch has toggle before caption composition.
+    * @cfg {Boolean} Determines the position of the caption.
+    * @variant left Caption before toggle.
+    * @variant right Toggle before caption. It is default value.
     */
 
    var Switch = Control.extend({

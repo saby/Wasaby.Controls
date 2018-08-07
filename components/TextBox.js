@@ -247,8 +247,9 @@ define('SBIS3.CONTROLS/TextBox', [
                   self.setText(newText);
                }
             })
-            .on('focusin', this._inputFocusInHandler.bind(this))
-            .on('click', this._inputClickHandler.bind(this));
+            .on('mousedown', this._inputMousedownHandler.bind(this))
+            .on('click', this._inputClickHandler.bind(this))
+            .on('focusin', this._inputFocusInHandler.bind(this));
          
          /* На Ipad'e при вставке текста из т9/autocorrect'a стреляет только событие input.
             Проверить, что это была вставка, можно по опции текст, т.к. в остальных случаях,
@@ -608,8 +609,19 @@ define('SBIS3.CONTROLS/TextBox', [
             EventBus.globalChannel().notify('MobileInputFocusOut');
             this._fromTouch = false;
          }
+         this._clicked = false;
 
          TextBox.superclass._focusOutHandler.apply(this, arguments);
+      },
+
+      _inputMousedownHandler: function () {
+         this._clicked = true;
+      },
+
+      _moveCursorAfterActivation: function() {
+         this._inputField[0].setSelectionRange(this._inputField.val().length, this._inputField.val().length);
+         this._inputField[0].scrollTop = 99999;
+         this._inputField[0].scrollLeft = 99999;
       },
       
       _inputClickHandler: function (e) {
@@ -630,6 +642,10 @@ define('SBIS3.CONTROLS/TextBox', [
                }, 0);
             } else {
                this._inputField.select();
+            }
+         } else {
+            if (this.isEnabled() && !this._clicked) {
+               this._moveCursorAfterActivation();
             }
          }
          /* При получении фокуса полем ввода, сделаем контрол активным.

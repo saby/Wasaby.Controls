@@ -28,6 +28,9 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
+         isArrayHead: function() {
+            return Array.isArray(this._options.head);
+         },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);
          },

@@ -89,6 +89,7 @@ define('Controls-demo/OperationsPanel/Panel', [
    return Control.extend({
       _template: template,
       _expanded: false,
+      _eventName: '',
       _multiSelectorVisibility: true,
       _rightTemplate: true,
       _rightTemplateTpl: RightTemplate,
@@ -105,6 +106,13 @@ define('Controls-demo/OperationsPanel/Panel', [
       sourceChange: function(e, key) {
          this._sourceNumber = key;
          this._source = _private.getPanelSource(key);
+      },
+      _reset: function() {
+         this._eventName = '';
+      },
+
+      _eventHandler: function(e) {
+         this._eventName = e.type;
       }
    });
 });

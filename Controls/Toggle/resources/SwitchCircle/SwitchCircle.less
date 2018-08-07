@@ -1,34 +1,34 @@
 .controls-SwitchCircle__innerCircle_selected_enabled {
-   fill: @fill_RadioGroup_innerCircle_selected_enabled;
+   fill: @color_ToggleCircle_innerCircle_selected_enabled;
 }
 
 .controls-SwitchCircle__innerCircle_selected_disabled {
-   fill: @fill_RadioGroup_innerCircle_selected_disabled;
+   fill: @color_ToggleCircle_innerCircle_selected_disabled;
 }
 
 .controls-SwitchCircle__innerCircle_unselected {
-   fill: @fill_RadioGroup_innerCircle_unselected;
+   fill: @color_ToggleCircle_innerCircle_unselected;
 }
 
 .controls-SwitchCircle__borderCircle_enabled {
-   fill: @fill_RadioGroup_borderCircle_enabled;
+   fill: @color_ToggleCircle_outerCircle_enabled;
 }
 
 .controls-SwitchCircle__borderCircle_disabled {
-   fill: @fill_RadioGroup_borderCircle_disabled;
+   fill: @color_ToggleCircle_outerCircle_disabled;
 }
 
 .ws-is-no-touch {
    .controls-SwitchCircle__svg:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @fill_RadioGroup_borderCircle_enabled_hovered;
+         fill: @color_ToggleCircle_outerCircle_enabled_hovered;
       }
    }
 }
 
 .controls-SwitchCircle__svg {
-   width: @width_RadioItem_svg;
-   height: @height_RadioItem_svg;
+   width: @width_ToggleCircle;
+   height: @height_ToggleCircle;
    display: inline-block;
    //в ie особая обработка кликов по svg: чтобы клик отработал, нужно соблюсти много условий
    // подробнее тут: https://stackoverflow.com/questions/40984532/svg-click-event-not-working или тут https://www.w3.org/TR/SVG/interact.html#PointerEventsProperty

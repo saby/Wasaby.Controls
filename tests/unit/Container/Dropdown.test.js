@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Dropdown/Container',
+      'Controls/Dropdown/Controller',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],

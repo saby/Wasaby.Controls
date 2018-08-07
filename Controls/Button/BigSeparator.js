@@ -8,15 +8,23 @@ define('Controls/Button/BigSeparator', [
    'use strict';
 
    /**
-    * Control showing the big separator button.
+    * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+    *
     * @class Controls/Button/BigSeparator
     * @extends Core/Control
     * @control
     * @public
+    * @mixes Controls/Toggle/interface/ICheckable
+    *
+    * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
+    *
+    * @mixes Controls/Button/BigSeparator/BigSeparatorStyles
     */
 
    /**
-    * @name Controls/Button/ButtonSeparator#value
+    * @name Controls/Button/Separator#value
     * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
@@ -39,6 +47,10 @@ define('Controls/Button/BigSeparator', [
 
       _beforeUpdate: function(newOptions) {
          _private.iconChangedValue(this, newOptions);
+      },
+
+      clickHandler: function() {
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 

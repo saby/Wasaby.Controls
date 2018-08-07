@@ -16,7 +16,6 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Mixins/Selectable",
        "SBIS3.CONTROLS/Mixins/ActiveSelectable",
        "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
-       "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
        "tmpl!SBIS3.CONTROLS/FieldLink/FieldLink",
        "tmpl!SBIS3.CONTROLS/FieldLink/afterFieldWrapper",
        "tmpl!SBIS3.CONTROLS/FieldLink/beforeFieldWrapper",
@@ -1022,8 +1021,12 @@ define('SBIS3.CONTROLS/FieldLink',
            */
           _dropAllItems: function() {
              this.removeItemsSelectionAll();
-             this._inputField.focus();
-             this._observableControlFocusHandler();
+             //в результате removeItemsSelectionAll стрелется событие и реакцием на него может быть уничтожение компонента
+             //например в FilterPanel так происходит. Надо проверить что компонент еще жив
+             if (!this.isDestroyed()) {
+                this._inputField.focus();
+                this._observableControlFocusHandler();
+             }
           },
 
           setDataSource: function(ds, noLoad) {

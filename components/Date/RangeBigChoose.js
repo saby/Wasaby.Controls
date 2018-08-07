@@ -310,7 +310,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this._options.yearStateEnabled) {
             this.applyYearState();
          } else {
-            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
+            this.applyMonthState();
          }
 
          this._updateHomeButton();
@@ -711,17 +711,20 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       applyMonthState: function (month) {
-         var container = this.getContainer();
+         var container = this.getContainer(),
+            startValue = this.getStartValue(),
+            cMonth = month || (startValue && DateUtil.getStartOfMonth(startValue)) ||
+               new Date(this._getCurrentYear(), 0);
          container.find('.controls-DateRangeBigChoose__dates').removeClass('ws-hidden');
          container.find('.controls-DateRangeBigChoose__months').addClass('ws-hidden');
          this.cancelSelection();
          this._options._state = states.month;
          this._dateRangePicker.cancelSelection();
-         this._dateRangePicker.setRange(this.getStartValue(), this.getEndValue(), true);
-         this._dateRangePicker.setMonth(month);
+         this._dateRangePicker.setRange(startValue, this.getEndValue(), true);
+         this._dateRangePicker.setMonth(cMonth);
          this._dateRangePicker._updateScrollPosition();
-         this._setCurrentYear(month.getFullYear(), true);
-         this._updateYearsBar(month.getFullYear());
+         this._setCurrentYear(cMonth.getFullYear(), true);
+         this._updateYearsBar(cMonth.getFullYear());
          if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').setChecked(true);
          }
@@ -837,7 +840,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _onStateBtnClick: function () {
          if (this._options._state === states.year) {
-            this.applyMonthState(new Date(this._getCurrentYear(), 0));
+            this.applyMonthState();
          } else {
             this.applyYearState();
          }

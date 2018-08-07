@@ -89,7 +89,7 @@
    "Неверная дата. Дата не является датой конца месяца.": "Invalid date. The date is not the month end date.",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
    "Нет": "No",
-   "Некорректно заполнены обязательные поля": "Incorrect values in required fields",
+   "Некорректно заполнены обязательные поля.": "Incorrect values in required fields.",
    "Объединение наименований": "Combining titles",
    "Объединить": "Merge",
    "ОК": "OK",
@@ -273,5 +273,9 @@
    "Отпустите файлы": "Drag files",
    "Инициализация камеры": "Initialize the camera",
    "plural#запись(-и,-ей)": "record|records",
-   "Перенести $count$d$ $records$s$ в": "Move $count$d$ $records$s$ to"
+   "Перенести $count$d$ $records$s$ в": "Move $count$d$ $records$s$ to",
+   "БТР@@Полужирный": "Bold",
+   "БТР@@Курсив": "Italic",
+   "БТР@@Подчеркнутый": "Underline",
+   "БТР@@Перечеркнутый": "Strikethrough"
 }

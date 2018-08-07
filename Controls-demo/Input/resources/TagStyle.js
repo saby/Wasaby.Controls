@@ -1,8 +1,7 @@
 define('Controls-demo/Input/resources/TagStyle', [
    'Core/Control',
    'tmpl!Controls-demo/Input/resources/TagStyle',
-   'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet' //TODO: https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
+   'WS.Data/Source/Memory'
 ],
 function(
    Base, template, Memory

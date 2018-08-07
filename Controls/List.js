@@ -86,6 +86,26 @@ define('Controls/List', [
          this._children.listControl.addItem(options);
       },
 
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.commitEdit();
+         }
+      },
+
       _onBeforeItemAdd: function(e, options) {
          return this._notify('beforeItemAdd', [options]);
       },
@@ -114,6 +134,12 @@ define('Controls/List', [
          return this._notify('dragEnd', [items, target, position]);
       }
    });
+
+   ListControl.getDefaultOptions = function() {
+      return {
+         multiSelectVisibility: 'hidden'
+      };
+   };
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
    /*ListView.getOptionTypes = function getOptionTypes(){

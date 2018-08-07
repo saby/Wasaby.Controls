@@ -8,9 +8,6 @@ define('Controls/List/ListControl', [
 ) {
    'use strict';
 
-   var _private = {
-   };
-
    /**
     * Plain list control with custom item template. Can load data from data source.
     *
@@ -39,6 +36,26 @@ define('Controls/List/ListControl', [
       addItem: function(options) {
          this._children.baseControl.addItem(options);
       },
+
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.commitEdit();
+         }
+      },
       _onCheckBoxClick: function(e, key, status) {
          var newSelectedKeys = this._options.selectedKeys.slice();
          if (status) {
@@ -64,7 +81,8 @@ define('Controls/List/ListControl', [
 
    ListControl.getDefaultOptions = function() {
       return {
-         uniqueKeys: true
+         uniqueKeys: true,
+         multiSelectVisibility: 'hidden'
       };
    };
 

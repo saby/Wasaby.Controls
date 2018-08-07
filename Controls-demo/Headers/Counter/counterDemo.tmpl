@@ -1,0 +1,43 @@
+<div class="demoWrapper">
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Counter</h2>
+            <div class="wrapper">
+                <Controls.Header.Counter on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_counterCaption}}" style="{{_counterSelectedStyle}}" size="{{_counterSelectedSize}}" attr:test_name="HeaderCounter"/>
+            </div>
+        </div>
+        <div class="optionsBlock">
+            <h3>Options</h3>
+            <Controls.Label name="myLabel1" caption="caption"/>
+            <Controls.Input.Number bind:value="_counterCaption"/>
+            <Controls.Label name="myLabel1" caption="style:"/>
+            <Controls.Input.ComboBox
+                    source="{{_counterStyleSource}}"
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_counterSelectedStyle}}"
+                    on:selectedKeyChanged="counterChangeStyle()"
+					attr:test_name="CounterStyle"
+            />
+            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.Input.ComboBox
+                    source="{{_counterSizeSource}}"
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_counterSelectedSize}}"
+                    on:selectedKeyChanged="counterChangeSize()"
+					attr:test_name="CounterSize"
+            />
+        </div>
+        <div class="eventBlock">
+            <span>Event that surfaced:</span>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+            <br/>
+            <span>{{_eventName}}</span>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,7 @@ define('Controls/Dropdown/Opener',
        * Opener for dropdown menu.
        *
        * @class Controls/Dropdown/Opener
-       * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IDropdownList
        * @control
        * @public
        * @category Popup

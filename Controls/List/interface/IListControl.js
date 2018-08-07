@@ -57,11 +57,11 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#multiSelectVisibility
-    * @cfg {Boolean} Whether multiple selection is enabled.
+    * @cfg {String} Whether multiple selection is enabled.
     * @variant visible Show.
     * @variant hidden Do not show.
     * @variant onhover Show on hover.
-    * @variant null Default.
+    * @default hidden
     */
 
    /**

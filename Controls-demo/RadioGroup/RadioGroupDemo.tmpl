@@ -1,7 +1,7 @@
 <div>
     <div attr:class="exampleBlock">
         <h2>Radio group</h2>
-        <Controls.Toggle.Radio
+        <Controls.Toggle.RadioGroup
                 attr:id="radioGroup1"
                 attr:class="demo-RadioGroup"
                 on:selectedKeyChanged="changeKey()"
@@ -12,52 +12,100 @@
                 readOnly="{{_readOnly}}"
                 itemTemplateProperty="{{_itemTemplatePropertyFlag ? 'templateTwo' : ''}}">
             <ws:itemTemplate>
-                <ws:partial template='tmpl!Controls/Toggle/Radio/resources/ItemTemplate'
-                            item="{{item}}"
-                            readOnly="{{readOnly}}"
-                            selected="{{selected}}"
-                            displayProperty="{{_displayProperty}}"
-                            contentTemplate="{{_contentTemplate}}"/>
+                <ws:partial template='tmpl!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                    item="{{item}}"
+                    readOnly="{{readOnly}}"
+                    selected="{{selected}}"
+                    displayProperty="{{_displayProperty}}"
+                    contentTemplate="{{_contentTemplate}}"
+                />
             </ws:itemTemplate>
-        </Controls.Toggle.Radio>
+        </Controls.Toggle.RadioGroup>
     </div>
     <div attr:class="optionsBlock">
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" attr:test_name="readOnly" caption="ReadOnly"/>
+        <Controls.Toggle.Checkbox 
+            attr:test_name="readOnly"
+            readOnly="{{false}}"
+            bind:value="_readOnly" 
+            caption="ReadOnly"
+        />
         <br/>
         <Controls.Label caption="Direction:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeDirection()"
-                keyProperty="title"
-                selectedKey="{{_selectedDirection}}"
-                source="{{_directionSource}}"
-                direction="horizontal"
-				attr:test_name="direction"
-                readOnly="{{false}}"/>
+        <Controls.Input.ComboBox
+            attr:test_name="direction"
+            attr:class="comboboxWidth"
+            source="{{_directionSource}}"
+            keyProperty="title"
+            placeholder="select"
+            displayProperty="title"
+            selectedKey="{{_selectedDirection}}"
+            on:selectedKeyChanged="changeDirection()"
+        />
         <Controls.Label caption="Source:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeSource()"
-                keyProperty="title"
-                selectedKey="{{_selectedSource}}"
-                source="{{_sourceOfSource}}"
-                direction="horizontal"
-                readOnly="{{false}}"/>
+        <Controls.Input.ComboBox
+            attr:test_name="changeSource"
+            attr:class="comboboxWidth"
+            source="{{_sourceOfSource}}"
+            keyProperty="title"
+            placeholder="select"
+            displayProperty="title"
+            selectedKey="{{_selectedSource}}"
+            on:selectedKeyChanged="changeSource()"
+        />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_itemTemplatePropertyFlag" attr:test_name="item_tmpl" caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."/>
+        <Controls.Toggle.Checkbox 
+            attr:test_name="item_tmpl"
+            readOnly="{{false}}"
+            bind:value="_itemTemplatePropertyFlag"
+            caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."
+        />
         <br/>
         <Controls.Label caption="Content template:"/>
-        <Controls.Toggle.Radio
-                on:selectedKeyChanged="changeContentTemplate()"
-                keyProperty="title"
-                selectedKey="{{_selectedContentTemplate}}"
-                source="{{_sourceContentTemplate}}"
-                direction="horizontal"
-                readOnly="{{false}}"
-				attr:test_name="content_tmpl"/>
+        <Controls.Input.ComboBox
+            attr:test_name="content_tmpl"
+            attr:class="comboboxWidth"
+            source="{{_sourceContentTemplate}}"
+            keyProperty="title"
+            placeholder="select"
+            displayProperty="title"
+            selectedKey="{{_selectedContentTemplate}}"
+            on:selectedKeyChanged="changeContentTemplate()"
+        />
+        <Controls.Label caption="Display property:"/>
+        <Controls.Toggle.DoubleSwitch 
+            attr:test_name="displayProperty"
+            on:valueChanged="changedDisplayProperty()" 
+            captions="{{['caption', 'title']}}" 
+            bind:value="_displayPropertyValue"
+        />
+        <Controls.Label caption="Selected key:"/>
+        <Controls.Toggle.RadioGroup
+            attr:test_name="selectedKey"
+            on:selectedKeyChanged="changeSelectedKey()"
+            keyProperty="id"
+            selectedKey="{{_selectKey}}"
+            source="{{_source}}"
+            direction="horizontal"
+            readOnly="{{false}}">
+            <ws:itemTemplate>
+                <ws:partial template='tmpl!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                    item="{{item}}"
+                    readOnly="{{readOnly}}"
+                    selected="{{selected}}"
+                    displayProperty="id"
+                />
+            </ws:itemTemplate>
+        </Controls.Toggle.RadioGroup>
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
-        <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+        <Controls.Button 
+            attr:class="demo-ResetButton" 
+            on:click="reset()" 
+            style="linkMain3" 
+            caption="reset"
+        />
         <br/>
-        <span>{{_eventName}}</span>
+        <span id="eventName">{{_eventName}}</span>
     </div>
 </div>

@@ -1,0 +1,60 @@
+.controls-Separator__icon_size {
+   .icon-size-without-important(@size-Separator__icon);
+}
+
+.controls-Separator__icon_style-secondary {
+   color: @color-Separator__icon_style-secondary;
+}
+
+.controls-Separator__icon_style-primary {
+   color: @color-Separator__icon_style-primary;
+}
+
+.controls-Separator__icon_style-additional {
+   color: @color-Separator__icon_style-additional;
+}
+
+.controls-Separator__wrapper {
+   width: @size-Separator;
+   height: @size-Separator;
+   cursor: pointer;
+   display: inline-flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-Separator__wrapper:before {
+   content: '\200b';
+}
+
+.controls-Separator__icon {
+   display: inline-block;
+}
+
+.controls-Separator__icon_style-secondary:active {
+   color: @color-Separator__icon_style-secondary_hovered;
+}
+
+.controls-Separator__icon_style-primary:active {
+   color: @color-Separator__icon_style-primary_hovered;
+}
+
+.controls-Separator__icon_style-additional:active{
+   color: @color-Separator__icon_style-additional_hovered;
+}
+
+.ws-is-no-touch {
+   .controls-Separator__icon_style-secondary:hover {
+      color: @color-Separator__icon_style-secondary_hovered;
+   }
+
+   .controls-Separator__icon_style-primary:hover {
+      color: @color-Separator__icon_style-primary_hovered;
+   }
+
+   .controls-Separator__icon_style-additional:hover {
+      color: @color-Separator__icon_style-additional_hovered;
+   }
+}
+
+

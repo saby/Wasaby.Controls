@@ -24,6 +24,7 @@ define('Controls-demo/Input/Text/Text', [
          {title: '[a-z]', example: 'You can use only lowercase letters'},
          {title: '[A-Z]', example: 'You can use only uppercase letters'}
       ],
+      _tooltip: '',
       _tagStyleHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,

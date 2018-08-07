@@ -7,14 +7,12 @@ define('Controls/Container/Filter',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Core/helpers/Object/isEqual',
-      'Controls/History/FilterSource',
-      'Controls/History/Service',
-      'WS.Data/Source/Memory',
+      'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEmpty'
    ],
    
-   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, isEmptyObject) {
+   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject) {
       
       'use strict';
       
@@ -41,17 +39,7 @@ define('Controls/Container/Filter',
 
          getHistorySource: function(self, hId) {
             if (!self._historySource) {
-               self._historySource = new HistorySource({
-                  originSource: new Memory({
-                     idProperty: 'id',
-                     data: []
-                  }),
-                  historySource: new HistoryService({
-                     historyId: hId,
-                     pinned: true,
-                     dataLoaded: true
-                  })
-               });
+               self._historySource = historyUtils.getHistorySource(hId);
             }
             return self._historySource;
          },

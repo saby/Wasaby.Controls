@@ -12,6 +12,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       "Core/constants",
       "Core/Deferred",
       "Core/helpers/Function/runDelayed",
+      'Core/helpers/domToJsonML',
+      'Core/HtmlJson',
       "SBIS3.CONTROLS/TextBox/TextBoxBase",
       "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
       "SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil",
@@ -40,6 +42,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants,
                Deferred,
                runDelayed,
+               domToJson,
+               HtmlJson,
                TextBoxBase,
                dotTplFn,
                RichUtil,
@@ -241,6 +245,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      object_resizing: false,
                      inline_boundaries: false
                   },
+
+                  /**
+                   * @cfg {Object} Json-массив
+                   * Указывается только при необходимости работы через json. Переписывает опцию value.
+                   */
+                  json: undefined,
                   /**
                    * @cfg {String} Значение Placeholder`а
                    * При пустом значении редактора отображается placeholder
@@ -308,6 +318,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                _fromTouch: false,
                _codeSampleDialog: undefined,
                _beforeFocusOutRng: undefined,
+               _htmlJson: undefined,
                _images: {},
                _lastActive: undefined,
                _lastSavedText: undefined,
@@ -316,15 +327,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
                //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
                //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
-               _ctrlKeyUpTimestamp: undefined
+               _ctrlKeyUpTimestamp: undefined,
+               _reviewContent: '',
+               _content: ''
             },
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = function(text) {
-                  return this._prepareReviewContent(text, options);
-               }.bind(this);
-               options._prepareContent = this._prepareContent.bind(this);
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
@@ -337,6 +346,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   options.maximalHeight = this._cleanHeight(options.maximalHeight);
                   options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
                }
+               options._reviewContent = this._prepareReviewContent(options.text, options);
+               options._content = this._prepareContent(options.text);
                return options;
             },
 
@@ -396,6 +407,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!this._readyControlDeffered.isReady()) {
                      this._readyControlDeffered.callback();
                   }
+               }
+               var self = this;
+               if (self._options.hasOwnProperty('json')) {
+                  self._htmlJson = new HtmlJson();
+
+                  // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
+                  self._htmlJson.setJson = function(json) {
+                     this._options.json = json;
+                  };
+                  self.setJson(self._options.json);
+
+                  self.subscribe('onTextChange', function(e, text) {
+                     if (text[0] !== '<') {
+                        text = '<p>' + text + '</p>';
+                     }
+                     var div = document.createElement('div');
+                     div.innerHTML = text;
+                     self._options.json = domToJson(div).slice(1);
+                     self._notify('onJsonChange', [self._options.json]);
+                  });
                }
                this._updateDataReview(this.getText());
             },
@@ -656,6 +687,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._drawText(text);
                }
                this._setText(text);
+            },
+            setJson: function(json) {
+               this._options.json = json;
+               this._htmlJson.setJson(json);
+               this.setText(this._htmlJson.render());
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -1172,6 +1208,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
                      //this._setFontSize(formats.fontsize);
                   }
+                  editor.undoManager.add();
                   this._updateTextByTiny();
                }
             },
@@ -1262,6 +1299,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                   if (typeof smile === 'object') {
                      this.insertHtml(this._smileHtml(smile));
+                     this._tinyLastRng = this._tinyEditor.selection.getRng();
                   }
                }
             },
@@ -1317,7 +1355,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
-               if (isA.strikethrough || isA.underline) {
+               if ((isA.strikethrough || isA.underline) && !(BROWSER.isIE && _getTrueIEVersion() < 12)) {
                   isAlreadyApplied = formatter.match(command);
                   if (isAlreadyApplied) {
                      // Здесь торлько снятие формата
@@ -2923,7 +2961,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  //TODO: Обдумать this._container[0].scrollIntoView(evt.alignToTop);//^^^
+                  this._container[0].scrollIntoView(evt.alignToTop);
                }
             },
             _getAdjacentTextNodesValue: function(node, toEnd) {
@@ -3368,32 +3406,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var cfg = cClone(options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     cfg.formats.underline = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'underline'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
-                        },
-                        {
-                           inline: 'u',
-                           remove: 'all'
-                        }
-                     ];
-                     cfg.formats.strikethrough = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'line-through'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
-                        },
-                        {
-                           inline: 'strike',
-                           remove: 'all'
-                        }
-                     ];
+                     if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                        cfg.formats.underline = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'underline'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
+                           },
+                           {
+                              inline: 'u',
+                              remove: 'all'
+                           }
+                        ];
+                        cfg.formats.strikethrough = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'line-through'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
+                           },
+                           {
+                              inline: 'strike',
+                              remove: 'all'
+                           }
+                        ];
+                     }
 
                      for (var key in options.customFormats) {
                         if ({}.hasOwnProperty.call(options.customFormats, key)) {
@@ -3451,17 +3491,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             /**
              * Убрать пустые строки из начала и конца текста
-             * @returns {*} текст без пустх строк вначале и конце
+             * @returns {*} текст без пустых строк вначале и конце
              */
             _trimText: function(text) {
                if (!text) {
                   return '';
                }
                var regs = {
-                  regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
-                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
-                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
-                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+                  regShiftLine1: /^<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,       // регулярка пустой строки через shift+ enter и space
+                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>$/gi,   // регулярка пустой строки через space и shift+ enter
+                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,                     // регулярка начала строки
+                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i                        // регулярка конца строки
                };
                var substitutes = {
                   regShiftLine1: '<p>',
@@ -3529,18 +3569,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //метод показа плейсхолдера по значению//
             //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
             _togglePlaceholder: function(value) {
-               var curValue = value || this.getText();
-               var _tiny = this.getTinyEditor();
-               var _currentContent = _tiny ? $(_tiny.getBody()).html() : this._inputControl.html();
-               var isEmptyCurValue = curValue === '' || curValue === undefined || curValue === null;
-               var bodyNotHasTags = _currentContent.indexOf('</li>') < 0 &&
-                  _currentContent.indexOf('<p>&nbsp;') < 0 &&
-                  _currentContent.indexOf('<p><br>&nbsp;') < 0 &&
-                  _currentContent.indexOf('<blockquote>') < 0;
-
-               var _toggle = isEmptyCurValue && bodyNotHasTags;
-
-               this.getContainer().toggleClass('controls-RichEditor__empty', _toggle);
+               var isEmpty;
+               if (this._sourceContainer.hasClass('ws-hidden')) {
+                  isEmpty = !(value || this.getText());
+                  if (isEmpty) {
+                     var editor = this.getTinyEditor();
+                     var $content = editor ? $(editor.getBody()) : this._inputControl;
+                     isEmpty = !$content.text().trim() && !$content.find('img,table').length;
+                  }
+               }
+               else {
+                  isEmpty = !this._sourceArea.val().trim();
+               }
+               this.getContainer().toggleClass('controls-RichEditor__empty', isEmpty);
             },
 
             _replaceSmilesToCode: function(text) {
@@ -3788,8 +3829,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
-                  this._dataReview.html(this._prepareReviewContent(text));
-                  this._decorateAsSVG(text);
+                  var reviewContent = this._prepareReviewContent(text);
+                  this._dataReview.html(reviewContent);
+                  this._decorateAsSVG(reviewContent);
                }
             },
 
