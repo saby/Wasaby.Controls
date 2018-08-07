@@ -136,7 +136,7 @@ node('controls') {
                         """
                         if ( quick_int ) {
                             changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                            echo changed_files
+                            echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
                     updateGitlabCommitStatus state: 'running'
@@ -489,25 +489,30 @@ node('controls') {
         // EXPERIMENTAL
         def tests_for_run = ""
         if ( quick_int ) {
-            try {
-                step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result1.json", selector: [$class: 'LastCompletedBuildSelector'], optional: true])
-            } catch (err) {
-                echo "Нет результатов покрытия тестами.\nERROR: ${err}"
-                return
-            }
-
-            echo "Изменения были в файлах: ${changed_files}"
-            dir("./controls/tests/int/coverage") {
-                def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
-                if ( tests_files ) {
-                    tests_files = tests_files.replace('\n', '')
-                    echo "Будут запущены ${tests_files}"
-                    tests_for_run = "--files_to_start ${tests_files}"
+            dir("./controls/tests") {
+                echo "Выкачиваем файл с зависимостями"
+                url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                script = """
+	                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+		            echo "result.json exitsts"; cp -fr tmp_result.json result.json
+		            else rm -f result.json
+	                fi
+	                """
+	                sh returnStdout: true, script: script
+                def exist_json = fileExists 'result.json'
+                if ( exist_json ) {
+                    def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
+                    if ( tests_files ) {
+                        tests_files = tests_files.replace('\n', '')
+                        echo "Будут запущены ${tests_files}"
+                        tests_for_run = "--files_to_start ${tests_files}"
+                    } else {
+                        echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                    }
                 } else {
-                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                    echo "Файл с покрытием не найден. Будут запущены все тесты."
                 }
             }
-
         }
         parallel (
             int_test: {
