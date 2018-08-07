@@ -1,5 +1,9 @@
 @min-width_BackButton_short: @min-width_BreadCrumbs-text + @width-BackButton__icon_size-m + @spacing-BackButton-between-icon-text;
 
+.controls-BreadCrumbsPath {
+   height: @height_BreadCrumbs-items;
+}
+
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
    align-items: baseline;
@@ -9,6 +13,9 @@
 .controls-BreadCrumbsPath__backButton {
    white-space: nowrap;
    position: relative;
+   &:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
+      display: inline-block;
+   }
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper {
@@ -23,6 +30,10 @@
    align-self: center;
    background-color: @background-color_Path-backButtonArrow;
    right: 0;
+   display: none;
+   &:hover {
+      display: inline-block;
+   }
 }
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
