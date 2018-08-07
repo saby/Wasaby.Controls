@@ -48,6 +48,16 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openMaximizedStack: function () {
+            this._children.maximizedStack.open({
+               minWidth: 900,
+               maxWidth: 1200,
+               minimizedWidth: 600,
+               maximized: true,
+               opener: this._children.stackButton
+            });
+         },
+
          openOldTemplate: function () {
             this._children.openOldTemplate.open({
                opener: this._children.stackButton2,
