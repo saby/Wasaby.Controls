@@ -492,7 +492,7 @@ node('controls') {
             try {
                 step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result1.json", selector: [$class: 'LastCompletedBuildSelector'], optional: true])
             } catch (err) {
-                echo "Нет результатов покрытия тестами.\n ERROR: ${err}"
+                echo "Нет результатов покрытия тестами.\nERROR: ${err}"
                 return
             }
 
