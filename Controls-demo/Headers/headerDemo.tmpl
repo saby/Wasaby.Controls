@@ -2,30 +2,36 @@
     <div class="testBlock" test_name="HeaderCapture">
         <div class="exampleBlock">
             <h2>Header</h2>
-            <Controls.Header on:click="clickHandler(3)" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
+            <Controls.Header readOnly="{{_readOnly}}" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="size:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="changeSize()"
-                    keyProperty="title"
-                    selectedKey="{{_selectedSize}}"
+            <Controls.Input.ComboBox
                     source="{{_headerSizeSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-					attr:test_name="CaptionSize"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_selectedSize}}"
+                    on:selectedKeyChanged="changeSize()"
+					attr:test_name="CaptionSize"
+            />
             <Controls.Label name="myLabel1" caption="caption"/>
             <Controls.Input.Text bind:value="_caption"/>
             <Controls.Label name="myLabel1" caption="style:"/>
-            <Controls.Toggle.Radio
-                    on:selectedKeyChanged="changeStyle()"
-                    keyProperty="title"
-                    selectedKey="{{_selectedStyle}}"
+            <Controls.Input.ComboBox
                     source="{{_headerStyleSource}}"
-                    direction="horizontal"
-                    readOnly="{{false}}"
-					attr:test_name="CaptionStyle"/>
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_selectedStyle}}"
+                    on:selectedKeyChanged="changeStyle()"
+					attr:test_name="CaptionStyle"
+            />
+            <br/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>

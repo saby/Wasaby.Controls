@@ -1,4 +1,4 @@
-define('Controls/Toggle/Radio/RadioStyles',
+define('Controls/Toggle/RadioGroup/RadioGroupStyles',
    [
    ],
    function() {
@@ -7,7 +7,7 @@ define('Controls/Toggle/Radio/RadioStyles',
    /**
     *
     * Styles of circle in RadioButton and Switch.
-    * @mixin Controls/Toggle/Radio/RadioStyles
+    * @mixin Controls/Toggle/RadioGroup/RadioGroupStyles
     * @public
     *
     * @css @spacing-between-radioItems_horizontal Spacing between radio items in horizontal state.

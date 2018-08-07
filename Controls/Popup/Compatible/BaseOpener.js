@@ -19,6 +19,7 @@ function(cMerge,
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
+         var templateOptions = this._getTemplateOptions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -32,15 +33,10 @@ function(cMerge,
             _compoundId: randomId('compound-')
          };
 
+         this._preparePopupCfgFromOldToNew(cfg);
+
          if (cfg.hoverTarget) {
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
-         }
-
-         if (cfg.target) {
-            // нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
-            // причем работают с jquery объектом
-            cfg.templateOptions.target = cfg.target;
-            cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
          }
 
          if (cfg.record) { // от RecordFloatArea
@@ -87,15 +83,54 @@ function(cMerge,
             cfg.templateOptions.linkedContext = cfg.linkedContext;
          }
 
-         cfg.className = cfg.className || '';
-
          if (cfg.maximize) {
             cfg.className += ' ws-window';
          }
 
-         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
-
          cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
+
+         if (cfg.hasOwnProperty('border')) {
+            cfg.templateOptions.hideCross = !cfg.border;
+         }
+
+         if (cfg.hasOwnProperty('autoShow')) {
+            cfg.templateOptions.autoShow = cfg.autoShow;
+            cfg.templateOptions._isVisible = cfg.autoShow;
+            if (!cfg.autoShow) {
+               cfg.closeByExternalClick = false;
+               cfg.className += ' ws-hidden';
+            }
+         }
+
+         if (cfg.hasOwnProperty('autoCloseOnHide')) {
+            cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         }
+
+         if (templateOptions.hasOwnProperty('enabled')) {
+            cfg.templateOptions.enabled = templateOptions.enabled;
+         }
+
+         if (cfg.hasOwnProperty('enabled')) {
+            cfg.templateOptions.enabled = cfg.enabled;
+         }
+
+         cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
+         this._setSizes(cfg, templateClass);
+      },
+
+      _preparePopupCfgFromOldToNew: function(cfg) {
+         cfg.templateOptions = cfg.templateOptions || cfg.componentOptions || {};
+
+         if (cfg.target) {
+            // нужно для миникарточки, они хотят работать с CompoundArea - и ей надо дать target
+            // причем работают с jquery объектом
+            cfg.templateOptions.target = cfg.target;
+            cfg.target = cfg.target[0] ? cfg.target[0] : cfg.target;
+         }
+
+         cfg.className = cfg.className || '';
+
+         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
 
          var revertPosition = {
             top: 'bottom',
@@ -149,29 +184,9 @@ function(cMerge,
             cfg.corner.horizontal = revertPosition[cfg.direction];
          }
 
-         if (cfg.hasOwnProperty('border')) {
-            cfg.templateOptions.hideCross = !cfg.border;
-         }
-
-         if (cfg.hasOwnProperty('autoShow')) {
-            cfg.templateOptions.autoShow = cfg.autoShow;
-            cfg.templateOptions._isVisible = cfg.autoShow;
-            if (!cfg.autoShow) {
-               cfg.closeByExternalClick = false;
-               cfg.className += ' ws-hidden';
-            }
-         }
-
-         if (cfg.hasOwnProperty('autoCloseOnHide')) {
-            cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
-         }
-
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
          }
-
-         cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
-         this._setSizes(cfg, templateClass);
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };

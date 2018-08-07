@@ -22,6 +22,8 @@ define('Controls/Toggle/Switch/SwitchStyles',
     * @css @background-color_Switch-track_disabled Disabled track color.
     * @css @color_Switch-text_enabled_unselected Text color in enabled and unselected state.
     * @css @color_Switch-text_disabled_unselected Text color in disabled and unselected state.
+    * @css @color_Switch-text_enabled_selected Text color in enabled and selected state.
+    * @css @color_Switch-text_disabled_selected Text color in disabled and selected state.
     *
     * @css @spacing_Switch-between-toggle-text Spacing before toggle and text.
     */

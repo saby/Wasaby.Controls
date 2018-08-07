@@ -7,6 +7,14 @@ define('Controls/Popup/Opener/Dialog/DialogController',
       var _private = {
          prepareConfig: function(cfg, sizes) {
             cfg.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes, cfg.popupOptions);
+            _private.fixCompatiblePosition(cfg);
+         },
+         fixCompatiblePosition: function(cfg) {
+            //COMPATIBLE: for old windows user can set the coordinates relative to the body
+            if (cfg.popupOptions.top && cfg.popupOptions.left) {
+               cfg.position.top = cfg.popupOptions.top;
+               cfg.position.left = cfg.popupOptions.left;
+            }
          }
       };
 

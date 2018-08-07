@@ -15,6 +15,7 @@
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
          readOnly="{{ _readOnly }}"
+         tooltip="{{_tooltip}}"
          on:tagHover="_tagStyleHandler()"
          on:tagClick="_tagStyleClickHandler()"
          attr:class="demo-TextBox"
@@ -30,6 +31,8 @@
                                       attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="maxLength"/>
       <Controls.Input.Number attr:id="maxLength" bind:value="_maxLength" precision="{{0}}" attr:class="demo-TextBox"/>
+       <Controls.Label caption="tooltip"/>
+       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
          <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"

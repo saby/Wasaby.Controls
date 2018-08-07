@@ -24,6 +24,7 @@ define('Controls-demo/Input/Number/Number', [
          {title: 'left'},
          {title: 'right'}
       ],
+      _tooltip: '',
       _tagStyleHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,

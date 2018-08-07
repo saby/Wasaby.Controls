@@ -4,17 +4,14 @@
 define('Controls/Filter/Button/History/List', [
    'Core/Control',
    'tmpl!Controls/Filter/Button/History/List',
-   'WS.Data/Source/Memory',
    'WS.Data/Adapter/Sbis',
-   'Controls/History/FilterSource',
-   'Controls/History/Service',
    'Controls/Controllers/SourceController',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Controls/Filter/Button/History/resources/historyUtils',
    'css!Controls/Filter/Button/History/List'
-], function(BaseControl, template, MemorySource, SbisAdapter, HistorySource, HistoryService, SourceController, RecordSet, Chain, Utils, historyUtils) {
+], function(BaseControl, template, SbisAdapter, SourceController, RecordSet, Chain, Utils, historyUtils) {
    'use strict';
 
    var MAX_NUMBER_ITEMS = 5;

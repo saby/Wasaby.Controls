@@ -327,15 +327,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
                //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
                //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
-               _ctrlKeyUpTimestamp: undefined
+               _ctrlKeyUpTimestamp: undefined,
+               _reviewContent: '',
+               _content: ''
             },
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = function(text) {
-                  return this._prepareReviewContent(text, options);
-               }.bind(this);
-               options._prepareContent = this._prepareContent.bind(this);
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
@@ -348,6 +346,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   options.maximalHeight = this._cleanHeight(options.maximalHeight);
                   options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
                }
+               options._reviewContent = this._prepareReviewContent(options.text, options);
+               options._content = this._prepareContent(options.text);
                return options;
             },
 
@@ -1299,6 +1299,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                   if (typeof smile === 'object') {
                      this.insertHtml(this._smileHtml(smile));
+                     this._tinyLastRng = this._tinyEditor.selection.getRng();
                   }
                }
             },
@@ -1354,7 +1355,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
-               if (isA.strikethrough || isA.underline) {
+               if ((isA.strikethrough || isA.underline) && !(BROWSER.isIE && _getTrueIEVersion() < 12)) {
                   isAlreadyApplied = formatter.match(command);
                   if (isAlreadyApplied) {
                      // Здесь торлько снятие формата
@@ -3405,32 +3406,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var cfg = cClone(options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     cfg.formats.underline = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'underline'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
-                        },
-                        {
-                           inline: 'u',
-                           remove: 'all'
-                        }
-                     ];
-                     cfg.formats.strikethrough = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'line-through'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
-                        },
-                        {
-                           inline: 'strike',
-                           remove: 'all'
-                        }
-                     ];
+                     if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                        cfg.formats.underline = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'underline'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
+                           },
+                           {
+                              inline: 'u',
+                              remove: 'all'
+                           }
+                        ];
+                        cfg.formats.strikethrough = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'line-through'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
+                           },
+                           {
+                              inline: 'strike',
+                              remove: 'all'
+                           }
+                        ];
+                     }
 
                      for (var key in options.customFormats) {
                         if ({}.hasOwnProperty.call(options.customFormats, key)) {
@@ -3488,17 +3491,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             /**
              * Убрать пустые строки из начала и конца текста
-             * @returns {*} текст без пустх строк вначале и конце
+             * @returns {*} текст без пустых строк вначале и конце
              */
             _trimText: function(text) {
                if (!text) {
                   return '';
                }
                var regs = {
-                  regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
-                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
-                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
-                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+                  regShiftLine1: /^<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,       // регулярка пустой строки через shift+ enter и space
+                  regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>$/gi,   // регулярка пустой строки через space и shift+ enter
+                  beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,                     // регулярка начала строки
+                  endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i                        // регулярка конца строки
                };
                var substitutes = {
                   regShiftLine1: '<p>',
@@ -3826,8 +3829,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
-                  this._dataReview.html(this._prepareReviewContent(text));
-                  this._decorateAsSVG(text);
+                  var reviewContent = this._prepareReviewContent(text);
+                  this._dataReview.html(reviewContent);
+                  this._decorateAsSVG(reviewContent);
                }
             },
 

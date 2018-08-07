@@ -12,7 +12,6 @@ def gitlabStatusUpdate() {
     }
 }
 
-
 node('controls') {
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
@@ -55,16 +54,18 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
+            booleanParam(defaultValue: false, description: "EXPERIMENTAL: Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int')
             ]),
         pipelineTriggers([])
     ])
 
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int)) {
             currentBuild.result = 'FAILURE'
             currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
             error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+
         }
 
 
@@ -74,6 +75,8 @@ node('controls') {
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
+        def quick_int = params.run_quick_int
+        def changed_files
 
         try {
         echo "Чистим рабочую директорию"
@@ -133,12 +136,16 @@ node('controls') {
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                     }
-                    echo "Обновляемся из rc-"
+                    echo "Обновляемся из rc-${version}"
                     dir("./controls"){
                         sh """
                         git fetch
+                        git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
+                        if ( quick_int ) {
+                            changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        }
                     }
                     updateGitlabCommitStatus state: 'running'
                     parallel (
@@ -482,9 +489,6 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
 
-        def site = "http://${NODE_NAME}:30010"
-        site.trim()
-
         dir("./controls/tests/int"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
@@ -507,6 +511,23 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
+        // EXPERIMENTAL
+        def tests_for_run = ""
+        if ( quick_int ) {
+            step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
+            echo "Изменения были в файлах: ${changed_files}"
+            dir("./controls/tests/int/coverage") {
+                def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
+                if ( tests_files ) {
+                    tests_files = tests_files.replace('\n', '')
+                    echo "Будут запущены ${tests_files}"
+                    tests_for_run = "--files_to_start ${tests_files}"
+                } else {
+                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                }
+            }
+
+        }
         parallel (
             int_test: {
                 echo "Запускаем интеграционные тесты"
@@ -515,7 +536,7 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --files_to_start test_accordion.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            python start_tests.py --files_to_start test_accordion.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                             deactivate
                             """
                         }
@@ -542,7 +563,12 @@ node('controls') {
 
         )
     }
-} finally {
+} catch (err) {
+    echo "ERROR: ${err}"
+    currentBuild.result = 'FAILURE'
+    gitlabStatusUpdate()
+
+}finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls

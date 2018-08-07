@@ -9,7 +9,9 @@
       <ws:if data="{{item.label}}">
          <div class="ws-align-self-end example-BaseDemoInput__content_{{item.spacing}}Spacing
                      {{item.label.position === 'left' ? 'ws-flexbox'}}">
-            <Controls.Label caption="{{item.label.value}}" required="{{item.label.required}}"
+            <Controls.Label caption="{{item.label.value}}"
+                            required="{{item.label.required}}"
+                            attr:class="ws-flex-shrink-0"
                             on:click="_labelClickHandler(item.label.name)"/>
             <ws:partial template="{{item.template}}"
                         readOnly="{{_lock}}"

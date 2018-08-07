@@ -12,7 +12,7 @@ define('Controls/Filter/Button/Container',
        * Special container for {@link Controls/Filter/Button}.
        * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
        * Receives props from context and pass to {@link Controls/Filter/Button}.
-       * NOTE: Must be located inside Controls/Filter/Container.
+       * NOTE: Must be located inside Controls/Filter/Controller.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *

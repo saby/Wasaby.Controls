@@ -5,9 +5,7 @@ define('Controls/Popup/Opener/BaseController',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, cDeferred, ManagerController, Utils) {
-      var CONTENT_SELECTOR = '.controls-Container__popup-scrolling-content';
-
+   function(CoreExtend, Deferred, ManagerController, Utils) {
       var _private = {
 
          /*
@@ -19,12 +17,19 @@ define('Controls/Popup/Opener/BaseController',
                height: container.offsetHeight
             };
          },
-         getMargins: function(config, container) {
-            var style = container.currentStyle || window.getComputedStyle(container);
+         getMargins: function(config) {
+            //create fakeDiv for calculate margins
+            var fakeDiv = document.createElement('div');
+            fakeDiv.classList = config.popupOptions.className;
+            document.body.append(fakeDiv);
+
+            var style = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
             var margins = {
                top: parseInt(style.marginTop, 10),
                left: parseInt(style.marginLeft, 10)
             };
+
+            fakeDiv.remove();
             return margins;
          }
       };
@@ -33,7 +38,7 @@ define('Controls/Popup/Opener/BaseController',
        * Базовая стратегия
        * @category Popup
        * @class Controls/Popup/Opener/BaseController
-       * @author Лощинин Дмитрий
+       * @author Красильников Андрей
        */
       var BaseController = CoreExtend.extend({
 
@@ -57,21 +62,25 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         elementAfterUpdated: function(element, container) {
+
+         },
+
          /**
           * Удаление элемента
           * @function Controls/Popup/Opener/BaseController#elementDestroyed
           * @param element
           */
          elementDestroyed: function(element) {
-            return new cDeferred().callback();
+            return (new Deferred()).callback();
          },
          popupDeactivated: function(item) {
             if (item.popupOptions.closeByExternalClick) {
                ManagerController.remove(item.id);
             }
          },
-         getDefaultPosition: function() {
-            return {
+         getDefaultConfig: function(item) {
+            item.position = {
                top: -10000,
                left: -10000
             };

@@ -1,4 +1,4 @@
-define('Controls/Button/BackButton/BackStyles',
+define('Controls/Header/BackButton/BackStyles',
    [
    ],
    function() {
@@ -6,7 +6,7 @@ define('Controls/Button/BackButton/BackStyles',
 
    /**
     *
-    * @mixin Controls/Button/BackButton/BackStyles
+    * @mixin Controls/Header/BackButton/BackStyles
     * @public
     *
     * @css @background-image-BackButton_style-default Default arrow image.

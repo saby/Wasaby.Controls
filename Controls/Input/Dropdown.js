@@ -5,7 +5,7 @@ define('Controls/Input/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
-      'Controls/Input/Dropdown/Util',
+      'Controls/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
@@ -17,8 +17,9 @@ define('Controls/Input/Dropdown',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/interface/ISingleSelectable
+       * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
@@ -48,10 +49,8 @@ define('Controls/Input/Dropdown',
          _beforeMount: function() {
             this._setText = this._setText.bind(this);
          },
-
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
-            this._icon = items[0].get('icon');
             this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
@@ -63,6 +62,7 @@ define('Controls/Input/Dropdown',
             } else {
                this._text = getPropValue(items[0], this._options.displayProperty || 'title');
             }
+            this._icon = items[0].get('icon');
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }

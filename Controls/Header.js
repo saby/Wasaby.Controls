@@ -7,13 +7,15 @@ define('Controls/Header', [
    'use strict';
 
    /**
-    * Header with support two display styles and four sizes. Can be used to display complex headers
-    * along with a counter, a header-separator and a button-separator. A complex header can have modifiers:
+    * Header with support different display styles and sizes. Can be used independently or as part of complex headers(you can see it in Demo-example)
+    * consisting of a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a>
+    * and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
+    * To ensure the standart was implemented some modifiers for complex header:
     * 1) controls-Header_Counter__clickable Class for highlighting the header and counter on the hover.
     * 2) controls-Header_all__clickable Class for highlighting the header, counter, button-separator and header-separator on the hover.
     * 3) controls-Header_Separator__clickable Class for highlighting the headers and header-separator on the hover.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     *
     * @class Controls/Header
@@ -22,6 +24,7 @@ define('Controls/Header', [
     * @public
     * @demo Controls-demo/Headers/headerDemo
     *
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/Header/HeaderStyles
     */
 
@@ -35,15 +38,10 @@ define('Controls/Header', [
     */
 
    /**
-    * @name Controls/Header#caption
-    * @cfg {String} Header text.
-    */
-
-   /**
     * @name Controls/Header#style
     * @cfg {String} Header display style.
-    * @variant default Default display style. It is default value.
-    * @variant primary Primary display style.
+    * @variant primary Primary display style. It is default value.
+    * @variant secondary Secondary display style.
     */
 
    var Header = Control.extend({
@@ -54,7 +52,7 @@ define('Controls/Header', [
       return {
          caption: types(String),
          style: types(String).oneOf([
-            'default',
+            'secondary',
             'primary'
          ]),
          size: types(String).oneOf([
@@ -68,7 +66,7 @@ define('Controls/Header', [
 
    Header.getDefaultOptions = function() {
       return {
-         style: 'default',
+         style: 'secondary',
          size: 'm'
       };
    };

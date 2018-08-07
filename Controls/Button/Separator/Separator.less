@@ -2,22 +2,24 @@
    .icon-size-without-important(@size-Separator__icon);
 }
 
-.controls-Separator__icon_style-accent {
-   color: @color-Separator__icon_style-Accent;
+.controls-Separator__icon_style-secondary {
+   color: @color-Separator__icon_style-secondary;
 }
 
-.controls-Separator__icon_style-main {
-   color: @color-Separator__icon_style-Main;
+.controls-Separator__icon_style-primary {
+   color: @color-Separator__icon_style-primary;
 }
 
 .controls-Separator__icon_style-additional {
-   color: @color-Separator__icon_style-Additional;
+   color: @color-Separator__icon_style-additional;
 }
 
 .controls-Separator__wrapper {
-   padding: @padding-Separator;
+   width: @size-Separator;
+   height: @size-Separator;
    cursor: pointer;
    display: inline-flex;
+   justify-content: center;
    align-items: center;
 }
 
@@ -29,29 +31,29 @@
    display: inline-block;
 }
 
-.controls-Separator__icon_style-accent:active {
-   color: @color-Separator__icon_style-Accent_hovered;
+.controls-Separator__icon_style-secondary:active {
+   color: @color-Separator__icon_style-secondary_hovered;
 }
 
-.controls-Separator__icon_style-main:active {
-   color: @color-Separator__icon_style-Main_hovered;
+.controls-Separator__icon_style-primary:active {
+   color: @color-Separator__icon_style-primary_hovered;
 }
 
 .controls-Separator__icon_style-additional:active{
-   color: @color-Separator__icon_style-Additional_hovered;
+   color: @color-Separator__icon_style-additional_hovered;
 }
 
 .ws-is-no-touch {
-   .controls-Separator__icon_style-accent:hover {
-      color: @color-Separator__icon_style-Accent_hovered;
+   .controls-Separator__icon_style-secondary:hover {
+      color: @color-Separator__icon_style-secondary_hovered;
    }
 
-   .controls-Separator__icon_style-main:hover {
-      color: @color-Separator__icon_style-Main_hovered;
+   .controls-Separator__icon_style-primary:hover {
+      color: @color-Separator__icon_style-primary_hovered;
    }
 
    .controls-Separator__icon_style-additional:hover {
-      color: @color-Separator__icon_style-Additional_hovered;
+      color: @color-Separator__icon_style-additional_hovered;
    }
 }
 
