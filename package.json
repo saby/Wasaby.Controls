@@ -18,8 +18,10 @@
    },
    "config": {
       "ws": "sbis3-ws",
-      "viewFrom": "sbis3-ws/View",
-      "viewTo": "View",
+      "wsModules": {
+         "View": "sbis3-ws/View",
+         "Core": "sbis3-ws/Core"
+      },
       "resources": "components",
       "tests": "tests/unit",
       "test_server_port": 1025,

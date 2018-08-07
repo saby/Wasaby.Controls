@@ -1,7 +1,7 @@
 /**
  * Created by dv.zuev on 08.01.2018.
  */
-/** Подготовим инфраструктуру для View
+/** Подготовим инфраструктуру для View и Core
  * Создадим симлинк, если это необходимо.
  * Чтобы не было случайных падений - обернем в try,
  * поскольку папка уже может быть создана
@@ -9,9 +9,11 @@
 
 exports.fix = function (config) {
    try {
-      if (config.viewFrom) {
+      if (config.wsModules) {
          var fs = require('fs');
-         fs.symlinkSync(process.cwd() + "/" + config.viewFrom, process.cwd() + "/" + config.viewTo, 'dir');
+         Object.keys(config.wsModules).forEach(function(name) {
+            fs.symlinkSync(process.cwd() + "/" + config.wsModules[name], process.cwd() + "/" + name, 'dir');
+         });
       }
    } catch (e) {
       console.log(e.message);
