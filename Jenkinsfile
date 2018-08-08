@@ -238,7 +238,7 @@ node('controls') {
             if ( !inte && !regr && !all_inte ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
-                for type in ['int', 'reg'] {
+                for ( type in ['int', 'reg'] ) {
                     dir('./controls/tests/${type}') {
                     def result = sh returnStdout: true, script: script
                     echo "${result}"
