@@ -83,6 +83,20 @@ define('Controls/Container/Data',
                });
             }
          },
+
+         _beforeUpdate: function(newOptions) {
+            var self = this;
+
+            _private.resolveOptions(this, newOptions);
+
+            if (this._options.source !== newOptions.source) {
+               return _private.createPrefetchSource(this).addCallback(function(result) {
+                  _private.resolvePrefetchSourceResult(self, result);
+                  self._forceUpdate();
+                  return result;
+               });
+            }
+         },
    
          _filterChanged: function(event, filter) {
             this._filter = clone(filter);
