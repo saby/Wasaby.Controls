@@ -14,7 +14,8 @@ define([
          preventDefault: function() {},
          pageX: pageX,
          pageY: pageY,
-         type: type
+         type: type,
+         buttons: 1
       };
    }
 

@@ -16,6 +16,8 @@ define('Controls/Toggle/Button', [
     * @control
     * @public
     * @category Toggle
+    *
+    * @demo Controls-demo/Buttons/Toggle/ToggleDemo
     */
 
    /**

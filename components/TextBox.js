@@ -638,10 +638,10 @@ define('SBIS3.CONTROLS/TextBox', [
             //https://codepen.io/anon/pen/LBYLpJ
             if (detection.isIE) {
                setTimeout(function() {
-                  self._inputField.select();
+                  self._selectText();
                }, 0);
             } else {
-               this._inputField.select();
+               self._selectText();
             }
          } else {
             if (this.isEnabled() && !this._clicked) {
@@ -706,6 +706,22 @@ define('SBIS3.CONTROLS/TextBox', [
          this._destroyCompatPlaceholder();
          this._destroyInformationIcon();
          TextBox.superclass.destroy.apply(this, arguments);
+      },
+
+      _selectText: function() {
+         var
+            selection,
+            range;
+
+         if (this._inputField[0].select) {
+            this._inputField[0].select();
+         } else {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(this._inputField[0]);
+            selection.removeAllRanges();
+            selection.addRange(range);
+         }
       }
    });
 
