@@ -5085,9 +5085,13 @@ define('SBIS3.CONTROLS/ListView',
 
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
-            this._destroyScrollWatcher();
+            if (this._options.task1175624523) { // https://online.sbis.ru/opendoc.html?guid=c99de432-def8-49b4-85d2-2ec30d5a74f5
+               this._destroyScrollWatcher();
+            }
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            this._createScrollWatcher();
+            if (this._options.task1175624523) { // https://online.sbis.ru/opendoc.html?guid=c99de432-def8-49b4-85d2-2ec30d5a74f5
+               this._createScrollWatcher();
+            }
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */
             if (this._resultsChanged && this._getItemsProjection() && this._getItemsProjection().isEventRaising()) {
