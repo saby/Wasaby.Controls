@@ -82,8 +82,10 @@
 //StackTemplate
 @min-height_stackTemplate_head:                 38px;
 @font-size_stackTemplate_head:                  18px;
-@spacing_stackTemplate_head:                    0 52px 0 12px;
+@spacing_stackTemplate_head-default:            0 52px 0 12px;
+@spacing_stackTemplate_head-maximized:          0 84px 0 12px;
 @top-space_stackTemplate_close-button:          5px;
+@top-space_stackTemplate_maximized-button:      7px;
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //DialogTemplate
@@ -575,8 +577,7 @@
 
 //radioGroup
 @height_RadioItem:                        24px;
-@font-size_RadioItem_size-l:              14px;
-@font-size_RadioItem_size-m:              15px;
+@font-size_RadioItem_size-m:              14px;
 @stroke-width_RadioGroup_borderCircle:    2px;
 @spacing-between-radioItems_horizontal:   12px;
 @spacing-between-radioItems_vertical:     8px;
@@ -605,12 +606,12 @@
 @width_FastFilter-iconArrow:                16px;
 @margin-bottom_FastFilter-popup:            2px;
 //icon-button
-@box-shadow-IconButton:                  0px 1px 2px @color-IconButton__shadow;
+@box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @height-IconButton_size-m:               24px;
 @width-IconButton_size-m:                24px;
 @height-IconButton_size-l:               28px;
 @width-IconButton_size-l:                28px;
-@border-radius-IconButton:               1px;
+@border-radius-IconButton:               2px;
 @border-width-IconButton:                1px;
 @border-style-IconButton:                solid;
 @box-shadow-IconButton_activated:        none;

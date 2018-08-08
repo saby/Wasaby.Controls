@@ -327,15 +327,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
                //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
                //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
-               _ctrlKeyUpTimestamp: undefined
+               _ctrlKeyUpTimestamp: undefined,
+               _reviewContent: '',
+               _content: ''
             },
 
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-               options._prepareReviewContent = function(text) {
-                  return this._prepareReviewContent(text, options);
-               }.bind(this);
-               options._prepareContent = this._prepareContent.bind(this);
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
@@ -348,6 +346,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   options.maximalHeight = this._cleanHeight(options.maximalHeight);
                   options._decreaseHeight = constants.decreaseHeight1 + constants.decreaseHeight2;
                }
+               options._reviewContent = this._prepareReviewContent(options.text, options);
+               options._content = this._prepareContent(options.text);
                return options;
             },
 
@@ -756,11 +756,49 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor && this._tinyReady.isReady()) {
 
-                  this._tinyEditor.off();
                   this._unSubscribeOnScroll();
+                  this._tinyEditor.off('keydown');
+                  this._tinyEditor.off('scroll');
+                  this._tinyEditor.off('mousewheel');
+                  this._tinyEditor.off('click');
+                  this._tinyEditor.off('mousedown');
+                  this._tinyEditor.off('touchstart');
+                  this._tinyEditor.off('mouseup');
+                  this._tinyEditor.off('keyup');
+                  this._tinyEditor.off('dblclick');
+                  this._tinyEditor.off('initContentBody');
+                  this._tinyEditor.off('onBeforePaste');
+                  this._tinyEditor.off('Paste');
+                  this._tinyEditor.off('PastePreProcess');
+                  this._tinyEditor.off('PastePostProcess');
+                  this._tinyEditor.off('drop');
+                  this._tinyEditor.off('dragstart');
+                  this._tinyEditor.off('input');
+                  this._tinyEditor.off('keypress');
+                  this._tinyEditor.off('change');
+                  this._tinyEditor.off('cut');
+                  this._tinyEditor.off('resizeEditor');
+                  this._tinyEditor.off('undo');
+                  this._tinyEditor.off('redo');
+                  this._tinyEditor.off('focusout');
+                  this._tinyEditor.off('beforeunload');
+                  this._tinyEditor.off('TypingUndo');
+                  this._tinyEditor.off('AddUndo');
+                  this._tinyEditor.off('ClearUndos');
+                  this._tinyEditor.off('NodeChange');
+                  this._tinyEditor.off('focus');
+                  this._tinyEditor.off('focusin');
+                  this._tinyEditor.off('blur');
+                  this._tinyEditor.off('focusout');
+                  this._tinyEditor.off('scrollIntoView');
+                  this._tinyEditor.off('BeforeSetContent');
+                  this._tinyEditor.off('PreInit');
+                  this._tinyEditor.off('ready');
+                  this._tinyEditor.off('resize');
+                  this._tinyEditor.off('init');
 
-                  this._tinyEditor.execCommand('mceRemoveControl', true, this.getContainer().find('[id*=mce_]').attr('id'));
-                  this._tinyEditor.destroy && this._tinyEditor.destroy();
+                  // destroy вызывается автоматически с отпиской не от всех событий
+                  // destroy также вызывает remove - что есть основное удаление.
                   this._tinyEditor.remove && this._tinyEditor.remove();
 
                   if (this._tinyEditor.theme) {
@@ -1299,6 +1337,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                   if (typeof smile === 'object') {
                      this.insertHtml(this._smileHtml(smile));
+                     this._tinyLastRng = this._tinyEditor.selection.getRng();
                   }
                }
             },
@@ -1354,7 +1393,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
-               if (isA.strikethrough || isA.underline) {
+               if ((isA.strikethrough || isA.underline) && !(BROWSER.isIE && _getTrueIEVersion() < 12)) {
                   isAlreadyApplied = formatter.match(command);
                   if (isAlreadyApplied) {
                      // Здесь торлько снятие формата
@@ -3405,32 +3444,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var cfg = cClone(options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     cfg.formats.underline = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'underline'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
-                        },
-                        {
-                           inline: 'u',
-                           remove: 'all'
-                        }
-                     ];
-                     cfg.formats.strikethrough = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'line-through'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
-                        },
-                        {
-                           inline: 'strike',
-                           remove: 'all'
-                        }
-                     ];
+                     if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                        cfg.formats.underline = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'underline'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
+                           },
+                           {
+                              inline: 'u',
+                              remove: 'all'
+                           }
+                        ];
+                        cfg.formats.strikethrough = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'line-through'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
+                           },
+                           {
+                              inline: 'strike',
+                              remove: 'all'
+                           }
+                        ];
+                     }
 
                      for (var key in options.customFormats) {
                         if ({}.hasOwnProperty.call(options.customFormats, key)) {
@@ -3438,6 +3479,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                      tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
+
+                     //правильнее задавать сразу target т.к.
+                     // если указывать selector в памяти остаются закешированные объекты (tiny генерит внутренний кэш)
+                     cfg.target = this.getContainer().find('.controls-RichEditor__editorFrame')[0];
+                     cfg.selector = '';
+
                      tinyMCE.init(cfg);
                   }.bind(this));
                }
@@ -3826,8 +3873,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                   // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                   this._lastReview = text || '';
-                  this._dataReview.html(this._prepareReviewContent(text));
-                  this._decorateAsSVG(text);
+                  var reviewContent = this._prepareReviewContent(text);
+                  this._dataReview.html(reviewContent);
+                  this._decorateAsSVG(reviewContent);
                }
             },
 

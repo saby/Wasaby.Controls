@@ -28,7 +28,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; // Берем размеры пользовательского шаблона
+            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].clientWidth; // Берем размеры пользовательского шаблона без бордера
          },
 
          getStackParentCoords: function() {
@@ -64,6 +64,24 @@ define('Controls/Popup/Opener/Stack/StackController',
             className += ' ' + STACK_CLASS;
             return className;
          },
+
+         prepareMaximizedState: function(maxPanelWidth, item) {
+            var canMaximized = maxPanelWidth > item.popupOptions.minWidth;
+            if (!canMaximized) {
+               //If we can't turn around, we hide the turn button and change the state
+               item.popupOptions.templateOptions.showMaximizedButton = false;
+               item.popupOptions.templateOptions.maximized = false;
+            } else {
+               item.popupOptions.templateOptions.showMaximizedButton = true;
+
+               //Restore the state after resize
+               item.popupOptions.templateOptions.maximized = item.popupOptions.maximized;
+            }
+         },
+         setMaximizedState: function(item, state) {
+            item.popupOptions.maximized = state;
+            item.popupOptions.templateOptions.maximized = state;
+         }
       };
 
       /**
@@ -107,7 +125,11 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
          },
 
-
+         elementMaximized: function(item, container, state) {
+            _private.setMaximizedState(item, state);
+            _private.prepareSizes(item, container);
+            this._update();
+         },
 
          elementDestroyed: function(item) {
             this._destroyDeferred[item.id] = new Deferred();
@@ -134,8 +156,12 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          _update: function() {
             var self = this;
+            var maxPanelWidth = StackStrategy.getMaxPanelWidth();
             this._stack.each(function(item, index) {
                item.position = _private.getItemPosition(self._stack, index);
+               if (StackStrategy.isMaximizedPanel(item)) {
+                  _private.prepareMaximizedState(maxPanelWidth, item);
+               }
             });
          },
 
@@ -143,6 +169,12 @@ define('Controls/Popup/Opener/Stack/StackController',
             var baseCoord = { top: 0, right: 0 };
             var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
             item.popupOptions.className += ' controls-Stack';
+            if (StackStrategy.isMaximizedPanel(item)) {
+               //set default values
+               item.popupOptions.templateOptions.showMaximizedButton = undefined; //for vdom dirtyChecking
+               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : true;
+               _private.setMaximizedState(item, maximizedState);
+            }
             if (HAS_ANIMATION) {
                item.popupOptions.className += ' controls-Stack__waiting';
             }

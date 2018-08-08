@@ -145,8 +145,22 @@ define('Controls/Application',
 
          _closeInfoBoxHandler: function() {
             this._children.infoBoxOpener.close();
+         },
+
+
+         _openPreviewerHandler: function(event, config, type) {
+            this._children.previewerOpener.open(config, type);
+         },
+
+         _closePreviewerHandler: function(event, type) {
+            this._children.previewerOpener.close(type);
+         },
+
+         _cancelPreviewerHandler: function(event, action) {
+            this._children.previewerOpener.cancel(action);
          }
       });
+
 
       Page.contextTypes = function contextTypes() {
          return {
