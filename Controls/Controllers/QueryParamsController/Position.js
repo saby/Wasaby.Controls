@@ -17,9 +17,8 @@ define('Controls/Controllers/QueryParamsController/Position',
          resolvePosition: function(item, optField) {
             var field, navPosition, fieldValue;
             if (optField instanceof Array) {
-               field = optField
-            }
-            else {
+               field = optField;
+            } else {
                field = [optField];
             }
 
@@ -31,6 +30,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             return navPosition;
          }
       };
+
       /**
        *
        * @author Крайнов Дмитрий
@@ -57,7 +57,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             this._more = {
                before: false,
                after: false
-            }
+            };
          },
 
          prepareQueryParams: function(loadDirection) {
@@ -70,7 +70,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             } else if (loadDirection === 'down') {
 
             } else {
-               
+
             }
 
          },
@@ -81,8 +81,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             if (typeof more === 'boolean') {
                navDirection = _private.resolveDirection(loadDirection, this._options.direction);
                this._more[navDirection] = more;
-            }
-            else {
+            } else {
                if (more instanceof Object) {
                   this._more = more;
                }
@@ -104,8 +103,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             var navDirection;
             if (loadDirection === 'up') {
                navDirection = 'before';
-            }
-            else if (loadDirection === 'down') {
+            } else if (loadDirection === 'down') {
                navDirection = 'after';
             }
             return this._more[navDirection];
