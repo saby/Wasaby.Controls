@@ -49,6 +49,10 @@ define('Controls/Input/Dropdown',
             this._setText = this._setText.bind(this);
          },
 
+         _afterMount: function() {
+            this._forceUpdate();
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._icon = items[0].get('icon');
