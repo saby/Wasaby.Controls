@@ -239,17 +239,17 @@ node('controls') {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
                 for ( type in ['int', 'reg'] ) {
-                    dir('./controls/tests/${type}') {
+                    dir("./controls/tests/${type}") {
                     def result = sh returnStdout: true, script: script
                     echo "${result}"
-                    if (type == 'int') {
+                    if (type == "int") {
                         if ( result.toBoolean() ) {
                             inte = true
                         } else {
                             inte = false
                             }
                         }
-                    if (type == 'reg') {
+                    if (type == "reg") {
                         if ( result.toBoolean() ) {
                             regr = true
                         } else {
