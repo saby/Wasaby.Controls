@@ -21,16 +21,16 @@ define(
 
          beforeEach(function() {
             data = [
-               {id : 1, title : 'Первый'},
-               {id : 2, title : 'Второй'},
-               {id : 3, title : 'Третий'},
-               {id : 4, title : 'Четвертый'}
+               {id : 1, title : 'Первый', field: 1},
+               {id : 2, title : 'Второй', field: 1},
+               {id : 3, title : 'Третий', field: 1},
+               {id : 4, title : 'Четвертый', field: 1}
             ];
             dataDown = [
-               {id : 5, title : 'Первый'},
-               {id : 6, title : 'Второй'},
-               {id : 7, title : 'Третий'},
-               {id : 8, title : 'Четвертый'}
+               {id : 5, title : 'Первый', field: 2},
+               {id : 6, title : 'Второй', field: 2},
+               {id : 7, title : 'Третий', field: 2},
+               {id : 8, title : 'Четвертый', field: 2}
             ];
             dataRs = new RecordSet({
                rawData: data,
