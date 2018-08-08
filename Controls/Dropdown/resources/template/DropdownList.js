@@ -122,7 +122,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (itemsChanged) {
                this._listModel.setItems(newOptions);
-               this._children.subDropdownOpener.close();
+               if (this._hasHierarchy) {
+                  this._children.subDropdownOpener.close();
+               }
             }
 
             if (rootChanged || itemsChanged) {
