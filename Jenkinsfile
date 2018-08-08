@@ -236,8 +236,8 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
             script = """python3 -c 'import sqlite3;conn=sqlite3.connect("result.db");c=conn.cursor();\
-            output=c.execute('''SELECT name FROM sqlite_master WHERE type="table" AND name="FailTest" ''');\
-            result = None if not output.fetchone() else c.execute('''SELECT * FROM FailTest''').fetchone();conn.close();print(result)'"""
+            output=c.execute(\'\'\'SELECT name FROM sqlite_master WHERE type="table" AND name="FailTest" \'\'\');\
+            result = None if not output.fetchone() else c.execute(\'\'\'SELECT * FROM FailTest\'\'\').fetchone();conn.close();print(result)'"""
             dir('./controls/tests/int') {
                 def result = sh returnStdout: true, script: script
                 echo result
