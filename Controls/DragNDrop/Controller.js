@@ -63,6 +63,11 @@ define('Controls/DragNDrop/Controller',
                startEvent = this._startEvent,
                nativeEvent = event.nativeEvent;
 
+            //необходимо проверять нажата ли кнопка при перемещении
+            if (!nativeEvent.buttons) {
+               this._dragNDropEnded(event);
+            }
+
             if (this._startEvent) {
                dragObject = this._getDragObject(nativeEvent, startEvent);
                if (!this._documentDragging && _private.isDragStarted(startEvent, nativeEvent)) {
@@ -80,13 +85,7 @@ define('Controls/DragNDrop/Controller',
 
          _onMouseUp: function(event) {
             if (this._startEvent) {
-               if (this._documentDragging) {
-                  this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
-               }
-               this._unregisterMouseMove();
-               this._unregisterMouseUp();
-               this._dragEntity = null;
-               this._startEvent = null;
+               this._dragNDropEnded(event);
             }
          },
 
@@ -132,6 +131,16 @@ define('Controls/DragNDrop/Controller',
                result.draggingTemplateOffset = this._options.draggingTemplateOffset;
             }
             return result;
+         },
+
+         _dragNDropEnded: function(event) {
+            if (this._documentDragging) {
+               this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
+            }
+            this._unregisterMouseMove();
+            this._unregisterMouseUp();
+            this._dragEntity = null;
+            this._startEvent = null;
          },
 
          _registerMouseMove: function() {

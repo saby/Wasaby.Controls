@@ -32,14 +32,32 @@
    flex-shrink: 1;
    display: flex;
    align-items: baseline;
-   margin: @spacing_stackTemplate_head;
    overflow: hidden;
+}
+
+.controls-StackTemplate__top-area-margin-default {
+   margin: @spacing_stackTemplate_head-default;
+}
+
+.controls-StackTemplate__top-area-margin-maximized {
+   margin: @spacing_stackTemplate_head-maximized;
 }
 
 .controls-StackTemplate__close_button {
    position: absolute;
    top: @top-space_stackTemplate_close-button;
    right: 0;
+}
+
+.controls-StackTemplate__maximized_button {
+   position: absolute;
+   right: 44px;
+   top: @top-space_stackTemplate_maximized-button;
+   background-image: url('resources/images/resize.svg');
+   width: 24px;
+   height: 24px;
+   z-index: 100;
+   cursor: pointer;
 }
 
 .controls-StackTemplate__caption {
