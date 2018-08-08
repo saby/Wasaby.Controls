@@ -20,7 +20,7 @@ define('Controls/Popup/Opener/BaseController',
          getMargins: function(config) {
             //create fakeDiv for calculate margins
             var fakeDiv = document.createElement('div');
-            fakeDiv.classList = config.popupOptions.className;
+            fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);
 
             var style = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
