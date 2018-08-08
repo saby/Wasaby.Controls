@@ -93,10 +93,9 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self.stopEvents = typeof window === 'undefined' && !(cfg.compat || self.compat);
-
+            self.onServer = typeof window === 'undefined';
+            self.isCompatible = cfg.compat || self.compat;
             _private.initState(self, receivedState || cfg);
-            self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
@@ -121,7 +120,7 @@ define('Controls/Application',
                context.AppData.servicesPath = self.servicesPath;
                context.AppData.product = self.product;
             }
-            
+
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
