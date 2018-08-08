@@ -44,6 +44,21 @@ define(
                   _scrolling: false
                });
             });
+
+            it('_listScrollHandler https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2', function() {
+               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: -100});
+               assert.deepEqual(self, {});
+
+               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 0});
+               assert.deepEqual(self, {});
+
+               self._time = Date.now() - 200;
+               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 100});
+               delete self._time;
+               assert.deepEqual(self, {
+                  _listTop: false
+               });
+            });
          });
       });
    }
