@@ -234,6 +234,7 @@ node('controls') {
 
         if ( only_fail ) {
             run_test_fail = "-sf"
+            // если галки не отмечены, сами определим какие тесты перезапустить
             if ( !inte && !regr && !all_inte ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
