@@ -238,22 +238,24 @@ node('controls') {
             if ( !inte && !regr && !all_inte ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
-                dir('./controls/tests/int') {
+                for type in ['int', 'reg'] {
+                    dir('./controls/tests/${type}') {
                     def result = sh returnStdout: true, script: script
                     echo "${result}"
-                    if ( result.toBoolean() ) {
-                        inte = true
-                    } else {
-                        inte = false
-                    }
-                }
-                dir('./controls/tests/reg') {
-                    def result = sh returnStdout: true, script: script
-                    echo "${result}"
-                    if ( result.toBoolean() ) {
-                        regr = true
-                    } else {
-                        regr = false
+                    if (type == 'int') {
+                        if ( result.toBoolean() ) {
+                            inte = true
+                        } else {
+                            inte = false
+                            }
+                        }
+                    if (type == 'reg') {
+                        if ( result.toBoolean() ) {
+                            regr = true
+                        } else {
+                            regr = false
+                            }
+                        }
                     }
                 }
                 if (!inte && !regr) {
