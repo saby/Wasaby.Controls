@@ -52,7 +52,9 @@ define(
                listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 0});
                assert.deepEqual(self, {});
 
+               self._time = Date.now() - 200;
                listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 100});
+               delete self._time;
                assert.deepEqual(self, {
                   _listTop: false
                });
