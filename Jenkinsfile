@@ -239,7 +239,7 @@ node('controls') {
                 script = "python3 ../fail_tests.py"
                 dir('./controls/tests/int') {
                     def result = sh returnStdout: true, script: script
-                    echo result
+                    echo "${result}""
                     if ( result.toBoolean() ) {
                         inte = true
                     } else {
@@ -255,7 +255,7 @@ node('controls') {
                         regr = false
                     }
                 }
-                if (!inte || !regr) {
+                if (!inte && !regr) {
                     error('Нет тестов для перезапуска.')
                 }
             }

@@ -11,7 +11,7 @@ def main():
         if tests.fetchone():
             result = 'true'
     conn.close()
-    return result
+    print(result)
 
 if __name__ == '__main__':
     main()
