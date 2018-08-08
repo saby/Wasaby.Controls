@@ -7,7 +7,7 @@ define('Controls/Toggle/Switch', [
 ], function(Control, template, types) {
 
    /**
-    * Switch with single caption and with support left and right caption positions.
+    * Switch button with single caption. Frequently used for 'on-off' settings.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
@@ -26,12 +26,12 @@ define('Controls/Toggle/Switch', [
 
    /**
     * @name Controls/Toggle/Switch#caption
-    * @cfg {String} Switch caption.
+    * @cfg {String} Caption text.
     */
 
    /**
     * @name Controls/Toggle/Switch#captionPosition
-    * @cfg {Boolean} Determines the position of the caption.
+    * @cfg {String} Determines on which side of the button caption is located.
     * @variant left Caption before toggle.
     * @variant right Toggle before caption. It is default value.
     */

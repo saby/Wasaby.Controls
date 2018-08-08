@@ -8,8 +8,8 @@ define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
    'use strict';
    
    var tabSourceData = [
-      { id: 1, title: 'Сотрудники', text: 'test' },
-      { id: 2, title: 'Контрагенты', text: 'test' }
+      { id: 1, title: 'Сотрудники', text: 'test', align: 'left' },
+      { id: 2, title: 'Контрагенты', text: 'test', align: 'left' }
    ];
    
    return Control.extend({

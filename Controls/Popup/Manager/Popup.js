@@ -14,6 +14,8 @@ define('Controls/Popup/Manager/Popup',
          /**
           * Компонент "Всплывающее окно"
           * @class Controls/Popup/Manager/Popup
+          * @mixes Controls/interface/IOpenerOwner
+          * @mixes Controls/interface/ICanBeDefaultOpener
           * @extends Core/Control
           * @control
           * @private
@@ -62,6 +64,9 @@ define('Controls/Popup/Manager/Popup',
           */
          _close: function() {
             this._notify('popupClose', [this._options.id], { bubbling: true });
+         },
+         _maximized: function(event, state) {
+            this._notify('popupMaximized', [this._options.id, state], { bubbling: true });
          },
          _animated: function() {
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
