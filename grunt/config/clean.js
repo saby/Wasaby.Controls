@@ -4,8 +4,8 @@ module.exports = function() {
 
    return {
       contents: [
-         'components/contents.js',
-         'components/contents.json'
+         '/contents.js',
+         '/contents.json'
       ],
       'sbis3-controls': [
          'SBIS3.CONTROLS/components',
