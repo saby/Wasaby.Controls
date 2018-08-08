@@ -217,6 +217,16 @@ function(cMerge,
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
+
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left',
+            middle: 'center',
+            center: 'center'
+         };
+
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
          }
@@ -225,12 +235,24 @@ function(cMerge,
             newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
-         if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
-            newCfg.dialogOptions.direction = 'top';
+         if (cfg.verticalAlign && cfg.verticalAlign.side) {
+            newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
+
+         if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
+            newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+         }
+         else {
+            newCfg.dialogOptions.direction = 'right';
+         }
+
 
          if (cfg.corner && cfg.corner.vertical === 'bottom') {
             newCfg.dialogOptions.verticalAlign = 'bottom';
+         }
+
+         if (cfg.corner && cfg.corner.horizontal) {
+            newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
 
          if (cfg.offset) {
