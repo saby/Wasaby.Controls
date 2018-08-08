@@ -140,10 +140,9 @@ node('controls') {
                         git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
-                        if ( inte ) {
-                            changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                            echo "Изменения были в файлах: ${changed_files}"
-                        }
+                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        echo "Изменения были в файлах: ${changed_files}"
+
                     }
                     updateGitlabCommitStatus state: 'running'
                     parallel (
@@ -516,7 +515,9 @@ node('controls') {
         }
 
 
-
+        if ( only_fail ) {
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+        }
         def tests_for_run = ""
         if ( inte ) {
             dir("./controls/tests") {
@@ -546,9 +547,9 @@ node('controls') {
         }
         parallel (
             int_test: {
-                echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
                     if ( all_inte || inte ){
+                        echo "Запускаем интеграционные тесты"
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
@@ -563,8 +564,8 @@ node('controls') {
             },
             reg_test: {
                 stage("Рег.тесты"){
-                    echo "Запускаем тесты верстки"
                     if ( regr ){
+                        echo "Запускаем тесты верстки"
                         sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                         dir("./controls/tests/reg"){
                             sh """
