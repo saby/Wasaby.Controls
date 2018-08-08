@@ -4,12 +4,14 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate',
    'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2',
    'WS.Data/Source/Memory',
+   'Controls/Application/HeadDataContext',
    'css!Controls-demo/PageLayout/PageLayoutDemo'
 ], function(Control,
             template,
             controlAreaTemplate,
             controlAreaTemplate2,
-            MemorySource
+            MemorySource,
+            HeadDataContext
 ) {
    'use strict';
    var demoTabsSource = new MemorySource({
@@ -58,7 +60,16 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
       _template: template,
       _demoTabsSelectedKey: '1',
       _demoTabsSource: demoTabsSource,
-      _demoTabsSource2: demoTabsSource2
+      _demoTabsSource2: demoTabsSource2,
+      constructor: function() {
+         demoBrowserTabs.superclass.constructor.apply(this, arguments);
+         this.headDataCtxField = new HeadDataContext();
+      },
+      _getChildContext: function() {
+         return {
+            headData: this.headDataCtxField
+         };
+      }
    });
    return demoBrowserTabs;
 });
