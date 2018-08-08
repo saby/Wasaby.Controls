@@ -1,6 +1,6 @@
 <div class="controls-StackTemplate">
     <div if="{{_options.caption || _options.topArea}}" class="controls-StackTemplate__top-area">
-        <div class="controls-StackTemplate__top-area-content">
+        <div class="controls-StackTemplate__top-area-content controls-StackTemplate__top-area-margin-{{_options.showMaximizedButton ? 'maximized' : 'default'}}">
             <ws:if data="{{_options.caption}}">
                 <div class="controls-StackTemplate__caption controls-StackTemplate__caption_style_{{_options.captionStyle}}" title="{{_options.caption}}">
                     <div class="controls-StackTemplate__caption_text">{{_options.caption}}</div>
@@ -11,6 +11,9 @@
             </ws:if>
         </div>
     </div>
+    <ws:if data="{{_options.showMaximizedButton}}">
+        <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
+    </ws:if>
     <Controls.Button.Close attr:class="controls-StackTemplate__close_button" on:click="close()"/>
     <div class="controls-StackTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}"></ws:partial>
