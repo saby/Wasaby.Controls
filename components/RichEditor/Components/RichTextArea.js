@@ -1317,7 +1317,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
-               if (isA.strikethrough || isA.underline) {
+               if ((isA.strikethrough || isA.underline) && !(BROWSER.isIE && _getTrueIEVersion() < 12)) {
                   isAlreadyApplied = formatter.match(command);
                   if (isAlreadyApplied) {
                      // Здесь торлько снятие формата
@@ -3368,32 +3368,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var cfg = cClone(options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     cfg.formats.underline = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'underline'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
-                        },
-                        {
-                           inline: 'u',
-                           remove: 'all'
-                        }
-                     ];
-                     cfg.formats.strikethrough = [
-                        {
-                           inline: 'span',
-                           styles: {textDecoration:'line-through'},
-                           remove_similar: true,
-                           onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
-                           onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
-                        },
-                        {
-                           inline: 'strike',
-                           remove: 'all'
-                        }
-                     ];
+                     if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                        cfg.formats.underline = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'underline'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
+                           },
+                           {
+                              inline: 'u',
+                              remove: 'all'
+                           }
+                        ];
+                        cfg.formats.strikethrough = [
+                           {
+                              inline: 'span',
+                              styles: {textDecoration:'line-through'},
+                              remove_similar: true,
+                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
+                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
+                           },
+                           {
+                              inline: 'strike',
+                              remove: 'all'
+                           }
+                        ];
+                     }
 
                      for (var key in options.customFormats) {
                         if ({}.hasOwnProperty.call(options.customFormats, key)) {
