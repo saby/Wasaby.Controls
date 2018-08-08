@@ -2,13 +2,15 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'Core/Control',
    'tmpl!Controls-demo/SwitchableArea/DemoSwitchableArea',
    'WS.Data/Collection/RecordSet',
+   'Controls/Application/HeadDataContext',
    'tmpl!Controls-demo/SwitchableArea/resources/content',
    'tmpl!Controls-demo/SwitchableArea/resources/content2',
    'tmpl!Controls-demo/SwitchableArea/resources/content3',
    'css!Controls-demo/SwitchableArea/DemoSwitchableArea'
 ], function(Control,
             template,
-            RecordSet
+            RecordSet,
+            HeadDataContext
 ) {
    'use strict';
    var items = new RecordSet({
@@ -36,7 +38,15 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
       _template: template,
       _demoSelectedKey: '1',
       _items: items,
-
+      constructor: function() {
+         demoSwitchableArea.superclass.constructor.apply(this, arguments);
+         this.headDataCtxField = new HeadDataContext();
+      },
+      _getChildContext: function() {
+         return {
+            headData: this.headDataCtxField
+         };
+      },
       clickHandler: function(event, idButton) {
          this._demoSelectedKey = idButton;
       }
