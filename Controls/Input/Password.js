@@ -12,8 +12,8 @@ define('Controls/Input/Password',
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
       /**
-       *  Component that renders all entered characters as stars. Text visibility can
-       *  be toggled by clicking on 'eye' icon.
+       *  Component that shows all entered characters as stars. Visibility of entered
+       *  text can be toggled by clicking on 'eye' icon.
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
        * @class Controls/Input/Password
