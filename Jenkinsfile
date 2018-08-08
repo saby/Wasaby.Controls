@@ -235,11 +235,11 @@ node('controls') {
         if ( only_fail ) {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-            script = "python3 ../fail_tests.py "
+            script = "python3 ../fail_tests.py| tr '\n' ''"
             dir('./controls/tests/int') {
                 def result = sh returnStdout: true, script: script
                 echo result
-                if ( result ) {
+                if ( result != '' ) {
                     inte = true
                 } else {
                     inte = false
@@ -248,7 +248,7 @@ node('controls') {
             dir('./controls/tests/reg') {
                 def result = sh returnStdout: true, script: script
                 echo result
-                if ( result ) {
+                if ( result != '' ) {
                     regr = true
                 } else {
                     regr = false
