@@ -5,11 +5,11 @@ define('Controls-demo/Input/Phone/Phone',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {
-
       'use strict';
 
       var Phone = Control.extend({
          _template: template,
+         _tooltip: 'Phone',
          _placeholder: 'Input phone number',
          _readOnly: false,
          _tagStyle: 'info',
@@ -35,5 +35,4 @@ define('Controls-demo/Input/Phone/Phone',
          }
       });
       return Phone;
-   }
-);
+   });
