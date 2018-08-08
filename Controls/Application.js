@@ -119,6 +119,7 @@ define('Controls/Application',
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
                context.AppData.servicesPath = self.servicesPath;
+               context.AppData.product = self.product;
             }
             
             /**
@@ -134,7 +135,8 @@ define('Controls/Application',
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
                servicesPath: self.servicesPath,
-               compat: self.compat
+               compat: self.compat,
+               product: self.product
             });
             return def;
          },
