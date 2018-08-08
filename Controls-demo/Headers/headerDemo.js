@@ -47,7 +47,7 @@ define('Controls-demo/Headers/headerDemo', [
          _selectedStyle: 'primary',
          _headerSizeSource: headerSizeSource,
          _headerStyleSource: headerStyleSource,
-         _caption: 'test',
+         _caption: 'Header',
          _readOnly: false,
          _eventName: 'no event',
 
