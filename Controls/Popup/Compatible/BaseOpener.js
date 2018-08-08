@@ -241,8 +241,7 @@ function(cMerge,
 
          if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
             newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
-         }
-         else {
+         } else {
             newCfg.dialogOptions.direction = 'right';
          }
 
