@@ -239,7 +239,7 @@ node('controls') {
                 script = "python3 ../fail_tests.py"
                 dir('./controls/tests/int') {
                     def result = sh returnStdout: true, script: script
-                    echo "${result}""
+                    echo "${result}"
                     if ( result.toBoolean() ) {
                         inte = true
                     } else {
@@ -248,7 +248,7 @@ node('controls') {
                 }
                 dir('./controls/tests/reg') {
                     def result = sh returnStdout: true, script: script
-                    echo result
+                    echo "${result}"
                     if ( result.toBoolean() ) {
                         regr = true
                     } else {
