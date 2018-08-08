@@ -142,7 +142,7 @@ node('controls') {
 
                     }
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int || params.RUN_ONLY_FAIL_TEST)) {
+                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || all_inte || unit || inte || only_fail )) {
                         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
                     }
                     parallel (
