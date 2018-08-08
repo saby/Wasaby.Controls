@@ -12,11 +12,11 @@
     <div attr:class="demo-CheckBox__optionsBlock">
         <h3>Options header</h3>
         <Controls.Label caption="caption"/>
-        <Controls.Input.Text bind:value="_caption"/>
+        <Controls.Input.Text bind:value="_caption" attr:test_name="caption"/>
         <Controls.Label caption="tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip" attr:test_name="tooltip"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readonly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readOnly"/>
         <br/>
         <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
         <Controls.Label name="myLabel1" caption="value:"/>
