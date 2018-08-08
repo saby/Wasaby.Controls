@@ -142,6 +142,9 @@ node('controls') {
 
                     }
                     updateGitlabCommitStatus state: 'running'
+                    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int || params.RUN_ONLY_FAIL_TEST)) {
+                        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
+                    }
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -228,9 +231,7 @@ node('controls') {
                     }
                 }
             )
-        if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int || params.RUN_ONLY_FAIL_TEST)) {
-            exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
-        }
+
         if ( only_fail ) {
             run_test_fail = "-sf"
             if ( !inte && !regr && !all_inte ) {
