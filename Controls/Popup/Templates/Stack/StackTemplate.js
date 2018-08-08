@@ -42,6 +42,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
          close: function() {
             this._notify('close', [], {bubbling: true});
+         },
+         changeMaximizedState: function() {
+            this._notify('maximized', [!this._options.maximized], {bubbling: true});
          }
       });
 

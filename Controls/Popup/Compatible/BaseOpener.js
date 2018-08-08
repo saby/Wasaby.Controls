@@ -19,6 +19,7 @@ function(cMerge,
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
+         var templateOptions = this._getTemplateOptions(templateClass);
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -103,6 +104,14 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('autoCloseOnHide')) {
             cfg.templateOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         }
+
+         if (templateOptions.hasOwnProperty('enabled')) {
+            cfg.templateOptions.enabled = templateOptions.enabled;
+         }
+
+         if (cfg.hasOwnProperty('enabled')) {
+            cfg.templateOptions.enabled = cfg.enabled;
          }
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';

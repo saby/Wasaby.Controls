@@ -404,8 +404,10 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
+      _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
+         this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
@@ -600,6 +602,26 @@ define('Controls/List/BaseControl', [
       addItem: function(options) {
          if (!this._options.readOnly) {
             this._children.editInPlace.addItem(options);
+         }
+      },
+
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.editInPlace.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.editInPlace.commitEdit();
          }
       },
 

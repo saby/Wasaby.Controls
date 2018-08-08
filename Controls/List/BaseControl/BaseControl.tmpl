@@ -54,43 +54,56 @@
       </ws:else>
    </ws:template>
 
+    <ws:template name="serverTemplate">
+        <ws:partial template="fullView" name="listView"/>
 
-   <ws:if data="{{_listViewModel}}">
-      <ws:partial template="fullView" name="listView" />
+        <Controls.List.EditInPlace
+                ws:content="listView"
+                name="editInPlace"
+                editingConfig="{{_options.editingConfig}}"
+                on:beforeItemAdd="_onBeforeItemAdd()"
+                on:beforeItemEdit="_onBeforeItemEdit()"
+                on:afterItemEdit="_onAfterItemEdit()"
+                on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+                on:afterItemEndEdit="_onAfterItemEndEdit()"
+                listModel="{{_listViewModel}}"
+                source="{{_sourceController}}"/>
+    </ws:template>
 
-      <Controls.List.EditInPlace
-         ws:content="listView"
-         name="editInPlace"
-         editingConfig="{{_options.editingConfig}}"
-         on:beforeItemAdd="_onBeforeItemAdd()"
-         on:beforeItemEdit="_onBeforeItemEdit()"
-         on:afterItemEdit="_onAfterItemEdit()"
-         on:beforeItemEndEdit="_onBeforeItemEndEdit()"
-         on:afterItemEndEdit="_onAfterItemEndEdit()"
-         listModel="{{_listViewModel}}"
-         source="{{_sourceController}}" />
-      <Controls.List.ItemActions.ItemActionsControl
-         ws:content="listView"
-         on:commitActionClick="_commitEditActionHandler()"
-         on:cancelActionClick="_cancelEditActionHandler()"
-         on:menuActionsClick="_showActionsMenu()"
-         on:itemActionsClick="_onItemActionsClick()"
-         showToolbar="{{_options.editingConfig.showToolbar}}"
-         name="itemActions"
-         listModel="{{_listViewModel}}"
-         menuIsShown="{{_menuIsShown}}"
-         itemActions="{{_options.itemActions}}"
-         itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-         itemActionsPosition="{{_options.itemActionsPosition}}"/>
-      <Controls.List.Swipe.SwipeControl
-         ws:content="listView"
-         on:menuActionsClick="_showActionsMenu()"
-         on:closeSwipe="_closeSwipe()"
-         menuIsShown="{{_menuIsShown}}"
-         listModel="{{_listViewModel}}"
-         itemActions="{{_options.itemActions}}"
-         name="swipeControl"/>
-   </ws:if>
+    <ws:template name="clientTemplate">
+        <!--TODO: нельзя здесь использовать запись через ws:content="listView" пока не исправят ошибку: https://online.sbis.ru/opendoc.html?guid=4677d32b-5338-4bec-9f9b-c3fffb685b23 -->
+        <Controls.List.ItemActions.ItemActionsControl
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                on:itemActionsClick="_onItemActionsClick()"
+                showToolbar="{{_options.editingConfig.showToolbar}}"
+                name="itemActions"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsPosition="{{_options.itemActionsPosition}}">
+            <Controls.List.Swipe.SwipeControl
+                    on:menuActionsClick="_showActionsMenu()"
+                    on:closeSwipe="_closeSwipe()"
+                    menuIsShown="{{_menuIsShown}}"
+                    listModel="{{_listViewModel}}"
+                    itemActions="{{_options.itemActions}}"
+                    name="swipeControl">
+                <ws:partial template="serverTemplate" name="listView"/>
+            </Controls.List.Swipe.SwipeControl>
+        </Controls.List.ItemActions.ItemActionsControl>
+    </ws:template>
+
+    <ws:if data="{{_listViewModel}}">
+        <ws:if data="{{_isServer}}">
+            <ws:partial template="serverTemplate"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="clientTemplate"/>
+        </ws:else>
+    </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
         <ws:partial template="{{_options.emptyTemplate}}"/>
