@@ -23,11 +23,6 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @name Controls/interface/IDropdown#contentTemplate
-    * @cfg {Function} Template that will be render the list.
-    */
-
-   /**
     * @name Controls/interface/IDropdown#footerTemplate
     * @cfg {Function} Template that will be rendered below the list.
     */
