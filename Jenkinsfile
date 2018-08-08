@@ -235,7 +235,7 @@ node('controls') {
         if ( only_fail ) {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-            script = "python3 ../fail_test.py "
+            script = "python3 ../fail_tests.py "
             dir('./controls/tests/int') {
                 def result = sh returnStdout: true, script: script
                 echo result
