@@ -5,6 +5,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
       'WS.Data/Source/Memory',
       'Controls/Input/ComboBox',
       'tmpl!Controls-demo/Combobox/itemTemplateCombobox',
+      'tmpl!Controls-demo/Combobox/itemTemplateMultiline',
       'css!Controls-demo/Combobox/ComboboxVDom'
    ],
    function(Control, template, Memory) {
@@ -40,7 +41,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
             {id: 1, title: 'Russian commercial organization'},
             {id: 2, title: 'Russian scientific organization'},
             {id: 3, title: 'Branch, representative of a foreign legal entity accredited in accordance with ' +
-            'the established procedure in the '}
+            'the established procedure in the territory of the Russian Federation'}
          ],
 
          _defaultItems: [

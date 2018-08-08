@@ -50,8 +50,9 @@
       <h3>With multi-line items</h3>
       <Controls.Input.ComboBox source="{{_createMemory(_itemsWorkers)}}"
                                keyProperty="id"
+                               className="demo-ddl-myTemplateMultiline"
                                displayProperty="title"
-                               multiLine="{{true}}"
+                               itemTemplate="tmpl!Controls-demo/Combobox/itemTemplateMultiline"
                                bind:selectedKey="_selectedKey6"
                                attr:class="combobox-demo-controlBig"/>
    </div>
