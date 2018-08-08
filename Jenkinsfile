@@ -12,6 +12,12 @@ def gitlabStatusUpdate() {
         updateGitlabCommitStatus state: 'success'
     }
 }
+def exception(err, reason) {
+    currentBuild.displayName = "#${env.BUILD_NUMBER} {reason}"
+    error(err)
+
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
 node('controls') {
@@ -62,10 +68,7 @@ node('controls') {
 
 
     if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_all_int || params.run_unit || params.run_int || params.RUN_ONLY_FAIL_TEST)) {
-            currentBuild.result = 'FAILURE'
-            currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
-            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-
+            exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
         }
 
 
@@ -255,7 +258,7 @@ node('controls') {
                     }
                 }
                 if (!inte && !regr) {
-                    error('Нет тестов для перезапуска.')
+                    exception('Нет тестов для перезапуска.', 'USER FAIL')
                 }
             }
         }
@@ -507,10 +510,8 @@ node('controls') {
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             sh "sudo rm -rf ./test-reports"
             if ( currentBuild.result != null ) {
-                currentBuild.result = 'FAILURE'
-                currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
-                gitlabStatusUpdate()
-                error('Стенд неработоспособен (не прошел smoke test).')
+                exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
+
             }
         }
 
@@ -519,7 +520,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         def tests_for_run = ""
-        if ( inte ) {
+        if ( inte && !only_fail ) {
             dir("./controls/tests") {
                 echo "Выкачиваем файл с зависимостями"
                 url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
