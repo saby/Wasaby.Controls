@@ -57,6 +57,9 @@ define('Controls/Popup/Manager/Popup',
          _afterUpdate: function() {
             this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
          },
+         _beforeUnmount: function() {
+            this._notify('popupDestroyed', [this._options.id], { bubbling: true });
+         },
 
          /**
           * Закрыть popup

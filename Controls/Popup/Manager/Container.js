@@ -42,27 +42,35 @@ define('Controls/Popup/Manager/Container',
           */
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
-            var container = this._container.hasOwnProperty('length') ? this._container[0] : this._container;
-            container.controlNodes[0].control._forceUpdate(); // ??
-            // this._forceUpdate();
+            this._forceUpdate();
          },
 
          _popupDeactivated: function(event, popupId) {
-            var activeElement = document.activeElement;
             var isPopupExists = this._children[popupId];
             if (isPopupExists) {
-               // this._children[popupId].activate();
-               var finishDef = this._children.registrator.finishPendingOperations(false);
+               if (!this[popupId + '_activeElement']) {
+                  this[popupId + '_activeElement'] = document.activeElement;
+               }
+               var popup = this._children[popupId],
+                  registrator = this._children[popupId + '_registrator'];
+               popup._container.focus();
+               var finishDef = registrator.finishPendingOperations(false);
                finishDef.addCallback(function() {
-                  // activeElement.focus();
                   this._notify('popupDeactivated', [popupId], { bubbling: true });
                }.bind(this));
-               finishDef.addErrback(function(e) {
-                  IoC.resolve('ILogger').error('FormController example', '', e);
-                  return e;
-               });
             } else {
                this._notify('popupDeactivated', [popupId], { bubbling: true });
+            }
+         },
+         _popupDestroyed: function(event, popupId) {
+            if (this[popupId + '_activeElement']) {
+               // мне нужно фокусировать на _afterUnmount, когда на фокусировку не стрельнет _popupDeactivated,
+               // но _afterUnmount не существует, так что я вызываю setTimeout на _beforeUnmount попапа,
+               // чтобы дождаться нужного состояния
+               setTimeout(function (){
+                  this[popupId + '_activeElement'].focus();
+                  delete this[popupId + '_activeElement'];
+               }.bind(this), 0);
             }
          },
 

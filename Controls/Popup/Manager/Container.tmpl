@@ -1,9 +1,9 @@
-<Controls.Container.PendingRegistrator name="registrator">
-    <div class="controls-PopupContainer" id="popup" xmlns:ws="http://www.w3.org/1999/XSL/Transform" xmlns:on="http://www.w3.org/1999/xhtml">
-        <ws:for data="index, item in _popupItems">
-            <ws:if data="{{index === _overlayId}}">
-                <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()" style="z-index: {{( index + 1 ) * 10 - 1}};"></div>
-            </ws:if>
+<div class="controls-PopupContainer" id="popup" on:popupDestroyed="_popupDestroyed()">
+    <ws:for data="index, item in _popupItems">
+        <ws:if data="{{index === _overlayId}}">
+            <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()" style="z-index: {{( index + 1 ) * 10 - 1}};"></div>
+        </ws:if>
+        <Controls.Container.PendingRegistrator name="{{item.id}}_registrator">
             <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                 on:deactivated="_popupDeactivated(item.id)"
                 attr:class="controls-Container__popup {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
@@ -17,6 +17,6 @@
                     height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
                 scope="{{item.popupOptions}}"
             />
-        </ws:for>
-    </div>
-</Controls.Container.PendingRegistrator>
+        </Controls.Container.PendingRegistrator>
+    </ws:for>
+</div>
