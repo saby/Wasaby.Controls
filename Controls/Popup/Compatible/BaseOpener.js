@@ -270,6 +270,10 @@ function(cMerge,
             newCfg.dialogOptions.offset = cfg.offset;
          }
 
+         if (cfg.closeOnTargetScroll) {
+            newCfg.dialogOptions.closeOnTargetScroll = true;
+         }
+
          if (newCfg.target) {
             newCfg.dialogOptions.target = $(newCfg.target);
             if (cfg.mode === 'floatArea') {
