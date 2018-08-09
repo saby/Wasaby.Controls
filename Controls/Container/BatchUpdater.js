@@ -30,7 +30,7 @@ define('Controls/Container/BatchUpdater',
       Async = Base.extend({
          _template: template,
          requestHandler: function(evt, def, callback) {
-            if (!(callback instanceof Deferred)) {
+            if (!(def instanceof Deferred)) {
                IoC.resolve('ILogger').error('Event batchUpdate should pass deferred in parameters');
                return;
             }

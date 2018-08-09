@@ -1,8 +1,8 @@
-define('Controls-demo/BatchUpdater/resources/c1',
+define('Controls-demo/BatchUpdater/BatchUpdaterDemo',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/BatchUpdater/resources/c1'
+      'tmpl!Controls-demo/BatchUpdater/resources/BatchUpdaterDemo'
    ],
    function(Base, Deferred, template) {
       'use strict';
@@ -11,15 +11,12 @@ define('Controls-demo/BatchUpdater/resources/c1',
 
       var Page = Base.extend({
          _template: template,
-         text: '1',
          _afterMount: function(options, context, receivedState) {
             var def = new Deferred();
-            window.me = this;
-            this.text = '2';
             this._notify('requestBatchUpdate', [def, this._forceUpdate], { bubbling: true, shouldUpdate: false });
             setTimeout(function() {
                def.callback();
-            }, 10);
+            }, 20);
          }
       });
       return Page;
