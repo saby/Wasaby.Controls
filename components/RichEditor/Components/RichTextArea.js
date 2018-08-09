@@ -2154,6 +2154,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      window.open(target.href, '_blank');
                   }
                }
+               this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _tinyReadyCallback0: function() {
                if (!this._readyControlDeffered.isReady()) {
