@@ -7,7 +7,7 @@ define('Controls/Container/BatchUpdater',
       'Core/Deferred',
       'Core/ParallelDeferred',
       'Core/IoC',
-      'Controls/Container/BatchUpdater'
+      'tmpl!Controls/Container/BatchUpdater/BatchUpdater'
    ],
 
    function(Base, Deferred, ParallelDeferred, IoC, template) {
@@ -55,6 +55,11 @@ define('Controls/Container/BatchUpdater',
             }
             self.pDef.push(def);
             self.callbackArray.push(callback);
+         },
+         _forceUpdate: function() {
+            // Do nothing
+            // This method will be called because of handling event.
+            // But BatchUpdater controls updates of inner controls independently
          }
       });
       return Async;
