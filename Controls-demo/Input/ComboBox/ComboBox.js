@@ -134,7 +134,12 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          _kindsOfBox: function() { // itemTemplate
             return new Memory({
                idProperty: 'id',
-               data: this._itemTemp
+               data: this._itemTemp,
+               filter: function(record, filter) {
+                  if (record.get('title').indexOf(filter.title) !== -1) {
+                     return true;
+                  }
+               }
             });
          }
       });

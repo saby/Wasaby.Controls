@@ -133,7 +133,12 @@ define('Controls-demo/Input/Suggest/Suggest', [
       _kindsOfSuggest: function() { //itemTemplate
          return new MemorySource({
             idProperty: 'id',
-            data: this._itemTpl
+            data: this._itemTpl,
+            filter: function(record, filter) {
+               if (record.get('title').indexOf(filter.title) !== -1) {
+                  return true;
+               }
+            }
          });
       },
       _mainSource: function() { //source

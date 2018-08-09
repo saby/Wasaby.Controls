@@ -147,8 +147,21 @@
                                                        source="{{_items}}" attr:class="demo-TextBox"/>
 
         <Controls.Label name="myLabel1" caption="suggestTemplate"/>
-        <Controls.Input.ComboBox source="{{_kindsOfSuggest()}}" keyProperty="title" displayProperty="title" bind:selectedKey="_flag" attr:class="demo-TextBox" />
-
+        <Controls.Input.Suggest
+                bind:value="_flag"
+                displayProperty="title"
+                searchParam="title"
+                attr:class="demo-TextBox"
+                autoDropDown="{{true}}"
+                source="{{_kindsOfSuggest()}}"
+                minSearchLength="1">
+            <ws:navigation source="page" view="page">
+                <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+            </ws:navigation>
+            <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+                <ws:templateOptions demoClass="demo-SuggestInputList" />
+            </ws:suggestTemplate>
+        </Controls.Input.Suggest>
         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="demo-TextBox"/>
         <Controls.Toggle.Checkbox attr:id="footerTemplate" readOnly="{{false}}" bind:value="_footer" caption="footerTemplate"/>
         <Controls.Toggle.Checkbox attr:id="filter" readOnly="{{false}}" bind:value="_filter" caption="filter"/>

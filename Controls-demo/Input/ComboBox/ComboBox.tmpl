@@ -42,7 +42,21 @@
           <Controls.Label name="myLabel1" caption="tagStyle"/>
           <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
           <Controls.Label name="myLabel1" caption="itemTemplate"/>
-          <Controls.Input.ComboBox source="{{_kindsOfBox()}}" keyProperty="title" displayProperty="title" bind:selectedKey="_flag" />
+          <Controls.Input.Suggest
+                  bind:value="_flag"
+                  displayProperty="title"
+                  attr:class="demo-TextBox"
+                  searchParam="title"
+                  autoDropDown="{{true}}"
+                  source="{{_kindsOfBox()}}"
+                  minSearchLength="1">
+              <ws:navigation source="page" view="page">
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+              </ws:navigation>
+              <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+                  <ws:templateOptions demoClass="demo-SuggestInputList" />
+              </ws:suggestTemplate>
+          </Controls.Input.Suggest>
           <Controls.Label name="myLabel1" caption="source"/>
           <Controls.Input.Suggest
                   bind:value="_resources"
