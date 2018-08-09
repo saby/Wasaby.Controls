@@ -139,7 +139,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
-               if (self._container.length) {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
                runDelayed(function() {
@@ -196,8 +196,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // лишних свойств, которые еще не применены к дому
             // панельки с этим начали вылезать плавненько
             runDelayed(function() {
+               // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
+               // подразумевается, что фокус уже внутри панели
+               self.once('onInitComplete', function() {
+                  if (self._options.catchFocus) {
+                     doAutofocus(self._childControl._container);
+                  }
+               });
                self.rebuildChildControl().addCallback(function() {
-                  doAutofocus(self._childControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                   runDelayed(function() {
                      self._notifyCompound('onResize');
