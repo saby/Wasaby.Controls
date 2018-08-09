@@ -216,6 +216,9 @@ define('Controls/Popup/Opener/BaseOpener',
             }
 
             requirejs(deps, function(CompatibleOpener, Action) {
+               if (opener && opener._options.closeOnTargetScroll) {
+                  cfg.closeOnTargetScroll = true;
+               }
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
                var action;
                if (!opener || !opener._action) {
