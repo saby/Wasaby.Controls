@@ -87,7 +87,7 @@ define(
 
          it('_preparePopupCfgFromOldToNew', function() {
             BaseOpener._preparePopupCfgFromOldToNew(config);
-            assert.equal(config.templateOptions.target,'testTarget');
+            assert.equal(config.templateOptions.target,config.target);
             assert.equal(config.className,'testClass');
             assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
@@ -127,20 +127,20 @@ define(
             BaseOpener._setSizes(newConfig,newClass);
             assert.isFalse(!!newConfig.autoWidth);
             assert.isFalse(!!newConfig.autoHeight);
-            assert.equal(newConfig.minWidth, 30);
-            assert.equal(newConfig.maxWidth, 30);
-            assert.equal(newConfig.minHeight, 30);
-            assert.equal(newConfig.maxHeight, 30);
+            assert.equal(newConfig.minWidth, newClass.dimensions.minWidth);
+            assert.equal(newConfig.maxWidth, newClass.dimensions.maxWidth);
+            assert.equal(newConfig.minHeight, newClass.dimensions.minHeight);
+            assert.equal(newConfig.maxHeight, newClass.dimensions.maxHeight);
          });
 
          it('_prepareConfigForOldTemplate', function() {
             BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
-            assert.equal(config.templateOptions.hoverTarget,'testHoverTarget');
-            assert.equal(config.templateOptions.record,'testRecord');
-            assert.equal(config.templateOptions.__parentFromCfg,'testParent');
-            assert.equal(config.templateOptions.__openerFromCfg,'testOpener');
-            assert.equal(config.templateOptions.newRecord,'newTestRecord');
-            assert.equal(config.templateOptions.linkedContext,'testLinkedContext');
+            assert.equal(config.templateOptions.hoverTarget,config.hoverTarget);
+            assert.equal(config.templateOptions.record,config.record);
+            assert.equal(config.templateOptions.__parentFromCfg,config.parent);
+            assert.equal(config.templateOptions.__openerFromCfg,config.opener);
+            assert.equal(config.templateOptions.newRecord,config.newRecord);
+            assert.equal(config.templateOptions.linkedContext,config.linkedContext);
             assert.equal(config.className, 'testClass ws-window ws-hidden');
             assert.isTrue(config.templateOptions.hideCross);
             assert.isFalse(config.templateOptions.autoShow);
@@ -167,7 +167,7 @@ define(
             assert.equal(newConfig.componentOptions.innerComponentOptions.template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
             assert.equal(newConfig.animation, 'off');
-            assert.equal(newConfig.componentOptions.onResultHandler, 'testHandler');
+            assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
          });
 
          it('_prepareConfigFromNewToOld', function() {
@@ -183,14 +183,14 @@ define(
             assert.equal(newConfig.template, config.template);
             assert.equal(newConfig._initCompoundArea, config._initCompoundArea);
             assert.isFalse(newConfig.dialogOptions.isStack);
-            assert.equal(newConfig.target, 'testTarget');
+            assert.equal(newConfig.target, config.target);
             assert.isTrue(newConfig.dialogOptions.modal);
-            assert.equal(newConfig.dialogOptions.handlers, 'testHandlers');
+            assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.isFalse(newConfig.dialogOptions.border);
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);
-            assert.equal(newConfig.dialogOptions.onResultHandler, 'onResult');
-            assert.isTrue(newConfig.dialogOptions.closeChildWindows, 'onResult');
+            assert.equal(newConfig.dialogOptions.onResultHandler, config.eventHandlers.onResult);
+            assert.isTrue(newConfig.dialogOptions.closeChildWindows);
             let testconfig = {
                verticalAlign: {
                   side: 'top'
