@@ -383,7 +383,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                return;
             }
 
-            if (view.getPage & view.setPage) {
+            if (view.getPage && view.setPage) {
                var page = view.getPage();
 
                if (page && (event.which === constants.key.pageDown)) {
