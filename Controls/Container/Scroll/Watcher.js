@@ -3,10 +3,10 @@
  * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
  * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
  */
-define('Controls/Layout/Scroll',
+define('Controls/Container/Scroll/Watcher',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Scroll/Scroll',
+      'tmpl!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
       'Core/helpers/Function/debounce',
       'Core/detection'
