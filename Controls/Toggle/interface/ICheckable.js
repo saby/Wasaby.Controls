@@ -13,8 +13,8 @@ define('Controls/Toggle/interface/ICheckable', [], function() {
     */
 
    /**
-    * @event Controls/Toggle/interface/ICheckable#valueChanged Occurs when state changes.
-    * @param {Boolean} value New state.
+    * @event Controls/Toggle/interface/ICheckable#valueChanged Occurs when value changes.
+    * @param {Boolean} value New value.
     */
 
 });

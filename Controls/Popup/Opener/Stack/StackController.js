@@ -56,12 +56,22 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeAnimationClasses: function(className) {
+            className = (className || '');
             return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
          prepareUpdateClassses: function(className) {
-            className =  _private.removeAnimationClasses(className);
-            className += ' ' + STACK_CLASS;
+            className = (className || '');
+            className = _private.removeAnimationClasses(className);
+            className = _private.addStackClasses(className);
+            return className;
+         },
+
+         addStackClasses: function(className) {
+            className = (className || '');
+            if (className.indexOf(STACK_CLASS) < 0) {
+               className += ' ' + STACK_CLASS;
+            }
             return className;
          },
 
@@ -168,7 +178,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
             var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
-            item.popupOptions.className += ' controls-Stack';
+            item.popupOptions.className = _private.addStackClasses(item.popupOptions.className);
             if (StackStrategy.isMaximizedPanel(item)) {
                //set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; //for vdom dirtyChecking

@@ -12,9 +12,9 @@ define('Controls/Input/Password',
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
       /**
-       *  A component for entering a password. Entered characters are replaced by *.
-       *  If you want to show the password, you need to click on the corresponding icon.
-       *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *  Component that shows all entered characters as stars. Visibility of entered
+       *  text can be toggled by clicking on 'eye' icon.
+       *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
        * @class Controls/Input/Password
        * @extends Core/Control
@@ -28,6 +28,8 @@ define('Controls/Input/Password',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Password/Password
+       * @demo Controls-demo/Input/Password/Password
+       *
        * @author Журавлев Максим Сергеевич
        */
 

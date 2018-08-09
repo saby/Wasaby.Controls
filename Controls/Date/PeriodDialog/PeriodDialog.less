@@ -1,0 +1,66 @@
+@import "_yearRange";
+@import "_monthsRange";
+@import "_dateRange";
+
+// TODO: выпилить после того как приведут стили List в порядок
+.controls-PeriodDialog {
+   .controls-ListView__itemContent {
+      margin: 0;
+      padding: 0;
+   }
+
+   .controls-ListView__itemV {
+      border-left: none;
+      cursor: auto;
+   }
+
+   .controls-ListView__itemV:hover {
+       background-color: transparent !important;
+   }
+}
+
+.controls-PeriodDialog {
+   background-color: @background-color_PeriodDialog;
+   width: @width_PeriodDialog;
+   border: @border-width_PeriodDialog solid @border-color_PeriodDialog;
+   box-shadow: @float-area-shadow;
+}
+
+
+// Header
+.controls-PeriodDialog__header {
+   background-color: @background-color__PeriodDialog-header;
+   padding-left: @padding-left_PeriodDialog-header;
+   box-sizing: border-box;
+   display: flex;
+   align-items: center;
+   height: @height_PeriodDialog-header;
+}
+
+.controls-PeriodDialog__stateButton {
+   padding-right: @padding-right_PeriodDialog-state-button;
+}
+
+.controls-PeriodDialog__header-period {
+   display: flex;
+   flex-grow: 1;
+}
+
+.controls-PeriodDialog__dateInputEnd-wrapper {
+   display: flex;
+   align-items: center;
+}
+
+.controls-PeriodDialog__header-rangeDash {
+   width: @width_PeriodDialog-header-dash;
+   border-bottom: 1px solid black;
+   margin: @margin_PeriodDialog-header-dash;
+}
+
+.controls-PeriodDialog__applyButton {
+   margin: 0 @margin_PeriodDialog-header-applyButton;
+}
+
+.controls-PeriodDialog__cursor-pointer {
+   cursor: pointer;
+}

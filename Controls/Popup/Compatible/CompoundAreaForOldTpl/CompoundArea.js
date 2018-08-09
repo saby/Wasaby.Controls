@@ -103,7 +103,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
+            if (this._options.canMaximize) {
+               var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
+               var templateComponent = this._getTemplateComponent();
+               this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+               this.getContainer().toggleClass('ws-float-area-maximized-mode', popupOptions.maximized || false);
+               if (templateComponent && maximized !== popupOptions.maximized) {
+                  templateComponent._notifyOnSizeChanged();
+                  templateComponent._notify('onChangeMaximizeState', popupOptions.maximized);
+                  templateComponent._options.isPanelMaximized = popupOptions.maximized;
+                  this._notify('onChangeMaximizeState', popupOptions.maximized);
+               }
+            }
             return false;
+         },
+
+         _changeMaximizedMode: function(event) {
+            event.stopPropagation();
+            var state = this.getContainer().hasClass('ws-float-area-maximized-mode');
+            this._notifyVDOM('maximized', [!state], {bubbling: true});
          },
 
          rebuildChildControl: function() {
@@ -119,7 +137,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
-               if (self._container.length) {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
                runDelayed(function() {
@@ -176,8 +194,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // лишних свойств, которые еще не применены к дому
             // панельки с этим начали вылезать плавненько
             runDelayed(function() {
+               // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
+               // подразумевается, что фокус уже внутри панели
+               self.once('onInitComplete', function() {
+                  if (self._options.catchFocus) {
+                     doAutofocus(self._childControl._container);
+                  }
+               });
                self.rebuildChildControl().addCallback(function() {
-                  doAutofocus(self._childControl._container);
                   self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                   runDelayed(function() {
                      self._notifyCompound('onResize');

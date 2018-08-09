@@ -33,11 +33,6 @@ define('Controls/Input/ComboBox',
        * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
-      /**
-       * @name Controls/Input/ComboBox#contentTemplate
-       * @cfg {Function} Template that will be render the list.
-       */
-
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);

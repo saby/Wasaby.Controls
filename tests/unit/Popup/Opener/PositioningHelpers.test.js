@@ -385,8 +385,10 @@ define(
 
                itemConfig.popupOptions.className = '';
                StackController.elementUpdated(itemConfig, {});
-               //класс обновился, потому что состояние было opened
-               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === " controls-Stack");
+               StackController.elementUpdated(itemConfig, {});
+               StackController.elementUpdated(itemConfig, {});
+               //класс обновился, потому что состояние было opened. После множ. update класс не задублировался
+               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === "controls-Stack");
 
                itemConfig.stackState = 'notOpened';
                itemConfig.popupOptions.className = '';

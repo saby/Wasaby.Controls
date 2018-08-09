@@ -130,7 +130,8 @@ define('Controls/Input/Number/InputProcessor',
                if (
                   !_private.validators.isValidInsert(splitValue.insert) ||
                   (options.onlyPositive && splitValue.insert === '-') ||
-                  (options.precision === 0 && splitValue.insert === '.')
+                  (options.precision === 0 && splitValue.insert === '.') ||
+                  options.integersLength <= 0
                ) {
                   splitValue.insert = '';
                } else {

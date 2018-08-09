@@ -22,7 +22,13 @@ define('Controls/Filter/Button/Container',
        * @control
        * @public
        */
-      
+
+      /**
+       * @event Controls/Filter/Button/Container#filterItemsChanged Happens when items changed.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {Object} items New items.
+       */
+
       'use strict';
    
       var _private = {

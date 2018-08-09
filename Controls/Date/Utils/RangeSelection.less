@@ -1,0 +1,83 @@
+.controls-RangeSelection__selection-start-base,
+.controls-RangeSelection__selection-start-hovered,
+.controls-RangeSelection__selection-inner,
+.controls-RangeSelection__selection-end-base,
+.controls-RangeSelection__selection-end-hovered,
+.controls-RangeSelection__selection-start-base-hovered,
+.controls-RangeSelection__selected-start,
+.controls-RangeSelection__selected-inner,
+.controls-RangeSelection__selected-end {
+   outline: @border-color_RangeSelection-selected-startEnd solid 1px;
+}
+
+.controls-RangeSelection__selection-start-base,
+.controls-RangeSelection__selection-start-hovered,
+.controls-RangeSelection__selection-end-base,
+.controls-RangeSelection__selection-end-hovered,
+.controls-RangeSelection__selection-start-base-hovered,
+.controls-RangeSelection__selected-start,
+.controls-RangeSelection__selected-end {
+   font-weight: bold;
+}
+
+.controls-RangeSelection__selected-start,
+.controls-RangeSelection__selected-inner,
+.controls-RangeSelection__selected-end,
+.controls-RangeSelection__selection-inner,
+.controls-RangeSelection__selected-start-end {
+   background-color: @background-color_RangeSelection-selected-inner;
+}
+
+.controls-RangeSelection__selected-start,
+.controls-RangeSelection__selected-start-hovered,
+.controls-RangeSelection__selection-start-base,
+.controls-RangeSelection__selection-start-base-hovered,
+.controls-RangeSelection__selected-start-end,
+.controls-RangeSelection__selected-start-end-hovered {
+   position: relative;
+   &:before {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: @width_RangeSelection-selected-startEnd-edgeBorder;
+      background-color: @border-color_RangeSelection-selected-startEnd-edgeBorder;
+      top: 0;
+      left: -1px;
+   }
+}
+
+.controls-RangeSelection__selected-end,
+.controls-RangeSelection__selected-end-hovered,
+.controls-RangeSelection__selection-end-base,
+.controls-RangeSelection__selected-start-end,
+.controls-RangeSelection__selected-start-end-hovered {
+   position: relative;
+   &:after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: @width_RangeSelection-selected-startEnd-edgeBorder;
+      background-color: @border-color_RangeSelection-selected-startEnd-edgeBorder;
+      top: 0;
+      right: -1px;
+   }
+}
+
+.controls-RangeSelection__selection-start-hovered,
+.controls-RangeSelection__selection-end-hovered,
+.controls-RangeSelection__selected-start-hovered,
+.controls-RangeSelection__selected-inner-hovered,
+.controls-RangeSelection__selected-start-end-hovered {
+   background-color: @background-color_RangeSelection-selected-unfinishedEdge;
+}
+
+.controls-RangeSelection__selection-start-base,
+.controls-RangeSelection__selection-end-base,
+.controls-RangeSelection__selection-start-base-hovered {
+   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
+}
+
+.controls-RangeSelection__hovered {
+   background-color: @background-color_RangeSelection-selected-unfinishedEdge;
+   outline: @border-color_RangeSelection-selected-startEnd solid 1px;
+}

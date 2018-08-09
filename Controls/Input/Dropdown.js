@@ -27,6 +27,12 @@ define('Controls/Input/Dropdown',
        * @demo Controls-demo/Dropdown/MenuVdom
        */
 
+      /**
+       * @name Controls/Input/Dropdown#contentTemplate
+       * @cfg {Function} Template that will be render calling element.
+       */
+
+
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
