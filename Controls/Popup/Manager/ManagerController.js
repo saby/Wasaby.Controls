@@ -17,30 +17,6 @@ define('Controls/Popup/Manager/ManagerController', [],
             return this._container;
          },
 
-         /**
-          * Обновить popup
-          */
-
-         update: function(id, config) {
-            return this._manager.update(id, config);
-         },
-
-         /**
-          * Показать popup
-          */
-
-         show: function(config, strategy) {
-            return this._manager.show(config, strategy);
-         },
-
-         /**
-          * Удалить popup
-          */
-
-         remove: function(id) {
-            return this._manager.remove(id);
-         },
-
          popupUpdated: function(id) {
             return this._manager._eventHandler(null, 'popupUpdated', id);
          },
@@ -49,13 +25,43 @@ define('Controls/Popup/Manager/ManagerController', [],
           * Найти popup
           */
 
-         find: function(id) {
-            return this._manager.find(id);
+         find: function() {
+            return this._callManager('find', arguments);
+         },
+
+         /**
+          * Удалить popup
+          */
+
+         remove: function() {
+            return this._callManager('remove', arguments);
+         },
+
+         /**
+          * Обновить popup
+          */
+
+         update: function() {
+            return this._callManager('update', arguments);
+         },
+
+         /**
+          * Показать popup
+          */
+
+         show: function() {
+            return this._callManager('show', arguments);
          },
 
          reindex: function() {
-            this._manager.reindex();
-         }
+            return this._callManager('reindex', arguments);
+         },
+
+         _callManager: function(methodName, args) {
+            if (this._manager) {
+               return this._manager[methodName].apply(this._manager, args || []);
+            }
+         },
       };
    }
 );
