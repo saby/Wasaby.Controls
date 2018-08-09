@@ -66,7 +66,14 @@
   "include": [
     "Controls/Input/*"
   ],
-  "output": "controls-input.package.js"
+  "exclude": [
+    "Controls/Input/RichArea"
+  ],
+  "output": "controls-input.package.js",
+  "include": [
+    "Controls/Input/RichArea"
+  ],
+  "output": "controls-richarea.package.js"
 }, {
   "include": [
     "Controls/Label/*",
