@@ -375,8 +375,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
             /* Строка поиска связывается searchController'ом со списком в браузере и со списком в автодополнении,
                когда открыто автодополнение, клик по стрелкам на клавиатуре должен приводить к навигации по списку в автодополнении */
             var
-               abortKeyPressedProcess = searchForm.isPickerVisible() && !self._options.searchFormWithSuggest,
-               page = view && view.getPage();
+               abortKeyPressedProcess = searchForm.isPickerVisible() && !self._options.searchFormWithSuggest;
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
@@ -384,11 +383,15 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                return;
             }
 
-            if (page && (event.which === constants.key.pageDown)) {
-               view.setPage(page + 1);
-            }
-            if (page && (event.which === constants.key.pageUp && page > 0)) {
-               view.setPage(page - 1);
+            if (view.getPage & view.setPage) {
+               var page = view.getPage();
+
+               if (page && (event.which === constants.key.pageDown)) {
+                  view.setPage(page + 1);
+               }
+               if (page && (event.which === constants.key.pageUp && page > 0)) {
+                  view.setPage(page - 1);
+               }
             }
 
 
