@@ -61,6 +61,7 @@ define('Controls/Popup/Manager/ManagerController', [],
             if (this._manager) {
                return this._manager[methodName].apply(this._manager, args || []);
             }
+            return false;
          },
       };
    }
