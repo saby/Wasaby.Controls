@@ -846,7 +846,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._images = null;
                this._readyControlDeffered = null;
                this._scrollContainer = null;
-               this._container = null;
                this._richTextAreaContainer = null;
                this._tinyReady = null;
                this._imageUploader = null;
