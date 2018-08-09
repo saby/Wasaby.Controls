@@ -15,14 +15,14 @@
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:test_name="readOnly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
         <Controls.Label caption="First caption"/>
-        <Controls.Input.Text bind:value="_caption1" attr:test_name="caption"/>
+        <Controls.Input.Text bind:value="_caption1" attr:class="ControlsDemo__caption"/>
         <Controls.Label caption="Second caption"/>
-        <Controls.Input.Text bind:value="_caption2" attr:test_name="caption2"/>
+        <Controls.Input.Text bind:value="_caption2" attr:class="ControlsDemo__caption2"/>
         <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip" attr:test_name="tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <Controls.Label caption="Orientation:"/>
         <Controls.Input.ComboBox
                 source="{{_orientationSource}}"
@@ -32,9 +32,9 @@
                 emptyText="none"
                 selectedKey="{{_selectedOrientation}}"
                 on:selectedKeyChanged="changeOrientation()"
-                attr:test_name="direction"
+                attr:class="ControlsDemo__direction"
         />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:test_name="value"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:class="ControlsDemo__value"/>
     </div>
 </div>

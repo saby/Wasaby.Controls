@@ -24,7 +24,7 @@
     </div>
     <div attr:class="optionsBlock">
         <Controls.Toggle.Checkbox 
-            attr:test_name="readOnly"
+            attr:class="ControlsDemo__readOnly"
             readOnly="{{false}}"
             bind:value="_readOnly" 
             caption="ReadOnly"
@@ -32,8 +32,7 @@
         <br/>
         <Controls.Label caption="Direction:"/>
         <Controls.Input.ComboBox
-            attr:test_name="direction"
-            attr:class="comboboxWidth"
+            attr:class="comboboxWidth ControlsDemo__direction"
             source="{{_directionSource}}"
             keyProperty="title"
             placeholder="select"
@@ -43,8 +42,7 @@
         />
         <Controls.Label caption="Source:"/>
         <Controls.Input.ComboBox
-            attr:test_name="changeSource"
-            attr:class="comboboxWidth"
+            attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__changeSource"
             source="{{_sourceOfSource}}"
             keyProperty="title"
             placeholder="select"
@@ -54,7 +52,7 @@
         />
         <br/>
         <Controls.Toggle.Checkbox 
-            attr:test_name="item_tmpl"
+            attr:class="ControlsDemo-RadioGroupDemo__item_tmpl"
             readOnly="{{false}}"
             bind:value="_itemTemplatePropertyFlag"
             caption="ItemTemplateProperty === 'templateTwo'. Property set for the concrete(in demo 3) item."
@@ -62,8 +60,7 @@
         <br/>
         <Controls.Label caption="Content template:"/>
         <Controls.Input.ComboBox
-            attr:test_name="content_tmpl"
-            attr:class="comboboxWidth"
+            attr:class="comboboxWidth ControlsDemo-RadioGroupDemo__content_tmpl"
             source="{{_sourceContentTemplate}}"
             keyProperty="title"
             placeholder="select"
@@ -73,14 +70,14 @@
         />
         <Controls.Label caption="Display property:"/>
         <Controls.Toggle.DoubleSwitch 
-            attr:test_name="displayProperty"
+            attr:class="ControlsDemo-RadioGroupDemo__displayProperty"
             on:valueChanged="changedDisplayProperty()" 
             captions="{{['caption', 'title']}}" 
             bind:value="_displayPropertyValue"
         />
         <Controls.Label caption="Selected key:"/>
         <Controls.Toggle.RadioGroup
-            attr:test_name="selectedKey"
+            attr:class="ControlsDemo-RadioGroupDemo__selectedKey"
             on:selectedKeyChanged="changeSelectedKey()"
             keyProperty="id"
             selectedKey="{{_selectKey}}"

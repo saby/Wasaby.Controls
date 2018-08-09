@@ -12,13 +12,13 @@
     <div attr:class="demo-CheckBox__optionsBlock">
         <h3>Options header</h3>
         <Controls.Label caption="caption"/>
-        <Controls.Input.Text bind:value="_caption" attr:test_name="caption"/>
+        <Controls.Input.Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
         <Controls.Label caption="tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip" attr:test_name="tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:test_name="readOnly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="readOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
-        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:test_name="state"/>
+        <Controls.Toggle.Checkbox on:valueChanged="setTristate()" readOnly="{{false}}" bind:value="_triState" caption="triState" attr:class="ControlsDemo-Checkbox__state"/>
         <Controls.Label name="myLabel1" caption="value:"/>
         <Controls.Input.ComboBox
                 source="{{_source}}"
@@ -28,7 +28,7 @@
                 emptyText="none"
                 selectedKey="{{_selectedValue}}"
                 on:selectedKeyChanged="changeValue()"
-				attr:test_name="value"
+                attr:class="ControlsDemo__value"
         />
     </div>
     <div class="eventBlock">

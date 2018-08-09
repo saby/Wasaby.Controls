@@ -15,15 +15,15 @@
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:test_name="readOnly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="readOnly"/>
         <br/>
         <Controls.Label caption="Caption"/>
-        <Controls.Input.Text bind:value="_caption" attr:test_name="caption"/>
+        <Controls.Input.Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
         <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip" attr:test_name="tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <Controls.Label caption="Caption position:"/>
         <Controls.Input.ComboBox
-                attr:test_name="direction"
+                attr:class="ControlsDemo__direction"
                 source="{{_captionPositionSource}}"
                 keyProperty="title"
                 placeholder="select"
@@ -33,6 +33,6 @@
                 on:selectedKeyChanged="changeCaptionPosition()"
         />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:test_name="value"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:class="ControlsDemo__value"/>
     </div>
 </div>
