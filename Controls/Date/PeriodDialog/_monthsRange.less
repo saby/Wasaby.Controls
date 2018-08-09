@@ -1,0 +1,228 @@
+.controls-PeriodDialog-MonthsRange {
+   height: @height_PeriodDialog-body;
+}
+
+.controls-PeriodDialog-MonthsRange__header {
+   height: @height_PeriodDialog-MonthRange-header;
+   line-height: @height_PeriodDialog-MonthRange-header;
+   text-align: center;
+   color: @color_PeriodDialog-MonthRange-header;
+   font-size: @font-size_PeriodDialog-MonthRange-header;
+   font-weight: bold;
+   border-top: @border-top-width_PeriodDialog-MonthRange-header solid @border-color_PeriodDialog-MonthRange;
+   border-bottom: @border-bottom-width_PeriodDialog-MonthRange-header solid @border-color_PeriodDialog-MonthRange;
+}
+
+.controls-PeriodDialog-MonthsRange__body {
+   display: flex;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYears {
+   flex-grow: 1;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYear {
+   display: flex;
+   position: relative;
+}
+
+.controls-PeriodDialog-MonthsRange__quarter {
+   position: relative;
+   flex-grow: 1;
+   display: flex;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYearsPanel-button,
+.controls-PeriodDialog-MonthsRange__quarterButton {
+   width: @width_PeriodDialog-years-leftRight - @border-width_PeriodDialog-MonthRange-quartersPanel-right;
+   .flex-grow(1);
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   border-bottom: @border-width_PeriodDialog-MonthRange-quartersPanel solid @border-color_PeriodDialog-MonthRange-quartersPanel;
+   color: @color_PeriodDialog-MonthRange_halfyearsAndQuartersPanel;
+}
+.controls-PeriodDialog-MonthsRange__quarterButton {
+   background-color: @background-color_PeriodDialog-MonthRange_quartersPanel;
+}
+.controls-PeriodDialog-MonthsRange__quarter-hovered {
+   .controls-PeriodDialog-MonthsRange__quarterButton {
+      background-color: transparent;
+      border-right-color: transparent;
+   }
+}
+
+.controls-PeriodDialog-MonthsRange__halfYear-hovered {
+   .controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
+      border-left-color: transparent;
+   }
+}
+
+.controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
+   font-size: @font-size_PeriodDialog-MonthRange-halfYearsPanel;
+   border-left: @border-width_PeriodDialog-MonthRange-halfYearsPanel solid @border-color_PeriodDialog-MonthRange-halfYearsPanel;
+}
+.controls-PeriodDialog-MonthsRange__quarterButton {
+   font-size: @font-size_PeriodDialog-MonthRange-quartersPanel;
+   border-right: @border-width_PeriodDialog-MonthRange-quartersPanel-right solid @border-color_PeriodDialog-MonthRange-quartersPanel;
+}
+
+.controls-PeriodDialog-MonthsRange__hovered {
+   outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
+   background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYear-hovered,
+.controls-PeriodDialog-MonthsRange__quarter-hovered {
+   background-color: @background-color_DateRangeBigChoose-dates-months-period-hover;
+}
+
+.controls-PeriodDialog-MonthsRange__item,
+.controls-PeriodDialog-MonthsRange__item-selected{
+   .box-sizing(border-box);
+   .flex-shrink(0);
+   z-index: 2;
+   padding: @padding_PeriodDialog-MonthRange-monthWrapper;
+}
+
+.controls-PeriodDialog-MonthsRange__item {
+   border-right: @border-width_PeriodDialog-MonthRange-monthWrapper solid @border-color_PeriodDialog-MonthRange-monthWrapper;
+   border-bottom: @border-width_PeriodDialog-MonthRange-monthWrapper solid @border-color_PeriodDialog-MonthRange-monthWrapper;
+   height: @height_PeriodDialog-MonthRange-monthWrapper;
+   width: @width_PeriodDialog-MonthRange-monthWrapper;
+}
+
+.controls-PeriodDialog-MonthsRange__item-selected {
+   width: @width_PeriodDialog-MonthRange-monthWrapper - @border-width_PeriodDialog-MonthRange-monthWrapper;
+   margin-right: @border-width_PeriodDialog-MonthRange-monthWrapper;
+   height: @height_PeriodDialog-MonthRange-monthWrapper - @border-width_PeriodDialog-MonthRange-monthWrapper;
+   margin-bottom: @border-width_PeriodDialog-MonthRange-monthWrapper;
+}
+
+.controls-PeriodDialog-MonthsRange__month_title {
+   text-align: center;
+   color: @color_PeriodDialog-MonthRange-month-title;
+   font-size: @font-size_PeriodDialog-MonthRange-month-title;
+   height: @height_PeriodDialog-MonthRange-month-title;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYear-hovered,
+.controls-PeriodDialog-MonthsRange__quarter-hovered {
+   .controls-PeriodDialog-MonthsRange__item-selected,
+   .controls-PeriodDialog-MonthsRange__item {
+      background-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+   }
+}
+.controls-PeriodDialog-MonthsRange__halfYear-hovered {
+   &:before {
+      content: '';
+      position: absolute;
+      top: -@border-width_PeriodDialog-MonthRange-quartersPanel;
+      bottom: 0;
+      left: @width_PeriodDialog-years-leftRight - @border-width_PeriodDialog-MonthRange-quartersPanel;
+      right: -@border-width_PeriodDialog-MonthRange-quartersPanel;
+      border: solid @border-width_PeriodDialog-MonthRange-quartersPanel @border-color_PeriodDialog-MonthRange-quarters-halhyears-selected;
+      z-index: 3;
+   }
+   .controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
+      z-index: 3;
+      border-bottom-color: transparent;
+   }
+}
+.controls-PeriodDialog-MonthsRange__quarter-hovered {
+   &:before {
+      content: '';
+      position: absolute;
+      top: -@border-width_PeriodDialog-MonthRange-quartersPanel;
+      bottom: 0;
+      right: 0;
+      left: -@border-width_PeriodDialog-MonthRange-quartersPanel;
+      border: solid @border-width_PeriodDialog-MonthRange-quartersPanel @border-color_PeriodDialog-MonthRange-quarters-halhyears-selected;
+      z-index: 3;
+   }
+   .controls-PeriodDialog-MonthsRange__quarterButton {
+      z-index: 3;
+      border-bottom-color: transparent;
+   }
+}
+
+// нестандартная тема для MonthView
+.controls-PeriodDialog-MonthsRange__month {
+   cursor: pointer;
+   border: 1px dotted transparent;
+   box-sizing: border-box;
+
+   &.controls-MonthViewVDOM {
+      width: 100%;
+      background-color: transparent;
+   }
+
+   .controls-MonthViewVDOM__tableRow {
+      flex-basis: @height_PeriodDialog-MonthRange-month-date;
+   }
+
+   .controls-MonthViewVDOM__item {
+      font-size: @font-size_PeriodDialog-MonthRange-month-date;
+   }
+
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected {
+      background-color: transparent;
+   }
+   .controls-MonthViewVDOM__item-selectedStart,
+   .controls-MonthViewVDOM__item-selectedEnd,
+   .controls-MonthViewVDOM__item-selectedInner {
+      outline: none;
+      font-weight: normal;
+   }
+   .controls-MonthViewVDOM__item-selectedStart:before,
+   .controls-MonthViewVDOM__item-selectedEnd:after {
+      width: @width_PeriodDialog-MonthRange-item-selectedStart-before;
+   }
+   .controls-MonthViewVDOM__item-selectedStart:before {
+      left: 0;
+   }
+}
+
+.controls-PeriodDialog-MonthsRange__halfYear-hovered,
+.controls-PeriodDialog-MonthsRange__quarter-hovered,
+.controls-PeriodDialog-MonthsRange__hovered {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected,
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected {
+      background-color: transparent;
+   }
+   .controls-MonthView__item-selectedStart:before,
+   .controls-MonthView__item-selectedEnd:after {
+      height: 0;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-PeriodDialog-MonthsRange__month {
+      .controls-MonthViewVDOM__item {
+         &:hover {
+            outline: none;
+         }
+      }
+   }
+   .controls-PeriodDialog-MonthsRange__month_clickable {
+      &:hover {
+         border-color: @border-color_PeriodDialog-MonthRange-month;
+      }
+   }
+}
+
+.controls-PeriodDialog-MonthsRange__month {
+   .controls-MonthViewVDOM__item {
+      &:active {
+         outline: none;
+      }
+   }
+}
+
+.controls-PeriodDialog-MonthsRange__month_clickable {
+   &:active {
+      border-color: @border-color_PeriodDialog-MonthRange-month;
+   }
+}
