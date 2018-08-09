@@ -148,10 +148,6 @@ function(cMerge,
             cfg.isModal = true;
          }
 
-         if (cfg.hasOwnProperty('side')) {
-            cfg.horizontalAlign = { side: cfg.side };
-         }
-
          if (cfg.horizontalAlign) {
             if (cfg.horizontalAlign.side === undefined) {
                delete cfg.horizontalAlign.side;
@@ -174,19 +170,26 @@ function(cMerge,
 
          if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
             cfg.corner = {};
-            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-               cfg.direction = 'left';
+            if (cfg.hasOwnProperty('side')) {
+               cfg.corner.horizontal = cfg.side;
             }
-            cfg.corner.horizontal = cfg.direction;
          }
 
-         if (cfg.hasOwnProperty('verticalAlign')) {
+         if (cfg.hasOwnProperty('verticalAlign') && typeof cfg.verticalAlign !== 'object') {
             cfg.corner = cfg.corner || {};
 
             //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
-            if (typeof cfg.verticalAlign !== 'object') {
-               cfg.corner.vertical = cfg.verticalAlign;
-               delete cfg.verticalAlign;
+            cfg.corner.vertical = cfg.verticalAlign;
+            delete cfg.verticalAlign;
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            if (cfg.direction === 'right' || cfg.direction === 'left') {
+               if (typeof cfg.horizontalAlign !== 'object') {
+                  cfg.horizontalAlign = {side: cfg.direction};
+               }
+            } else if (typeof cfg.verticalAlign !== 'object') {
+               cfg.verticalAlign = {side: cfg.direction};
             }
          }
 
