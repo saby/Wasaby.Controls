@@ -26,15 +26,16 @@ define('Controls/Container/BatchUpdater',
        * @cfg {Content} Container contents.
        *
        */
-      var Async = Base.extend({
+      var Async;
+      Async = Base.extend({
          _template: template,
          requestHandler: function(evt, def, callback) {
-            if(!callback instanceof Deferred) {
-               IoC.resolve('ILogger').error('Event batchUpdate should pass deferred in parameters')
+            if (!(callback instanceof Deferred)) {
+               IoC.resolve('ILogger').error('Event batchUpdate should pass deferred in parameters');
                return;
             }
-            if(typeof callback !== 'function') {
-               IoC.resolve('ILogger').error('Event batchUpdate should pass callback in parameters')
+            if (typeof callback !== 'function') {
+               IoC.resolve('ILogger').error('Event batchUpdate should pass callback in parameters');
                return;
             }
             var self = this;
