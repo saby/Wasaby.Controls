@@ -105,7 +105,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
+            if (this._options.canMaximize) {
+               var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
+               var templateComponent = this._getTemplateComponent();
+               this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+               this.getContainer().toggleClass('ws-float-area-maximized-mode', popupOptions.maximized || false);
+               if (templateComponent && maximized !== popupOptions.maximized) {
+                  templateComponent._notifyOnSizeChanged();
+                  templateComponent._notify('onChangeMaximizeState', popupOptions.maximized);
+                  templateComponent._options.isPanelMaximized = popupOptions.maximized;
+                  this._notify('onChangeMaximizeState', popupOptions.maximized);
+               }
+            }
             return false;
+         },
+
+         _changeMaximizedMode: function(event) {
+            event.stopPropagation();
+            var state = this.getContainer().hasClass('ws-float-area-maximized-mode');
+            this._notifyVDOM('maximized', [!state], {bubbling: true});
          },
 
          rebuildChildControl: function() {

@@ -116,6 +116,13 @@ function(cMerge,
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
+
+         if (cfg.canMaximize) {
+            cfg.minimizedWidth = cfg.minWidth;
+            cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
+            cfg.templateOptions.canMaximize = true;
+            cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
+         }
       },
 
       _preparePopupCfgFromOldToNew: function(cfg) {
