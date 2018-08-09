@@ -1482,7 +1482,7 @@ define('SBIS3.CONTROLS/ListView',
          },
          /**
           * Возвращает следующий элемент
-          * @param id
+          * @param id - ключ записи
           * @returns {jQuery}
           */
          getNextItemById: function (id) {
