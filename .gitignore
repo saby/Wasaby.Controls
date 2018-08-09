@@ -10,6 +10,9 @@
 /components/WS.Data/*
 /WS.Data
 /sbis3-ws
+/View
+/Core
+/components/Core
 /ws-data
 /cdn
 /node_modules
