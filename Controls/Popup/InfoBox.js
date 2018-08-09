@@ -124,6 +124,7 @@ define('Controls/Popup/InfoBox',
 
             this._openId = setTimeout(function() {
                self._open(event);
+               self._forceUpdate();
             }, self._options.showDelay);
          },
 
@@ -134,6 +135,7 @@ define('Controls/Popup/InfoBox',
 
             this._closeId = setTimeout(function() {
                self._close();
+               self._forceUpdate();
             }, self._options.hideDelay);
          },
 
@@ -156,6 +158,10 @@ define('Controls/Popup/InfoBox',
                   event.stopPropagation();
                   break;
             }
+         },
+
+         _scrollHandler: function() {
+            this._close();
          }
       });
 
