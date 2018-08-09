@@ -45,7 +45,8 @@ define(
                });
             });
 
-            it('_listScrollHandler https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2', function() {
+            //TODO: удалить после выполнения https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
+            it('_listScrollHandler', function() {
                listScrollHandler.call(self, null, 'scrollMove', {scrollTop: -100});
                assert.deepEqual(self, {});
 
