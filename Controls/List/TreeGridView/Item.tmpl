@@ -20,7 +20,7 @@
       <ws:partial template="{{itemActionsTemplate}}" itemData="{{itemData}}"/>
    </ws:if>
 </ws:template>
-<div attr:class="controls-Grid__row controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
+<div attr:class="controls-Grid__row controls-Grid__row_{{itemData.style}} controls-ListView__itemV" attr:key="{{itemData.item.getId()}}">
    <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
       <div attr:class="{{itemData.getCurrentColumn().cellClasses}} controls-TreeGrid__row"
            attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">

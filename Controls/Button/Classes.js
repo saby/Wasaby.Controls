@@ -66,7 +66,7 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
    };
    var Classes = {
 
-   /**
+      /**
      * Получить текущий стиль кнопки
      * @param {String} style
      * @returns {Object}
