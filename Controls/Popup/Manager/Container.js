@@ -67,7 +67,7 @@ define('Controls/Popup/Manager/Container',
                // мне нужно фокусировать на _afterUnmount, когда на фокусировку не стрельнет _popupDeactivated,
                // но _afterUnmount не существует, так что я вызываю setTimeout на _beforeUnmount попапа,
                // чтобы дождаться нужного состояния
-               setTimeout(function (){
+               setTimeout(function() {
                   this[popupId + '_activeElement'].focus();
                   delete this[popupId + '_activeElement'];
                }.bind(this), 0);
