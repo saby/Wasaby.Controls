@@ -142,7 +142,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._options.enabled);
+                  self.setEnabled(self._enabled);
                });
             });
 
@@ -155,6 +155,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _afterMount: function(cfg) {
             this._options = cfg;
+            this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
