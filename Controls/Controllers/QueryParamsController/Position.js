@@ -1,7 +1,10 @@
 define('Controls/Controllers/QueryParamsController/Position',
-   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
-   function(cExtend, SbisService) {
+   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService', 'Core/IoC'],
+   function(cExtend, SbisService, IoC) {
       var _private = {
+         resolveField: function(optField) {
+            return (optField instanceof Array) ? optField : [optField];
+         },
          resolveDirection: function(loadDirection, optDirection) {
             var navDirection;
             if (loadDirection === 'down') {
@@ -15,16 +18,12 @@ define('Controls/Controllers/QueryParamsController/Position',
          },
 
          resolvePosition: function(item, optField) {
-            var field, navPosition, fieldValue;
-            if (optField instanceof Array) {
-               field = optField;
-            } else {
-               field = [optField];
-            }
+            var navField, navPosition, fieldValue;
 
+            navField = _private.resolveField(optField);
             navPosition = [];
-            for (var i = 0; i < field.length; i++) {
-               fieldValue = item.get(field[i]);
+            for (var i = 0; i < navField.length; i++) {
+               fieldValue = item.get(navField[i]);
                navPosition.push(fieldValue);
             }
             return navPosition;
@@ -61,17 +60,37 @@ define('Controls/Controllers/QueryParamsController/Position',
          },
 
          prepareQueryParams: function(loadDirection) {
-            var navPosition, navDirection;
+            var navPosition, navDirection, additionalFilter, sign, navField;
+
             navDirection = _private.resolveDirection(loadDirection, this._options.direction);
-
             if (loadDirection === 'up') {
-
-
+               navPosition = this._beforePosition;
             } else if (loadDirection === 'down') {
-
+               navPosition = this._afterPosition;
             } else {
-
+               if (this._options.position instanceof Array) {
+                  navPosition = this._options.position;
+               } else {
+                  navPosition = [this._options.position];
+               }
             }
+
+            sign = '';
+            navField = _private.resolveField(this._options.field);
+            switch (navDirection) {
+               case 'after': sign = '>='; break;
+               case 'before': sign = '<='; break;
+               case 'both': sign = '~'; break;
+            }
+
+            additionalFilter = {};
+            for (var i = 0; i < navField.length; i++) {
+               additionalFilter[navField[i] + sign] = navPosition[i];
+            }
+
+            return {
+               filter: additionalFilter
+            };
 
          },
 
@@ -79,11 +98,21 @@ define('Controls/Controllers/QueryParamsController/Position',
             var more, navDirection, edgeElem, navPosition;
             more = list.getMetaData().more;
             if (typeof more === 'boolean') {
-               navDirection = _private.resolveDirection(loadDirection, this._options.direction);
-               this._more[navDirection] = more;
+               if (loadDirection || this._options.direction !== 'both') {
+                  navDirection = _private.resolveDirection(loadDirection, this._options.direction);
+                  this._more[navDirection] = more;
+               }
+               else {
+                  IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+               }
             } else {
                if (more instanceof Object) {
-                  this._more = more;
+                  if (!loadDirection &&  this._options.direction === 'both') {
+                     this._more = more;
+                  }
+                  else {
+                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+                  }
                }
             }
 
@@ -92,7 +121,7 @@ define('Controls/Controllers/QueryParamsController/Position',
                   edgeElem = list.at(0);
                   this._beforePosition = _private.resolvePosition(edgeElem, this._options.field);
                }
-               if (loadDirection === 'up') {
+               if (loadDirection !== 'up') {
                   edgeElem = list.at(list.getCount() - 1);
                   this._afterPosition = _private.resolvePosition(edgeElem, this._options.field);
                }
@@ -122,6 +151,8 @@ define('Controls/Controllers/QueryParamsController/Position',
          destroy: function() {
             this._options = null;
             this._more = null;
+            this._afterPosition = null;
+            this._beforePosition = null;
          }
       });
 
