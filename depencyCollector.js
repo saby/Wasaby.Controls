@@ -41,13 +41,14 @@ dirWalker(wsResources);
 var contents = {
    jsModules: jsModules
 };
-contents["modules"] = {
+contents["modules"] = contents["modules"] = {
    "SbisFile": {path:"tests/sbis3-app-engine/client/SbisFile"},
    "SBIS3.CONTROLS": {path:"components"},
    "View": {path:"sbis3-ws/View"},
    "WSTest": {path:"tests/WSTest"},
-   "ControlsSandbox": {path:"pages/sandbox"}
+   "ControlsSandbox": {path:"pages/sandbox"},
+   "Core": {path:"sbis3-ws/Core"}
 };
 
-fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
-fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');
+fs.writeFileSync(path.join(__dirname, 'contents.json'), JSON.stringify(contents, null, 3));
+fs.writeFileSync(path.join(__dirname, 'contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');

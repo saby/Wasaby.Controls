@@ -22,8 +22,15 @@
                                 value="{{ itemTemplate.itemData.item.title }}"
                                 enabled="{{true}}">
                         <ws:editorTemplate>
-                            <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
-                                                 selectOnClick="{{ false }}" />
+                            <Controls.Validate.Input>
+                                <ws:validators>
+                                    <ws:Function value="{{ itemTemplate.itemData.item.title }}">Controls/Validate/Validators/IsRequired</ws:Function>
+                                </ws:validators>
+                                <ws:content>
+                                    <Controls.Input.Text bind:value="itemTemplate.itemData.item.title"
+                                                         selectOnClick="{{ false }}" />
+                                </ws:content>
+                            </Controls.Validate.Input>
                         </ws:editorTemplate>
                     </ws:partial>
                 </ws:contentTemplate>

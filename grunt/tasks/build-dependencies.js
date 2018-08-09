@@ -34,8 +34,8 @@ module.exports = function(grunt) {
       global.define = restoreDefine;
 
       var jsModulesJsonString = JSON.stringify({jsModules: jsModules}, null, 3);
-      fs.writeFileSync(path.join(gruntFilePath, 'components/contents.json'), jsModulesJsonString);
-      fs.writeFileSync(path.join(gruntFilePath, 'components/contents.js'), 'contents = ' + jsModulesJsonString + ';');
+      fs.writeFileSync(path.join(gruntFilePath, '/contents.json'), jsModulesJsonString);
+      fs.writeFileSync(path.join(gruntFilePath, '/contents.js'), 'contents = ' + jsModulesJsonString + ';');
       grunt.log.writeln('Contents files are built.');
    });
 };

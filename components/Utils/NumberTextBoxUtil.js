@@ -13,10 +13,11 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              *
              * @param value
              * @param maxLength
+             * @param countMinusInLength
              * @returns {boolean}
              */
-            checkMaxLength: function (value, maxLength) {
-                var length = this._getValueLength(value);
+            checkMaxLength: function (value, maxLength, countMinusInLength) {
+                var length = this._getValueLength(value, countMinusInLength);
                 return !(maxLength && length > maxLength);
             },
             /**
@@ -29,14 +30,15 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
              * @param decimals
              * @param keyCode
              * @param maxLength
+             * @param countMinusInLength
              * @returns {*}
              */
-            numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength){
+            numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength, countMinusInLength){
                 var dotPosition = currentVal.indexOf('.'),
                     oldValue = currentVal,
                     symbol = String.fromCharCode(keyCode),
                     integerCount =  this._getIntegersCount(currentVal),
-                    checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
+                    checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength, countMinusInLength),
                     newCaretPosition = b,
                     isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers,
                     replaceFirstZero = false;
@@ -89,7 +91,7 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                 }
                 currentVal = currentVal.replace(/\s/g, '');
 
-                if(!this.checkMaxLength(currentVal, maxLength)){
+                if(!this.checkMaxLength(currentVal, maxLength, countMinusInLength)){
                     currentVal = oldValue;
                 }
 
@@ -222,8 +224,14 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                 return true;
             },
 
-            _getValueLength: function(value) {
-                return value ? value.replace(/[\s.-]/g, '').length : 0;
+            _getValueLength: function(value, countMinusInLength) {
+               var length = 0;
+
+               if (value) {
+                  length = countMinusInLength ? value.replace(/[\s.]/g, '').length : value.replace(/[\s.-]/g, '').length;
+               }
+
+               return length;
             },
             
             _getZeroString: function(length){
