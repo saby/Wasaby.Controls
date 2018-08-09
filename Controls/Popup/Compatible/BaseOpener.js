@@ -182,6 +182,7 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('verticalAlign')) {
             cfg.corner = cfg.corner || {};
+
             //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
             if (typeof cfg.verticalAlign !== 'object') {
                cfg.corner.vertical = cfg.verticalAlign;
