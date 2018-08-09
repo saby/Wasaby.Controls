@@ -7,6 +7,7 @@ define('Controls/Controllers/QueryParamsController/Position',
          },
          resolveDirection: function(loadDirection, optDirection) {
             var navDirection;
+
             if (loadDirection === 'down') {
                navDirection = 'after';
             } else if (loadDirection === 'up') {
@@ -91,7 +92,6 @@ define('Controls/Controllers/QueryParamsController/Position',
             return {
                filter: additionalFilter
             };
-
          },
 
          calculateState: function(list, loadDirection) {
@@ -101,16 +101,14 @@ define('Controls/Controllers/QueryParamsController/Position',
                if (loadDirection || this._options.direction !== 'both') {
                   navDirection = _private.resolveDirection(loadDirection, this._options.direction);
                   this._more[navDirection] = more;
-               }
-               else {
+               } else {
                   IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
                }
             } else {
                if (more instanceof Object) {
                   if (!loadDirection &&  this._options.direction === 'both') {
                      this._more = more;
-                  }
-                  else {
+                  } else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
                   }
                }
