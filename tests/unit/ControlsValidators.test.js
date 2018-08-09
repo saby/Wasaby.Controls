@@ -24,7 +24,7 @@ define(['SBIS3.CONTROLS/Utils/ControlsValidators'], function (ControlsValidators
             });
       
             it('validate false', function (){
-               assert.equal(ControlsValidators.required(''), 'Поле обязательно для заполнения');
+               assert.equal(ControlsValidators.required(''), 'Поле обязательно для заполнения.');
             });
       
          });
@@ -44,14 +44,14 @@ define(['SBIS3.CONTROLS/Utils/ControlsValidators'], function (ControlsValidators
             });
       
             it('validate NaN', function (){
-               assert.equal(ControlsValidators.required(NaN), 'Поле обязательно для заполнения');
+               assert.equal(ControlsValidators.required(NaN), 'Поле обязательно для заполнения.');
             });
       
          });
    
          describe('undefined option test', function() {
             it('validate true', function (){
-               assert.equal(ControlsValidators.required(undefined), 'Поле обязательно для заполнения');
+               assert.equal(ControlsValidators.required(undefined), 'Поле обязательно для заполнения.');
             });
          });
       });
