@@ -69,7 +69,8 @@
   "exclude": [
     "Controls/Input/RichArea"
   ],
-  "output": "controls-input.package.js",
+  "output": "controls-input.package.js"
+}, {
   "include": [
     "Controls/Input/RichArea"
   ],
