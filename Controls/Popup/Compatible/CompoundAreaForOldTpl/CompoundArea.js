@@ -202,8 +202,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   }
                });
                self.rebuildChildControl().addCallback(function() {
-                  self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                   runDelayed(function() {
+                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                      self._notifyCompound('onResize');
                   });
                });
