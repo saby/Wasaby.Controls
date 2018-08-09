@@ -42,11 +42,28 @@ define('Controls/Popup/Manager/Container',
           */
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
-            this._forceUpdate();
+            var container = this._container.hasOwnProperty('length') ? this._container[0] : this._container;
+            container.controlNodes[0].control._forceUpdate(); // ??
+            // this._forceUpdate();
          },
 
          _popupDeactivated: function(event, popupId) {
-            this._notify('popupDeactivated', [popupId], { bubbling: true });
+            var activeElement = document.activeElement;
+            var isPopupExists = this._children[popupId];
+            if (isPopupExists) {
+               // this._children[popupId].activate();
+               var finishDef = this._children.registrator.finishPendingOperations(false);
+               finishDef.addCallback(function() {
+                  // activeElement.focus();
+                  this._notify('popupDeactivated', [popupId], { bubbling: true });
+               }.bind(this));
+               finishDef.addErrback(function(e) {
+                  IoC.resolve('ILogger').error('FormController example', '', e);
+                  return e;
+               });
+            } else {
+               this._notify('popupDeactivated', [popupId], { bubbling: true });
+            }
          },
 
          _overlayClickHandler: function(event) {
