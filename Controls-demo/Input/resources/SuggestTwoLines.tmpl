@@ -1,8 +1,9 @@
 <Controls.Input.Suggest
    attr:test_name="Suggest"
    value="{{_options.suggestValue}}"
-   displayProperty="title"
+   displayProperty="{{_options.displayProperty || 'title'}}"
    searchParam="title"
+   autoDropDown="{{_options.autoDropDown}}"
    source="{{_suggestSource()}}"
    minSearchLength="1"
    on:valueChanged="_changeValueHandler()">
