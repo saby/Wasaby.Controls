@@ -28,6 +28,7 @@ define('Controls/Popup/Opener/Confirmation',
 
          _beforeMount: function() {
             this._closeHandler = this._closeHandler.bind(this);
+            Confirmation.superclass._beforeMount.call(this);
          },
 
          _closeHandler: function(res) {
