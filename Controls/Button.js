@@ -7,47 +7,48 @@ define('Controls/Button', [
    'use strict';
 
    /**
-    * Basic button.
+    * Base button with support different display styles, sizes, icon styles.
     *
-    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     * @class Controls/Button
     * @extends Core/Control
     * @mixes Controls/Button/interface/IHref
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Button
-    * @demo Controls-demo/Buttons/demoButtons
+    * @demo Controls-demo/Buttons/ButtonDemo
     */
 
    /**
     * @name Controls/Button#style
     * @cfg {String} Display style of button.
-    * @variant iconButtonBordered Button display as icon with border.
-    * @variant linkMain Button display as main link style.
-    * @variant linkMain2 Button display as first nonaccent link style.
-    * @variant linkMain3 Button display as second nonaccent link style.
-    * @variant linkAdditional Button display as third nonaccent link style.
-    * @variant linkAdditional2 Button display as first accent link style.
-    * @variant linkAdditional3 Button display as second accent link style.
-    * @variant linkAdditional4 Button display as third accent link style.
-    * @variant linkAdditional5 Button display as fourth accent link style.
-    * @variant buttonPrimary Button display as primary contour button style.
-    * @variant buttonDefault Button display as default contour button style.
-    * @variant buttonAdd Button display as button with icon add style.
+    * @variant iconButtonBordered Bordered icon button display style. Minimum number size.
+    * @variant iconButtonBorderedAdditional Additional bordered icon button display style. Minimum number size
+    * @variant linkMain First main link display style.
+    * @variant linkMain2 Second main link display style.
+    * @variant linkMain3 Third main link display style.
+    * @variant linkAdditional First additional link display style.
+    * @variant linkAdditional2 Second additional link display style.
+    * @variant linkAdditional3 Third additional link display style.
+    * @variant linkAdditional4 Fourth additional link display style.
+    * @variant linkAdditional5 Fifth additional link display style.
+    * @variant buttonPrimary Primary contour button display style. Minimum number size.
+    * @variant buttonDefault Default contour button display style. Minimum number size. It is default value.
+    * @variant buttonAdd Button add display style. Minimum number size.
     */
 
    /**
     * @name Controls/Button#size
     * @cfg {String} Size of the button.
-    * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
-    * @variant m Button has m size.
-    * @variant l Button has l size.
-    * @variant xl Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
+    * @variant s Small button size. Not supported by button styles with label: 'Minimum number size'.
+    * @variant m Medium button size. It is default value.
+    * @variant l Large button size.
+    * @variant xl Extra large button size. Not supported by button styles with label: 'Minimum number size'.
     */
 
    /**
@@ -57,16 +58,16 @@ define('Controls/Button', [
 
    /**
     * @name Controls/Button#icon
-    * @cfg {String} Button icon.
+    * @cfg {String} Button icon. It is given by css-classes, without color class.
     */
 
    /**
     * @name Controls/Button#iconStyle
     * @cfg {String} Displaying icon style.
-    * @variant default Icon has default display style in this type of button.
-    * @variant attention Icon has attention display style.
-    * @variant error Icon has error display style.
-    * @variant done Icon has done icon style.
+    * @variant default Default icon display style. It is different for different button styles. It is default value.
+    * @variant attention Attention icon display style.
+    * @variant error Error icon display style.
+    * @variant done Done icon display style.
     */
    var _private = {
       cssStyleGeneration: function(self, options) {

@@ -8,14 +8,15 @@ define('Controls/Button/BigSeparator', [
    'use strict';
 
    /**
-    * Big separator button.
+    * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     * @class Controls/Button/BigSeparator
     * @extends Core/Control
     * @control
     * @public
+    * @mixes Controls/Toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
     *
@@ -46,6 +47,10 @@ define('Controls/Button/BigSeparator', [
 
       _beforeUpdate: function(newOptions) {
          _private.iconChangedValue(this, newOptions);
+      },
+
+      clickHandler: function() {
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 

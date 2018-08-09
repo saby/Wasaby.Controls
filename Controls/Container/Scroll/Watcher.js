@@ -3,10 +3,10 @@
  * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
  * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
  */
-define('Controls/Layout/Scroll',
+define('Controls/Container/Scroll/Watcher',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Scroll/Scroll',
+      'tmpl!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
       'Core/helpers/Function/debounce',
       'Core/detection'
@@ -159,9 +159,9 @@ define('Controls/Layout/Scroll',
 
                _private.onInitScroll(this, this._container);
 
-               //IntersectionObserver doesn't work correctly in Edge
+               //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !detection.isIE12) {
+               if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
                   _private.initIntersectionObserver(this, triggers);
                } else {
                   _private.onChangeScroll(this, this._container);

@@ -20,7 +20,7 @@ define('Controls/Dropdown/Controller',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/Input/interface/IDropdownEmptyText
-       * @mixes Controls/Button/interface/ICaption
+       * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/IGroupedView
        * @author Золотова Э.Е.

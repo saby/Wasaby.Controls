@@ -6,9 +6,7 @@ define('Controls/Input/Number', [
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
    'Core/helpers/Function/runDelayed',
-
-   'Controls/Input/resources/InputRender/InputRender',
-   'tmpl!Controls/Input/resources/input'
+   'Core/IoC'
 ], function(
    Control,
    tmplNotify,
@@ -16,7 +14,9 @@ define('Controls/Input/Number', [
    types,
    NumberViewModel,
    inputHelper,
-   runDelayed) {
+   runDelayed,
+   IoC
+) {
 
    /**
     * A component are used to let the user enter a number.
@@ -87,6 +87,10 @@ define('Controls/Input/Number', [
       _notifyHandler: tmplNotify,
 
       _beforeMount: function(options) {
+         if (options.integersLength <= 0) {
+            IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+         }
+
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
@@ -99,6 +103,10 @@ define('Controls/Input/Number', [
       _beforeUpdate: function(newOptions) {
          var
             value;
+
+         if (newOptions.integersLength <= 0) {
+            IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + newOptions.integersLength + '. Integers length must be greater than 0.');
+         }
 
          //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
          if (this._options.value === newOptions.value) {

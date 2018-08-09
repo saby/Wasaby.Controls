@@ -24,7 +24,7 @@ define('Controls/List/ListView', [
          if (self._listChanged) {
             self._listChanged = false;
             
-            //command to scroll layout
+            //command to scroll watcher
             self._notify('resize', [], {bubbling: true});
             
             //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2

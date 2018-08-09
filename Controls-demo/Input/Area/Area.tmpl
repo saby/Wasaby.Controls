@@ -15,6 +15,7 @@
          readOnly="{{_readOnly}}"
          selectOnClick="{{_selectOnClick}}"
          validationErrors="{{_validationErrors}}"
+         tooltip="{{_tooltip}}"
          on:valueChanged="_eventHandler()"
          on:inputCompleted="_eventHandler()"
          attr:class="demo-TextBox"
@@ -36,6 +37,8 @@
       <Controls.Input.Number attr:id="minLines" bind:value="_minLines" precision="{{0}}" attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="maxLines"/>
       <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines" precision="{{0}}" attr:class="demo-TextBox"/>
+       <Controls.Label caption="tooltip"/>
+       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim"/>
          <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"

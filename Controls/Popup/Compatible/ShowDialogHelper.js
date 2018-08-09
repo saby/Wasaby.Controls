@@ -14,7 +14,6 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                if (config.isStack === true) {
                   deps.push('Controls/Popup/Opener/Stack/StackController');
                   config._type = 'stack';
-                  config.className = (config.className || '') + ' controls-Stack';
                } else if (config.target) {
                   deps.push('Controls/Popup/Opener/Sticky/StickyController');
                   config._type = 'sticky';

@@ -710,7 +710,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор сохранения.
        * @remark
        * При сохранении записи происходит проверка всех <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/validation/'>валидаторов</a> диалога.
-       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля".
+       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля.".
        * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
        * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
@@ -749,7 +749,7 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
       },
 
       _prepareUpdatingRecord: function(config) {
-         var error = new Error(rk('Некорректно заполнены обязательные поля')),
+         var error = new Error(rk('Некорректно заполнены обязательные поля.')),
             self = this,
             updateDeferred = new Deferred(),
             onBeforeUpdateData;

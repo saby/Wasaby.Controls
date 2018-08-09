@@ -1,24 +1,24 @@
-define('Controls/Button/Back', [
+define('Controls/Header/BackButton', [
    'Core/Control',
-   'tmpl!Controls/Button/BackButton/Back',
+   'tmpl!Controls/Header/BackButton/Back',
    'WS.Data/Type/descriptor',
-   'css!Controls/Button/BackButton/Back'
+   'css!Controls/Header/BackButton/Back'
 ], function(Control, template, types) {
 
    /**
-    * Back button with support two display styles and three size.
+    * Specialized heading to go to the previous level. Support different display styles and sizes.
     *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Button/Back
+    * @class Controls/Header/BackButton
     * @extends Core/Control
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public
     * @category Button
     *
-    * @mixes Controls/Button/BackButton/BackStyles
+    * @mixes Controls/Header/BackButton/BackStyles
     *
     * @demo Controls-demo/Buttons/BackButton/backDemo
     */

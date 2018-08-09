@@ -13,6 +13,7 @@
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
         dataLoadCallback="{{_setText}}"
+        tooltip="{{_options.tooltip}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         on:mousedown="_mouseDownHandler()"
         class="controls-ComboBox">

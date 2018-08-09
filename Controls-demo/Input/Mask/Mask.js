@@ -30,6 +30,7 @@ define('Controls-demo/Input/Mask/Mask',
             {title: '(ddd(ddd)ddd)', example: ''},
             {title: 'd\\{1,3}l\\{1,3}', example: ''}
          ],
+         _tooltip: '',
          _tagStyleHandler: function() {
             this._children.infoBoxMask.open({
                target: this._children.textMask._container,

@@ -8,11 +8,11 @@ define('Controls/Toggle/Checkbox', [
    /**
     * Checkbox with support undefined state(options tristate) and tooltip. Tooltip should be used if the icon instead of the caption.
     *
-    * <a href="/materials/demo-ws4-checkbox">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
     *
     * @class Controls/Toggle/Checkbox
     * @extends Core/Control
-    * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ICaption
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
@@ -29,7 +29,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#value
-    * @cfg {Boolean|null} Current state.
+    * @cfg {Boolean|null} Current value.
     * @variant True Selected checkbox state.
     * @variant False Unselected checkbox state. It is default state.
     * @variant Null Tristate checkbox state.

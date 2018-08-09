@@ -4,6 +4,7 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/resources/utils/TreeItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
+   'WS.Data/Collection/IBind',
    'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    ListViewModel,
@@ -11,6 +12,7 @@ define('Controls/List/Tree/TreeViewModel', [
    TreeItemsUtil,
    cClone,
    HierarchyRelation,
+   IBindCollection,
    ArraySimpleValuesUtil
 ) {
 
@@ -91,6 +93,30 @@ define('Controls/List/Tree/TreeViewModel', [
             });
 
             return res;
+         },
+
+         onCollectionChange: function(self, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+            if (action === IBindCollection.ACTION_REMOVE) {
+               _private.checkRemovedNodes(self, removedItems);
+            }
+         },
+
+         checkRemovedNodes: function(self, removedItems) {
+            var
+               nodeId;
+            if (removedItems.length) {
+               for (var idx = 0; idx < removedItems.length; idx++) {
+                  if (removedItems[idx].isNode && removedItems[idx].isNode()) {
+                     nodeId = removedItems[idx].getContents().getId();
+
+                     // clear only if node removed from items, else this is collapsed node
+                     if (!self._items.getRecordById(nodeId)) {
+                        delete self._expandedNodes[nodeId];
+                        self._notify('onNodeRemoved', nodeId);
+                     }
+                  }
+               }
+            }
          }
       },
 
@@ -140,6 +166,11 @@ define('Controls/List/Tree/TreeViewModel', [
             data['expandedNodes'] = this._expandedNodes;
             data['keyProperty'] = this._options.keyProperty;
             return data;
+         },
+
+         _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+            TreeViewModel.superclass._onCollectionChange.apply(this, arguments);
+            _private.onCollectionChange(this, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
          getCurrent: function() {

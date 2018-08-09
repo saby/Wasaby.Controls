@@ -93,7 +93,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             dropDownList._beforeUpdate(dropDownConfig);
    
             assert.isFalse(dropDownList._hasHierarchy);
-            
+
+            dropDownList._expanded = true; //В компоненте значение меняется по биндингу
             dropDownList._toggleExpanded();
             assert.isTrue(dropDownList._hasHierarchy);
             

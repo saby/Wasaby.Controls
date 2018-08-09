@@ -7,7 +7,7 @@ define('Controls/Container/Data',
    ],
    
    function(Control, template, getPrefetchSource, ContextOptions) {
-   
+
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -26,12 +26,12 @@ define('Controls/Container/Data',
        * @name Controls/Container/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
-   
+
       /**
        * @name Controls/Container/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
-   
+
       'use strict';
       
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
@@ -106,21 +106,21 @@ define('Controls/Container/Data',
                });
             }
          },
-         
+
          _beforeUpdate: function(newOptions) {
             var self = this;
-            
+
             _private.resolveOptions(this, newOptions);
-            
+
             if (this._options.source !== newOptions.source) {
-               _private.createPrefetchSource(this).addCallback(function(result) {
+               return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
                   self._forceUpdate();
                   return result;
                });
             }
          },
-   
+
          _filterChanged: function(event, filter) {
             this._filter = filter;
             this._notify('filterChanged', [filter]);
@@ -141,7 +141,7 @@ define('Controls/Container/Data',
             };
          }
       });
-   
+
       Data._private = _private;
       return Data;
    });

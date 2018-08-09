@@ -1482,7 +1482,7 @@ define('SBIS3.CONTROLS/ListView',
          },
          /**
           * Возвращает следующий элемент
-          * @param id
+          * @param id - ключ записи
           * @returns {jQuery}
           */
          getNextItemById: function (id) {
@@ -4654,12 +4654,7 @@ define('SBIS3.CONTROLS/ListView',
             });
             return eip;
          },
-         destroy: function () {
-            this._destroyEditInPlaceController();
-            if (this._scrollBinder){
-               this._scrollBinder.destroy();
-               this._scrollBinder = null;
-            }
+         _destroyScrollWatcher: function() {
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
@@ -4668,6 +4663,14 @@ define('SBIS3.CONTROLS/ListView',
                this._scrollWatcher.destroy();
                this._scrollWatcher = undefined;
             }
+         },
+         destroy: function () {
+            this._destroyEditInPlaceController();
+            if (this._scrollBinder){
+               this._scrollBinder.destroy();
+               this._scrollBinder = null;
+            }
+            this._destroyScrollWatcher();
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
@@ -5082,7 +5085,13 @@ define('SBIS3.CONTROLS/ListView',
 
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
+            if (this._options.task1175678591) { // https://online.sbis.ru/opendoc.html?guid=31bc2c39-ef26-4ff7-88f6-1066045262f3
+               this._destroyScrollWatcher();
+            }
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
+            if (this._options.task1175678591) { // https://online.sbis.ru/opendoc.html?guid=31bc2c39-ef26-4ff7-88f6-1066045262f3
+               this._createScrollWatcher();
+            }
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */
             if (this._resultsChanged && this._getItemsProjection() && this._getItemsProjection().isEventRaising()) {

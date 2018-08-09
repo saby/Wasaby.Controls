@@ -14,7 +14,7 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
       idProperty: 'title',
       data: [
          {
-            title: 'default'
+            title: 'secondary'
          },
          {
             title: 'primary'
@@ -25,12 +25,16 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _iconSelectedStyle: 'default',
+         _iconSelectedStyle: 'primary',
          _iconStyleSource: iconStyleSource,
          _eventName: 'no event',
 
-         clickHandler: function(e) {
-            this._eventName = 'click';
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
+         },
+
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
          iconChangeStyle: function(e, key) {

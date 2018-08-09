@@ -3,6 +3,8 @@
       <Controls.Filter.Button attr:class="panel-demo-filterButton"
                               orientation="{{_selectedKeyOrientation}}"
                               bind:items="_itemsSimple"
+                              on:filterChanged="filterChangeHandler()"
+                              on:itemsChanged="itemsChangeHandler()"
                               historyId="{{_historyBlock ? 'DEMO_HISTORY_ID' : false}}">
          <ws:templateName>
             <ws:partial template="tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions"
@@ -26,7 +28,7 @@
    <div class="panel-demo-option-block">
       <h3>Задайте опции:</h3>
       <Controls.Label name="myLabel1" caption="Filter orientation"/>
-      <Controls.Toggle.Radio
+      <Controls.Toggle.RadioGroup
               keyProperty="title"
               bind:selectedKey="_selectedKeyOrientation"
               source="{{_alignFilterSource}}"
@@ -46,6 +48,16 @@
       <Controls.Toggle.Checkbox attr:id="property" on:valueChanged="valueChangedHandler2()"
                                 bind:value="_hasItemTemplateProperty"
                                 caption="Filter 'author' from block 'Selected' is specified using the option 'templateItem'"/>
+   </div>
+
+   <div class="eventBlock">
+      <span>Event that surfaced:</span>
+      <br/>
+      <div class="eventName">
+         <span>{{_eventNameFilter}}</span>
+         <span>{{_eventNameItems}}</span>
+      </div>
+      <Controls.Button on:click="reset()" style="linkMain3" caption="reset"/>
    </div>
 
 </div>

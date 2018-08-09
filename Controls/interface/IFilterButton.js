@@ -43,5 +43,11 @@ define('Controls/interface/IFilterButton', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
     */
+
+   /**
+    * @event Controls/interface/IFilterButton#itemsChanged Happens when items changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} items New items.
+    */
    
 });
