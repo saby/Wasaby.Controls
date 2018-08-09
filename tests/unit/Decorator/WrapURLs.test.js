@@ -130,7 +130,7 @@ define(
                result = parseText('e@mail.ru');
                assert.deepEqual(result, [{
                   type: 'email',
-                  addres: 'e@mail.ru',
+                  address: 'e@mail.ru',
                   end: ''
                }]);
             });
@@ -138,7 +138,7 @@ define(
                result = parseText('my-e.ma@il.ru');
                assert.deepEqual(result, [{
                   type: 'email',
-                  addres: 'my-e.ma@il.ru',
+                  address: 'my-e.ma@il.ru',
                   end: ''
                }]);
             });
@@ -146,7 +146,7 @@ define(
                result = parseText('почтальон@почта.рф');
                assert.deepEqual(result, [{
                   type: 'email',
-                  addres: 'почтальон@почта.рф',
+                  address: 'почтальон@почта.рф',
                   end: ''
                }]);
             });
@@ -154,7 +154,7 @@ define(
                result = parseText('git@git.sbis.ru:');
                assert.deepEqual(result, [{
                   type: 'email',
-                  addres: 'git@git.sbis.ru',
+                  address: 'git@git.sbis.ru',
                   end: ':'
                }]);
             });
@@ -163,7 +163,7 @@ define(
                assert.deepEqual(result, [
                   {
                      type: 'email',
-                     addres: 'git@git.sbis.ru',
+                     address: 'git@git.sbis.ru',
                      end: ': '
                   },
                   {
