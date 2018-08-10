@@ -1,6 +1,8 @@
 define('Controls/Input/Mask/FormatBuilder',
-   [],
-   function() {
+   [
+      'Controls/Utils/RegExp'
+   ],
+   function(RegExpUtil) {
 
       'use strict';
 
@@ -23,15 +25,6 @@ define('Controls/Input/Mask/FormatBuilder',
             },
 
             /**
-             * Экранирование специальных символов регулярного выражения.
-             * @param {String} value экранируемое значение.
-             * @return {String} Заэкранированное значение.
-             */
-            escapeRegSpecialChars: function(value) {
-               return value.replace(/[\(\)\{\}\[\]\?\+\*\.]/g, '\\$&');
-            },
-
-            /**
              * Получить ключи маски в виде строки.
              * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
              * @return {String} ключи маски.
@@ -43,7 +36,7 @@ define('Controls/Input/Mask/FormatBuilder',
                   maskKeys += maskKey;
                }
 
-               return _private.escapeRegSpecialChars(maskKeys);
+               return RegExpUtil.escapeSpecialChars(maskKeys);
             },
 
             /**
@@ -76,7 +69,7 @@ define('Controls/Input/Mask/FormatBuilder',
              */
             getReplacingKeyFn: function(formatMaskChars, replacer) {
                //Need to escape the replacer in case it is a special regular expression character
-               replacer = _private.escapeRegSpecialChars(replacer);
+               replacer = RegExpUtil.escapeSpecialChars(replacer);
 
                return replacer ? _private.getReplacingKeyAsValueAndReplacer.bind(this, formatMaskChars, replacer) : _private.getReplacingKeyAsValue.bind(this, formatMaskChars);
             },
@@ -102,7 +95,7 @@ define('Controls/Input/Mask/FormatBuilder',
                expression += '(?:\\\\({.*?}|.))?';
 
                // Парные разделители
-               expression += '|(([' + _private.escapeRegSpecialChars(openDelimiters) + '])|([' + _private.escapeRegSpecialChars(closeDelimiters) + ']))';
+               expression += '|(([' + RegExpUtil.escapeSpecialChars(openDelimiters) + '])|([' + RegExpUtil.escapeSpecialChars(closeDelimiters) + ']))';
 
                // Одиночные разделители
                expression += '|(.)';
@@ -212,13 +205,13 @@ define('Controls/Input/Mask/FormatBuilder',
                         groupInPairingDelimiter--;
                      }
 
-                     searchingGroups += '(' + _private.escapeRegSpecialChars(maskCharData.value) + ')?';
+                     searchingGroups += '(' + RegExpUtil.escapeSpecialChars(maskCharData.value) + ')?';
                      positionGroup++;
                   }
 
                   // Найденый символ одиночный разделитель.
                   if (maskCharData.type === 'singlingDelimiter') {
-                     searchingGroups += _private.escapeRegSpecialChars(maskCharData.value);
+                     searchingGroups += RegExpUtil.escapeSpecialChars(maskCharData.value);
                      singlingDelimitersGroup += maskCharData.value;
                   }
 
