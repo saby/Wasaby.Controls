@@ -383,14 +383,12 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                return;
             }
 
-            if (view.getPage && view.setPage) {
-               var page = view.getPage();
-
-               if (page && (event.which === constants.key.pageDown)) {
-                  view.setPage(page + 1);
+            if (view._scrollPager) {
+               if (event.which === constants.key.pageDown) {
+                  view._scrollPager._goToNext();
                }
-               if (page && (event.which === constants.key.pageUp && page > 0)) {
-                  view.setPage(page - 1);
+               if (event.which === constants.key.pageUp) {
+                  view._scrollPager._goToPrev();
                }
             }
 
