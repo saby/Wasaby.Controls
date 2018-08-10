@@ -470,6 +470,20 @@ define('SBIS3.CONTROLS/ComponentBinder',
          this._dateRangeRelationController.bindDateRanges();
       },
 
+      /**
+       * Shifts the period in the period selection controls back
+       */
+      dateRangesShiftPrev: function() {
+         this._dateRangeRelationController.shiftPrev();
+      },
+
+      /**
+       * Shifts the period in the period selection controls forward
+       */
+      dateRangesShiftNext: function() {
+         this._dateRangeRelationController.shiftNext();
+      },
+
       destroy: function(){
          if (this._historyController){
             this._historyController.destroy();

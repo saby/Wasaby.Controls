@@ -83,8 +83,6 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
 
          container.find('.controls-DateRangeSlider__prev').click(this._onPrevBtnClick.bind(this));
          container.find('.controls-DateRangeSlider__next').click(this._onNextBtnClick.bind(this));
-
-         this.subscribe('onRangeChange', this._updateValueView.bind(this));
       },
 
       _modifyOptions: function() {
@@ -99,6 +97,22 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
       _isMinWidth: function (opts) {
          // Минимальную высоту устанавливаем если контрол находится в режиме выбора не только года и включены стрелки влево или вправо
          return (opts.showMonths || opts.showQuarters || opts.showHalfyears) && (opts.showPrevArrow || opts.showNextArrow);
+      },
+
+      setStartValue: function() {
+         var changed = DateRangeSlider.superclass.setStartValue.apply(this, arguments);
+         if (changed) {
+            this._updateValueView();
+         }
+         return changed;
+      },
+
+      setEndValue: function() {
+         var changed = DateRangeSlider.superclass.setEndValue.apply(this, arguments);
+         if (changed) {
+            this._updateValueView();
+         }
+         return changed;
       },
 
       _onPrevBtnClick: function () {
