@@ -436,7 +436,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   },
                   {
                      title: 'last',
-                     width: '1px'
+                     width: 'auto'
                   }
                ];
             for (var i = 0; i < initialColumns.length; i++) {
@@ -578,7 +578,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: {},
                index: 0,
-               style: ''
+               style: '',
+               multiSelectVisibility: true
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value first call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after first call "getCurrentColgroupColumn()".');
@@ -587,7 +588,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridColumns[0],
                index: 1,
-               style: 'width: 1fr'
+               style: 'width: 1fr',
+               multiSelectVisibility: true
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value second call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after second call "getCurrentColgroupColumn()".');
@@ -596,7 +598,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridColumns[1],
                index: 2,
-               style: 'width: auto'
+               style: 'width: auto',
+               multiSelectVisibility: true
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value third call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after third call "getCurrentColgroupColumn()".');
@@ -605,7 +608,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({
                column: gridColumns[2],
                index: 3,
-               style: 'width: auto'
+               style: 'width: auto',
+               multiSelectVisibility: true
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value fourth call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after fourth call "getCurrentColgroupColumn()".');
