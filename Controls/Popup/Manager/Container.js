@@ -54,7 +54,7 @@ define('Controls/Popup/Manager/Container',
                var popup = this._children[popupId],
                   registrator = this._children[popupId + '_registrator'];
                popup._container.focus();
-               var finishDef = registrator.finishPendingOperations(false);
+               var finishDef = registrator.finishPendingOperations();
                finishDef.addCallback(function() {
                   this._notify('popupDeactivated', [popupId], { bubbling: true });
                }.bind(this));

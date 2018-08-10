@@ -70,6 +70,12 @@ define('Controls-demo/Popup/PopupPage',
                isCompoundTemplate: true
             });
          },
+         openStackWithFormController: function() {
+            this._children.openStackWithFormController.open({
+               opener: this._children.stackButton4,
+               isCompoundTemplate: true
+            });
+         },
 
          _onResult: function (result) {
             if( result ){

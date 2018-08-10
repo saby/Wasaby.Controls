@@ -109,6 +109,13 @@ define('Controls/FormController', [
                showLoadingIndicator: false,
                onPendingFail: function() {
                   self._showConfirmDialog(def);
+                  def.addCallbacks(function(res) {
+                     self._propertyChangeNotified = false;
+                     return res;
+                  }, function(e) {
+                     self._propertyChangeNotified = false;
+                     return e;
+                  });
                   return def;
                }
             }], { bubbling: true });
@@ -120,13 +127,17 @@ define('Controls/FormController', [
                this._updateByPopup = true;
                this.update().addCallbacks(function(res) {
                   this._updateByPopup = false;
-                  def.callback(res);
+                  if (!res.validationErrors) { // todo отстрелить событием отмены finishPendings, но сам пендинг не завершать
+                     def.callback(res);
+                  } else {
+                     this._notify('cancelFinishingPending', [], {bubbling: true});
+                  }
                   return res;
-               }, function(e) {
+               }.bind(this), function(e) {
                   this._updateByPopup = false;
                   def.callback(false);
                   return e;
-               });
+               }.bind(this));
             } else if (answer === false) {
                def.callback(false);
             }
@@ -137,13 +148,30 @@ define('Controls/FormController', [
          } else {
             var self = this;
 
-            return self._children.popupOpener.open({
-               message: rk('Сохранить изменения?'),
-               details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-               type: 'yesnocancel'
-            }).addCallback(function(answer) {
-               updating.call(self, answer);
-            });
+            if (this._confirmDef) {
+               this._confirmDef.addCallback(function(answer) {
+                  self._confirmDef = null;
+                  updating.call(self, answer);
+               }).addErrback(function(e) {
+                  self._confirmDef = null;
+                  return e;
+               });
+            } else {
+               var confirmDef = self._children.popupOpener.open({
+                  message: rk('Сохранить изменения?'),
+                  details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
+                  type: 'yesnocancel'
+               }).addCallback(function(answer) {
+                  self._confirmDef = null;
+                  updating.call(self, answer);
+                  return answer;
+               }).addErrback(function(e) {
+                  self._confirmDef = null;
+                  return e;
+               });
+               this._confirmDef = confirmDef;
+               return confirmDef;
+            }
          }
       },
 
@@ -204,7 +232,6 @@ define('Controls/FormController', [
                      }
                      if (isChanged && !self._updateByPopup) {
                         self._propertyChangedDef.callback(true);
-                        self._propertyChangeNotified = false;
                      }
                      self._isNewRecord = false;
 
@@ -221,14 +248,15 @@ define('Controls/FormController', [
                   }
                   if (isChanged && !self._updateByPopup) {
                      self._propertyChangedDef.callback(true);
-                     self._propertyChangeNotified = false;
                   }
                   self._isNewRecord = false;
                   updateDef.callback(true);
                }
             } else {
                self._notify('validationFailed', [], { bubbling: true });
-               updateDef.callback(false);
+               updateDef.callback({
+                  validationErrors: self._children.validation.isValid()
+               });
             }
          });
          validationDef.addErrback(function(e) {

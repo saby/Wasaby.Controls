@@ -11,8 +11,11 @@ define('Controls/Container/PendingRegistrator', [
 
    var module = Control.extend({
       _template: tmpl,
-      _pendings: {},
+      _pendings: null,
       _parallelDef: null,
+      _beforeMount: function() {
+         this._pendings = {};
+      },
       _registerPendingHandler: function(e, def, config) {
          this._pendings[cnt] = {
             def: def,
@@ -79,14 +82,10 @@ define('Controls/Container/PendingRegistrator', [
             }
          });
 
-         if (this._parallelDef) {
-            this._parallelDef._fired = -1;
-            this._parallelDef.cancel();
-         }
+         this._cancelFinishingPending();
          this._parallelDef = parallelDef.done().getResult();
 
          this._parallelDef.addCallback(function(results) {
-            var wholeResult = false;
             if (typeof results === 'object') {
                for (var resultIndex in results) {
                   if (results.hasOwnProperty(resultIndex)) {
@@ -96,15 +95,9 @@ define('Controls/Container/PendingRegistrator', [
                }
             }
 
-            pendingResults.forEach(function(pendingResult) {
-               if (!pendingResult) {
-                  wholeResult = true;
-               }
-            });
-
             self._parallelDef = null;
 
-            resultDeferred.callback(wholeResult);
+            resultDeferred.callback(pendingResults);
          }).addErrback(function(e) {
             if (!e.canceled) {
                IoC.resolve('ILogger').error('PendingRegistrator', 'PendingRegistrator error', e);
@@ -113,6 +106,12 @@ define('Controls/Container/PendingRegistrator', [
          });
 
          return resultDeferred;
+      },
+      _cancelFinishingPending: function() {
+         if (this._parallelDef) {
+            this._parallelDef._fired = -1;
+            this._parallelDef.cancel();
+         }
       }
    });
 
