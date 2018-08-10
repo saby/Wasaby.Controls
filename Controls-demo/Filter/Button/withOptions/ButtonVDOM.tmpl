@@ -3,6 +3,8 @@
                               orientation="{{_selectedKeyOrientation}}"
                               bind:items="_itemsSimple"
                               readOnly="{{_readOnly}}"
+                              on:filterChanged="filterChangeHandler()"
+                              on:itemsChanged="itemsChangeHandler()"
                               templateName="tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple">
          <ws:lineSpaceTemplate>
                <ws:if data="{{_spaceTemplate === 'custom template'}}">
@@ -49,6 +51,16 @@
       <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
          <Controls.Toggle.Checkbox attr:id="readonly" bind:value="_readOnly" caption="readOnly"/>
       </div>
+   </div>
+
+   <div class="ControlsDemo-FilterButton__ButtonVDOM-eventBlock">
+      <span>Event that surfaced:</span>
+      <br/>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-eventName">
+         <span>{{_eventNameFilter}}</span>
+         <span>{{_eventNameItems}}</span>
+      </div>
+      <Controls.Button on:click="reset()" style="linkMain3" caption="reset"/>
    </div>
 
 </div>
