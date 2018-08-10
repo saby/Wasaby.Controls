@@ -82,7 +82,7 @@ define([
 
          iv.setMarkedKey(3);
          marItem = iv._markedItem;
-         assert.equal(3, iv._options.markedKey, 'Incorrect selectedKey option value');
+         assert.equal(2, iv._options.markedKey, 'Incorrect selectedKey option value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });

@@ -56,18 +56,33 @@ define(
             })
          };
 
+
+         let getDropdown = function(config) {
+            let dropdownList = new Dropdown(config);
+            dropdownList.saveOptions(config);
+            return dropdownList;
+         };
          let dropdownList = new Dropdown(config);
 
-         it('check selectedItemsChanged event', () => {
-
-            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
-            //(дефолтный метод для vdom компонент который стреляет событием).
-            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
-            //событие и оно полетит с корректными параметрами.
-
-            dropdownList._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
-            assert.equal(dropdownList._text, 'Запись 6');
-            assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
+         it('data load callback', () => {
+            let ddl = getDropdown(config);
+            ddl._setText([itemsRecords.at(5)]);
+            assert.equal(ddl._text, 'Запись 6');
+            assert.equal(ddl._icon, 'icon-16 icon-Admin icon-primary');
          });
-      })
+
+         it('check selectedItemsChanged event', () => {
+            let ddl = getDropdown(config);
+            ddl._notify = (e, data) => {
+               if (e === 'textValueChanged') {
+                  assert.equal(data[0], 'Запись 6');
+               }
+               if (e === 'selectedKeysChanged') {
+                  assert.deepEqual(data[0], ['6']);
+               }
+            };
+            ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
+         });
+
+      });
    });

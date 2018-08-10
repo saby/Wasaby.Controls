@@ -1,0 +1,19 @@
+.controls-MasterDetail {
+   border-top: 1px solid @border-color_MasterList;
+}
+
+.controls-MasterDetail_master {
+   position: relative;
+   background-color: @background-color_MasterList;
+
+   &:after {
+      content: '';
+      z-index: 0;
+      width: @border-width_MasterList-right;
+      background-color: @border-color_MasterList;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+   }
+}

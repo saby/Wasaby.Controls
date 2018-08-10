@@ -142,7 +142,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._options.enabled);
+                  self.setEnabled(self._enabled);
                });
             });
 
@@ -155,6 +155,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _afterMount: function(cfg) {
             this._options = cfg;
+            this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
@@ -202,8 +203,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   }
                });
                self.rebuildChildControl().addCallback(function() {
-                  self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                   runDelayed(function() {
+                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
                      self._notifyCompound('onResize');
                   });
                });
@@ -246,11 +247,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this._close(arg);
+               return this.close(arg);
             } if (commandName === 'ok') {
-               return this._close(true);
+               return this.close(true);
             } if (commandName === 'cancel') {
-               return this._close(false);
+               return this.close(false);
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
@@ -275,21 +276,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._childControl._notifyOnSizeChanged();
             }
          },
-         _close: function(arg) {
-            if (this._isClosing) {
-               return false;
-            }
-            this._isClosing = true;
-            if (this._notifyCompound('onBeforeClose', arg) !== false) {
-               this.close(arg);
-               this._isClosing = false;
-               return true;
-            }
-            this._isClosing = false;
-         },
          closeHandler: function(e, arg) {
             e.stopPropagation();
-            this._close(arg);
+            this.close(arg);
          },
          _mouseenterHandler: function() {
             if (this._options.hoverTarget) {
@@ -308,7 +297,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this._close();
+               this.close();
                event.stopPropagation();
             }
          },
@@ -558,13 +547,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
             } else if (!this._childControl.isDestroyed()) {
-               this._notifyVDOM('close', null, { bubbling: true });
-
-               this._notifyCompound('onClose', arg);
-               this._notifyCompound('onAfterClose', arg);
+               // Закрытие панели могут вызвать несколько раз подряд
+               if (this._isClosing) {
+                  return false;
+               }
+               this._isClosing = true;
+               if (this._notifyCompound('onBeforeClose', arg) !== false) {
+                  this._notifyVDOM('close', null, { bubbling: true });
+                  this._notifyCompound('onClose', arg);
+                  this._notifyCompound('onAfterClose', arg);
+               }
+               this._isClosing = false;
             }
-
-            // Могут несколько раз позвать закрытие подряд
+            return true;
          },
 
          _toggleVisibleClass: function(className, visible) {

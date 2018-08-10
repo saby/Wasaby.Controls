@@ -2,11 +2,9 @@ define('Controls/Popup/Previewer',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Previewer/Previewer',
-      'Controls/Popup/Previewer/OpenerTemplate',
-
       'Controls/Popup/Opener/Previewer'
    ],
-   function(Control, template, OpenerTemplate, PreviewerOpener) {
+   function(Control, template, PreviewerOpener) {
 
       'use strict';
 
@@ -33,7 +31,7 @@ define('Controls/Popup/Previewer',
             return {
                opener: self,
                target: event.currentTarget || event.target,
-               template: OpenerTemplate,
+               template: 'Controls/Popup/Previewer/OpenerTemplate',
                corner: {
                   vertical: 'bottom',
                   horizontal: 'right'
