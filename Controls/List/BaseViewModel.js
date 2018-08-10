@@ -20,6 +20,7 @@ define('Controls/List/BaseViewModel',
          },
 
          destroy: function() {
+            ObservableMixin.destroy.apply(this, arguments);
             this._options = null;
          }
       });
