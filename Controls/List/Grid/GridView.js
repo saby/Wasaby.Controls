@@ -1,6 +1,7 @@
 define('Controls/List/Grid/GridView', [
    'Controls/List/ListView',
    'tmpl!Controls/List/Grid/GridView',
+   'tmpl!Controls/List/Grid/OldGridView',
    'tmpl!Controls/List/Grid/Item',
    'tmpl!Controls/List/Grid/Column',
    'tmpl!Controls/List/Grid/HeaderContent',
@@ -12,7 +13,7 @@ define('Controls/List/Grid/GridView', [
    'css!Controls/List/Grid/Grid',
    'css!Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(ListView, GridTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
+], function(ListView, GridViewTpl, OldGridViewTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
 
    'use strict';
 
@@ -51,12 +52,12 @@ define('Controls/List/Grid/GridView', [
          }
       },
       GridView = ListView.extend({
-         _template: GridTpl,
+         isNotFullGridSupport: cDetection.isNotFullGridSupport,
+         _template: cDetection.isNotFullGridSupport ? OldGridViewTpl : GridViewTpl,
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: DefaultItemTpl,
          _headerContentTemplate: HeaderContentTpl,
          _prepareGridTemplateColumns: _private.prepareGridTemplateColumns,
-         isNotFullGridSupport: cDetection.isNotFullGridSupport,
 
          _beforeMount: function(cfg) {
             GridView.superclass._beforeMount.apply(this, arguments);
