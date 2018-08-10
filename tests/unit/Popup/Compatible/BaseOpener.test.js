@@ -148,6 +148,15 @@ define(
             assert.isTrue(config.templateOptions.enabled);
             assert.equal(config.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.isFalse(!!config.templateOptions.caption);
+            let newConfig = config;
+            newConfig.minWidth = 100;
+            newConfig.maximized = false;
+            newConfig.canMaximize = true;
+            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            assert.equal(newConfig.minimizedWidth, 100);
+            assert.equal(newConfig.minWidth, 200);
+            assert.isTrue(newConfig.templateOptions.canMaximize);
+            assert.equal(newConfig.templateOptions.templateOptions.isPanelMaximized, newConfig.maximized);
          });
 
          it('_getCaption', function() {
@@ -192,17 +201,21 @@ define(
             assert.equal(newConfig.dialogOptions.onResultHandler, config.eventHandlers.onResult);
             assert.isTrue(newConfig.dialogOptions.closeChildWindows);
             let testconfig = {
+               horizontalAlign: {
+                  side: 'left'
+               },
                verticalAlign: {
                   side: 'top'
                },
                corner: {
-                  vertical: 'bottom'
+                  vertical: 'bottom',
                },
                mode: 'floatArea'
             };
             let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
-            assert.equal(newTestConfig.dialogOptions.direction, 'top');
+            assert.equal(newTestConfig.dialogOptions.direction, testconfig.horizontalAlign.side);
             assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
+            assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
          });
 
          it('_getDimensions', function() {
