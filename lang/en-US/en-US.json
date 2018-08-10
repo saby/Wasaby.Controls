@@ -135,7 +135,7 @@
    "В тексте, без обтекания": "In the text, without wrapping",
    "Подождите, идет выгрузка данных": "Please wait, unloading data",
    "Подчеркнутый": "Underlined",
-   "Поле обязательно для заполнения": "Required field",
+   "Поле обязательно для заполнения.": "Required field.",
    "Полужирный": "Bold",
    "Пользовательский обработчик получения данных не является функцией": "Custom data acquisition handler is not a function",
    "При открытии изображения возникла ошибка": "An error occured while opening the image",
@@ -277,5 +277,5 @@
    "БТР@@Полужирный": "Bold",
    "БТР@@Курсив": "Italic",
    "БТР@@Подчеркнутый": "Underline",
-   "БТР@@Перечеркнутый": "Strikethrough"
+   "БТР@@Зачеркнутый": "Strikethrough"
 }

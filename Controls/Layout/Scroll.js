@@ -159,9 +159,9 @@ define('Controls/Layout/Scroll',
 
                _private.onInitScroll(this, this._container);
 
-               //IntersectionObserver doesn't work correctly in Edge
+               //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !detection.isIE12) {
+               if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
                   _private.initIntersectionObserver(this, triggers);
                } else {
                   _private.onChangeScroll(this, this._container);

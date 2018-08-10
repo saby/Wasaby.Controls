@@ -255,8 +255,10 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          var params = { 'id': id };
          if (isExcel) {
             params['storage'] = 'excel';
+         } else {
+            params['storage'] = 'pdf_converter_storage';
          }
-         var url = prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/');
+         var url = prepareGetRPCInvocationURL('FileTransfer', 'Download', params, undefined, '/file-transfer/service/');
          Downloader(url, {}, Downloader.DRIVERS_NAMES.URL);
       },
       /**

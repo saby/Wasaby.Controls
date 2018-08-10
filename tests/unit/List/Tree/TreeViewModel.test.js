@@ -1,4 +1,20 @@
-define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(TreeViewModel, cMerge, RecordSet) {
+define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet', 'WS.Data/Collection/IBind'], function(TreeViewModel, cMerge, RecordSet, IBindCollection) {
+   function MockedDisplayItem(cfg) {
+      var
+         self = this;
+      this._id = cfg.id;
+      this._isNode = cfg.isNode;
+      this.isNode = function() {
+         return this._isNode;
+      };
+      this.getContents = function() {
+         return {
+            getId: function() {
+               return self._id;
+            }
+         };
+      };
+   }
    var
       treeData = [
          {
@@ -165,6 +181,25 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 4; //3
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
+         });
+         it('onCollectionChange', function() {
+            var
+               removedItems1 = [
+                  new MockedDisplayItem({ id: 'mi1', isNode: true }), new MockedDisplayItem({ id: 'mi3', isNode: false })],
+               removedItems2 = [
+                  new MockedDisplayItem({ id: 'mi2', isNode: true }), new MockedDisplayItem({ id: 'mi4', isNode: false })],
+               notifiedOnNodeRemoved = false;
+            treeViewModel._expandedNodes = { 'mi1': true, 'mi2': true };
+            treeViewModel._notify = function(eventName) {
+               if (eventName === 'onNodeRemoved') {
+                  notifiedOnNodeRemoved = true;
+               }
+            };
+            treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems1, null);
+            assert.deepEqual(treeViewModel._expandedNodes, { 'mi2': true }, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems2, null);
+            assert.deepEqual(treeViewModel._expandedNodes, {}, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
       });
    });
