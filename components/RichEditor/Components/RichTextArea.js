@@ -3443,7 +3443,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      cfg.selector = '';
 
                      tinyMCE.init(cfg);
-                  });
+                  }.bind(this));
                }
                this._tinyReady.addCallback(function() {
                   var editor = this._tinyEditor;
