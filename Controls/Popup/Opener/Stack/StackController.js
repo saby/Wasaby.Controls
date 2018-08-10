@@ -41,9 +41,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             };
          },
 
-         getItemPosition: function(stack, index) {
+         getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            var item = stack.at(index);
             return StackStrategy.getPosition(targetCoords, item);
          },
 
@@ -165,10 +164,9 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          _update: function() {
-            var self = this;
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
-            this._stack.each(function(item, index) {
-               item.position = _private.getItemPosition(self._stack, index);
+            this._stack.each(function(item) {
+               item.position = _private.getItemPosition(item);
                if (StackStrategy.isMaximizedPanel(item)) {
                   _private.prepareMaximizedState(maxPanelWidth, item);
                }
