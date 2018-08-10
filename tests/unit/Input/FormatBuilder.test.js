@@ -9,21 +9,6 @@ define(
       describe('Controls.Input.Mask.FormatBuilder', function() {
          var result;
 
-         describe('_private.escapeRegSpecialChars', function() {
-            it('Test_01', function() {
-               result = FormatBuilder._private.escapeRegSpecialChars('');
-               assert.equal(result, '');
-            });
-            it('Test_02', function() {
-               result = FormatBuilder._private.escapeRegSpecialChars('123456789');
-               assert.equal(result, '123456789');
-            });
-            it('Test_03', function() {
-               result = FormatBuilder._private.escapeRegSpecialChars('1(2)3{4}5+6.7*8[9]');
-               assert.equal(result, '1\\(2\\)3\\{4\\}5\\+6\\.7\\*8\\[9\\]');
-            });
-         });
-
          describe('_private.getMaskKeysString', function() {
             it('Test_01', function() {
                result = FormatBuilder._private.getMaskKeysString({});
