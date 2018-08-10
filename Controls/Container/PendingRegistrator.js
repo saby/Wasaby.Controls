@@ -7,6 +7,7 @@ define('Controls/Container/PendingRegistrator', [
 ], function(Control, tmpl, Deferred, ParallelDeferred, IoC) {
    'use strict';
 
+   // счетчик-идентификатор пендинга
    var cnt = 0;
 
    var module = Control.extend({
@@ -18,21 +19,21 @@ define('Controls/Container/PendingRegistrator', [
       },
       _registerPendingHandler: function(e, def, config) {
          this._pendings[cnt] = {
+            // сам деферред, который сигнализирует о завершении пендинга
             def: def,
+            // функция, которая помогает пендингу завершиться, когда идет запрос на завершение из finishPendingOperations
             onPendingFail: config.onPendingFail,
+            // показывать ли индикатор во время навешенного пендинга
             showLoadingIndicator: config.showLoadingIndicator
          };
          if (config.showLoadingIndicator && !def.isReady()) {
+            // покажем индикатор, если деферред на момент регистрации не завершился
             this._children.loadingIndicator.toggleIndicator(true);
          }
 
-         def.addCallback(function(cnt, res) {
+         def.addBoth(function(cnt, res) {
             this._unregisterPending(cnt);
             return res;
-         }.bind(this, cnt));
-         def.addErrback(function(cnt, e) {
-            this._unregisterPending(cnt);
-            return e;
          }.bind(this, cnt));
 
          cnt++;
@@ -40,10 +41,12 @@ define('Controls/Container/PendingRegistrator', [
       _unregisterPending: function(id) {
          delete this._pendings[id];
 
+         // если больше нет пендингов с отображением индикатора, убираем индикатор
          if (!this._hasPendingsWithIndicator()) {
             this._children.loadingIndicator.toggleIndicator(false);
          }
 
+         // если больше нет никаких пендингов, уведомляем
          if (!this._hasRegisteredPendings()) {
             this._notify('pendingsFinished', [], { bubbling: true });
          }
@@ -75,13 +78,16 @@ define('Controls/Container/PendingRegistrator', [
                if (res instanceof Deferred) {
                   parallelDef.push(res);
                } else {
+                  // сохраним результат завершения пендинга
                   pendingResults.push(res);
                }
             } else {
-               pendingResults.push(false);
+               // пендинг завершился без результата
+               pendingResults.push(undefined);
             }
          });
 
+         // отменим предыдущий запрос на завершение пендингов и создадим новый
          this._cancelFinishingPending();
          this._parallelDef = parallelDef.done().getResult();
 
@@ -109,6 +115,7 @@ define('Controls/Container/PendingRegistrator', [
       },
       _cancelFinishingPending: function() {
          if (this._parallelDef) {
+            // чтобы отменить результирующий деферред параллельного деферреда, нужно сбросить состояние этого деферреда
             this._parallelDef._fired = -1;
             this._parallelDef.cancel();
          }

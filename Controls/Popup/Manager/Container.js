@@ -58,8 +58,6 @@ define('Controls/Popup/Manager/Container',
                finishDef.addCallback(function() {
                   this._notify('popupDeactivated', [popupId], { bubbling: true });
                }.bind(this));
-            } else {
-               this._notify('popupDeactivated', [popupId], { bubbling: true });
             }
          },
          _popupDestroyed: function(event, popupId) {
