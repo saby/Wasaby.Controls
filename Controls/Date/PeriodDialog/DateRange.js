@@ -1,6 +1,5 @@
 define('Controls/Date/PeriodDialog/DateRange', [
    'Core/Control',
-   'Core/core-merge',
    'Core/helpers/Date/format',
    'Controls/Date/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
@@ -13,7 +12,6 @@ define('Controls/Date/PeriodDialog/DateRange', [
    'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
-   coreMerge,
    formatDate,
    EventProxy,
    DateRangeModel,
