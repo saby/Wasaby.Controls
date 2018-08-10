@@ -200,9 +200,9 @@ define(
                },
                mode: 'floatArea'
             };
-            newConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
-            assert.equal(newConfig.dialogOptions.direction, 'top');
-            assert.equal(newConfig.dialogOptions.verticalAlign, 'bottom');
+            let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.direction, 'top');
+            assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
          });
 
          it('_getDimensions', function() {
