@@ -1,0 +1,191 @@
+/*---| WaitIndicator Rules: |---------*/
+
+x{}
+
+// Required these variables from theme:
+
+//@wait-indicator-size: 32px;
+//@wait-indicator-small-size: 16px;
+//@wait-indicator-gap: 8px;
+//@wait-indicator-small-gap: 2px;
+//@wait-indicator-min-text-width: 88px;
+//@wait-indicator-labeled-width: 214px;
+//@wait-indicator-small-margin: 6px;
+//@wait-indicator-font-size: 14px;
+//@wait-indicator-line-height: 18px;
+//@wait-indicator-font-color: rgb(0, 0, 0);
+//@wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
+//@wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
+//@wait-indicator-gradient-white: rgb(255, 255, 255);
+//@wait-indicator-gradient-gray: #EAEAEA;
+
+
+
+.linear-gradient-only(@direction: 180deg, @from-color-point: #FFFFFF 0, @to-color-point: #000000 100%) {
+   //background: -webkit-gradient(linear, left top, left bottom, from(@from-color-point), to(@to-color-point));
+   background-image: -webkit-linear-gradient(@direction, @from-color-point, @to-color-point);
+   background-image: -moz-linear-gradient(@direction, @from-color-point, @to-color-point);
+   //background-image: -ms-linear-gradient(@direction, @from-color-point, @to-color-point);
+   background-image: -o-linear-gradient(@direction, @from-color-point, @to-color-point);
+   background-image: linear-gradient(@direction, @from-color-point, @to-color-point);
+}
+
+
+
+.controls-loading-indicator {
+   .flexbox();
+   .justify-content(center);
+   .align-items(center);
+   background-color: @wait-indicator-overlay-default;
+   cursor: default !important;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+}
+
+.controls-loading-indicator_global {
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 1000000;/*16777271 2147483647*/
+}
+
+.controls-loading-indicator_local {
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+}
+
+.controls-loading-indicator_text {
+}
+
+.controls-loading-indicator_overlay-none {
+   background-color: transparent;
+   pointer-events: none;
+   cursor: auto !important;
+}
+
+.controls-loading-indicator_overlay-dark {
+   background-color: @wait-indicator-overlay-dark;
+}
+
+.controls-loading-indicator_sided {
+   .justify-content(flex-start);
+}
+
+.controls-loading-indicator_sided-left {
+   .flex-direction(row);
+}
+
+.controls-loading-indicator_sided-right {
+   .flex-direction(row-reverse);
+}
+
+.controls-loading-indicator_sided-top {
+   .flex-direction(column);
+}
+
+.controls-loading-indicator_sided-bottom {
+   .flex-direction(column-reverse);
+}
+
+.controls-loading-indicator_scroll_grad(@direction, @color) {
+   @r: red(@color);
+   @g: green(@color);
+   @b: blue(@color);
+   .linear-gradient-only(@direction, @color, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-left {
+   .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-white);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-right {
+   .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-white);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-top {
+   .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-white);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-bottom {
+   .controls-loading-indicator_scroll_grad(0deg, @wait-indicator-gradient-white);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-left.controls-loading-indicator_mod-gray {
+   .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-gray);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-right.controls-loading-indicator_mod-gray {
+   .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-gray);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-top.controls-loading-indicator_mod-gray {
+   .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-gray);
+}
+
+.controls-loading-indicator_scroll.controls-loading-indicator_sided-bottom.controls-loading-indicator_mod-gray {
+   .controls-loading-indicator_scroll_grad(0deg, @wait-indicator-gradient-gray);
+}
+
+.controls-loading-indicator_small {
+}
+
+
+
+.controls-loading-indicator-in {
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+   width: @wait-indicator-size + 2*@wait-indicator-gap;
+   height: @wait-indicator-size + 2*@wait-indicator-gap;
+   overflow: hidden;
+   border-radius: @border-radius_WaitIndicator;
+   background: @background-color_WaitIndicator @background_url_WaitIndicator 50% 50% no-repeat;
+   background-size: @wait-indicator-size;
+   cursor: default !important;
+   pointer-events: auto;
+   font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
+   font-size: @wait-indicator-font-size;
+   line-height: @wait-indicator-line-height;
+   color: @wait-indicator-font-color;
+}
+
+.controls-loading-indicator_text .controls-loading-indicator-in {
+   min-width: max(@wait-indicator-size + 3*@wait-indicator-gap, @wait-indicator-min-text-width);
+   width: auto;
+   padding: (@wait-indicator-size + 2*@wait-indicator-gap - @wait-indicator-line-height)/2 @wait-indicator-gap 0 (@wait-indicator-size + 2*@wait-indicator-gap);
+   background-position: @wait-indicator-gap 50%;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+}
+
+.controls-loading-indicator_small .controls-loading-indicator-in {
+   width: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
+   height: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
+   border-radius: (@wait-indicator-small-size + 2*@wait-indicator-small-gap)/4;
+   background-color: transparent;
+   background-image: @background_url_WaitIndicator_small;
+   background-size: @wait-indicator-small-size;
+}
+
+.controls-loading-indicator_small.controls-loading-indicator_sided-left .controls-loading-indicator-in {
+   margin-left: @wait-indicator-small-margin;
+}
+
+.controls-loading-indicator_small.controls-loading-indicator_sided-right .controls-loading-indicator-in {
+   margin-right: @wait-indicator-small-margin;
+}
+
+.controls-loading-indicator_small.controls-loading-indicator_sided-top .controls-loading-indicator-in {
+   margin-top: @wait-indicator-small-margin;
+}
+
+.controls-loading-indicator_small.controls-loading-indicator_sided-bottom .controls-loading-indicator-in {
+   margin-bottom: @wait-indicator-small-margin;
+}
