@@ -6,7 +6,7 @@ define('Controls/Header',
    function(Heading, IoC) {
 
       var logger = IoC.resolve('ILogger');
-      logger.warn('Контрол "Controls/Header" перенесён, используйте "Controls/Heading"');
+      logger.error('Контрол "Controls/Header" перенесён, используйте "Controls/Heading"');
       return Heading;
    }
 );
