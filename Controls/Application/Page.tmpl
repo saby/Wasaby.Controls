@@ -20,6 +20,7 @@
                <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.Popup.Manager>
+                        <Controls.Container.BatchUpdater>
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.DragNDrop.Container name="dragNDropContainer">
                               <body
@@ -52,18 +53,20 @@
                                  </Controls.Application._Wait>
                               </ws:else>
 
-                              <ws:if data="{{ content.dragAvatarTemplate }}">
-                                 <ws:partial template="{{content.dragAvatarTemplate}}" scope="{{content.dragAvatarOptions}}"></ws:partial>
-                              </ws:if>
-                              <Controls.Popup.Manager.Container attr:id="popup"
-                                                                eventHandler="{{content._managerEventHandler}}"/>
-                              <script key="bundles" type="text/javascript"
-                                      src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-                              <script key="require" type="text/javascript"
-                                      src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-                              <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-                              <script key="config" type="text/javascript"
-                                      src="{{wsRoot}}ext/requirejs/config.js"></script>
+                                 <ws:if data="{{ content.dragAvatarTemplate }}">
+                                    <ws:partial template="{{content.dragAvatarTemplate}}"
+                                                scope="{{content.dragAvatarOptions}}"></ws:partial>
+                                 </ws:if>
+                                 <Controls.Popup.Manager.Container attr:id="popup"
+                                                                   eventHandler="{{content._managerEventHandler}}"/>
+                                 <script key="bundles" type="text/javascript"
+                                         src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                                 <script key="require" type="text/javascript"
+                                         src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                                 <script key="contents" type="text/javascript"
+                                         src="{{resourceRoot}}/contents.js"></script>
+                                 <script key="config" type="text/javascript"
+                                         src="{{wsRoot}}ext/requirejs/config.js"></script>
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
                                  <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
@@ -91,6 +94,7 @@
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>
+                        </Controls.Container.BatchUpdater>
                      </Controls.Popup.Manager>
                   </Controls.Event.Listener>
                </Controls.Event.Listener>
