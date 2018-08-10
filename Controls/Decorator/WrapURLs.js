@@ -16,6 +16,8 @@ define('Controls/Decorator/WrapURLs',
        * @control
        * @public
        * @category Decorator
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
       /**
@@ -51,7 +53,7 @@ define('Controls/Decorator/WrapURLs',
                } else if (exec[3]) {
                   node = {
                      type: 'email',
-                     addres: exec[3]
+                     address: exec[3]
                   };
                } else if (node.type === 'text') {
                   node.value += node.end + exec[4];
