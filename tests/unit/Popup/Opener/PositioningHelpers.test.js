@@ -185,12 +185,27 @@ define(
                var itemConfig = {};
                StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
-               try {
-                  StickyController.elementCreated(itemConfig);
-               } catch (ex) {
-                  //Упадет в ошибку, потому что не передан параметр container
-                  assert.isTrue(itemConfig.position.position === undefined);
-               }
+
+               StickyController._checkContainer = () => { return false; };
+               StickyController.elementCreated(itemConfig);
+               assert.isTrue(itemConfig.position.position === undefined);
+            });
+
+            it('Sticky state', function() {
+               StickyController._checkContainer = () => { return false; };
+               let itemConfig = {
+                  popupOptions: {}
+               };
+               let result = StickyController.elementAfterUpdated(itemConfig);
+               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
+               assert.equal(result, false);
+
+               StickyController.elementUpdated(itemConfig);
+               assert.equal(itemConfig.stickyState, 'updated');
+
+               StickyController.elementAfterUpdated(itemConfig);
+               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
+               assert.equal(itemConfig.stickyState, 'afterUpdated');
             });
 
             it('Sticky with option locationStrategy=fixed', function() {
@@ -311,6 +326,48 @@ define(
                assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
             });
 
+            it('stack panel maximized', function() {
+               StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+
+               let popupOptions = {
+                  minimizedWidth: 600,
+                  minWidth: 900,
+                  maxWidth: 1200,
+                  templateOptions: {}
+               };
+               let itemConfig = {
+                  popupOptions: popupOptions
+               };
+
+               Stack.getMaxPanelWidth = () => 1600;
+
+               assert.equal(Stack.isMaximizedPanel(itemConfig), true);
+
+               StackController.getDefaultConfig(itemConfig);
+               assert.equal(itemConfig.popupOptions.maximized, true); //default value
+               assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
+
+               StackController.elementMaximized(itemConfig, {}, false);
+               assert.equal(itemConfig.popupOptions.maximized, false);
+               assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
+               let position = Stack.getPosition({top: 0, right: 0}, itemConfig);
+               assert.equal(position.width, popupOptions.minimizedWidth + stackShadowWidth);
+
+               StackController.elementMaximized(itemConfig, {}, true);
+               assert.equal(itemConfig.popupOptions.maximized, true);
+               assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
+               position = Stack.getPosition({top: 0, right: 0}, itemConfig);
+               assert.equal(position.width, popupOptions.maxWidth + stackShadowWidth);
+
+               StackController._private.prepareMaximizedState(1600, itemConfig);
+               assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
+
+               StackController._private.prepareMaximizedState(800, itemConfig);
+               assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, false);
+
+            });
+
             it('stack state', function() {
                let itemConfig = {
                   id: '22',
@@ -328,8 +385,10 @@ define(
 
                itemConfig.popupOptions.className = '';
                StackController.elementUpdated(itemConfig, {});
-               //класс обновился, потому что состояние было opened
-               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === " controls-Stack");
+               StackController.elementUpdated(itemConfig, {});
+               StackController.elementUpdated(itemConfig, {});
+               //класс обновился, потому что состояние было opened. После множ. update класс не задублировался
+               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === "controls-Stack");
 
                itemConfig.stackState = 'notOpened';
                itemConfig.popupOptions.className = '';
@@ -367,6 +426,7 @@ define(
                assert.isTrue(position.bottom === 0);
             });
             it('stack reduced width', function() {
+               Stack.getMaxPanelWidth = () => 1000;
                let item = {
                   popupOptions: {
                      minWidth: 600,

@@ -69,6 +69,9 @@ define('Controls/List/TreeControl', [
                return acc;
             }
          }, 0);
+      },
+      onNodeRemoved: function(self, nodeId) {
+         delete self._loadedNodes[nodeId];
       }
    };
 
@@ -83,16 +86,27 @@ define('Controls/List/TreeControl', [
     */
 
    var TreeControl = Control.extend({
+      _onNodeRemovedFn: null,
       _template: TreeControlTpl,
       _loadedNodes: null,
       constructor: function(cfg) {
          this._loadedNodes = {};
-         this._hierarchyRelation =  new HierarchyRelation({
+         this._hierarchyRelation = new HierarchyRelation({
             idProperty: cfg.keyProperty || 'id',
             parentProperty: cfg.parentProperty || 'Раздел',
             nodeProperty: cfg.nodeProperty || 'Раздел@'
          });
          return TreeControl.superclass.constructor.apply(this, arguments);
+      },
+      _afterMount: function() {
+         TreeControl.superclass._afterMount.apply(this, arguments);
+         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
+
+         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
+      },
+      _onNodeRemoved: function(event, nodeId) {
+         _private.onNodeRemoved(this, nodeId);
       },
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
@@ -106,6 +120,27 @@ define('Controls/List/TreeControl', [
       },
       addItem: function(options) {
          this._children.baseControl.addItem(options);
+      },
+
+
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.baseControl.commitEdit();
+         }
       },
       _onCheckBoxClick: function(e, key, status) {
          var
@@ -166,6 +201,10 @@ define('Controls/List/TreeControl', [
 
             this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          }
+      },
+      destroy: function() {
+         this._children.baseControl.getViewModel().unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
+         TreeControl.superclass.destroy.apply(this, arguments);
       }
    });
 

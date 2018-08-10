@@ -93,10 +93,9 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self.stopEvents = typeof window === 'undefined' && !(cfg.compat || self.compat);
-
+            self.onServer = typeof window === 'undefined';
+            self.isCompatible = cfg.compat || self.compat;
             _private.initState(self, receivedState || cfg);
-            self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }
@@ -119,8 +118,9 @@ define('Controls/Application',
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
                context.AppData.servicesPath = self.servicesPath;
+               context.AppData.product = self.product;
             }
-            
+
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
@@ -134,7 +134,8 @@ define('Controls/Application',
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
                servicesPath: self.servicesPath,
-               compat: self.compat
+               compat: self.compat,
+               product: self.product
             });
             return def;
          },
@@ -145,8 +146,22 @@ define('Controls/Application',
 
          _closeInfoBoxHandler: function() {
             this._children.infoBoxOpener.close();
+         },
+
+
+         _openPreviewerHandler: function(event, config, type) {
+            this._children.previewerOpener.open(config, type);
+         },
+
+         _closePreviewerHandler: function(event, type) {
+            this._children.previewerOpener.close(type);
+         },
+
+         _cancelPreviewerHandler: function(event, action) {
+            this._children.previewerOpener.cancel(action);
          }
       });
+
 
       Page.contextTypes = function contextTypes() {
          return {
