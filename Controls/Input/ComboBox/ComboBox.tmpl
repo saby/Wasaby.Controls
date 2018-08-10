@@ -21,6 +21,8 @@
               size="{{_options.size}}"
               tagStyle="{{_options.tagStyle}}"
               viewModel="{{_simpleViewModel}}"
+              on:tagClick="_notifyHandler('tagClick')"
+              on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               validationErrors="{{_options.validationErrors}}"
               class="controls-ComboBox-InputRender">

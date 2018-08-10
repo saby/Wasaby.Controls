@@ -5,11 +5,11 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
+      'Controls/Utils/tmplNotify',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, Utils, dropdownUtils) {
-
+   function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
       /**
        * Control "ComboBox"
        * @class Controls/Input/ComboBox
@@ -48,6 +48,7 @@ define('Controls/Input/ComboBox',
       var ComboBox = Control.extend({
          _template: template,
          _isOpen: false,
+         _notifyHandler: tmplNotify,
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);

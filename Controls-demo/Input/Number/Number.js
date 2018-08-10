@@ -4,13 +4,13 @@ define('Controls-demo/Input/Number/Number', [
    'WS.Data/Source/Memory',
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template, Memory) {
-
    'use strict';
 
    var VdomDemoNumber = Control.extend({
       _template: template,
       _placeholder: 'Input number',
       _text1: '',
+      _tooltip: 'Number',
       _textAlign: 'left',
       _tagStyle: 'done',
       _integersLength: 5,
@@ -21,10 +21,9 @@ define('Controls-demo/Input/Number/Number', [
       _eventResult: '',
       _selectOnClick: false,
       _items: [
-         {title: 'left'},
-         {title: 'right'}
+         { title: 'left' },
+         { title: 'right' }
       ],
-      _tooltip: '',
       _tagStyleHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
@@ -37,7 +36,7 @@ define('Controls-demo/Input/Number/Number', [
             message: 'Click'
          });
       },
-      valueChangedHandler: function() {
+      _valueChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];
          } else {
