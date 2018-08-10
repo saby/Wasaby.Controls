@@ -388,7 +388,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                    itemsProjection = view._getItemsProjection();
                /* При поиске по дереву папки отображаются, как Хлебные крошки
                   поэтому маркер нужно установить на первый элемент проекции, который не является папкой */
-               if(self._searchMode && itemsProjection.at(0).isNode) {
+               if(self._searchMode && !!itemsProjection.getCount() && itemsProjection.at(0).isNode) {
                   itemsProjection.each(function (item, index) {
                      if (!selectedIndex && !item.isNode()) {
                         selectedIndex = index;
