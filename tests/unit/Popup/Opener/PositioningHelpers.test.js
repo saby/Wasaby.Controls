@@ -326,6 +326,18 @@ define(
                assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
             });
 
+            it('stack maximized popup position', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: 600,
+                     maxWidth: 800
+                  },
+                  hasMaximizePopup: true
+               };
+               let position = Stack.getPosition({top: 0, right: 100}, item);
+               assert.equal(position.right, 0);
+            });
+
             it('stack panel maximized', function() {
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
