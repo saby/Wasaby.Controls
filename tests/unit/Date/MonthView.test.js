@@ -79,38 +79,5 @@ define([
          });
       });
 
-      describe('_dayClickHandler', function() {
-         it('should generate "itemClick" event', function() {
-            const onItemClick = sinon.spy(),
-               item = 'item',
-               mv = calendarTestUtils.createComponent(MonthView, config);
-
-            mv.subscribe('itemClick', onItemClick);
-            mv._dayClickHandler({}, item);
-
-            // TODO: почему то в тестах вне браузера события не генерируются.. Разобраться с этим
-            if (typeof $ !== 'undefined') {
-               assert(onItemClick.calledOnce, `onItemClick called ${onItemClick.callCount}`);
-               assert.strictEqual(item, onItemClick.args[0][1][0], `wrong parameter ${onItemClick.args[0][1]}`);
-            }
-         });
-      });
-
-      describe('_mouseEnterHandler', function() {
-         it('should generate "itemMouseEnter" event', function() {
-            const onItemMouseEnter = sinon.spy(),
-               item = 'item',
-               mv = calendarTestUtils.createComponent(MonthView, config);
-
-            mv.subscribe('itemMouseEnter', onItemMouseEnter);
-            mv._mouseEnterHandler({}, item);
-
-            // TODO: почему то в тестах вне браузера события не генерируются.. Разобраться с этим
-            if (typeof $ !== 'undefined') {
-               assert(onItemMouseEnter.calledOnce, `itemMouseEnter called ${onItemMouseEnter.callCount}`);
-               assert.strictEqual(item, onItemMouseEnter.args[0][1][0], `wrong parameter ${onItemMouseEnter.args[0][1]}`);
-            }
-         });
-      });
    });
 });
