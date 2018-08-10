@@ -25,30 +25,14 @@ define('Controls/Filter/Fast',
        *
        * @class Controls/Filter/Fast
        * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/Filter/Fast/FastStyles
        * @control
        * @public
        * @author Золотова Э.Е.
        */
 
-      /**
-       * @event Controls/Filter/Fast#filterChanged Occurs when the filter changes.
-       */
 
-      /**
-       * @name Controls/Filter/Fast#source
-       * @cfg {WS.Data/Source/ISource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
-       */
-
-      /**
-       * @name Controls/Filter/Fast#items
-       * @cfg {WS.Data/Collection/IList} Sets a set of initial data to build the mapping.
-       */
-   
-      /**
-       * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {Object} filter New filter.
-       */
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
       var setPropValue = Utils.setItemPropertyValue.bind(Utils);
