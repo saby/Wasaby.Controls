@@ -846,7 +846,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._images = null;
                this._readyControlDeffered = null;
                this._scrollContainer = null;
-               this._container = null;
                this._richTextAreaContainer = null;
                this._tinyReady = null;
                this._imageUploader = null;
@@ -2154,6 +2153,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      window.open(target.href, '_blank');
                   }
                }
+               this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _tinyReadyCallback0: function() {
                if (!this._readyControlDeffered.isReady()) {

@@ -286,6 +286,10 @@ define('SBIS3.CONTROLS/ComboBox', [
                this._setKeyByText();
             }
          }
+
+         if (!this._options.editable) {
+            this._destroyCompatPlaceholder();
+         }
       },
 
       _searchFilter: function(text, model){
@@ -608,6 +612,9 @@ define('SBIS3.CONTROLS/ComboBox', [
       setPlaceholder: function(placeholder) {
          ComboBox.superclass.setPlaceholder.apply(this, arguments);
          $('.controls-ComboBox__fieldNotEditable__placeholder', this._container.get(0)).text(placeholder);
+         if (!this._options.editable) {
+            this._destroyCompatPlaceholder();
+         }
       },
 
       _getItemTemplate: function (projItem) {
@@ -781,6 +788,11 @@ define('SBIS3.CONTROLS/ComboBox', [
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
+         if (editable) {
+            this._createCompatiblePlaceholder();
+         } else {
+            this._destroyCompatPlaceholder();
+         }
       },
       /**
        * Признак возможности ручного ввода.

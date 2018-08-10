@@ -51,7 +51,6 @@ define('Controls/Input/Dropdown',
 
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
-            this._icon = items[0].get('icon');
             this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
@@ -62,6 +61,7 @@ define('Controls/Input/Dropdown',
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
                this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+               this._icon = items[0].get('icon');
             }
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
