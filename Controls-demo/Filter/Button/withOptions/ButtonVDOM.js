@@ -115,6 +115,22 @@ define('Controls-demo/Filter/Button/withOptions/ButtonVDOM',
          _templateName: 'custom',
          _templateNameItems: _templateNameItems,
 
+         _eventNameFilter: 'no event',
+         _eventNameItems: 'no event',
+
+         reset: function() {
+            this._eventNameFilter = 'no event';
+            this._eventNameItems = 'no event';
+         },
+
+         filterChangeHandler: function() {
+            this._eventNameFilter = 'filterChanged';
+         },
+
+         itemsChangeHandler: function() {
+            this._eventNameItems = 'itemsChanged';
+         },
+
          _suggestHandler: function(event, value) {
             if (value === 'items 1') {
                this._itemsSimple = items1;
