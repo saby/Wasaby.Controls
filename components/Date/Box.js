@@ -296,9 +296,9 @@ define(
       _addDefaultValidator: function() {
          var self = this,
             _validationErrors = {
-               time: rk('Время заполнено некорректно'),
-               date: rk('Дата заполнена некорректно'),
-               datetime: rk('Дата или время заполнены некорректно')
+               time: rk('Время заполнено некорректно.'),
+               date: rk('Дата заполнена некорректно.'),
+               datetime: rk('Дата или время заполнены некорректно.')
             };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
          this.addValidators([{
@@ -310,7 +310,7 @@ define(
             validator: function() {
                return self._options.date instanceof Date ? self._options.date.getFullYear() > 1400 : true;
             },
-            errorMessage: rk('Год должен быть больше 1400')
+            errorMessage: rk('Год должен быть больше 1400.')
          }]);
       },
 
