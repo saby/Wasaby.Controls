@@ -124,7 +124,7 @@ module.exports = function(Component) {
 
       // Демо-пример: Панель массовых операций
       '/demo-ws4-operations-panel': function(req, res) {
-         requirejs('Controls-demo/OperationsPanel/Demo');
+         requirejs('Controls-demo/OperationsPanel/PanelWithApplication');
          res.render('tmpl!Controls/Application/Route', {
             application: 'Controls-demo/OperationsPanel/PanelWithApplication',
             initDependencies: false
