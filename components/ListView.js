@@ -1531,7 +1531,7 @@ define('SBIS3.CONTROLS/ListView',
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
-               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
+               index,
                isRootId = function(id) {
                   //корень может отображаться даже если его нет в рекордсете
                   return (itemsProjection.getRoot &&
@@ -1540,6 +1540,9 @@ define('SBIS3.CONTROLS/ListView',
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
+            if (!!itemsProjection.getCount()) {
+               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1;
+            }
             if (index === -1 && typeof id !== 'undefined' && isRootId(id)) {
                index = 0;
             }
