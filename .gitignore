@@ -37,3 +37,5 @@
 /tests/reg/screenshots
 /tests/reg/capture_reports
 /__pycache__
+/application
+/builder-ui

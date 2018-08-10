@@ -13,7 +13,7 @@ define('Controls/Application/_Head',
       var Page = Base.extend({
          _template: template,
          _beforeMount: function(options, context, receivedState) {
-            if (typeof window !== 'undefined') {
+            if (typeof window !== 'undefined' && !window.themesActive) {
                return;
             }
             var def = context.headData.waitAppContent();

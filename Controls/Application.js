@@ -106,6 +106,7 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
+            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
@@ -115,6 +116,7 @@ define('Controls/Application',
             if (receivedState && context.AppData) {
                context.AppData.buildnumber = self.buildnumber;
                context.AppData.wsRoot = self.wsRoot;
+               context.AppData.lite = self.lite;
                context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
@@ -128,6 +130,7 @@ define('Controls/Application',
             def.callback({
                application: self.application,
                buildnumber: self.buildnumber,
+               lite: self.lite,
                title: self.title,
                appRoot: self.appRoot,
                wsRoot: self.wsRoot,

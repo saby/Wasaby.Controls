@@ -64,8 +64,14 @@
                               <script key="require" type="text/javascript"
                                       src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-                              <script key="config" type="text/javascript"
+                              <ws:if data="{{lite}}">
+                                 <script key="config" type="text/javascript"
+                                         src="{{wsRoot}}ext/requirejs/config-lite.js"></script>
+                              </ws:if>
+                              <ws:else>
+                                 <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
+                              </ws:else>
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
                                  <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"

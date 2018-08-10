@@ -18,19 +18,19 @@
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish ."
    },
    "config": {
-      "ws": "sbis3-ws",
+      "ws": "/",
       "wsModules": {
-         "View": "sbis3-ws/View",
-         "components/Core": "sbis3-ws/Core"
+         "View": "View",
+         "components/Core": "Core"
       },
-      "resources": "components",
-      "tests": "tests/unit",
-      "test_server_port": 1025,
+      "resources": "/",
+      "tests": "../tests/unit",
+      "test_server_port": 2025,
       "test_report": "artifacts/xunit-report.xml",
       "test_url": {
          "scheme": "http",
          "host": "localhost",
-         "port": 1025,
+         "port": 2025,
          "path": "",
          "query": "reporter=XUnit"
       }
@@ -50,7 +50,7 @@
       "grunt-contrib-less": "1.0.0",
       "grunt-contrib-watch": "0.6.1",
       "grunt-express-server": "0.4.19",
-      "gulp": "^3.9.1",
+      "gulp": "^4.0.0",
       "gulp-less": "^3.5.0",
       "gulp-livereload": "^3.8.1",
       "humanize": "0.0.9",
@@ -61,6 +61,7 @@
       "postcss": "^6.0.23",
       "progress": "^2.0.0",
       "requirejs": "2.1.18",
+      "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.500",
       "serve-static": "1.11.x",
       "typescript": "2.5.3",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0"

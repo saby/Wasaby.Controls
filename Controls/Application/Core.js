@@ -7,12 +7,15 @@ define('Controls/Application/Core',
       'tmpl!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'native-css'
+      'native-css',
+      'Core/css-resolve'
    ],
    function(Control,
       template,
       AppData,
-      HeadDataContext) {
+      HeadDataContext,
+      nativeCss,
+      cssResolve) {
 
       'use strict';
 
@@ -21,12 +24,14 @@ define('Controls/Application/Core',
          ctxData: null,
          constructor: function(cfg) {
 
-            /*var self = this;
-            nativeCss.load = function(path, require, load, conf) {
-               load(null);
-               self.headDataCtx.pushCssLink(cssResolve(path));
-               self.headDataCtx.updateConsumers();
-            };*/
+            if (typeof window !== 'undefined' && window.themesActive) {
+               var self = this;
+               nativeCss.load = function (path, require, load, conf) {
+                  load(null);
+                  self.headDataCtx.pushCssLink(cssResolve(path));
+                  self.headDataCtx.updateConsumers();
+               };
+            }
 
             try {
                /*TODO: set to presentation service*/
