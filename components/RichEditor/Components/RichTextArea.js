@@ -311,7 +311,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
                _enabled: undefined, //TODO: подумать как избавиться от этого
                _typeInProcess: false,
-               _clipboardText: undefined,
+               _clipboardText: false,
                _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
                _imageOptionsPanel: undefined,
                _lastReview: undefined,
