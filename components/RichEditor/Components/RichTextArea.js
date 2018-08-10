@@ -2477,10 +2477,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _onDropCallback: function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                this._clipboardText = false;
-               if (!this._mouseIsPressed && !cConstants.browser.isIE &&
-                  (!event.targetClone || !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))) {
-                  event.preventDefault();
-               }
             },
             _onDragStartCallback: function(event) {
                //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
