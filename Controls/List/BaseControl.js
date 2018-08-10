@@ -505,6 +505,10 @@ define('Controls/List/BaseControl', [
             this._scrollPagingCtr.destroy();
          }
 
+         if (this._listViewModel) {
+            this._listViewModel.destroy();
+         }
+
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
