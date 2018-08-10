@@ -20,18 +20,20 @@ define('Controls/FormController', [
          if (cfg.record && cfg.record instanceof Model) {
             this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
             this._record = cfg.record;
+
             // на изменение рекорда регистрируем пендинг
             this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
             if (cfg.isNewRecord) {
                this._isNewRecord = cfg.isNewRecord;
             }
-         } else  if (cfg.keyProperty !== undefined && cfg.keyProperty !== null) {
+         } else if (cfg.keyProperty !== undefined && cfg.keyProperty !== null) {
             // если в опции не пришел рекорд, смотрим на ключ keyProperty, который попробуем прочитать
             // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
             var readDef = cfg.dataSource.read(cfg.keyProperty);
             readDef.addCallback(function(record) {
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._record = record;
+
                // на изменение рекорда регистрируем пендинг
                self._record.subscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._readInMounting = { isError: false, result: record };
@@ -51,6 +53,7 @@ define('Controls/FormController', [
             var createDef = cfg.dataSource.create();
             createDef.addCallback(function(record) {
                self._record = record;
+
                // на изменение рекорда регистрируем пендинг
                self._record.subscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._createdInMounting = { isError: false, result: record };
@@ -67,6 +70,7 @@ define('Controls/FormController', [
          if (this._createdInMounting) {
             if (!this._createdInMounting.isError) {
                this._notify('createSuccessed', [this._createdInMounting.result], { bubbling: true });
+
                // зарегистрируем пендинг, перерисуемся
                this._createHandler(this._record);
             } else {
@@ -79,6 +83,7 @@ define('Controls/FormController', [
          if (this._readInMounting) {
             if (!this._readInMounting.isError) {
                this._notify('readSuccessed', [this._readInMounting.result], { bubbling: true });
+
                // перерисуемся
                this._readHandler(this._record);
             } else {
@@ -151,7 +156,7 @@ define('Controls/FormController', [
                      // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
                      // чтобы оно не сработало, когда пендинг завершится.
                      // иначе попробуем закрыть панель, не получится, потом сохраним рекорд и панель закроется сама собой
-                     this._notify('cancelFinishingPending', [], {bubbling: true});
+                     this._notify('cancelFinishingPending', [], { bubbling: true });
                   }
                   return res;
                }.bind(this), function(e) {
