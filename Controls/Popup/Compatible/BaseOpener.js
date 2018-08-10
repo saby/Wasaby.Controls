@@ -285,6 +285,10 @@ function(cMerge,
             newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }
 
+         if (newCfg.eventHandlers && newCfg.eventHandlers.onClose) {
+            newCfg.dialogOptions.onCloseHandler = newCfg.eventHandlers.onClose;
+         }
+
          return newCfg;
       },
 
