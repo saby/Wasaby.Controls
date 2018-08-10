@@ -53,30 +53,7 @@ function(cMerge,
          }
 
          if (cfg.context) {
-            var destroyDef = new Deferred(),
-               destrFunc = function() {
-                  destroyDef.callback();
-                  destroyDef = null;
-               };
-
-            if (cfg.context instanceof Context) {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-            } else {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-               cfg.templateOptions.context.setContextData(cfg.context);
-            }
-
-            if (!cfg.templateOptions.handlers) {
-               cfg.templateOptions.handlers = {};
-            }
-
-            if (!cfg.templateOptions.handlers.onDestroy) {
-               cfg.templateOptions.handlers.onDestroy = destrFunc;
-            } else if (cfg.templateOptions.handlers.onDestroy.push) {
-               cfg.templateOptions.handlers.onDestroy.push(destrFunc);
-            } else {
-               cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
-            }
+            this._prepareContext(cfg);
          }
 
          if (cfg.linkedContext) {
@@ -127,6 +104,33 @@ function(cMerge,
             cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
             cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
+         }
+      },
+
+      _prepareContext: function(cfg) {
+         var destroyDef = new Deferred(),
+            destrFunc = function() {
+               destroyDef.callback();
+               destroyDef = null;
+            };
+
+         if (cfg.context instanceof Context) {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+         } else {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+            cfg.templateOptions.context.setContextData(cfg.context);
+         }
+
+         if (!cfg.templateOptions.handlers) {
+            cfg.templateOptions.handlers = {};
+         }
+
+         if (!cfg.templateOptions.handlers.onDestroy) {
+            cfg.templateOptions.handlers.onDestroy = destrFunc;
+         } else if (cfg.templateOptions.handlers.onDestroy.push) {
+            cfg.templateOptions.handlers.onDestroy.push(destrFunc);
+         } else {
+            cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
          }
       },
 
@@ -275,7 +279,7 @@ function(cMerge,
          }
 
          if (newCfg.target) {
-            newCfg.dialogOptions.target = $(newCfg.target);
+            this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
@@ -290,6 +294,10 @@ function(cMerge,
          }
 
          return newCfg;
+      },
+
+      _prepareTarget: function(cfg) {
+         cfg.dialogOptions.target = $(cfg.target);
       },
 
       // Берем размеры либо с опций, либо с дименшенов
