@@ -19,10 +19,13 @@ define('Controls/Container/PendingRegistrator', [
       },
       _registerPendingHandler: function(e, def, config) {
          this._pendings[cnt] = {
+
             // сам деферред, который сигнализирует о завершении пендинга
             def: def,
+
             // функция, которая помогает пендингу завершиться, когда идет запрос на завершение из finishPendingOperations
             onPendingFail: config.onPendingFail,
+
             // показывать ли индикатор во время навешенного пендинга
             showLoadingIndicator: config.showLoadingIndicator
          };
