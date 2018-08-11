@@ -5,13 +5,13 @@
 }
 
 /**
-  * На android есть промежуток между дочерними элементами, внутри родительского.
-  * Когда шапка фиксируется, то между контейнером, относительно которого она фиксируется, и шапкой появляется
-  * пространство, через него можно увидеть прокрученный контент.
+  * On android there is a gap between child elements.
+  * When the header is fixed, there is a space between the container, relative to which it is fixed,
+  * and the header, through which you can see the scrolled content.
   * https://jsfiddle.net/tz52xr3k/3/
   *
-  * В качестве решения смещаем шапку вверх и увеличиваем её размер на смещение, через padding.
-  * Таким способом визуально не меняется контент шапки, а свободное пространство исчезает.
+  * As a solution, move the header up and increase its size by an offset, using padding.
+  * In this way, the content of the header does not change visually, and the free space disappears.
  */
 .controls-StickyHeader_android {
    @offset: 2px;

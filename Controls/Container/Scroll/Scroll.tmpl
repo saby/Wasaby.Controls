@@ -1,16 +1,16 @@
 <ws:template name="content">
    <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Listener name="scrollDetect" register="scroll">
-         <div name="content"
+         <span name="content"
               style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
-              class="ws-flex-grow-1 controls-Scroll__content
+              class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup
                      {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                      {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
                      {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
               on:resize="_resizeHandler()"
               on:scroll="_scrollHandler()">
             <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
-         </div>
+         </span>
       </Controls.Event.Listener>
    </Controls.Container.Scroll.Watcher>
 </ws:template>
@@ -38,7 +38,7 @@
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
-         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeader}}">
+         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeaderModel.isFixed()}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
          </ws:if>
          <ws:if data="{{_displayState.shadowPosition.indexOf('bottom') > -1}}">

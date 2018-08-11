@@ -5,7 +5,9 @@ define('Controls/Container/Scroll',
       'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
+      'Controls/StickyHeader/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
+      'Controls/Container/Scroll/Model/StickyHeader',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
       'Controls/Container/Scroll/Watcher',
@@ -13,7 +15,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, StickyHeaderModel, ScrollHeightFixUtil, template) {
 
       'use strict';
 
@@ -173,12 +175,29 @@ define('Controls/Container/Scroll',
 
             _pagingState: null,
 
+            /**
+             * @type {Controls/Container/Scroll/Model/StickyHeader|null}
+             * @private
+             */
+            _stickyHeaderModel: null,
+
+            /**
+             * @type {Controls/StickyHeader/Context|null}
+             * @private
+             */
+            _stickyHeaderContext: null,
+
             _beforeMount: function(options, context, receivedState) {
                var
                   self = this,
                   def;
 
                this._displayState = {};
+               this._stickyHeaderModel = new StickyHeaderModel();
+               this._stickyHeaderContext = new StickyHeaderContext({
+                  shadowVisible: options.shadowVisible
+               });
+
                if (context.ScrollData && context.ScrollData.pagingVisible) {
                   this._pagingState = {
                      visible: true,
@@ -242,12 +261,14 @@ define('Controls/Container/Scroll',
                this._displayState.hasScroll = _private.calcHasScroll(this);
                this._displayState.contentHeight = _private.getContentHeight(this);
                this._displayState.shadowPosition = _private.getShadowPosition(this);
+               this._updateStickyHeaderContext();
 
                this._forceUpdate();
             },
 
             _beforeUpdate: function(options, context) {
                this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
+               this._updateStickyHeaderContext();
             },
 
             _afterUpdate: function() {
@@ -255,6 +276,7 @@ define('Controls/Container/Scroll',
 
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
+                  this._updateStickyHeaderContext();
 
                   this._forceUpdate();
                }
@@ -353,13 +375,29 @@ define('Controls/Container/Scroll',
                this._dragging = dragging;
             },
 
-            _fixedHandler: function(event, shouldBeFixed) {
-               this._stickyHeader = shouldBeFixed;
+            _fixedHandler: function(event, args) {
+               this._stickyHeaderModel.update(args);
+
                event.stopPropagation();
             },
 
+            _updateStickyHeaderContext: function() {
+               var shadowVisible = this._options.shadowVisible && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
+
+               if (this._stickyHeaderContext.shadowVisible !== shadowVisible) {
+                  this._stickyHeaderContext.shadowVisible = shadowVisible;
+                  this._stickyHeaderContext.updateConsumers();
+               }
+            },
+
+            _getChildContext: function() {
+               return {
+                  stickyHeader: this._stickyHeaderContext
+               };
+            },
+
             getDataId: function() {
-               return 'ControlsContainerScroll';
+               return 'Controls/Container/Scroll';
             },
 
             /**

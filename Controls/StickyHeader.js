@@ -2,101 +2,156 @@ define('Controls/StickyHeader',
    [
       'Core/Control',
       'Core/detection',
+      'Controls/StickyHeader/Context',
       'Controls/Utils/IntersectionObserver',
       'tmpl!Controls/StickyHeader/StickyHeader',
 
       'css!Controls/StickyHeader/StickyHeader'
    ],
-   function(Control, detection, IntersectionObserver, template) {
+   function(Control, detection, StickyHeaderContext, IntersectionObserver, template) {
 
       'use strict';
 
+      /**
+       * Ensures that content sticks to the top of the parent container when scrolling down.
+       * Occurs at the moment of intersection of the upper part of the content and the parent container.
+       *
+       *
+       * @public
+       * @extends Core/Control
+       * @class Controls/StickyHeader
+       */
+
+      /**
+       * @name Controls/StickyHeader#content
+       * @cfg {Function} Sticky header content.
+       */
+
+      /**
+       * @event Controls/StickyHeader#fixed Change the fixation state.
+       * @param {SyntheticEvent} event Event descriptor.
+       * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
+       */
+
+      /**
+       * @typedef {Object} Intersection
+       * @property {Boolean} top Determines whether the upper boundary of content is crossed.
+       * @property {Boolean} bottom Determines whether the lower boundary of content is crossed.
+       */
+
+      /**
+       * typedef {String} TrackedTarget
+       * @variant top Top target.
+       * @variant bottom Bottom target.
+       */
+      
       var StickyHeader = Control.extend({
+
+         /**
+          * @type {Function} Component display template.
+          * @private
+          */
          _template: template,
 
+         /**
+          * @type {Intersection|null} Determines whether the boundaries of content crossed.
+          * @private
+          */
+         _intersection: null,
+
+         /**
+          * type {Boolean} Determines whether the content is fixed.
+          * @private
+          */
          _shouldBeFixed: false,
 
-         _isIntersecting: null,
+         /**
+          * type {Boolean} Determines whether the component is built on the Android mobile platform.
+          * @private
+          */
+         _shouldBeMobileAndroid: detection.isMobileAndroid,
 
-         _isMobileAndroid: detection.isMobileAndroid,
-
-         _beforeMount: function() {
-            this._isIntersecting = {
-               top: null,
-               bottom: null
-            };
+         constructor: function() {
+            StickyHeader.superclass.constructor.call(this);
+            this._intersection = {};
             this._observeHandler = this._observeHandler.bind(this);
+            this._updateStateIntersection = this._updateStateIntersection.bind(this);
          },
 
          _afterMount: function() {
+            var children = this._children;
             var observer = new IntersectionObserver(this._observeHandler);
 
-            observer.observe(this._children.observationTargetTop);
-            observer.observe(this._children.observationTargetBottom);
+            observer.observe(children.observationTargetTop);
+            observer.observe(children.observationTargetBottom);
          },
 
+         /**
+          * Handles changes to the visibility of the target object of observation at the intersection of the root container.
+          * @param {IntersectionObserverEntry[]} entries The intersections between the target element and its root container at a specific moment of transition.
+          * @private
+          */
          _observeHandler: function(entries) {
-            var self = this;
-            var entryTop, entryBottom, isIntersectingTop, isIntersectingBottom, shouldBeFixed;
+            entries.forEach(this._updateStateIntersection);
 
-            entries.forEach(function(entry) {
-               if (entry.target === self._children.observationTargetTop) {
-                  entryTop = entry;
-               }
-               if (entry.target === self._children.observationTargetBottom) {
-                  entryBottom = entry;
-               }
-            });
+            var shouldBeFixed = this._isFixed();
 
-            if (entryTop) {
-               isIntersectingTop = entryTop.isIntersecting;
-               this._isIntersecting.top = entryTop.isIntersecting;
-            } else {
-               isIntersectingTop = this._isIntersecting.top;
-            }
-
-            if (entryBottom) {
-               isIntersectingBottom = entryBottom.isIntersecting;
-               this._isIntersecting.bottom = entryBottom.isIntersecting;
-            } else {
-               isIntersectingBottom = this._isIntersecting.bottom;
-            }
-
-            shouldBeFixed = isIntersectingBottom && !isIntersectingTop;
-
-            if (shouldBeFixed !== this._shouldBeFixed) {
-               this._notify('fixed', [shouldBeFixed, this._container.offsetHeight], {bubbling: true});
-               this._shouldBeFixed = shouldBeFixed;
-               this._forceUpdate();
+            if (this._shouldBeFixed !== shouldBeFixed) {
+               this._updateOnFixation(shouldBeFixed);
             }
          },
 
-         _listScrollHandler: function(e, eventType, args) {
-            switch (eventType) {
-               case 'listTop':
-                  //TODO: https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
-                  this._time = Date.now();
+         /**
+          * @param {IntersectionObserverEntry} entry
+          * @private
+          */
+         _updateStateIntersection: function(entry) {
+            var target = this._getTarget(entry);
 
-                  this._listTop = true;
-                  break;
-               case 'scrollMove':
-                  /**
-                   * TODO: Убрать условие после выполнения задачи.
-                   * https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
-                   */
-                  if (args.scrollTop !== 0 && Date.now() - this._time > 150) {
-                     this._listTop = false;
-                  }
-                  break;
-               case 'canScroll':
-                  this._scrolling = true;
-                  break;
-               case 'cantScroll':
-                  this._scrolling = false;
-                  break;
-            }
+            this._intersection[target] = entry.isIntersecting;
+         },
+
+         /**
+          * Get the name of the intersection target.
+          * @param {IntersectionObserverEntry} entry The intersection between the target element and its root container at a specific moment of transition.
+          * @returns {TrackedTarget} The name of the intersection target.
+          * @private
+          */
+         _getTarget: function(entry) {
+            return this._children.observationTargetTop === entry.target ? 'top' : 'bottom';
+         },
+
+         /**
+          * To inform descendants about the fixing status. To update the state of the instance.
+          * @param {Boolean} shouldBeFixed Determines whether the content is fixed.
+          * @private
+          */
+         _updateOnFixation: function(shouldBeFixed) {
+            var information = {
+               id: this.getId(),
+               shouldBeFixed: shouldBeFixed
+            };
+
+            this._forceUpdate();
+            this._shouldBeFixed = shouldBeFixed;
+            this._notify('fixed', [information], {bubbling: true});
+         },
+
+         /**
+          * Determines the content is fixed.
+          * @returns {Boolean} Determines whether the content is fixed.
+          * @private
+          */
+         _isFixed: function() {
+            return this._intersection.bottom && !this._intersection.top;
          }
       });
+
+      StickyHeader.contextTypes = function() {
+         return {
+            stickyHeader: StickyHeaderContext
+         };
+      };
 
       return StickyHeader;
    }
