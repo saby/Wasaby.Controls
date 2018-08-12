@@ -4375,6 +4375,7 @@ define('SBIS3.CONTROLS/ListView',
                      //в некоторых условиях (например поиск в сообщениях) размер страницы, приходящей с сервера не соответствует указанному в настройке
                      //поэтому элемента с таким индексом может и не быть.
                      if(projItem) {
+                        this._offset = this._options.pageSize * pageNumber;
                         this._scrollToProjItem(projItem);
                      }
                   }
