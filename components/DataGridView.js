@@ -655,7 +655,7 @@ define('SBIS3.CONTROLS/DataGridView',
             /**
              * @cfg {Boolean} Устанавливает фиксацию/прилипание заголовков списка к "шапке" страницы/всплывающей панели.
              * @remark
-             * Подробнее об этом механизме вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
+             * Подробнее об этом механизме вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/ready-solutions/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>
