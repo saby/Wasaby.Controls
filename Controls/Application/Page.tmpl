@@ -20,6 +20,7 @@
                <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.Popup.Manager>
+                        <Controls.Container.BatchUpdater>
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.DragNDrop.Container name="dragNDropContainer">
                               <body
@@ -67,6 +68,7 @@
                               <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
 
+
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
                                  <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
                                              _options="{{_options}}"/>
@@ -93,6 +95,7 @@
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>
+                        </Controls.Container.BatchUpdater>
                      </Controls.Popup.Manager>
                   </Controls.Event.Listener>
                </Controls.Event.Listener>
