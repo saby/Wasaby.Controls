@@ -188,8 +188,7 @@ function(cMerge,
             var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
             if (side === 'left') {
                cfg.direction = 'right';
-            }
-            else if (side === 'right') {
+            } else if (side === 'right') {
                cfg.direction = 'left';
             }
          }
