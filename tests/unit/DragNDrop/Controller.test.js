@@ -79,46 +79,91 @@ define([
             dragObject = null;
          });
 
-         it('dragStart', function() {
-            controller.startDragNDrop(entity, startEvent);
-            assert.equal(startEvent.nativeEvent, controller._startEvent);
-            assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
+         describe('mouse', function() {
+            it('dragStart', function() {
+               controller.startDragNDrop(entity, startEvent);
+               assert.equal(startEvent.nativeEvent, controller._startEvent);
+               assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
+            });
+            it('mouseMove without start dragMove', function() {
+               controller._onMouseMove(createSyntheticEvent('mousemove', 20, 10));
+               assert.equal(events.join(', '), '');
+               assert.isFalse(controller._documentDragging);
+               assert.isFalse(controller._insideDragging);
+            });
+            it('start dragMove', function() {
+               controller._onMouseMove(createSyntheticEvent('mousemove', 25, 10));
+               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
+               assert.isTrue(controller._documentDragging);
+               assert.isTrue(controller._insideDragging);
+            });
+            it('dragMove', function() {
+               controller._onMouseMove(createSyntheticEvent('mousemove', 30, 15));
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
+               assert.deepEqual(dragObject.offset, {x: 10, y: 5});
+               assert.deepEqual(dragObject.position, {x: 30, y: 15});
+            });
+            it('dragLeave', function() {
+               controller._mouseLeave();
+               assert.equal(events.join(', '), 'dragLeave');
+               assert.isFalse(controller._insideDragging);
+            });
+            it('dragEnter', function() {
+               controller._mouseEnter();
+               assert.equal(events.join(', '), 'dragEnter');
+               assert.isTrue(controller._insideDragging);
+            });
+            it('dragEnd', function() {
+               controller._onMouseUp(createSyntheticEvent('mouseup', 50, 45));
+               assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
+               assert.isFalse(controller._documentDragging);
+               assert.isFalse(controller._insideDragging);
+               assert.isFalse(!!controller._startEvent);
+               assert.isFalse(!!controller._dragEntity);
+            });
          });
-         it('mouseMove without start dragMove', function() {
-            controller._onMouseMove(createSyntheticEvent('mousemove', 20, 10));
-            assert.equal(events.join(', '), '');
-            assert.isFalse(controller._documentDragging);
-            assert.isFalse(controller._insideDragging);
-         });
-         it('start dragMove', function() {
-            controller._onMouseMove(createSyntheticEvent('mousemove', 25, 10));
-            assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
-            assert.isTrue(controller._documentDragging);
-            assert.isTrue(controller._insideDragging);
-         });
-         it('dragMove', function() {
-            controller._onMouseMove(createSyntheticEvent('mousemove', 30, 15));
-            assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
-            assert.deepEqual(dragObject.offset, {x: 10, y: 5});
-            assert.deepEqual(dragObject.position, {x: 30, y: 15});
-         });
-         it('dragLeave', function() {
-            controller._mouseLeave();
-            assert.equal(events.join(', '), 'dragLeave');
-            assert.isFalse(controller._insideDragging);
-         });
-         it('dragEnter', function() {
-            controller._mouseEnter();
-            assert.equal(events.join(', '), 'dragEnter');
-            assert.isTrue(controller._insideDragging);
-         });
-         it('dragEnd', function() {
-            controller._onMouseUp(createSyntheticEvent('mouseup', 50, 45));
-            assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
-            assert.isFalse(controller._documentDragging);
-            assert.isFalse(controller._insideDragging);
-            assert.isFalse(!!controller._startEvent);
-            assert.isFalse(!!controller._dragEntity);
+         describe('touch', function() {
+            it('dragStart', function() {
+               controller.startDragNDrop(entity, startEvent);
+               assert.equal(startEvent.nativeEvent, controller._startEvent);
+               assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
+            });
+            it('touchmove without start dragMove', function() {
+               controller._onTouchMove(createSyntheticEvent('touchmove', 20, 10));
+               assert.equal(events.join(', '), '');
+               assert.isFalse(controller._documentDragging);
+               assert.isFalse(controller._insideDragging);
+            });
+            it('start dragMove', function() {
+               controller._onTouchMove(createSyntheticEvent('touchmove', 25, 10));
+               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
+               assert.isTrue(controller._documentDragging);
+               assert.isTrue(controller._insideDragging);
+            });
+            it('dragMove', function() {
+               controller._onTouchMove(createSyntheticEvent('touchmove', 30, 15));
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
+               assert.deepEqual(dragObject.offset, {x: 10, y: 5});
+               assert.deepEqual(dragObject.position, {x: 30, y: 15});
+            });
+            it('dragLeave', function() {
+               controller._mouseLeave();
+               assert.equal(events.join(', '), 'dragLeave');
+               assert.isFalse(controller._insideDragging);
+            });
+            it('dragEnter', function() {
+               controller._mouseEnter();
+               assert.equal(events.join(', '), 'dragEnter');
+               assert.isTrue(controller._insideDragging);
+            });
+            it('dragEnd', function() {
+               controller._onMouseUp(createSyntheticEvent('mouseup', 50, 45));
+               assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
+               assert.isFalse(controller._documentDragging);
+               assert.isFalse(controller._insideDragging);
+               assert.isFalse(!!controller._startEvent);
+               assert.isFalse(!!controller._dragEntity);
+            });
          });
       });
    });

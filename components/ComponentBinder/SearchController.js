@@ -374,7 +374,8 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
          this.subscribeTo(searchForm, 'onKeyPressed', function(eventObject, event) {
             /* Строка поиска связывается searchController'ом со списком в браузере и со списком в автодополнении,
                когда открыто автодополнение, клик по стрелкам на клавиатуре должен приводить к навигации по списку в автодополнении */
-            var abortKeyPressedProcess = searchForm.isPickerVisible() && !self._options.searchFormWithSuggest;
+            var
+               abortKeyPressedProcess = searchForm.isPickerVisible() && !self._options.searchFormWithSuggest;
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
@@ -382,13 +383,23 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                return;
             }
 
+            if (view._scrollPager) {
+               if (event.which === constants.key.pageDown) {
+                  view._scrollPager._goToNext();
+               }
+               if (event.which === constants.key.pageUp) {
+                  view._scrollPager._goToPrev();
+               }
+            }
+
+
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
             if (event.which == constants.key.down && (!this.getText() || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = null,
                    itemsProjection = view._getItemsProjection();
                /* При поиске по дереву папки отображаются, как Хлебные крошки
                   поэтому маркер нужно установить на первый элемент проекции, который не является папкой */
-               if(self._searchMode && itemsProjection.at(0).isNode) {
+               if(self._searchMode && !!itemsProjection.getCount() && itemsProjection.at(0).isNode) {
                   itemsProjection.each(function (item, index) {
                      if (!selectedIndex && !item.isNode()) {
                         selectedIndex = index;

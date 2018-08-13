@@ -306,11 +306,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._endDatePicker.addValidators(this._options.endValueValidators);
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
-   
+
          if (this._options.yearStateEnabled) {
             this.applyYearState();
          } else {
-            this.applyMonthState();
+            this.applyMonthState(this._options.startValue ? this._options.startValue : new Date());
          }
 
          this._updateHomeButton();

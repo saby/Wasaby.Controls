@@ -53,30 +53,7 @@ function(cMerge,
          }
 
          if (cfg.context) {
-            var destroyDef = new Deferred(),
-               destrFunc = function() {
-                  destroyDef.callback();
-                  destroyDef = null;
-               };
-
-            if (cfg.context instanceof Context) {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-            } else {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-               cfg.templateOptions.context.setContextData(cfg.context);
-            }
-
-            if (!cfg.templateOptions.handlers) {
-               cfg.templateOptions.handlers = {};
-            }
-
-            if (!cfg.templateOptions.handlers.onDestroy) {
-               cfg.templateOptions.handlers.onDestroy = destrFunc;
-            } else if (cfg.templateOptions.handlers.onDestroy.push) {
-               cfg.templateOptions.handlers.onDestroy.push(destrFunc);
-            } else {
-               cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
-            }
+            this._prepareContext(cfg);
          }
 
          if (cfg.linkedContext) {
@@ -122,11 +99,38 @@ function(cMerge,
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
 
-         if (cfg.canMaximize) {
+         if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;
             cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
             cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
+         }
+      },
+
+      _prepareContext: function(cfg) {
+         var destroyDef = new Deferred(),
+            destrFunc = function() {
+               destroyDef.callback();
+               destroyDef = null;
+            };
+
+         if (cfg.context instanceof Context) {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+         } else {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+            cfg.templateOptions.context.setContextData(cfg.context);
+         }
+
+         if (!cfg.templateOptions.handlers) {
+            cfg.templateOptions.handlers = {};
+         }
+
+         if (!cfg.templateOptions.handlers.onDestroy) {
+            cfg.templateOptions.handlers.onDestroy = destrFunc;
+         } else if (cfg.templateOptions.handlers.onDestroy.push) {
+            cfg.templateOptions.handlers.onDestroy.push(destrFunc);
+         } else {
+            cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
          }
       },
 
@@ -144,28 +148,8 @@ function(cMerge,
 
          cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
 
-         var revertPosition = {
-            top: 'bottom',
-            bottom: 'top',
-            left: 'right',
-            right: 'left',
-            middle: 'center',
-            center: 'center'
-         };
-
-         if (cfg.hasOwnProperty('verticalAlign')) {
-            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
-            if (typeof cfg.verticalAlign !== 'object') {
-               cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
-            }
-         }
-
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
-         }
-
-         if (cfg.hasOwnProperty('side')) {
-            cfg.horizontalAlign = { side: revertPosition[cfg.side] };
          }
 
          if (cfg.horizontalAlign) {
@@ -190,10 +174,27 @@ function(cMerge,
 
          if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
             cfg.corner = {};
-            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-               cfg.direction = 'right';
+            if (cfg.hasOwnProperty('side')) {
+               cfg.corner.horizontal = cfg.side;
             }
-            cfg.corner.horizontal = revertPosition[cfg.direction];
+         }
+
+         if (cfg.hasOwnProperty('verticalAlign') && typeof cfg.verticalAlign !== 'object') {
+            cfg.corner = cfg.corner || {};
+
+            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
+            cfg.corner.vertical = cfg.verticalAlign;
+            delete cfg.verticalAlign;
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            if (cfg.direction === 'right' || cfg.direction === 'left') {
+               if (typeof cfg.horizontalAlign !== 'object') {
+                  cfg.horizontalAlign = {side: cfg.direction};
+               }
+            } else if (typeof cfg.verticalAlign !== 'object') {
+               cfg.verticalAlign = {side: cfg.direction};
+            }
          }
 
          if (cfg.hasOwnProperty('modal')) {
@@ -275,7 +276,7 @@ function(cMerge,
          }
 
          if (newCfg.target) {
-            newCfg.dialogOptions.target = $(newCfg.target);
+            this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
@@ -290,6 +291,10 @@ function(cMerge,
          }
 
          return newCfg;
+      },
+
+      _prepareTarget: function(cfg) {
+         cfg.dialogOptions.target = $(cfg.target);
       },
 
       // Берем размеры либо с опций, либо с дименшенов

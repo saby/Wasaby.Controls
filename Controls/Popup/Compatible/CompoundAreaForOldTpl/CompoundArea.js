@@ -130,6 +130,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                rebuildDeferred;
 
             self._childConfig._compoundArea = self;
+
+            self.once('onInit', function() {
+               self.setEnabled(self._enabled);
+            });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
                cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
@@ -142,7 +146,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._enabled);
                });
             });
 
@@ -205,7 +208,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                self.rebuildChildControl().addCallback(function() {
                   runDelayed(function() {
                      self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     self._notifyCompound('onResize');
+                     runDelayed(function() {
+                        self._notifyCompound('onResize');
+                     });
                   });
                });
             });
@@ -546,7 +551,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          close: function(arg) {
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
-            } else if (!this._childControl.isDestroyed()) {
+            } else if (this._childControl && !this._childControl.isDestroyed()) {
                // Закрытие панели могут вызвать несколько раз подряд
                if (this._isClosing) {
                   return false;

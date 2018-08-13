@@ -43,6 +43,7 @@ define('Controls/Container/List',
          resolveOptions: function(self, options) {
             self._options = options;
             self._filter = options.filter;
+            self._source = options.source;
             self._navigation = options.navigation;
          },
          
