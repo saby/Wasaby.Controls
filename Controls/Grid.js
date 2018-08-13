@@ -22,6 +22,7 @@ define('Controls/Grid', [
     * @mixes Controls/List/interface/IGridControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 

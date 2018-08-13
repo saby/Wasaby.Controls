@@ -24,6 +24,7 @@ define('Controls/Container/Scroll',
        * @extends Core/Control
        * @control
        * @public
+       * @author Журавлев М.С.
        * @category Container
        * @demo Controls-demo/Container/Scroll
        */
