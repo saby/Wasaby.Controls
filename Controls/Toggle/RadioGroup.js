@@ -18,6 +18,7 @@ define('Controls/Toggle/RadioGroup', [
     * @mixes Controls/interface/ISingleSelectable
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemo
     *

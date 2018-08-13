@@ -22,6 +22,7 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/interface/ITreeControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 

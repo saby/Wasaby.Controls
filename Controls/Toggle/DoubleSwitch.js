@@ -19,6 +19,7 @@ define('Controls/Toggle/DoubleSwitch', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     *
     * @demo Controls-demo/Switch/DoubleSwitchDemo
