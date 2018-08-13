@@ -187,6 +187,16 @@ function(cMerge,
             delete cfg.verticalAlign;
          }
 
+         if (!cfg.hasOwnProperty('direction')) {
+            //Значения по умолчанию. взято из floatArea.js
+            var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
+            if (side === 'left') {
+               cfg.direction = 'right';
+            } else if (side === 'right') {
+               cfg.direction = 'left';
+            }
+         }
+
          if (cfg.hasOwnProperty('direction')) {
             if (cfg.direction === 'right' || cfg.direction === 'left') {
                if (typeof cfg.horizontalAlign !== 'object') {
