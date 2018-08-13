@@ -45,10 +45,12 @@ define(
          },
          context: new Context(),
          eventHandlers: {
-            onResult: 'onResult'
+            onResult: 'onResult',
+            onClose: 'onclose'
          },
          enabled: true,
-         closeChildWindows: true
+         closeChildWindows: true,
+         closeOnTargetScroll: true
       };
 
       describe('Controls/Popup/Compatible/BaseOpener', function() {
@@ -91,18 +93,25 @@ define(
             assert.equal(config.className,'testClass');
             assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
-            assert.equal(config.verticalAlign.side,'center');
-            assert.equal(config.horizontalAlign.side,'right');
-            assert.equal(config.verticalAlign.offset, 25);
-            assert.equal(config.horizontalAlign.offset,25);
-            assert.equal(config.direction,'right');
-            assert.equal(config.corner.horizontal,'left');
             assert.isTrue(cInstance.instanceOfModule(config.context,'Core/Abstract'));
             config.side = null;
             config.modal = true;
+            config.horizontalAlign = {
+               offset: undefined
+            };
+            config.offset = 0;
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.isFalse(!!config.horizontalAlign.side);
+            assert.isFalse(!!config.horizontalAlign.offset);
             assert.isTrue(config.isModal);
+            config.direction = 'right';
+            config.horizontalAlign = 'test';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.direction,config.horizontalAlign.side);
+            config.direction = 'top';
+            config.verticalAlign = 'test';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.direction,config.verticalAlign.side);
          });
 
          it('_setSizes', function() {
@@ -185,6 +194,10 @@ define(
             BaseOpener._prepareTarget = function(cfg) {
                return cfg.target
             };
+            config.offset = {
+               x:25,
+               y:25
+            };
             config.target = 'testTarget';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.equal(newConfig.templateOptions, config.templateOptions);
@@ -199,7 +212,10 @@ define(
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);
             assert.equal(newConfig.dialogOptions.onResultHandler, config.eventHandlers.onResult);
+            assert.equal(newConfig.dialogOptions.onCloseHandler, config.eventHandlers.onClose);
             assert.isTrue(newConfig.dialogOptions.closeChildWindows);
+            assert.equal(newConfig.dialogOptions.closeOnTargetScroll, config.closeOnTargetScroll);
+            assert.equal(newConfig.dialogOptions.offset, config.offset);
             let testconfig = {
                horizontalAlign: {
                   side: 'left'
@@ -216,6 +232,9 @@ define(
             assert.equal(newTestConfig.dialogOptions.direction, testconfig.horizontalAlign.side);
             assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
             assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
+            testconfig.horizontalAlign = null;
+            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.direction,'right');
          });
 
          it('_getDimensions', function() {
