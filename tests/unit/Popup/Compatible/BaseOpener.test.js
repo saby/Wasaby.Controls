@@ -112,6 +112,10 @@ define(
             config.verticalAlign = 'test';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction,config.verticalAlign.side);
+            delete config.direction;
+            config.side = 'right';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.direction, 'left');
          });
 
          it('_setSizes', function() {
@@ -161,6 +165,7 @@ define(
             newConfig.minWidth = 100;
             newConfig.maximized = false;
             newConfig.canMaximize = true;
+            newConfig.maxWidth = 150;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);
