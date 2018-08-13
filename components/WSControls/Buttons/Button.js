@@ -153,7 +153,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
          this.subscribe('onAfterShow', function() {
             // событие стреляет рано. нужно дождаться, когда предки тоже успеют отобразиться в DOM
             setTimeout(function () {
-               if (this._options.primary === true) {
+               if (this._options.primary === true && !this._defaultAction) {
                   this._registerDefaultButton();
                }
             }.bind(this), 0);
