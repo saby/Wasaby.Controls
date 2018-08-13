@@ -724,6 +724,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       setFrequnet: function(frequents) {
          this._frequent = _private.getEmptyHistoryRecord(this, coreClone(this._options.oldItems.getFormat()));
          _private.fillHistoryRecord(this, frequents, this._frequent, 'frequent');
+         historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(this));
       },
 
       /**
@@ -744,6 +745,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       setPinned: function(items) {
          this._pinned = _private.getEmptyHistoryRecord(this, coreClone(this._options.oldItems.getFormat()));
          _private.fillHistoryRecord(this, items, this._pinned, 'pinned');
+         historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(this));
       },
 
       /**
@@ -799,6 +801,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
          records.add(newItem);
          this._recent.prepend(records);
          this._pinned.setIdProperty(_private.getHistoryId(this));
+         historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(self));
       },
 
       getIndexesList: function(self, data) {
