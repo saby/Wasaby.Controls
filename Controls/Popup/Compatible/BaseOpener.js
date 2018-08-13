@@ -39,8 +39,8 @@ function(cMerge,
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
          }
 
-         if (cfg.componentOptions.closeButtonStyle || cfg.closeButtonStyle) {
-            cfg.templateOptions.closeButtonStyle = (cfg.componentOptions.closeButtonStyle ? cfg.componentOptions.closeButtonStyle : cfg.closeButtonStyle);
+         if (cfg.closeButtonStyle) {
+            cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
          }
 
          if (cfg.record) { // от RecordFloatArea
