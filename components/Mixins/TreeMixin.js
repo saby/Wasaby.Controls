@@ -1174,7 +1174,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                } else {
                   position.push(null);
                }
-               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, 'after');
+               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, this._options.navigation.config.direction);
             } else {
                return parentFn.call(this, filter, direction);
             }
