@@ -208,6 +208,10 @@ function(cMerge,
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
 
+         if (cfg.onCloseHandler) {
+            cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
+         }
+
          this._setSizes(cfg, templateClass);
       },
 
