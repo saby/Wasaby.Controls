@@ -48,7 +48,7 @@ define('Controls/Container/BatchUpdater',
                   var cbarr = self.callbackArray;
 
                   function update() {
-                     if(!updated) {
+                     if (!updated) {
                         updated = true;
                         for (var i = 0; i < cbarr.length; i++) {
                            cbarr[i].call();
