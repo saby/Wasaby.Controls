@@ -161,17 +161,6 @@ function(cMerge,
             }
          }
 
-         if (cfg.hasOwnProperty('offset')) {
-            if (cfg.offset.x) {
-               cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
-            }
-            if (cfg.offset.y) {
-               cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
-            }
-         }
-
          if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
             cfg.corner = {};
             if (cfg.hasOwnProperty('side')) {
@@ -204,6 +193,17 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+            }
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
             }
          }
 
