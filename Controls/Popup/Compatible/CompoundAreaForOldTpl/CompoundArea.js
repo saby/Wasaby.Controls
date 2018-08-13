@@ -132,6 +132,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                rebuildDeferred;
 
             self._childConfig._compoundArea = self;
+
+            self.once('onInit', function() {
+               self.setEnabled(self._enabled);
+            });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
                cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
@@ -144,7 +148,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._enabled);
                });
             });
 
