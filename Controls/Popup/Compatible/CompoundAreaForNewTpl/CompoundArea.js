@@ -32,6 +32,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             var self = this;
             this._onCloseHandler = this._onCloseHandler.bind(this);
             this._onResultHandler = this._onResultHandler.bind(this);
+            this._onResizeHandler = this._onResizeHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
@@ -46,11 +47,15 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                         //Отлавливаем события с дочернего vdom компонента
                         self._getRootContainer().eventProperties = {
                            'on:close': [{
-                              fn: self._onCloseHandler,
+                              fn: self._createFnForEvents(self._onCloseHandler),
+                              args: []
+                           }],
+                           'on:resize': [{
+                              fn: self._createFnForEvents(self._onResizeHandler),
                               args: []
                            }],
                            'on:sendresult': [{
-                              fn: self._onResultHandler,
+                              fn: self._createFnForEvents(self._onResultHandler),
                               args: []
                            }]
                         };
@@ -67,6 +72,18 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             });
          },
 
+         //Создаем обработчик события, который положим в eventProperties узла
+         _createFnForEvents: function(callback) {
+            var fn = callback;
+
+            //Нужно для событийного канала vdom'a.
+            //У fn.control позовется forceUpdate. На compoundArea его нет, поэтому ставим заглушку
+            fn.control = {
+               _forceUpdate: this._forceUpdate
+            };
+            return fn;
+         },
+
          // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
          _afterMountHandler: function() {
             var self = this;
@@ -78,6 +95,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   self._options._initCompoundArea(self);
                }
             };
+         },
+         _onResizeHandler: function() {
+            this._notifyOnSizeChanged();
          },
          _onCloseHandler: function() {
             this._options.onCloseHandler && this._options.onCloseHandler(this._result);
