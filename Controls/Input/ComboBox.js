@@ -18,6 +18,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputPlaceholder
+       * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
        * @public
        * @category Input
