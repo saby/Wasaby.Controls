@@ -40,7 +40,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   this._popupIds.forEach(function(popupId) {
                      ManagerController.remove(popupId);
                   });
-               } else if (this._action) {
+               } else if (this._action) { // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
                   this._action.destroy();
                   this._action = null;
                }
