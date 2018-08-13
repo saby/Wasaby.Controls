@@ -1,19 +1,35 @@
 [
   {
     "include": [
-      "SBIS3.CONTROLS/Button",
-      "SBIS3.CONTROLS/Button/*",
       "SBIS3.CONTROLS/SearchForm/*",
       "SBIS3.CONTROLS/BreadCrumbs",
       "SBIS3.CONTROLS/BreadCrumbs/*",
       "SBIS3.CONTROLS/ComponentBinder",
-      "SBIS3.CONTROLS/ComponentBinder/*",
-      "SBIS3.CONTROLS/Filter/*"
+      "SBIS3.CONTROLS/ComponentBinder/*"
     ],
     "exclude": [
       "css!*"
     ],
     "output": "sbis3controls-browser.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-filter.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Button",
+      "SBIS3.CONTROLS/Button/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-buttons.package.js"
   },
   {
     "include": [
@@ -23,15 +39,6 @@
       "css!*"
     ],
     "output": "sbis3controls-mixin.package.js"
-  },
-  {
-    "include": [
-      "SBIS3.CONTROLS/Utils/*"
-    ],
-    "exclude": [
-      "css!*"
-    ],
-    "output": "sbis3controls-utils.package.js"
   },
   {
     "include": [
