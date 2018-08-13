@@ -1200,7 +1200,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!editor) {
                   return;
                }
-               var defaults = this.getCurrentFormats();
                if (cConstants.browser.firefox) {
                   this._clearBrDataMceBogus();
                }
@@ -1209,21 +1208,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this.setFontStyle(formats.id);
                }
                else {
-                  var isTheSame = Object.keys(defaults).every(function(v) {
-                     return defaults[v] === formats[v];
-                  });
-                  if (isTheSame) {
-                     return;
-                  }
                   var formatter = editor.formatter;
                   for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
                      formatter.remove(names[i], {value: undefined}, null, true);
                   }
-                  var sameFont = formats.fontsize === this.getCurrentFormats(['fontsize']).fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  if (!sameFont) {
-                     this._setFontSize(formats.fontsize);
-                  }
+                  this._setFontSize(formats.fontsize);
                   var node = this._getCurrentFormatNode();
                   if (this._applyTextDecorationUnderlineAndLinethrough(node, false) && !node.attributes.length) {
                      var nodes = [].slice.call(node.childNodes);
@@ -1242,14 +1232,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         hasOther = formats[name] || hasOther;
                      }
                   }
-                  if (formats.color !== this.getCurrentFormats(['color']).color) {
-                     formatter.apply('forecolor', {value: formats.color});
-                     if (formats.underline && formats.strikethrough) {
-                        this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
-                     }
-                     hasOther = true;
+                  formatter.apply('forecolor', {value: formats.color});
+                  if (formats.underline && formats.strikethrough) {
+                     this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
-                  if (sameFont && !hasOther) {
+                  hasOther = true;
+                  if (!hasOther) {
                      // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
