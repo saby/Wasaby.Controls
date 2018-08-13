@@ -122,7 +122,7 @@ function(cMerge,
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
 
-         if (cfg.canMaximize) {
+         if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;
             cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
