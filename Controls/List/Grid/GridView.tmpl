@@ -1,7 +1,4 @@
 <div class="controls-Grid controls-Grid_{{_options.itemActionsPosition}}" attr:style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility())}};">
-   <ws:if data="{{isNotFullGridSupport}}">
-      <ws:partial template="tmpl!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
-   </ws:if>
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="tmpl!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
    </ws:if>

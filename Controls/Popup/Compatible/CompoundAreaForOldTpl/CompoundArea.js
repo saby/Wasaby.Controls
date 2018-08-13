@@ -207,7 +207,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                self.rebuildChildControl().addCallback(function() {
                   runDelayed(function() {
                      self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     self._notifyCompound('onResize');
+                     runDelayed(function() {
+                        self._notifyCompound('onResize');
+                     });
                   });
                });
             });
@@ -548,7 +550,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          close: function(arg) {
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
-            } else if (!this._childControl.isDestroyed()) {
+            } else if (this._childControl && !this._childControl.isDestroyed()) {
                // Закрытие панели могут вызвать несколько раз подряд
                if (this._isClosing) {
                   return false;

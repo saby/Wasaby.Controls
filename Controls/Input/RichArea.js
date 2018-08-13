@@ -39,7 +39,7 @@ define('Controls/Input/RichArea', [
          if (opts.json) {
             var isOldJson = opts.json === this._htmlJson._options.json;
             if (!isOldJson) {
-               opts.value = this.jsonToHtml(opts.json);
+               opts.value = this._jsonToHtml(opts.json);
             }
          }
          if (!isOldJson && this._simpleViewModel.getValue() !== opts.value) {

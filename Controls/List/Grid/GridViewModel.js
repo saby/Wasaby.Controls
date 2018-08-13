@@ -192,8 +192,6 @@ define('Controls/List/Grid/GridViewModel', [
             if (isNotFullGridSupport) {
                if (result.width === '1fr') {
                   result.width = 'auto';
-               } else if (result.width === 'auto') {
-                  result.width = '1px';
                }
             }
             return result;
@@ -363,6 +361,7 @@ define('Controls/List/Grid/GridViewModel', [
             return {
                column: column,
                index: this._curColgroupColumnIndex,
+               multiSelectVisibility: this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover',
                style: typeof column.width !== 'undefined' ? 'width: ' + column.width : ''
             };
          },

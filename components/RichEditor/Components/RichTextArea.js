@@ -311,7 +311,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
                _enabled: undefined, //TODO: подумать как избавиться от этого
                _typeInProcess: false,
-               _clipboardText: undefined,
+               _clipboardText: false,
                _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
                _imageOptionsPanel: undefined,
                _lastReview: undefined,
@@ -1171,8 +1171,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            selectors = {
                               'bold': 'strong',
                               'italic': 'em',
-                              'underline': 'span[style*="text-decoration"][style*="underline"]',
-                              'strikethrough': 'span[style*="text-decoration"][style*="line-through"]'
+                              'underline': 'span[style*="decoration: underline"]',
+                              'strikethrough': 'span[style*="decoration: line-through"]'
                            };
                         }
                         var selector = selectors[prop];
@@ -1224,18 +1224,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!sameFont) {
                      this._setFontSize(formats.fontsize);
                   }
+                  var node = this._getCurrentFormatNode();
+                  if (this._applyTextDecorationUnderlineAndLinethrough(node, false) && !node.attributes.length) {
+                     var nodes = [].slice.call(node.childNodes);
+                     editor.$(nodes).unwrap();
+                     var last = nodes[nodes.length - 1];
+                     this._selectNewRng(nodes[0], 0, last, last[last.nodeType ===
+                     3 ? 'nodeValue' : 'innerHTML'].length);
+                  }
                   var hasOther;
                   for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
                      var name = names[i];
                      if (name in formats) {
                         if (formats[name] !== formatter.match(name)) {
-                           this.execCommand(name);
+                           editor.execCommand(name);
                         }
                         hasOther = formats[name] || hasOther;
                      }
                   }
                   if (formats.color !== this.getCurrentFormats(['color']).color) {
                      formatter.apply('forecolor', {value: formats.color});
+                     if (formats.underline && formats.strikethrough) {
+                        this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
+                     }
                      hasOther = true;
                   }
                   if (sameFont && !hasOther) {
@@ -1243,36 +1254,30 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
                      //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
-                     //this._setFontSize(formats.fontsize);
+                     this._setFontSize(formats.fontsize);
                   }
                   editor.undoManager.add();
                   this._updateTextByTiny();
                }
             },
 
-            _onFormatMatchUnderlineOrStrikethrough: function (formatName, elem, formatDef, scopeName) {
-               var cssValue = this._tinyEditor.dom.getStyle(elem, 'text-decoration');
-               if (cssValue) {
-                  var pattern = formatName === 'underline' ? formatName : 'line-through';
-                  return cssValue.indexOf(pattern) !== -1;
-               }
-            },
-
-            _onFormatApplyUnderlineOrStrikethrough: function (formatName, elem, formatDef, vars) {
+            _applyTextDecorationUnderlineAndLinethrough: function(node, isOn) {
                var dom = this._tinyEditor.dom;
-               var cssValue = dom.getStyle(elem, 'text-decoration');
-               if (cssValue) {
-                  var pairFormatName = formatName === 'underline' ? 'strikethrough' : 'underline';
-                  var pairCssValue = pairFormatName === 'underline' ? pairFormatName : 'line-through';
-                  if (cssValue === pairCssValue) {
-                     dom.setAttrib(elem, 'data-ws-text-decoration', 'complex');
-                     runDelayed(function () {
-                        var node = this._getCurrentFormatNode();
-                        node = dom.getAttrib(node, 'data-ws-text-decoration') ? node : dom.getParent(node, '[data-ws-text-decoration]');
-                        if (node) {
-                           dom.setStyle(node, 'text-decoration-line', 'underline line-through');
-                        }
-                     }.bind(this));
+               if (isOn) {
+                  dom.setStyle(node, 'text-decoration-line', 'underline line-through');
+                  return true;
+               }
+               else {
+                  if (dom.getStyle(node, 'text-decoration-line', false) === 'underline line-through') {
+                     dom.setStyle(node, {
+                        'text-decoration-line': '',
+                        'text-decoration-style': '',
+                        'text-decoration-color': ''
+                     });
+                     if (!dom.getAttrib(node, 'style')) {
+                        node.removeAttribute('style');
+                     }
+                     return true;
                   }
                }
             },
@@ -1379,12 +1384,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         'alignjustify': 'JustifyFull'
                      }[command];
                      break;
-                  case 'strikethrough':
-                     isA.strikethrough = true;
-                     break;
-                  case 'underline':
-                     isA.underline = true;
-                     break;
                }
                // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
                // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
@@ -1392,20 +1391,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
-               if ((isA.strikethrough || isA.underline) && !(BROWSER.isIE && _getTrueIEVersion() < 12)) {
-                  isAlreadyApplied = formatter.match(command);
-                  if (isAlreadyApplied) {
-                     // Здесь торлько снятие формата
-                     var pairFormatName = isA.strikethrough ? 'underline' : 'strikethrough';
-                     if (formatter.match(pairFormatName)) {
-                        var elem = this._getCurrentFormatNode();
-                        elem.removeAttribute('data-ws-text-decoration');
-                        editor.dom.setStyle(elem, 'text-decoration', isA.strikethrough ? 'underline' : 'line-through');
-                        editor.undoManager.add();
-                        return;
-                     }
-                  }
-               }
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
                   isAlreadyApplied = formatter.match(command);
@@ -2477,10 +2462,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _onDropCallback: function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                this._clipboardText = false;
-               if (!this._mouseIsPressed && !cConstants.browser.isIE &&
-                  (!event.targetClone || !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))) {
-                  event.preventDefault();
-               }
             },
             _onDragStartCallback: function(event) {
                //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
@@ -2659,7 +2640,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var selection = this.getTinyEditor().selection,
                   node = selection.getNode().parentNode;
                if (node.innerHTML === "<p><br></p>") {
-                  node.innerHTML = '<p><br data-mce-bogus="1"></p>';//this._tinyEditor.startContent
+                  node.innerHTML = '<p><br data-mce-bogus="1"></p>';//this._tinyEditor.settings.startContent
                }
                this._tinyLastRng = selection.getRng();
             },
@@ -3439,45 +3420,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _initTiny: function() {
+               var
+                  self = this;
                if (!this._tinyEditor && !this._tinyIsInit) {
                   this._tinyIsInit = true;
                   this._requireTinyMCE().addCallback(function() {
-                     var options = this._options;
-                     var cfg = cClone(options.editorConfig);
+                     var cfg = cClone(self._options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
-                        cfg.formats.underline = [
-                           {
-                              inline: 'span',
-                              styles: {textDecoration:'underline'},
-                              remove_similar: true,
-                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'underline'),
-                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'underline')
-                           },
-                           {
-                              inline: 'u',
-                              remove: 'all'
-                           }
-                        ];
-                        cfg.formats.strikethrough = [
-                           {
-                              inline: 'span',
-                              styles: {textDecoration:'line-through'},
-                              remove_similar: true,
-                              onmatch: this._onFormatMatchUnderlineOrStrikethrough.bind(this, 'strikethrough'),
-                              onformat: this._onFormatApplyUnderlineOrStrikethrough.bind(this, 'strikethrough')
-                           },
-                           {
-                              inline: 'strike',
-                              remove: 'all'
-                           }
-                        ];
-                     }
-
-                     for (var key in options.customFormats) {
-                        if ({}.hasOwnProperty.call(options.customFormats, key)) {
-                           cfg.formats[key] = options.customFormats[key];
+                     for (var key in self._options.customFormats) {
+                        if ({}.hasOwnProperty.call(self._options.customFormats, key)) {
+                           cfg.formats[key] = self._options.customFormats[key];
                         }
                      }
                      tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;
