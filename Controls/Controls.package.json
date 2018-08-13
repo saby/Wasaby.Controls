@@ -41,8 +41,8 @@
     "Controls/Filter/*"
   ],
   "exclude": [
-    "Controls/Filter/_FilterCompatible",
-    "Controls/Filter/OldPanelOpener"
+    "Controls/Filter/Button/_FilterCompatible",
+    "Controls/Filter/Button/OldPanelOpener"
   ],
   "output": "controls-filter.package.js"
 }, {
