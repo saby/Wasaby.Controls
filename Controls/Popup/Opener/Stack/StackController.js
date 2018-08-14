@@ -180,7 +180,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (StackStrategy.isMaximizedPanel(item)) {
                //set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; //for vdom dirtyChecking
-               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : true;
+               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
             if (HAS_ANIMATION) {
