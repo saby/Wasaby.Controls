@@ -1,0 +1,30 @@
+<div class="controls-PeriodDialog-Years">
+   <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
+      <Controls.Button
+         style="linkMain"
+         icon="icon-24 icon-MarkLeftBold"
+         size="l"
+         on:click="_onPrevClick()"
+      />
+   </div>
+
+   <div class="controls-PeriodDialog-Years__yearsRange">
+      <ws:for data="yearIndex, year in _model">
+         <div class="controls-PeriodDialog-Years__rangeBtn {{
+                     _prepareItemClass(year.date) }}"
+            on:click="_onItemClick(year.date)"
+            on:mouseenter="_onItemMouseEnter(year.date)"
+            on:mouseleave="_onItemMouseLeave(year.date)">
+            {{ year.caption }}
+         </div>
+      </ws:for>
+   </div>
+
+   <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
+      <Controls.Button
+         style="linkMain"
+         icon="icon-24 icon-MarkRightBold"
+         on:click="_onNextClick()"
+      />
+   </div>
+</div>

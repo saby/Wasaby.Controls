@@ -1,0 +1,24 @@
+<Controls.Date.Controllers.DateRangeSelectionController
+   name="selectionController"
+
+   selectionType="{{_options.selectionType}}"
+   quantum="{{_options.quantum}}"
+
+   startValue="{{_options.startValue}}"
+   endValue="{{_options.endValue}}"
+
+   selectionProcessing="{{_options.selectionProcessing}}"
+   selectionBaseValue="{{_options.selectionBaseValue}}"
+   selectionHoveredValue="{{_options.selectionHoveredValue}}"
+
+   on:rangeChanged="_onRangeChangedHandler()"
+>
+   <Controls.Date.MonthView
+      month="{{_options.month}}"
+      showCaption="{{_options.showCaption}}"
+      showWeekdays="{{_options.showWeekdays}}"
+      dayFormatter="{{_dayFormatter}}"
+      monthViewModel="{{_monthViewModel}}"
+      mode="{{_options.mode}}"
+   />
+</Controls.Date.Controllers.DateRangeSelectionController>

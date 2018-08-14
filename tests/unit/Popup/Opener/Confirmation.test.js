@@ -13,6 +13,7 @@ define(
 
          beforeEach(function(){
             popupOpener = new PopupOpener();
+            popupOpener._beforeMount();
             popupOpener._children.opener = {
                open: function(){
 

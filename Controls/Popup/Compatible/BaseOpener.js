@@ -53,30 +53,7 @@ function(cMerge,
          }
 
          if (cfg.context) {
-            var destroyDef = new Deferred(),
-               destrFunc = function() {
-                  destroyDef.callback();
-                  destroyDef = null;
-               };
-
-            if (cfg.context instanceof Context) {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-            } else {
-               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-               cfg.templateOptions.context.setContextData(cfg.context);
-            }
-
-            if (!cfg.templateOptions.handlers) {
-               cfg.templateOptions.handlers = {};
-            }
-
-            if (!cfg.templateOptions.handlers.onDestroy) {
-               cfg.templateOptions.handlers.onDestroy = destrFunc;
-            } else if (cfg.templateOptions.handlers.onDestroy.push) {
-               cfg.templateOptions.handlers.onDestroy.push(destrFunc);
-            } else {
-               cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
-            }
+            this._prepareContext(cfg);
          }
 
          if (cfg.linkedContext) {
@@ -114,8 +91,47 @@ function(cMerge,
             cfg.templateOptions.enabled = cfg.enabled;
          }
 
+         if (!cfg.hasOwnProperty('catchFocus')) {
+            cfg.catchFocus = true;
+         }
+         cfg.templateOptions.catchFocus = cfg.catchFocus;
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
+
+         if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
+            cfg.minimizedWidth = cfg.minWidth;
+            cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
+            cfg.templateOptions.canMaximize = true;
+            cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
+         }
+      },
+
+      _prepareContext: function(cfg) {
+         var destroyDef = new Deferred(),
+            destrFunc = function() {
+               destroyDef.callback();
+               destroyDef = null;
+            };
+
+         if (cfg.context instanceof Context) {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+         } else {
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+            cfg.templateOptions.context.setContextData(cfg.context);
+         }
+
+         if (!cfg.templateOptions.handlers) {
+            cfg.templateOptions.handlers = {};
+         }
+
+         if (!cfg.templateOptions.handlers.onDestroy) {
+            cfg.templateOptions.handlers.onDestroy = destrFunc;
+         } else if (cfg.templateOptions.handlers.onDestroy.push) {
+            cfg.templateOptions.handlers.onDestroy.push(destrFunc);
+         } else {
+            cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
+         }
       },
 
       _preparePopupCfgFromOldToNew: function(cfg) {
@@ -132,28 +148,8 @@ function(cMerge,
 
          cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
 
-         var revertPosition = {
-            top: 'bottom',
-            bottom: 'top',
-            left: 'right',
-            right: 'left',
-            middle: 'center',
-            center: 'center'
-         };
-
-         if (cfg.hasOwnProperty('verticalAlign')) {
-            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
-            if (typeof cfg.verticalAlign !== 'object') {
-               cfg.verticalAlign = {side: revertPosition[cfg.verticalAlign]};
-            }
-         }
-
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
-         }
-
-         if (cfg.hasOwnProperty('side')) {
-            cfg.horizontalAlign = { side: revertPosition[cfg.side] };
          }
 
          if (cfg.horizontalAlign) {
@@ -162,6 +158,41 @@ function(cMerge,
             }
             if (cfg.horizontalAlign.offset === undefined) {
                delete cfg.horizontalAlign.offset;
+            }
+         }
+
+         if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
+            cfg.corner = {};
+            if (cfg.hasOwnProperty('side')) {
+               cfg.corner.horizontal = cfg.side;
+            }
+         }
+
+         if (cfg.hasOwnProperty('verticalAlign') && typeof cfg.verticalAlign !== 'object') {
+            cfg.corner = cfg.corner || {};
+
+            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
+            cfg.corner.vertical = cfg.verticalAlign;
+            delete cfg.verticalAlign;
+         }
+
+         if (!cfg.hasOwnProperty('direction')) {
+            //Значения по умолчанию. взято из floatArea.js
+            var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
+            if (side === 'left') {
+               cfg.direction = 'right';
+            } else if (side === 'right') {
+               cfg.direction = 'left';
+            }
+         }
+
+         if (cfg.hasOwnProperty('direction')) {
+            if (cfg.direction === 'right' || cfg.direction === 'left') {
+               if (typeof cfg.horizontalAlign !== 'object') {
+                  cfg.horizontalAlign = {side: cfg.direction};
+               }
+            } else if (typeof cfg.verticalAlign !== 'object') {
+               cfg.verticalAlign = {side: cfg.direction};
             }
          }
 
@@ -174,14 +205,6 @@ function(cMerge,
                cfg.verticalAlign = cfg.verticalAlign || {};
                cfg.verticalAlign.offset = cfg.offset.y;
             }
-         }
-
-         if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
-            cfg.corner = {};
-            if (cfg.direction !== 'right' && cfg.direction !== 'left') {
-               cfg.direction = 'right';
-            }
-            cfg.corner.horizontal = revertPosition[cfg.direction];
          }
 
          if (cfg.hasOwnProperty('modal')) {
@@ -197,6 +220,10 @@ function(cMerge,
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
+
+         if (cfg.onCloseHandler) {
+            cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
          this._setSizes(cfg, templateClass);
@@ -217,6 +244,16 @@ function(cMerge,
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
+
+         var revertPosition = {
+            top: 'bottom',
+            bottom: 'top',
+            left: 'right',
+            right: 'left',
+            middle: 'center',
+            center: 'center'
+         };
+
          if (cfg.hasOwnProperty('closeByExternalClick')) {
             cfg.autoHide = cfg.closeByExternalClick;
          }
@@ -225,20 +262,35 @@ function(cMerge,
             newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
-         if (cfg.verticalAlign && cfg.verticalAlign.side === 'top') {
-            newCfg.dialogOptions.direction = 'top';
+         if (cfg.verticalAlign && cfg.verticalAlign.side) {
+            newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
+
+         if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
+            newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+         } else {
+            newCfg.dialogOptions.direction = 'right';
+         }
+
 
          if (cfg.corner && cfg.corner.vertical === 'bottom') {
             newCfg.dialogOptions.verticalAlign = 'bottom';
+         }
+
+         if (cfg.corner && cfg.corner.horizontal) {
+            newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
 
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }
 
+         if (cfg.closeOnTargetScroll) {
+            newCfg.dialogOptions.closeOnTargetScroll = true;
+         }
+
          if (newCfg.target) {
-            newCfg.dialogOptions.target = $(newCfg.target);
+            this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
@@ -248,7 +300,15 @@ function(cMerge,
             newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }
 
+         if (newCfg.eventHandlers && newCfg.eventHandlers.onClose) {
+            newCfg.dialogOptions.onCloseHandler = newCfg.eventHandlers.onClose;
+         }
+
          return newCfg;
+      },
+
+      _prepareTarget: function(cfg) {
+         cfg.dialogOptions.target = $(cfg.target);
       },
 
       // Берем размеры либо с опций, либо с дименшенов

@@ -5,12 +5,12 @@ define('Controls-demo/Input/Password/Password',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {
-
       'use strict';
 
       var Password = Control.extend({
          _template: template,
          _readOnly: false,
+         _tooltip: 'Password',
          passwordValue: '',
          _tagStyle: 'attention',
          _placeholder: 'Password',
@@ -36,5 +36,4 @@ define('Controls-demo/Input/Password/Password',
       });
 
       return Password;
-   }
-);
+   });

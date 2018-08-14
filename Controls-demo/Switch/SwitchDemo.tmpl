@@ -10,19 +10,20 @@
                 <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
             </div>
             <br/>
-            <span>{{_eventName}}</span>
+            <span class="ControlsDemo__eventName">{{_eventName}}</span>
         </div>
     </div>
     <div class="optionsBlock">
         <h3>Options</h3>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:test_name="readonly"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_readOnly" caption="ReadOnly" attr:class="ControlsDemo__readOnly"/>
         <br/>
         <Controls.Label caption="Caption"/>
-        <Controls.Input.Text bind:value="_caption"/>
+        <Controls.Input.Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
         <Controls.Label caption="Tooltip"/>
-        <Controls.Input.Text bind:value="_tooltip"/>
+        <Controls.Input.Text bind:value="_tooltip" attr:class="ControlsDemo__tooltip"/>
         <Controls.Label caption="Caption position:"/>
         <Controls.Input.ComboBox
+                attr:class="ControlsDemo__direction"
                 source="{{_captionPositionSource}}"
                 keyProperty="title"
                 placeholder="select"
@@ -32,6 +33,6 @@
                 on:selectedKeyChanged="changeCaptionPosition()"
         />
         <br/>
-        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value"/>
+        <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value" caption="value" attr:class="ControlsDemo__value"/>
     </div>
 </div>

@@ -367,6 +367,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
       _getEditorOffset: function(model, target) {
          var
             container = this.getContainer(),
+            checkbox,
             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty)),
             // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
             levelOffset = 0,
@@ -385,7 +386,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             }
          }
          if (this._options.editingTemplate && hasCheckbox) {
-            checkboxOffset = $('.controls-DataGridView__td__checkBox', target).width() || 0;
+            // считаем ширину чекбокса именно через вставку td с классом, так можно получить его настоящие размеры
+            // https://online.sbis.ru/opendoc.html?guid=20d95122-461e-49e3-9c5b-57890afe4414
+            checkbox = $('<td class="controls-DataGridView__td controls-DataGridView__td__checkBox"></td>');
+            checkbox.prependTo(target);
+            checkboxOffset = checkbox.width() || 0;
+            checkbox.remove();
          }
          // Считаем необходимый отступ слева-направо:
          // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.

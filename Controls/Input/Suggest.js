@@ -4,9 +4,11 @@ define('Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
+      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Utils/tmplNotify',
       'css!Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, BaseViewModel) {
+   function(Control, template, types, BaseViewModel, tmplNotify) {
       
       /**
        * Input that suggests options as you are typing. Options are available for selection through the drop-down list.
@@ -25,8 +27,7 @@ define('Controls/Input/Suggest',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Suggest/SuggestApplication
-       *
+       * @demo Controls-demo/Input/Suggest/Suggest
        * @author Журавлев Максим Сергеевич
        */
       
@@ -36,7 +37,7 @@ define('Controls/Input/Suggest',
          initViewModel: function(self, options) {
             self._simpleViewModel = new BaseViewModel(this.getViewModelOptions(options));
          },
-         
+
          getViewModelOptions: function(options) {
             return {
                value: options.value,
@@ -48,7 +49,7 @@ define('Controls/Input/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
-         
+         _notifyHandler: tmplNotify,
          _suggestState: false,
          _searchState: false,
          

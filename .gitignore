@@ -2,6 +2,8 @@
 *.log
 /contents.json
 /contents.js
+/components/contents.js
+/components/contents.json
 /components/**/*.css
 /Examples/**/*.css
 /pages/**/*.css
@@ -10,6 +12,9 @@
 /components/WS.Data/*
 /WS.Data
 /sbis3-ws
+/View
+/Core
+/components/Core
 /ws-data
 /cdn
 /node_modules

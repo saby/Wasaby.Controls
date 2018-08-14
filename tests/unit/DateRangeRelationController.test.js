@@ -1,4 +1,4 @@
-/* global Array, Object, Date, define, beforeEach, afterEach, describe, context, it, assert, $ws */
+/* global Array, Object, Date, define, beforeEach, afterEach, describe, context, it, assert */
 define([
    'SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController',
    'Core/Abstract',
@@ -32,32 +32,61 @@ define([
    describe('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', function () {
       let controls, controller;
 
-      // this.timeout(1500000);
+      this.timeout(1500000);
 
-      let initControls = function (start, endOrStep, options, count, period) {
+      let initControls = function (start, endOrStep, options, count, period, periodType) {
             var step = typeof endOrStep === 'number' ? endOrStep : null,
                period = period || step,
-               end = step ? new Date(start.getFullYear(), start.getMonth() + period, 0): endOrStep;
+               end;
+            if (step) {
+               if (periodType === 'days') {
+                  end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + period - 1);
+               } else {
+                  end = new Date(start.getFullYear(), start.getMonth() + period, 0);
+               }
+            } else {
+               end = endOrStep;
+            }
+
             options = options || {};
             controls = [];
             count = count || 5;
             for (let i = 0; i < count; i++) {
                controls.push(new DateRangeControl({startValue: start, endValue: end}));
                if (period) {
-                  start = new Date(start.getFullYear(), start.getMonth() + step, 1);
-                  end = new Date(end.getFullYear(), end.getMonth() + step + 1, 0);
+                  if (periodType === 'days') {
+                     start = new Date(start.getFullYear(), start.getMonth(), start.getDate() + step);
+                     end = new Date(end.getFullYear(), end.getMonth(),  end.getDate() + step);
+                  } else {
+                     start = new Date(start.getFullYear(), start.getMonth() + step, 1);
+                     end = new Date(end.getFullYear(), end.getMonth() + step + 1, 0);
+                  }
                }
             }
             controller = new DateRangeRelationController(Object.assign({dateRanges: controls}, options));
             controller.bindDateRanges();
          },
-         createDates = function (start, step, period, count) {
+         createMonths = function (start, step, period, count) {
             let year = start.getFullYear(),
                month = start.getMonth(),
                dates = [];
             count = count || 5;
             for (let i of Array(count).keys()) {
-               dates.push([new Date(year, month + i*step, 1), new Date(year, month + i*step + period, 0)])
+               dates.push([new Date(year, month + i*step, 1), new Date(year, month + i*step + period, 0)]);
+            }
+            return dates;
+         },
+         createDates = function(start, step, period, count) {
+            let year = start.getFullYear(),
+               month = start.getMonth(),
+               date = start.getDate(),
+               dates = [];
+            count = count || 5;
+            for (let i of Array(count).keys()) {
+               dates.push([
+                  new Date(year, month, date + i * step),
+                  new Date(year, month, date + i * step + period - 1)
+               ]);
             }
             return dates;
          },
@@ -67,7 +96,7 @@ define([
                controls[0].setRange(new Date(2011, 2, 1), new Date(2011, 2, 31));
                controls[0]._notify('onLockedChanged', true);
                controls[0].setRange(new Date(2012, 0, 1), new Date(2012, 11, 31));
-               let dates = createDates(new Date(2012, 0, 1), 12, 12);
+               let dates = createMonths(new Date(2012, 0, 1), 12, 12);
                for (let [i, control] of controls.entries()) {
                   assertRangeControl(control, dates[i], `Control ${i}`);
                }
@@ -98,7 +127,7 @@ define([
          });
 
          it('should not update all controls on initialisation by first one', function () {
-            let dates = createDates(new Date(2015, 0, 1), 1, 1);
+            let dates = createMonths(new Date(2015, 0, 1), 1, 1);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
             }
@@ -107,7 +136,7 @@ define([
          capacityIncreasingTest();
 
          describe('updating range with same period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 1, 1);
+            let dates = createMonths(new Date(2016, 0, 1), 1, 1);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -119,7 +148,7 @@ define([
          });
 
          describe('updating range with other period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 3, 3);
+            let dates = createMonths(new Date(2016, 0, 1), 3, 3);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -131,13 +160,13 @@ define([
          });
       });
 
-      describe('step = 6, period = 1', function () {
+      describe('step = 6 months, period = 1 month', function () {
          beforeEach(function() {
             initControls(new Date(2015, 0, 1), 6, {step: 6}, null, 1);
          });
 
          it('should not update all controls on initialisation', function () {
-            let dates = createDates(new Date(2015, 0, 1), 6, 1);
+            let dates = createMonths(new Date(2015, 0, 1), 6, 1);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
             }
@@ -146,7 +175,7 @@ define([
          capacityIncreasingTest();
 
          describe('updating range with same period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 6, 1);
+            let dates = createMonths(new Date(2016, 0, 1), 6, 1);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -158,7 +187,7 @@ define([
          });
 
          describe('updating range with other period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 6, 6);
+            let dates = createMonths(new Date(2016, 0, 1), 6, 6);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -170,7 +199,7 @@ define([
          });
 
          describe('updating range with period type less than step', function () {
-            let dates = createDates(new Date(2016, 0, 1), 6, 3);
+            let dates = createMonths(new Date(2016, 0, 1), 6, 3);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -181,7 +210,7 @@ define([
             }
          });
          describe('updating range with period type > initial period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 12, 12);
+            let dates = createMonths(new Date(2016, 0, 1), 12, 12);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -193,20 +222,20 @@ define([
          });
       });
 
-      describe('period = 1, onlyByCapacity = true', function () {
+      describe('period = 1 month, onlyByCapacity = true', function () {
          beforeEach(function() {
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true});
          });
 
          it('should not update all controls on initialisation by first one', function () {
-            let dates = createDates(new Date(2015, 0, 1), 12, 12);
+            let dates = createMonths(new Date(2015, 0, 1), 12, 12);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
             }
          });
 
          describe('updating range with other period type', function () {
-            let dates = createDates(new Date(2016, 0, 1), 6, 6);
+            let dates = createMonths(new Date(2016, 0, 1), 6, 6);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
                   controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -216,9 +245,10 @@ define([
                });
             }
          });
+
          //
          // describe('updating range with other period type', function () {
-         //    let dates = createDates(new Date(2016, 0, 1), 6, 6);
+         //    let dates = createMonths(new Date(2016, 0, 1), 6, 6);
          //    for (let controlNumber of dates.keys()) {
          //       it(`should be update all controls after ${controlNumber} control updated`, function () {
          //          controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
@@ -228,8 +258,41 @@ define([
          //       });
          //    }
          // });
+      });
 
+      describe('period = 1 day', function () {
+         beforeEach(function() {
+            initControls(new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 5, 1, 'days');
+         });
 
+         it('should not update all controls on initialisation by first one', function () {
+            let dates = createDates(new Date(2015, 0, 1), 1, 1);
+            for (let [i, control] of controls.entries()) {
+               assertRangeControl(control, dates[i], `Control ${i}`);
+            }
+         });
+
+         describe('updating range with other period type', function () {
+            let dates = createMonths(new Date(2016, 0, 1), 6, 6);
+            for (let controlNumber of dates.keys()) {
+               it(`should be update all controls after ${controlNumber} control updated`, function() {
+                  controls[controlNumber].setRange(dates[controlNumber][0], dates[controlNumber][1]);
+                  for (let [i, control] of controls.entries()) {
+                     assertRangeControl(control, dates[i], `Control ${i}`);
+                  }
+               });
+            }
+         });
+
+         describe('updating range with same period type', function () {
+            let dates = createDates(new Date(2015, 2, 1), 1, 1);
+            it('should be update all controls after 0 control updated', function() {
+               controls[0].setRange(dates[0][0], dates[0][1]);
+               for (let [i, control] of controls.entries()) {
+                  assertRangeControl(control, dates[i], `Control ${i}`);
+               }
+            });
+         });
       });
 
       describe('Auto update relation type', function () {
@@ -238,7 +301,7 @@ define([
             initControls(new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 1, 1), new Date(2014, 2, 0));
-            let dates = createDates(new Date(2014, 1, 1), 12, 1);
+            let dates = createMonths(new Date(2014, 1, 1), 12, 1);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(control.isLocked());
@@ -248,7 +311,7 @@ define([
             initControls(new Date(2015, 0, 1), 3, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 3, 1), new Date(2014, 6, 0));
-            let dates = createDates(new Date(2014, 3, 1), 12, 3, 2);
+            let dates = createMonths(new Date(2014, 3, 1), 12, 3, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(control.isLocked());
@@ -258,21 +321,21 @@ define([
             initControls(new Date(2015, 0, 1), 6, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 6, 1), new Date(2014, 12, 0));
-            let dates = createDates(new Date(2014, 6, 1), 12, 6, 2);
+            let dates = createMonths(new Date(2014, 6, 1), 12, 6, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(control.isLocked());
             }
          });
 
-         it(`should update relation type if period type changed`, function () {
+         it(`should not update relation type if period type changed to months`, function() {
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
-            let dates = createDates(new Date(2013, 0, 1), 1, 1, 2);
+            let dates = createMonths(new Date(2013, 0, 1), 1, 1, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
-               assert(control.isLocked());
+               assert.isFalse(control.isLocked());
             }
          });
 
@@ -280,10 +343,10 @@ define([
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true, step: 12}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
-            let dates = createDates(new Date(2013, 0, 1), 12, 1, 2);
+            let dates = createMonths(new Date(2013, 0, 1), 1, 1, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
-               assert(control.isLocked());
+               assert.isFalse(control.isLocked());
             }
          });
 
@@ -291,7 +354,7 @@ define([
             initControls(new Date(2015, 2, 1), 1, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2015, 0, 1), new Date(2015, 1, 0));
-            let dates = createDates(new Date(2015, 0, 1), 3, 1, 2);
+            let dates = createMonths(new Date(2015, 0, 1), 3, 1, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(!control.isLocked());
@@ -302,12 +365,51 @@ define([
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 12, 0));
-            let dates = createDates(new Date(2013, 0, 1), 36, 12, 2);
+            let dates = createMonths(new Date(2013, 0, 1), 36, 12, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(control.isLocked());
             }
          });
+      });
+
+      describe('shift periods', function () {
+         [[
+            '1 day',
+            [new Date(2015, 0, 1), 1, { onlyByCapacity: true }, 5, 1, 'days'],
+            createDates(new Date(2014, 11, 31), 1, 1)
+         ], [
+            '1 year',
+            [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
+            createMonths(new Date(2014, 0, 1), 12, 12)
+         ]].forEach(function(test) {
+            it(`period ${test[0]}, shift prev`, function () {
+               initControls.apply(null, test[1]);
+               controller.shiftPrev();
+               for (let [i, control] of controls.entries()) {
+                  assertRangeControl(control, test[2][i], `Control ${i}`);
+               }
+            });
+         });
+
+         [[
+            '1 day',
+            [new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 5, 1, 'days'],
+            createDates(new Date(2015, 0, 2), 1, 1)
+         ], [
+            '1 year',
+            [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
+            createMonths(new Date(2016, 0, 1), 12, 12)
+         ]].forEach(function(test) {
+            it('period 1 day, shift next', function () {
+               initControls.apply(null, test[1]);
+               controller.shiftNext();
+               for (let [i, control] of controls.entries()) {
+                  assertRangeControl(control, test[2][i], `Control ${i}`);
+               }
+            });
+         });
+
       });
    });
 });

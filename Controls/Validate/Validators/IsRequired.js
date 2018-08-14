@@ -33,7 +33,7 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
       }
 
       return isEmpty
-         ? rk('Поле обязательно для заполнения')
+         ? rk('Поле обязательно для заполнения.')
          : true;
    };
 });

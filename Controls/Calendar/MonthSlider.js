@@ -1,7 +1,7 @@
 define('Controls/Calendar/MonthSlider', [
    'Core/Control',
    'Core/core-merge',
-   'Controls/Calendar/interface/IMonth',
+   'Controls/Date/interface/IMonth',
    'Controls/Calendar/MonthSlider/Slider',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date',

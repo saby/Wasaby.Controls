@@ -403,6 +403,7 @@
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
 @margin_MenuIcon-hideHeader-round24-border_text:      0 0 0 round(70px * @multiplier);
 @margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-2px * @multiplier);
+@margin_MenuIcon-hideHeader:                          round(-10px * @multiplier) 0 0 round(-18px * @multiplier);
 @top_MenuIcon_bordered_offset_s:                      round(16px * @multiplier);
 @left_MenuIcon_bordered_offset_m:                     round(16px * @multiplier);
 @top_MenuIcon_bordered_offset_m:                      round(9px * @multiplier);
@@ -456,6 +457,47 @@
 @height_DateLinkView:                      round(40px * @multiplier);
 @width_DateLinkView-prev-next-buttons:     round(40px * @multiplier);
 @font-size_DateLinkView-prev-next-buttons: @font-size_DateLinkView;
+
+// PeriodDialog
+@border-width_PeriodDialog:                              0;
+@width_PeriodDialog:                                     round(712px * @multiplier);
+@height_PeriodDialog-header:                             round(100px * @multiplier);
+@padding-left_PeriodDialog-header:                       round(16px * @multiplier);
+@margin_PeriodDialog-header-dash:                        round(8px * @multiplier);
+@height_PeriodDialog-years:                              round(100px * @multiplier);
+@width_PeriodDialog-years-leftRight:                     round(81px * @multiplier);
+@height_PeriodDialog-years-rangeButton:                  round(58px * @multiplier);
+@font-size_PeriodDialog-years-displayed-year:            @large-text-size;
+@font-size_PeriodDialog-years-rangeButton:               @large-text-size;
+@height_PeriodDialog-body:                               round(700px * @multiplier);
+@height_PeriodDialog-MonthRange-header:                  round(76px * @multiplier);
+@font-size_PeriodDialog-MonthRange-header:               round(27px * @multiplier);
+@border-top-width_PeriodDialog-MonthRange-header:        0;
+@height_PeriodDialog-MonthRange-monthWrapper:            round(151px * @multiplier);
+@width_PeriodDialog-MonthRange-monthWrapper:             round(184px * @multiplier);
+@height_PeriodDialog-MonthRange-month-title:             ceil(40px * @multiplier);
+@font-size_PeriodDialog-MonthRange-month-title:          round(24px * @multiplier);
+@font-size_PeriodDialog-MonthRange-month-date:           round(12px * @multiplier);
+@height_PeriodDialog-MonthRange-month-date:              round(16px * @multiplier);
+@font-size_PeriodDialog-MonthRange-halfYearsPanel:       @large-text-size;
+@font-size_PeriodDialog-MonthRange-quartersPanel:        @large-text-size;
+@width_PeriodDialog-DateRange-header-year:               round(152px * @multiplier);
+@height_PeriodDialog-DateRange-months-button:            round(45px * @multiplier);
+@font-size_PeriodDialog-DateRange-months-button:         round(24px * @multiplier);
+@height_PeriodDialog-DateRange-monthsWithDates-title:    round(60px * @multiplier);
+@font-size_PeriodDialog-DateRange-monthsWithDates-title: @large-text-size;
+@font-size_PeriodDialog-DateRange-months-nextYearButton: @large-text-size;
+@height_PeriodDialog-DateRange-months-nextYearButton:    round(60px * @multiplier);
+@width_PeriodDialog-MonthRange-item-selectedStart-before:round(2px * @multiplier);
+@height_PeriodDialog-DateRange-header:                   round(100px * @multiplier);
+@font-size_PeriodDialog-DateRange-header:                @large-text-size;
+@padding-left_PeriodDialog-DateRange-months-button:      round(24px * @multiplier);
+@border-width_PeriodDialog-MonthRange-monthWrapper:      ceil(4px * @multiplier);
+@border-width_PeriodDialog-MonthRange-quartersPanel:     ceil(4px * @multiplier);
+@border-width_PeriodDialog-MonthRange_quartersPanel-right: ceil(4px * @multiplier);
+@border-width_PeriodDialog-MonthRange-halfYearsPanel:    0;
+@padding_PeriodDialog-MonthRange-monthWrapper:           0 round(13px * @multiplier);
+@padding-left_PeriodDialog-DateRange-header-year:        round(24px * @multiplier);
 
 // PeriodLiteDialog
 @indents_PeriodLiteDialog:                          round(8px * @multiplier);
@@ -528,6 +570,10 @@
 @time-header-container-block-padding:           round(11px * @multiplier);
 //Toolbar
 @controls-toolbar-default-margin:               round(8px * @multiplier);
+
+// RangeSelectionController
+@width_RangeSelection-selected-startEnd-edgeBorder:          round(6px * @multiplier);
+
 // Date Range Big Choose
 @height_DateRangeBigChoose-header:                           round(100px * @multiplier);
 @padding-left_DateRangeBigChoose-header:                     round(16px * @multiplier);
@@ -700,6 +746,7 @@
 
 //Path
 @font-size_Path-backButtonArrow:                        @icon-size_default_medium;
+@spacing_Path-between-home-and-backButton:              round(16px * @multiplier);
 
 //BreadCrumbs
 @height_BreadCrumbs-items:                                     round(58px * @multiplier);
@@ -711,7 +758,7 @@
 @height_BreadCrumbs-menuItem:                                  round(77px * @multiplier);
 
 //FastFilter
-@icon-size_FastFilter:                      round(42px * @multiplier);
+@icon-size_FastFilter-iconReset:            round(42px * @multiplier);
 @spacing_FastFilter-item:                   0 round(8px * @multiplier) 0 0;
 @height_FastFilter-iconArrow:               round(24px * @multiplier);
 @width_FastFilter-iconArrow:                round(42px * @multiplier);

@@ -1368,8 +1368,8 @@ define('SBIS3.CONTROLS/ListView',
 
          _onVisibleChange: function(event, visible){
             if (this._scrollPager) {
-               // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount() > 1);
+               // покажем если ListView показалось, вместе с родителями, и есть страницы и скроем если скрылось
+               this._scrollPager.setVisible(this.isVisibleWithParents() && visible && this._scrollPager.getPagesCount() > 1);
             }
             if (this._scrollBinder) {
                this._scrollBinder.freezePaging(!visible);
@@ -1531,7 +1531,7 @@ define('SBIS3.CONTROLS/ListView',
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
-               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
+               index,
                isRootId = function(id) {
                   //корень может отображаться даже если его нет в рекордсете
                   return (itemsProjection.getRoot &&
@@ -1540,6 +1540,9 @@ define('SBIS3.CONTROLS/ListView',
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
+            if (!!itemsProjection.getCount()) {
+               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1;
+            }
             if (index === -1 && typeof id !== 'undefined' && isRootId(id)) {
                index = 0;
             }
@@ -4275,20 +4278,25 @@ define('SBIS3.CONTROLS/ListView',
                this._updatePaging();
             }
          },
-         _prepareAdditionalFilterForCursor: function(filter, direction) {
-            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+         _prepareAdditionalFilterForCursor: function(filter, direction, position) {
+            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction, position);
          },
          _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
-               queryFilter = filter;
+               queryFilter = filter,
+               addParams;
             if (this._isCursorNavigation()) {
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
 
                queryFilter = coreClone(filter);
-               var addParams = this._prepareAdditionalFilterForCursor(filter, direction);
+               if (offset === -1) {
+                  addParams = this._prepareAdditionalFilterForCursor(filter, 'up', '');
+               } else {
+                  addParams = this._prepareAdditionalFilterForCursor(filter, direction);
+               }
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
@@ -4372,6 +4380,7 @@ define('SBIS3.CONTROLS/ListView',
                      //в некоторых условиях (например поиск в сообщениях) размер страницы, приходящей с сервера не соответствует указанному в настройке
                      //поэтому элемента с таким индексом может и не быть.
                      if(projItem) {
+                        this._offset = this._options.pageSize * pageNumber;
                         this._scrollToProjItem(projItem);
                      }
                   }

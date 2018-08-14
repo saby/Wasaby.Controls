@@ -213,9 +213,9 @@ define('Controls/List/TreeControl', [
             this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          }
       },
-      destroy: function() {
-         this._children.baseControl.getViewModel().unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
-         TreeControl.superclass.destroy.apply(this, arguments);
+
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 

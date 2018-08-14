@@ -1,0 +1,34 @@
+<div class="PageWrap">
+   <div class="PageBlock">
+      <div class="PageBlock__title">MonthView со сквозным выделением</div>
+      <div class="PageBlock__componentWrap">
+         <div>_startValue: {{_startValue}}</div>
+         <div>_endValue: {{_endValue}}</div>
+         <Controls.Date.Month
+                           month="{{_month1}}"
+                           bind:startValue="_startValue"
+                           bind:endValue="_endValue"
+                           bind:selectionProcessing="_selectionProcessing"
+                           bind:selectionBaseValue="_selectionBaseValue"
+                           bind:selectionHoveredValue="_selectionHoveredValue"
+                           selectionType="range"
+         />
+         <Controls.Date.Month
+                           month="{{_month2}}"
+                           bind:startValue="_startValue"
+                           bind:endValue="_endValue"
+                           bind:selectionProcessing="_selectionProcessing"
+                           bind:selectionBaseValue="_selectionBaseValue"
+                           bind:selectionHoveredValue="_selectionHoveredValue"
+                           selectionType="range"
+                           captionType="text"
+         />
+         <div>
+            <span>startValue: </span>
+            <Controls.Button caption="-1 день" on:click="_clickHandler(-1)"/>
+            <Controls.Button caption="+1 день" on:click="_clickHandler(1)"/>
+         </div>
+
+      </div>
+   </div>
+</div>

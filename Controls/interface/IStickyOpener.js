@@ -70,4 +70,9 @@ define('Controls/interface/IStickyOpener', [], function() {
     * @name Controls/interface/IStickyOpener#closeOnTargetScroll
     * @cfg {Boolean} Close popup on scroll.
     */
+
+   /**
+    * Controls/interface/IStickyOpener#popupOptions
+    * @cfg {PopupOptions} Options for pop-up.
+    */
 });

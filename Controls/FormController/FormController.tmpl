@@ -1,0 +1,14 @@
+<Controls.Validate.FormController name="validation">
+   <Controls.Container.Crud
+         showLoadingIndicator="{{ true }}"
+         name="crud"
+         dataSource="{{ _options.dataSource }}">
+      <div>
+         <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+         <ws:partial
+               template="{{ _options.content }}"
+               record="{{ _record }}"/>
+      </div>
+   </Controls.Container.Crud>
+</Controls.Validate.FormController>
+

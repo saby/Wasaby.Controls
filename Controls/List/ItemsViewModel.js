@@ -87,6 +87,7 @@ define('Controls/List/ItemsViewModel',
             var
                itemData = {
                   getPropValue: ItemsUtil.getPropertyValue,
+                  style: this._options.style,
                   keyProperty: this._options.keyProperty,
                   displayProperty: this._options.displayProperty,
                   index: this._display.getIndex(dispItem),

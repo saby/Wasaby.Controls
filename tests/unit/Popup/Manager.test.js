@@ -1,11 +1,12 @@
 define(
    [
       'Controls/Popup/Manager',
+      'Controls/Popup/Manager/ManagerController',
       'Controls/Popup/Manager/Container',
       'Controls/Popup/Opener/BaseController'
    ],
 
-   function (ManagerConstructor, ManagerContainer, BaseController) {
+   function (ManagerConstructor, ManagerController, ManagerContainer, BaseController) {
       'use strict';
 
       function getManager() {
@@ -15,6 +16,35 @@ define(
          Container._afterMount();
          return Manager;
       }
+
+      describe('Controls/Popup/Manager/ManagerController', () => {
+         it('initialize', function() {
+            //Manager and container doesn't initialized
+            ManagerController._manager = undefined;
+            assert.equal(ManagerController.find(), false);
+         });
+
+         it('callMethod', () => {
+            getManager();
+            let arg0 = '1';
+            let arg1 = '2';
+            let methodName;
+
+            let baseMethod = ManagerController._callManager;
+
+            ManagerController._callManager = (method, args) => {
+               assert.equal(methodName, method);
+               assert.equal(args[0], arg0);
+               assert.equal(args[1], arg1);
+            };
+
+            for (methodName of ['find', 'remove', 'update', 'show', 'reindex']) {
+               ManagerController[methodName](arg0, arg1);
+            }
+
+            ManagerController._callManager = baseMethod;
+         });
+      });
 
       describe('Controls/Popup/Manager', function () {
          var id, element;
@@ -97,6 +127,36 @@ define(
             indices = Manager._popupItems.getIndicesByValue('isModal', true);
             assert.equal(indices.length, 1);
             assert.equal(indices[0], 0);
+         });
+
+         it('add maximized popup', function() {
+            let Manager = getManager();
+            let id0 = Manager.show({
+               isModal: false,
+               maximize: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._hasMaximizePopup, true);
+
+            let id1 = Manager.show({
+               isModal: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._popupItems.at(1).hasMaximizePopup, true);
+
+            Manager.remove(id0);
+
+            assert.equal(Manager._hasMaximizePopup, false);
+
+            let id2 = Manager.show({
+               isModal: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
+
          });
       });
    }

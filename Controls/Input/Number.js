@@ -36,7 +36,7 @@ define('Controls/Input/Number', [
     * @category Input
     * @demo Controls-demo/Input/Number/Number
     *
-    * @author Журавлев Максим Сергеевич
+    * @author Зайцев А.С.
     */
 
    /**
