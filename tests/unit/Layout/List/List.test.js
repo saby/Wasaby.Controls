@@ -259,13 +259,16 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
                };
                newOpts = clone(newOpts);
                newOpts.navigation = newNavigation;
-               newOpts.source = newSource;
+               newOpts.source = new Memory({
+                  data: listSourceData,
+                  idProperty: 'id'
+               });
    
                listLayout._searchMode = true;
                listLayout._beforeUpdate(newOpts, context);
    
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
-               assert.isTrue(listLayout._source !== newSource);
+               assert.isTrue(listLayout._source !== newOpts.source);
    
                done();
             }, 50);
