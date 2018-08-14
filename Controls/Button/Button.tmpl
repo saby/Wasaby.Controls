@@ -1,10 +1,10 @@
-<a class="controls-Button__href-link" href="{{_options.href}}">
-    <span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
-                     controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
-                     controls-Button_type-{{_typeWithSize}}
-                     {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
-          attr:title="{{_options.tooltip}}"
-          on:click="_clickHandler()">
+<span attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
+                 controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
+                 controls-Button_type-{{_typeWithSize}}
+                 {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
+      attr:title="{{_options.tooltip}}"
+      on:click="_clickHandler()">
+    <a class="controls-Button__href-link" href="{{_options.href}}">
         <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
             <ws:if data="{{!!_icon}}">
                 <i attr:class="controls-Button__icon {{_icon}} {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + _state}}"></i>
@@ -15,5 +15,5 @@
                </span>
             </ws:if>
         </span>
-    </span>
-</a>
+    </a>
+</span>
