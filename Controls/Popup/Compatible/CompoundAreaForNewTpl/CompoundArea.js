@@ -98,7 +98,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
          destroy: function() {
             moduleClass.superclass.destroy.apply(this, arguments);
-            Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
+            if (this._vDomTemplate) {
+               Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
+            }
          },
          _modifyOptions: function(cfg) {
             var cfg = moduleClass.superclass._modifyOptions.apply(this, arguments);
