@@ -12,7 +12,7 @@
         </div>
     </div>
     <ws:if data="{{!_options.hideCross}}">
-        <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"/>
+        <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}"/>
     </ws:if>
     <div class="controls-DialogTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
