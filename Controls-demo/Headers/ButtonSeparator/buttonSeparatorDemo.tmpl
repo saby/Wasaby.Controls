@@ -1,15 +1,16 @@
 <div class="demoWrapper">
-    <div class="testBlock" test_name="HeaderCapture">
+    <div class="testBlock">
         <div class="exampleBlock">
             <h2>Button-separator</h2>
             <div class="wrapper">
-                <Controls.Button.Separator on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" on:valueChanged="valueChangedHandler()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}" attr:test_name="ButtonSeparator"/>
+                <Controls.Button.Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" on:valueChanged="valueChangedHandler()" style="{{_separatorSelectedStyle}}" bold="{{_bold}}" value="{{_iconValue}}"/>
             </div>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style:"/>
             <Controls.Input.ComboBox
+                    attr:class="ControlsDemo__style"
                     source="{{_separatorStyleSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -17,18 +18,17 @@
                     emptyText="none"
                     selectedKey="{{_separatorSelectedStyle}}"
                     on:selectedKeyChanged="separatorChangeStyle()"
-					attr:test_name="IconStyle"
             />
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:test_name="bold"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_bold" caption="bold" attr:class="ControlsDemo-ButtonSeparator__bold"/>
             <br/>
-            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_iconValue" caption="value"/>
+            <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_iconValue" caption="value" attr:class="ControlsDemo-ButtonSeparator__value"/>
         </div>
         <div class="eventBlock">
             <span>Event that surfaced:</span>
             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
             <br/>
-            <span>{{_eventName}}</span>
+            <span class="ControlsDemo__eventName">{{_eventName}}</span>
         </div>
     </div>
 </div>
