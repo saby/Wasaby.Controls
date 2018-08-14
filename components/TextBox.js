@@ -100,6 +100,7 @@ define('SBIS3.CONTROLS/TextBox', [
          _textFieldWrapper: null,
          _informationIcon: null,
          _options: {
+            _showNativePlaceholder: false,
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
@@ -208,15 +209,15 @@ define('SBIS3.CONTROLS/TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
-         if (constants.browser.chrome) {
+         if (!constants.browser.chrome) {
             /*
-              В IE есть баг что при установке фокуса в поле ввода, в котором есть плейсхолдер, стреляет событие input:
-              https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/274987/
-              Нативным плейсхолдером мы пользуемся, чтобы хром навешивал псевдокласс :placeholder-shown, так что
-              лучше буду навешивать плейсхолдер только в хроме
-            */
-            this._inputField.attr('placeholder', ' ');
-
+             В IE есть баг что при установке фокуса в поле ввода, в котором есть плейсхолдер, стреляет событие input:
+             https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/274987/
+             Нативным плейсхолдером мы пользуемся, чтобы хром навешивал псевдокласс :placeholder-shown, так что
+             лучше буду навешивать плейсхолдер только в хроме
+             */
+            //Плейсхолдер навешивается в шаблоне, иначе он будет моргать
+            this._inputField.removeAttr('placeholder');
          }
          this._inputField
             .on('paste', function(event){
