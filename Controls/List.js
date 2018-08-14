@@ -32,7 +32,7 @@ define('Controls/List', [
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List */{
       _template: ListControlTpl,
 
       _items: null,

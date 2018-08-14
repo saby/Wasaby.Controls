@@ -75,7 +75,8 @@ define('Controls/interface/IEditInPlace', [
     */
 
    /**
-    * @name {Object} Controls/interface/IEditInPlace#editingConfig Configuration for editing in place.
+    * @cfg {Object} editingConfig
+    * @name Controls/interface/IEditInPlace#editingConfig Configuration for editing in place.
     * @property {Boolean} [editingConfig.editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [editingConfig.singleEdit=false] If true, after the end of editing of any list item but the last, editing of the next list item begins automatically.
