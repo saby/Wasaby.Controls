@@ -255,7 +255,7 @@ define('Controls/Container/List',
                
                if (this._searchMode) {
                   _private.cachedSourceFix(this);
-                  /* back memory source if now searchMode is on (chached source used in Controls/Search/Controller) */
+                  /* back memory source if now searchMode is on. (Will used cached source by task https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63) */
                   this._source = source;
                }
                
