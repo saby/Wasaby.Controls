@@ -1224,6 +1224,14 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
          this._dataSource = null;
          trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
+      },
+
+      _onResizeHandler: function() {
+         this.reflow();
+      },
+
+      reflow: function() {
+         this._chartObj && this._chartObj.reflow();
       }
 
    });
