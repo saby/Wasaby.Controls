@@ -268,10 +268,13 @@ define('Controls/Container/Suggest/Layout',
          
          
          // <editor-fold desc="handlers">
-         
+
          _close: function() {
-            if (this._options.suggestStyle === 'overInput') {
-               this._searchValue = '';
+            this._searchValue = '';
+
+            /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
+               Notify event only if value is not empty, because event listeners expect, that the value is really changed */
+            if (this._options.value) {
                this._notify('valueChanged', ['']);
             }
             _private.close(this);

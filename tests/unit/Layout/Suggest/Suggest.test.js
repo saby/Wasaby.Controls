@@ -57,16 +57,23 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
       it('Suggest::_close', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._options.suggestStyle = 'overInput';
          var value = 'test';
+         
          suggestComponent._notify = function(event, val) {
             if (event === 'valueChanged') {
                value = val[0];
             }
          };
+   
+         suggestComponent._options.suggestStyle = 'overInput';
+         suggestComponent._options.value = '';
+         suggestComponent._close();
+         assert.equal(value, 'test');
+         assert.equal(suggestComponent._searchValue, '');
+   
+         suggestComponent._options.value = 'test';
          suggestComponent._close();
          assert.equal(value, '');
-         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_private.open', function (done) {
