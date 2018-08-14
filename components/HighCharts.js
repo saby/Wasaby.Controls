@@ -1230,6 +1230,11 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
          this.reflow();
       },
 
+      /**
+       * Обновляет размеры графика под размеры контейнера. Вызывает одноименный метод из highcharts
+       * http://api.highcharts.com/highcharts/Chart.reflow
+       */
+
       reflow: function() {
          this._chartObj && this._chartObj.reflow();
       }
