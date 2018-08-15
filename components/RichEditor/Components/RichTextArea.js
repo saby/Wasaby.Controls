@@ -2554,7 +2554,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   this._typeInProcess = false;
                }
-               this._updateHeight();
+               setTimeout(function() {
+                  //При удалении строки БТР не стреляет никакими событиями, из-за этого тулбар редактирования по месту
+                  //неправильно позиционируется.
+                  //Просто по keydown звать _updateHeight бесполезно, т.к. высота ещё не поменялась. Так что будем звать
+                  //_updateHeight после перерисовки
+                  if (!this.isDestroyed()) {
+                     this._updateHeight();
+                  }
+               }.bind(this), 0);
             },
 
             _onKeyDownCallback5: function(e) {
