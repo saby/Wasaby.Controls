@@ -1,98 +1,143 @@
  <div class="demo__header">
 	<div class="ControlsDemo-standartDemoHeader_Headers">
-		<h1>Headers</h1>
-		<h2>Header without click event</h2>
+	<h1>Headers</h1>
+	<h2>Header without click event</h2>
+	<div>
 		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">xl size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element ControlsDemo-standartDemoHeader_HeaderPrimary" caption="Header" readOnly="{{true}}" style="primary" size="xl"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSecondary" caption="Header" readOnly="{{true}}" style="secondary" size="xl"/>
-				</div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">xl size</span>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">l size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="l"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="l"/>
-				</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element ControlsDemo-standartDemoHeader_HeaderPrimary" caption="Header" readOnly="{{true}}" style="primary" size="xl"/>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="m"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="m"/>
-				</div>
-			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">s size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="s"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="s"/>
-				</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSecondary" caption="Header" readOnly="{{true}}" style="secondary" size="xl"/>
 			</div>
 		</div>
-		<h2>Header with click event (with hover)</h2>
-		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">l size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="l"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="l"/>
-				</div>
-			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="m"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="m"/>
-				</div>
-			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">s size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="s"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="s"/>
-				</div>
-			</div>
-		</div>
-		<h2>Header with counter</h2>
 		<div>
 			<div attr:class="test_element__wrapper">
 				<span attr:class="test_element">l size</span>
 			</div>
 			<div attr:class="test_element__wrapper">
-				<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="l"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="l"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="m"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="m"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">s size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="primary" size="s"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header attr:class="test_element" caption="Header" readOnly="{{true}}" style="secondary" size="s"/>
+			</div>
+		</div>
+	</div>
+	<h2>Header with click event (with hover)</h2>
+	<div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">l size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="l"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="l"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="m"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="m"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">s size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="primary" size="s"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Header on:click="clickHeaderAction()" attr:class="test_element" caption="Header" readOnly="{{false}}" style="secondary" size="s"/>
+			</div>
+		</div>
+	</div>
+	<h2>Header with counter</h2>
+	<div>
+		<div attr:class="test_element__wrapper">
+			<span attr:class="test_element">l size</span>
+		</div>
+		<div attr:class="test_element__wrapper">
+			<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
+				<Controls.Header caption="Header" style="primary" size="l"/>
+				<Controls.Header.Counter attr:class="counter" caption="12" style="disabled" size="m"/>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div attr:class="test_element__wrapper">
+			<span attr:class="test_element">m size</span>
+		</div>
+		<div attr:class="test_element__wrapper">
+			<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
+				<Controls.Header caption="Header" style="secondary" size="m"/>
+				<Controls.Header.Counter attr:class="counter" caption="12" style="primary" size="s"/>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div attr:class="test_element__wrapper">
+			<span attr:class="test_element">s size</span>
+		</div>
+		<div attr:class="test_element__wrapper">
+			<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
+				<Controls.Header caption="Header" style="primary" size="s"/>
+				<Controls.Header.Counter attr:class="counter" caption="12" style="secondary" size="m"/>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div class="ControlsDemo-standartDemoHeader_Separator">
+	<h2>Separator</h2>
+	<h3>Header-separator with and without counter</h3>
+	<div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">l size</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSeparatorPrimary Header_Counter__wrapper controls-Header_Separator__clickable">
+					<Controls.Header caption="Header" style="primary" size="l"/>
+					<Controls.Header.Separator style="secondary"/>
+				</div>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
 					<Controls.Header caption="Header" style="primary" size="l"/>
 					<Controls.Header.Counter attr:class="counter" caption="12" style="disabled" size="m"/>
+					<Controls.Header.Separator style="secondary"/>
 				</div>
 			</div>
 		</div>
@@ -101,207 +146,162 @@
 				<span attr:class="test_element">m size</span>
 			</div>
 			<div attr:class="test_element__wrapper">
-				<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
+				<div attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSeparatorSecondary Header_Counter__wrapper controls-Header_Separator__clickable">
 					<Controls.Header caption="Header" style="secondary" size="m"/>
-					<Controls.Header.Counter attr:class="counter" caption="12" style="primary" size="s"/>
+					<Controls.Header.Separator style="primary"/>
 				</div>
 			</div>
-		</div>
-		<div>
 			<div attr:class="test_element__wrapper">
-				<span attr:class="test_element">s size</span>
-			</div>
-			<div attr:class="test_element__wrapper">
-				<div attr:class="Header_Counter__wrapper test_element controls-Header_all__clickable">
-					<Controls.Header caption="Header" style="primary" size="s"/>
-					<Controls.Header.Counter attr:class="counter" caption="12" style="secondary" size="m"/>
+				<div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
+					<Controls.Header caption="Header" style="secondary" size="m"/>
+					<Controls.Header.Counter attr:class="counter" caption="12" style="disabled" size="m"/>
+					<Controls.Header.Separator style="primary"/>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="ControlsDemo-standartDemoHeader_Separator">
-		<h2>Separator</h2>
-		<h3>Header-separator with and without counter</h3>
+	<h3>Button-separator for showing/hiding contents</h3>
+	<div>
 		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">l size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSeparatorPrimary Header_Counter__wrapper controls-Header_Separator__clickable">
-						<Controls.Header caption="Header" style="primary" size="l"/>
-						<Controls.Header.Separator style="secondary"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
-						<Controls.Header caption="Header" style="primary" size="l"/>
-						<Controls.Header.Counter attr:class="counter" caption="12" style="disabled" size="m"/>
-						<Controls.Header.Separator style="secondary"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">Primary style:</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(2)" bold="{{true}}" style="primary" value="{{_iconValue2}}"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(5)" bold="{{false}}" style="primary" value="{{_iconValue5}}"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.BigSeparator attr:class="test_element" on:click="clickIcon(15)" value="{{_iconValue15}}"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">Secondary style:</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(1)" bold="{{true}}" style="secondary" value="{{_iconValue1}}"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(4)" bold="{{false}}" style="secondary" value="{{_iconValue4}}"/>
+			</div>
+		</div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">Additional style:</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(3)" bold="{{true}}" style="additional" value="{{_iconValue3}}"/>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(6)" bold="{{false}}" style="additional" value="{{_iconValue6}}"/>
+			</div>
+		</div>
+	</div>
+	<h3>Button-separator and headers with union click</h3>
+	<div>
+		<div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size, without counter</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Header on:click="clickIcon(7)" caption="Header" style="secondary" size="m"/>
+					<Controls.Button.Separator on:click="clickIcon(7)" bold="{{true}}" style="primary" value="{{_iconValue7}}" size="m"/>
 				</div>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element ControlsDemo-standartDemoHeader_HeaderSeparatorSecondary Header_Counter__wrapper controls-Header_Separator__clickable">
-						<Controls.Header caption="Header" style="secondary" size="m"/>
-						<Controls.Header.Separator style="primary"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element Header_Counter__wrapper controls-Header_Separator__clickable">
-						<Controls.Header caption="Header" style="secondary" size="m"/>
-						<Controls.Header.Counter attr:class="counter" caption="12" style="disabled" size="m"/>
-						<Controls.Header.Separator style="primary"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Button.Separator on:click="clickIcon(9)" bold="{{true}}" style="primary" value="{{_iconValue9}}"/>
+					<Controls.Header on:click="clickIcon(9)" caption="Header" style="secondary" size="m"/>
 				</div>
 			</div>
 		</div>
-		<h3>Button-separator for showing/hiding contents</h3>
 		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">Primary style:</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(2)" bold="{{true}}" style="primary" value="{{_iconValue2}}"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(5)" bold="{{false}}" style="primary" value="{{_iconValue5}}"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.BigSeparator attr:class="test_element" on:click="clickIcon(15)" value="{{_iconValue15}}"/>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size, with counter</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorSecondary controls-Header_all__clickable">
+					<Controls.Header on:click="clickIcon(8)" caption="Header" style="secondary" size="m"/>
+					<Controls.Header.Counter on:click="clickIcon(8)" attr:class="counter" caption="12" style="primary" size="m"/>
+					<Controls.Button.Separator on:click="clickIcon(8)" bold="{{true}}" style="primary" value="{{_iconValue8}}"/>
 				</div>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">Secondary style:</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(1)" bold="{{true}}" style="secondary" value="{{_iconValue1}}"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(4)" bold="{{false}}" style="secondary" value="{{_iconValue4}}"/>
-				</div>
-			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">Additional style:</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(3)" bold="{{true}}" style="additional" value="{{_iconValue3}}"/>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<Controls.Button.Separator attr:class="test_element" on:click="clickIcon(6)" bold="{{false}}" style="additional" value="{{_iconValue6}}"/>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorPrimary controls-Header_all__clickable">
+					<Controls.Button.Separator on:click="clickIcon(10)" bold="{{true}}" style="primary" value="{{_iconValue10}}"/>
+					<Controls.Header.Counter on:click="clickIcon(10)" attr:class="counter-left-direction" caption="12" style="primary" size="m"/>
+					<Controls.Header on:click="clickIcon(10)" caption="Header" style="secondary" size="m"/>
 				</div>
 			</div>
 		</div>
-		<h3>Button-separator and headers with union click</h3>
+	</div>
+	<h3>Button-separator and header without union click</h3>
+	<div>
 		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size, without counter</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Header on:click="clickIcon(7)" caption="Header" style="secondary" size="m"/>
-						<Controls.Button.Separator on:click="clickIcon(7)" bold="{{true}}" style="primary" value="{{_iconValue7}}" size="m"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Button.Separator on:click="clickIcon(9)" bold="{{true}}" style="primary" value="{{_iconValue9}}"/>
-						<Controls.Header on:click="clickIcon(9)" caption="Header" style="secondary" size="m"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size, without counter</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
+					<Controls.Button.Separator on:click="clickIcon(7)" bold="{{true}}" style="primary" value="{{_iconValue7}}" size="m"/>
 				</div>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size, with counter</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorSecondary controls-Header_all__clickable">
-						<Controls.Header on:click="clickIcon(8)" caption="Header" style="secondary" size="m"/>
-						<Controls.Header.Counter on:click="clickIcon(8)" attr:class="counter" caption="12" style="primary" size="m"/>
-						<Controls.Button.Separator on:click="clickIcon(8)" bold="{{true}}" style="primary" value="{{_iconValue8}}"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorPrimary controls-Header_all__clickable">
-						<Controls.Button.Separator on:click="clickIcon(10)" bold="{{true}}" style="primary" value="{{_iconValue10}}"/>
-						<Controls.Header.Counter on:click="clickIcon(10)" attr:class="counter-left-direction" caption="12" style="primary" size="m"/>
-						<Controls.Header on:click="clickIcon(10)" caption="Header" style="secondary" size="m"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Button.Separator on:click="clickIcon(9)" bold="{{true}}" style="primary" value="{{_iconValue9}}"/>
+					<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
 				</div>
 			</div>
 		</div>
-		<h3>Button-separator and header without union click</h3>
 		<div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size, without counter</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
-						<Controls.Button.Separator on:click="clickIcon(7)" bold="{{true}}" style="primary" value="{{_iconValue7}}" size="m"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Button.Separator on:click="clickIcon(9)" bold="{{true}}" style="primary" value="{{_iconValue9}}"/>
-						<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<span attr:class="test_element">m size, with counter</span>
+			</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
+					<Controls.Header.Counter on:click="clickHeaderAction()" attr:class="counter" caption="12" style="primary" size="m"/>
+					<Controls.Button.Separator on:click="clickIcon(8)" bold="{{true}}" style="primary" value="{{_iconValue8}}"/>
 				</div>
 			</div>
-			<div>
-				<div attr:class="test_element__wrapper">
-					<span attr:class="test_element">m size, with counter</span>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
-						<Controls.Header.Counter on:click="clickHeaderAction()" attr:class="counter" caption="12" style="primary" size="m"/>
-						<Controls.Button.Separator on:click="clickIcon(8)" bold="{{true}}" style="primary" value="{{_iconValue8}}"/>
-					</div>
-				</div>
-				<div attr:class="test_element__wrapper">
-					<div attr:class="test_element controls-Header_all__clickable">
-						<Controls.Button.Separator on:click="clickIcon(10)" bold="{{true}}" style="primary" value="{{_iconValue10}}"/>
-						<Controls.Header.Counter on:click="clickHeaderAction()" attr:class="counter-left-direction" caption="12" style="primary" size="m"/>
-						<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
-					</div>
+			<div attr:class="test_element__wrapper">
+				<div attr:class="test_element controls-Header_all__clickable">
+					<Controls.Button.Separator on:click="clickIcon(10)" bold="{{true}}" style="primary" value="{{_iconValue10}}"/>
+					<Controls.Header.Counter on:click="clickHeaderAction()" attr:class="counter-left-direction" caption="12" style="primary" size="m"/>
+					<Controls.Header on:click="clickHeaderAction()" caption="Header" style="secondary" size="m"/>
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 	<div class="ControlsDemo-standartDemoHeader_BackButton">
-		<h2>Back button</h2>
-		<div>
-			<div attr:class="test_element__wrapper">
-				<div>
-					<span attr:class="test_element">l size</span>
-					<Controls.Header.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonDefault" style="default" size="l" caption="Back"/>
-					<Controls.Header.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonPrimary" style="primary" size="l" caption="Back"/>
-				</div>
-			</div>
-			<div attr:class="test_element__wrapper">
-				<div>
-					<span attr:class="test_element">m size</span>
-					<Controls.Header.BackButton attr:class="test_element" style="default" size="m" caption="Back"/>
-					<Controls.Header.BackButton attr:class="test_element" style="primary" size="m" caption="Back"/>
-				</div>
-			</div>
-			<div attr:class="test_element__wrapper">
-				<div>
-					<span attr:class="test_element">s size</span>
-					<Controls.Header.BackButton attr:class="test_element" style="default" size="s" caption="Back"/>
-					<Controls.Header.BackButton attr:class="test_element" style="primary" size="s" caption="Back"/>
-				</div>
+	<h2>Back button</h2>
+	<div>
+		<div attr:class="test_element__wrapper">
+			<div>
+				<span attr:class="test_element">l size</span>
+				<Controls.Header.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonDefault" style="default" size="l" caption="Back"/>
+				<Controls.Header.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonPrimary" style="primary" size="l" caption="Back"/>
 			</div>
 		</div>
+		<div attr:class="test_element__wrapper">
+			<div>
+				<span attr:class="test_element">m size</span>
+				<Controls.Header.BackButton attr:class="test_element" style="default" size="m" caption="Back"/>
+				<Controls.Header.BackButton attr:class="test_element" style="primary" size="m" caption="Back"/>
+			</div>
+		</div>
+		<div attr:class="test_element__wrapper">
+			<div>
+				<span attr:class="test_element">s size</span>
+				<Controls.Header.BackButton attr:class="test_element" style="default" size="s" caption="Back"/>
+				<Controls.Header.BackButton attr:class="test_element" style="primary" size="s" caption="Back"/>
+			</div>
+		</div>
+	</div>
 	</div>
 </div>
