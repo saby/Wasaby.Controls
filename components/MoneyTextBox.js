@@ -50,6 +50,12 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            /**
+             * @cfg {string} Выравнивание текста относительно контейнера
+             * <pre>
+             *     <option name="textAlign">left</option>
+             * </pre>
+             */
             textAlign: 'right',
             _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
@@ -64,6 +70,13 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              * @see hideEmptyDecimals
              */
             decimals: 2,
+            /**
+             * @cfg {Boolean} Требуется ли скрывать пустую дробную часть
+             * @example
+             * <pre>
+             *     <option name="hideEmptyDecimals">true</option>
+             * <pre>
+             */
             hideEmptyDecimals: false,
             /**
              * @cfg {Boolean} Показать разделители триад

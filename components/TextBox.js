@@ -56,7 +56,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     * @demo Examples/TextBox/MyTextBox/MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -217,6 +217,13 @@ define('SBIS3.CONTROLS/TextBox', [
              лучше буду навешивать плейсхолдер только в хроме
              */
             //Плейсхолдер навешивается в шаблоне, иначе он будет моргать
+            if (constants.browser.isIE) {
+               //Оказывается, в IE событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
+               this._inputField.one('input', function(e) {
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+               });
+            }
             this._inputField.removeAttr('placeholder');
          }
          this._inputField

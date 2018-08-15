@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/FormattedTextBox',
     * @class SBIS3.CONTROLS/FormattedTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     * @demo Examples/FormattedTextBox/MyFormattedTextBox/MyFormattedTextBox
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

@@ -85,7 +85,7 @@ define('Controls/List/TreeControl', [
     * @category List
     */
 
-   var TreeControl = Control.extend({
+   var TreeControl = Control.extend(/** @lends Controls/List/TreeControl */{
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
       _loadedNodes: null,
