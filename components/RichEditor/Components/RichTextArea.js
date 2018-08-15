@@ -26,6 +26,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'Core/helpers/String/linkWrap',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
+      'Lib/LayoutManager/LayoutManager',
       'Core/EventBus',
       'SBIS3.CONTROLS/WaitIndicator',
 
@@ -56,6 +57,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                LinkWrap,
                ImageOptionsPanel,
                CodeSampleDialog,
+               LayoutManager,
                EventBus,
                WaitIndicator) {
       'use strict';
@@ -712,7 +714,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
                      var
                         resizeHandler = function() {
-                           this._inputControl[0].scrollIntoView(false);
+                           LayoutManager.scrollToElement(this._inputControl, true);
                            $(window).off('resize', resizeHandler);
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
@@ -2971,7 +2973,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   // При прокручивании Internet Explorer выводит нативный скролл, сдвигая влево ScrollContainer
                   if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
-                     this._container[0].scrollIntoView(evt.alignToTop);
+                     LayoutManager.scrollToElement(this._inputControl, true);
                   }
                }
             },
