@@ -9,7 +9,8 @@
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
-   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
+   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll"
+                              shadowVisible="{{false}}">
       <div>
          <ws:partial template="tmpl!Controls/Dropdown/resources/template/For"
                      listModel="{{_listModel}}"
