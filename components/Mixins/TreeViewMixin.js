@@ -254,7 +254,9 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
       _needCreateFolderFooter: function (item) {
          var
             model, id, nodeType;
-         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+
+         //В режиме поиска никогда не создаём футеры
+         if (this._isSearchMode() || cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
             return false;
          }
          model = item.getContents();
