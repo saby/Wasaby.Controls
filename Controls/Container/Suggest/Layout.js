@@ -135,19 +135,26 @@ define('Controls/Container/Suggest/Layout',
                self._isFooterShown = _private.shouldShowFooter(self, resultData);
             }
          },
-         
-         updateFilter: function(self, searchValue, tabId) {
-            var filter = clone(self._options.filter) || {};
+   
+         prepareFilter: function(self, filter, searchValue, tabId) {
+            var preparedFilter = clone(filter) || {};
+            
             if (tabId) {
-               filter.currentTab = tabId;
+               preparedFilter.currentTab = tabId;
             }
-            filter[self._options.searchParam] = searchValue;
-            self._filter = filter;
+   
+            preparedFilter[self._options.searchParam] = searchValue;
+            
+            return preparedFilter;
+         },
+         
+         setFilter: function(self, filter) {
+            self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey);
          },
          
          updateSuggestState: function(self) {
             if (_private.shouldSearch(self, self._searchValue)) {
-               _private.updateFilter(self, self._searchValue, self._tabsSelectedKey);
+               _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
                //autoDropDown - close only on Esc key or deactivate
@@ -218,6 +225,10 @@ define('Controls/Container/Suggest/Layout',
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
          },
+         
+         _afterMount: function() {
+            _private.setFilter(this, this._options.filter);
+         },
    
          _beforeUnmount: function() {
             this._searchResult = null;
@@ -230,6 +241,10 @@ define('Controls/Container/Suggest/Layout',
          _beforeUpdate: function(newOptions) {
             if (!newOptions.suggestState) {
                _private.resetSizesState(this);
+            }
+            
+            if (this._options.filter !== newOptions.filter) {
+               _private.setFilter(this, newOptions.filter);
             }
          },
    
@@ -268,10 +283,13 @@ define('Controls/Container/Suggest/Layout',
          
          
          // <editor-fold desc="handlers">
-         
+
          _close: function() {
-            if (this._options.suggestStyle === 'overInput') {
-               this._searchValue = '';
+            this._searchValue = '';
+
+            /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
+               Notify event only if value is not empty, because event listeners expect, that the value is really changed */
+            if (this._options.value) {
                this._notify('valueChanged', ['']);
             }
             _private.close(this);
@@ -302,7 +320,12 @@ define('Controls/Container/Suggest/Layout',
    
          _tabsSelectedKeyChanged: function(event, key) {
             this._searchDelay = 0;
-            _private.updateFilter(this, this._searchValue, key);
+            
+            // change only filter for query, tabSelectedKey will be changed after processing query result,
+            // otherwise interface will blink
+            if (this._tabsSelectedKey !== key) {
+               this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key);
+            }
             
             // move focus from tabs to input, after change tab
             this.activate();

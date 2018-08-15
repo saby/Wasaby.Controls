@@ -357,7 +357,7 @@ define(
                assert.equal(Stack.isMaximizedPanel(itemConfig), true);
 
                StackController.getDefaultConfig(itemConfig);
-               assert.equal(itemConfig.popupOptions.maximized, true); //default value
+               assert.equal(itemConfig.popupOptions.maximized, false); //default value
                assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
 
                StackController.elementMaximized(itemConfig, {}, false);

@@ -21,6 +21,7 @@
          <div class="controls-RichEditor__placeholder">{{ placeholder }}</div>
          <div
             class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
+            ws-autofocus="true"
             tabindex="1"
             style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + (minimalHeight - _decreaseHeight) + 'px;'}}"
             >{{!enabled && text ? (_reviewContent|sanitize)}}</div>
