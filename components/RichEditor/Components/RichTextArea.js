@@ -2980,7 +2980,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  // Не прокручивать в Internet Explorer старше 12 версии
+
+                  // При прокручивании Internet Explorer выводит нативный скролл, сдвигая влево ScrollContainer
                   if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
                      this._container[0].scrollIntoView(evt.alignToTop);
                   }
