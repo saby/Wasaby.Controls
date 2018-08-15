@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/NumberTextBox
     * @extends SBIS3.CONTROLS/TextBox
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     * @demo Examples/NumberTextBox/MyNumberTextBox/MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
