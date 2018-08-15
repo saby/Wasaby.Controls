@@ -37,34 +37,41 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
+               var replaceVDOMContainer = function() {
+                  //Отлавливаем события с дочернего vdom компонента
+                  self._getRootContainer().eventProperties = {
+                     'on:close': [{
+                        fn: self._createFnForEvents(self._onCloseHandler),
+                        args: []
+                     }],
+                     'on:resize': [{
+                        fn: self._createFnForEvents(self._onResizeHandler),
+                        args: []
+                     }],
+                     'on:sendresult': [{
+                        fn: self._createFnForEvents(self._onResultHandler),
+                        args: []
+                     }]
+                  };
+               };
 
                require([this._options.innerComponentOptions.template], function(ctr) {
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
-
-                     var replaceVDOMContainer = function() {
-                        //Отлавливаем события с дочернего vdom компонента
-                        self._getRootContainer().eventProperties = {
-                           'on:close': [{
-                              fn: self._createFnForEvents(self._onCloseHandler),
-                              args: []
-                           }],
-                           'on:resize': [{
-                              fn: self._createFnForEvents(self._onResizeHandler),
-                              args: []
-                           }],
-                           'on:sendresult': [{
-                              fn: self._createFnForEvents(self._onResultHandler),
-                              args: []
-                           }]
-                        };
-                     };
-                     self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
-                        replaceVDOMContainer();
-                     });
-
+                  } else {
+                     self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
+                     if (self._options._initCompoundArea) {
+                        self._notifyOnSizeChanged(self, self);
+                        self._options._initCompoundArea(self);
+                     }
+                     replaceVDOMContainer();
                   }
+
+                  self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
+                     replaceVDOMContainer();
+                  });
+
                   def.callback();
                });
 

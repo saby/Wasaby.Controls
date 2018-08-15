@@ -213,6 +213,12 @@ function(cMerge,
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+
+         //InfoBox
+         if (cfg.componentOptions.innerComponentOptions.template) {
+            cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
+         }
+
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
