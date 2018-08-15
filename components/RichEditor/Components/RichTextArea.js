@@ -1400,6 +1400,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
+
+                  // Перед применением цитаты сбрасываем вначале прикладные стили
+                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
+                  for (var format in this._options.customFormats) {
+                     if (this._options.customFormats.hasOwnProperty(format)) {
+                        this._tinyEditor.formatter.remove(format);
+                     }
+                  }
                   // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                   // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                   var listNode = rng.commonAncestorContainer;
@@ -1756,27 +1764,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this.isActive()) {
                   this.setActive(true);
                }
+               if (this._tinyEditor.formatter.match('blockquote')) {
+                  this._tinyEditor.formatter.remove('blockquote');
+               }
                this._tinyEditor.formatter.toggle(style);
                this._updateTextByTiny();
-            },
-
-            // Проверка вложенности цитаты в блок с пользовательски форматом и наоборот. Если один из них вложен другой,
-            // то отменяем тот, что находится снаружи Здесь obj.parent[2] существует только при вложенности одного блока в
-            // другой, и это либо блок с пользовательским форматом в который вложена цитата, либо цитата в которую вложен
-            // блок с пользовательским форматом
-            checkParentForCustomStyle: function(obj) {
-               switch (obj.format) {
-                  case 'blockquote':
-                     if (obj.parents[2]) {
-                        this.toggleStyle(obj.parents[2].className);
-                     }
-                     break;
-                  default:
-                     if (obj.parents[2]) {
-                        this.execCommand(obj.parents[2].localName);
-                     }
-                     break;
-               }
             },
 
             /**
