@@ -5,16 +5,22 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
+      'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Core/vdom/Synchronizer/Synchronizer',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'Core/Control',
       'Core/Deferred',
+      'Core/core-merge',
       'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
       template,
+      ComponentWrapper,
       Sync,
+      SyntheticEvent,
       control,
-      Deferred) {
+      Deferred,
+      cMerge) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
        * */
@@ -38,14 +44,16 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
 
-               require([this._options.innerComponentOptions.template], function(ctr) {
+               require([this._options.innerComponentOptions.template], function() {
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
-                     self._vDomTemplate = control.createControl(ctr, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
+                     self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
 
                      var replaceVDOMContainer = function() {
+                        var rootContainer = self._getRootContainer();
+
                         //Отлавливаем события с дочернего vdom компонента
-                        self._getRootContainer().eventProperties = {
+                        rootContainer.eventProperties = cMerge(rootContainer.eventProperties || {}, {
                            'on:close': [{
                               fn: self._createFnForEvents(self._onCloseHandler),
                               args: []
@@ -58,7 +66,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                               fn: self._createFnForEvents(self._onResultHandler),
                               args: []
                            }]
-                        };
+                        });
+                        rootContainer.eventProperties['on:register'] = rootContainer.eventProperties['on:register'] || [];
+                        rootContainer.eventProperties['on:register'].push({
+                           fn: self._createFnForEvents(self._onRegisterHandler),
+                           args: []
+                        });
+                        rootContainer.eventProperties['on:unregister'] = rootContainer.eventProperties['on:unregister'] || [];
+                        rootContainer.eventProperties['on:unregister'].push({
+                           fn: self._createFnForEvents(self._onRegisterHandler),
+                           args: []
+                        });
                      };
                      self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
                         replaceVDOMContainer();
@@ -108,6 +126,20 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._result = result;
             if (this._options.onResultHandler) {
                this._options.onResultHandler(this._result);
+            }
+         },
+         _onRegisterHandler: function(event, eventName, emitter, handler) {
+            if (['mousemove', 'touchmove', 'mouseup', 'touchend'].indexOf(eventName) !== -1) {
+               if (handler) {
+                  this._compoundHandlers = this._compoundHandlers || {};
+                  this._compoundHandlers[eventName] = function(event) {
+                     handler.apply(emitter, [new SyntheticEvent(event)]);
+                  };
+                  document.body.addEventListener(eventName, this._compoundHandlers[eventName]);
+               } else if (this._compoundHandlers && this._compoundHandlers[eventName]) {
+                  document.body.removeEventListener(eventName, this._compoundHandlers[eventName]);
+                  this._compoundHandlers[eventName] = null;
+               }
             }
          },
 
