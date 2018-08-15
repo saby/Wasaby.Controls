@@ -120,10 +120,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _openComponent: function(meta, mode) {
+         var self = this;
          meta = meta || {};
          meta.mode = mode || meta.mode || this._options.mode; //todo в 3.17.300 убрать аргумент mode, его через execute проставить нельзя
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta);
+         if (this._isDialogClosing()) {
+            this._dialog.once('onAfterClose', function() {
+               self._createComponent(config, meta);
+            });
+         }
+         else {
+            this._createComponent(config, meta);
+         }
       },
 
       _buildComponentConfig: function(meta) {
