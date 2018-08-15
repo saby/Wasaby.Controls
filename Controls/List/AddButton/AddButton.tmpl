@@ -1,6 +1,11 @@
 <span class="controls-AddButton" on:click="clickHandler()">
    <span attr:class="controls-AddButton_state-{{_options.readOnly ? 'disable': 'enable'}} controls-AddButton-wrapper">
-      <i attr:class="controls-AddButton__icon icon-Add"></i>
+      <span class="controls-AddButton__svgWrapper">
+         <svg class="controls-AddButton__icon" data-name="Add" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" shape-rendering="geometricPrecision">
+            <line x1="0" y1="4" x2="8" y2="4" class="controls-AddButton__line" />
+            <line x1="4" y1="0" x2="4" y2="8" class="controls-AddButton__line" />
+         </svg>
+      </span>
       <span attr:class="controls-AddButtonText">{{_options.caption}}</span>
    </span>
 </span>
