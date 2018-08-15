@@ -82,7 +82,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             }
          },
          _tagStyleHandler: function() {
-            this._events += 'tagHover' + '\r\n';
+            this._events += 'tagHover\r\n';
             this._children.infoBoxComboBox.open({
                target: this._children.comboBox._container,
                message: 'Hover',
@@ -90,7 +90,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             });
          },
          _tagStyleClickHandler: function() {
-            this._events += 'tagClick' + '\r\n';
+            this._events += 'tagClick\r\n';
             this._children.infoBoxComboBox.open({
                target: this._children.comboBox._container,
                message: 'Click'
@@ -100,7 +100,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             this._events += 'valueChanged : ' + tmp + '\n';
          },
          _inputCompletedHandler: function() {
-            this._events += 'inputCompleted' + '\r\n';
+            this._events += 'inputCompleted\r\n';
          },
          _validationChangedHandler: function() {
             if (this._validationErrorsValue) {

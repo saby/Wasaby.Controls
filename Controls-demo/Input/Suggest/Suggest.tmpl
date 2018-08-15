@@ -30,7 +30,7 @@
                 navigation="{{navigationConfig}}">
 
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" itemSuggestTemplate="{{_flag }}" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" itemSuggestTemplate="{{_flag }}" firstLine="title" secondLine="age"/>
             </ws:suggestTemplate>
 
         </Controls.Input.Suggest>
@@ -87,7 +87,7 @@
                 <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title"/>
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
@@ -104,7 +104,7 @@
                 <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
@@ -121,7 +121,7 @@
                 <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title"/>
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
@@ -138,7 +138,7 @@
                 <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
 
@@ -159,7 +159,7 @@
                 <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
             </ws:navigation>
             <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="demo-SuggestInputList" />
+                <ws:templateOptions demoClass="demo-SuggestInputList" firstLine="title" />
             </ws:suggestTemplate>
         </Controls.Input.Suggest>
         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="demo-TextBox"/>

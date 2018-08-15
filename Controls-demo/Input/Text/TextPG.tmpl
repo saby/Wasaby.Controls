@@ -1,0 +1,42 @@
+<div class="wrapper">
+    <div class="box1">
+        <Controls.PropertyGrid bind:items="_itemsSimple"
+                               itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                               attr:class="controls-FilterPanel__PropertyGrid">
+            <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
+        </Controls.PropertyGrid>
+    </div>
+        <div class="box3">
+            <h3>Example</h3>
+            <Controls.Popup.Opener.InfoBox name="infoBox"/>
+            <Controls.Input.Text
+                    attr:id="main_field"
+                    name="textBox"
+                    bind:value="textValue"
+                    placeholder="{{_itemsSimple.placeholder.value}}"
+                    constraint="{{_itemsSimple.constraint.value}}"
+                    validationErrors="{{_validationErrors}}"
+                    trim="{{_itemsSimple.trim.value}}"
+                    tagStyle="{{_itemsSimple.tagStyle.value || undefined  }}"
+                    selectOnClick="{{_itemsSimple.selectOnClick.value}}"
+                    maxLength="{{_itemsSimple.maxLength.value}}"
+                    on:valueChanged="_valueChanged()"
+                    readOnly="{{_itemsSimple.readOnly.value}}"
+                    tooltip="{{_itemsSimple.tooltip.value}}"
+                    on:tagHover="_tagStyleHandler()"
+                    on:tagClick="_tagStyleClickHandler()"
+                    attr:class="demo-TextBox"
+            />
+        </div>
+            <div class="box4">
+                <h4>Events</h4>
+                <Controls.Container.Scroll
+                        attr:style="height: 100px; border-width:thin"
+                        scrollbarVisible="{{true}}"
+                        shadowVisible="{{true}}">
+                    <pre>{{ _events }}</pre>
+                </Controls.Container.Scroll>
+            </div>
+            <br/>
+            <span class="ControlsDemo__eventName">{{_eventName}}</span>
+        </div>

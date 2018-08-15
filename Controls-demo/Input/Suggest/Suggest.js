@@ -164,14 +164,14 @@ define('Controls-demo/Input/Suggest/Suggest', [
          });
       },
       _tagStyleHandler: function() {
-         this._events += 'tagHover' + '\r\n';
+         this._events += 'tagHover\r\n';
          this._children.infoBoxSuggest.open({
             target: this._children.suggest._container,
             message: 'Hover'
          });
       },
       _tagStyleClickHandler: function() {
-         this._events += 'tagClick' + '\r\n';
+         this._events += 'tagClick\r\n';
          this._children.infoBoxSuggest.open({
             target: this._children.suggest._container,
             message: 'Click'
@@ -184,7 +184,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          this._events += 'valueChanged : ' + tmp  + '\n';
       },
       _inputCompletedHandler: function() {
-         this._events += 'inputCompleted' + '\r\n';
+         this._events += 'inputCompleted\r\n';
       },
       _selectedKeyChangedHandler: function(event, tmp) {
          this._events += 'selectedKeyChanged :  ' + tmp + '\n';

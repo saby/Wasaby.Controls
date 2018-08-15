@@ -1,0 +1,29 @@
+<div>
+<Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+<ws:if data="{{!_options.source}}">
+    <Controls.Input.Text value="{{_options.value}}"
+                         readOnly="{{_options.readOnly}}" attr:class="demo-TextBox"
+                         on:valueChanged="_valueChangedHandler()"/>
+</ws:if>
+<ws:else>
+    <Controls.Input.Suggest
+            value="{{_options.value}}"
+            displayProperty="title"
+            searchParam="title"
+            autoDropDown="{{true}}"
+            source="{{_suggestSource()}}"
+            minSearchLength="1"
+            on:valueChanged="_valueChangedHandler()"
+            attr:class="demo-TextBox">
+        <ws:navigation source="page" view="page">
+            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+        </ws:navigation>
+        <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
+            <ws:templateOptions demoClass="demo-SuggestInputList"
+                                itemSuggestTemplate="{{_options.template}}"
+                                firstLine="{{_options.firstLine}}"
+                                secondLine="{{_options.secondLine}}"/>
+        </ws:suggestTemplate>
+    </Controls.Input.Suggest>
+</ws:else>
+</div>
