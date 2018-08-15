@@ -28,8 +28,7 @@
                      controls-Button_type-{{_typeWithSize}}
                      {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
        attr:title="{{_options.tooltip}}"
-       on:click="_clickHandler()"
-       attr:href="{{_options.href}}">
+       on:click="_clickHandler()">
         <ws:partial template="buttonContent"/>
     </span>
 </ws:else>
