@@ -29,6 +29,7 @@ define(
          newRecord: 'newTestRecord',
          handlers: 'testHandlers',
          linkedContext: 'testLinkedContext',
+         closeButtonStyle: 'testStyle',
          border: false,
          autoShow: false,
          autoCloseOnHide: false,
@@ -156,6 +157,7 @@ define(
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
             assert.equal(config.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
             newConfig.minWidth = 100;

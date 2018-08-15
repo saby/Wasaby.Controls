@@ -4278,20 +4278,25 @@ define('SBIS3.CONTROLS/ListView',
                this._updatePaging();
             }
          },
-         _prepareAdditionalFilterForCursor: function(filter, direction) {
-            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+         _prepareAdditionalFilterForCursor: function(filter, direction, position) {
+            return this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction, position);
          },
          _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
-               queryFilter = filter;
+               queryFilter = filter,
+               addParams;
             if (this._isCursorNavigation()) {
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
 
                queryFilter = coreClone(filter);
-               var addParams = this._prepareAdditionalFilterForCursor(filter, direction);
+               if (offset === -1) {
+                  addParams = this._prepareAdditionalFilterForCursor(filter, 'up', '');
+               } else {
+                  addParams = this._prepareAdditionalFilterForCursor(filter, direction);
+               }
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/

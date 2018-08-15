@@ -39,6 +39,10 @@ function(cMerge,
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
          }
 
+         if (cfg.closeButtonStyle) {
+            cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
+         }
+
          if (cfg.record) { // от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
@@ -220,6 +224,10 @@ function(cMerge,
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
+
+         if (cfg.onCloseHandler) {
+            cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
          this._setSizes(cfg, templateClass);
