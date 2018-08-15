@@ -92,23 +92,24 @@ define('Controls/Button/Menu',
 
       var Menu = Control.extend({
          _template: template,
+         _filter: null,
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
-            this._filter = this._options.filter;
+            this._filter = options.filter;
          },
 
          _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }
-         
+
       });
 
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
             style: 'buttonDefault',
-            size: 'default',
+            size: 'm',
             filter: {}
          };
       };
