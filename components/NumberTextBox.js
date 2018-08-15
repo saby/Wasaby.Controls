@@ -374,6 +374,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       setDecimals: function(decimals) {
          if (typeof decimals === 'number') {
             this._options.decimals = decimals;
+            this.setText(this._options.text);
          }
       },
 
