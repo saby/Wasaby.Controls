@@ -1,8 +1,7 @@
 <div class="demoWrapper">
     <div class="testBlock" test_name="HeaderCapture">
         <div class="exampleBlock">
-            <h2>Header</h2>
-            <Controls.Header readOnly="{{_readOnly}}" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
+            <Controls.Heading readOnly="{{_readOnly}}" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()" caption="{{_caption}}" style="{{_selectedStyle}}" size="{{_selectedSize}}" attr:test_name="Header"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
@@ -12,7 +11,6 @@
                     keyProperty="title"
                     placeholder="select"
                     displayProperty="title"
-                    emptyText="none"
                     selectedKey="{{_selectedSize}}"
                     on:selectedKeyChanged="changeSize()"
 					attr:test_name="CaptionSize"
@@ -25,7 +23,6 @@
                     keyProperty="title"
                     placeholder="select"
                     displayProperty="title"
-                    emptyText="none"
                     selectedKey="{{_selectedStyle}}"
                     on:selectedKeyChanged="changeStyle()"
 					attr:test_name="CaptionStyle"

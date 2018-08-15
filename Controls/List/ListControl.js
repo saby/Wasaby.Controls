@@ -25,7 +25,7 @@ define('Controls/List/ListControl', [
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List/ListControl */{
       _template: ListControlTpl,
       reload: function() {
          this._children.baseControl.reload();

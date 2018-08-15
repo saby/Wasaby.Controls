@@ -1,13 +1,11 @@
 .controls-AddButton-wrapper{
    display: inline-flex;
-   align-items: center;
-   &:before {
-      content: "\200b";
-   }
+   align-items: baseline;
 }
 
 .controls-AddButton_state-enable{
    color: @color_listAddButton_enabled;
+   stroke: @color_listAddButton_enabled;
    cursor: pointer;
 }
 
@@ -28,13 +26,24 @@
 
 .controls-AddButton_state-disable{
    color: @color_listAddButton_disabled;
+   stroke: @color_listAddButton_disabled;
 }
 
-.controls-AddButton__icon{
-   .icon-size-without-important(@icon-size_ListAddButton);
-   font-style: normal;
+.controls-AddButton__icon {
+   height: @icon-size_ListAddButton / 2;
+   width: @icon-size_ListAddButton / 2;
+}
+
+.controls-AddButton__svgWrapper {
+   width: @icon-size_ListAddButton;
+   display: inline-flex;
+   justify-content: center;
 }
 
 .controls-AddButton{
    font-size: @font-size_listAddButton;
+}
+
+.controls-AddButton__line {
+   stroke-width: 2;
 }
