@@ -283,6 +283,7 @@ define('Controls/History/Source', [
          } else {
             item.set('pinned', true);
             pinned.add(this.getRawHistoryItem(self, item.getId()));
+            _private.checkPinnedAmountAfterAdd(pinned);
          }
          self.historySource.saveHistory(self._history);
       },
@@ -316,6 +317,12 @@ define('Controls/History/Source', [
             },
             adapter: self._history.recent.getAdapter()
          });
+      },
+      
+      checkPinnedAmountAfterAdd: function(pinned) {
+         if (pinned.getCount() > Constants.MAX_HISTORY) {
+            pinned.removeAt(Constants.MAX_HISTORY);
+         }
       }
    };
 
