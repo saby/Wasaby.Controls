@@ -294,6 +294,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
          _mouseleaveHandler: function(event) {
+            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
             if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
@@ -303,6 +304,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
+         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
          _isLinkedPanel: function(event) {
             var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
             if (compoundArea.length) {
