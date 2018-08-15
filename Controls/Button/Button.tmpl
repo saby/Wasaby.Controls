@@ -12,13 +12,13 @@
 </ws:template>
 
 <ws:if data="{{_options.href}}">
-    <a attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
+    <a attr:class="controls-BaseButton_withHref controls-Button_style-{{_style}}{{_state}}
                  controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
                  controls-Button_type-{{_typeWithSize}}
                  {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
-       attr:title="{{_options.tooltip}}"
-       on:click="_clickHandler()"
-       attr:href="{{_options.href}}">
+        attr:title="{{_options.tooltip}}"
+        on:click="_clickHandler()"
+        attr:href="{{_options.href}}">
         <ws:partial template="buttonContent"/>
     </a>
 </ws:if>
@@ -27,8 +27,8 @@
                      controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
                      controls-Button_type-{{_typeWithSize}}
                      {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
-       attr:title="{{_options.tooltip}}"
-       on:click="_clickHandler()">
+        attr:title="{{_options.tooltip}}"
+        on:click="_clickHandler()">
         <ws:partial template="buttonContent"/>
     </span>
 </ws:else>
