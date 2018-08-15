@@ -45,9 +45,14 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
-               this._popupIds.forEach(function(popupId) {
-                  ManagerController.remove(popupId);
-               });
+               if (Base.isNewEnvironment()) {
+                  this._popupIds.forEach(function(popupId) {
+                     ManagerController.remove(popupId);
+                  });
+               } else if (this._action) { // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+                  this._action.destroy();
+                  this._action = null;
+               }
             }
          },
 

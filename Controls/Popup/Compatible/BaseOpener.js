@@ -39,6 +39,10 @@ function(cMerge,
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
          }
 
+         if (cfg.closeButtonStyle) {
+            cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
+         }
+
          if (cfg.record) { // от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
@@ -161,17 +165,6 @@ function(cMerge,
             }
          }
 
-         if (cfg.hasOwnProperty('offset')) {
-            if (cfg.offset.x) {
-               cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
-            }
-            if (cfg.offset.y) {
-               cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
-            }
-         }
-
          if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
             cfg.corner = {};
             if (cfg.hasOwnProperty('side')) {
@@ -187,6 +180,16 @@ function(cMerge,
             delete cfg.verticalAlign;
          }
 
+         if (!cfg.hasOwnProperty('direction')) {
+            //Значения по умолчанию. взято из floatArea.js
+            var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
+            if (side === 'left') {
+               cfg.direction = 'right';
+            } else if (side === 'right') {
+               cfg.direction = 'left';
+            }
+         }
+
          if (cfg.hasOwnProperty('direction')) {
             if (cfg.direction === 'right' || cfg.direction === 'left') {
                if (typeof cfg.horizontalAlign !== 'object') {
@@ -194,6 +197,17 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+            }
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
             }
          }
 
@@ -210,6 +224,10 @@ function(cMerge,
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
+
+         if (cfg.onCloseHandler) {
+            cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
          this._setSizes(cfg, templateClass);

@@ -2,7 +2,6 @@ define('Controls/Date/PeriodDialog', [
    'Core/Control',
    'Core/core-merge',
    'Core/helpers/Date/getFormattedDateRange',
-   'Core/helpers/date-helpers',
    'Core/helpers/i18n/locales',
    'Controls/Date/interface/IRangeSelectable',
    'Controls/Date/Mixin/EventProxy',
@@ -12,12 +11,12 @@ define('Controls/Date/PeriodDialog', [
    'Controls/Utils/Date',
    'tmpl!Controls/Date/PeriodDialog/PeriodDialog',
    'tmpl!Controls/Date/PeriodDialog/header',
-   'css!Controls/Date/PeriodDialog/PeriodDialog'
+   'css!Controls/Date/PeriodDialog/PeriodDialog',
+   'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    coreMerge,
    getFormattedDateRange,
-   dateHelpers,
    locales,
    IRangeSelectable,
    EventProxyMixin,

@@ -23,6 +23,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Input
        * @demo Controls-demo/Dropdown/MenuVdom
        */

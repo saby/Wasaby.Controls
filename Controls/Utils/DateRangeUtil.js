@@ -1,8 +1,7 @@
 define('Controls/Utils/DateRangeUtil', [
-   'Core/helpers/Date/getPeriodLength',
    'Core/helpers/Date/getPeriodType',
    'Core/helpers/Date/periodTypes'
-], function(getPeriodLength, getPeriodType, periodTypes) {
+], function(getPeriodType, periodTypes) {
    'use strict';
 
    var utils = {

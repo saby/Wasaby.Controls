@@ -13,11 +13,11 @@
                          name="previewContainer"
                          style="{{!_options.previewAutoHeight && _options.autoHeight && _options.minimalHeight && _options.minimalHeight != 0 ? 'min-height:' + _options.minimalHeight + 'px;'}}"
                     >
-                        {{_options.value}}
+                        {{_value}}
                     </div>
                 </ws:if>
                 <ws:else>
-                    <Controls.Input.RichArea.resources.TinyMCE value="{{_options.value}}"
+                    <Controls.Input.RichArea.resources.TinyMCE value="{{_value}}"
                                                                on:textChanged="_onTextChanged()"
                                                                on:updateScrollContainerHeight="_updateScrollContainerHeightHandler()"
                                                                on:updateScrollContainerScrollTop="_updateScrollContainerScrollTopHandler()"
