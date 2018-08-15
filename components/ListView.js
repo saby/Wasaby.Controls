@@ -1022,7 +1022,7 @@ define('SBIS3.CONTROLS/ListView',
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
             /* Инициализацию бесконечного скрола производим один раз */
-            this._prepareInfiniteScroll = once(this._prepareInfiniteScroll);
+            this._prepareInfiniteScroll = once(this._prepareInfiniteScrollFn);
             
             this._toggleEventHandlers(this._container, true);
 
@@ -3401,7 +3401,7 @@ define('SBIS3.CONTROLS/ListView',
           * @see setInfiniteScroll
           */
 
-         _prepareInfiniteScroll: function(){
+         _prepareInfiniteScrollFn: function(){
             var topParent = this.getTopParent(),
                 self = this;
    
@@ -5099,7 +5099,7 @@ define('SBIS3.CONTROLS/ListView',
             }
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
             if (this._options.task1175678591) { // https://online.sbis.ru/opendoc.html?guid=31bc2c39-ef26-4ff7-88f6-1066045262f3
-               this._createScrollWatcher();
+               this._prepareInfiniteScrollFn();
             }
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */
