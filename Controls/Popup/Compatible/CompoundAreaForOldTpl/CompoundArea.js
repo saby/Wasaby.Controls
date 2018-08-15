@@ -293,13 +293,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._hoverTimer = null;
             }
          },
-         _mouseleaveHandler: function() {
-            if (this._options.hoverTarget) {
+         _mouseleaveHandler: function(event) {
+            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
+            if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
                this._hoverTimer = setTimeout(function() {
                   _this.hide();
                }, 1000);
+            }
+         },
+
+         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
+         _isLinkedPanel: function(event) {
+            var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
+            if (compoundArea.length) {
+               var opener = compoundArea[0].controlNodes[0].control.getOpener();
+               while (opener && opener._moduleName !== this._moduleName) {
+                  opener = opener.getParent && opener.getParent();
+               }
+               return opener === this;
             }
          },
          _keyDown: function(event) {
