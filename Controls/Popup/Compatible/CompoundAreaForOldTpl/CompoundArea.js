@@ -195,6 +195,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._logicParent.waitForPopupCreated = true;
 
+            // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
+            self.subscribe('onResize', function() {
+               this._notifyVDOM('resize', null, { bubbling: true });
+            });
+
             // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
             // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
             // лишних свойств, которые еще не применены к дому
