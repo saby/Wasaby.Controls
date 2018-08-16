@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    [
       'Core/core-merge',
+      'Core/CompoundContainer',
       'Controls/Popup/Opener/Notification',
       'SBIS3.CONTROLS/SubmitPopup',
       'SBIS3.CONTROLS/NotificationPopup',
@@ -31,6 +32,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     * @public
     */
    function(cMerge,
+      CompoundContainer,
       NotificationVDOM,
       SubmitPopup,
       NotificationPopup,
@@ -161,18 +163,40 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                      error: 'error',
                      warning: 'warning'
                   };
+                  this._icon = {
+                     success: 'icon-size icon-24 icon-Yes icon-done',
+                     error: 'icon-size icon-24 icon-Alert icon-error',
+                     warning: 'icon-size icon-24 icon-Alert icon-attention'
+                  };
                }
 
+               if (!('closeButton' in config)) {
+                  config.closeButton = true;
+               }
+               if (!('icon' in config)) {
+                  config.icon = this._icon[config.status];
+               }
+
+               config._opener = this._notificationVDOM;
+
                this._notificationVDOM.open({
-                  template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                  template: 'Controls/Popup/Templates/Notification/Base',
                   templateOptions: {
-                     iconClose: true,
                      autoClose: !notHide,
-                     text: config.caption,
-                     icon: config.icon,
-                     style: this._styles[config.status]
+                     contentTemplateOptions: {
+                        component: 'Controls/Popup/Templates/Notification/Compatible',
+                        componentOptions: config
+                     },
+                     style: this._styles[config.status],
+                     contentTemplate: CompoundContainer,
+                     iconClose: config.closeButton || true
                   }
                });
+               this._notificationVDOM.isDestroyed = function() {
+                  return false;
+               };
+
+               return this._notificationVDOM;
             } else {
                var popup = new NotificationPopup(cMerge({
                   element: $('<div></div>')
