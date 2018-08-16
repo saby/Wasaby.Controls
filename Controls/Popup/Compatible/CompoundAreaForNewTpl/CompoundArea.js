@@ -50,7 +50,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                               fn: self._createFnForEvents(self._onCloseHandler),
                               args: []
                            }],
-                           'on:resize': [{
+                           'on:controlResize': [{
                               fn: self._createFnForEvents(self._onResizeHandler),
                               args: []
                            }],

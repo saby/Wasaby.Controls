@@ -166,7 +166,7 @@ define('Controls/Container/Scroll/Watcher',
 
          _afterMount: function() {
             _private.calcSizeCache(this, this._container);
-            this._notify('register', ['resize', this, this._resizeHandler], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
 
@@ -214,7 +214,7 @@ define('Controls/Container/Scroll/Watcher',
                this._observer.disconnect();
                this._observer = null;
             }
-            this._notify('unregister', ['resize', this], {bubbling: true});
+            this._notify('unregister', ['controlResize', this], {bubbling: true});
             this._registrar.destroy();
             this._sizeCache = null;
          }
