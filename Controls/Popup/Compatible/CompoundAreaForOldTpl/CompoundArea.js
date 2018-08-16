@@ -134,6 +134,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._childConfig._compoundArea = self;
 
             self.once('onInit', function() {
+               // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
+               // созданием нового, поэтому делаем на onInit
+               if (self._options._initCompoundArea) {
+                  self._options._initCompoundArea(self);
+               }
                self.setEnabled(self._enabled);
             });
             self.once('onAfterLoad', function() {
@@ -150,10 +155,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._childControl._notifyOnSizeChanged();
                });
             });
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             return rebuildDeferred;
          },
@@ -175,10 +176,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._childConfig = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             self._pending = self._pending || [];
             self._pendingTrace = self._pendingTrace || [];
