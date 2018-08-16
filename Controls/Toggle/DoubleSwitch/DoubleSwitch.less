@@ -86,10 +86,10 @@
       text-decoration: underline;
    }
 
-   // Каскад нужен чтоб при наведении на любое место переключателя, загорался кружок, который является
-   // маленькой частью переключателя.
-   // Два класса, так как ховер может вешаться из двух мест, один вешается из js, нужен для подсветки
-   // когда наводят на неактивный заголовок, другой класс для подсветки когда наводят на сам переключатель.
+   // The cascade is needed so that when you move to any place of the switch, a circle lights up,
+   // and it's a small part of the switch.
+   // Two classes, since the hover can be set from two places, one is set from js, it needed for
+   // backlighting when hovered on the inactive header, another class for backlighting when navigated to the toggle.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
       .controls-SwitchCircle__borderCircle_enabled {
          fill: @color_ToggleCircle_outerCircle_enabled_hovered;
