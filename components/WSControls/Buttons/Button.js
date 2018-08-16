@@ -168,14 +168,19 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
          }
 
          if (containingArea && cInstance.instanceOfModule(containingArea, 'Lib/Control/FloatArea/FloatArea')) {
-            // У FloatArea есть событие onAfterVisibilityChange, которое она выстреливает гарантированно после того
-            // как закончит строиться и показываться. В этом случае нам не нужно делать задержек, можно сразу
-            // регистрировать кнопку
-            containingArea.subscribe('onAfterVisibilityChange', function(event, isVisible) {
-               if (isVisible) {
-                  tryRegisterDefault();
-               }
-            });
+            if (containingArea.isVisible()) {
+               // FloatArea могла уже закончить построение, тогда мы можем регистрироваться сразу
+               tryRegisterDefault();
+            } else {
+               // У FloatArea есть событие onAfterVisibilityChange, которое она выстреливает гарантированно после того
+               // как закончит строиться и показываться. В этом случае нам не нужно делать задержек, можно сразу
+               // регистрировать кнопку
+               containingArea.subscribe('onAfterVisibilityChange', function(event, isVisible) {
+                  if (isVisible) {
+                     tryRegisterDefault();
+                  }
+               });
+            }
          } else {
             self.subscribe('onAfterShow', function() {
                // Нужно подождать, пока предки станут видимы. onAfterShow выстреливают "отложенным событием", то есть
