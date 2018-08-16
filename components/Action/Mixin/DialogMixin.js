@@ -268,6 +268,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          }
 
+         //Определяем связь popupMixin и панели по опенерам. в цепочке могут появиться vdom компоненты, поэтому старый механизм может работать с ошибками
+         var popupMixin = $(target).closest('.controls-FloatArea');
+         if (popupMixin.length) {
+            opener = popupMixin.wsControl().getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               opener = opener.getOpener && opener.getOpener() || (opener.getParent && opener.getParent());
+            }
+         }
+
          //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay');
          return !!infoBox.length;
