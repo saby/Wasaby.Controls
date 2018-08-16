@@ -156,6 +156,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
+   
+         _additionMouseenter: function() {
+            if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
+            }
+         },
+         
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
