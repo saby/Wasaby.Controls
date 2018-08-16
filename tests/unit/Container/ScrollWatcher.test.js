@@ -30,6 +30,13 @@ define([
          evType = [];
          ScrollWatcher._private.sendCanScroll(ins, clientHeight, scrollHeight);
          assert.deepEqual(['cantScroll'], evType, 'Wrong scroll possibility');
+         assert.isFalse(ins._canScrollCache, 'Wrong scroll possibility cache');
+
+         clientHeight = 200;
+         scrollHeight = 200;
+         evType = [];
+         ScrollWatcher._private.sendCanScroll(ins, clientHeight, scrollHeight);
+         assert.deepEqual([], evType, 'Similar event twice');
 
          scrollHeight = 400;
          evType = [];

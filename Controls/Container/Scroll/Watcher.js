@@ -24,12 +24,12 @@ define('Controls/Container/Scroll/Watcher',
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
-               if (!self._canScrollCache) {
+               if (self._canScrollCache === false) {
                   self._canScrollCache = true;
                   _private.start(self, 'canScroll');
                }
             } else {
-               if (!self._canScrollCache) {
+               if (self._canScrollCache) {
                   self._canScrollCache = false;
                   _private.start(self, 'cantScroll');
                }
@@ -153,7 +153,7 @@ define('Controls/Container/Scroll/Watcher',
          _registrar: null,
          _sizeCache: null,
          _scrollTopCache: 0,
-         _canScrollCache: false,
+         _canScrollCache: null,
 
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
@@ -166,6 +166,7 @@ define('Controls/Container/Scroll/Watcher',
 
          _afterMount: function() {
             _private.calcSizeCache(this, this._container);
+            _private.sendCanScroll(self, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
