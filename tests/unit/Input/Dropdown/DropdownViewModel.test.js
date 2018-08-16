@@ -135,16 +135,34 @@ define(
                let viewModel3 = new DropdownViewModel(newConfig);
                viewModel3._options.additionalProperty = null;
                viewModel3._options.nodeProperty = '@parent';
-            it('groupItems', function () {
-               assert.equal(viewModel3._itemsModel._display.getCount(), 11)
+            it('groupItems', function() {
+               assert.equal(viewModel3._itemsModel._display.getCount(), 11);
                assert.equal(viewModel3._itemsModel._display.at(9).getContents().get('group'), 'group_1');
                assert.equal(viewModel3._itemsModel._display.at(10).getContents().get('group'), 'group_1');
             });
-            it('historySeparator', function () {
+            it('historySeparator', function() {
                viewModel3.goToNext();
                assert.isFalse(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
                viewModel3.goToNext();
                assert.isTrue(DropdownViewModel._private.needToDrawSeparator(viewModel3._itemsModel.getCurrent().item, viewModel3._itemsModel.getNext().item));
+            });
+            it('needHideGroup', function() {
+               let groupItems = {
+                  empty: [],
+                  notEmpty: ['test']
+               };
+               let self = {
+                  _itemsModel: {
+                     _display: {
+                        getGroupItems: function(key) {
+                           return groupItems[key];
+                        }
+                     }
+                  }
+               };
+   
+               assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'empty'));
+               assert.isFalse(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
             });
          });
 

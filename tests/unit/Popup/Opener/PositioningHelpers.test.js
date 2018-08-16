@@ -437,6 +437,18 @@ define(
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
+
+            it('stack with wrong options type', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: '600',
+                     maxWidth: '800'
+                  }
+               };
+               var position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10) + stackShadowWidth);
+            });
+
             it('stack reduced width', function() {
                Stack.getMaxPanelWidth = () => 1000;
                let item = {
