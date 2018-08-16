@@ -68,7 +68,8 @@
   ],
   "exclude": [
     "Controls/Input/RichArea",
-    "Controls/Input/RichArea/*"
+    "Controls/Input/RichArea/*",
+    "css!Controls/Input/resources/InputRender/InputRender"
   ],
   "output": "controls-input.package.js"
 }, {
@@ -121,7 +122,8 @@
   "output": "controls-toggle.package.js"
 }, {
   "include": [
-    "Controls/Utils/*"
+    "Controls/Utils/*",
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-utils.package.js"
 }, {
@@ -144,6 +146,9 @@
 }, {
   "include": [
     "Controls/Calendar/*"
+  ],
+  "exclude": [
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
 }]
