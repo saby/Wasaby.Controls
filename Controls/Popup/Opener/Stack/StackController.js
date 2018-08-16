@@ -90,6 +90,12 @@ define('Controls/Popup/Opener/Stack/StackController',
          setMaximizedState: function(item, state) {
             item.popupOptions.maximized = state;
             item.popupOptions.templateOptions.maximized = state;
+         },
+         getWindowSize: function() {
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight
+            };
          }
       };
 
@@ -191,6 +197,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.position = {
                top: -10000,
                left: -10000,
+               height: _private.getWindowSize().height,
                width: position.width || undefined
             };
          },
