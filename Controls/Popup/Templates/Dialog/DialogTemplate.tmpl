@@ -1,20 +1,22 @@
-<div class="controls-DialogTemplate">
-    <div if="{{_options.caption || _options.topArea}}" class="controls-DialogTemplate__top-area">
-        <div class="controls-DialogTemplate__top-area-content">
-            <ws:if data="{{_options.caption}}">
-                <div class="controls-DialogTemplate__caption" title="{{_options.caption}}">
-                    <div class="controls-DialogTemplate__caption_text">{{_options.caption}}</div>
-                </div>
-            </ws:if>
-            <ws:if data="{{_options.topArea}}">
-                <ws:partial template="{{_options.topArea}}" scope="{{_options.topAreaOptions}}"></ws:partial>
-            </ws:if>
+<Controls.DragNDrop.Controller name="dragNDrop" on:dragmove="_onDragMove()" >
+    <div class="controls-DialogTemplate" on:mousedown="_onMouseDown()">
+        <div if="{{_options.caption || _options.topArea}}" class="controls-DialogTemplate__top-area">
+            <div class="controls-DialogTemplate__top-area-content">
+                <ws:if data="{{_options.caption}}">
+                    <div class="controls-DialogTemplate__caption" title="{{_options.caption}}">
+                        <div class="controls-DialogTemplate__caption_text">{{_options.caption}}</div>
+                    </div>
+                </ws:if>
+                <ws:if data="{{_options.topArea}}">
+                    <ws:partial template="{{_options.topArea}}" scope="{{_options.topAreaOptions}}"></ws:partial>
+                </ws:if>
+            </div>
+        </div>
+        <ws:if data="{{!_options.hideCross}}">
+            <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}"/>
+        </ws:if>
+        <div class="controls-DialogTemplate__content-area">
+            <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
         </div>
     </div>
-    <ws:if data="{{!_options.hideCross}}">
-        <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}"/>
-    </ws:if>
-    <div class="controls-DialogTemplate__content-area">
-        <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
-    </div>
-</div>
+</Controls.DragNDrop.Controller>
