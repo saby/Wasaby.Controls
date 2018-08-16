@@ -20,7 +20,7 @@ define('Controls/Popup/Manager/Popup',
           * @control
           * @private
           * @category Popup
-          * @author Красильников Андрей
+          * @author Красильников А.С.
           */
 
          /**

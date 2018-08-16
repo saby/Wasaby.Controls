@@ -38,7 +38,7 @@ define('Controls/Popup/Opener/BaseController',
        * Базовая стратегия
        * @category Popup
        * @class Controls/Popup/Opener/BaseController
-       * @author Красильников Андрей
+       * @author Красильников А.С.
        */
       var BaseController = CoreExtend.extend({
 

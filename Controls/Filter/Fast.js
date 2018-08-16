@@ -29,7 +29,7 @@ define('Controls/Filter/Fast',
        * @mixes Controls/Filter/Fast/FastStyles
        * @control
        * @public
-       * @author Золотова Э.Е.
+       * @author Герасимов А.М.
        */
 
 

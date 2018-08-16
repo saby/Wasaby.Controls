@@ -20,6 +20,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/interface/IGroupedView
        * @control
        * @public
+       * @author Михайловский Д.С.
        * @category Button
        * @demo Controls-demo/Dropdown/MenuVdom
        */

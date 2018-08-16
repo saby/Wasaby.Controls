@@ -22,6 +22,7 @@ define('Controls/List/ListControl', [
     * @mixes Controls/List/interface/IListControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 

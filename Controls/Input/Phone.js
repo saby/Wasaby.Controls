@@ -25,7 +25,7 @@ define('Controls/Input/Phone',
        * @category Input
        * @demo Controls-demo/Input/Phone/Phone
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Зайцев А.С.
        */
 
       var Phone = Control.extend({

@@ -13,7 +13,7 @@ define('Controls/Input/RichArea', [
     * @class Controls/Input/RichTextArea
     * @extends Core/Control
     * @control
-    * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
+    * @authors Зайцев А.С.
     */
 
    var RichTextArea = Control.extend({
