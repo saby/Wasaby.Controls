@@ -317,6 +317,7 @@ define(
             });
 
             it('stack default position', function() {
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                let itemConfig = {
                   popupOptions: item.popupOptions
                };
@@ -324,6 +325,7 @@ define(
                assert.equal(itemConfig.position.top, -10000);
                assert.equal(itemConfig.position.left, -10000);
                assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
+               assert.equal(itemConfig.position.height, 950);
             });
 
             it('stack maximized popup position', function() {
@@ -341,6 +343,7 @@ define(
             it('stack panel maximized', function() {
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
 
                let popupOptions = {
                   minimizedWidth: 600,
@@ -387,6 +390,7 @@ define(
                };
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
 
                StackController.elementCreated(itemConfig, {});
                //Зависит от того где запускаем тесты, под нодой или в браузере
