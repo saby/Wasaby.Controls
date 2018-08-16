@@ -48,6 +48,11 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          showNotification: function(inst, notHide){
             notHide = !!notHide;
 
+            //Убираем фокус с окна
+            inst.getContainer().get(0).addEventListener('mousedown', function(event) {
+               event.preventDefault();
+            });
+
             if(this._getItemIndexById(inst.getId()) === -1){
                this._appendNotification(inst, notHide);
             }
