@@ -132,6 +132,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._childConfig._compoundArea = self;
 
             self.once('onInit', function() {
+               // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
+               // созданием нового, поэтому делаем на onInit
+               if (self._options._initCompoundArea) {
+                  self._options._initCompoundArea(self);
+               }
                self.setEnabled(self._enabled);
             });
             self.once('onAfterLoad', function() {
@@ -148,10 +153,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   self._childControl._notifyOnSizeChanged();
                });
             });
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             return rebuildDeferred;
          },
@@ -174,10 +175,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._childConfig = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
-
             self._pending = self._pending || [];
             self._pendingTrace = self._pendingTrace || [];
             self._waiting = self._waiting || [];
@@ -192,6 +189,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._notify = self._notifyCompound;
 
             self._logicParent.waitForPopupCreated = true;
+
+            // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
+            self.subscribe('onResize', function() {
+               this._notifyVDOM('resize', null, { bubbling: true });
+            });
 
             // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
             // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
