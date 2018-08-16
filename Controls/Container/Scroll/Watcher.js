@@ -142,7 +142,7 @@ define('Controls/Container/Scroll/Watcher',
             self._sizeCache = {
                scrollHeight: scrollHeight,
                clientHeight: clientHeight
-            }
+            };
          }
       };
 
@@ -158,7 +158,7 @@ define('Controls/Container/Scroll/Watcher',
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
             this._sizeCache = {};
-            this._scrollChangeBatch = {}
+            this._scrollChangeBatch = {};
          },
 
          _beforeMount: function() {
