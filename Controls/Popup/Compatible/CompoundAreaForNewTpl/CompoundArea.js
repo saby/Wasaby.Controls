@@ -10,7 +10,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'Core/Control',
       'Core/Deferred',
-      'Core/core-merge',
       'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
@@ -19,8 +18,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       Sync,
       SyntheticEvent,
       control,
-      Deferred,
-      cMerge) {
+      Deferred) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
        * */
@@ -50,33 +48,23 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      self._afterMountHandler();
 
                      var replaceVDOMContainer = function() {
-                        var rootContainer = self._getRootContainer();
+                        var
+                           rootContainer = self._getRootContainer(),
+                           additionalEventProperties = {
+                              'on:close': self._createEventProperty(self._onCloseHandler),
+                              'on:resize': self._createEventProperty(self._onResizeHandler),
+                              'on:sendresult': self._createEventProperty(self._onResultHandler),
+                              'on:register': self._createEventProperty(self._onRegisterHandler),
+                              'on:unregister': self._createEventProperty(self._onRegisterHandler)
+                           };
 
                         //Отлавливаем события с дочернего vdom компонента
-                        rootContainer.eventProperties = cMerge(rootContainer.eventProperties || {}, {
-                           'on:close': [{
-                              fn: self._createFnForEvents(self._onCloseHandler),
-                              args: []
-                           }],
-                           'on:resize': [{
-                              fn: self._createFnForEvents(self._onResizeHandler),
-                              args: []
-                           }],
-                           'on:sendresult': [{
-                              fn: self._createFnForEvents(self._onResultHandler),
-                              args: []
-                           }]
-                        });
-                        rootContainer.eventProperties['on:register'] = rootContainer.eventProperties['on:register'] || [];
-                        rootContainer.eventProperties['on:register'].push({
-                           fn: self._createFnForEvents(self._onRegisterHandler),
-                           args: []
-                        });
-                        rootContainer.eventProperties['on:unregister'] = rootContainer.eventProperties['on:unregister'] || [];
-                        rootContainer.eventProperties['on:unregister'].push({
-                           fn: self._createFnForEvents(self._onRegisterHandler),
-                           args: []
-                        });
+                        for (var event in additionalEventProperties) {
+                           if (additionalEventProperties.hasOwnProperty(event)) {
+                              rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
+                              rootContainer.eventProperties[event].push(additionalEventProperties[event]);
+                           }
+                        }
                      };
                      self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
                         replaceVDOMContainer();
@@ -88,6 +76,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                return def;
             });
+         },
+
+         _createEventProperty: function(handler) {
+            return {
+               fn: this._createFnForEvents(handler),
+               args: []
+            };
          },
 
          //Создаем обработчик события, который положим в eventProperties узла
