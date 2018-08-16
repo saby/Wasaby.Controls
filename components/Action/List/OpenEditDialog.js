@@ -106,7 +106,8 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          _openInNewTab: false
       },
       $constructor: function() {
-        this._publish('onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onReadModel');
+         this._publish('onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onReadModel');
+         this._clearVariables = this._clearVariables.bind(this);
       },
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
@@ -168,14 +169,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             }.bind(this));
          }
          else {
-            if (this._isDialogClosing()) {
-               this._dialog.once('onAfterClose', function() {
-                  OpenEditDialog.superclass._openComponent.call(this, meta, mode);
-               }.bind(this));
-            }
-            else {
-               OpenEditDialog.superclass._openComponent.call(this, meta, mode);
-            }
+            OpenEditDialog.superclass._openComponent.call(this, meta, mode);
          }
       },
 
@@ -702,7 +696,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             },
             //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
             //onAfterClose не будет, смотрим на destroy
-            onDestroy: self._clearVariables.bind(self)
+            onDestroy: self._clearVariables
          };
       },
 
@@ -711,9 +705,14 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          OpenEditDialog.superclass._notifyOnExecuted.call(this, meta, record);
       },
 
-      _clearVariables: function() {
+      _clearVariables: function(event) {
+         var isDestroy = event && event.name === 'onDestroy';
          this._isExecuting = false;
          this._finishExecuteDeferred();
+         //Если метод быд вызван после onAfterClose, то не вызываем его после onDestroy.
+         if (!isDestroy) {
+            this._dialog && this._dialog.unsubscribe('onDestroy', this._clearVariables);
+         }
          this._dialog = undefined;
       },
 

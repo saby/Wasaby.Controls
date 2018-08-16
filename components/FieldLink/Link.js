@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
       /**
        * Сслыка, которая может использоваться в качестве метки поля связи.
        * Так же можно положить её в placeholder поля связи.
-       * Клик по ссылке посылает комманду showSelector. 
+       * Клик по ссылке посылает команду showSelector.
        * @class SBIS3.CONTROLS/FieldLink/Link
        * @extends WSControls/Buttons/ButtonBase
        * @mixes SBIS3.CONTROLS/FieldLink/LinkDocs

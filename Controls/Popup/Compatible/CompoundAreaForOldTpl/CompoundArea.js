@@ -225,7 +225,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
             if (hasHeader) {
                if (customHeaderContainer.length) {
-                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
+                     customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  }
                   this._prependCustomHeader(customHeaderContainer);
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
@@ -239,7 +241,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _prependCustomHeader: function(customHead) {
-            var container = $('.controls-DialogTemplate', this.getContainer());
+            var container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
             container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
             if (this._options.type === 'dialog') {
@@ -291,13 +293,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._hoverTimer = null;
             }
          },
-         _mouseleaveHandler: function() {
-            if (this._options.hoverTarget) {
+         _mouseleaveHandler: function(event) {
+            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
+            if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
                this._hoverTimer = setTimeout(function() {
                   _this.hide();
                }, 1000);
+            }
+         },
+
+         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
+         _isLinkedPanel: function(event) {
+            var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
+            if (compoundArea.length) {
+               var opener = compoundArea[0].controlNodes[0].control.getOpener();
+               while (opener && opener._moduleName !== this._moduleName) {
+                  opener = opener.getParent && opener.getParent();
+               }
+               return opener === this;
             }
          },
          _keyDown: function(event) {
