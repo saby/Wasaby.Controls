@@ -197,24 +197,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._notifyVDOM('resize', null, { bubbling: true });
             });
 
-            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            // лишних свойств, которые еще не применены к дому
-            // панельки с этим начали вылезать плавненько
-            runDelayed(function() {
-               // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
-               // подразумевается, что фокус уже внутри панели
-               self.once('onInitComplete', function() {
-                  if (self._options.catchFocus) {
-                     doAutofocus(self._childControl._container);
-                  }
-               });
-               self.rebuildChildControl().addCallback(function() {
+            self.once('onInitComplete', function() {
+               if (self._options.catchFocus) {
+                  doAutofocus(self._childControl._container);
+               }
+            });
+            self.rebuildChildControl().addCallback(function() {
+               runDelayed(function() {
                   runDelayed(function() {
-                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     runDelayed(function() {
-                        self._notifyCompound('onResize');
-                     });
+                     self._notifyCompound('onResize');
+                     if (self._options.catchFocus) {
+                        doAutofocus(self._childControl._container);
+                     }
                   });
                });
             });
