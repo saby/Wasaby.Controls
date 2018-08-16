@@ -8,10 +8,10 @@ define('Controls/Container/Scroll/Watcher',
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/debounce',
+      'Core/helpers/Function/throttle',
       'Core/detection'
    ],
-   function(Control, template, Registrar, debounce, detection) {
+   function(Control, template, Registrar, throttle, detection) {
 
       'use strict';
 
@@ -24,9 +24,9 @@ define('Controls/Container/Scroll/Watcher',
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
-               _private.start(self, 'canScroll');
+               _private.notifyCanScroll(self, true);
             } else {
-               _private.start(self, 'cantScroll');
+               _private.notifyCanScroll(self, false);
             }
          },
 
@@ -48,25 +48,19 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         onInitScroll: function(self, container) {
-            var scrollTop, clientHeight, scrollHeight;
+         onResizeContainer: function(self, container) {
+            _private.calcSizeCache(self, container);
+            container.scrollTop = self._scrollTopCache;
+            _private.sendCanScroll(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight);
 
-            scrollTop = container.scrollTop;
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
-
-            _private.sendCanScroll(self, clientHeight, scrollHeight, scrollTop);
          },
 
-         onChangeScroll: function(self, container) {
-            var scrollTop, clientHeight, scrollHeight;
-
-            scrollTop = container.scrollTop;
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
-
-            _private.sendCanScroll(self, clientHeight, scrollHeight);
-            _private.sendEdgePositions(self, clientHeight, scrollHeight, scrollTop);
+         onScrollContainer: function(self, container, withObserver) {
+            self._scrollTopCache = container.scrollTop;
+            _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache});
+            if (!withObserver) {
+               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+            }
          },
 
          initIntersectionObserver: function(self, elements) {
@@ -100,71 +94,103 @@ define('Controls/Container/Scroll/Watcher',
 
          doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
-               self._container.scrollTop = 0;
+               container.scrollTop = 0;
             } else {
-               var clientHeight = container.clientHeight, scrollHeight;
+               var clientHeight = self._sizeCache.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
-                  scrollHeight = container.scrollHeight;
-                  self._container.scrollTop = scrollHeight - clientHeight;
+                  scrollHeight = self._sizeCache.scrollHeight;
+                  container.scrollTop = scrollHeight - clientHeight;
                } else {
                   if (scrollParam === 'pageUp') {
-                     self._container.scrollTop -= clientHeight;
+                     container.scrollTop -= clientHeight;
                   } else {
-                     self._container.scrollTop += clientHeight;
+                     container.scrollTop += clientHeight;
                   }
                }
             }
          },
 
+         notifyCanScroll: function(self, state) {
+            var stateChanged;
+            if (state) {
+               if (!self._canScrollCache) {
+                  self._canScrollCache = true;
+                  self._scrollChangeBatch.canScroll = true;
+               }
+            } else {
+               if (self._canScrollCache) {
+                  self._canScrollCache = false;
+                  self._scrollChangeBatch.canScroll = false;
+               }
+            }
+         },
+
+         notifyScrollEvent: function() {
+
+         },
+
          start: function(self, eventType, scrollTop) {
             self._registrar.start(eventType, scrollTop);
             self._notify(eventType, [scrollTop]);
+         },
+
+         calcSizeCache: function(self, container) {
+            var clientHeight, scrollHeight;
+
+            clientHeight = container.clientHeight;
+            scrollHeight = container.scrollHeight;
+            self._sizeCache = {
+               scrollHeight: scrollHeight,
+               clientHeight: clientHeight
+            }
          }
       };
 
       var Scroll = Control.extend({
          _template: template,
          _observer: null,
+         _registrar: null,
+         _sizeCache: null,
+         _scrollTopCache: 0,
+         _canScrollCache: false,
+         _scrollChangeBatch: null,
 
+         constructor: function() {
+            Scroll.superclass.constructor.apply(this, arguments);
+            this._sizeCache = {};
+            this._scrollChangeBatch = {}
+         },
 
          _beforeMount: function() {
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
          _afterMount: function() {
+            _private.calcSizeCache(this, this._container);
             this._notify('register', ['resize', this, this._resizeHandler], {bubbling: true});
          },
 
 
          _scrollHandler: function(e) {
-            var self = this;
-
-            // подписка на скролл через debounce. Нужно подобрать оптимальное значение,
-            // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
-            debounce(function() {
-               _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
-               if (!self._observer) {
-                  _private.onChangeScroll(self, e.target);
-               }
-            }, 100, true)();
+            _private.onScrollContainer(this, this._container, !!this._observer);
          },
 
          _resizeHandler: function() {
-            _private.onChangeScroll(this, this._container);
+            _private.onResizeContainer(this, this._container);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
-               _private.onInitScroll(this, this._container);
+               _private.onResizeContainer(this, this._container);
 
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
                if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
                   _private.initIntersectionObserver(this, triggers);
                } else {
-                  _private.onChangeScroll(this, this._container);
+                  _private.onScrollContainer(this, this._container);
                }
             }
          },
@@ -191,6 +217,7 @@ define('Controls/Container/Scroll/Watcher',
             }
             this._notify('unregister', ['resize', this], {bubbling: true});
             this._registrar.destroy();
+            this._sizeCache = null;
          }
 
 
