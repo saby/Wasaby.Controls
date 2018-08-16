@@ -8,25 +8,31 @@ define('Controls/Container/Scroll/Watcher',
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle',
+      'Core/helpers/Function/debounce',
       'Core/detection'
    ],
-   function(Control, template, Registrar, throttle, detection) {
+   function(Control, template, Registrar, debounce, detection) {
 
       'use strict';
 
       var SCROLL_LOAD_OFFSET = 100;
       var global = (function() {
-         return this || (0, eval)('this'); 
+         return this || (0, eval)('this');
       })();
 
       var _private = {
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
-               _private.notifyCanScroll(self, true);
+               if (!self._canScrollCache) {
+                  self._canScrollCache = true;
+                  _private.start(self, 'canScroll');
+               }
             } else {
-               _private.notifyCanScroll(self, false);
+               if (!self._canScrollCache) {
+                  self._canScrollCache = false;
+                  _private.start(self, 'cantScroll');
+               }
             }
          },
 
@@ -56,11 +62,24 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          onScrollContainer: function(self, container, withObserver) {
-            self._scrollTopCache = container.scrollTop;
-            _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache});
             if (!withObserver) {
                _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
             }
+
+            self._scrollTopCache = container.scrollTop;
+
+            debounce(function() {
+               var position;
+               if (self._scrollTopCache <= 0) {
+                  position = 'up';
+               } else if (self._scrollTopCache + self._sizeCache.clientHeight >= self._sizeCache.scrollHeight) {
+                  position = 'down';
+               } else {
+                  position = 'middle';
+               }
+               _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: position});
+            }, 100, true)();
+
          },
 
          initIntersectionObserver: function(self, elements) {
@@ -110,28 +129,10 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         notifyCanScroll: function(self, state) {
-            var stateChanged;
-            if (state) {
-               if (!self._canScrollCache) {
-                  self._canScrollCache = true;
-                  self._scrollChangeBatch.canScroll = true;
-               }
-            } else {
-               if (self._canScrollCache) {
-                  self._canScrollCache = false;
-                  self._scrollChangeBatch.canScroll = false;
-               }
-            }
-         },
 
-         notifyScrollEvent: function() {
-
-         },
-
-         start: function(self, eventType, scrollTop) {
-            self._registrar.start(eventType, scrollTop);
-            self._notify(eventType, [scrollTop]);
+         start: function(self, eventType, params) {
+            self._registrar.start(eventType, params);
+            self._notify(eventType, [params]);
          },
 
          calcSizeCache: function(self, container) {
@@ -153,12 +154,10 @@ define('Controls/Container/Scroll/Watcher',
          _sizeCache: null,
          _scrollTopCache: 0,
          _canScrollCache: false,
-         _scrollChangeBatch: null,
 
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
             this._sizeCache = {};
-            this._scrollChangeBatch = {};
          },
 
          _beforeMount: function() {
