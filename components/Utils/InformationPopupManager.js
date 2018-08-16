@@ -158,11 +158,18 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   //TODO: Дима Зуев предлагает перейти на создание через new, но падают ошибки.
                   //https://online.sbis.ru/opendoc.html?guid=2be2cedb-91ec-4814-a76c-66c0f62431be
                   this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
+                  /**
+                   * Ассоциативный объект значений опций старого и нового шаблона.
+                   * [значение в старом шаблоне]: значение в новом шаблоне
+                   */
                   this._styles = {
                      success: 'done',
                      error: 'error',
                      warning: 'warning'
                   };
+                  /**
+                   * Аналогично this._styles.
+                   */
                   this._icon = {
                      success: 'icon-size icon-24 icon-Yes icon-done',
                      error: 'icon-size icon-24 icon-Alert icon-error',
@@ -170,6 +177,9 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   };
                }
 
+               /**
+                * Эмулируем код в init SBIS3.CONTROLS/NotificationPopup
+                */
                if (!('closeButton' in config)) {
                   config.closeButton = true;
                }
@@ -177,8 +187,18 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   config.icon = this._icon[config.status];
                }
 
+               /**
+                * Прикладники обращаесь через .getParent() получали popup, в нашем случае opener, сейчас
+                * получают Controls/Popup/Templates/Notification/Compatible в нем нужно
+                * пробросить вызовы в opener. Поэтому передаем его.
+                */
                config._opener = this._notificationVDOM;
 
+               /**
+                * Используем базовый шаблон vdom нотификационных окон с контентом Core/CompoundContainer для
+                * оэивления старых компонентов. А ему в качестве контента отдадим эмуляцию SBIS3.CONTROLS/NotificationPopup,
+                * а именно Controls/Popup/Templates/Notification/Compatible
+                */
                this._notificationVDOM.open({
                   template: 'Controls/Popup/Templates/Notification/Base',
                   templateOptions: {
