@@ -4,9 +4,8 @@
             readOnly="{{item.readOnly}}"
             caption="{{item.id}}"
             source="{{item.source}}"
-            template="{{item.template}}"
-            firstLine="{{item.firstLine}}"
-            secondLine="{{item.secondLine}}">
+            config="{{item.config}}"
+           >
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
@@ -19,20 +18,23 @@
 </ws:template>
 
 <ws:template name="boolean">
-    <Controls.Toggle.Checkbox caption="{{item.id}}"  bind:value="item.value" />
+    <Controls-demo.PropertyGrid.BooleanTemplate
+            bind:value="item.value"
+            caption="{{item.id}}">
+    </Controls-demo.PropertyGrid.BooleanTemplate>
 </ws:template>
 
 <ws:template name="enum">
-    <Controls.Label caption="{{item.id}}" attr:class="demo-TextBox"/>
-    <Controls.Input.ComboBox
-            source="{{item.source}}"
-            keyProperty="key"
-            emptyText="{{item.emptyText}}"
-            on:valueChanged="_valueChanged(item.nullValue)"
-            on:selectedKeyChanged="_selectedKeyChanged()"
-            displayProperty="title"
+
+    <Controls-demo.PropertyGrid.EnumTemplate
             bind:value="item.value"
-            attr:class="demo-TextBox"/>
+            displayProperty="{{item.displayProperty}}"
+            keyProperty="{{item.keyProperty}}"
+            readOnly="{{item.readOnly}}"
+            emptyText="{{item.emptyText}}"
+            source="{{item.source}}"
+            caption="{{item.id}}">
+    </Controls-demo.PropertyGrid.EnumTemplate>
 </ws:template>
 
 <ws:template name="funct">

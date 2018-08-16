@@ -1,0 +1,11 @@
+<div>
+    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+    <Controls.Input.ComboBox
+            source="{{_comboBoxSource()}}"
+            keyProperty="{{_options.keyProperty}}"
+            emptyText="{{_options.emptyText}}"
+            on:valueChanged="_valueChangedHandler()"
+            displayProperty="{{_options.displayProperty}}"
+            value="{{_options.value}}"
+            attr:class="demo-TextBox"/>
+</div>

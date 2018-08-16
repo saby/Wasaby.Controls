@@ -16,13 +16,13 @@
             on:valueChanged="_valueChangedHandler()"
             attr:class="demo-TextBox">
         <ws:navigation source="page" view="page">
-            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+            <ws:sourceConfig pageSize="{{_options.source.length}}" page="{{0}}" mode="totalCount"/>
         </ws:navigation>
         <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
             <ws:templateOptions demoClass="demo-SuggestInputList"
-                                itemSuggestTemplate="{{_options.template}}"
-                                firstLine="{{_options.firstLine}}"
-                                secondLine="{{_options.secondLine}}"/>
+                                itemSuggestTemplate="{{_options.config.template}}"
+                                title="{{_options.config.value}}"
+                               comment="{{_options.config.comment}}"/>
         </ws:suggestTemplate>
     </Controls.Input.Suggest>
 </ws:else>

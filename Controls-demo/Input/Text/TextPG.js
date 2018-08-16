@@ -12,19 +12,13 @@ define('Controls-demo/Input/Text/TextPG',
 
    function(Control, MemorySource, Chain, template, myTmpl) {
       'use strict';
-      var sourcePeriod = {
-         module: 'WS.Data/Source/Memory',
-         options: {
-            data: [
-               { key: 1, title: 'done' },
-               { key: 2, title: 'error' },
-               { key: 3, title: 'primary' },
-               { key: 4, title: 'info' },
-               { key: 5, title: 'attention' }
-            ],
-            idProperty: 'key'
-         }
-      };
+      var sourcePeriod = [
+         { key: 1, title: 'done' },
+         { key: 2, title: 'error' },
+         { key: 3, title: 'primary' },
+         { key: 4, title: 'info' },
+         { key: 5, title: 'attention' }
+      ];
       var constraintSource = [
          { id: 1, title: '[0-9]', example: 'You can use only digits' },
          { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
@@ -37,6 +31,8 @@ define('Controls-demo/Input/Text/TextPG',
             type: 'enum',
             value: 'error',
             emptyText: 'none',
+            displayProperty: 'title',
+            keyProperty: 'key',
             nullValue: undefined,
             source: sourcePeriod
          },
@@ -44,7 +40,7 @@ define('Controls-demo/Input/Text/TextPG',
             id: 'placeholder',
             type: 'funct',
             value: 'Input',
-            flag: true
+            flag: false
          },
          value: {
             id: 'value',
@@ -60,9 +56,11 @@ define('Controls-demo/Input/Text/TextPG',
          constraint: {
             id: 'constraint',
             type: 'string',
-            template: 'custom',
-            firstLine: 'title',
-            secondLine: 'example',
+            config: {
+               template: 'custom',
+               value: 'title',
+               comment: 'example',
+            },
             value: '',
             source: constraintSource
          },

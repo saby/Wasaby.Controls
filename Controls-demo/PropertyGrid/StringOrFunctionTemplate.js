@@ -18,17 +18,17 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
          },
          _valueChangedHandler: function(event, tmp) {
             this._value = tmp;
-            this._vCN();
+            this._valueChangedNotify();
          },
-         _vCN: function() {
+         _valueChangedNotify: function() {
             if (this.checkBoxFlag === true) {
                this._notify('valueChanged', [tmplstr.getFunction(this._value)]);
             } else {
                this._notify('valueChanged', [this._value]);
             }
          },
-         _myFN: function() {
-            this._vCN();
+         _checkBoxValueChanged: function() {
+            this._valueChangedNotify();
          }
 
 

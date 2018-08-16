@@ -33,7 +33,7 @@ define('Controls/PropertyGrid', [
          // this._options.items[index].value = value;
          this._notify('itemsChanged', [this._options.items]);
       },
-      _valueChanged: function(event, nullValue, value) {
+      _valueChanged: function(event, value) {
          this._notify('valueChanged', [value]);
       },
       _selectedKeyChanged: function(event, value) {
