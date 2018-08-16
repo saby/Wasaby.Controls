@@ -253,8 +253,13 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
             * Необходимо обновить версию jquery ui на cdn.
             * */
             _outerHeight: function(target, height) {
+               var offsets;
+
+               //Сбрасываем ранее устанавленное значение высоты, чтобы заново пересчитать правильно
+               target.height('');
+
                //Получаем сумму margin + border + padding (top и bottom);
-               var offsets = target.outerHeight() - target.height();
+               offsets = target.outerHeight() - target.height();
                target.height(height - offsets);
             },
             hide: function() {
