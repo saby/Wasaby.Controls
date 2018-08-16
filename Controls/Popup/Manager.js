@@ -65,7 +65,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                element.controller.elementMaximized(element, _private.getItemContainer(id), state);
-               this._notify('managerPopupMaximized', [element, this._popupItems, state], {bubbling: true});
+               this._notify('managerPopupMaximized', [element, this._popupItems], {bubbling: true});
                return true;
             }
             return false;
