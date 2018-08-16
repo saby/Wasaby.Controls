@@ -1,7 +1,7 @@
 <div class="demo-filterSearch-wrapper">
     <div class="demo-filterSearch">
         <div class="demo-filterSearch__firstCol">
-            <div class="controls-demo__filterSearch-container">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch_first">
                 <h3>Custom layout with Input/Search and List</h3>
                 <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_search">
                     <Controls.Search.Controller searchParam="department">
@@ -30,7 +30,7 @@
                 </Controls.Container.Data>
             </div>
 
-            <div class="controls-demo__filterSearch-container">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch_second">
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List</h3>
                 <Controls.Filter.Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
@@ -73,7 +73,7 @@
             </div>
         </div>
         <div class="demo-filterSearch__secondCol">
-            <div class="controls-demo__filterSearch-container">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch_third">
                 <h3>Custom layout with Filter/Button, Filter/Fast and List</h3>
                 <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
@@ -108,7 +108,7 @@
                 </Controls.Filter.Controller>
             </div>
 
-            <div class="controls-demo__filterSearch-container">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch_fourth">
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List.</h3>
                 <h3>Filters are located in the tabs.</h3>
                 <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
