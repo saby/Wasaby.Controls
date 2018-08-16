@@ -14,12 +14,40 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Filter/*"
+      "SBIS3.CONTROLS/Filter/Button",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+      "SBIS3.CONTROLS/Filter/Button/Line",
+      "SBIS3.CONTROLS/Filter/Button/Line/*"
+    ],
+    "exlucde": [
+      "css!*"
+    ],
+    "output": "sbis3controls-filterbutton.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/FastData",
+      "SBIS3.CONTROLS/Filter/FastData/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-filter.package.js"
+    "output": "sbis3controls-fastfilter.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/*"
+    ],
+    "exclude": [
+      "css!*",
+      "SBIS3.CONTROLS/Filter/FastData",
+      "SBIS3.CONTROLS/Filter/FastData/*",
+      "SBIS3.CONTROLS/Filter/Button",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+      "SBIS3.CONTROLS/Filter/Button/Line",
+      "SBIS3.CONTROLS/Filter/Button/Line/*"
+    ],
+    "output": "sbis3controls-filterpicker.package.js"
   },
   {
     "include": [
