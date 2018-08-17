@@ -67,8 +67,13 @@
 }
 
 .controls-CompoundArea__container {
-   contain: paint;
    height: 100%;
+}
+
+.controls-Stack__waiting, .controls-Stack__open, .controls-Stack__close {
+   .controls-CompoundArea__container {
+      contain: paint;
+   }
 }
 
 .controls-CompoundArea-custom-header {
