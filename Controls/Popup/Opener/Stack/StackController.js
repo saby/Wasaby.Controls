@@ -120,7 +120,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
-               if (HAS_ANIMATION) {
+               if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                   item.popupOptions.className += ' controls-Stack__open';
                   item.stackState = 'creating';
                } else {
@@ -189,7 +189,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
-            if (HAS_ANIMATION) {
+            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                item.popupOptions.className += ' controls-Stack__waiting';
             }
 
