@@ -219,6 +219,8 @@ function(cMerge,
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
          }
+
+         cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
