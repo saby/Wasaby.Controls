@@ -41,7 +41,7 @@ define('Controls/Application/_Head',
             }
             var forReplace = '.min.css';
 
-            if (value.indexOf(forReplace) === -1){
+            if (value.indexOf(forReplace) === -1) {
                forReplace = '.css';
             }
             return  value.replace(forReplace, '') + '_' + theme + forReplace;

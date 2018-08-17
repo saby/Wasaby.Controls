@@ -25,14 +25,14 @@ define('Controls/Application/HeadDataContext', [
 
 
    var bundles, modDeps, contents;
-   try{
+   try {
       modDeps = require('json!resources/module-dependencies');
-   }catch (e) {
+   } catch (e) {
 
    }
-   try{
+   try {
       contents = require('json!resources/contents');
-   }catch (e) {
+   } catch (e) {
 
    }
    try {

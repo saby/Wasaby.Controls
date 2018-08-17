@@ -26,7 +26,7 @@ define('Controls/Application/Core',
 
             if (cfg.lite) {
                var self = this,
-                  myLoadCssFn = function (path, require, load, conf) {
+                  myLoadCssFn = function(path, require, load, conf) {
                      load(null);
                      self.headDataCtx.pushCssLink(cssResolve(path));
                      self.headDataCtx.updateConsumers();
