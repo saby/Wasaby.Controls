@@ -3752,7 +3752,7 @@ define('SBIS3.CONTROLS/ListView',
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
                                  this._dogNailSavedMode = state.mode;
-                                 this._setInfiniteScrollState('up');
+                                 this._setInfiniteScrollState(state.mode === 'up' ? 'down' : 'up');
                                  this._scrollLoadNextPage();
                               }
                            }
