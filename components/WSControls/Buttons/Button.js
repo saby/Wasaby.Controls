@@ -163,12 +163,16 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
             }
          }
 
+         // Пробуем зарегистрироваться в качестве кнопки по умолчанию сразу, и подписываемся на onAfterVisibilityChange
+         // на случай если кнопка или какой-то из ее родителей еще скрыт
          registerIfPrimary();
          self.subscribe('onAfterVisibilityChange', function() {
             registerIfPrimary();
          });
       },
 
+      // Нужно стрелять событием onAfterVisibilityChange при изменении видимости кнопки.
+      // ButtonBase этого не делает
       _setVisibility: function() {
          var
             visibleBefore = this.isVisible(),
