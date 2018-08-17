@@ -1,5 +1,6 @@
 define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    [
+      'Core/Deferred',
       'Core/core-merge',
       'Core/CompoundContainer',
       'Controls/Popup/Opener/Notification',
@@ -31,7 +32,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     * @author Степин П.В.
     * @public
     */
-   function(cMerge,
+   function(Deferred,
+      cMerge,
       CompoundContainer,
       NotificationVDOM,
       SubmitPopup,
@@ -158,6 +160,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   //TODO: Дима Зуев предлагает перейти на создание через new, но падают ошибки.
                   //https://online.sbis.ru/opendoc.html?guid=2be2cedb-91ec-4814-a76c-66c0f62431be
                   this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
+
                   /**
                    * Ассоциативный объект значений опций старого и нового шаблона.
                    * [значение в старом шаблоне]: значение в новом шаблоне
@@ -167,6 +170,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                      error: 'error',
                      warning: 'warning'
                   };
+
                   /**
                    * Аналогично this._styles.
                    */
@@ -194,6 +198,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                 */
                config._opener = this._notificationVDOM;
 
+               config._def = new Deferred();
+
                /**
                 * Используем базовый шаблон vdom нотификационных окон с контентом Core/CompoundContainer для
                 * оэивления старых компонентов. А ему в качестве контента отдадим эмуляцию SBIS3.CONTROLS/NotificationPopup,
@@ -203,7 +209,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   template: 'Controls/Popup/Templates/Notification/Base',
                   templateOptions: {
                      autoClose: !notHide,
-                     contentTemplateOptions: {
+                     _compatibleContentTemplateOptions: {
                         component: 'Controls/Popup/Templates/Notification/Compatible',
                         componentOptions: config
                      },
@@ -216,7 +222,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   return false;
                };
 
-               return this._notificationVDOM;
+               return config._def;
             } else {
                var popup = new NotificationPopup(cMerge({
                   element: $('<div></div>')

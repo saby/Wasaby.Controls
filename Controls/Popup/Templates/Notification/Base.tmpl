@@ -4,7 +4,8 @@
      on:mouseleave="_mouseleaveHandler()">
    <div class="controls-Notification__content">
       <ws:if data="{{_options.contentTemplate}}">
-         <ws:partial template="{{_options.contentTemplate}}" scope="{{_options.contentTemplateOptions}}"></ws:partial>
+         <!--TODO: _compatibleContentTemplateOptions нельзя использовать всем кроме платформы.-->
+         <ws:partial template="{{_options.contentTemplate}}" scope="{{_options._compatibleContentTemplateOptions}}"></ws:partial>
       </ws:if>
    </div>
    <ws:if data="{{_options.iconClose}}">

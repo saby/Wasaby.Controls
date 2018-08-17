@@ -42,6 +42,19 @@ define('Controls/Popup/Templates/Notification/Compatible',
       var Compatible = Control.extend({
          _dotTplFn: template,
 
+         init: function() {
+            Compatible.superclass.init.apply(this, arguments);
+
+            this._options._def.callback(this);
+         },
+
+         /**
+          * Прикладники обращаются к методу open для открытия. Раньше они имели popup, а сейчас текущий компонент.
+          */
+         open: function() {
+            this._options._opener.open();
+         },
+
          /**
           * Прикладники обращаются к методу close для закрытия. Раньше они имели popup, а сейчас текущий компонент.
           */
