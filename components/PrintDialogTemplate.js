@@ -33,7 +33,7 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
                htmlView = this.getChildControlByName('controls-PrintDialog-print-report'),
                self = this;
 
-            CommandDispatcher.declareCommand(this, 'print', function() {
+            CommandDispatcher.declareCommand(this, 'startPrint', function() {
                htmlView.print();
             });
 
