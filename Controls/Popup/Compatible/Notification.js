@@ -1,10 +1,11 @@
 define('Controls/Popup/Compatible/Notification',
    [
+      'Core/CommandDispatcher',
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!Controls/Popup/Compatible/Notification/Notification',
       'css!Controls/Popup/Compatible/Notification/Notification'
    ],
-   function(Control, template) {
+   function(CommandDispatcher, Control, template) {
 
       /**
        * Замена SBIS3.CONTROLS/NotificationPopup при открытии нотификационных окон через vdom механизм.
@@ -46,6 +47,13 @@ define('Controls/Popup/Compatible/Notification',
        */
       var Compatible = Control.extend({
          _dotTplFn: template,
+
+         $constructor: function() {
+            /**
+             * Поддерка комманды close брошеная из дочерних контролов.
+             */
+            CommandDispatcher.declareCommand(this, 'close', this.close.bind(this));
+         },
 
          init: function() {
             Compatible.superclass.init.apply(this, arguments);
