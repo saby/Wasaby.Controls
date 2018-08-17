@@ -14,6 +14,7 @@ define('Controls/Popup/Opener/Stack',
        * @class Controls/Popup/Opener/Stack
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */

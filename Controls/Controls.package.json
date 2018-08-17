@@ -120,7 +120,8 @@
   "output": "controls-toggle.package.js"
 }, {
   "include": [
-    "Controls/Utils/*"
+    "Controls/Utils/*",
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-utils.package.js"
 }, {
@@ -143,6 +144,9 @@
 }, {
   "include": [
     "Controls/Calendar/*"
+  ],
+  "exclude": [
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
 }]

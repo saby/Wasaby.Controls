@@ -1,3 +1,6 @@
+/**
+ * @author Михайловский Д.С.
+ */
 define('Controls/Header',
    [
       'Controls/Heading',

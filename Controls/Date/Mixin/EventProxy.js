@@ -6,7 +6,7 @@ define('Controls/Date/Mixin/EventProxy', [
 
    /**
     * An mixin that allows the component to proxy events from models and internal controls.
-    * @class Controls.Date.Mixin.EventProxy
+    * @class Controls/Date/Mixin/EventProxy
     * @public
     * @author Миронов А.Ю.
     */

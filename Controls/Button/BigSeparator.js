@@ -16,6 +16,7 @@ define('Controls/Button/BigSeparator', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @mixes Controls/Toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo

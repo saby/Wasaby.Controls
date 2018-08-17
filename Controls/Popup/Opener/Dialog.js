@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Dialog',
        * @class Controls/Popup/Opener/Dialog
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/Base
        */

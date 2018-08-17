@@ -197,6 +197,11 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+
+               //magic of old floatarea
+               if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
+                  cfg.horizontalAlign = {side: cfg.side === 'right' ? 'left' : 'right'};
+               }
             }
          }
 

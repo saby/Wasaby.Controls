@@ -14,6 +14,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Герасимов А.М.
     *
     * @css @max-height_FilterPanel-items Maximum height of the folded block.
     * @css @font-size_FilterPanel-caption Font size of the header.

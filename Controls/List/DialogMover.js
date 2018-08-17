@@ -11,7 +11,7 @@ define('Controls/List/DialogMover', [
     * @extends Core/Control
     * @mixes Controls/interface/IMovable
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */
