@@ -42,12 +42,10 @@ define('Controls-demo/Demo/PageThemes',
                this.componentName = 'Controls-demo/' + UrlParams().cname;
             }
             this._theme = UrlParams()['theme'] || opts.theme;
-            requirejs([this.componentName], deferred.callback.bind(deferred));
-            return deferred;
          },
 
          _beforeUpdate: function(opts){
-            this._theme = UrlParams()['theme'] || opts.theme;
+            this._theme = opts.theme || UrlParams()['theme'];
          },
 
          changeTheme: function(event, theme) {

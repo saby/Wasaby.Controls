@@ -25,17 +25,25 @@ define('Controls/Application/HeadDataContext', [
 
 
    var bundles, modDeps, contents;
+   try{
+      modDeps = require('json!resources/module-dependencies');
+   }catch (e) {
+
+   }
+   try{
+      contents = require('json!resources/contents');
+   }catch (e) {
+
+   }
    try {
       bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
-      modDeps = require('json!resources/module-dependencies');
-      contents = require('json!resources/contents');
    } catch (e) {
 
-   } finally {
-      bundles = bundles || {};
-      modDeps = modDeps || {links: {}, nodes: {}};
-      contents = contents || {};
    }
+
+   bundles = bundles || {};
+   modDeps = modDeps || {links: {}, nodes: {}};
+   contents = contents || {};
 
    return DataContext.extend({
       _version: 0,

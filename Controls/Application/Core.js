@@ -24,13 +24,22 @@ define('Controls/Application/Core',
          ctxData: null,
          constructor: function(cfg) {
 
-            if (typeof window !== 'undefined' && window.themesActive) {
-               var self = this;
-               nativeCss.load = function (path, require, load, conf) {
-                  load(null);
-                  self.headDataCtx.pushCssLink(cssResolve(path));
-                  self.headDataCtx.updateConsumers();
-               };
+            if (cfg.lite) {
+               var self = this,
+                  myLoadCssFn = function (path, require, load, conf) {
+                     load(null);
+                     self.headDataCtx.pushCssLink(cssResolve(path));
+                     self.headDataCtx.updateConsumers();
+                     if (typeof window === 'undefined') {
+                        requirejs.undef('css!' + path);
+                     }
+                  };
+
+               if (typeof process !== 'undefined' && process.domain && process.domain.req && process.domain.req.loadCss) {
+                  process.domain.req.loadCss = myLoadCssFn;
+               } else {
+                  nativeCss.load = myLoadCssFn;
+               }
             }
 
             try {

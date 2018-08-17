@@ -39,7 +39,12 @@ define('Controls/Application/_Head',
                value = this._options.appRoot + value;
                value = value.replace('//', '/');
             }
-            return  value.replace('.css', '') + '_' + theme + '.css';
+            var forReplace = '.min.css';
+
+            if (value.indexOf(forReplace) === -1){
+               forReplace = '.css';
+            }
+            return  value.replace(forReplace, '') + '_' + theme + forReplace;
          }
       });
       Page.contextTypes = function() {

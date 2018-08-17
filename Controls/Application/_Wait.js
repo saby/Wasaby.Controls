@@ -28,7 +28,7 @@ define('Controls/Application/_Wait',
          _beforeMount: function(options, context) {
             this.waitDef = new Deferred();
             context.headData.pushWaiterDeferred(this.waitDef);
-            if (typeof window === 'undefined') {
+            if (typeof window !== 'undefined') {
                this.waitDef.callback();
                this.waitDef = new Deferred();
             }

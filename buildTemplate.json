@@ -2,8 +2,12 @@
   "cache": "%cd%/builder-ui/builder-json-cache",
   "output": "%cd%/application",
   "logs": "%cd%/builder-ui/logs",
-  "mode": "debug",
+  "mode": "release",
   "modules": [
+    {
+      "name": "TodoMvc",
+      "path": "%cd%/TodoMvc"
+    },
     {
       "name": "Controls",
       "path": "%cd%/Controls"
@@ -14,35 +18,35 @@
     },
     {
       "name": "Core",
-      "path": "%cd%/sbis3-ws/Core"
+      "path": "%cd%/node_modules/sbis3-ws/Core"
     },
     {
       "name": "WS.Core",
-      "path": "%cd%/sbis3-ws/ws"
+      "path": "%cd%/node_modules/sbis3-ws/ws"
     },
     {
       "name": "Lib",
-      "path": "%cd%/sbis3-ws/ws/lib"
+      "path": "%cd%/node_modules/sbis3-ws/ws/lib"
     },
     {
       "name": "Ext",
-      "path": "%cd%/sbis3-ws/ws/lib/Ext"
+      "path": "%cd%/node_modules/sbis3-ws/ws/lib/Ext"
     },
     {
       "name": "Transport",
-      "path": "%cd%/sbis3-ws/ws/transport"
+      "path": "%cd%/node_modules/sbis3-ws/ws/transport"
     },
     {
       "name": "View",
-      "path": "%cd%/sbis3-ws/View"
+      "path": "%cd%/node_modules/sbis3-ws/View"
     },
     {
       "name": "WS.Data",
-      "path": "%cd%/WS.Data"
+      "path": "%cd%/node_modules/ws-data/WS.Data"
     },
     {
       "name": "SBIS3.CONTROLS",
-      "path": "%cd%/components"
+      "path": "%cd%/SBIS3.CONTROLS"
     },
     {
       "name": "Examples",
