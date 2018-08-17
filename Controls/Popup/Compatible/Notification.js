@@ -39,6 +39,11 @@ define('Controls/Popup/Compatible/Notification',
        * @name Controls/Popup/Templates/Notification/Compatible#_opener
        * @cfg {String} Инстанс vdom opener.
        */
+
+      /**
+       * @name Controls/Popup/Templates/Notification/Compatible#_def
+       * @cfg {Core/Deferred} Deffered в callback которого приходит инстанс компонента.
+       */
       var Compatible = Control.extend({
          _dotTplFn: template,
 

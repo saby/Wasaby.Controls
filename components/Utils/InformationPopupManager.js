@@ -198,6 +198,12 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                 */
                config._opener = this._notificationVDOM;
 
+               /**
+                * В старом окружении метод возвращает инстанс компонента. В vdom кружении мы не можем его вернуть, потому что он создается ассинхронно,
+                * будем возвращать Deferred в callback которого придет инстанс компонента окна. Для этого в Controls/Popup/Compatible/Notification
+                * отдадим Deferred в опцию _def и отдадим его из метода.
+                * Прикладные разработчики у себя поправят код на работу с Deferred.
+                */
                config._def = new Deferred();
 
                /**
