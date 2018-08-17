@@ -206,11 +206,11 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                 * а именно Controls/Popup/Templates/Notification/Compatible
                 */
                this._notificationVDOM.open({
-                  template: 'Controls/Popup/Templates/Notification/Base',
+                  template: 'Controls/Popup/Compatible/Notification/Base',
                   templateOptions: {
                      autoClose: !notHide,
-                     _compatibleContentTemplateOptions: {
-                        component: 'Controls/Popup/Templates/Notification/Compatible',
+                     contentTemplateOptions: {
+                        component: 'Controls/Popup/Compatible/Notification/Compatible',
                         componentOptions: config
                      },
                      style: this._styles[config.status],

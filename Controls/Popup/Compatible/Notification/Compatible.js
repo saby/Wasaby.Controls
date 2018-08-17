@@ -1,8 +1,8 @@
-define('Controls/Popup/Templates/Notification/Compatible',
+define('Controls/Popup/Compatible/Notification/Compatible',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls/Popup/Templates/Notification/Compatible',
-      'css!Controls/Popup/Templates/Notification/Compatible'
+      'tmpl!Controls/Popup/Compatible/Notification/Compatible',
+      'css!Controls/Popup/Compatible/Notification/Compatible'
    ],
    function(Control, template) {
 
