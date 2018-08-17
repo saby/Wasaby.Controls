@@ -304,14 +304,27 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
          _isLinkedPanel: function(event) {
-            var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
+            var target = $(event.nativeEvent.relatedTarget);
+            var compoundArea = target.closest('.controls-CompoundArea');
+            var opener;
+
             if (compoundArea.length) {
-               var opener = compoundArea[0].controlNodes[0].control.getOpener();
-               while (opener && opener._moduleName !== this._moduleName) {
-                  opener = opener.getParent && opener.getParent();
-               }
-               return opener === this;
+               opener = compoundArea[0].controlNodes[0].control.getOpener();
             }
+
+            var popupMixin = target.closest('.controls-Menu, .controls-FloatArea');
+            if (popupMixin.length) {
+               opener = popupMixin.wsControl().getOpener();
+            }
+            return this._checkLink(opener);
+         },
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
+         _checkLink: function (opener) {
+            while (opener && opener._moduleName !== this._moduleName) {
+               opener = opener.getParent && opener.getParent();
+            }
+            return opener === this;
          },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
