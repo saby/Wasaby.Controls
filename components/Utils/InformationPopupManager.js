@@ -210,7 +210,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   templateOptions: {
                      autoClose: !notHide,
                      contentTemplateOptions: {
-                        component: 'Controls/Popup/Compatible/Notification/Compatible',
+                        component: 'Controls/Popup/Compatible/Notification',
                         componentOptions: config
                      },
                      style: this._styles[config.status],
