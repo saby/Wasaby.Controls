@@ -1,8 +1,8 @@
-define('Controls/Popup/Templates/Notification/Compatible',
+define('Controls/Popup/Compatible/Notification',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls/Popup/Templates/Notification/Compatible',
-      'css!Controls/Popup/Templates/Notification/Compatible'
+      'tmpl!Controls/Popup/Compatible/Notification/Notification',
+      'css!Controls/Popup/Compatible/Notification/Notification'
    ],
    function(Control, template) {
 
@@ -39,8 +39,26 @@ define('Controls/Popup/Templates/Notification/Compatible',
        * @name Controls/Popup/Templates/Notification/Compatible#_opener
        * @cfg {String} Инстанс vdom opener.
        */
+
+      /**
+       * @name Controls/Popup/Templates/Notification/Compatible#_def
+       * @cfg {Core/Deferred} Deffered в callback которого приходит инстанс компонента.
+       */
       var Compatible = Control.extend({
          _dotTplFn: template,
+
+         init: function() {
+            Compatible.superclass.init.apply(this, arguments);
+
+            this._options._def.callback(this);
+         },
+
+         /**
+          * Прикладники обращаются к методу open для открытия. Раньше они имели popup, а сейчас текущий компонент.
+          */
+         open: function() {
+            this._options._opener.open();
+         },
 
          /**
           * Прикладники обращаются к методу close для закрытия. Раньше они имели popup, а сейчас текущий компонент.
