@@ -286,11 +286,13 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          * @param isExcel - файл выгружается в формате EXCEL
          */
         _downloadFile : function(id, isExcel){
-            var params = { 'id': id };
-            if (isExcel) {
-                params['storage'] = 'excel';
-            }
-            window.open(prepareGetRPCInvocationURL(isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+           var params = { 'id': id };
+           if (isExcel) {
+              params['storage'] = 'excel';
+           } else {
+              params['storage'] = 'pdf_converter_storage';
+           }
+           window.open(prepareGetRPCInvocationURL('FileTransfer', 'Download', params, undefined, '/file-transfer/service/'), '_self');
         },
 
         _parseColumns: function(columns) {

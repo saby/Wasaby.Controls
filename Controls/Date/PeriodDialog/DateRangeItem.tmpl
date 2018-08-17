@@ -1,0 +1,47 @@
+<div class="controls-PeriodDialog-DateRangeItem">
+   <div class="controls-PeriodDialog-DateRangeItem__months">
+      <ws:for data="monthIndex, month in item.months">
+         <div class="controls-PeriodDialog-DateRangeItem__months-btn">
+            {{ _formatDate(month, 'MMMM') }}
+         </div>
+      </ws:for>
+      <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+            >
+         {{ item.months[0].getFullYear() + 1 }}
+      </div>
+   </div>
+   <div class="controls-PeriodDialog-DateRangeItem__monthList">
+      <div for="monthIndex, month in item.months">
+         <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
+                     _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
+               on:click="_monthCaptionClick(month)">
+            {{ _formatDate(month, 'MMMM') }}
+         </div>
+         <Controls.Date.MonthView
+            attr:class="controls-DateRangeBigChoose-DateRangePicker__item"
+            monthViewModel="{{_monthViewModel}}"
+            selectionType="{{_options.selectionType}}"
+            quantum="{{_options.quantum}}"
+            showWeekdays="{{false}}"
+            month="{{month}}"
+
+            startValue="{{_options.startValue}}"
+            endValue="{{_options.endValue}}"
+
+            selectionProcessing="{{_options.selectionProcessing}}"
+            on:selectionProcessingChanged="_proxyEvent()"
+            selectionBaseValue="{{_options.selectionBaseValue}}"
+            selectionHoveredValue="{{_options.selectionHoveredValue}}"
+
+            hoveredStartValue="{{_options.hoveredStartValue}}"
+            hoveredEndValue="{{_options.hoveredEndValue}}"
+
+            on:monthClick="_proxyEvent()"
+            on:fixedPeriodClick="_proxyEvent()"
+            on:itemClick="_proxyEvent()"
+            on:itemMouseEnter="_proxyEvent()"
+            on:itemMouseLeave="_proxyEvent()"
+         />
+      </div>
+   </div>
+</div>

@@ -1,10 +1,8 @@
-/* eslint-disable quotes */
 define('Controls-demo/Input/Text/Text', [
    'Core/Control',
    'tmpl!Controls-demo/Input/Text/Text',
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template) {
-
    'use strict';
 
    var VdomDemoText = Control.extend({
@@ -19,22 +17,22 @@ define('Controls-demo/Input/Text/Text', [
       _selectOnClick: false,
       _readOnly: false,
       _items: [
-         {title: '[0-9]', example: 'You can use only digits'},
-         {title: '[a-zA-Z]', example: 'You can use only letters'},
-         {title: '[a-z]', example: 'You can use only lowercase letters'},
-         {title: '[A-Z]', example: 'You can use only uppercase letters'}
+         { title: '[0-9]', example: 'You can use only digits' },
+         { title: '[a-zA-Z]', example: 'You can use only letters' },
+         { title: '[a-z]', example: 'You can use only lowercase letters' },
+         { title: '[A-Z]', example: 'You can use only uppercase letters' }
       ],
-      _tooltip: '',
+      _tooltip: 'Text',
       _tagStyleHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Hover"
+            message: 'Hover'
          });
       },
       _tagStyleClickHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,
-            message: "Click"
+            message: 'Click'
          });
       },
       valueChangedHandler: function() {

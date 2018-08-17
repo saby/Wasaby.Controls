@@ -103,7 +103,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
+            if (this._options.canMaximize) {
+               var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
+               var templateComponent = this._getTemplateComponent();
+               this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+               this.getContainer().toggleClass('ws-float-area-maximized-mode', popupOptions.maximized || false);
+               if (templateComponent && maximized !== popupOptions.maximized) {
+                  templateComponent._notifyOnSizeChanged();
+                  templateComponent._notify('onChangeMaximizeState', popupOptions.maximized);
+                  templateComponent._options.isPanelMaximized = popupOptions.maximized;
+                  this._notify('onChangeMaximizeState', popupOptions.maximized);
+               }
+            }
             return false;
+         },
+
+         _changeMaximizedMode: function(event) {
+            event.stopPropagation();
+            var state = this.getContainer().hasClass('ws-float-area-maximized-mode');
+            this._notifyVDOM('maximized', [!state], {bubbling: true});
          },
 
          rebuildChildControl: function() {
@@ -112,6 +130,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                rebuildDeferred;
 
             self._childConfig._compoundArea = self;
+
+            self.once('onInit', function() {
+               // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
+               // созданием нового, поэтому делаем на onInit
+               if (self._options._initCompoundArea) {
+                  self._options._initCompoundArea(self);
+               }
+               self.setEnabled(self._enabled);
+            });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
                cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
@@ -119,24 +146,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
-               if (self._container.length) {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._options.enabled);
                });
             });
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             return rebuildDeferred;
          },
 
          _afterMount: function(cfg) {
             this._options = cfg;
+            this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
@@ -151,10 +174,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._childConfig = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             self._pending = self._pending || [];
             self._pendingTrace = self._pendingTrace || [];
@@ -171,16 +190,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._logicParent.waitForPopupCreated = true;
 
-            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            // лишних свойств, которые еще не применены к дому
-            // панельки с этим начали вылезать плавненько
-            runDelayed(function() {
-               self.rebuildChildControl().addCallback(function() {
+            // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
+            self.subscribe('onResize', function() {
+               this._notifyVDOM('resize', null, { bubbling: true });
+            });
+
+            self.once('onInitComplete', function() {
+               if (self._options.catchFocus) {
                   doAutofocus(self._childControl._container);
-                  self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+               }
+            });
+            self.rebuildChildControl().addCallback(function() {
+               runDelayed(function() {
                   runDelayed(function() {
                      self._notifyCompound('onResize');
+                     if (self._options.catchFocus) {
+                        doAutofocus(self._childControl._container);
+                     }
                   });
                });
             });
@@ -195,7 +221,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
             if (hasHeader) {
                if (customHeaderContainer.length) {
-                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
+                     customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  }
                   this._prependCustomHeader(customHeaderContainer);
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
@@ -209,7 +237,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _prependCustomHeader: function(customHead) {
-            var container = $('.controls-DialogTemplate', this.getContainer());
+            var container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
             container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
             if (this._options.type === 'dialog') {
@@ -222,11 +250,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this._close(arg);
+               return this.close(arg);
             } if (commandName === 'ok') {
-               return this._close(true);
+               return this.close(true);
             } if (commandName === 'cancel') {
-               return this._close(false);
+               return this.close(false);
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
@@ -251,21 +279,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._childControl._notifyOnSizeChanged();
             }
          },
-         _close: function(arg) {
-            if (this._isClosing) {
-               return false;
-            }
-            this._isClosing = true;
-            if (this._notifyCompound('onBeforeClose', arg) !== false) {
-               this.close(arg);
-               this._isClosing = false;
-               return true;
-            }
-            this._isClosing = false;
-         },
          closeHandler: function(e, arg) {
             e.stopPropagation();
-            this._close(arg);
+            this.close(arg);
          },
          _mouseenterHandler: function() {
             if (this._options.hoverTarget) {
@@ -273,8 +289,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._hoverTimer = null;
             }
          },
-         _mouseleaveHandler: function() {
-            if (this._options.hoverTarget) {
+         _mouseleaveHandler: function(event) {
+            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
+            if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
                this._hoverTimer = setTimeout(function() {
@@ -282,9 +299,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }, 1000);
             }
          },
+
+         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
+         _isLinkedPanel: function(event) {
+            var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
+            if (compoundArea.length) {
+               var opener = compoundArea[0].controlNodes[0].control.getOpener();
+               while (opener && opener._moduleName !== this._moduleName) {
+                  opener = opener.getParent && opener.getParent();
+               }
+               return opener === this;
+            }
+         },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this._close();
+               this.close();
                event.stopPropagation();
             }
          },
@@ -533,14 +562,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          close: function(arg) {
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
-            } else if (!this._childControl.isDestroyed()) {
-               this._notifyVDOM('close', null, { bubbling: true });
-
-               this._notifyCompound('onClose', arg);
-               this._notifyCompound('onAfterClose', arg);
+            } else if (this._childControl && !this._childControl.isDestroyed()) {
+               // Закрытие панели могут вызвать несколько раз подряд
+               if (this._isClosing) {
+                  return false;
+               }
+               this._isClosing = true;
+               if (this._notifyCompound('onBeforeClose', arg) !== false) {
+                  this._notifyVDOM('close', null, { bubbling: true });
+                  this._notifyCompound('onClose', arg);
+                  this._notifyCompound('onAfterClose', arg);
+               }
+               this._isClosing = false;
             }
-
-            // Могут несколько раз позвать закрытие подряд
+            return true;
          },
 
          _toggleVisibleClass: function(className, visible) {

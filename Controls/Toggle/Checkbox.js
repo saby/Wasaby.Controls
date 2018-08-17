@@ -16,6 +16,7 @@ define('Controls/Toggle/Checkbox', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     * @demo Controls-demo/Checkbox/Checkbox
     *
@@ -29,7 +30,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#value
-    * @cfg {Boolean|null} Current state.
+    * @cfg {Boolean|null} Current value.
     * @variant True Selected checkbox state.
     * @variant False Unselected checkbox state. It is default state.
     * @variant Null Tristate checkbox state.

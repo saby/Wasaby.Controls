@@ -36,7 +36,7 @@ define('Controls/Validate/FormController',
                var def = validate.validate();
                parallelDeferred.push(def);
             });
-            return parallelDeferred.done().getResult().addCallback(function(results) {
+            var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
                var
                   key;
 
@@ -50,6 +50,14 @@ define('Controls/Validate/FormController',
                return results;
             }.bind(this)).addErrback(function(e) {
                IoC.resolve('ILogger').error('Form', 'Submit error', e);
+               return e;
+            });
+            this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });
+            return resultDef;
+         },
+         setValidationResult: function() {
+            this._validates.forEach(function(validate) {
+               validate.setValidationResult(null);
             });
          }
       });

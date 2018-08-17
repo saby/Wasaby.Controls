@@ -4,7 +4,11 @@
 .ws-is-not-full-grid-support {
   .controls-Grid {
     display: table;
+    table-layout: fixed;
     width: 100%;
+  }
+  .controls-Grid__colgroup-columnMultiselect {
+    width: @width_Grid-cell-checkbox;
   }
   .controls-Grid__row-cell__contentWrapper {
     display: inline-flex;

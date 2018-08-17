@@ -380,7 +380,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -503,6 +503,10 @@ define('Controls/List/BaseControl', [
 
          if (this._scrollPagingCtr) {
             this._scrollPagingCtr.destroy();
+         }
+
+         if (this._listViewModel) {
+            this._listViewModel.destroy();
          }
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
@@ -729,6 +733,10 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 

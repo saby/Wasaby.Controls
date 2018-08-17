@@ -4,7 +4,7 @@
          <a rel="noreferrer" href="{{path.www ? 'http://'}}{{path.href}}" target="{{_options.newTab ? '_blank'}}">{{path.href}}</a>
       </ws:if>
       <ws:else data="{{path.type === 'email'}}">
-         <a href="mailto:{{path.addres}}">{{path.addres}}</a>
+         <a href="mailto:{{path.address}}">{{path.address}}</a>
       </ws:else>
       <ws:else>{{path.value}}</ws:else>
       {{path.end}}

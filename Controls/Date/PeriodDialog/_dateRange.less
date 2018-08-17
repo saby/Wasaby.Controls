@@ -1,0 +1,150 @@
+.controls-PeriodDialog-DateRange {
+   height: @height_PeriodDialog-body;
+   display: flex;
+   flex-direction: column;
+   position: relative;
+   user-select: none;
+}
+
+.controls-PeriodDialog-DateRange__header {
+   display: flex;
+   flex-shrink: 0;
+   height: @height_PeriodDialog-DateRange-header;
+   border-bottom: @border-width_PeriodDialog solid @border-color_PeriodDialog;
+   align-items: center;
+   font-size: @font-size_PeriodDialog-DateRange-header;
+}
+
+.controls-PeriodDialog-DateRange__year {
+   flex-shrink: 0;
+   width: @width_PeriodDialog-DateRange-header-year;
+   padding-left: @padding-left_PeriodDialog-DateRange-header-year;
+   color: @color_PeriodDialog-DateRange-header-year;
+   font-weight: @font-weight_PeriodDialog-DateRange-header-year;
+   box-sizing: border-box;
+}
+
+.controls-PeriodDialog-DateRange-header-weekdays {
+   display: flex;
+   flex-shrink: 1;
+   flex-grow: 1;
+}
+.controls-PeriodDialog-DateRange-header-weekdays-workday,
+.controls-PeriodDialog-DateRange-header-weekdays-weekend {
+   flex-grow: 1;
+   text-align: center;
+}
+
+.controls-PeriodDialog-DateRange-header-weekdays-workday {
+   color: @color_PeriodDialog-DateRange-header-weekdays-workday;
+}
+.controls-PeriodDialog-DateRange-header-weekdays-weekend {
+   color: @color_PeriodDialog-DateRange-header-weekdays-weekend;
+}
+
+.controls-PeriodDialog-DateRange-dates-wrapper {
+   flex-shrink: 1;
+   flex-grow: 1;
+}
+
+@height_PeriodDialog-DateRange-months: @height_PeriodDialog-body - @height_PeriodDialog-DateRange-header - 1px;
+@height_PeriodDialog-DateRange-months-year-button: @height_PeriodDialog-DateRange-months - @height_PeriodDialog-DateRange-months-button*12;
+
+.controls-PeriodDialog-DateRangeItem {
+   display: flex;
+   margin-bottom: @height_PeriodDialog-DateRange-months-year-button !important; // TODO: спилить !important когда уберут маргины и падинги с айтемов ListView
+   position: relative;
+
+   &:after {
+      content: '';
+      position: absolute;
+      bottom: -@height_PeriodDialog-DateRange-months-year-button/2;
+      left: @width_PeriodDialog-DateRange-header-year + @width_MontView/14;
+      right: @width_MontView/14;
+      border-top: 1px solid @border-color_PeriodDialog-DateRange-months;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__months {
+   height: @height_PeriodDialog-DateRange-months;
+   display: flex;
+   flex-direction: column;
+   flex-shrink: 1;
+   position: sticky;
+   top: 0;
+   margin-bottom: -@height_PeriodDialog-DateRange-months-year-button;
+}
+
+.controls-PeriodDialog-DateRangeItem__months-btn {
+   display: flex;
+   flex-shrink: 1;
+   align-items: center;
+
+   color: @color_PeriodDialog-DateRange-months-button;
+   font-size: @font-size_PeriodDialog-DateRange-months-button;
+   padding-left: @padding-left_PeriodDialog-DateRange-months-button;
+   width: @width_PeriodDialog-DateRange-header-year;
+   height: @height_PeriodDialog-DateRange-months-button;
+   border: 1px solid transparent;
+   border-right-color: @border-color_PeriodDialog-DateRange-months;
+   border-bottom-color: @border-color_PeriodDialog-DateRange-months;
+   cursor: pointer;
+   background-color: @background-color_PeriodDialog-DateRange-months-button;
+   box-sizing: border-box;
+
+   &:hover {
+      border-color: @border-color_PeriodDialog-DateRange-months-button-hover;
+      background-color: @background-color_PeriodDialog-DateRange-months-button-hover;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__months-nextyearBtn {
+   display: flex;
+   flex-shrink: 1;
+   flex-grow: 1;
+   align-items: center;
+   padding-left: @padding-left_PeriodDialog-DateRange-months-button;
+   color: @color_PeriodDialog-DateRange-months-nextYearButton;
+   font-size: @font-size_PeriodDialog-DateRange-months-nextYearButton;
+   border: 1px solid transparent;
+   border-right-color: @border-color_PeriodDialog-DateRange-months;
+   border-bottom-color: @border-color_PeriodDialog-DateRange-months;
+   cursor: pointer;
+   height:  @height_PeriodDialog-DateRange-months-nextYearButton;
+   background-color: @background-color_PeriodDialog-DateRange-months-nextYearButton;
+
+   &:hover {
+      border-color: @border-color_PeriodDialog-DateRange-months-nextYearButton;
+      background-color: @background-color_PeriodDialog-DateRange-months-nextYearButton-hover;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__monthList {
+   flex-shrink: 0;
+   padding-left: 1px;
+}
+
+.controls-PeriodDialog-DateRangeItem__monthList_title {
+   height: @height_PeriodDialog-DateRange-monthsWithDates-title;
+   line-height: @height_PeriodDialog-DateRange-monthsWithDates-title - 2px;
+   font-size: @font-size_PeriodDialog-DateRange-monthsWithDates-title;
+   font-weight: bold;
+   color: @color_PeriodDialog-DateRange-monthsWithDates-title;
+   text-align: center;
+   border: 1px solid transparent;
+   background-color: @background-color_PeriodDialog-DateRange-monthsWithDates-title;
+}
+
+.controls-PeriodDialog-DateRangeItem__monthList_title_selectable {
+   cursor: pointer;
+
+   &:hover {
+      border: 1px solid @border-color_PeriodDialog-DateRange-monthsWithDates-title-hover;
+      background-color: @background-color_PeriodDialog-DateRange-monthsWithDates-title-hover;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__item {
+   transform: translateZ(0);
+   will-change: transform;
+}

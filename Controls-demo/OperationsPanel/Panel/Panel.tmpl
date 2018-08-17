@@ -5,7 +5,6 @@
          <Controls.Container.Data keyProperty="id" source="{{_viewSource}}">
             <Controls.Container.MultiSelector>
                <Controls.Operations.Panel
-                       test_name="panel"
                        expanded="{{_expanded}}"
                        multiSelectorVisibility="{{_multiSelectorVisibility}}"
                        source="{{_source}}"
@@ -23,24 +22,24 @@
       <div class="optionsBlock">
          <h3>Опции</h3>
          <Controls.Label caption="expanded:"/>
-         <Controls.Toggle.Checkbox test_name="expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
          <Controls.Label caption="source:"/>
          <Controls.Toggle.RadioGroup
-            test_name="source"
+            attr:class="ControlsDemo-OperationsPanel__source"
             on:selectedKeyChanged="sourceChange()"
             keyProperty="id"
             selectedKey="{{_sourceNumber}}"
             source="{{_sourceConfig}}"/>
          <Controls.Label caption="multiSelectorVisibility:"/>
-         <Controls.Toggle.Checkbox test_name="multiSelectorVisibility" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__multiSelector" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
          <Controls.Label caption="rightTemplate:"/>
-         <Controls.Toggle.Checkbox test_name="rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
       </div>
       <div class="eventBlock">
          <span>Event that surfaced:</span>
          <Controls.Button attr:class="demo-ResetButton" on:click="_reset()" style="linkMain3" caption="reset"/>
          <br/>
-         <span>{{_eventName}}</span>
+         <span class="ControlsDemo__eventName">{{_eventName}}</span>
       </div>
    </div>
 </div>

@@ -7,7 +7,7 @@ define('Controls/Container/Data',
    ],
    
    function(Control, template, getPrefetchSource, ContextOptions) {
-   
+
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -26,12 +26,12 @@ define('Controls/Container/Data',
        * @name Controls/Container/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
-   
+
       /**
        * @name Controls/Container/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
-   
+
       'use strict';
       
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
@@ -93,34 +93,25 @@ define('Controls/Container/Data',
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
-
-                  //TODO: Необходимо чтобы при построении на сервере, prefetchSource сериализовался в правильном состоянии.
-                  //При загрузке данных, prefetchSource проставляет у себя сосотояние query = true и в дальнейшем работант
-                  //в зависимсти от этого состояния. Сейчас проблема в том, что когда мы возвращаем в _beforeMount
-                  //prefetchSource, он сразу сериализуется в строку, а состояние query = true простовляется в дочернем
-                  //компоненте, при вызове метода query. Поэтому на клиент прилетает неправильное состояние и
-                  //первый вызов query возвращает захэшированные данные, а не пытается загрузить актуальные данные.
-                  //Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
-                  result.source._done.query = true;
                   return result;
                });
             }
          },
-         
+
          _beforeUpdate: function(newOptions) {
             var self = this;
-            
+
             _private.resolveOptions(this, newOptions);
-            
+
             if (this._options.source !== newOptions.source) {
-               _private.createPrefetchSource(this).addCallback(function(result) {
+               return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
                   self._forceUpdate();
                   return result;
                });
             }
          },
-   
+
          _filterChanged: function(event, filter) {
             this._filter = filter;
             this._notify('filterChanged', [filter]);
@@ -141,7 +132,7 @@ define('Controls/Container/Data',
             };
          }
       });
-   
+
       Data._private = _private;
       return Data;
    });

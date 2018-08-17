@@ -25,7 +25,7 @@ define('Controls/List/ListControl', [
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List/ListControl */{
       _template: ListControlTpl,
       reload: function() {
          this._children.baseControl.reload();
@@ -76,6 +76,10 @@ define('Controls/List/ListControl', [
             this._notify('selectedKeysChanged', [newSelectedKeys, [], keys]);
          }
          this._notify('afterItemsRemove', [keys, result]);
+      },
+
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 

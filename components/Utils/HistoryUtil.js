@@ -12,18 +12,32 @@ define('SBIS3.CONTROLS/Utils/HistoryUtil', function() {
       },
 
       isEqualHistory: function(id, value) {
-         var saveHistory = this.getHistory(id);
+         var savedHistory = this.getHistory(id);
          var isEqual = true;
-         var hRows, vRows, hRecord, vRecord;
+         var hRows, vRows, hRecordSet, vRecordSet;
+         
+         var isItemsIdsEqual = function(firstItem, secondItem) {
+            var firstItemId = firstItem && firstItem.getId();
+            var secondItemId = secondItem && secondItem.getId();
+            
+            return firstItemId === secondItemId;
+         };
 
-         if (saveHistory && value) {
-            hRows = saveHistory.getRow();
+         if (savedHistory && value) {
+            hRows = savedHistory.getRow();
             vRows = value.getRow();
             this.historyType.forEach(function(type) {
-               hRecord = hRows.get(type);
-               vRecord = vRows.get(type);
-               if (hRecord && vRecord && !hRecord.isEqual(vRecord)) {
-                  isEqual = false;
+               hRecordSet = hRows.get(type);
+               vRecordSet = vRows.get(type);
+               
+               if (hRecordSet && vRecordSet) {
+                  /* Т.к. нам важен лиш порядок записей и само наличие записи, то проверяем по этим признакам,
+                     а не полностью сравниваем рекордсеты. */
+                  hRecordSet.forEach(function(item, index) {
+                     if (isEqual) {
+                        isEqual = isItemsIdsEqual(item, vRecordSet.at(index));
+                     }
+                  });
                }
             });
          } else {

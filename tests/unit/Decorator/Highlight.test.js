@@ -44,6 +44,23 @@ define(
                   value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.'
                }]);
             });
+            it('The highlight text contains special regular expression characters.', function() {
+               result = parseText('Lorem ipsum dolor sit amet, consectetur\\ adipiscing elit. Nunc consectetur.', 'consectetur\\');
+               assert.deepEqual(result, [
+                  {
+                     type: 'text',
+                     value: 'Lorem ipsum dolor sit amet, '
+                  },
+                  {
+                     type: 'found',
+                     value: 'consectetur\\'
+                  },
+                  {
+                     type: 'text',
+                     value: ' adipiscing elit. Nunc consectetur.'
+                  }
+               ]);
+            });
          });
       });
    }

@@ -6,14 +6,20 @@ define('Controls/interface/IFilterButton', [
     * @interface Controls/interface/IFilterButton
     * @public
     */
-   
+
+   /**
+    * @typedef {Boolean} Visibility
+    * @variant true The filter editor is located in the "Selected"
+    * @variant false The filter editor is located in the "Possible to select"
+    */
+
    /**
     * @typedef {Object} FilterPanelItems
     * @property {String} id Name of filter field
     * @property {*} value Current filter field value
     * @property {*} resetValue Value for reset
     * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
-    * @property {Boolean} visibilityValue Determines whether the filter editor is visible
+    * @property {Visibility} visibility Defines in which block the filter editor is located. For filter editors that are never displayed in the "You can still select" section, you do not need to specify.
     */
    
    /**
@@ -42,6 +48,12 @@ define('Controls/interface/IFilterButton', [
     * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
+    */
+
+   /**
+    * @event Controls/interface/IFilterButton#itemsChanged Happens when items changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Object} items New items.
     */
    
 });

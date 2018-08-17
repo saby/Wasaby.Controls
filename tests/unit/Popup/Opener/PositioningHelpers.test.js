@@ -317,6 +317,7 @@ define(
             });
 
             it('stack default position', function() {
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                let itemConfig = {
                   popupOptions: item.popupOptions
                };
@@ -324,11 +325,25 @@ define(
                assert.equal(itemConfig.position.top, -10000);
                assert.equal(itemConfig.position.left, -10000);
                assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
+               assert.equal(itemConfig.position.height, 950);
+            });
+
+            it('stack maximized popup position', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: 600,
+                     maxWidth: 800
+                  },
+                  hasMaximizePopup: true
+               };
+               let position = Stack.getPosition({top: 0, right: 100}, item);
+               assert.equal(position.right, 0);
             });
 
             it('stack panel maximized', function() {
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
 
                let popupOptions = {
                   minimizedWidth: 600,
@@ -345,7 +360,7 @@ define(
                assert.equal(Stack.isMaximizedPanel(itemConfig), true);
 
                StackController.getDefaultConfig(itemConfig);
-               assert.equal(itemConfig.popupOptions.maximized, true); //default value
+               assert.equal(itemConfig.popupOptions.maximized, false); //default value
                assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
 
                StackController.elementMaximized(itemConfig, {}, false);
@@ -375,6 +390,7 @@ define(
                };
                StackController._update = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
+               StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
 
                StackController.elementCreated(itemConfig, {});
                //Зависит от того где запускаем тесты, под нодой или в браузере
@@ -385,8 +401,10 @@ define(
 
                itemConfig.popupOptions.className = '';
                StackController.elementUpdated(itemConfig, {});
-               //класс обновился, потому что состояние было opened
-               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === " controls-Stack");
+               StackController.elementUpdated(itemConfig, {});
+               StackController.elementUpdated(itemConfig, {});
+               //класс обновился, потому что состояние было opened. После множ. update класс не задублировался
+               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === "controls-Stack");
 
                itemConfig.stackState = 'notOpened';
                itemConfig.popupOptions.className = '';
@@ -423,6 +441,18 @@ define(
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
+
+            it('stack with wrong options type', function() {
+               let item = {
+                  popupOptions: {
+                     minWidth: '600',
+                     maxWidth: '800'
+                  }
+               };
+               var position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10) + stackShadowWidth);
+            });
+
             it('stack reduced width', function() {
                Stack.getMaxPanelWidth = () => 1000;
                let item = {

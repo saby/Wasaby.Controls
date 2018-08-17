@@ -41,9 +41,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             };
          },
 
-         getItemPosition: function(stack, index) {
+         getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            var item = stack.at(index);
             return StackStrategy.getPosition(targetCoords, item);
          },
 
@@ -56,12 +55,22 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeAnimationClasses: function(className) {
+            className = (className || '');
             return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
          prepareUpdateClassses: function(className) {
-            className =  _private.removeAnimationClasses(className);
-            className += ' ' + STACK_CLASS;
+            className = (className || '');
+            className = _private.removeAnimationClasses(className);
+            className = _private.addStackClasses(className);
+            return className;
+         },
+
+         addStackClasses: function(className) {
+            className = (className || '');
+            if (className.indexOf(STACK_CLASS) < 0) {
+               className += ' ' + STACK_CLASS;
+            }
             return className;
          },
 
@@ -81,6 +90,12 @@ define('Controls/Popup/Opener/Stack/StackController',
          setMaximizedState: function(item, state) {
             item.popupOptions.maximized = state;
             item.popupOptions.templateOptions.maximized = state;
+         },
+         getWindowSize: function() {
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight
+            };
          }
       };
 
@@ -155,10 +170,9 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          _update: function() {
-            var self = this;
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
-            this._stack.each(function(item, index) {
-               item.position = _private.getItemPosition(self._stack, index);
+            this._stack.each(function(item) {
+               item.position = _private.getItemPosition(item);
                if (StackStrategy.isMaximizedPanel(item)) {
                   _private.prepareMaximizedState(maxPanelWidth, item);
                }
@@ -168,11 +182,11 @@ define('Controls/Popup/Opener/Stack/StackController',
          getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
             var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
-            item.popupOptions.className += ' controls-Stack';
+            item.popupOptions.className = _private.addStackClasses(item.popupOptions.className);
             if (StackStrategy.isMaximizedPanel(item)) {
                //set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; //for vdom dirtyChecking
-               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : true;
+               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
             if (HAS_ANIMATION) {
@@ -183,6 +197,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.position = {
                top: -10000,
                left: -10000,
+               height: _private.getWindowSize().height,
                width: position.width || undefined
             };
          },

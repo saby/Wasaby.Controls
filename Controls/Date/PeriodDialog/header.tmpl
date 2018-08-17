@@ -1,0 +1,63 @@
+<div class="controls-PeriodDialog__header">
+   <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
+      <Controls.Button
+         if="{{_yearStateEnabled}}"
+         attr:class="controls-PeriodDialog__stateButton"
+         style="linkMain"
+         tooltip="{[Смена режима календаря]}"
+         icon="icon-small icon-ArrangeList icon-primary"
+         checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
+         on:click="_toggleState()"
+      />
+   <!--</div>-->
+
+   <Controls.Input.Date.LinkView
+      if="{{ _headerType === 'link' }}"
+      startValue="{{_headerRangeModel.startValue}}"
+      endValue="{{_headerRangeModel.endValue}}"
+      emptyCaption="{{_options.emptyCaption}}"
+      showNextArrow="{{false}}"
+      showPrevArrow="{{false}}"
+      showUndefined="{{true}}"
+      attr:class="controls-PeriodDialog__header-period"
+   />
+   <div if="{{ _headerType !== 'link' }}" class="controls-PeriodDialog__header-period">
+      <!--<SBIS3.CONTROLS.Date.Box-->
+         <!--tabindex="1"-->
+         <!--mask="{{mask}}"-->
+         <!--name="DatePickerStart"-->
+         <!--autocompleteMode="start"-->
+         <!--onTextChangeMode="onTextEnter"-->
+         <!--date="{{startValue}}"-->
+         <!--size="m"-->
+         <!--className="controls-DateRangeBigChoose__datePickerStart"-->
+         <!--serializationMode="{{serializationMode}}"-->
+      <!--/>-->
+      <div if="{{selectionType !== 'range'}}" class="controls-PeriodDialog__dateInputEnd-wrapper">
+         <div class="controls-PeriodDialog__header-rangeDash"></div>
+         <!--<ws:partial template="DateBoxTpl" scope="{{...}}" activableByClick="{{ false }}">-->
+            <!--<ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>-->
+            <!--<ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>-->
+         <!--</ws:partial>-->
+      </div>
+   </div>
+
+   <Controls.Button
+      if="{{_homeButtonVisible}}"
+      style="linkMain"
+      activableByClick="{{false}}"
+      iconStyle="default"
+      tooltip="{[Текущий период]}"
+      icon="icon-size icon-small icon-Home3 icon-primary"
+   />
+   <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
+   <Controls.Button
+      style="iconButtonBordered"
+      icon="icon-medium icon-Yes"
+      iconStyle="done"
+      size="l"
+      attr:class="controls-PeriodDialog__applyButton"
+   />
+
+   <Controls.Button.Close/>
+</div>

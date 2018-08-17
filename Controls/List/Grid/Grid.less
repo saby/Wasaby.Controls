@@ -47,10 +47,12 @@
    display: grid;
    width: 100%;
 }
+
 .controls-Grid__header {
    display: contents;
    color: @color_Grid-header;
 }
+
 .controls-Grid__header-cell {
    height: 100%;
    box-sizing: border-box;
@@ -63,35 +65,44 @@
    padding-top: @spacing_Grid-header-row / 2;
    padding-bottom: @spacing_Grid-header-row / 2;
 }
+
 .controls-Grid__header-cell_spacing_money:after {
    content: ".99";
    visibility: hidden;
    display: inline-block;
 }
-.controls-Grid__header-cell__content{
+
+.controls-Grid__header-cell__content {
    display: inline-block;
 }
+
 .controls-Grid__header-cell_valign_bottom {
    align-self: end;
 }
+
 .controls-Grid__header-cell_valign_top {
    align-self: start;
 }
+
 .controls-Grid__header-cell_valign_middle {
    align-self: center;
 }
+
 .controls-Grid__results {
    display: contents;
 }
+
 .controls-Grid__results-cell {
    .position-sticky();
    background-color: @background-color_Grid-sticky-row;
    z-index: 1;
    min-width: 0;
 }
+
 .controls-Grid__row {
    display: contents;
 }
+
 .controls-Grid__row-cell {
    min-height: @min-height_Grid-row;
    position: relative;
@@ -101,86 +112,108 @@
    min-width: 0;
    font-size: @font-size_Grid-row-cell;
 }
+
 .controls-Grid__header-cell_halign_left {
    text-align: left;
 }
+
 .controls-Grid__header-cell_halign_right {
    text-align: right;
 }
+
 .controls-Grid__header-cell_halign_center {
    text-align: center;
 }
+
 .controls-Grid__row-cell__content_halign_left {
    justify-content: flex-start;
    text-align: left;
 }
+
 .controls-Grid__row-cell__content_halign_right {
    justify-content: flex-end;
    text-align: right;
 }
+
 .controls-Grid__row-cell__content_halign_center {
    justify-content: center;
    text-align: center;
 }
+
 .ws-is-no-touch {
-   .controls-Grid__row:hover .controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_default:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {
       display: inline-block;
    }
 }
+
 .controls-Grid__row-cell-background-editing {
    background-color: @controls-editInPlace-editing-item-bg;
-   >.controls-itemActionsV {
+   > .controls-itemActionsV {
       display: inline-block;
    }
 }
+
 .controls-Grid__row-cell_rowSpacing_default {
    padding-top: (@spacing_Grid-row_default / 2);
    padding-bottom: @spacing_Grid-row_default / 2;
 }
+
 .controls-Grid__row-cell_rowSpacing_M {
    padding-top: (@spacing_Grid-row_M / 2);
    padding-bottom: @spacing_Grid-row_M / 2;
 }
+
 .controls-Grid__row-cell_rowSpacing_L {
    padding-top: (@spacing_Grid-row_L / 2);
    padding-bottom: @spacing_Grid-row_L / 2;
 }
+
 .controls-Grid__cell_spacingLeft {
    padding-left: @spacing_Grid-column / 2;
 }
+
 .controls-Grid__cell_spacingRight {
    padding-right: @spacing_Grid-column / 2;
 }
+
 .controls-Grid__row-cell__content_withLadder {
    visibility: hidden;
 }
+
 .controls-Grid__row-ladder-cell {
    pointer-events: none;
    position: relative;
 }
+
 .controls-Grid__row-ladder-cell__content {
    .position-sticky();
    top: 0;
 }
+
 .controls-Grid__row-cell_withoutRowSeparator {
    border-top-color: transparent;
    border-bottom-color: transparent;
 }
+
 .controls-Grid__row-cell_lastRow {
    border-bottom: @height-Grid-row-separator solid;
 }
+
 .controls-Grid__row-cell_withRowSeparator_firstRow {
    border-top-color: @color-Grid-row-separator-boundary;
 }
+
 .controls-Grid__row-cell_withRowSeparator_lastRow {
    border-bottom-color: @color-Grid-row-separator-boundary;
 }
+
 .controls-Grid__row-cell_withRowSeparator {
    border-top-color: @color-Grid-row-separator;
 }
+
 /* По умолчанию используется большая базова линия (первая строка всегда должна быть с большой базовой линией).
    Далее, в зависимости от задачи, по месту устанавливаются нужные классы:
    controls-Grid__row-cell__content_baseline_S
@@ -190,74 +223,143 @@
    content: '\200b';
    font-size: @font-size_Grid-cell_L;
 }
+
 .controls-Grid__row-cell__content_baseline_M:before {
    content: '\200b';
    font-size: @font-size_Grid-cell_M;
 }
+
 .controls-Grid__row-cell__content_baseline_S:before {
    content: '\200b';
    font-size: @font-size_Grid-cell_S;
 }
+
 .controls-Grid__cell_spacingFirstCol_default {
    padding-left: @padding_Grid-left_default;
 }
+
 .controls-Grid__cell_spacingFirstCol_XS {
    padding-left: @padding_Grid-left_XS;
 }
+
 .controls-Grid__cell_spacingFirstCol_S {
    padding-left: @padding_Grid-left_S;
 }
+
 .controls-Grid__cell_spacingFirstCol_M {
    padding-left: @padding_Grid-left_M;
 }
+
 .controls-Grid__cell_spacingFirstCol_L {
    padding-left: @padding_Grid-left_L;
 }
+
 .controls-Grid__cell_spacingFirstCol_XL {
    padding-left: @padding_Grid-left_XL;
 }
+
 .controls-Grid__cell_spacingFirstCol_XXL {
    padding-left: @padding_Grid-left_XXL;
 }
+
 .controls-Grid__cell_spacingLastCol_default {
    padding-right: @padding_Grid-right_default;
 }
+
 .controls-Grid__cell_spacingLastCol_XS {
    padding-right: @padding_Grid-left_XS;
 }
+
 .controls-Grid__cell_spacingLastCol_S {
    padding-right: @padding_Grid-left_S;
 }
+
 .controls-Grid__cell_spacingLastCol_M {
    padding-right: @padding_Grid-left_M;
 }
+
 .controls-Grid__cell_spacingLastCol_L {
    padding-right: @padding_Grid-left_L;
 }
+
 .controls-Grid__cell_spacingLastCol_XL {
    padding-right: @padding_Grid-left_XL;
 }
+
 .controls-Grid__cell_spacingLastCol_XXL {
    padding-right: @padding_Grid-left_XXL;
 }
+
 .controls-Grid__row-cell_withSelectionMarker {
    box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
 }
+
 .controls-GridView__item_active {
    background-color: @default-bg-color-hovered-item;
 }
+
 // Checkbox styles
 .controls-Grid__row-cell-checkbox {
    min-width: @width_Grid-cell-checkbox;
    max-width: @width_Grid-cell-checkbox;
 }
+
 .controls-GridView__checkbox {
    position: absolute;
    top: @padding_Grid-checkbox;
    left: 0;
 }
+
+.controls-Grid__row-cell__contentWrapper {
+   display: inline-flex;
+   width: 100%;
+}
+
 .controls-Grid__row-cell__content {
    width: 100%;
    display: inline-flex;
    align-items: baseline;
+}
+
+//MasterList styles
+
+.controls-Grid_master {
+   padding-right: @border-width_MasterList-right;
+   box-sizing: border-box;
+}
+
+.controls-Grid__row-cell_withSelectionMarker_master {
+   background-color: @background-color_MasterList_item-selected;
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: @border-width_MasterList-selected-item;
+      border-style: solid;
+      border-color: @border-color_MasterList_item-selected;
+      box-shadow: @box-shadow_MasterList_item-selected;
+      width: ~'calc(100% + @{border-width_MasterList-right})';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      //Top border of grid element is 1px;
+      height: ~'calc(100% + 1px)';
+   }
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @border-width_MasterList-right;
+      position: absolute;
+      right: -@border-width_MasterList-right;
+      background-color: @default-bg-color;
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
+      background-color: @hover-color_MasterList_item;
+   }
 }

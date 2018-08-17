@@ -1,12 +1,14 @@
 define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    [
-   "Core/core-merge",
-   "SBIS3.CONTROLS/SubmitPopup",
-   "SBIS3.CONTROLS/NotificationPopup",
-   "browser!SBIS3.CONTROLS/Utils/NotificationStackManager",
-   "Core/constants",
-   "Core/helpers/Function/runDelayed"
-],
+      'Core/core-merge',
+      'Core/CompoundContainer',
+      'Controls/Popup/Opener/Notification',
+      'SBIS3.CONTROLS/SubmitPopup',
+      'SBIS3.CONTROLS/NotificationPopup',
+      'browser!SBIS3.CONTROLS/Utils/NotificationStackManager',
+      'Core/constants',
+      'Core/helpers/Function/runDelayed'
+   ],
 
    /**
     * Класс интерфейса для работы с нотификационными уведомлениями (см. {@link SBIS3.CONTROLS/NotificationPopup}) и окнами (см. {@link SBIS3.CONTROLS/SubmitPopup}).
@@ -26,18 +28,20 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     *    });
     * </pre>
     * @class SBIS3.CONTROLS/Utils/InformationPopupManager
-    * @author Степин П.В.
+    * @author Красильников А.С.
     * @public
     */
-   function( cMerge,
-             SubmitPopup,
-             NotificationPopup,
-             NotificationManager,
-             constants,
-             runDelayed){
+   function(cMerge,
+      CompoundContainer,
+      NotificationVDOM,
+      SubmitPopup,
+      NotificationPopup,
+      NotificationManager,
+      constants,
+      runDelayed) {
       'use strict';
 
-      var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
+      var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler) {
          if (config.message && config.status === 'error') {
             config.message = config.message.toString().replace('Error: ', '');
          }
@@ -46,21 +50,21 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
             isModal: true
          }));
 
-         popup.subscribeOnceTo(popup, 'onChoose', function(e, res){
+         popup.subscribeOnceTo(popup, 'onChoose', function(e, res) {
             var handler;
-            switch(res){
+            switch (res) {
                case true: handler = positiveHandler; break;
                case false: handler = negativeHandler; break;
                default: handler = cancelHandler; break;
             }
 
-            if(handler && typeof handler === 'function'){
+            if (handler && typeof handler === 'function') {
                handler.call(popup);
             }
          });
 
          if (constants.browser.isIE) {
-            runDelayed(function () {
+            runDelayed(function() {
                popup.show();
                popup.setActive(true);
             });
@@ -98,7 +102,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showNotification
           * @see showCustomNotification
           */
-         showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler){
+         showConfirmDialog: function(config, positiveHandler, negativeHandler, cancelHandler) {
             return showSubmitDialog(cMerge(config, {
                status: 'confirm'
             }), positiveHandler, negativeHandler, cancelHandler);
@@ -123,7 +127,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showNotification
           * @see showCustomNotification
           */
-         showMessageDialog: function(config, handler){
+         showMessageDialog: function(config, handler) {
             return showSubmitDialog(config, null, null, handler);
          },
 
@@ -148,14 +152,80 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showConfirmDialog
           * @see showMessageDialog
           */
-         showNotification: function(config, notHide){
-            var popup = new NotificationPopup(cMerge({
-               element: $('<div></div>')
-            }, config));
+         showNotification: function(config, notHide) {
+            if (NotificationVDOM.isNewEnvironment()) {
+               if (!this._notificationVDOM) {
+                  //TODO: Дима Зуев предлагает перейти на создание через new, но падают ошибки.
+                  //https://online.sbis.ru/opendoc.html?guid=2be2cedb-91ec-4814-a76c-66c0f62431be
+                  this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
+                  /**
+                   * Ассоциативный объект значений опций старого и нового шаблона.
+                   * [значение в старом шаблоне]: значение в новом шаблоне
+                   */
+                  this._styles = {
+                     success: 'done',
+                     error: 'error',
+                     warning: 'warning'
+                  };
+                  /**
+                   * Аналогично this._styles.
+                   */
+                  this._icon = {
+                     success: 'icon-size icon-24 icon-Yes icon-done',
+                     error: 'icon-size icon-24 icon-Alert icon-error',
+                     warning: 'icon-size icon-24 icon-Alert icon-attention'
+                  };
+               }
 
-            NotificationManager.showNotification(popup, notHide);
+               /**
+                * Эмулируем код в init SBIS3.CONTROLS/NotificationPopup
+                */
+               if (!('closeButton' in config)) {
+                  config.closeButton = true;
+               }
+               if (!('icon' in config)) {
+                  config.icon = this._icon[config.status];
+               }
 
-            return popup;
+               /**
+                * Прикладники обращаесь через .getParent() получали popup, в нашем случае opener, сейчас
+                * получают Controls/Popup/Templates/Notification/Compatible в нем нужно
+                * пробросить вызовы в opener. Поэтому передаем его.
+                */
+               config._opener = this._notificationVDOM;
+
+               /**
+                * Используем базовый шаблон vdom нотификационных окон с контентом Core/CompoundContainer для
+                * оэивления старых компонентов. А ему в качестве контента отдадим эмуляцию SBIS3.CONTROLS/NotificationPopup,
+                * а именно Controls/Popup/Templates/Notification/Compatible
+                */
+               this._notificationVDOM.open({
+                  template: 'Controls/Popup/Templates/Notification/Base',
+                  templateOptions: {
+                     autoClose: !notHide,
+                     contentTemplateOptions: {
+                        component: 'Controls/Popup/Templates/Notification/Compatible',
+                        componentOptions: config
+                     },
+                     style: this._styles[config.status],
+                     contentTemplate: CompoundContainer,
+                     iconClose: config.closeButton || true
+                  }
+               });
+               this._notificationVDOM.isDestroyed = function() {
+                  return false;
+               };
+
+               return this._notificationVDOM;
+            } else {
+               var popup = new NotificationPopup(cMerge({
+                  element: $('<div></div>')
+               }, config));
+
+               NotificationManager.showNotification(popup, notHide);
+
+               return popup;
+            }
          },
 
          /**
@@ -166,7 +236,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showConfirmDialog
           * @see showMessageDialog
           */
-         showCustomNotification: function(inst, notHide){
+         showCustomNotification: function(inst, notHide) {
             NotificationManager.showNotification(inst, notHide);
             return inst;
          }

@@ -1,12 +1,13 @@
 define('Controls/Decorator/Highlight',
    [
       'Core/Control',
+      'Controls/Utils/RegExp',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Decorator/Highlight/Highlight',
 
       'css!Controls/Decorator/Highlight/Highlight'
    ],
-   function(Control, descriptor, template) {
+   function(Control, RegExpUtil, descriptor, template) {
 
       'use strict';
 
@@ -18,6 +19,8 @@ define('Controls/Decorator/Highlight',
        * @control
        * @public
        * @category Decorator
+       *
+       * @author Журавлев Максим Сергеевич
        */
 
       /**
@@ -52,7 +55,7 @@ define('Controls/Decorator/Highlight',
          getHighlightRegExp: function(highlight) {
             var highlightRegExpString = highlight.replace(this.separatorsRegExp, ')?(\\s?');
 
-            return new RegExp('(' + highlightRegExpString + ')?', 'gi');
+            return new RegExp('(' + RegExpUtil.escapeSpecialChars(highlightRegExpString) + ')?', 'gi');
          },
 
          parseText: function(text, highlight) {

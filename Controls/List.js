@@ -32,7 +32,7 @@ define('Controls/List', [
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List */{
       _template: ListControlTpl,
 
       _items: null,
@@ -132,6 +132,10 @@ define('Controls/List', [
 
       _dragEnd: function(event, items, target, position) {
          return this._notify('dragEnd', [items, target, position]);
+      },
+
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 
@@ -147,5 +151,12 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
+
+   ListControl.getDefaultOptions = function() {
+      return {
+         style: 'default'
+      };
+   };
+
    return ListControl;
 });

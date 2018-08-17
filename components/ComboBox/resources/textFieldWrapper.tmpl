@@ -8,8 +8,8 @@
     maxlength="{{maxLength ? maxLength}}"
     required="true"
     title="{{tooltip ? tooltip : ' '}}"
-    placeholder="{{' '}}"
     readonly="{{ (!enabled || !editable) ? 'readonly' }}"
+    placeholder="{{' '}}"
     autocorrect="off"
 />
 <ws:if data="{{ enabled && placeholder }}">

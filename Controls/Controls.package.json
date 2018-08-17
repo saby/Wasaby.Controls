@@ -13,7 +13,6 @@
 }, {
   "include": [
     "Controls/Container/*",
-    "Controls/Layout/*",
     "Controls/StickyHeader",
     "Controls/StickyHeader/*"
   ],
@@ -41,8 +40,8 @@
     "Controls/Filter/*"
   ],
   "exclude": [
-    "Controls/Filter/_FilterCompatible",
-    "Controls/Filter/OldPanelOpener"
+    "Controls/Filter/Button/_FilterCompatible",
+    "Controls/Filter/Button/OldPanelOpener"
   ],
   "output": "controls-filter.package.js"
 }, {
@@ -66,7 +65,17 @@
   "include": [
     "Controls/Input/*"
   ],
+  "exclude": [
+    "Controls/Input/RichArea",
+    "Controls/Input/RichArea/*"
+  ],
   "output": "controls-input.package.js"
+}, {
+  "include": [
+    "Controls/Input/RichArea",
+    "Controls/Input/RichArea/*"
+  ],
+  "output": "controls-richarea.package.js"
 }, {
   "include": [
     "Controls/Label/*",
@@ -111,7 +120,8 @@
   "output": "controls-toggle.package.js"
 }, {
   "include": [
-    "Controls/Utils/*"
+    "Controls/Utils/*",
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-utils.package.js"
 }, {
@@ -134,6 +144,9 @@
 }, {
   "include": [
     "Controls/Calendar/*"
+  ],
+  "exclude": [
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
 }]

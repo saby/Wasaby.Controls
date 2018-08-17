@@ -9,7 +9,7 @@ define('Controls/Utils/hasHorizontalScroll', [
          targetStyles = getComputedStyle(target),
          result = target.clientWidth !== target.scrollWidth;
 
-         /*
+      /*
           Если на элементе висит text-align: right, то хром очень странно округляет scrollWidth. Например при реальной
           ширине в 277.859 он может округлить scrollWidth до 279. При этом для clientWidth он округляет по какому-то другому
           алгоритму, и в итоге возникает ситуация, когда текст влезает, но clientWidth и scrollWidth сильно отличаются.

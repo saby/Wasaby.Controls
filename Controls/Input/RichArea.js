@@ -28,10 +28,12 @@ define('Controls/Input/RichArea', [
             this._htmlJson.setJson = function(json) {
                this._options.json = json;
             };
-            opts.value = this._jsonToHtml(opts.json);
+            this._value = this._jsonToHtml(opts.json);
+         } else {
+            this._value = opts.value;
          }
          this._simpleViewModel = new RichModel({
-            value: opts.value
+            value: this._value
          });
       },
 
@@ -39,11 +41,13 @@ define('Controls/Input/RichArea', [
          if (opts.json) {
             var isOldJson = opts.json === this._htmlJson._options.json;
             if (!isOldJson) {
-               opts.value = this.jsonToHtml(opts.json);
+               this._value = this._jsonToHtml(opts.json);
             }
+         } else {
+            this._value = opts.value;
          }
-         if (!isOldJson && this._simpleViewModel.getValue() !== opts.value) {
-            this.setValue(opts.value);
+         if (!isOldJson && this._simpleViewModel.getValue() !== this._value) {
+            this.setValue(this._value);
          }
       },
 

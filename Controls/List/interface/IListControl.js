@@ -141,10 +141,6 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
-    * @event Controls/List/interface/IListControl#dataLoaded Occurs when data is loaded.
-    */
-
-   /**
     * @event  Controls/List/interface/IListControl#markedKeyChanged Occurs when list item was selected (marked).
     * @param {Number} key Key of the selected item.
     */

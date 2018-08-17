@@ -1071,7 +1071,7 @@ define('SBIS3.CONTROLS/FieldLink',
 
              if (!this._options.multiselect && keysArrLen) {
                 this._destroyCompatPlaceholder();
-             } else if (!this._compatPlaceholder) {
+             } else if (!this._compatPlaceholder && this.isEnabled()) {
                 this._createCompatiblePlaceholder();
              }
 

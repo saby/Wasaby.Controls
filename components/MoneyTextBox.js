@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
 
    'use strict';
 
-   function formatText(value, text, integers, maxLength, onlyPositive){
+   function formatText(value, text, integers, maxLength, onlyPositive, countMinusInLength, decimals){
       // Вырезаем переносы строк и теги.
       value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
@@ -23,13 +23,13 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
           value,
           integers,
           true,
-          2,
+          decimals,
           onlyPositive,
           maxLength,
           true
       );
 
-      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
+      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength, countMinusInLength)){
          return text;
       }
 
@@ -50,6 +50,12 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            /**
+             * @cfg {string} Выравнивание текста относительно контейнера
+             * <pre>
+             *     <option name="textAlign">left</option>
+             * </pre>
+             */
             textAlign: 'right',
             _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
@@ -64,6 +70,13 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              * @see hideEmptyDecimals
              */
             decimals: 2,
+            /**
+             * @cfg {Boolean} Требуется ли скрывать пустую дробную часть
+             * @example
+             * <pre>
+             *     <option name="hideEmptyDecimals">true</option>
+             * <pre>
+             */
             hideEmptyDecimals: false,
             /**
              * @cfg {Boolean} Показать разделители триад
@@ -104,7 +117,9 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
                 options.text,
                 options.integers,
                 options.maxLength,
-                options.onlyPositive
+                options.onlyPositive,
+                options.countMinusInLength,
+                options.decimals
             );
              dotPos = options.text.indexOf('.');
              if(dotPos){
@@ -206,7 +221,9 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              this._options.text,
              this._options.integers,
              this._options.maxLength,
-             this._options.onlyPositive
+             this._options.onlyPositive,
+             this._options.countMinusInLength,
+             this._options.decimals
          );
       },
       /**
