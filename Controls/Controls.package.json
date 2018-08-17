@@ -68,8 +68,7 @@
   ],
   "exclude": [
     "Controls/Input/RichArea",
-    "Controls/Input/RichArea/*",
-    "css!Controls/Input/resources/InputRender/InputRender"
+    "Controls/Input/RichArea/*"
   ],
   "output": "controls-input.package.js"
 }, {
