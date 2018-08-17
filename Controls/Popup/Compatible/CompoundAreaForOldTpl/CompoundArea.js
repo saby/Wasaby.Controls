@@ -320,7 +320,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          //TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
-         _checkLink: function (opener) {
+         _checkLink: function(opener) {
             while (opener && opener._moduleName !== this._moduleName) {
                opener = opener.getParent && opener.getParent();
             }
