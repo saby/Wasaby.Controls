@@ -216,8 +216,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _fixIos: function() {
+
             //todo https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
             var container = this._childControl && this._childControl.getContainer();
+
             //На ios появилась бага, у панели контактов после открытия не вызывается браузерная перерисовка. вызываю вручную
             if (container && CoreConstants.browser.isMobileIOS) {
                container = container.get ? container.get(0) : container;
