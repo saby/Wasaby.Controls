@@ -48,7 +48,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          showNotification: function(inst, notHide){
             notHide = !!notHide;
 
-            //Убираем фокус с окна
+            // Всплывающие уведомления не должны принимать фокус при клике на них
             inst.getContainer().get(0).addEventListener('mousedown', function(event) {
                event.preventDefault();
             });
