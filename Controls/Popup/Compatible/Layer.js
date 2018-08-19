@@ -295,9 +295,15 @@ define('Controls/Popup/Compatible/Layer', [
             return loadDeferred;
          }
          var fakeDeferred = new Deferred();
-         loadDeferred.addCallback(function() {
+         //Если из колбэка основного дефереда вернули другой деферед, то после того, как основной деферед получит статус
+         //isReady = true, он проигнорирует все колбэки, которые навешены после завершения.
+         if (loadDeferred.isReady()) {
             fakeDeferred.callback();
-         });
+         } else {
+            loadDeferred.addCallback(function() {
+               fakeDeferred.callback();
+            });
+         }
          return fakeDeferred;
       }
    };
