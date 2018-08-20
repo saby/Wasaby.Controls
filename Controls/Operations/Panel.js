@@ -26,7 +26,7 @@ define('Controls/Operations/Panel', [
 
    /**
     * @name Controls/Operations/Panel#multiSelectorVisibility
-    * @cfg {Boolean} multiSelector Show multiSelector block.
+    * @cfg {Boolean} Show the block with the operations of the mark.
     */
 
    /**
@@ -36,6 +36,7 @@ define('Controls/Operations/Panel', [
 
    /**
     * @event Controls/Operations/Panel#itemClick Occurs when item was clicked.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} item Clicked item.
     */
 
