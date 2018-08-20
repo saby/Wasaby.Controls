@@ -157,7 +157,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
          _forceUpdate: function() {
             // Заглушка для ForceUpdate которого на compoundControl нет
-         }
+         },
+
+         setInnerComponentOptions: function (newOptions) {
+            //https://online.sbis.ru/opendoc.html?guid=037ab701-0148-478c-9ef0-07365d1fa3c1
+            this._vDomTemplate._options = newOptions;
+            this._vDomTemplate._forceUpdate();
+         },
       });
 
       moduleClass.dimensions = {
