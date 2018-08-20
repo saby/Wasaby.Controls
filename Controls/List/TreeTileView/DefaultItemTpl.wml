@@ -1,0 +1,45 @@
+<ws:template name="folderTpl">
+   <div class="controls-TileView__item controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+            {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
+            {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+            {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
+        attr:style="{{'flex-basis: ' + folderWidth + 'px;'}}">
+      <ws:partial if="{{itemData.multiSelectVisibility}}"
+                  template="{{multiSelectTpl}}"
+                  attr:class="controls-TileView__checkbox controls-TreeTileView__checkbox">
+         <ws:templateOptions triState="{{true}}"
+                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             key="{{itemData.key}}" />
+      </ws:partial>
+      <span class="controls-TreeTileView__folderIcon icon-large icon-Folder icon-disabled"></span>
+      <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+      <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+                  template="{{swipeTemplate}}"
+                  itemData="{{itemData}}"
+                  itemActionsTemplate="{{itemActionsTemplate}}"/>
+      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
+                  template="{{itemActionsTemplate}}"
+                  itemData="{{itemData}}"
+                  attr:class="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
+   </div>
+</ws:template>
+<ws:if data="{{invisible}}">
+   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'flex-basis: ' + folderWidth + 'px;'}}"></div>
+</ws:if>
+<ws:else>
+   <ws:if data="{{itemData.dispItem.isNode()}}">
+      <ws:partial template="folderTpl"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial
+         template="wml!Controls/List/TileView/DefaultItemTpl"
+         width="{{itemWidth}}"
+         hasTitle="{{hasTitle}}"
+         itemData="{{itemData}}"
+         invisible="{{invisible}}"
+         contentTemplate="{{contentTemplate}}"
+         itemActionsTemplate="{{itemActionsTemplate}}"
+         swipeTemplate="{{swipeTemplate}}"
+         multiSelectTpl="{{multiSelectTpl}}"/>
+   </ws:else>
+</ws:else>

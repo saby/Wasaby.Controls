@@ -1,0 +1,121 @@
+.controls-TileView {
+   display: flex;
+   flex-wrap: wrap;
+}
+
+.controls-TileView__item {
+   position: relative;
+   flex-grow: 1;
+   margin: @margin_TileView-item;
+}
+
+.controls-TileView__itemContent {
+   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
+   background-color: @background-color_TileView-item;
+   z-index: 1;
+   overflow: hidden;
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+}
+
+.controls-TileView__title {
+   max-height: @max-height_TileView-title;
+   padding: @padding_TileView-title;
+   border-top: @border-width_TileView-title solid @border-color_TileView-title;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+}
+
+.controls-TileView__imageWrapper {
+   position: relative;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   overflow: hidden;
+}
+
+.controls-TileView__image {
+   position: absolute;
+}
+
+.controls-TileView__itemContent:hover, .controls-TileView__item_active, .controls-TileView__item_swiped {
+   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+}
+
+.controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
+   z-index: 10;
+
+   .controls-TileView__title {
+      background-color: @background-color_TileView-title;
+      white-space: normal;
+      word-break: break-all;
+   }
+
+   .controls-TileView__title_invisible {
+      display: block;
+   }
+}
+
+.controls-TileView__item_active {
+   z-index: 20;
+}
+
+.controls-TileView__item_fixed {
+   position: fixed;
+}
+
+.controls-TileView__title_invisible {
+   display: none;
+}
+
+.controls-TileView__checkbox {
+   position: absolute;
+   z-index: 1;
+
+   .controls-Checkbox__icon:before {
+      background-color: @border-color_TileView-checkbox;
+   }
+}
+
+.controls-TileView__checkbox_top {
+   top: 0;
+   left: 0;
+}
+
+.controls-TileView__item_withoutMarker {
+   border: @border-width_TileView-item solid @border-color_TileView-item;
+}
+
+.controls-TileView__item_withMarker {
+   border: @border-width_TileView-item solid @border-color_TileView-item_marked;
+}
+
+//TODO: Можно убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=38c5aa2c-f30c-42e9-a654-5358bc7691fd
+.controls-itemActionsV.controls-TileView__itemActions {
+   padding: 0;
+}
+//TODO: end
+
+.controls-TileView__itemActions {
+   box-shadow: @box-shadow-offset_TileView-itemActions 0 @box-shadow-blur_TileView-itemActions 0 @background-color_TileView-title;
+}
+
+.controls-TileView__resizer {
+   margin-bottom: -@height_TileView-title_visible;
+}
+
+.controls-TileView__imageWrapper_reduced {
+   border-bottom: @height_TileView-title_visible solid transparent;
+   margin-bottom: -@height_TileView-title_visible;
+   box-sizing: border-box;
+}
+
+.controls-TileView__item_invisible {
+   height: 0;
+   margin-top: 0;
+   margin-bottom: 0;
+   border: none;
+}

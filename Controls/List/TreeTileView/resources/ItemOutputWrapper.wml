@@ -1,0 +1,16 @@
+<ws:if data="{{listModel.getCurrent().hasSeparator}}">
+   <ws:for data="i in 10">
+      <ws:partial template="{{itemTemplate}}" invisible="{{true}}"/>
+   </ws:for>
+   <div class="controls-TreeTileView__separator"></div>
+</ws:if>
+<ws:partial
+   __noDirtyChecking="{{true}}"
+   template="{{'wml!Controls/List/resources/ItemOutput'}}"
+   listModel="{{listModel}}"
+   itemActionsTemplate="{{itemActionsTemplate}}"
+   swipeTemplate="{{swipeTemplate}}"
+   multiSelectTpl="{{multiSelectTpl}}"
+   itemTemplate="{{itemTemplate}}"
+   itemActionsPosition="{{itemActionsPosition}}" />
+{{listModel.goToNext()}}

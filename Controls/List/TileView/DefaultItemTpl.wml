@@ -1,0 +1,82 @@
+<ws:template name="itemTpl">
+   <div class="controls-TileView__item controls-ListView__itemV">
+      <ws:partial template="{{content}}"/>
+   </div>
+</ws:template>
+
+<ws:template name="defaultContentTpl">
+   <div class="controls-TileView__itemContent
+               {{!!itemData.isActive ? ' controls-TileView__item_active'}}
+               {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
+               {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
+               {{itemData.fixedPosition ? ' controls-TileView__item_fixed'}}
+               {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+               {{!!itemData.showActions && itemData.isHovered ? ' controls-ListView__item_showActions'}}"
+        attr:style="{{itemData.fixedPosition ? itemData.fixedPosition}}">
+      <ws:partial if="{{itemData.multiSelectVisibility}}"
+                  template="{{multiSelectTpl}}"
+                  attr:class="controls-TileView__checkbox controls-TileView__checkbox_top">
+         <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
+      </ws:partial>
+      <ws:if data="{{contentTemplate}}">
+         <ws:partial template="{{contentTemplate}}"
+                     itemData="{{itemData}}"
+                     swipeTemplate="{{swipeTemplate}}"
+                     itemActionsTemplate="{{itemActionsTemplate}}"
+                     hasTitle="{{hasTitle}}"
+                     width="{{width}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="{{imageWrapper}}"/>
+         <div class="controls-TileView__title {{!hasTitle ? 'controls-TileView__title_invisible'}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+      </ws:else>
+      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
+                  template="{{itemActionsTemplate}}"
+                  itemData="{{itemData}}"
+                  attr:class="controls-TileView__itemActions controls-TileView__itemActions_bottom"/>
+   </div>
+</ws:template>
+
+<ws:template name="imageWrapperTpl">
+   <div class="controls-TileView__imageWrapper js-controls-SwipeControl__actionsContainer">
+      <ws:partial template="{{content}}"/>
+   </div>
+</ws:template>
+
+<ws:template name="imageTpl">
+   <img class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
+   <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+               template="{{swipeTemplate}}"
+               itemData="{{itemData}}"
+               itemActionsTemplate="{{itemActionsTemplate}}"/>
+</ws:template>
+
+<ws:if data="{{invisible}}">
+   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'flex-basis: ' + width + 'px;'}}"></div>
+</ws:if>
+<ws:else>
+   <ws:if data="{{itemData.tileMode === 'dynamic'}}">
+      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' +  (width * 0.7) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + width + 'px;'}}">
+         <ws:partial template="defaultContentTpl">
+            <ws:imageWrapper>
+               <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}}" attr:style="{{'height: ' + itemData.itemsHeight + 'px;'}}">
+                  <ws:partial template="imageTpl"/>
+               </ws:partial>
+            </ws:imageWrapper>
+         </ws:partial>
+      </ws:partial>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + width + 'px;'}}">
+         <div style="{{'padding-top: ' + (itemData.itemsHeight / width) * 100 + '%;'}}"></div>
+         <ws:partial template="defaultContentTpl">
+            <ws:imageWrapper>
+               <ws:partial template="imageWrapperTpl">
+                  <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / width) * 100 + '%;'}}"></div>
+                  <ws:partial template="imageTpl"/>
+               </ws:partial>
+            </ws:imageWrapper>
+         </ws:partial>
+      </ws:partial>
+   </ws:else>
+</ws:else>

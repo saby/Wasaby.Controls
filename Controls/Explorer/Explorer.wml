@@ -6,18 +6,38 @@
                               items="{{_breadCrumbsItems}}"
                               on:arrowActivated="_onBreadCrumbsArrowActivated()"
                               on:itemClick="_onBreadCrumbsClick()" />
-   <Controls.TreeGrid root="{{_root}}"
-                      scope="{{_options}}"
-                      on:itemClick="_onItemClick()"
-                      on:checkboxClick="_notifyHandler('checkboxClick')"
-                      on:beforeItemAdd="_notifyHandler('beforeItemAdd')"
-                      on:beforeItemEdit="_notifyHandler('beforeItemEdit')"
-                      on:afterItemEdit="_notifyHandler('afterItemEdit')"
-                      on:beforeItemEndEdit="_notifyHandler('beforeItemEndEdit')"
-                      on:afterItemEndEdit="_notifyHandler('afterItemEndEdit')"
-                      on:itemActionsClick="_notifyHandler('itemActionsClick')"
-                      on:dragStart="_notifyHandler('dragStart')"
-                      on:dragEnd="_notifyHandler('dragEnd')"
-                      on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-                      dataLoadCallback="{{_dataLoadCallback}}"/>
+   <!--TODO: Когда Алексей Авраменко сделает логику переключения viewMode, контролов под if небудет.-->
+   <ws:if data="{{_options.viewMode === 'table'}}">
+      <Controls.TreeGrid root="{{_root}}"
+                         scope="{{_options}}"
+                         on:itemClick="_onItemClick()"
+                         on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                         on:beforeItemAdd="_notifyHandler('beforeItemAdd')"
+                         on:beforeItemEdit="_notifyHandler('beforeItemEdit')"
+                         on:afterItemEdit="_notifyHandler('afterItemEdit')"
+                         on:beforeItemEndEdit="_notifyHandler('beforeItemEndEdit')"
+                         on:afterItemEndEdit="_notifyHandler('afterItemEndEdit')"
+                         on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                         on:dragStart="_notifyHandler('dragStart')"
+                         on:dragEnd="_notifyHandler('dragEnd')"
+                         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                         dataLoadCallback="{{_dataLoadCallback}}"/>
+   </ws:if>
+   <ws:else data="{{_options.viewMode === 'tile'}}">
+      <Controls.TreeTile root="{{_root}}"
+                         scope="{{_options}}"
+                         itemTemplate="{{_options.tileItemTemplate}}"
+                         on:itemClick="_onItemClick()"
+                         on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                         on:beforeItemAdd="_notifyHandler('beforeItemAdd')"
+                         on:beforeItemEdit="_notifyHandler('beforeItemEdit')"
+                         on:afterItemEdit="_notifyHandler('afterItemEdit')"
+                         on:beforeItemEndEdit="_notifyHandler('beforeItemEndEdit')"
+                         on:afterItemEndEdit="_notifyHandler('afterItemEndEdit')"
+                         on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                         on:dragStart="_notifyHandler('dragStart')"
+                         on:dragEnd="_notifyHandler('dragEnd')"
+                         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                         dataLoadCallback="{{_dataLoadCallback}}"/>
+   </ws:else>
 </div>

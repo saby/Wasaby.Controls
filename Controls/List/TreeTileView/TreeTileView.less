@@ -1,0 +1,42 @@
+.controls-TreeTileView__item {
+   height: @height_TreeTileView-item;
+   box-sizing: border-box;
+   display: flex;
+   align-items: center;
+   //flex bug fix
+   min-width: 0;
+}
+
+.controls-TreeTileView__checkbox {
+   left: @left_TreeTileView-checkbox;
+}
+
+.controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
+   background-color: @background-color_TileView-title;
+   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+}
+
+.controls-TreeTileView__title {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 100%;
+   font-size: @font-size_TreeTileView-title;
+   margin: @margin_TreeTileView-title;
+   flex-shrink: 1;
+}
+
+.controls-TreeTileView__folderIcon {
+   margin: @margin_TreeTileView-icon;
+   flex-shrink: 0;
+}
+
+//TODO: Можно убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=38c5aa2c-f30c-42e9-a654-5358bc7691fd
+.controls-itemActionsV.controls-TreeTileView__itemActions_center {
+   bottom: auto;
+}
+//TODO: end
+
+.controls-TreeTileView__separator {
+   width: 100%;
+}

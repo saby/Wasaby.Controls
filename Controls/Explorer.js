@@ -77,7 +77,8 @@ define('Controls/Explorer', [
 
    Explorer.getDefaultOptions = function() {
       return {
-         multiSelectVisibility: 'hidden'
+         multiSelectVisibility: 'hidden',
+         viewMode: 'table'
       };
    };
 
