@@ -738,6 +738,14 @@ define('SBIS3.CONTROLS/DropdownList',
          },
          _dataLoadedCallback: function() {
             var item;
+            
+            /* Зачем тут такая проверка:
+               _dataLoadedCallback при первой загрузке вызывается после события onItemsReady, в этом событии
+               могут что-то поменять в контексте (особенно актуально для быстрого фильтра), и это может вызвать перестроение
+               выпадающего списка. */
+            if (this.isDestroyed()) {
+               return;
+            }
             this._setHeadVariables();
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
