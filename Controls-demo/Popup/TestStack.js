@@ -2,11 +2,10 @@ define('Controls-demo/Popup/TestStack',
    [
       'Core/Control',
       'tmpl!Controls-demo/Popup/TestStack',
-      'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'WS.Data/Entity/Record',
       'require'
    ],
-   function (Control, template, OpenEditDialog, Record, require) {
+   function (Control, template, Record, require) {
       'use strict';
 
       var TestDialog = Control.extend({
@@ -30,7 +29,7 @@ define('Controls-demo/Popup/TestStack',
             this._children.modalDialog.open();
          },
          _openOldPanel: function (event, tplName, mode, isStack) {
-            require([tplName], function () {
+            require(['SBIS3.CONTROLS/Action/List/OpenEditDialog', tplName], function (OpenEditDialog) {
                new OpenEditDialog().execute({
                   template: tplName,
                   mode: mode,

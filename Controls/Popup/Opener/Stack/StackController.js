@@ -28,7 +28,18 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].clientWidth; // Берем размеры пользовательского шаблона без бордера
+            item.containerWidth = _private.getContainerWidth(item, container);
+         },
+
+         getContainerWidth: function(item, container) {
+            var template;
+            if (item.popupOptions.isCompoundTemplate) {
+               //Берем размеры прикладного шаблона
+               template = container.querySelector('.controls-CompoundArea__container').children[0];
+            } else {
+               template = container.querySelector('.controls-Popup__template');
+            }
+            return template.clientWidth; // Берем размеры пользовательского шаблона без бордера
          },
 
          getStackParentCoords: function() {
