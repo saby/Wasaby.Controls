@@ -43,7 +43,7 @@ define('Controls/List/Remover', [
    * @extends Core/Control
    * @mixes Controls/interface/IRemovable
    * @control
-   * @author Sukhoruchkin A.S.
+   * @author Авраменко А.С.
    * @public
    * @category List
    */

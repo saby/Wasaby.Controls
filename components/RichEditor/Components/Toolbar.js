@@ -169,7 +169,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   this._toggleState(state, obj);
                   break;
                case 'blockquote':
-                  this._checkParentForCustomStyle(obj);
                   this._toggleState(state, obj);
                   break;
                case 'alignleft':
@@ -184,7 +183,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   this._updateTextFormat(state, obj);
                   break;
                default: {
-                  this._checkParentForCustomStyle(obj);
                   this._toggleState(state, obj);
                }
             }
@@ -195,12 +193,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                result = RichEditorToolbar.superclass._toggleState.apply(this, arguments);
             if (this.getItems().getRecordById(result.name) && this.getItemInstance(result.name)) {
                 this.getItemInstance(result.name).setChecked(result.state);
-            }
-         },
-
-         _checkParentForCustomStyle: function(obj) {
-            if(this._options.linkedEditor) {
-               this._options.linkedEditor.checkParentForCustomStyle(obj);
             }
          },
 

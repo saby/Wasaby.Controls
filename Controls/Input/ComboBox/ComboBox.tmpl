@@ -35,7 +35,7 @@
          </ws:content>
 
          <ws:afterFieldWrapper>
-            <Controls.Button.Separator if="{{!_options.readOnly}}" bind:value="_isOpen"/>
+            <Controls.Button.Separator if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
          </ws:afterFieldWrapper>
 
       </Controls.Input.resources.InputRender.InputRender>

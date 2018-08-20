@@ -9,12 +9,14 @@
                 <div class="controls-BreadCrumbsPath__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
                      on:click="_onArrowClick()"></div>
             </div>
-            <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
-                                  items="{{_breadCrumbsItems}}"
-                                  visibleItems="{{_visibleItems}}"
-                                  keyProperty="{{_options.keyProperty}}"
-                                  displayProperty="{{_options.displayProperty}}"
-                                  on:itemClick="_onItemClick()"/>
+            <ws:if data="{{_visibleItems.length}}">
+                <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+                                           items="{{_breadCrumbsItems}}"
+                                           visibleItems="{{_visibleItems}}"
+                                           keyProperty="{{_options.keyProperty}}"
+                                           displayProperty="{{_options.displayProperty}}"
+                                           on:itemClick="_onItemClick()"/>
+            </ws:if>
         </ws:if>
 
         <Controls.Event.Emitter event="controlResize"

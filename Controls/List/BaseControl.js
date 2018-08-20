@@ -381,7 +381,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,

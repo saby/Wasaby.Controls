@@ -18,7 +18,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @extends Core/Control
        * @control
        * @category Popup
-       * @author Степин Павел Владимирович
+       * @author Красильников А.С.
        */
 
       /**

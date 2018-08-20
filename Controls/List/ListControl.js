@@ -22,10 +22,11 @@ define('Controls/List/ListControl', [
     * @mixes Controls/List/interface/IListControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List/ListControl */{
       _template: ListControlTpl,
       reload: function() {
          this._children.baseControl.reload();
