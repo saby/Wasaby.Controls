@@ -21,7 +21,7 @@ define('Controls/Filter/Fast/Container',
        *
        * @class Controls/Filter/Fast/Container
        * @extends Core/Control
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */

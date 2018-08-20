@@ -10,7 +10,7 @@ define('Controls/List/BaseViewModel',
 
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
       var BaseViewModel = cExtend.extend([ObservableMixin, VersionableMixin], {

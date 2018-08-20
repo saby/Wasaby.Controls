@@ -160,6 +160,11 @@ define('Controls-demo/Dropdown/MenuVdom', [
             for (var i = 3; i < items.length; i++) {
                items[i][additionalProperty] = true;
             }
+            for (var i = 0; i < items.length; i++) {
+               items[i]['parent'] = null;
+            }
+            items[2]['@parent'] = true;
+            items[3]['parent'] = '3';
             return this._createMemory(items);
          },
          footerClickHandler: function() {

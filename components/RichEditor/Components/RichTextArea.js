@@ -26,6 +26,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'Core/helpers/String/linkWrap',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
+      'Lib/LayoutManager/LayoutManager',
       'Core/EventBus',
       'SBIS3.CONTROLS/WaitIndicator',
 
@@ -56,6 +57,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                LinkWrap,
                ImageOptionsPanel,
                CodeSampleDialog,
+               LayoutManager,
                EventBus,
                WaitIndicator) {
       'use strict';
@@ -110,6 +112,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             defaultYoutubeWidth: 430,
             minYoutubeWidth: 350,
             //dataReviewPaddings: 6,
+            baseFontSize: 14,
             styles: {
                title: {
                   inline: 'span',
@@ -712,7 +715,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
                      var
                         resizeHandler = function() {
-                           this._inputControl[0].scrollIntoView(false);
+                           LayoutManager.scrollToElement(this._inputControl, true);
                            $(window).off('resize', resizeHandler);
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
@@ -1237,7 +1240,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
                   hasOther = true;
-                  if (!hasOther) {
+                  // Добавил проверку, что это не размер по умолчанию
+                  // https://online.sbis.ru/opendoc.html?guid=89964a3c-98b4-4411-9c61-5de10da28ed5
+                  if (formats.fontsize !== constants.baseFontSize && !hasOther) {
                      // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
@@ -1388,6 +1393,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
+
+                  // Перед применением цитаты сбрасываем вначале прикладные стили
+                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
+                  for (var format in this._options.customFormats) {
+                     if (this._options.customFormats.hasOwnProperty(format)) {
+                        this._tinyEditor.formatter.remove(format);
+                     }
+                  }
                   // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                   // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                   var listNode = rng.commonAncestorContainer;
@@ -1744,27 +1757,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this.isActive()) {
                   this.setActive(true);
                }
+               if (this._tinyEditor.formatter.match('blockquote')) {
+                  this._tinyEditor.formatter.remove('blockquote');
+               }
                this._tinyEditor.formatter.toggle(style);
                this._updateTextByTiny();
-            },
-
-            // Проверка вложенности цитаты в блок с пользовательски форматом и наоборот. Если один из них вложен другой,
-            // то отменяем тот, что находится снаружи Здесь obj.parent[2] существует только при вложенности одного блока в
-            // другой, и это либо блок с пользовательским форматом в который вложена цитата, либо цитата в которую вложен
-            // блок с пользовательским форматом
-            checkParentForCustomStyle: function(obj) {
-               switch (obj.format) {
-                  case 'blockquote':
-                     if (obj.parents[2]) {
-                        this.toggleStyle(obj.parents[2].className);
-                     }
-                     break;
-                  default:
-                     if (obj.parents[2]) {
-                        this.execCommand(obj.parents[2].localName);
-                     }
-                     break;
-               }
             },
 
             /**
@@ -2552,7 +2549,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   this._typeInProcess = false;
                }
-               this._updateHeight();
+               setTimeout(function() {
+                  //При удалении строки БТР не стреляет никакими событиями, из-за этого тулбар редактирования по месту
+                  //неправильно позиционируется.
+                  //Просто по keydown звать _updateHeight бесполезно, т.к. высота ещё не поменялась. Так что будем звать
+                  //_updateHeight после перерисовки
+                  if (!this.isDestroyed()) {
+                     this._updateHeight();
+                  }
+               }.bind(this), 0);
             },
 
             _onKeyDownCallback5: function(e) {
@@ -2971,7 +2976,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   // При прокручивании Internet Explorer выводит нативный скролл, сдвигая влево ScrollContainer
                   if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
-                     this._container[0].scrollIntoView(evt.alignToTop);
+                     LayoutManager.scrollToElement(this._inputControl, true);
                   }
                }
             },
@@ -3112,9 +3117,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj) {
                      self._startWaitIndicator(rk('Загрузка изображения...'), 1000);
                      var $img = this.getTarget();
-                     //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
-                     $img[0].style.width = '';
-                     $img[0].style.height = '';
                      var width = $img[0].style.width || ($img.width() + 'px');
                      var isPixels = width.charAt(width.length - 1) !== '%';
                      self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length -

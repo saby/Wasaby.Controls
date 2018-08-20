@@ -33,7 +33,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @mixes Controls/interface/IOpener
        * @control
        * @public
-       * @author Красильников Андрей
+       * @author Красильников А.С.
        */
       var Base = Control.extend({
          _template: Template,

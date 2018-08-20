@@ -27,7 +27,7 @@ define('Controls/List', [
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IEditInPlace
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
 
    'use strict';
 
-   function formatText(value, text, integers, maxLength, onlyPositive, countMinusInLength){
+   function formatText(value, text, integers, maxLength, onlyPositive, countMinusInLength, decimals){
       // Вырезаем переносы строк и теги.
       value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
           value,
           integers,
           true,
-          2,
+          decimals,
           onlyPositive,
           maxLength,
           true
@@ -44,7 +44,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @mixes SBIS3.CONTROLS/MoneyTextBoxDocs
      * @public
      * @control
-     * @author Зайцев А.С.
+     * @author Журавлев М.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
@@ -118,7 +118,8 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
                 options.integers,
                 options.maxLength,
                 options.onlyPositive,
-                options.countMinusInLength
+                options.countMinusInLength,
+                options.decimals
             );
              dotPos = options.text.indexOf('.');
              if(dotPos){
@@ -221,7 +222,8 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              this._options.integers,
              this._options.maxLength,
              this._options.onlyPositive,
-             this._options.countMinusInLength
+             this._options.countMinusInLength,
+             this._options.decimals
          );
       },
       /**
