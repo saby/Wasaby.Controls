@@ -24,12 +24,12 @@ define('Controls/Container/Scroll/Watcher',
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
-               if (self._canScrollCache === false) {
+               if (self._canScrollCache !== true) {
                   self._canScrollCache = true;
                   _private.start(self, 'canScroll');
                }
             } else {
-               if (self._canScrollCache) {
+               if (self._canScrollCache !== false) {
                   self._canScrollCache = false;
                   _private.start(self, 'cantScroll');
                }
@@ -54,36 +54,65 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         onResizeContainer: function(self, container) {
+         calcSizeCache: function(self, container) {
+            var clientHeight, scrollHeight;
+
+            clientHeight = container.clientHeight;
+            scrollHeight = container.scrollHeight;
+            self._sizeCache = {
+               scrollHeight: scrollHeight,
+               clientHeight: clientHeight
+            };
+         },
+
+         onResizeContainer: function(self, container, withObserver) {
             _private.calcSizeCache(self, container);
             container.scrollTop = self._scrollTopCache;
             _private.sendCanScroll(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight);
-
-         },
-
-         onScrollContainer: function(self, container, withObserver) {
             if (!withObserver) {
                _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
             }
 
-            self._scrollTopCache = container.scrollTop;
+         },
 
-            debounce(function() {
-               var position;
-               if (self._scrollTopCache <= 0) {
-                  position = 'up';
-               } else if (self._scrollTopCache + self._sizeCache.clientHeight >= self._sizeCache.scrollHeight) {
-                  position = 'down';
-               } else {
-                  position = 'middle';
+         onScrollContainer: function(self, container, withObserver) {
+            var curPosition;
+            self._scrollTopCache = container.scrollTop;
+            if (!self._sizeCache.clientHeight) {
+               _private.calcSizeCache(self, container);
+            }
+            if (!withObserver) {
+               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+            }
+
+            if (self._scrollTopCache <= 0) {
+               curPosition = 'up';
+            } else if (self._scrollTopCache + self._sizeCache.clientHeight >= self._sizeCache.scrollHeight) {
+               curPosition = 'down';
+            } else {
+               curPosition = 'middle';
+            }
+
+            if (self._scrollPositionCache !== curPosition) {
+               _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               self._scrollPositionCache = curPosition;
+               self._scrollTopTimer = null;
+            }
+            else {
+               if (!self._scrollTopTimer) {
+                  self._scrollTopTimer = setTimeout(function () {
+                     if (self._scrollTopTimer) {
+                        _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+                        console.log(self._scrollTopCache);
+                        self._scrollTopTimer = null;
+                     }
+                  }, 100);
                }
-               _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: position});
-            }, 100, true)();
+            }
 
          },
 
          initIntersectionObserver: function(self, elements) {
-
             self._observer = new IntersectionObserver(function(changes) {
                for (var i = 0; i < changes.length; i++) {
                   if (changes[i].isIntersecting) {
@@ -133,17 +162,6 @@ define('Controls/Container/Scroll/Watcher',
          start: function(self, eventType, params) {
             self._registrar.start(eventType, params);
             self._notify(eventType, [params]);
-         },
-
-         calcSizeCache: function(self, container) {
-            var clientHeight, scrollHeight;
-
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
-            self._sizeCache = {
-               scrollHeight: scrollHeight,
-               clientHeight: clientHeight
-            };
          }
       };
 
@@ -153,6 +171,8 @@ define('Controls/Container/Scroll/Watcher',
          _registrar: null,
          _sizeCache: null,
          _scrollTopCache: 0,
+         _scrollTopTimer: null,
+         _scrollPositionCache: null,
          _canScrollCache: null,
 
          constructor: function() {
@@ -166,7 +186,7 @@ define('Controls/Container/Scroll/Watcher',
 
          _afterMount: function() {
             _private.calcSizeCache(this, this._container);
-            _private.sendCanScroll(self, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+            _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
@@ -176,7 +196,7 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _resizeHandler: function() {
-            _private.onResizeContainer(this, this._container);
+            _private.onResizeContainer(this, this._container, !!this._observer);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
@@ -209,7 +229,6 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-
          _beforeUnmount: function() {
             if (this._observer) {
                this._observer.disconnect();
@@ -219,9 +238,6 @@ define('Controls/Container/Scroll/Watcher',
             this._registrar.destroy();
             this._sizeCache = null;
          }
-
-
-
       });
 
       Scroll.getOptionTypes = function() {
