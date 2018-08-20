@@ -15,6 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Entity/InstantiableMixin',
+      'Core/helpers/Function/callNext',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -32,7 +33,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       addHelpers,
       cEventBus,
       ManagerController,
-      InstantiableMixin
+      InstantiableMixin,
+      callNext
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -43,6 +45,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
+      }
+
+      function popupAfterUpdated(item, container) {
+         if (item.isHiddenForRecalc) {
+            // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+            item.isHiddenForRecalc = false;
+            runDelayed(function() {
+               item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
+               container.className = container.className.replace('ws-invisible', '');
+            });
+         }
       }
 
       var logger = IoC.resolve('ILogger');
@@ -637,6 +650,28 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
                   ManagerController.reindex();
                   ManagerController.update(id, popupConfig.popupOptions);
+               }
+
+               if (visible) {
+                  // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
+                  // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
+                  // на новую, поставим на время пересчета класс `ws-invisible`
+                  popupConfig.popupOptions.className += ' ws-invisible';
+                  popupContainer.className += ' ws-invisible';
+
+                  // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
+                  popupConfig.isHiddenForRecalc = true;
+
+                  // Нужно убрать класс `ws-invisible` после того как будет пересчитана позиция. Чтобы понять, когда
+                  // это произошло, нужно пропатчить elementAfterUpdated в контроллере попапа, чтобы он поддерживал
+                  // CompoundArea
+                  if (!popupConfig.controller._modifiedByCompoundArea) {
+                     popupConfig.controller._modifiedByCompoundArea = true;
+                     popupConfig.controller.elementAfterUpdated = callNext(
+                        popupConfig.controller.elementAfterUpdated,
+                        popupAfterUpdated
+                     );
+                  }
                }
 
                this._isVisible = visible;
