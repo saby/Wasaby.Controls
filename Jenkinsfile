@@ -555,7 +555,7 @@ node('controls') {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
-                            python --files_to_start start_tests.py test_vdom_filterbutton.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                            python start_tests.py --files_to_start test_vdom_filterbutton.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                             deactivate
                             """
                         }
