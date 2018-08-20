@@ -24,11 +24,13 @@ define('Controls/Input/RichArea', [
          if (opts.json) {
             this._htmlJson = new HtmlJson();
 
-            // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
-            this._htmlJson.setJson = function(json) {
-               this._options.json = json;
-            };
-            this._value = this._jsonToHtml(opts.json);
+            // TODO удалить этот костыль в 510
+            if (!this._htmlJson.setJson) {
+               this._htmlJson.setJson = function(json) {
+                  this._options.json = json;
+               };
+            }
+            this._value = this._jsonToHtml(typeof opts.json === 'string' ? JSON.parse(opts.json) : opts.json);
          } else {
             this._value = opts.value;
          }
@@ -39,9 +41,13 @@ define('Controls/Input/RichArea', [
 
       _beforeUpdate: function(opts) {
          if (opts.json) {
-            var isOldJson = opts.json === this._htmlJson._options.json;
+            var isOldJson = opts.json === (
+               typeof opts.json === 'string'
+                  ? JSON.stringify(this._htmlJson._options.json)
+                  : this._htmlJson._options.json
+            );
             if (!isOldJson) {
-               this._value = this._jsonToHtml(opts.json);
+               this._value = this._jsonToHtml(typeof opts.json === 'string' ? JSON.parse(opts.json) : opts.json);
             }
          } else {
             this._value = opts.value;
