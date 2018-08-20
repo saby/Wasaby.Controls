@@ -97,10 +97,9 @@ define('Controls/Container/Scroll/Watcher',
                _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
                self._scrollPositionCache = curPosition;
                self._scrollTopTimer = null;
-            }
-            else {
+            } else {
                if (!self._scrollTopTimer) {
-                  self._scrollTopTimer = setTimeout(function () {
+                  self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
                         _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
                         console.log(self._scrollTopCache);
