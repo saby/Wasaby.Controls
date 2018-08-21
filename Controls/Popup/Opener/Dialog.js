@@ -20,9 +20,15 @@ define('Controls/Popup/Opener/Dialog',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+            config = this._getDialogConfig(config);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
-         }
+         },
+
+         _getDialogConfig: function (config) {
+            config = config || {};
+            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+            return config;
+         },
       });
 
       return Dialog;
