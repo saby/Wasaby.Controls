@@ -66,12 +66,13 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @typedef {Array} ItemActions
-    * @property {String} id identifier of operation.
-    * @property {String} title operation name.
-    * @property {String} icon operation icon.
-    * @property {Number} showType location of operation.
-    * @property {String} style style operation icons.
-    * @property {Function} handler operation handler.
+    * @property {String} id Identifier of operation.
+    * @property {String} title Operation name.
+    * @property {String} icon Operation icon.
+    * @property {Number} showType Location of operation.
+    * @property {String} style Operation style.
+    * @property {String} iconStyle Style operation icons (default | attention | error | done ).
+    * @property {Function} handler Operation handler.
     */
 
    /**
