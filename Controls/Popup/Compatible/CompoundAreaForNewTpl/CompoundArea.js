@@ -13,12 +13,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
-            template,
-            ComponentWrapper,
-            Sync,
-            SyntheticEvent,
-            control,
-            Deferred) {
+      template,
+      ComponentWrapper,
+      Sync,
+      SyntheticEvent,
+      control,
+      Deferred) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
        * */
