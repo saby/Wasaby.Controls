@@ -230,9 +230,17 @@ define('Controls/Popup/Opener/BaseOpener',
                   action = new Action();
                } else {
                   action = opener._action;
-                  action.closeDialog();
                }
-               action.execute(newCfg);
+
+               if (action.getDialog() && !isFormController) {
+                  //Перерисовываем открытый шаблон по новым опциям
+                  var compoundArea = action.getDialog()._getTemplateComponent();
+                  CompatibleOpener._prepareConfigForNewTemplate(newCfg);
+                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+               } else {
+                  action.closeDialog();
+                  action.execute(newCfg);
+               }
                def.callback(action);
             });
          }
