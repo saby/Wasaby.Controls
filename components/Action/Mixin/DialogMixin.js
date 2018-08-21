@@ -87,6 +87,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             Utils.logger.log(this._moduleName + '::$constructor()', 'option "dialogComponent" is deprecated and will be removed in 3.8.0');
             this._options.template = this._options.dialogComponent;
          }
+         if (isNewEnvironment()) {
+            if (this._options.closeByFocusOut === undefined) {
+               this._options.closeByFocusOut = true;
+            }
+         }
          this._documentClickHandler = this._documentClickHandler.bind(this);
          document.addEventListener('mousedown', this._documentClickHandler);
          document.addEventListener('touchstart', this._documentClickHandler);
@@ -494,7 +499,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
    //TODO start compatible block for VDOM
    function isNewEnvironment() {
-      return !!document.getElementsByTagName('html')[0].controlNodes;
+      return document && document.getElementsByTagName('html')[0].controlNodes;
    }
 
    //TODO end compatible block for VDOM
