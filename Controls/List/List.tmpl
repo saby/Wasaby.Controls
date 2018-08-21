@@ -4,6 +4,7 @@
     scope="{{_options}}"
     viewName="{{_viewName}}"
     viewModelConstructor="{{_viewModelConstructor}}"
+    on:markedKeyChanged="_markedKeyChangedHandler()"
     on:dragStart="_dragStart()"
     on:dragEnd="_dragEnd()"
     on:beforeItemAdd="_onBeforeItemAdd()"

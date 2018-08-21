@@ -6,4 +6,5 @@ npm install
 
 node depencyCollector
 python build.py
+node sbis3-ws/compileEsAndTs.js
 node node_modules/ws-unit-testing/cover test-isolated

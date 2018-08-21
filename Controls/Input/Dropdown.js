@@ -23,9 +23,16 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
+       * @author Зайцев А.С.
        * @category Input
        * @demo Controls-demo/Dropdown/MenuVdom
        */
+
+      /**
+       * @name Controls/Input/Dropdown#contentTemplate
+       * @cfg {Function} Template that will be render calling element.
+       */
+
 
       'use strict';
 
@@ -61,8 +68,8 @@ define('Controls/Input/Dropdown',
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
                this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+               this._icon = items[0].get('icon');
             }
-            this._icon = items[0].get('icon');
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }

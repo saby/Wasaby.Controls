@@ -17,12 +17,19 @@ define('Controls/Popup/Opener/BaseController',
                height: container.offsetHeight
             };
          },
-         getMargins: function(config, container) {
-            var style = container.currentStyle || window.getComputedStyle(container);
+         getMargins: function(config) {
+            //create fakeDiv for calculate margins
+            var fakeDiv = document.createElement('div');
+            fakeDiv.className = config.popupOptions.className;
+            document.body.appendChild(fakeDiv);
+
+            var style = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
             var margins = {
                top: parseInt(style.marginTop, 10),
                left: parseInt(style.marginLeft, 10)
             };
+
+            document.body.removeChild(fakeDiv);
             return margins;
          }
       };
@@ -31,7 +38,7 @@ define('Controls/Popup/Opener/BaseController',
        * Базовая стратегия
        * @category Popup
        * @class Controls/Popup/Opener/BaseController
-       * @author Красильников Андрей
+       * @author Красильников А.С.
        */
       var BaseController = CoreExtend.extend({
 
@@ -52,6 +59,14 @@ define('Controls/Popup/Opener/BaseController',
           * @param container
           */
          elementUpdated: function(element, container) {
+
+         },
+
+         elementMaximized: function(element, state) {
+
+         },
+
+         elementAfterUpdated: function(element, container) {
 
          },
 

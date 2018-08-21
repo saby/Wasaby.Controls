@@ -32,4 +32,11 @@ define('Controls/interface/IOpener', [], function() {
    /** @name Controls/interface/IOpener#popupOptions
     * @cfg {PopupOptions} Options for pop-up.
     */
+
+   /**
+    * @name Controls/interface/IOpener#displayMode
+    * @cfg {String} Allows display multiple popups
+    * @variant 'single' default. Show only one popup at a time
+    * @variant 'multiple' Allow multiple popups on a screen
+    */
 });

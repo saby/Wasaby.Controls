@@ -65,8 +65,19 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
+    * @typedef {Array} ItemActions
+    * @property {String} id Identifier of operation.
+    * @property {String} title Operation name.
+    * @property {String} icon Operation icon.
+    * @property {Number} showType Location of operation.
+    * @property {String} style Operation style.
+    * @property {String} iconStyle Style operation icons (default | attention | error | done ).
+    * @property {Function} handler Operation handler.
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#itemActions
-    * @cfg {Array} item operations
+    * @cfg {ItemActions[]} item operations
     */
 
    /**
@@ -138,10 +149,6 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#itemClick Occurs when list item is clicked.
-    */
-
-   /**
-    * @event Controls/List/interface/IListControl#dataLoaded Occurs when data is loaded.
     */
 
    /**

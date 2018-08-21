@@ -14,6 +14,7 @@ define('Controls/Button/Close', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @demo Controls-demo/Buttons/Close/CloseDemo
     * @mixes Controls/Button/interface/IClick
     *

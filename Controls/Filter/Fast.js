@@ -9,11 +9,12 @@ define('Controls/Filter/Fast',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'WS.Data/Utils',
+      'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Fast/Fast',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils) {
+   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
 
       'use strict';
 
@@ -25,30 +26,14 @@ define('Controls/Filter/Fast',
        *
        * @class Controls/Filter/Fast
        * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/Filter/Fast/FastStyles
        * @control
        * @public
-       * @author Золотова Э.Е.
+       * @author Герасимов А.М.
        */
 
-      /**
-       * @event Controls/Filter/Fast#filterChanged Occurs when the filter changes.
-       */
 
-      /**
-       * @name Controls/Filter/Fast#source
-       * @cfg {WS.Data/Source/ISource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
-       */
-
-      /**
-       * @name Controls/Filter/Fast#items
-       * @cfg {WS.Data/Collection/IList} Sets a set of initial data to build the mapping.
-       */
-   
-      /**
-       * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {Object} filter New filter.
-       */
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
       var setPropValue = Utils.setItemPropertyValue.bind(Utils);
@@ -107,7 +92,7 @@ define('Controls/Filter/Fast',
          getFilter: function(items) {
             var filter = {};
             Chain(items).each(function(item) {
-               if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
+               if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                   filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
             });
@@ -183,6 +168,9 @@ define('Controls/Filter/Fast',
             var self = this;
             Chain(this._configs).each(function(config, index) {
                var sKey = getPropValue(self._items.at(index), 'value');
+               if (sKey instanceof Array) {
+                  sKey = sKey[0];
+               }
                Chain(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);

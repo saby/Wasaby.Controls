@@ -23,7 +23,7 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
-       * @author Золотова Э.Е.
+       * @author Зайцев А.С.
        */
 
       /**

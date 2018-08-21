@@ -1,7 +1,6 @@
 .controls-CompoundArea {
    background: #FFFFFF;
    width: 100%;
-   box-sizing: border-box;
 
    //TODO Поддержка стилей старой шапки
    .controls-StackTemplate .controls-StackTemplate__content-area .ws-window-titlebar-custom, &.ws-float-area .ws-window-titlebar {
@@ -54,12 +53,13 @@
 
    &.controls-CompoundArea-headerPadding .controls-StackTemplate {
       padding-top: 39px;
-      height: ~"calc(100% - 39px)";
+      height: 100%;
+      box-sizing: border-box;
    }
    &.controls-CompoundArea-headerPadding .controls-DialogTemplate {
       padding-top: 40px;
-      height: ~"calc(100% - 40px)";
-      box-sizing: content-box;
+      height: 100%;
+      box-sizing: border-box;
    }
 
    .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
@@ -69,6 +69,12 @@
 
 .controls-CompoundArea__container {
    height: 100%;
+}
+
+.controls-Stack__waiting, .controls-Stack__open, .controls-Stack__close {
+   .controls-CompoundArea__container {
+      contain: paint;
+   }
 }
 
 .controls-CompoundArea-custom-header {

@@ -27,12 +27,12 @@ define('Controls/List', [
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IEditInPlace
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List */{
       _template: ListControlTpl,
 
       _items: null,
@@ -86,6 +86,26 @@ define('Controls/List', [
          this._children.listControl.addItem(options);
       },
 
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.listControl.commitEdit();
+         }
+      },
+
       _onBeforeItemAdd: function(e, options) {
          return this._notify('beforeItemAdd', [options]);
       },
@@ -112,6 +132,10 @@ define('Controls/List', [
 
       _dragEnd: function(event, items, target, position) {
          return this._notify('dragEnd', [items, target, position]);
+      },
+
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 
@@ -127,5 +151,12 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
+
+   ListControl.getDefaultOptions = function() {
+      return {
+         style: 'default'
+      };
+   };
+
    return ListControl;
 });

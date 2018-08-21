@@ -2,17 +2,16 @@ define('Controls/Popup/Previewer',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Previewer/Previewer',
-
       'Controls/Popup/Opener/Previewer'
    ],
-   function(Control, template) {
+   function(Control, template, PreviewerOpener) {
 
       'use strict';
 
       /**
        * @class Controls/Popup/Previewer
        * @extends Core/Control
-       * @public
+       * @author Красильников А.С.
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
@@ -27,11 +26,34 @@ define('Controls/Popup/Previewer',
             } else {
                return 'click';
             }
+         },
+         getCfg: function(self, event) {
+            return {
+               opener: self,
+               target: event.currentTarget || event.target,
+               template: 'Controls/Popup/Previewer/OpenerTemplate',
+               corner: {
+                  vertical: 'bottom',
+                  horizontal: 'right'
+               },
+               isCompoundTemplate: self._options.isCompoundTemplate,
+               eventHandlers: {
+                  onResult: self._resultHandler
+               },
+               templateOptions: {
+                  content: self._options.template,
+                  contentTemplateName: self._options.templateName,
+                  contentTemplateOptions: self._options.templateOptions
+               },
+               closeChildWindows: self._options.closeChildWindows
+            };
          }
       };
 
       var Previewer = Control.extend({
          _template: template,
+
+         _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
          _beforeMount: function() {
             this._resultHandler = this._resultHandler.bind(this);
@@ -41,21 +63,30 @@ define('Controls/Popup/Previewer',
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            this._children.openerPreviewer.open({
-               target: event.target,
-               closeChildWindows: this._options.closeChildWindows
-            }, type);
+            if (this._isNewEnvironment()) {
+               this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
+            } else {
+               this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+            }
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
 
-            this._children.openerPreviewer.close(type);
+            if (this._isNewEnvironment()) {
+               this._notify('closePreviewer', [type], {bubbling: true});
+            } else {
+               this._children.openerPreviewer.close(type);
+            }
          },
 
 
          _cancel: function(event, action) {
-            this._children.openerPreviewer.cancel(action);
+            if (this._isNewEnvironment()) {
+               this._notify('cancelPreviewer', [action], {bubbling: true});
+            } else {
+               this._children.openerPreviewer.cancel(action);
+            }
          },
 
          _contentMousedownHandler: function(event) {

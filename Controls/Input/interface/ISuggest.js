@@ -36,6 +36,11 @@ define('Controls/Input/interface/ISuggest', [
     */
 
    /**
+    * @name Controls/Input/interface/ISuggest#autoDropDown
+    * @cfg {Boolean} show dropDown when the input get focused.
+    */
+
+   /**
     * @event Controls/Input/interface/ISuggest#choose Occurs when user selects item from suggest.
     * @param {String} value Selected value.
     */

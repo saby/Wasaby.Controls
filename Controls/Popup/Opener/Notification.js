@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Notification',
        * @class Controls/Popup/Opener/Notification
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */
@@ -25,9 +26,18 @@ define('Controls/Popup/Opener/Notification',
           * @param {popupOptions} popupOptions конфиг попапа.
           */
          open: function(popupOptions) {
+
+            //Убираем автофокусировку, чтобы не закрывались окна с autoHide true
+            popupOptions.autofocus = false;
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
          }
       });
+
+      Notification.getDefaultOptions = function() {
+         return {
+            displayMode: 'multiple'
+         };
+      };
 
       return Notification;
    }

@@ -32,7 +32,7 @@ define('Controls/Input/Text',
        * @category Input
        * @demo Controls-demo/Input/Text/Text
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Зайцев А.С.
        */
 
 
@@ -109,9 +109,7 @@ define('Controls/Input/Text',
 
             this._notify('inputCompleted', [this._options.value]);
          },
-
          _notifyHandler: tmplNotify,
-
          paste: function(text) {
             this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }

@@ -6,7 +6,7 @@ define('Controls/List/ListViewModel',
    function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
 
@@ -88,10 +88,11 @@ define('Controls/List/ListViewModel',
             if (key === this._options.markedKey) {
                return;
             }
-            this._options.markedKey = key;
+
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
+            this._notify('onMarkedKeyChanged', key);
          },
 
          getSwipeItem: function() {

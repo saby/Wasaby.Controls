@@ -15,8 +15,9 @@ define('Controls/Popup/InfoBox',
        *
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
-       * @interface Controls/interface/IStickyOpener
+       * @mixes Controls/interface/IStickyOpener
        * @public
+       * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
        */
 
@@ -80,6 +81,17 @@ define('Controls/Popup/InfoBox',
             this._resultHandler = this._resultHandler.bind(this);
          },
 
+         /**
+          * TODO: https://online.sbis.ru/opendoc.html?guid=ed987a67-0d73-4cf6-a55b-306462643982
+          * Кто должен закрывать инфобокс после разрушения компонента нужно будет обсудить.
+          * Если компонент обрабатывающий openInfoBox и closeInfoBox, то данный код будет удален по ошибке выше.
+          */
+         _beforeUnmount: function() {
+            if (this._opened) {
+               this._notify('closeInfoBox', [], {bubbling: true});
+            }
+         },
+
          _open: function(event) {
             var config = _private.getCfg(this, event);
 
@@ -124,6 +136,7 @@ define('Controls/Popup/InfoBox',
 
             this._openId = setTimeout(function() {
                self._open(event);
+               self._forceUpdate();
             }, self._options.showDelay);
          },
 
@@ -134,6 +147,7 @@ define('Controls/Popup/InfoBox',
 
             this._closeId = setTimeout(function() {
                self._close();
+               self._forceUpdate();
             }, self._options.hideDelay);
          },
 
@@ -156,6 +170,10 @@ define('Controls/Popup/InfoBox',
                   event.stopPropagation();
                   break;
             }
+         },
+
+         _scrollHandler: function() {
+            this._close();
          }
       });
 

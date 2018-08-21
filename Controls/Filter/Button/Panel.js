@@ -17,6 +17,7 @@ define('Controls/Filter/Button/Panel', [
     * @mixes Controls/interface/IFilterPanel
     * @control
     * @public
+    * @author Герасимов А.М.
     *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
@@ -101,9 +102,9 @@ define('Controls/Filter/Button/Panel', [
          this._isChanged = _private.isChangedValue(this._items);
       },
 
-      _beforeUpdate: function() {
+      _beforeUpdate: function(newOptions) {
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = newOptions.additionalTemplate && _private.hasAdditionalParams(this._items);
       },
 
       _valueChangedHandler: function() {

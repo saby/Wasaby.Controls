@@ -4,8 +4,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
    'SBIS3.CONTROLS/WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS/WSControls/Buttons/Button',
    'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/contentTemplate',
-   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon'
-], function(constants, ButtonBase, dotTplFn, contentTemplate, svgIconTpl) {
+   'tmpl!SBIS3.CONTROLS/WSControls/Buttons/resources/AddIcon',
+   'Core/core-instance'
+], function(constants, ButtonBase, dotTplFn, contentTemplate, svgIconTpl, cInstance) {
 
    'use strict';
 
@@ -146,10 +147,43 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
       },
 
       $constructor: function() {
-         if (this._options.primary === true) {
-            this._registerDefaultButton();
-         }
          this._contentContainer = this._container.find('.controls-ButtonBase__content');
+      },
+      init: function() {
+         Button.superclass.init.call(this);
+         this._tryRegisterPrimary();
+      },
+
+      _tryRegisterPrimary: function() {
+         var self = this;
+
+         function registerIfPrimary() {
+            if (self._options.primary === true && !self._defaultAction) {
+               self._registerDefaultButton();
+            }
+         }
+
+         // Пробуем зарегистрироваться в качестве кнопки по умолчанию сразу, и подписываемся на onAfterVisibilityChange
+         // на случай если кнопка или какой-то из ее родителей еще скрыт
+         registerIfPrimary();
+         self.subscribe('onAfterVisibilityChange', function() {
+            registerIfPrimary();
+         });
+      },
+
+      // Нужно стрелять событием onAfterVisibilityChange при изменении видимости кнопки.
+      // ButtonBase этого не делает
+      _setVisibility: function() {
+         var
+            visibleBefore = this.isVisible(),
+            visibleAfter;
+
+         Button.superclass._setVisibility.apply(this, arguments);
+         visibleAfter = this.isVisible();
+
+         if (visibleAfter !== visibleBefore) {
+            this._notify('onAfterVisibilityChange', visibleAfter);
+         }
       },
 
       setCaption: function(caption) {
@@ -280,13 +314,13 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
 
       _registerDefaultButton: function() {
          // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
-         if (this.isVisible()) {
+         if (this.isVisibleWithParents()) {
             // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
             this._unregisterDefaultButton();
 
             // action создаем только после отмены регистрации, иначе он зануляется
             this._defaultAction = function(e) {
-               if (this && this.isEnabled()) {
+               if (this && this.isEnabled() && this.isVisibleWithParents()) {
                   this._onClickHandler(e);
                   return false;
                } else {

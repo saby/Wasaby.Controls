@@ -379,8 +379,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
             if (!size) {
-               var previewContainer = this._preview.parent();
-               this._previewSize = size = {width:previewContainer.width(), height:previewContainer.height()};
+               this._previewSize = size = {width: 1920, height: 0};
             }
             this._waitIndicatorStart();
             var options = this._options;

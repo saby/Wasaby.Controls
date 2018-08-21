@@ -3,13 +3,12 @@
         keyProperty="{{_options.keyProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
         itemTemplate="{{_options.itemTemplate}}"
-        contentTemplate="{{_options.contentTemplate}}"
         selectedKeys="{{[_options.selectedKey]}}"
         emptyText="{{_options.emptyText}}"
         corner="{{_corner}}"
         width="{{_width}}"
         marker="{{false}}"
-        className="controls-ComboBox-popup"
+        className="{{_options.className || 'controls-ComboBox-popup'}}"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
         dataLoadCallback="{{_setText}}"
@@ -22,6 +21,8 @@
               size="{{_options.size}}"
               tagStyle="{{_options.tagStyle}}"
               viewModel="{{_simpleViewModel}}"
+              on:tagClick="_notifyHandler('tagClick')"
+              on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               validationErrors="{{_options.validationErrors}}"
               class="controls-ComboBox-InputRender">
@@ -30,11 +31,11 @@
             <ws:partial
                     template="tmpl!Controls/Input/resources/input"
                     readOnly="{{!_options.editable}}"
-                    bind:value="_value"/>
+                    value="{{_value}}"/>
          </ws:content>
 
          <ws:afterFieldWrapper>
-            <Controls.Button.Separator if="{{!_options.readOnly}}" bind:value="_isOpen"/>
+            <Controls.Button.Separator if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
          </ws:afterFieldWrapper>
 
       </Controls.Input.resources.InputRender.InputRender>

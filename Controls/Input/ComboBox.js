@@ -5,11 +5,11 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
+      'Controls/Utils/tmplNotify',
       'css!Controls/Input/ComboBox/ComboBox'
    ],
 
-   function(Control, template, BaseViewModel, Utils, dropdownUtils) {
-
+   function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
       /**
        * Control "ComboBox"
        * @class Controls/Input/ComboBox
@@ -17,15 +17,14 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
-       * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
+       * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
        * @public
        * @category Input
-       * @author Золотова Э.Е.
+       * @author Зайцев А.С.
        * @demo Controls-demo/Input/ComboBox/ComboBox
+       * @demo Controls-demo/Combobox/ComboboxVDom
        */
 
       /**
@@ -34,8 +33,8 @@ define('Controls/Input/ComboBox',
        */
 
       /**
-       * @name Controls/Input/ComboBox#contentTemplate
-       * @cfg {Function} Template that will be render the list.
+       * @name Controls/Input/Dropdown#contentTemplate
+       * @cfg {Function} Template that will be render calling element.
        */
 
       'use strict';
@@ -52,6 +51,7 @@ define('Controls/Input/ComboBox',
       var ComboBox = Control.extend({
          _template: template,
          _isOpen: false,
+         _notifyHandler: tmplNotify,
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);

@@ -26,6 +26,7 @@
          template="{{ _options.content }}"
          scope="{{_options}}"
          listModel="{{_listViewModel}}"
+         on:markedKeyChanged="_markedKeyChangedHandler()"
          on:itemClick="_onItemClick()"
          on:groupClick="_onGroupClick()"
          on:itemContextMenu="_showActionsMenu()"
@@ -36,7 +37,11 @@
             <ws:partial template="{{_options.viewName}}"/>
          </ws:viewTemplate>
          <ws:multiSelectTpl>
-            <ws:partial template ="{{_multiSelectTpl}}"/>
+             <ws:if data="{{_options.multiSelectVisibility}}">
+                 <Controls.Container.Async name="multiSelectContainer" templateName="tmpl!Controls/List/BaseControl/multiSelect">
+                     <ws:partial template="{{'tmpl!Controls/List/BaseControl/multiSelect'}}" />
+                 </Controls.Container.Async>
+             </ws:if>
          </ws:multiSelectTpl>
       </ws:partial>
    </ws:template>
@@ -54,43 +59,58 @@
       </ws:else>
    </ws:template>
 
+    <ws:template name="serverTemplate">
+        <ws:partial template="fullView" name="listView"/>
 
-   <ws:if data="{{_listViewModel}}">
-      <ws:partial template="fullView" name="listView" />
+        <Controls.List.EditInPlace
+                ws:content="listView"
+                name="editInPlace"
+                editingConfig="{{_options.editingConfig}}"
+                on:beforeItemAdd="_onBeforeItemAdd()"
+                on:beforeItemEdit="_onBeforeItemEdit()"
+                on:afterItemEdit="_onAfterItemEdit()"
+                on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+                on:afterItemEndEdit="_onAfterItemEndEdit()"
+                listModel="{{_listViewModel}}"
+                source="{{_sourceController}}"/>
+    </ws:template>
 
-      <Controls.List.EditInPlace
-         ws:content="listView"
-         name="editInPlace"
-         editingConfig="{{_options.editingConfig}}"
-         on:beforeItemAdd="_onBeforeItemAdd()"
-         on:beforeItemEdit="_onBeforeItemEdit()"
-         on:afterItemEdit="_onAfterItemEdit()"
-         on:beforeItemEndEdit="_onBeforeItemEndEdit()"
-         on:afterItemEndEdit="_onAfterItemEndEdit()"
-         listModel="{{_listViewModel}}"
-         source="{{_sourceController}}" />
-      <Controls.List.ItemActions.ItemActionsControl
-         ws:content="listView"
-         on:commitActionClick="_commitEditActionHandler()"
-         on:cancelActionClick="_cancelEditActionHandler()"
-         on:menuActionsClick="_showActionsMenu()"
-         on:itemActionsClick="_onItemActionsClick()"
-         showToolbar="{{_options.editingConfig.showToolbar}}"
-         name="itemActions"
-         listModel="{{_listViewModel}}"
-         menuIsShown="{{_menuIsShown}}"
-         itemActions="{{_options.itemActions}}"
-         itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-         itemActionsPosition="{{_options.itemActionsPosition}}"/>
-      <Controls.List.Swipe.SwipeControl
-         ws:content="listView"
-         on:menuActionsClick="_showActionsMenu()"
-         on:closeSwipe="_closeSwipe()"
-         menuIsShown="{{_menuIsShown}}"
-         listModel="{{_listViewModel}}"
-         itemActions="{{_options.itemActions}}"
-         name="swipeControl"/>
-   </ws:if>
+    <ws:template name="clientTemplate">
+        <ws:partial template="serverTemplate" name="serverView" />
+
+        <Controls.List.ItemActions.ItemActionsControl
+                ws:content="serverView"
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                on:itemActionsClick="_onItemActionsClick()"
+                showToolbar="{{_options.editingConfig.showToolbar}}"
+                name="itemActions"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsPosition="{{_options.itemActionsPosition}}">
+        </Controls.List.ItemActions.ItemActionsControl>
+        <Controls.List.Swipe.SwipeControl
+                ws:content="serverView"
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                menuIsShown="{{_menuIsShown}}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl">
+        </Controls.List.Swipe.SwipeControl>
+    </ws:template>
+
+    <ws:if data="{{_listViewModel}}">
+        <ws:if data="{{_isServer}}">
+            <ws:partial template="serverTemplate"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="clientTemplate"/>
+        </ws:else>
+    </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
         <ws:partial template="{{_options.emptyTemplate}}"/>

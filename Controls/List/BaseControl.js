@@ -9,7 +9,6 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
@@ -27,7 +26,6 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   multiSelectTpl,
    RecordSet,
    tUtil,
    aUtil
@@ -380,7 +378,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -395,7 +393,6 @@ define('Controls/List/BaseControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
-      _multiSelectTpl: multiSelectTpl,
 
       _needScrollCalculation: false,
       _loadOffset: 100,
@@ -404,8 +401,10 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
+      _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
+         this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
@@ -501,6 +500,10 @@ define('Controls/List/BaseControl', [
 
          if (this._scrollPagingCtr) {
             this._scrollPagingCtr.destroy();
+         }
+
+         if (this._listViewModel) {
+            this._listViewModel.destroy();
          }
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
@@ -600,6 +603,26 @@ define('Controls/List/BaseControl', [
       addItem: function(options) {
          if (!this._options.readOnly) {
             this._children.editInPlace.addItem(options);
+         }
+      },
+
+      /**
+       * Ends editing in place without saving.
+       * @returns {Core/Deferred}
+       */
+      cancelEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.editInPlace.cancelEdit();
+         }
+      },
+
+      /**
+       * Ends editing in place with saving.
+       * @returns {Core/Deferred}
+       */
+      commitEdit: function() {
+         if (!this._options.readOnly) {
+            this._children.editInPlace.commitEdit();
          }
       },
 
@@ -707,6 +730,10 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 

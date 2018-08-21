@@ -14,11 +14,13 @@ define('Controls/Popup/Manager/Popup',
          /**
           * Компонент "Всплывающее окно"
           * @class Controls/Popup/Manager/Popup
+          * @mixes Controls/interface/IOpenerOwner
+          * @mixes Controls/interface/ICanBeDefaultOpener
           * @extends Core/Control
           * @control
           * @private
           * @category Popup
-          * @author Красильников Андрей
+          * @author Красильников А.С.
           */
 
          /**
@@ -34,22 +36,15 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-            /* Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
-            * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза */
-
-            if (this.waitForPopupCreated) {
-               this.callbackCreated = (function() {
-                  this.callbackCreated = null;
-                  this.waitForPopupCreated = false;
-                  this._notify('popupCreated', [this._options.id], { bubbling: true });
-               }).bind(this);
-            } else {
-               // todo doautofocus
-               this._notify('popupCreated', [this._options.id], { bubbling: true });
-               if (this._options.autofocus) {
-                  this.activate();
-               }
+            // todo doautofocus
+            this._notify('popupCreated', [this._options.id], {bubbling: true});
+            if (this._options.autofocus) {
+               this.activate();
             }
+         },
+
+         _afterUpdate: function() {
+            this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
          },
 
          /**
@@ -58,6 +53,9 @@ define('Controls/Popup/Manager/Popup',
           */
          _close: function() {
             this._notify('popupClose', [this._options.id], { bubbling: true });
+         },
+         _maximized: function(event, state) {
+            this._notify('popupMaximized', [this._options.id, state], { bubbling: true });
          },
          _animated: function() {
             this._notify('popupAnimated', [this._options.id], { bubbling: true });

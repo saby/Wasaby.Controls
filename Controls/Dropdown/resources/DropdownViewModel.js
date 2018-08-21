@@ -33,7 +33,12 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
             return itemInHistory && !nextItemInHistory;
-         }
+         },
+         
+         needHideGroup: function(self, key) {
+            //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+            return self._itemsModel._display.getGroupItems(key).length === 0;
+         },
       };
 
       var DropdownViewModel = BaseViewModel.extend({
@@ -100,6 +105,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
             //if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
+               //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+               if (_private.needHideGroup(this, itemsModelCurrent.key)) {
+                  itemsModelCurrent.isHiddenGroup = true;
+               }
                return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);

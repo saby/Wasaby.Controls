@@ -20,7 +20,7 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
     * @css @spacing_CheckBox-between-icon-caption Spacing between icon and caption.
     * @css @line-height_Checkbox__caption Caption line height.
     *
-    * @css @color_CheckBox__icon_disabled Disabled icon color of selcted or tristate checkbox.
+    * @css @color_CheckBox__icon_disabled Disabled icon color of selected or tristate checkbox.
     * @css @color_CheckBox__icon_enabled Enabled icon color of selected or tristate checkbox.
     */
 );

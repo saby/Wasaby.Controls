@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
                this._options.config.position = [this._options.config.position];
             }
          },
-         prepareQueryParams: function(projection, scrollDirection) {
+         prepareQueryParams: function(projection, scrollDirection, position) {
             var edgeRecord, filterValue;
 
             //TODO при дозагрузке по скроллу вверх вниз мы меняем состояние навигации
@@ -57,16 +57,20 @@ define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
             }
 
             if (projection && projection.getCount() && scrollDirection) {
-               if (scrollDirection == 'up') {
-                  edgeRecord = projection.getFirst().getContents();
-               }
-               else {
-                  edgeRecord = projection.getLast().getContents();
-               }
                var newPos = [];
-               for (var i = 0; i < this._options.config.field.length; i++) {
-                  filterValue = edgeRecord.get(this._options.config.field[i]);
-                  newPos.push(filterValue);
+               if (typeof position !== 'undefined') {
+                  newPos.push(position);
+               } else {
+                  if (scrollDirection == 'up') {
+                     edgeRecord = projection.getFirst().getContents();
+                  }
+                  else {
+                     edgeRecord = projection.getLast().getContents();
+                  }
+                  for (var i = 0; i < this._options.config.field.length; i++) {
+                     filterValue = edgeRecord.get(this._options.config.field[i]);
+                     newPos.push(filterValue);
+                  }
                }
                this.setPosition(newPos);
             }

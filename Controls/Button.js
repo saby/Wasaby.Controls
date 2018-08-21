@@ -20,6 +20,7 @@ define('Controls/Button', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Button
     * @demo Controls-demo/Buttons/ButtonDemo
     */

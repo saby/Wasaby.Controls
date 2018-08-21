@@ -56,7 +56,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     * @demo Examples/TextBox/MyTextBox/MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -100,6 +100,7 @@ define('SBIS3.CONTROLS/TextBox', [
          _textFieldWrapper: null,
          _informationIcon: null,
          _options: {
+            _showNativePlaceholder: false,
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
@@ -208,6 +209,26 @@ define('SBIS3.CONTROLS/TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
+         //В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
+         //но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/
+         //Так что в Safari тоже нельзя убирать плейсхолдер
+         if (!constants.browser.chrome && !constants.browser.safari) {
+            /*
+             В IE есть баг что при установке фокуса в поле ввода, в котором есть плейсхолдер, стреляет событие input:
+             https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/274987/
+             Нативным плейсхолдером мы пользуемся, чтобы хром навешивал псевдокласс :placeholder-shown, так что
+             лучше буду навешивать плейсхолдер только в хроме
+             */
+            //Плейсхолдер навешивается в шаблоне, иначе он будет моргать
+            if (constants.browser.isIE) {
+               //Оказывается, в IE событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
+               this._inputField.one('input', function(e) {
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+               });
+            }
+            this._inputField.removeAttr('placeholder');
+         }
          this._inputField
             .on('paste', function(event){
                var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
@@ -638,10 +659,10 @@ define('SBIS3.CONTROLS/TextBox', [
             //https://codepen.io/anon/pen/LBYLpJ
             if (detection.isIE) {
                setTimeout(function() {
-                  self._inputField.select();
+                  self._selectText();
                }, 0);
             } else {
-               this._inputField.select();
+               self._selectText();
             }
          } else {
             if (this.isEnabled() && !this._clicked) {
@@ -706,6 +727,22 @@ define('SBIS3.CONTROLS/TextBox', [
          this._destroyCompatPlaceholder();
          this._destroyInformationIcon();
          TextBox.superclass.destroy.apply(this, arguments);
+      },
+
+      _selectText: function() {
+         var
+            selection,
+            range;
+
+         if (this._inputField[0].select) {
+            this._inputField[0].select();
+         } else {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(this._inputField[0]);
+            selection.removeAllRanges();
+            selection.addRange(range);
+         }
       }
    });
 

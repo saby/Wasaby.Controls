@@ -8,7 +8,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
-      'Controls/Layout/Scroll',
+      'Controls/Container/Scroll/Watcher',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
@@ -24,6 +24,7 @@ define('Controls/Container/Scroll',
        * @extends Core/Control
        * @control
        * @public
+       * @author Журавлев М.С.
        * @category Container
        * @demo Controls-demo/Container/Scroll
        */
@@ -204,7 +205,7 @@ define('Controls/Container/Scroll',
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
 
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
-                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
+                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
 
                      _private.updateDisplayState(self, displayState);
                      self._styleHideScrollbar = styleHideScrollbar;
@@ -300,7 +301,7 @@ define('Controls/Container/Scroll',
                      break;
                }
 
-               this._children.scrollLayout.doScroll(scrollParam);
+               this._children.scrollWatcher.doScroll(scrollParam);
             },
 
             _scrollReachTopHandler: function() {

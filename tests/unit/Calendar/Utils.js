@@ -6,7 +6,9 @@ define('tests/unit/Calendar/Utils', [
    return {
       createComponent: function(Component, cfg) {
          let mv;
-         cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+         if (Component.getDefaultOptions) {
+            cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+         }
          mv = new Component(cfg);
          mv.saveOptions(cfg);
          mv._beforeMount(cfg);

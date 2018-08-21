@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
    /**
     * Синглтон для работы со стеком нотификационных окон.
     * @class SBIS3.CONTROLS/Utils/NotificationStackManager
-    * @author Степин П.В.
+    * @author Красильников А.С.
     */
    function( cWindowManager, EventBus, Control){
       'use strict';
@@ -47,6 +47,11 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
           */
          showNotification: function(inst, notHide){
             notHide = !!notHide;
+
+            // Всплывающие уведомления не должны принимать фокус при клике на них
+            inst.getContainer().get(0).addEventListener('mousedown', function(event) {
+               event.preventDefault();
+            });
 
             if(this._getItemIndexById(inst.getId()) === -1){
                this._appendNotification(inst, notHide);

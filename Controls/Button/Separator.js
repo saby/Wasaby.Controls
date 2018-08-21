@@ -8,8 +8,7 @@ define('Controls/Button/Separator', [
 
    /**
     * Button separator with support different display styles and can be bold thickness. Can be used independently or as part of complex headers(you can see it in Demo-example)
-    * consisting of a <a href="/docs/js/Controls/Header/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a>
-    * and a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>.
+    * consisting of a <a href="/docs/js/Controls/Header/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
@@ -17,6 +16,7 @@ define('Controls/Button/Separator', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @mixes Controls/Toggle/interface/ICheckable
     *
     * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo

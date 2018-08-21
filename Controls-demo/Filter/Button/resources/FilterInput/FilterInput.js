@@ -1,6 +1,7 @@
 define('Controls-demo/Filter/Button/resources/FilterInput/FilterInput', [
    'Core/Control',
-   'tmpl!Controls-demo/Filter/Button/resources/FilterInput/FilterInput'
+   'tmpl!Controls-demo/Filter/Button/resources/FilterInput/FilterInput',
+   'css!Controls-demo/Filter/Button/resources/FilterInput/FilterInput'
 ], function(Control, template) {
 
    'use strict';

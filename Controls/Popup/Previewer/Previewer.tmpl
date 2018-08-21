@@ -3,16 +3,7 @@
                on:mousedown="_contentMousedownHandler()"
                on:mouseenter="_contentMouseenterHandler()"
                on:mouseleave="_contentMouseleaveHandler()"/>
-   <Controls.Popup.Opener.Previewer name="openerPreviewer">
-      <ws:popupOptions template="Controls/Popup/Previewer/OpenerTemplate"
-                       isCompoundTemplate="{{_options.isCompoundTemplate}}">
-         <ws:corner vertical="bottom" horizontal="right"/>
-         <ws:templateOptions
-            content="{{_options.template}}"
-            contentTemplateName="{{_options.templateName}}"
-            contentTemplateOptions="{{_options.templateOptions}}"
-         />
-         <ws:eventHandlers onResult="{{_resultHandler}}"></ws:eventHandlers>
-      </ws:popupOptions>
-   </Controls.Popup.Opener.Previewer>
+   <ws:if data="{{!_isNewEnvironment()}}">
+      <Controls.Popup.Opener.Previewer name="openerPreviewer"/>
+   </ws:if>
 </div>

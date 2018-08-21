@@ -18,7 +18,8 @@ define('Controls/Filter/Button',
        * Component for data filtering.
        * Uses property grid for editing filter fields.
        *
-       * The component is used in combination with other components for filters.
+       * The component is used in combination with other components for filters. {@link Controls/Filter/Button/Panel}, {@link Controls/Filter/Fast},
+       * {@link Controls/Filter/Controller}, {@link Controls/Filter/Button/Container}
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
@@ -26,11 +27,11 @@ define('Controls/Filter/Button',
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
-       * @demo Controls-demo/Filter/Button/panelOptions/PanelVDom
+       * @demo Controls-demo/Filter/Button/withOptions/ButtonVDOM
        * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        *
        * @css @height_FilterButton Height of button.
        * @css @color_FilterButton-icon Color of button icon.

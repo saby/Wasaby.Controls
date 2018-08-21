@@ -9,7 +9,7 @@ define('Controls/Popup/Opener/Sticky',
        * @class Controls/Popup/Opener/Sticky
        * @mixes Controls/interface/IStickyOpener
        * @control
-       * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/Base
        */
@@ -21,6 +21,7 @@ define('Controls/Popup/Opener/Sticky',
           * @param config конфигурация попапа (popupOptions).
           */
          open: function(config) {
+            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             this._setCompatibleConfig(config);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Sticky/StickyController');
          },

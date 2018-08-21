@@ -16,7 +16,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @control
           * @public
           * @category Popup
-          * @author Красильников Андрей
+          * @author Красильников А.С.
           */
 
          /**
@@ -42,6 +42,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
          close: function() {
             this._notify('close', [], {bubbling: true});
+         },
+         changeMaximizedState: function() {
+            this._notify('maximized', [!this._options.maximized], {bubbling: true});
          }
       });
 

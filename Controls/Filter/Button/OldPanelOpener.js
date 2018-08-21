@@ -40,6 +40,7 @@ define('Controls/Filter/Button/OldPanelOpener',
        *
        * @control
        * @public
+       * @author Герасимов А.М.
        * @category Filtering
        */
       

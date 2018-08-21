@@ -28,7 +28,18 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].offsetWidth; // Берем размеры пользовательского шаблона
+            item.containerWidth = _private.getContainerWidth(item, container);
+         },
+
+         getContainerWidth: function(item, container) {
+            var template;
+            if (item.popupOptions.isCompoundTemplate) {
+               //Берем размеры прикладного шаблона
+               template = container.querySelector('.controls-CompoundArea__container').children[0];
+            } else {
+               template = container.querySelector('.controls-Popup__template');
+            }
+            return template.clientWidth; // Берем размеры пользовательского шаблона без бордера
          },
 
          getStackParentCoords: function() {
@@ -41,9 +52,8 @@ define('Controls/Popup/Opener/Stack/StackController',
             };
          },
 
-         getItemPosition: function(stack, index) {
+         getItemPosition: function(item) {
             var targetCoords = _private.getStackParentCoords();
-            var item = stack.at(index);
             return StackStrategy.getPosition(targetCoords, item);
          },
 
@@ -56,14 +66,48 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeAnimationClasses: function(className) {
+            className = (className || '');
             return className.replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
          prepareUpdateClassses: function(className) {
-            className =  _private.removeAnimationClasses(className);
-            className += ' ' + STACK_CLASS;
+            className = (className || '');
+            className = _private.removeAnimationClasses(className);
+            className = _private.addStackClasses(className);
             return className;
          },
+
+         addStackClasses: function(className) {
+            className = (className || '');
+            if (className.indexOf(STACK_CLASS) < 0) {
+               className += ' ' + STACK_CLASS;
+            }
+            return className;
+         },
+
+         prepareMaximizedState: function(maxPanelWidth, item) {
+            var canMaximized = maxPanelWidth > item.popupOptions.minWidth;
+            if (!canMaximized) {
+               //If we can't turn around, we hide the turn button and change the state
+               item.popupOptions.templateOptions.showMaximizedButton = false;
+               item.popupOptions.templateOptions.maximized = false;
+            } else {
+               item.popupOptions.templateOptions.showMaximizedButton = true;
+
+               //Restore the state after resize
+               item.popupOptions.templateOptions.maximized = item.popupOptions.maximized;
+            }
+         },
+         setMaximizedState: function(item, state) {
+            item.popupOptions.maximized = state;
+            item.popupOptions.templateOptions.maximized = state;
+         },
+         getWindowSize: function() {
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight
+            };
+         }
       };
 
       /**
@@ -87,7 +131,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (this._checkContainer(item, container)) {
                _private.prepareSizes(item, container);
                this._stack.add(item, 0);
-               if (HAS_ANIMATION) {
+               if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                   item.popupOptions.className += ' controls-Stack__open';
                   item.stackState = 'creating';
                } else {
@@ -107,7 +151,11 @@ define('Controls/Popup/Opener/Stack/StackController',
             }
          },
 
-
+         elementMaximized: function(item, container, state) {
+            _private.setMaximizedState(item, state);
+            _private.prepareSizes(item, container);
+            this._update();
+         },
 
          elementDestroyed: function(item) {
             this._destroyDeferred[item.id] = new Deferred();
@@ -133,17 +181,26 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          _update: function() {
-            var self = this;
-            this._stack.each(function(item, index) {
-               item.position = _private.getItemPosition(self._stack, index);
+            var maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            this._stack.each(function(item) {
+               item.position = _private.getItemPosition(item);
+               if (StackStrategy.isMaximizedPanel(item)) {
+                  _private.prepareMaximizedState(maxPanelWidth, item);
+               }
             });
          },
 
          getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
             var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
-            item.popupOptions.className += ' controls-Stack';
-            if (HAS_ANIMATION) {
+            item.popupOptions.className = _private.addStackClasses(item.popupOptions.className);
+            if (StackStrategy.isMaximizedPanel(item)) {
+               //set default values
+               item.popupOptions.templateOptions.showMaximizedButton = undefined; //for vdom dirtyChecking
+               var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
+               _private.setMaximizedState(item, maximizedState);
+            }
+            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                item.popupOptions.className += ' controls-Stack__waiting';
             }
 
@@ -151,6 +208,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.position = {
                top: -10000,
                left: -10000,
+               height: _private.getWindowSize().height,
                width: position.width || undefined
             };
          },

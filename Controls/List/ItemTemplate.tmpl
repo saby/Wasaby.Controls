@@ -1,11 +1,15 @@
-<div attr:class="controls-ListView__itemV{{marker !== false && itemData.isSelected ? ' controls-ListView__itemV_withMarker'}}
+<div attr:class="controls-ListView__itemV{{marker !== false && itemData.isSelected ? (' controls-ListView__itemV_withMarker controls-ListView__item__marked_' + itemData.style)}}
+    controls-ListView__item_{{itemData.style}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
     {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
     {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
      attr:key="{{itemData.item.getId()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
+        <ws:partial template="{{multiSelectTpl}}"  attr:class="controls-ListView__checkbox js-controls-ListView__notEditable">
+            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
+                                key="{{itemData.key}}" />
+        </ws:partial>
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">

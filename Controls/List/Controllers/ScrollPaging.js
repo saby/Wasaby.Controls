@@ -8,7 +8,7 @@ define('Controls/List/Controllers/ScrollPaging',
    function(cExtend) {
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
 

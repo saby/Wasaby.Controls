@@ -1,0 +1,13 @@
+<div attr:class="">
+   <ws:for data="monthIndex, month in item.months.slice(1, 2)">
+      <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper">
+         <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title{{ monthSelectionEnabled ? ' controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title_selectable' }}">
+         </div>
+         <Controls.Date.Month
+            className="controls-DateRangeBigChoose-DateRangePicker__item"
+            showWeekdays="{{false}}"
+            month="{{month}}"
+         />
+      </div>
+   </ws:for>
+</div>
