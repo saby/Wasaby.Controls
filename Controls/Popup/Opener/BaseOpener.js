@@ -93,6 +93,9 @@ define('Controls/Popup/Opener/BaseOpener',
                   self._isExecuting = false;
                   if (Base.isNewEnvironment()) {
                      self._popupIds.push(result);
+
+                     //Call redraw to create emitter on scroll after popup opening
+                     self._forceUpdate();
                   } else {
                      self._action = result;
                   }
