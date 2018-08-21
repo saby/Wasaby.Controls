@@ -4,7 +4,7 @@ define('Controls/Utils/getWidth', [
    'use strict';
 
    return {
-      getWidth: function (element) {
+      getWidth: function(element) {
          var
             measurer = document.createElement('div'),
             width;
