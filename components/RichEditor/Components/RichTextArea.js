@@ -421,6 +421,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                   if (typeof self._options.json === 'string') {
+                     self.isJsonString = true;
                      self._options.json = JSON.parse(self._options.json);
                   }
                   self.setJson(self._options.json);
@@ -432,7 +433,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var div = document.createElement('div');
                      div.innerHTML = text;
                      self._options.json = domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self._options.json]);
+                     self._notify('onJsonChange', [self.isJsonString ? JSON.stringify(self._options.json) : self._options.json]);
                   });
                }
                this._updateDataReview(this.getText());

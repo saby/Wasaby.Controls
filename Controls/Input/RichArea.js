@@ -65,7 +65,9 @@ define('Controls/Input/RichArea', [
 
       _onTextChanged: function(e, value) {
          if (this._options.json) {
-            this._notify('jsonChanged', [this._valueToJson(value)]);
+            this._notify('jsonChanged', [typeof this._options.json === 'string'
+               ? JSON.stringify(this._valueToJson(value))
+               : this._valueToJson(value)]);
          } else {
             this._notify('valueChanged', [value]);
          }
