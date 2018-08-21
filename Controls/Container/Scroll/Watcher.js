@@ -102,7 +102,6 @@ define('Controls/Container/Scroll/Watcher',
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
                         _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
-                        console.log(self._scrollTopCache);
                         self._scrollTopTimer = null;
                      }
                   }, 100);
@@ -159,6 +158,7 @@ define('Controls/Container/Scroll/Watcher',
 
 
          start: function(self, eventType, params) {
+
             self._registrar.start(eventType, params);
             self._notify(eventType, [params]);
          }
@@ -194,8 +194,9 @@ define('Controls/Container/Scroll/Watcher',
             _private.onScrollContainer(this, this._container, !!this._observer);
          },
 
-         _resizeHandler: function() {
-            _private.onResizeContainer(this, this._container, !!this._observer);
+         //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
+         _resizeHandler: function(force) {
+            _private.onResizeContainer(this, this._container, force !== undefined ? force : !!this._observer);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
