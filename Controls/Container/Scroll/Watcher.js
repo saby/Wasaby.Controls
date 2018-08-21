@@ -81,9 +81,6 @@ define('Controls/Container/Scroll/Watcher',
             if (!self._sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
             }
-            if (!withObserver) {
-               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
-            }
 
             if (self._scrollTopCache <= 0) {
                curPosition = 'up';
@@ -102,6 +99,9 @@ define('Controls/Container/Scroll/Watcher',
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
                         _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+                        if (!withObserver) {
+                           _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                        }
                         self._scrollTopTimer = null;
                      }
                   }, 100);
@@ -138,6 +138,20 @@ define('Controls/Container/Scroll/Watcher',
             self._observer.observe(elements.bottomListTrigger);
          },
 
+         onRegisterNewComponent: function(self, component, withObserver) {
+            if (this._sizeCache.clientHeight <= this._sizeCache.scrollHeight) {
+               self._registrar.startOnceTarget(component, 'cantScroll');
+            }
+            else {
+               self._registrar.startOnceTarget(component, 'canScroll');
+            }
+
+            if (!withObserver) {
+               //TODO надо кидать не всем компонентам, а адресно одному
+               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+            }
+         },
+
          doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
                container.scrollTop = 0;
@@ -158,7 +172,6 @@ define('Controls/Container/Scroll/Watcher',
 
 
          start: function(self, eventType, params) {
-
             self._registrar.start(eventType, params);
             self._notify(eventType, [params]);
          }
@@ -196,22 +209,22 @@ define('Controls/Container/Scroll/Watcher',
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
          _resizeHandler: function(force) {
-            _private.onResizeContainer(this, this._container, force !== undefined ? force : !!this._observer);
+            _private.onResizeContainer(this, this._container, force !== undefined ? false : !!this._observer);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
-               _private.onResizeContainer(this, this._container);
-
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
                if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
-                  _private.initIntersectionObserver(this, triggers);
-               } else {
-                  _private.onScrollContainer(this, this._container);
+                  if (!this._observer) {
+                     _private.initIntersectionObserver(this, triggers);
+                  }
                }
+
+               _private.onRegisterNewComponent(this, this._container, component, callback, !!this._observer);
             }
          },
 
