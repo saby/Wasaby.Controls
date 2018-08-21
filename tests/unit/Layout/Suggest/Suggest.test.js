@@ -66,14 +66,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
    
          suggestComponent._options.suggestStyle = 'overInput';
-         suggestComponent._options.value = '';
+         suggestComponent._searchValue = '';
          suggestComponent._close();
          assert.equal(value, 'test');
-         assert.equal(suggestComponent._searchValue, '');
    
-         suggestComponent._options.value = 'test';
+         suggestComponent._searchValue = 'test';
          suggestComponent._close();
          assert.equal(value, '');
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_private.open', function (done) {

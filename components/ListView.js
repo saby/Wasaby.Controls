@@ -679,23 +679,14 @@ define('SBIS3.CONTROLS/ListView',
                   }
                }],
                /**
-                * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
-                * @variant "" Запрещено перемещение.
-                * @variant false Запрещено перемещение.
-                * @variant allow Разрешено перемещение.
-                * @variant true Разрешено перемещение.
-                * @example
-                * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
-                * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
-                * <pre>
-                *     itemsDragNDrop=""          <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
-                *     itemsDragNDrop="{{false}}" <!-- Передаем false -->
-                * </pre>
-                * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
-                * <pre>
-                *     itemsDragNDrop="allow"    <!-- Передаем allow -->
-                *     itemsDragNDrop="{{true}}" <!-- Передаем true -->
-                * </pre>
+                * @cfg {String|Boolean} Перемещение элементов с помощью курсора мыши.
+                * Подробнее в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
+                * @variant "" Запрещено.
+                * @variant false Запрещено.
+                * @variant allow Разрешено.
+                * @variant true Разрешено.
+                * @remark Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
+                * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
                 */
                itemsDragNDrop: 'allow',
                elemClickHandler: null,
@@ -980,7 +971,8 @@ define('SBIS3.CONTROLS/ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Разрешает перемещать элементы в списке.
-                * @remark по умолчанию опция включена
+                * @remark Перемещением с помощью курсора управляет опция {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Mixins/TreeViewMixin/options/itemsDragNDrop/ itemsDragNDrop}.
+                * Описание всех возможных типов перемещений описано в {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B5%D0%B9__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html стандарте разработки}.
                 */
                enabledMove: true,
                /**
@@ -1022,7 +1014,7 @@ define('SBIS3.CONTROLS/ListView',
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
             /* Инициализацию бесконечного скрола производим один раз */
-            this._prepareInfiniteScroll = once(this._prepareInfiniteScroll);
+            this._prepareInfiniteScroll = once(this._prepareInfiniteScrollFn);
             
             this._toggleEventHandlers(this._container, true);
 
@@ -3401,7 +3393,7 @@ define('SBIS3.CONTROLS/ListView',
           * @see setInfiniteScroll
           */
 
-         _prepareInfiniteScroll: function(){
+         _prepareInfiniteScrollFn: function(){
             var topParent = this.getTopParent(),
                 self = this;
    
@@ -3760,7 +3752,7 @@ define('SBIS3.CONTROLS/ListView',
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
                                  this._dogNailSavedMode = state.mode;
-                                 this._setInfiniteScrollState('up');
+                                 this._setInfiniteScrollState(state.mode === 'up' ? 'down' : 'up');
                                  this._scrollLoadNextPage();
                               }
                            }
@@ -5099,7 +5091,7 @@ define('SBIS3.CONTROLS/ListView',
             }
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
             if (this._options.task1175678591) { // https://online.sbis.ru/opendoc.html?guid=31bc2c39-ef26-4ff7-88f6-1066045262f3
-               this._createScrollWatcher();
+               this._prepareInfiniteScrollFn();
             }
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */

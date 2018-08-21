@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/SubmitPopup', [
     * @extends SBIS3.CONTROLS/InformationPopup
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Красильников А.С.
     */
    function(constants, InformationPopup, runDelayed, template){
       'use strict';

@@ -16,7 +16,7 @@ define('Controls/List/MultiSelector', [
     * @class Controls/List/MultiSelector
     * @extends Core/Control
     * @control
-    * @author Зайцев А.С.
+    * @author Авраменко А.С.
     * @public
     */
 

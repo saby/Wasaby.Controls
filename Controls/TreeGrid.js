@@ -26,7 +26,7 @@ define('Controls/TreeGrid', [
     * @category List
     */
 
-   var Tree = Grid.extend({
+   var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
       _viewName: 'Controls/List/TreeGridView/TreeGridView',
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {

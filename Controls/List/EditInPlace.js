@@ -169,7 +169,7 @@ define('Controls/List/EditInPlace', [
          }
       };
 
-   var EditInPlace = Control.extend({
+   var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace */{
       _template: template,
 
       /**

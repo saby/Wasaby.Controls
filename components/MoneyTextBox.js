@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
 
    'use strict';
 
-   function formatText(value, text, integers, maxLength, onlyPositive, countMinusInLength){
+   function formatText(value, text, integers, maxLength, onlyPositive, countMinusInLength, decimals){
       // Вырезаем переносы строк и теги.
       value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
           value,
           integers,
           true,
-          2,
+          decimals,
           onlyPositive,
           maxLength,
           true
@@ -44,17 +44,22 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @mixes SBIS3.CONTROLS/MoneyTextBoxDocs
      * @public
      * @control
-     * @author Зайцев А.С.
+     * @author Журавлев М.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Выравнивание текста относительно контейнера.
+             * @variant right Выравнивание справа относительно контейнера.
+             * @variant left Выравнивание слева относительно контейнера.
+             */
             textAlign: 'right',
             _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
-             * @cfg {Number} Количество знаков после запятой
+             * @cfg {Number} Количество знаков после запятой.
              * Опция задаёт ограничение количества знаков дробной части числа.
              * @example
              * <pre>
@@ -64,9 +69,13 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              * @see hideEmptyDecimals
              */
             decimals: 2,
+            /**
+             * @cfg {Boolean} Требуется ли скрывать пустую дробную часть.
+             * @example
+             */
             hideEmptyDecimals: false,
             /**
-             * @cfg {Boolean} Показать разделители триад
+             * @cfg {Boolean} Показать разделители триад.
              * @example
              * <pre>
              *     <option name="delimiters">true</option>
@@ -77,7 +86,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              */
             delimiters: true,
             /**
-             * @cfg {String} Денежное значение контрола
+             * @cfg {String} Денежное значение контрола.
              * @example
              * <pre>
              *     <option name="moneyValue">123.456</option>
@@ -105,7 +114,8 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
                 options.integers,
                 options.maxLength,
                 options.onlyPositive,
-                options.countMinusInLength
+                options.countMinusInLength,
+                options.decimals
             );
              dotPos = options.text.indexOf('.');
              if(dotPos){
@@ -208,7 +218,8 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              this._options.integers,
              this._options.maxLength,
              this._options.onlyPositive,
-             this._options.countMinusInLength
+             this._options.countMinusInLength,
+             this._options.decimals
          );
       },
       /**

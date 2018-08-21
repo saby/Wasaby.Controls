@@ -14,7 +14,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'use strict';
 
       /**
-       * @class Controls.Input.resources.InputRender.InputRender
+       * @class Controls/Input/resources/InputRender/InputRender
        * @extends Core/Control
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control

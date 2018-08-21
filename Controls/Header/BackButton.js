@@ -16,6 +16,7 @@ define('Controls/Header/BackButton', [
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Button
     *
     * @mixes Controls/Header/BackButton/BackStyles

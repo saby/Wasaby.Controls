@@ -1,6 +1,8 @@
 define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    [
+      'Core/Deferred',
       'Core/core-merge',
+      'Core/CompoundContainer',
       'Controls/Popup/Opener/Notification',
       'SBIS3.CONTROLS/SubmitPopup',
       'SBIS3.CONTROLS/NotificationPopup',
@@ -27,10 +29,12 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     *    });
     * </pre>
     * @class SBIS3.CONTROLS/Utils/InformationPopupManager
-    * @author Степин П.В.
+    * @author Красильников А.С.
     * @public
     */
-   function(cMerge,
+   function(Deferred,
+      cMerge,
+      CompoundContainer,
       NotificationVDOM,
       SubmitPopup,
       NotificationPopup,
@@ -156,23 +160,75 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                   //TODO: Дима Зуев предлагает перейти на создание через new, но падают ошибки.
                   //https://online.sbis.ru/opendoc.html?guid=2be2cedb-91ec-4814-a76c-66c0f62431be
                   this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, $('<div></div>'));
+
+                  /**
+                   * Ассоциативный объект значений опций старого и нового шаблона.
+                   * [значение в старом шаблоне]: значение в новом шаблоне
+                   */
                   this._styles = {
                      success: 'done',
                      error: 'error',
                      warning: 'warning'
                   };
+
+                  /**
+                   * Аналогично this._styles.
+                   */
+                  this._icon = {
+                     success: 'icon-size icon-24 icon-Yes icon-done',
+                     error: 'icon-size icon-24 icon-Alert icon-error',
+                     warning: 'icon-size icon-24 icon-Alert icon-attention'
+                  };
                }
 
+               /**
+                * Эмулируем код в init SBIS3.CONTROLS/NotificationPopup
+                */
+               if (!('closeButton' in config)) {
+                  config.closeButton = true;
+               }
+               if (!('icon' in config)) {
+                  config.icon = this._icon[config.status];
+               }
+
+               /**
+                * Прикладники обращаесь через .getParent() получали popup, в нашем случае opener, сейчас
+                * получают Controls/Popup/Templates/Notification/Compatible в нем нужно
+                * пробросить вызовы в opener. Поэтому передаем его.
+                */
+               config._opener = this._notificationVDOM;
+
+               /**
+                * В старом окружении метод возвращает инстанс компонента. В vdom кружении мы не можем его вернуть, потому что он создается ассинхронно,
+                * будем возвращать Deferred в callback которого придет инстанс компонента окна. Для этого в Controls/Popup/Compatible/Notification
+                * отдадим Deferred в опцию _def и отдадим его из метода.
+                * Прикладные разработчики у себя поправят код на работу с Deferred.
+                */
+               config._def = new Deferred();
+
+               /**
+                * Используем базовый шаблон vdom нотификационных окон с контентом Core/CompoundContainer для
+                * оэивления старых компонентов. А ему в качестве контента отдадим эмуляцию SBIS3.CONTROLS/NotificationPopup,
+                * а именно Controls/Popup/Templates/Notification/Compatible
+                */
                this._notificationVDOM.open({
-                  template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                  template: 'Controls/Popup/Compatible/Notification/Base',
                   templateOptions: {
-                     iconClose: true,
                      autoClose: !notHide,
-                     text: config.caption,
-                     icon: config.icon,
-                     style: this._styles[config.status]
+                     contentTemplateOptions: {
+                        component: 'Controls/Popup/Compatible/Notification',
+                        componentOptions: config
+                     },
+                     style: this._styles[config.status],
+                     contentTemplate: CompoundContainer,
+                     iconClose: config.closeButton || true
                   }
                });
+               this._notificationVDOM.isDestroyed = function() {
+                  return false;
+               };
+
+               return config._def;
             } else {
                var popup = new NotificationPopup(cMerge({
                   element: $('<div></div>')

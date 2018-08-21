@@ -94,16 +94,15 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
              */
             folderFooterTpl: undefined,
             /**
-             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
-             * @variant "" Запрещено
-             * @variant allow Разрешено
-             * @variant onlyChangeOrder Разрешено только изменение порядка
-             * @variant onlyChangeParent Разрешено только перемещение в папку
-             * @variant separateParent Нельзя перемещать лист между папками и папку между листами
-             * @example
-             * <pre>
-             *     <option name="itemsDragNDrop">onlyChangeParent</option>
-             * </pre>
+             * @cfg {String} Перемещения элементов с помощью курсора мыши.
+             * @variant "" Запрещено.
+             * @variant allow Разрешено.
+             * @variant onlyChangeOrder Разрешено только изменение порядка.
+             * @variant onlyChangeParent Разрешено только перемещение в папку.
+             * @variant separateParent Нельзя перемещать лист между папками и папку между листами.
+             * @remark Дополнительная информация в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Типы отношений в таблицах БД}.
+             * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
+             * Подробнее о том, как перемещать записи в списках, читайте в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
              */
             itemsDragNDrop: 'allow'
          }
@@ -254,7 +253,9 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
       _needCreateFolderFooter: function (item) {
          var
             model, id, nodeType;
-         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+
+         //В режиме поиска никогда не создаём футеры
+         if (this._isSearchMode() || cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
             return false;
          }
          model = item.getContents();

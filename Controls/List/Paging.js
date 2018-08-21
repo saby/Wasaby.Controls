@@ -1,5 +1,6 @@
 /**
  * Created by kraynovdo on 01.11.2017.
+ * @author Крайнов Д.О.
  */
 define('Controls/List/Paging', [
    'Core/Control',

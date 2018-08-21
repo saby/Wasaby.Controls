@@ -29,6 +29,7 @@ define('Controls/Input/Lookup', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
+    * @author Зайцев А.С.
     * @category Input
     */
 
