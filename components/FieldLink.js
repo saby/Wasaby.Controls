@@ -1193,6 +1193,15 @@ define('SBIS3.CONTROLS/FieldLink',
                 }
              };
           },
+   
+          _getLoadingContainer: function() {
+             return this.getContainer().find('.controls-FieldLink__fieldWrapper');
+          },
+   
+          _showLoadingIndicator: function() {
+             FieldLink.superclass._showLoadingIndicator.call(this);
+             this._loadingIndicator.addClass('controls-FieldLink__indicator');
+          },
 
           _checkListItemRevert: function(){
              if(!this._options.reverseItemsOnListRevert) {
