@@ -1,0 +1,44 @@
+<div class="center-align" on:changeValue="checkEvent()">
+    <div>
+        <div attr:class="demo-Checkbox__inline_row demo-Checkbox__TestBlock_wrapper">
+            <div attr:class="demo-Checkbox__TestBlock_inline">
+                <h2>View mode</h2>
+                <Controls.Toggle.Checkbox class="checkbox_wrapper_width1" readOnly="{{false}}" bind:value="_value" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+            </div>
+            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
+                <h2>Read mode</h2>
+                <div class="disable-state-wrapper">
+                    <div class="checkbox_wrapper_width2">
+                        <h3>Selected value</h3>
+                        <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{true}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+                    </div>
+                    <div class="checkbox_wrapper_width1">
+                        <h3>Not selected value</h3>
+                        <Controls.Toggle.Checkbox readOnly="{{true}}" value="{{false}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div attr:class="demo-Checkbox__TestBlock_wrapper">
+            <h2>Long caption</h2>
+            <Controls.Toggle.Checkbox attr:class="demo-Checkbox_smallWidth" readOnly="{{false}}" bind:value="_value2"
+                                      caption="if you need a very long headline, it should be transferred like this. This header is so long that it does not fit in a line with a length of 500px. Of course, it's better not to use such long headlines, but in the event that you still need to make such a headline, be prepared that he would look like this. It does not have a newline character."
+                                      tooltip="Tooltip"/>
+        </div>
+        <div attr:class="demo-Checkbox__TestBlock_wrapper test-block_width">
+            <h2>Different content in caption</h2>
+            <div attr:class="demo-Checkbox__TestBlock_inline">
+                <h3>Text and text-link</h3>
+                <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value3" caption="{{_content1}}" tooltip="Tooltip"/>
+            </div>
+            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
+                <h3>Icon</h3>
+                <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value4" caption="{{_content2}}" tooltip="Tooltip"/>
+            </div>
+            <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
+                <h3>Different style text</h3>
+                <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value5" caption="{{_content3}}" tooltip="Tooltip"/>
+            </div>
+        </div>
+    </div>
+</div>

@@ -75,62 +75,62 @@ x{}
 }
 
 .controls-loading-indicator_overlay-dark {
-   background-color: @wait-indicator-overlay-dark;
+    background-color: @wait-indicator-overlay-dark;
 }
 
 .controls-loading-indicator_sided {
-   .justify-content(flex-start);
+    .justify-content(flex-start);
 }
 
 .controls-loading-indicator_sided-left {
-   .flex-direction(row);
+    .flex-direction(row);
 }
 
 .controls-loading-indicator_sided-right {
-   .flex-direction(row-reverse);
+    .flex-direction(row-reverse);
 }
 
 .controls-loading-indicator_sided-top {
-   .flex-direction(column);
+    .flex-direction(column);
 }
 
 .controls-loading-indicator_sided-bottom {
-   .flex-direction(column-reverse);
+    .flex-direction(column-reverse);
 }
 
 .controls-loading-indicator_scroll_grad(@direction, @color) {
-   @r: red(@color);
-   @g: green(@color);
-   @b: blue(@color);
-   .linear-gradient-only(@direction, @color, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+    @r: red(@color);
+    @g: green(@color);
+    @b: blue(@color);
+    .linear-gradient-only(@direction, @color, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-left {
-   .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-white);
+    .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-white);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-right {
-   .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-white);
+    .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-white);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-top {
-   .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-white);
+    .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-white);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-bottom {
-   .controls-loading-indicator_scroll_grad(0deg, @wait-indicator-gradient-white);
+    .controls-loading-indicator_scroll_grad(0deg, @wait-indicator-gradient-white);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-left.controls-loading-indicator_mod-gray {
-   .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-gray);
+    .controls-loading-indicator_scroll_grad(90deg, @wait-indicator-gradient-gray);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-right.controls-loading-indicator_mod-gray {
-   .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-gray);
+    .controls-loading-indicator_scroll_grad(270deg, @wait-indicator-gradient-gray);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-top.controls-loading-indicator_mod-gray {
-   .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-gray);
+    .controls-loading-indicator_scroll_grad(180deg, @wait-indicator-gradient-gray);
 }
 
 .controls-loading-indicator_scroll.controls-loading-indicator_sided-bottom.controls-loading-indicator_mod-gray {

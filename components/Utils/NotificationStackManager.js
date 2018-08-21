@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
    /**
     * Синглтон для работы со стеком нотификационных окон.
     * @class SBIS3.CONTROLS/Utils/NotificationStackManager
-    * @author Степин П.В.
+    * @author Красильников А.С.
     */
    function( cWindowManager, EventBus, Control){
       'use strict';

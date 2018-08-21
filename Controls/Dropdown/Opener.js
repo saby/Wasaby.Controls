@@ -8,9 +8,11 @@ define('Controls/Dropdown/Opener',
        * Opener for dropdown menu.
        *
        * @class Controls/Dropdown/Opener
-       * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IDropdownList
+       * @extends Controls/Popup/Opener/Sticky
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        */
       var _private = {

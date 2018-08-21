@@ -17,14 +17,22 @@ define('Controls/Input/Dropdown',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/interface/ISingleSelectable
+       * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
+       * @author Зайцев А.С.
        * @category Input
        * @demo Controls-demo/Dropdown/MenuVdom
        */
+
+      /**
+       * @name Controls/Input/Dropdown#contentTemplate
+       * @cfg {Function} Template that will be render calling element.
+       */
+
 
       'use strict';
 
@@ -48,7 +56,6 @@ define('Controls/Input/Dropdown',
          _beforeMount: function() {
             this._setText = this._setText.bind(this);
          },
-
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._notify('textValueChanged', [this._text]);

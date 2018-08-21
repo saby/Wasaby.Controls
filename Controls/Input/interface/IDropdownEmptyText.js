@@ -4,7 +4,7 @@ define('Controls/Input/interface/IDropdownEmptyText', [
    /**
     * Interface for adding "empty selection" to dropdown lists.
     *
-    * @mixin Controls/Input/interface/IDropdownEmptyText
+    * @interface Controls/Input/interface/IDropdownEmptyText
     * @public
     */
 

@@ -1,0 +1,45 @@
+<div class="demoWrapper">
+   <div class="testBlock" test_name="BackButtonCapture">
+      <div class="exampleBlock">
+         <h2>Панель операций</h2>
+         <Controls.Container.Data keyProperty="id" source="{{_viewSource}}">
+            <Controls.Container.MultiSelector>
+               <Controls.Operations.Panel
+                       expanded="{{_expanded}}"
+                       multiSelectorVisibility="{{_multiSelectorVisibility}}"
+                       source="{{_source}}"
+                       parentProperty="parent"
+                       nodeProperty="@parent"
+                       rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
+                       keyProperty="id"
+                       on:activated="_eventHandler()"
+                       on:deactivated="_eventHandler()"
+                       on:itemClick="_eventHandler()"
+               />
+            </Controls.Container.MultiSelector>
+         </Controls.Container.Data>
+      </div>
+      <div class="optionsBlock">
+         <h3>Опции</h3>
+         <Controls.Label caption="expanded:"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__expanded" bind:value="_expanded" caption="Show/hide operationsPanel"/>
+         <Controls.Label caption="source:"/>
+         <Controls.Toggle.RadioGroup
+            attr:class="ControlsDemo-OperationsPanel__source"
+            on:selectedKeyChanged="sourceChange()"
+            keyProperty="id"
+            selectedKey="{{_sourceNumber}}"
+            source="{{_sourceConfig}}"/>
+         <Controls.Label caption="multiSelectorVisibility:"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__multiSelector" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
+         <Controls.Label caption="rightTemplate:"/>
+         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
+      </div>
+      <div class="eventBlock">
+         <span>Event that surfaced:</span>
+         <Controls.Button attr:class="demo-ResetButton" on:click="_reset()" style="linkMain3" caption="reset"/>
+         <br/>
+         <span class="ControlsDemo__eventName">{{_eventName}}</span>
+      </div>
+   </div>
+</div>

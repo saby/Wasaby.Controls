@@ -11,7 +11,7 @@ define('Controls/List/DialogMover', [
     * @extends Core/Control
     * @mixes Controls/interface/IMovable
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */
@@ -52,6 +52,14 @@ define('Controls/List/DialogMover', [
 
       moveItems: function(items, target, position) {
          this._children.mover.moveItems(items, target, position);
+      },
+
+      _beforeItemsMove: function(event, items, target, position) {
+         return this._notify('beforeItemsMove', [items, target, position]);
+      },
+
+      _afterItemsMove: function(event, items, target, position, result) {
+         return this._notify('afterItemsMove', [items, target, position, result]);
       },
 
       moveItemsWithDialog: function(items) {

@@ -1,12 +1,39 @@
 .controls-Button__close {
-  display: flex;
+   display: inline-block;
+}
+
+.controls-Button__close__wrapper:before {
+   content: "\200b";
+}
+
+.controls-Button__close__icon_default, .controls-Button__close__icon_primary {
+   font-size: @font-size_CloseButton_default;
+   font-family: @font-family_CloseButton_default;
+   color: @color_CloseButton-icon;
+}
+
+.controls-Button__close__icon_light {
+   font-size: @font-size_CloseButton_light;
+}
+
+.controls-Button__close__icon:before {
+   content: @content_CloseButton_icon;
+   text-shadow: @text-shadow_Button;
+}
+
+.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active {
+   color: @color_CloseButton-icon_hover;
+}
+
+.controls-Button__close__icon_light:active {
+   color: @color_CloseButton-light-icon_hover;
+}
+
+.controls-Button__close__wrapper {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  line-height: @height_CloseButton;
-  &:before {
-    content: @content_CloseButton_icon;
-  }
 }
 
 .controls-Button__close_default {
@@ -23,16 +50,7 @@
   border: solid @border-color_CloseButton;
   border-width: @border-width_CloseButton;
   border-radius: @border-radius_CloseButton;
-  font-size: @font-size_CloseButton_default;
-  font-family: @font-family_CloseButton_default;
-  color: @color_CloseButton-icon;
   box-shadow: @box-shadow_CloseButton;
-  &:before {
-    text-shadow: @text-shadow_Button;
-  }
-  &:active {
-    color: @color_CloseButton-icon_hover;
-  }
 }
 
 .controls-Button__close_light {
@@ -40,19 +58,15 @@
   width: @width_CloseButton_small;
   height: @height_CloseButton_small;
   color: @color_CloseButton-light-icon;
-  font-size: @font-size_CloseButton_light;
-  &:active {
-    color: @color_CloseButton-light-icon_hover;
-  }
 }
 
 .ws-is-no-touch{
-   .controls-Button__close_default:hover, .controls-Button__close_primary:hover {
+   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover {
       border-color: @default-border-color-second;
       color: @color_CloseButton-icon_hover;
    }
 
-   .controls-Button__close_light:hover {
+   .controls-Button__close__icon_light:hover {
       color: @color_CloseButton-light-icon_hover;
    }
 }

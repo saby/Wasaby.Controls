@@ -3,12 +3,35 @@ define('Controls/Container/Data',
       'Core/Control',
       'tmpl!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
-      'Controls/Container/Data/ContextOptions',
-      'Core/core-clone'
+      'Controls/Container/Data/ContextOptions'
    ],
    
-   function(Control, template, getPrefetchSource, ContextOptions, clone) {
+   function(Control, template, getPrefetchSource, ContextOptions) {
+
+      /**
+       * Container component that provides a context field "dataOptions" with necessary data for child containers.
+       *
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       *
+       * @class Controls/Container/Data
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
+       * @extends Core/Control
+       * @control
+       * @public
+       * @author A.M. Gerasimov
+       */
       
+      /**
+       * @name Controls/Container/Data#source
+       * @cfg Object that implements ISource interface for data access.
+       */
+
+      /**
+       * @name Controls/Container/Data#keyProperty
+       * @cfg {String} Name of the item property that uniquely identifies collection item.
+       */
+
       'use strict';
       
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
@@ -16,7 +39,7 @@ define('Controls/Container/Data',
       var _private = {
          createOptionsObject: function(self) {
             function reducer(result, optName) {
-               if (optName === 'source') {
+               if (optName === 'source' && self._source) {
                   //TODO: При построении на сервере в сериализованом состоянии в компонент приходят prefetchSource и
                   //source изначально заданный в опциях. prefetchSource содержит в себе source из опций, но так как
                   //это 2 разных парамтра, при десериализации получаем 2 разных source. Один десериализуется внутри
@@ -58,7 +81,7 @@ define('Controls/Container/Data',
          }
       };
       
-      var Base =  Control.extend({
+      var Data =  Control.extend(/** @lends Controls/Container/Data.prototype */{
          
          _template: template,
          
@@ -67,7 +90,7 @@ define('Controls/Container/Data',
             _private.resolveOptions(this, options);
             if (receivedState) {
                _private.resolvePrefetchSourceResult(this, receivedState);
-            } else {
+            } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
                   return result;
@@ -88,13 +111,19 @@ define('Controls/Container/Data',
                });
             }
          },
-   
+
          _filterChanged: function(event, filter) {
-            this._filter = clone(filter);
+            this._filter = filter;
+            this._notify('filterChanged', [filter]);
          },
          
          _itemsChanged: function(event, items) {
-            _private.createPrefetchSource(this, items);
+            var self = this;
+            _private.createPrefetchSource(this, items).addCallback(function(result) {
+               _private.resolvePrefetchSourceResult(self, result);
+               self._forceUpdate();
+               return result;
+            });
          },
          
          _getChildContext: function() {
@@ -103,7 +132,7 @@ define('Controls/Container/Data',
             };
          }
       });
-      
-      Base._private = _private;
-      return Base;
+
+      Data._private = _private;
+      return Data;
    });

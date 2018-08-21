@@ -1,28 +1,76 @@
 define('Controls/Filter/Button/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Button/Container'
+      'tmpl!Controls/Filter/Button/Container',
+      'Controls/Container/Filter/FilterContextField',
+      'Core/helpers/Object/isEqual'
    ],
    
-   function(Control, template) {
+   function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * Container component for FilterButton
-       * Receives props from context and pass to FilterButton.
-       * Should be located inside Controls/Container/Filter.
-       * @class Controls/Container/Filter/Button
+       * Special container for {@link Controls/Filter/Button}.
+       * Listens for child's "filterChanged" event and notify bubbling event "filterChanged".
+       * Receives props from context and pass to {@link Controls/Filter/Button}.
+       * NOTE: Must be located inside Controls/Filter/Controller.
+       *
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
+       * @class Controls/Filter/Button/Container
        * @extends Core/Control
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */
-      
+
+      /**
+       * @event Controls/Filter/Button/Container#filterItemsChanged Happens when items changed.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {Object} items New items.
+       */
+
       'use strict';
+   
+      var _private = {
+         updateHistoryId: function(self, context) {
+            if (context.filterLayoutField.historyId) {
+               self._historyId = context.filterLayoutField.historyId;
+            }
+         }
+      };
       
-      var Container = Control.extend({
+      var Container = Control.extend(/** @lends Controls/Filter/Button/Container.prototype */{
          
-         _template: template
+         _template: template,
+   
+         _beforeUpdate: function(options, context) {
+            //context from Filter layout
+            var filterItems = context.filterLayoutField.filterButtonItems;
+            if (!isEqual(this._items, filterItems)) {
+               this._items = filterItems;
+            }
+            _private.updateHistoryId(this, context);
+         },
+   
+         _beforeMount: function(options, context) {
+            if (context.filterLayoutField.filterButtonItems) {
+               this._items = context.filterLayoutField.filterButtonItems;
+            }
+            _private.updateHistoryId(this, context);
+         },
+   
+         _itemsChanged: function(event, items) {
+            this._items = items;
+            this._notify('filterItemsChanged', [items], {bubbling: true});
+         }
       });
+   
+   
+      Container.contextTypes = function() {
+         return {
+            filterLayoutField: FilterContextField
+         };
+      };
       
       
       return Container;

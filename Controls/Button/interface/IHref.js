@@ -4,7 +4,7 @@ define('Controls/Button/interface/IHref', [
    /**
     * Interface for buttons with href links.
     *
-    * @mixin Controls/Button/interface/IHref
+    * @interface Controls/Button/interface/IHref
     * @public
     */
 

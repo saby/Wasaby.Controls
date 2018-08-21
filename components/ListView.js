@@ -679,23 +679,14 @@ define('SBIS3.CONTROLS/ListView',
                   }
                }],
                /**
-                * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
-                * @variant "" Запрещено перемещение.
-                * @variant false Запрещено перемещение.
-                * @variant allow Разрешено перемещение.
-                * @variant true Разрешено перемещение.
-                * @example
-                * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
-                * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
-                * <pre>
-                *     itemsDragNDrop=""          <!-- Передаём пустую строку в атрибуте value. Иным способом пустая строка не распознаётся -->
-                *     itemsDragNDrop="{{false}}" <!-- Передаем false -->
-                * </pre>
-                * <b>Пример 2.</b> Разрешим перемещение записей с помощью курсора мыши.
-                * <pre>
-                *     itemsDragNDrop="allow"    <!-- Передаем allow -->
-                *     itemsDragNDrop="{{true}}" <!-- Передаем true -->
-                * </pre>
+                * @cfg {String|Boolean} Перемещение элементов с помощью курсора мыши.
+                * Подробнее в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
+                * @variant "" Запрещено.
+                * @variant false Запрещено.
+                * @variant allow Разрешено.
+                * @variant true Разрешено.
+                * @remark Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
+                * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link /docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
                 */
                itemsDragNDrop: 'allow',
                elemClickHandler: null,
@@ -980,7 +971,8 @@ define('SBIS3.CONTROLS/ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Разрешает перемещать элементы в списке.
-                * @remark по умолчанию опция включена
+                * @remark Перемещением с помощью курсора управляет опция {@link /docs/js/SBIS3/CONTROLS/Mixins/TreeViewMixin/options/itemsDragNDrop/ itemsDragNDrop}.
+                * Описание всех возможных типов перемещений описано в {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B5%D0%B9__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html стандарте разработки}.
                 */
                enabledMove: true,
                /**
@@ -1482,7 +1474,7 @@ define('SBIS3.CONTROLS/ListView',
          },
          /**
           * Возвращает следующий элемент
-          * @param id
+          * @param id - ключ записи
           * @returns {jQuery}
           */
          getNextItemById: function (id) {

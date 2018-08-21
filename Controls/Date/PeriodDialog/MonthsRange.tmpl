@@ -1,0 +1,31 @@
+<Controls.Date.MonthList
+   attr:class="controls-PeriodDialog-MonthsRange"
+   on:itemClick="_onItemClick()"
+>
+   <ws:itemTemplate>
+      <Controls.Date.PeriodDialog.MonthsRangeItem
+         monthClickable="_options.monthClickable"
+         quantum="{{_options.quantum}}"
+         selectionType="{{_options.selectionType}}"
+         bind:startValue="_rangeModel.startValue"
+         bind:endValue="_rangeModel.endValue"
+
+         selectionProcessing="{{_options.selectionProcessing}}"
+         on:selectionProcessingChanged="_proxyEvent()"
+         selectionBaseValue="{{_options.selectionBaseValue}}"
+         selectionHoveredValue="{{_options.selectionHoveredValue}}"
+
+         hoveredStartValue="{{_options.hoveredStartValue}}"
+         hoveredEndValue="{{_options.hoveredEndValue}}"
+
+         selectionViewType="{{_options.selectionViewType}}"
+         on:selectionViewTypeChanged="_proxyEvent()"
+
+         on:monthClick="_proxyEvent()"
+         on:fixedPeriodClick="_proxyEvent()"
+         on:itemClick="_proxyEvent()"
+         on:itemMouseEnter="_proxyEvent()"
+         on:itemMouseLeave="_proxyEvent()"
+      />
+   </ws:itemTemplate>
+</Controls.Date.MonthList>

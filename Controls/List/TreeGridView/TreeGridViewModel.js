@@ -19,6 +19,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          toggleExpanded: function(dispItem) {
             this._model.toggleExpanded(dispItem);
          },
+         setRoot: function(root) {
+            this._model.setRoot(root);
+         },
          _onNodeRemoved: function(event, nodeId) {
             this._notify('onNodeRemoved', nodeId);
          },

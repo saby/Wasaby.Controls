@@ -1,0 +1,10 @@
+<div style=" display: flex;  flex-direction: column" class="test_root_div">
+    <div style="padding: 1px 10px 10px 10px; background-color: rgba(81,81,81,0.11) ">
+        <ws:for data="i in _options.editors">
+            <div>
+                {{i.fieldName}} <br/>
+                <ws:partial scope="{{_options}}" template="{{i.editor}}"  value="{{_options.value[i.fieldName]}}"   on:valueChanged="_objectValueChanged(i.fieldName)"  />
+            </div>
+        </ws:for>
+    </div>
+</div>

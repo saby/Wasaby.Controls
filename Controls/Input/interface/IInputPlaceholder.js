@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputPlaceholder', [
    /**
     * Interface for input placeholder.
     *
-    * @mixin Controls/Input/interface/IInputPlaceholder
+    * @interface Controls/Input/interface/IInputPlaceholder
     * @public
     */
 

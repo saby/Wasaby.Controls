@@ -199,6 +199,7 @@
 @radio-button-text-font-size:             round(32px * @multiplier);
 //Checkbox
 @height_CheckBox:                         round(50px * @multiplier);
+@line-height_Checkbox:                    @height_CheckBox;
 @check-box-icon-successful-size:          round(50px * @multiplier);
 @check-box-font-size:                     round(32px * @multiplier);
 @check-box-icon-successful-top:           round(-4px * @multiplier);
@@ -208,6 +209,7 @@
 @check-box-caption-padding:               round(9px * @multiplier) 0;
 @check-box-icon-box-size:                 round(32px * @multiplier);
 @check-box-caption-line-height:           round(32px * @multiplier);
+@line-height_Checkbox__caption:           @check-box-caption-line-height;
 @spacing_CheckBox-between-icon-caption:   round(9px * @multiplier) 0;
 @margin-left-CheckBox__icon_size:         @width_CheckBox;
 @font-size__checkBox:                     round(32px * @multiplier);
@@ -229,6 +231,7 @@
 @switcher-btn-hover-border-width:         @switcher-btn-border-width;
 //SwitcherDouble
 @switcher-do-text-margin:                 round(16px * @multiplier);
+@line-height_DoubleSwitch_vertical:       @default-text-size;
 //Menu
 @font-size_Popup:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
 @menu-subpopup-margin:                    0;
@@ -709,14 +712,14 @@
 @vertical-padding_InputArea: round(7px * @multiplier);
 
 //headers
-@font-size_Header__caption_size-xl:   round(40px * @multiplier);
-@font-size_Header__caption_size-l:    round(32px * @multiplier);
-@font-size_Header__caption_size-default: round(28px * @multiplier);
-@font-size_Header__caption_size-s:    round(24px * @multiplier);
+@font-size_Heading__caption_size-xl:   round(40px * @multiplier);
+@font-size_Heading__caption_size-l:    round(32px * @multiplier);
+@font-size_Heading__caption_size-m: round(28px * @multiplier);
+@font-size_Heading__caption_size-s:    round(24px * @multiplier);
 @padding_HeaderCounter-between-counter-caption: round(8px * @multiplier);
-@font-size_HeaderCounter_size-h3:     round(32px * @multiplier);
-@font-size_HeaderCounter_size-h7:     round(28px * @multiplier);
-@font-size_HeaderCounter_size-h6:     round(24px * @multiplier);
+@font-size_Counter_size-l:     round(32px * @multiplier);
+@font-size_Counter_size-s:     round(28px * @multiplier);
+@font-size_Counter_size-m:     round(24px * @multiplier);
 @padding_Header-between-counter-caption: round(8px * @multiplier);
 @width-HeaderSeparator:               round(14px * @multiplier);
 @height-HeaderSeparator:              round(23px * @multiplier);
@@ -727,33 +730,34 @@
 @width-Header__icon_size-big:         round(52px * @multiplier);
 @height-Header__icon_size-big:        round(52px * @multiplier);
 @size-Separator__icon:                round(42px * @multiplier);
-@padding-left_HeaderSeparator:        round(8px * @multiplier);
+@spacing-HeaderSeparator_between_headerSeparator_Header:        round(8px * @multiplier);
 @size-BigSeparator__icon:             round(52px * @multiplier);
 
 //radioGroup
 @height_RadioItem:                        round(50px * @multiplier);
-@font-size_RadioItem_size-m:              round(32px * @multiplier);
+@font-size_RadioItem:              round(32px * @multiplier);
 @stroke-width_RadioGroup_borderCircle:    round(3px * @multiplier);
 @spacing-between-radioItems_horizontal:   round(24px * @multiplier);
 @spacing-between-radioItems_vertical:     0;
 @spacing-between-radioItem-icon-caption:  round(16px * @multiplier);
-@width_RadioItem_svg:                     round(26px * @multiplier);
-@height_RadioItem_svg:                    round(26px * @multiplier);
+@width_ToggleCircle:                     round(26px * @multiplier);
+@height_ToggleCircle:                    round(26px * @multiplier);
 
 //backButton
-@width-BackButton_size-l:              round(14px * @multiplier);
-@height-BackButton_size-l:             round(23px * @multiplier);
-@width-BackButton_size-default:        round(14px * @multiplier);
-@height-BackButton_size-default:       round(23px * @multiplier);
-@width-BackButton_size-s:              round(14px * @multiplier);
-@height-BackButton_size-s:             round(23px * @multiplier);
+@width-BackButton__icon_size-l:              round(14px * @multiplier);
+@height-BackButton__icon_size-l:             round(23px * @multiplier);
+@width-BackButton__icon_size-m:        round(14px * @multiplier);
+@height-BackButton__icon_size-m:       round(23px * @multiplier);
+@width-BackButton__icon_size-s:              round(14px * @multiplier);
+@height-BackButton__icon_size-s:             round(23px * @multiplier);
 @spacing-BackButton-between-icon-text: round(16px * @multiplier);
 @spacing-BackButton-between-icon-text_big: round(16px * @multiplier);
-@spacing-Separator-between-icon-text:     0;
+@padding-Separator:     0;
+@size-Separator:        auto;
 @height-BackButton:                    round(50px * @multiplier);
-@font-size_BackButton__caption_size-l: @font-size_Header__caption_size-l;
-@font-size_BackButton__caption_size-m: @font-size_Header__caption_size-l;
-@font-size_BackButton__caption_size-s: @font-size_Header__caption_size-l;
+@font-size_BackButton__caption_size-l: @font-size_Heading__caption_size-l;
+@font-size_BackButton__caption_size-m: @font-size_Heading__caption_size-l;
+@font-size_BackButton__caption_size-s: @font-size_Heading__caption_size-l;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @height-IconButton_size-m:               round(44px * @multiplier);
@@ -766,10 +770,13 @@
 @box-shadow-IconButton_activated:        none;
 //toggle-button
 @border-radius-ToggleButton:         @border-radius_Button_default;
-@min-width-ToggleButton_style_linkMain_size-m:    @min-width_Button-Vdom;
-@min-width-ToggleButton_style_linkMain_size-l:          @min-width_Button-Vdom;
+@min-width-ToggleButton_size-s:    @min-width_Button-Vdom;
+@min-width-ToggleButton_size-m:    @min-width_Button-Vdom;
+@min-width-ToggleButton_size-l:          @min-width_Button-Vdom;
 @border-width_ToggleButton:          2px;
-@height-ToggleButton_style_linkMain_size-m:   @height_Button_m;
-@height-ToggleButton_style_linkMain_size-l:         @height_Button-Vdom_l;
+@height-ToggleButton_size-s:         @height_Button_m;
+@height-ToggleButton_size-m:   @height_Button_m;
+@height-ToggleButton_size-l:         @height_Button-Vdom_l;
+@padding_ToggleButton-wrapper_s: @padding_Button-wrapper_default;
 @padding_ToggleButton-wrapper_m: @padding_Button-wrapper_default;
 @padding_ToggleButton-wrapper_l:     @padding_Button-wrapper_l;

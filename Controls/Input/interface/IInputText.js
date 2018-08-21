@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputText', [
    /**
     * Interface for text inputs.
     *
-    * @mixin Controls/Input/interface/IInputText
+    * @interface Controls/Input/interface/IInputText
     * @public
     */
 

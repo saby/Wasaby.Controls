@@ -4,8 +4,14 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * Selection interface for collections with unknown number of items.
     *
-    * @mixin Controls/interface/IPromisedSelectable
+    * @interface Controls/interface/IPromisedSelectable
     * @public
+    */
+
+   /**
+    * @typedef {Object} Selection
+    * @param {Array} selection.selected Array of selected keys.
+    * @param {Array} selection.excluded Array of excluded keys.
     */
 
    /**
@@ -21,22 +27,15 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * Toggle selection.
-    * @function Controls/interface/IPromisedSelectable#toggleSelection
+    * Returns selection.
+    * @function Controls/interface/IPromisedSelectable#getSelection
+    * @returns {Selection} Selection.
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selected keys were changed.
-    * @param {Array} keys Array of selected items' keys.
-    * @param {Array} added Array of added keys in selection.
-    * @param {Array} deleted Array of deleted keys in selection.
-    */
-
-   /**
-    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when excluded keys were changed.
-    * @param {Array} keys Array of excluded items' keys.
-    * @param {Array} added Array of added keys.
-    * @param {Array} deleted Array of deleted keys.
+    * @event Controls/interface/IPromisedSelectable#selectionChanged Occurs when selection was changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Selection} Selection.
     */
 
 });

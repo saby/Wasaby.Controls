@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "3.18.420",
+   "version": "3.18.500",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
@@ -14,13 +14,16 @@
       "rebuild": "grunt rebuild",
       "test": "node node_modules/ws-unit-testing/mocha test-isolated",
       "test-debug": "node node_modules/ws-unit-testing/mocha %NODE_DEBUG_OPTION% test-isolated",
-      "coverage": "node node_modules/ws-unit-testing/cover test-isolated"
+      "coverage": "node node_modules/ws-unit-testing/cover test-isolated",
+      "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish ."
    },
    "config": {
       "ws": "sbis3-ws",
-      "viewFrom": "sbis3-ws/View",
-      "viewTo": "View",
-      "resources": "components",
+      "wsModules": {
+         "View": "sbis3-ws/View",
+         "Core": "sbis3-ws/Core"
+      },
+      "resources": "./",
       "tests": "tests/unit",
       "test_server_port": 1025,
       "test_report": "artifacts/xunit-report.xml",
@@ -33,10 +36,12 @@
       }
    },
    "devDependencies": {
+      "@tensor-corp/eslint-config": "^2.0.3",
       "async": "^2.6.1",
       "autoprefixer": "^8.6.5",
       "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
+      "eslint": "^5.2.0",
       "express": "^4.16.3",
       "grunt": "^0.4.5",
       "grunt-contrib-clean": "0.6.0",
@@ -59,9 +64,5 @@
       "serve-static": "1.11.x",
       "typescript": "2.5.3",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0"
-   },
-   "dependencies": {
-      "@tensor-corp/eslint-config": "^1.0.0",
-      "eslint": "^4.19.1"
    }
 }

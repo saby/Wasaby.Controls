@@ -202,7 +202,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
          _toggleExpanded: function() {
-            this._expanded = !this._expanded;
             this._listModel.toggleExpanded(this._expanded);
             this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();

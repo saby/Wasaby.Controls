@@ -3,11 +3,20 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Control',
       'tmpl!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
+      'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred'
    ],
-   function(Control, Template, ManagerController, CoreClone, CoreMerge, Deferred) {
+   function(
+      Control,
+      Template,
+      ManagerController,
+      DefaultOpenerFinder,
+      CoreClone,
+      CoreMerge,
+      Deferred
+   ) {
 
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
@@ -24,7 +33,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @mixes Controls/interface/IOpener
        * @control
        * @public
-       * @author Красильников Андрей
+       * @author Красильников А.С.
        */
       var Base = Control.extend({
          _template: Template,
@@ -128,7 +137,7 @@ define('Controls/Popup/Opener/BaseOpener',
          _getConfig: function(popupOptions) {
             var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
             CoreMerge(cfg, popupOptions || {});
-            cfg.opener = cfg.opener || this;
+            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this);
             return cfg;
          },
 

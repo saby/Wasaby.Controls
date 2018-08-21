@@ -1,0 +1,346 @@
+<div class="demo-Button__wrapper">
+    <h1>Button</h1>
+    <h2>Default button</h2>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Small button</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" caption="small button"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" style="buttonPrimary" caption="small button"/>
+            </div>
+        </div>
+    </div>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Big button</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" size="l" caption="big button"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" size="l" style="buttonPrimary" caption="big button"/>
+            </div>
+        </div>
+    </div>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Button with icon</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" iconStyle="default" icon="icon-24 icon-Send"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" iconStyle="default" style="buttonPrimary" icon="icon-24 icon-Send"/>
+            </div>
+        </div>
+    </div>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Button with icon and text</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-ThumbUp2" caption="promotion"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.Button readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-ThumbDown2" caption="penalty"/>
+            </div>
+        </div>
+    </div>
+    <h2>Button-link</h2>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Simple button-link</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column demo-Button__testBlock_column">
+                <Controls.Button readOnly="{{false}}" caption="Main link" style="linkMain" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Inactive link 1" style="linkMain2" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Inactive link 2" style="linkMain3" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Inactive link 3" style="linkAdditional" size="m"/>
+            </div>
+            <div attr:class="test_element_two_column test_element demo-Button__testBlock_column">
+                <Controls.Button readOnly="{{false}}" caption="Accent link 1" style="linkAdditional2" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Accent link 2" style="linkAdditional3" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Accent link 3" style="linkAdditional4" size="m"/>
+                <Controls.Button readOnly="{{false}}" caption="Accent link 4" style="linkAdditional5" size="m"/>
+            </div>
+        </div>
+        <h3>Button-link with icon and text</h3>
+        <div attr:class="demo-Button_margin-10">
+            <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Send" caption="Main link" style="linkMain" size="m"/>
+        </div>
+        <h3>Button-link for table</h3>
+        <div attr:class="demo-Button_margin-10">
+            <Controls.List.AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
+        </div>
+    </div>
+    <h2>Button-icon</h2>
+    <div attr:class="demo-Button_margin-10">
+        <h3>Simple button-icon</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_three_column">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Send" style="linkMain" size="m"/>
+            </div>
+            <div attr:class="test_element_three_column">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" icon="icon-16 icon-Undo2" style="linkMain" size="m"/>
+            </div>
+            <div attr:class="test_element_three_column">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" icon="icon-16 icon-Redo2" style="linkMain" size="m"/>
+            </div>
+        </div>
+        <h3>Icon toggle-button</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="test_element_two_column">
+                <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" icons="{{['icon-16 icon-ArrangeList03', 'icon-16 icon-ArrangeList04']}}" style="buttonLinkMain"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.Toggle.Button attr:class="test_element" readOnly="{{false}}" bind:value="toggleState2" size="m" icons="{{['icon-16 icon-ArrangePreview', 'icon-16 icon-ArrangeList']}}" style="buttonLinkMain"/>
+            </div>
+        </div>
+        <h3>Text toggle-button</h3>
+        <div attr:class="demo-Button_margin-10">
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="buttonLinkAdditional"/>
+        </div>
+        <h3>Bordered button-icon with m size</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div attr:class="demo-Button__testBlock__controlPanelFirst">
+                <Controls.Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBordered" size="m"/>
+                <span class="demo-Button__Label">Confirm</span>
+            </div>
+            <div attr:class="demo-Button__testBlock__controlPanel">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-TFDelete" style="iconButtonBordered" size="m"/>
+                <span class="demo-Button__Label">Delete</span>
+            </div>
+            <div attr:class="demo-Button__testBlock__controlPanel">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-Forward" style="iconButtonBordered" size="m"/>
+                <span class="demo-Button__Label">Advanced editing</span>
+            </div>
+            <div attr:class="demo-Button__testBlock__controlPanel">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-ArrowUp" style="iconButtonBordered" size="m"/>
+                <span class="demo-Button__Label">Up</span>
+            </div>
+            <div attr:class="demo-Button__testBlock__controlPanel">
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-ArrowDown" style="iconButtonBordered" size="m"/>
+                <span class="demo-Button__Label">Down</span>
+            </div>
+        </div>
+        <h3>Bordered button-icon with l size</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div>
+                <div attr:class="demo-Button__testBlock__controlPanelFirst">
+                    <Controls.Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBordered" size="l"/>
+                    <span class="demo-Button__Label">Confirm</span>
+                </div>
+                <div attr:class="demo-Button__testBlock__controlPanel">
+                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-TFDelete" style="iconButtonBordered" size="l"/>
+                    <span class="demo-Button__Label">Delete</span>
+                </div>
+                <div attr:class="demo-Button__testBlock__controlPanel">
+                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-EmptyMessage" style="iconButtonBordered" size="l"/>
+                    <span class="demo-Button__Label">Message</span>
+                </div>
+            </div>
+            <div>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanelFirst" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-TFCurtailRTE2" style="iconButtonBordered" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-ExpandList" style="iconButtonBordered" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-EmoiconSmile" style="iconButtonBordered" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{true}}" iconStyle="default" icon="icon-16 icon-Check" style="iconButtonBordered" size="l"/>
+            </div>
+            <div>
+                <div class="demo-Button__Label">Transparent button</div>
+                <div class="demo-Button__background_simple">
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBordered" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-TFDelete" style="iconButtonBordered" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-EmptyMessage" style="iconButtonBordered" size="l"/>
+                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="default"/>
+                </div>
+            </div>
+            <div>
+                <div class="demo-Button__Label">Not transparent button</div>
+                <div class="demo-Button__background_complex">
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBorderedAdditional" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-TFDelete" style="iconButtonBorderedAdditional" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="default" icon="icon-16 icon-EmptyMessage" style="iconButtonBorderedAdditional" size="l"/>
+                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="primary"/>
+                </div>
+            </div>
+        </div>
+        <h3>Sticky button</h3>
+        <div attr:class="demo-Button_margin-10">
+            <div>
+                <div class="demo-Button__Label">For the color picker panel.</div>
+                <div>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="linkMain"/>
+                </div>
+            </div>
+            <div>
+                <div class="demo-Button__Label">For the text editor. First variant.</div>
+                <div class="demo-Button__background_simple">
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Bold']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Italic']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Underline']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-LetterN']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterA']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-Quote']}}" style="linkMain"/>
+                </div>
+            </div>
+            <div>
+                <div class="demo-Button__Label">For the text editor. Second variant.</div>
+                <div class="demo-Button__background_simple">
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="iconButtonBordered"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="iconButtonBordered"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="iconButtonBordered"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="iconButtonBordered"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="iconButtonBordered"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="iconButtonBordered"/>
+                </div>
+            </div>
+            <div>
+                <div class="demo-Button__Label">For the image edit.</div>
+                <div>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState22" size="l" icons="{{['icon-24 icon-Handwrite2']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState23" size="l" icons="{{['icon-24 icon-Preferment']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState24" size="l" icons="{{['icon-24 icon-MagicWand']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState25" size="l" icons="{{['icon-24 icon-Line']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState26" size="l" icons="{{['icon-24 icon-Rectangle']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState27" size="l" icons="{{['icon-24 icon-Degradation']}}" style="linkMain"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState28" size="l" icons="{{['icon-24 icon-Scissors']}}" style="linkMain"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2>Typical</h2>
+    <div attr:class="demo-Button_margin-10">
+        <div attr:class="test_element_three_column">
+            <h4>Button-icon 16px</h4>
+            <div>
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Save" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Unload</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Send" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Message</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Print" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Print</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Question2" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Reference</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-ExpandList" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">History</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Favourite" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Favorites</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Link" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Get the link</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Erase" iconStyle="error" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Delete</div>
+            </div>
+        </div>
+        <div attr:class="test_element_three_column">
+            <h4>Button icon 24px</h4>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Save" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Unload</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Send" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Message</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Print" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Print</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Question2" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Reference</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ExpandList" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">History</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Favourite" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Favorites</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Link" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Get the link</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-NewTab" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Get the link</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-FilterBig" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Get the link</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Erase" iconStyle="error" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Delete</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-CollapseExpand" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Delete</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">List</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ArrangePreview" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Tile</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-TreeView" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Tree</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList04" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Folders on top</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList03" style="linkMain" size="m"/>
+                <div class="demo-Button__Label">Folders on the left</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button.Close style="light"/>
+                <div class="demo-Button__Label">Light close button</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button.Close/>
+                <div class="demo-Button__Label">Default close button</div>
+            </div>
+        </div>
+        <div attr:class="test_element_three_column">
+            <h4>Bordered icon button</h4>
+            <div>
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Add" style="iconButtonBordered" size="m"/>
+                <div class="demo-Button__Label">Add</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" iconStyle="done" icon="icon-16 icon-Yes" style="iconButtonBordered" size="m"/>
+                <div class="demo-Button__Label">Confirm</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-Erase" style="iconButtonBordered" size="m"/>
+                <div class="demo-Button__Label">Delete</div>
+            </div>
+        </div>
+    </div>
+    <h2>Text link</h2>
+    <div attr:class="demo-Button_margin-10">
+        Today the site with the <a attr:class="asLink" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
+    </div>
+</div>

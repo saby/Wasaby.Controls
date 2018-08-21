@@ -24,7 +24,7 @@ define('Controls/List/ListView', [
          if (self._listChanged) {
             self._listChanged = false;
 
-            //command to scroll layout
+            //command to scroll watcher
             self._notify('resize', [], {bubbling: true});
 
             //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
@@ -63,6 +63,7 @@ define('Controls/List/ListView', [
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
+               this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandler.bind(this));
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
@@ -123,8 +124,11 @@ define('Controls/List/ListView', [
 
          _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
-         }
+         },
 
+         _onMarkedKeyChangedHandler: function(event, key) {
+            this._notify('markedKeyChanged', [key]);
+         }
       });
 
    ListView._private = _private;

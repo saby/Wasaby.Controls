@@ -45,7 +45,7 @@ define('Controls/Controllers/_SearchController',
                if (search.isLoading()) {
                   search.abort();
                }
-   
+      
                var filter = self._options.filter;
                delete filter[self._options.searchParam];
                self._options.abortCallback(filter);

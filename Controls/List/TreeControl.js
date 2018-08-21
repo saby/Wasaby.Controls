@@ -85,16 +85,16 @@ define('Controls/List/TreeControl', [
     * @category List
     */
 
-   var TreeControl = Control.extend({
+   var TreeControl = Control.extend(/** @lends Controls/List/TreeControl */{
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
       _loadedNodes: null,
       constructor: function(cfg) {
          this._loadedNodes = {};
          this._hierarchyRelation = new HierarchyRelation({
-            idProperty: cfg.keyProperty || 'id',
-            parentProperty: cfg.parentProperty || 'Раздел',
-            nodeProperty: cfg.nodeProperty || 'Раздел@'
+            idProperty: cfg.keyProperty,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty
          });
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
@@ -108,12 +108,23 @@ define('Controls/List/TreeControl', [
       _onNodeRemoved: function(event, nodeId) {
          _private.onNodeRemoved(this, nodeId);
       },
+      _beforeUpdate: function(newOptions) {
+         var
+            filter;
+         if (this._options.root !== newOptions.root) {
+            filter = cClone(this._options.filter || {});
+            filter[this._options.parentProperty] = newOptions.root;
+            this.reload(filter);
+            this._children.baseControl.getViewModel().setRoot(newOptions.root);
+         }
+         TreeControl.superclass._beforeUpdate.apply(this, arguments);
+      },
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
-      reload: function() {
+      reload: function(filter) {
          this._loadedNodes = {};
-         this._children.baseControl.reload();
+         this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
          this._children.baseControl.editItem(options);
@@ -201,13 +212,18 @@ define('Controls/List/TreeControl', [
 
             this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, key) {
+         this._notify('markedKeyChanged', [key]);
       }
    });
 
    TreeControl.getDefaultOptions = function() {
       return {
          uniqueKeys: true,
-         filter: {}
+         filter: {},
+         multiSelectVisibility: 'hidden'
       };
    };
 

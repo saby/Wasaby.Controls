@@ -9,7 +9,8 @@
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
-   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
+   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll"
+                              shadowVisible="{{false}}">
       <div>
          <ws:partial template="tmpl!Controls/Dropdown/resources/template/For"
                      listModel="{{_listModel}}"
@@ -24,7 +25,7 @@
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_options.additionalProperty}}">
             <div class="controls-DropdownList__additional" on:mouseenter="_additionMouseenter()">
-               <Controls.Button.BigSeparator bind:value="_expanded" on:click="_toggleExpanded()" attr:class="controls-DropdownList__additional-button"/>
+               <Controls.Button.BigSeparator bind:value="_expanded" on:valueChanged="_toggleExpanded()" attr:class="controls-DropdownList__additional-button"/>
             </div>
          </ws:if>
       </div>

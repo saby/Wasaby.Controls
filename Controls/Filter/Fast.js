@@ -9,36 +9,31 @@ define('Controls/Filter/Fast',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'WS.Data/Utils',
+      'Core/helpers/Object/isEqual',
       'css!Controls/Filter/Fast/Fast',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils) {
+   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
 
       'use strict';
 
       /**
-       * Control "Fast Filter"
-       * @class Controls/Filter/FastFilter
+       * Control "Fast Filter".
+       * Use dropDown lists for filter data.
+       *
+       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       *
+       * @class Controls/Filter/Fast
        * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/Filter/Fast/FastStyles
        * @control
        * @public
-       * @author Золотова Э.Е.
+       * @author Герасимов А.М.
        */
 
-      /**
-       * @event Controls/Filter/FastFilter#filterChanged Occurs when the filter changes.
-       */
 
-      /**
-       * @name Controls/Filter/FastFilter#source
-       * @cfg {WS.Data/Source/ISource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
-       */
-
-      /**
-       * @name Controls/Filter/FastFilter#items
-       * @cfg {WS.Data/Collection/IList} Sets a set of initial data to build the mapping.
-       */
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
       var setPropValue = Utils.setItemPropertyValue.bind(Utils);
@@ -73,7 +68,7 @@ define('Controls/Filter/Fast',
             self._configs[index].displayProperty = properties.displayProperty;
 
             if (properties.items) {
-               _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
+               _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
                return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty);
@@ -89,6 +84,7 @@ define('Controls/Filter/Fast',
 
             //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
             return pDef.done().getResult().addCallback(function() {
+               self._setText();
                self._forceUpdate();
             });
          },
@@ -96,7 +92,7 @@ define('Controls/Filter/Fast',
          getFilter: function(items) {
             var filter = {};
             Chain(items).each(function(item) {
-               if (getPropValue(item, 'value') !== getPropValue(item, 'resetValue')) {
+               if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                   filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
             });
@@ -108,6 +104,7 @@ define('Controls/Filter/Fast',
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
+            this._setText();
          },
 
          onResult: function(result) {
@@ -118,13 +115,13 @@ define('Controls/Filter/Fast',
          }
       };
 
-      var FastData = Control.extend({
+      var Fast = Control.extend(/** @lends Controls/Filter/Fast.prototype */{
          _template: template,
          _configs: null,
          _items: null,
 
          constructor: function() {
-            FastData.superclass.constructor.apply(this, arguments);
+            Fast.superclass.constructor.apply(this, arguments);
 
             this._configs = {};
             this._items = [];
@@ -167,11 +164,19 @@ define('Controls/Filter/Fast',
             this._children.DropdownOpener.open(config, this);
          },
 
-         _getText: function(item, index) {
-            if (this._configs[index]._items) {
-               var sKey = getPropValue(this._items.at(index), 'value');
-               return getPropValue(this._configs[index]._items.getRecordById(sKey), this._configs[index].displayProperty);
-            }
+         _setText: function() {
+            var self = this;
+            Chain(this._configs).each(function(config, index) {
+               var sKey = getPropValue(self._items.at(index), 'value');
+               if (sKey instanceof Array) {
+                  sKey = sKey[0];
+               }
+               Chain(config._items).each(function(item) {
+                  if (getPropValue(item, config.keyProperty) === sKey) {
+                     config.text = getPropValue(item, config.displayProperty);
+                  }
+               });
+            });
          },
 
          _reset: function(event, item, index) {
@@ -179,10 +184,11 @@ define('Controls/Filter/Fast',
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
+            this._setText();
          }
       });
-
-      FastData._private = _private;
-      return FastData;
+   
+      Fast._private = _private;
+      return Fast;
    }
 );

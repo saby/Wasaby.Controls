@@ -52,8 +52,8 @@ define('Controls/DragNDrop/Controller',
                }
                if (self._documentDragging) {
                   self._notify('dragMove', [dragObject]);
-                  if (self._options.dragAvatarTemplate) {
-                     self._notify('_updateDragAvatar', [dragObject, self._options.dragAvatarTemplate], {bubbling: true});
+                  if (self._options.draggingTemplate) {
+                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                   }
                }
             }
@@ -133,6 +133,7 @@ define('Controls/DragNDrop/Controller',
                result.domEvent = mouseEvent;
                result.position = _private.getDragPosition(mouseEvent);
                result.offset = _private.getDragOffset(mouseEvent, startEvent);
+               result.draggingTemplateOffset = this._options.draggingTemplateOffset;
             }
             return result;
          },
@@ -181,6 +182,12 @@ define('Controls/DragNDrop/Controller',
       });
 
       DragNDropController._private = _private;
+
+      DragNDropController.getDefaultOptions = function() {
+         return {
+            draggingTemplateOffset: 10
+         };
+      };
 
       return DragNDropController;
    });

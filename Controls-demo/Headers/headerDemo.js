@@ -3,7 +3,8 @@ define('Controls-demo/Headers/headerDemo', [
    'WS.Data/Source/Memory',
    'tmpl!Controls-demo/Headers/headerDemo',
    'WS.Data/Collection/RecordSet',
-   'css!Controls-demo/Headers/headerDemo'
+   'css!Controls-demo/Headers/headerDemo',
+   'css!Controls-demo/Headers/resetButton'
 ], function (Control,
              MemorySource,
              template) {
@@ -12,179 +13,49 @@ define('Controls-demo/Headers/headerDemo', [
    var headerSizeSource = new MemorySource({
       idProperty: 'title',
       data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         },
-         {
-            title: 'xl'
-         }
+         { title: 's'  },
+         { title: 'm'  },
+         { title: 'l'  },
+         { title: 'xl' }
       ]
    });
 
    var headerStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var counterSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
-   var counterStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         },
-         {
-            title: 'disabled'
-         }
-      ]
-   });
-
-   var separatorStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'Accent'
-         },
-         {
-            title: 'Additional'
-         },
-         {
-            title: 'Main'
-         }
-      ]
-   });
-
-   var iconStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var backStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var backSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
+         { title: 'primary'   },
+         { title: 'secondary' }
       ]
    });
 
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _selectedSize: 'm',
+         _headerSelectedSize: 'm',
          _selectedStyle: 'primary',
-         _counterSelectedSize: 'l',
-         _counterSelectedStyle: 'default',
-         _separatorSelectedStyle: 'Accent',
-         _iconSelectedStyle: 'default',
-         _backSelectedStyle: 'default',
-         _backSelectedSize: 'm',
-         _backStyleSource: backStyleSource,
-         _backSizeSource: backSizeSource,
-         _iconStyleSource: iconStyleSource,
-         _separatorStyleSource: separatorStyleSource,
          _headerSizeSource: headerSizeSource,
          _headerStyleSource: headerStyleSource,
-         _counterSizeSource: counterSizeSource,
-         _counterStyleSource: counterStyleSource,
-         _caption: 'test',
-         _type: 'commonHeader',
-         _counterValue: 12,
-         _backCaption: 'Back',
-         _showCaption: true,
-         _showCounter: true,
-         _showButtonSeparator: true,
-         _showSeparator: true,
-         _bold: true,
+         _caption: 'Header',
+         _readOnly: false,
+         _eventName: 'no event',
 
-         clickIcon: function (e) {
-            this._iconValue = !this._iconValue;
+         activatedHandler: function(e) {
+            this._eventName = 'activated';
          },
 
-         changeSize: function (e, key) {
-            this._selectedSize=key;
+         deactivatedHandler: function(e) {
+            this._eventName = 'deactivated';
          },
 
-         changeStyle: function (e, key) {
+         changeSize: function(e, key) {
+            this._headerSelectedSize = key;
+         },
+
+         changeStyle: function(e, key) {
             this._selectedStyle = key;
          },
-         counterChangeSize: function (e, key) {
-            this._counterSelectedSize=key;
-         },
-
-         counterChangeStyle: function (e, key) {
-            this._counterSelectedStyle = key;
-         },
-
-         separatorChangeStyle: function (e, key) {
-            this._separatorSelectedStyle = key;
-         },
-
-         iconChangeStyle: function (e, key) {
-            this._iconSelectedStyle = key;
-         },
-
-         backChangeStyle: function (e, key) {
-            this._backSelectedStyle = key;
-         },
-
-         backChangeSize: function (e, key) {
-            this._backSelectedSize = key;
+         reset: function() {
+            this._eventName = 'no event';
          }
       });
    return ModuleClass;

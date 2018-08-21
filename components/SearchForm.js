@@ -75,7 +75,7 @@ define('SBIS3.CONTROLS/SearchForm', [
          this.getContainer().on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
                self.hidePicker();
-               if (self._options.trim && self._options.fix1175704420) {
+               if (self._options.trim) {
                   var text = self.getText();
                   if (text) {
                      text = text.trim();

@@ -1,7 +1,9 @@
 .idea
 *.log
-/components/contents.json
+/contents.json
+/contents.js
 /components/contents.js
+/components/contents.json
 /components/**/*.css
 /Examples/**/*.css
 /pages/**/*.css

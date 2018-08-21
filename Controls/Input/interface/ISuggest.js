@@ -4,7 +4,7 @@ define('Controls/Input/interface/ISuggest', [
    /**
     * Interface for Input.Suggest.
     *
-    * @mixin Controls/Input/interface/ISuggest
+    * @interface Controls/Input/interface/ISuggest
     * @public
     */
    
@@ -33,6 +33,11 @@ define('Controls/Input/interface/ISuggest', [
    /**
     * @name Controls/Input/interface/ISuggest#historyId
     * @cfg {String} Unique id to save input history.
+    */
+
+   /**
+    * @name Controls/Input/interface/ISuggest#autoDropDown
+    * @cfg {Boolean} show dropDown when the input get focused.
     */
 
    /**

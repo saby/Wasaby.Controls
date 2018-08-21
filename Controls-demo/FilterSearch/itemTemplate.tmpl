@@ -1,0 +1,20 @@
+<ws:template name="owner">
+    <Controls.Input.Dropdown bind:selectedKeys="item.value" keyProperty='lastName' displayProperty='title'>
+        <ws:source module='WS.Data/Source/Memory'>
+            <ws:options>
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="0" title='По ответственному' lastName='0'></ws:Object>
+                        <ws:Object id="1" title='Новиков Д.В.' lastName='Новиков Д.В.'></ws:Object>
+                        <ws:Object id="2" title='Кошелев А.Е.' lastName='Кошелев А.Е.'></ws:Object>
+                        <ws:Object id="3" title='Субботин А.В.' lastName='Субботин А.В.'></ws:Object>
+                        <ws:Object id="4" title='Чеперегин А.С.' lastName='Чеперегин А.С.'></ws:Object>
+                    </ws:Array>
+                </ws:data>
+            </ws:options>
+        </ws:source>
+    </Controls.Input.Dropdown>
+</ws:template>
+
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

@@ -1,10 +1,11 @@
 define('Controls/Container/Input/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Input/Search/Search'
+      'tmpl!Controls/Container/Input/Search/Search',
+      'Core/IoC'
    ],
    
-   function(Control, template) {
+   function(Control, template, IoC) {
       
       /**
        * Container component for Input
@@ -23,6 +24,11 @@ define('Controls/Container/Input/Search',
          
          _template: template,
          _value: '',
+   
+         constructor: function() {
+            IoC.resolve('ILogger').error('Controls/Container/Input/Search', 'Component is deprecated and will be deleted in 3.18.600, use Controls/Search/Input/Container instead.');
+            SearchContainer.superclass.constructor.apply(this, arguments);
+         },
          
          _notifySearch: function(value) {
             this._notify('search', [value], {bubbling: true});

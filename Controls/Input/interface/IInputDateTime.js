@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputDateTime', [
    /**
     * Interface for date/time inputs.
     *
-    * @mixin Controls/Input/interface/IInputDateTime
+    * @interface Controls/Input/interface/IInputDateTime
     * @public
     */
 

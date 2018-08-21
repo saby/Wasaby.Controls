@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/NumberTextBox
     * @extends SBIS3.CONTROLS/TextBox
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     * @demo Examples/NumberTextBox/MyNumberTextBox/MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
@@ -148,7 +148,12 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * </pre>
              * @see text
              */
-            numericValue: null
+            numericValue: null,
+            /**
+             * @cfg {Boolean} Учитывать знак "-" при проверке длины числа
+             * @see maxLength
+             */
+            countMinusInLength: false
          },
          _inputMirror: null,
          _dotOverstep: true
@@ -177,7 +182,8 @@ define('SBIS3.CONTROLS/NumberTextBox', [
                options.delimiters, 
                options.onlyPositive, 
                options.maxLength,
-               options.hideEmptyDecimals
+               options.hideEmptyDecimals,
+               options.countMinusInLength
             );
          }
          if(options.hideEmptyDecimals && options.text) {
@@ -414,7 +420,8 @@ define('SBIS3.CONTROLS/NumberTextBox', [
             this._options.delimiters, 
             this._options.onlyPositive, 
             this._options.maxLength,
-            this._options.hideEmptyDecimals
+            this._options.hideEmptyDecimals,
+            this._options.countMinusInLength
          );
       },
 
@@ -480,7 +487,8 @@ define('SBIS3.CONTROLS/NumberTextBox', [
                  this._options.integers,
                  this._options.decimals,
                  keyCode,
-                 this._options.maxLength
+                 this._options.maxLength,
+                 this._options.countMinusInLength
              );
 
          this._setText(newState.value);
@@ -549,6 +557,10 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
          if (!this._options.onlyPositive) {
             value = this._getInputValue();
+
+            if (!NumberTextBoxUtil.checkMaxLength(value, this._options.maxLength, this._options.countMinusInLength)) {
+               return;
+            }
             // это надо т.к. при смене знака каретка должна остаться на месте
             // если в поле ввода не было значения, то появится "-0" -> сдвиг 2 в остальных случаях сдвиг на 1
             step = value ? 1 : 2;

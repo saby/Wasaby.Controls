@@ -3,7 +3,7 @@ define('Controls/interface/ITextValue', [], function() {
    /**
     * Interface for controls that have text value.
     *
-    * @mixin Controls/interface/ITextValue
+    * @interface Controls/interface/ITextValue
     * @public
     */
 

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/resources/ColorRadioB
     * @class SBIS3.CONTROLS.ColorRadioButton
     * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
     * @public
-    * @author Борисов П.С.
+    * @author Авраменко А.С.
     */
 
    var ColorRadioButtonNew = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.ColorRadioButton.prototype */ {

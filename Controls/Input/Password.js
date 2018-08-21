@@ -11,23 +11,27 @@ define('Controls/Input/Password',
 
    function(Control, types, tmplNotify, template, BaseViewModel) {
 
-   /**
-    * Password input.
-    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
-    *
-    * @class Controls/Input/Password
-    * @extends Core/Control
-    * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/Password/PasswordStyles
-    * @mixes Controls/Input/resources/InputRender/InputRenderStyles
-    * @control
-    * @public
-    * @category Input
-    * @author Золотова Э.Е.
-    */
+      /**
+       *  Component that shows all entered characters as stars. Visibility of entered
+       *  text can be toggled by clicking on 'eye' icon.
+       *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
+       *
+       * @class Controls/Input/Password
+       * @extends Core/Control
+       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/Input/interface/IValidation
+       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/Password/PasswordStyles
+       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @control
+       * @public
+       * @category Input
+       * @demo Controls-demo/Input/Password/Password
+       * @demo Controls-demo/Input/Password/Password
+       *
+       * @author Зайцев А.С.
+       */
 
       'use strict';
 

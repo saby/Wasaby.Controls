@@ -1,35 +1,38 @@
-<Controls.Container.Filter filterButtonSource="{{_options.filterButtonSource}}"
-                           fastFilterSource="{{_options.fastFilterSource}}">
-   <Controls.Container.Search>
-      <div>
-         <div class="controls-Browser__header">
-            <ws:if data="{{_options.search}}">
-               <Controls.Container.Input.Search>
-                  <ws:partial template="{{_options.search}}" class="controls-Browser__search"/>
-               </Controls.Container.Input.Search>
-            </ws:if>
-            <ws:if data="{{_options.topTemplate}}">
-               <ws:partial template="{{_options.topTemplate}}" class="controls-Browser__topTemplate"/>
-            </ws:if>
-            <div name="filterWrapper"
-                 class="controls-Browser__filter-wrapper">
-               <ws:if data="{{_options.fastFilter}}">
-                  <Controls.Container.Filter.Fast>
-                     <ws:partial template="{{_options.fastFilter}}" class="controls-Browser__fastFilter"/>
-                  </Controls.Container.Filter.Fast>
+<Controls.Filter.Controller filterButtonSource="{{_options.filterButtonSource}}"
+                           fastFilterSource="{{_options.fastFilterSource}}"
+                           filter="{{_options.filter}}">
+   <Controls.Container.Data source="{{_options.source}}" navigation="{{_options.navigation}}" sorting="{{_options.sorting}}">
+      <Controls.Search.Controller searchParam="{{_options.searchParam}}">
+         <div>
+            <div class="controls-Browser__header">
+               <ws:if data="{{_options.search}}">
+                  <Controls.Search.Input.Container>
+                     <ws:partial template="{{_options.search}}" class="controls-Browser__search"/>
+                  </Controls.Search.Input.Container>
                </ws:if>
-               <ws:if data="{{_options.filterButton}}">
-                  <Controls.Container.Filter.Button>
-                     <ws:partial template="{{_options.filterButton}}" class="controls-Browser__filterButton"/>
-                  </Controls.Container.Filter.Button>
+               <ws:if data="{{_options.topTemplate}}">
+                  <ws:partial template="{{_options.topTemplate}}" class="controls-Browser__topTemplate"/>
                </ws:if>
+               <div name="filterWrapper"
+                    class="controls-Browser__filter-wrapper">
+                  <ws:if data="{{_options.fastFilter}}">
+                     <Controls.Filter.Fast.Container>
+                        <ws:partial template="{{_options.fastFilter}}" class="controls-Browser__fastFilter"/>
+                     </Controls.Filter.Fast.Container>
+                  </ws:if>
+                  <ws:if data="{{_options.filterButton}}">
+                     <Controls.Filter.Button.Container>
+                        <ws:partial template="{{_options.filterButton}}" class="controls-Browser__filterButton"/>
+                     </Controls.Filter.Button.Container>
+                  </ws:if>
+               </div>
             </div>
+            <ws:if data="{{_options.content}}">
+               <Controls.List.Container>
+                  <ws:partial template="{{_options.content}}"/>
+               </Controls.List.Container>
+            </ws:if>
          </div>
-         <ws:if data="{{_options.content}}">
-            <Controls.Container.List searchParam="{{_options.searchParam}}" source="{{_options.source}}">
-               <ws:partial template="{{_options.content}}"/>
-            </Controls.Container.List>
-         </ws:if>
-      </div>
-   </Controls.Container.Search>
-</Controls.Container.Filter>
+      </Controls.Search.Controller>
+   </Controls.Container.Data>
+</Controls.Filter.Controller>

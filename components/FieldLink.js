@@ -27,6 +27,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
        "SBIS3.CONTROLS/Action/SelectorAction",
+       "Core/core-merge",
        "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
        "SBIS3.CONTROLS/Utils/TemplateUtil",
        "SBIS3.CONTROLS/Button/IconButton",
@@ -74,7 +75,8 @@ define('SBIS3.CONTROLS/FieldLink',
         List,
         ItemsSelectionUtil,
         objectFind,
-        SelectorAction
+        SelectorAction,
+        wsCoreMerge
     ) {
 
        'use strict';

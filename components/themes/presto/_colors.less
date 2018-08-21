@@ -186,6 +186,13 @@
 @color_Paging_arrow-icon:                @color_Paging-digit-text;
 @color_Paging_arrow-icon_disabled:       #8991a9;
 
+//VDOM Operations.Panel
+@background-color_OperationsPanel:                       transparent;
+
+//VDOM Operations.Button
+@color_OperationsButton__icon:                           #FFFFFF;
+@color_OperationsButton__icon_hovered:                   #FFFFFF;
+
 //Switcher VDOM.
 @color_switcher_line:                     #839EBC;
 @switcher-disabled-color:                 #4B688B;
@@ -197,13 +204,15 @@
 
 //VDOM Switcher
 @border-color_Switch:                                   rgba(109,141,176, .4);
-@background-color_Switch-line_enabled:                  #839EBC;
-@background-color_Switch-line_disabled:                 #4B688B;
+@background-color_Switch-track_enabled:                  #839EBC;
+@background-color_Switch-track_disabled:                 #4B688B;
 @border-color_Switch-marker_enabled:                    #839EBC;
 @border-color_Switch-marker_disabled:                   #4B688B;
 @background_Switch-dot_disabled:                        #B9E9FF;
 @color_Switch-text_enabled_unselected:                  #8991A9;
 @color_Switch-text_disabled_unselected:                 #4B688B;
+@color_Switch-text_disabled_selected:                   @default-text-color;
+@color_Switch-text_enabled_selected:                    @default-text-color;
 
 //Suggest VDOM
 @background-color_Suggest-suggestionsContainer: #405A77;
@@ -327,6 +336,44 @@
 @color_DateRangeChoose_year:                                          #839EBC;
 @color_dateRangeChoose__year_prev_next_hover:                         #B9E9FF;
 
+// RangeSelectionController
+@border-color_RangeSelection-selected-startEnd:             #23303e;
+@background-color_RangeSelection-selected-inner:            rgba(92, 122, 163, .2);
+@border-color_RangeSelection-selected-startEnd-edgeBorder:  rgba(92, 122, 163, .2);
+@background-color_RangeSelection-selected-unfinishedEdge:   #39506A;
+@background-color_RangeSelection-selected-startEnd:         #39506A;
+
+// PeriodDialog
+@background-color_PeriodDialog:                                #273749;
+@background-color__PeriodDialog-header:                        #39506a;
+@color_PeriodDialog-years-rangeButton:                         #4B688B;
+@color_PeriodDialog-years-panel-current-year:                  #26B8FF;
+@color_PeriodDialog-years-panel-displayed-year:                #FFCC99;
+@color_PeriodDialog-MonthRange-month-title:                    #839EBC;
+@border-color_PeriodDialog-MonthRange-month:                   #4B688B;
+@background-color_PeriodDialog-MonthRange_quartersPanel:       #273749;
+@color_PeriodDialog-MonthRange_halfyearsAndQuartersPanel:      #839EBC;
+@color_PeriodDialog-DateRange-months-button:                   #839EBC;
+@background-color_PeriodDialog-DateRange-months-button:        #273749;
+@background-color_PeriodDialog-DateRange-months-button-hover:  rgba(92, 122, 163, .2);
+@color_PeriodDialog-DateRange-monthsWithDates-title:           #839EBC;
+@background-color_PeriodDialog-DateRange-monthsWithDates-title-hover:   rgba(92, 122, 163, .2);
+@color_PeriodDialog-DateRange-months-nextYearButton:                    #FFCC99;
+@background-color_PeriodDialog-DateRange-months-nextYearButton:         #273749;
+@background-color_PeriodDialog-DateRange-months-nextYearButton-hover:   rgba(92, 122, 163, .2);
+@color_PeriodDialog-DateRange-header-weekdays-weekend:                  #E8736C;
+@border-color_PeriodDialog-DateRange-months-nextYearButton:             transparent;
+@border-color_PeriodDialog-DateRange-monthsWithDates-title-hover:       transparent;
+@border-color_PeriodDialog-MonthRange-range-unselected-hover:           transparent;
+@border-color_PeriodDialog-DateRange-months-button-hover:               transparent;
+@color_PeriodDialog-DateRange-header-year:                              #FFCC99;
+@border-color_PeriodDialog-MonthRange-monthWrapper:                     #23303e;
+@border-color_PeriodDialog-MonthRange-quartersPanel:                    #23303e;
+@border-color_PeriodDialog-MonthRange-halfYearsPanel:                   #23303e;
+@border-color_PeriodDialog-MonthRange-quarters-halhyears-selected:      #23303e;
+@border-color_PeriodDialog-MonthRange:                                  #23303e;
+@border-color_PeriodDialog-DateRange-months:                            #2d3e51;
+
 // PeriodLiteDialog
 @background-color_PeriodLiteDialog:               #405A77;
 @indents-color_PeriodLiteDialog:                  #476485;
@@ -419,9 +466,9 @@
 @color_FilterButton-text_hover:          #B9E9FF;
 
 //FastFilter
-@color_FastFilter-iconArrow:                    #26B8FF;
-@color_FastFilter-iconArrow_hover:         #B9E9FF;
-@color_FastFilter-iconReset:               #CCCCCC;
+@color_FastFilter-iconArrow:                 #26B8FF;
+@color_FastFilter-iconArrow_hover:           #B9E9FF;
+@color_FastFilter-iconReset:                 #CCCCCC;
 
 //FilterPanel
 @color_FilterPanel-caption:                  #fff;

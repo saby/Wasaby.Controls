@@ -22,11 +22,12 @@ define('Controls/Grid', [
     * @mixes Controls/List/interface/IGridControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 
    var
-      Grid = List.extend({
+      Grid = List.extend(/** @lends Controls/Grid */{
          _viewName: 'Controls/List/Grid/GridView',
          _viewTemplate: 'Controls/List/ListControl',
          _getModelConstructor: function() {

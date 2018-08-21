@@ -55,7 +55,7 @@ define([
          controller._afterMount();
 
          controller.saveOptions({
-            dragAvatarTemplate: 'template'
+            draggingTemplate: 'template'
          });
 
          controller._notify = function(eventName, args) {
@@ -93,13 +93,13 @@ define([
             });
             it('start dragMove', function() {
                controller._onMouseMove(createSyntheticEvent('mousemove', 25, 10));
-               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDragAvatar');
+               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
                assert.isTrue(controller._documentDragging);
                assert.isTrue(controller._insideDragging);
             });
             it('dragMove', function() {
                controller._onMouseMove(createSyntheticEvent('mousemove', 30, 15));
-               assert.equal(events.join(', '), 'dragMove, _updateDragAvatar');
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
                assert.deepEqual(dragObject.offset, {x: 10, y: 5});
                assert.deepEqual(dragObject.position, {x: 30, y: 15});
             });
@@ -136,13 +136,13 @@ define([
             });
             it('start dragMove', function() {
                controller._onTouchMove(createSyntheticEvent('touchmove', 25, 10));
-               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDragAvatar');
+               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
                assert.isTrue(controller._documentDragging);
                assert.isTrue(controller._insideDragging);
             });
             it('dragMove', function() {
                controller._onTouchMove(createSyntheticEvent('touchmove', 30, 15));
-               assert.equal(events.join(', '), 'dragMove, _updateDragAvatar');
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
                assert.deepEqual(dragObject.offset, {x: 10, y: 5});
                assert.deepEqual(dragObject.position, {x: 30, y: 15});
             });

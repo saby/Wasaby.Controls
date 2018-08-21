@@ -182,6 +182,12 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel._curIndex = 4; //3
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
          });
+
+         it('setRoot', function() {
+            treeViewModel.setRoot('testRoot');
+            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandNodes" after setRoot("testRoot").');
+            assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
+         });
          it('onCollectionChange', function() {
             var
                removedItems1 = [

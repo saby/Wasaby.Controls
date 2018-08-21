@@ -1,0 +1,45 @@
+<div class="PageWrap" style="padding-top: 50px;">
+   <div class="PageBlock">
+      <div class="PageBlock__title">Controls.Calendar.PeriodDialog</div>
+      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; flex-wrap: wrap; align-items: flex-start;">
+
+         <div>
+            <h3>Any period</h3>
+            <Controls.Date.PeriodDialog
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+            />
+         </div>
+
+         <div>
+            <h3>Single Day</h3>
+            <Controls.Date.PeriodDialog
+               startValue="{{_startValue}}"
+               endValue="{{_startValue}}"
+               selectionType="single"
+            />
+         </div>
+
+         <div>
+            <h3>Day, 1 month, 1 year</h3>
+            <Controls.Date.PeriodDialog
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               selectionType="quantum"
+               quantum="{{ {'days': [1], 'months': [1], 'years': [1]} }}"
+            />
+         </div>
+
+         <div>
+            <h3>Day, 3 days, week, 1 month</h3>
+            <Controls.Date.PeriodDialog
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               selectionType="quantum"
+               quantum="{{ {'days': [1, 3], 'weeks': [1], 'month': [1]} }}"
+            />
+         </div>
+
+      </div>
+   </div>
+</div>

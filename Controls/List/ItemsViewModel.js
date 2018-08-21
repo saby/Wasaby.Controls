@@ -7,7 +7,7 @@ define('Controls/List/ItemsViewModel',
 
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
       var _private = {
@@ -87,12 +87,21 @@ define('Controls/List/ItemsViewModel',
             var
                itemData = {
                   getPropValue: ItemsUtil.getPropertyValue,
+                  style: this._options.style,
                   keyProperty: this._options.keyProperty,
                   displayProperty: this._options.displayProperty,
                   index: this._display.getIndex(dispItem),
                   item: dispItem.getContents(),
                   dispItem: dispItem,
-                  key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty)
+                  key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
+                  getVersion: function() {
+                     //records have defined method nextVersion, groups haven't
+                     if (this.item.getVersion) {
+                        return this.item.getVersion();
+                     } else {
+                        return this.item;
+                     }
+                  }
                };
             if (this._options.itemsGroup) {
                if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {

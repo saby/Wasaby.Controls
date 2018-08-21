@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     *    });
     * </pre>
     * @class SBIS3.CONTROLS/Utils/InformationPopupManager
-    * @author Степин П.В.
+    * @author Красильников А.С.
     * @public
     */
    function(Deferred,

@@ -9,7 +9,9 @@ define('Controls/Toggle/DoubleSwitch', [
 ], function(Control, template, toggleTemplate, textTemplate, types) {
 
    /**
-    * Double switch (switch between two values).
+    * Switch with two captions and with support two orientation.
+    *
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/DoubleSwitch
     * @extends Core/Control
@@ -17,19 +19,27 @@ define('Controls/Toggle/DoubleSwitch', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
+    *
+    * @demo Controls-demo/Switch/DoubleSwitchDemo
+    *
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
+    *
+    * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
     */
 
    /**
     * @name Controls/Toggle/DoubleSwitch#captions
-    * @cfg {Array.<String>} Array of captions.
+    * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
     */
 
    /**
     * @name Controls/Toggle/DoubleSwitch#orientation
-    * @cfg {String} Display type.
-    * @variant horizontal Horizontal switch.
-    * @variant vertical Vertical switch.
+    * @cfg {String} Double switch orientation in space.
+    * @variant horizontal Horizontal orientation. It is default value.
+    * @variant vertical Vertical orientation.
     */
    var _private = {
       checkCaptions: function(captions) {

@@ -48,7 +48,9 @@
 @border-color-IconButton:                         rgba(0, 0, 0, 0.05);
 @color-IconButton__shadow:                        rgba(0, 0, 0, 0.35);
 @background-color-IconButton:                     rgba(64, 90, 119, 0.3);
+@background-color-IconButton_transparent:         @background-color-IconButton;
 @background-color-IconButton_hovered:             rgba(58, 81, 107, 0.35);
+@background-color-IconButton_transparent_hovered: @background-color-IconButton_hovered;
    //Scrollbar
 @controls-Scrollbar-dark-hover-thumb-color:rgba(131, 158, 188, 0.2);
 @controls-Scrollbar-dark-active-thumb-color:rgba(131, 158, 188, 0.25);
@@ -187,10 +189,10 @@
 //checkbox
 @color_CheckBox__iconBox:                       rgba(109, 141, 176, .6);
 @color_CheckBox__iconBox_disabled:              #4B688B;
-@color_CheckBox_disabled:                       #B9E9FF;
-@color_CheckBox___caption_disabled:             #4B688B;
-@color_CheckBox-caption_enabled:                #E4E4E4;
-@color_CheckBox-icon_enabled:                   #FF7033;
+@color_CheckBox__icon_disabled:                       #B9E9FF;
+@color_CheckBox__caption_disabled:             #4B688B;
+@color_CheckBox__caption_enabled:                #E4E4E4;
+@color_CheckBox__icon_enabled:                   #FF7033;
 //Switcher
 @switcher-btn-bg-color:                   @basic-block-bg-color;
 @switcher-btn-color-inactive:					@disabled-color;
@@ -401,14 +403,14 @@
 @color_asLink_hovered:                   @color_Link-text_hovered;
 
 //radioGroup
-@fill_RadioGroup_innerCircle_selected_enabled:     #FF7033;
-@fill_RadioGroup_innerCircle_selected_disabled:    #B9E9FF;
-@fill_RadioGroup_innerCircle_unselected:           none;
+@color_ToggleCircle_innerCircle_selected_enabled:     #FF7033;
+@color_ToggleCircle_innerCircle_selected_disabled:    #B9E9FF;
+@color_ToggleCircle_innerCircle_unselected:           none;
 @fill_RadioGroup_borderCircle:                     none;
-@fill_RadioGroup_borderCircle_enabled:           #839EBC;
-@fill_RadioGroup_borderCircle_disabled:          #4B688B;
-@fill_RadioGroup_borderCircle_enabled_hovered:   #FF7033;
-@color_RadioItem_caption_selected_size-m:          #E4E4E4;
+@color_ToggleCircle_outerCircle_enabled:           #839EBC;
+@color_ToggleCircle_outerCircle_disabled:          #4B688B;
+@color_ToggleCircle_outerCircle_enabled_hovered:   #FF7033;
+@color_RadioItem_caption_selected:          #E4E4E4;
 @color_RadioItem_caption_selected_size-l:          #E4E4E4;
 @color_RadioItem_caption_unselected_disabled:      #4B688B;
 @color_RadioItem_caption_unselected_enabled:       #8991A9;
@@ -417,33 +419,33 @@
 //headers
 @color-BackButton__caption_style-default:      #FFCC99;
 @color-BackButton__caption_style-primary:      #FFCC99;
-@color_Header__caption_style-default:          #FFFFFF;
-@color_Header__caption_style-primary:          #FFCC99;
-@color-BackButton__caption_style-default_hovered: @color_Header__caption_style-default_hovered;
-@color-BackButton__caption_style-primary_hovered: @color_Header__caption_style-primary_hovered;
-@color_Header__caption_style-default_hovered:  #B9E9FF;
-@color_Header__caption_style-primary_hovered:  #B9E9FF;
-@color_HeaderCounter_style-default_hovered:    #26B8FF;
-@color_HeaderCounter_style-primary_hovered:    #B9E9FF;
-@color_HeaderCounter_style-primary:            #839EBC;
-@color_HeaderCounter_style-default:            #B9E9FF;
-@color_HeaderCounter_style-disabled:           #4B688B;
-@color-Separator__icon_style-Accent:              #26B8FF;
-@color-Separator__icon_style-Main:                #FFCC99;
-@color-Separator__icon_style-Additional:          #839EBC;
-@color-Separator__icon_style-Accent_hovered:      #B9E9FF;
-@color-Separator__icon_style-Main_hovered:        #B9E9FF;
-@color-Separator__icon_style-Additional_hovered:  #B9E9FF;
+@color_Heading__caption_style-primary:          #FFFFFF;
+@color_Heading__caption_style-secondary:          #FFCC99;
+@color-BackButton__caption_style-default_hovered: @color_Heading__caption_style-primary_hovered;
+@color-BackButton__caption_style-primary_hovered: @color_Heading__caption_style-secondary_hovered;
+@color_Heading__caption_style-primary_hovered:  #B9E9FF;
+@color_Heading__caption_style-secondary_hovered:  #B9E9FF;
+@color_Counter_style-primary_hovered:    #26B8FF;
+@color_Counter_style-secondary_hovered:    #B9E9FF;
+@color_Counter_style-secondary:            #839EBC;
+@color_Counter_style-primary:            #B9E9FF;
+@color_Counter_style-disabled:           #4B688B;
+@color-Separator__icon_style-secondary:              #26B8FF;
+@color-Separator__icon_style-primary:                #FFCC99;
+@color-Separator__icon_style-additional:          #839EBC;
+@color-Separator__icon_style-secondary_hovered:      #B9E9FF;
+@color-Separator__icon_style-primary_hovered:        #B9E9FF;
+@color-Separator__icon_style-additional_hovered:  #B9E9FF;
 @color_BigSeparator-icon:                         #839EBC;
 @color_BigSeparator-icon_hovered:                 #B9E9FF;
 @fill-HeaderSeparator__icon_style-primary:     #839EBC;
 @fill-HeaderSeparator__icon_style-default:     #26B8FF;
 @fill-HeaderSeparator__icon_style-primary_hovered:     #B9E9FF;
 @fill-HeaderSeparator__icon_style-default_hovered:     #B9E9FF;
-@fill_HeaderSeparator_default:                     #26B8FF;
-@fill_HeaderSeparator_primary:                     #839EBC;
-@fill_HeaderSeparator_default_hovered:             #B9E9FF;
-@fill_HeaderSeparator_primary_hovered:             #B9E9FF;
+@color_HeaderSeparator_secondary:                     #26B8FF;
+@color_HeaderSeparator_primary:                     #839EBC;
+@color_HeaderSeparator_primary_hovered:             #B9E9FF;
+@color_HeaderSeparator_secondary_hovered:             #B9E9FF;
 @background-image-BackButton_style-primary:                                                                                                     url('img/BackArrowOrangePresto.svg');
 @background-image-BackButton_style-default:                                                                                                     url('img/BackArrowOrangePresto.svg');
 @background-image-BackButton_style-primary_hovered:                                                                                             url('img/BackArrowHoveredPresto.svg');

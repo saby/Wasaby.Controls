@@ -103,6 +103,8 @@ define('Controls/Container/List',
             if (!isEqual(filter, _private.getFilterFromContext(self, self._context)) || !isEqual(filter, self._filter)) {
                _private.updateFilter(self, filter);
             }
+
+            self._searchDeferred = new Deferred();
             _private.updateSource(self, result.data);
             self._searchDeferred.callback();
             self._forceUpdate();
@@ -116,7 +118,6 @@ define('Controls/Container/List',
             }
    
             _private.cancelSearchDeferred(self);
-            self._searchDeferred = new Deferred();
             
             if (filter) {
                searchController.setFilter(filter);
@@ -222,7 +223,7 @@ define('Controls/Container/List',
          
          _beforeMount: function(options, context) {
             this._source = options.source;
-            
+
             _private.resolveOptions(this, options);
             _private.checkContextValues(this, context);
 

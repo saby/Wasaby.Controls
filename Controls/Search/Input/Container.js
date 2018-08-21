@@ -7,10 +7,13 @@ define('Controls/Search/Input/Container',
    function(Control, template) {
       
       /**
-       * Container component for Input
-       * Notify bubbling event "search".
-       * Should be located inside Controls/Container/Search.
-       * @class Controls/Container/Input/Search
+       * Special container for component with {@link Controls/Input/interface/IInputText}.
+       * Listens for child's "valueChanged" event and notify bubbling event "search".
+       * NOTE: must be located inside {@link Controls/Search/Controller}.
+       *
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
+       *
+       * @class Controls/Search/Input/Container
        * @extends Core/Control
        * @author Герасимов Александр
        * @control
@@ -19,7 +22,7 @@ define('Controls/Search/Input/Container',
       
       'use strict';
       
-      var SearchContainer = Control.extend({
+      var SearchContainer = Control.extend(/** @lends Controls/Search/Input/Container.prototype */{
          
          _template: template,
          _value: '',

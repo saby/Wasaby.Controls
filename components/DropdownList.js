@@ -806,13 +806,7 @@ define('SBIS3.CONTROLS/DropdownList',
             if (id !== undefined) {
                //Попадаем сюда, когда в selectedKeys установлены ключи, которых нет в наборе данных
                //В этом случае выбираем первый элемент как выбранный.
-               //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
-               
-               if (this._options.task1175760068) {
-                  this.addItemsSelection([id]);
-               } else {
-                  keys.splice(0, keys.length, id);
-               }
+               this.addItemsSelection([id]);
             }
          },
          _setHasMoreButtonVisibility: function(){

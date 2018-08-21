@@ -1,14 +1,17 @@
 define('Controls/BreadCrumbs/Path', [
    'Core/Control',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
+   'Controls/Utils/getWidth',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/Path/Path',
-   'tmpl!Controls/Button/BackButton/Back',
+   'tmpl!Controls/Header/BackButton/Back',
+   'Controls/Header/BackButton',
    'css!Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,
+   getWidthUtil,
    ItemsUtil,
    FontLoadUtil,
    template,
@@ -41,7 +44,7 @@ define('Controls/BreadCrumbs/Path', [
          self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
             self._breadCrumbsItems = items.slice(1);
-            backButtonWidth = BreadCrumbsUtil.getWidth(backButtonTemplate({
+            backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                _options: {
                   caption: self._backButtonCaption,
                   style: 'default',
@@ -106,12 +109,12 @@ define('Controls/BreadCrumbs/Path', [
          }
       },
 
-      _onItemClick: function(e, item) {
-         this._notify('itemClick', [item]);
+      _onItemClick: function(e, item, homeClick) {
+         this._notify('itemClick', [item, homeClick]);
       },
 
       _onBackButtonClick: function() {
-         this._notify('itemClick', [this._options.items[0]]);
+         this._notify('itemClick', [this._options.items[0], true]);
       },
 
       _onResize: function() {

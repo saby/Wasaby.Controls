@@ -1,5 +1,5 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
-                                                class="controls-PanelFilter__{{_options.size}}">
+                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
 
@@ -18,8 +18,8 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div>
-         <div class="{{!_options.historyId ? 'controls-FilterPanel__blockParams'}}">
+      <div class="{{_options.panelStyle ? 'controls-FilterPanel__column'}}">
+         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
             <Controls.PropertyGrid items="{{_items}}"
                                    itemTemplate="{{_options.itemTemplate}}"
                                    itemTemplateProperty="{{_options.itemTemplateProperty}}"

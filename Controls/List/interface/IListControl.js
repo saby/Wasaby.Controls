@@ -4,7 +4,7 @@ define('Controls/List/interface/IListControl', [
    /**
     * Interface for lists.
     *
-    * @mixin Controls/List/interface/IListControl
+    * @interface Controls/List/interface/IListControl
     * @public
     */
 
@@ -57,16 +57,27 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#multiSelectVisibility
-    * @cfg {Boolean} Whether multiple selection is enabled.
+    * @cfg {String} Whether multiple selection is enabled.
     * @variant visible Show.
     * @variant hidden Do not show.
     * @variant onhover Show on hover.
-    * @variant null Default.
+    * @default hidden
+    */
+
+   /**
+    * @typedef {Array} ItemActions
+    * @property {String} id Identifier of operation.
+    * @property {String} title Operation name.
+    * @property {String} icon Operation icon.
+    * @property {Number} showType Location of operation.
+    * @property {String} style Operation style.
+    * @property {String} iconStyle Style operation icons (default | attention | error | done ).
+    * @property {Function} handler Operation handler.
     */
 
    /**
     * @name Controls/List/interface/IListControl#itemActions
-    * @cfg {Array} item operations
+    * @cfg {ItemActions[]} item operations
     */
 
    /**
@@ -138,10 +149,6 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#itemClick Occurs when list item is clicked.
-    */
-
-   /**
-    * @event Controls/List/interface/IListControl#dataLoaded Occurs when data is loaded.
     */
 
    /**

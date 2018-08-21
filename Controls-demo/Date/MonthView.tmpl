@@ -1,0 +1,29 @@
+<div class="PageWrap">
+   <div class="PageBlock">
+      <div class="PageBlock__title">With days and title</div>
+      <div class="PageBlock__componentWrap">
+         <!--<Controls.Calendar.MonthView month="{{_month}}" captionType="text"/>-->
+         <Controls.Date.MonthView month="{{_month}}" showCaption="{{true}}"/>
+         <div>
+            <span>Отображаемый месяц: </span>
+            <Controls.Button enabled="{{true}}" caption="-1 месяц" style="buttonAdd" on:click="_changeMonth(-1)"/>
+            <Controls.Button enabled="{{true}}" caption="+1 месяц" style="buttonAdd" on:click="_changeMonth(1)"/>
+         </div>
+      </div>
+   </div>
+
+   <div class="PageBlock">
+      <div class="PageBlock__title">With days, without title</div>
+      <div class="PageBlock__componentWrap">
+         <Controls.Date.MonthView month="{{_month}}" captionType="text"/>
+      </div>
+   </div>
+
+   <div class="PageBlock">
+      <div class="PageBlock__title">Without days and title</div>
+      <div class="PageBlock__componentWrap">
+         <Controls.Date.MonthView month="{{_month}}" showWeekdays="{{ false }}"/>
+      </div>
+   </div>
+
+</div>

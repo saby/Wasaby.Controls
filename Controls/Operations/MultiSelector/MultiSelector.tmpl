@@ -1,0 +1,14 @@
+<div class="controls-operationsPanelV__multiSelector">
+    <Controls.Toggle.Checkbox
+            readOnly="{{false}}"
+            value="{{_multiSelectStatus}}"
+            triState="{{true}}"
+            on:valueChanged="_onCheckBoxClick()"/>
+    <Controls.Button.MenuButton name="myMenuButton2"
+                                keyProperty="id"
+                                style="linkMain"
+                                caption="{{_menuCaption}}"
+                                on:onMenuItemActivate="_onMenuItemActivate()"
+                                source="{{_menuSource}}"/>
+    <div class="controls-operationsPanelV__multiSelector_separator"></div>
+</div>

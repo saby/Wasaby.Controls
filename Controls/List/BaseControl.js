@@ -366,7 +366,7 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -378,7 +378,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -402,10 +402,6 @@ define('Controls/List/BaseControl', [
 
       _popupOptions: null,
       _isServer: null,
-
-      constructor: function(cfg) {
-         BaseControl.superclass.constructor.apply(this, arguments);
-      },
 
       _beforeMount: function(newOptions, context, receivedState) {
          this._isServer = typeof window === 'undefined';
@@ -570,8 +566,10 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function() {
-         return _private.reload(this, this._options.filter, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function(filter) {
+         var
+            reloadFilter = filter || this._options.filter;
+         return _private.reload(this, reloadFilter, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
@@ -732,6 +730,10 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
+      },
+
+      _markedKeyChangedHandler: function(event, item) {
+         this._notify('markedKeyChanged', [item]);
       }
    });
 
@@ -744,7 +746,8 @@ define('Controls/List/BaseControl', [
    BaseControl._private = _private;
    BaseControl.getDefaultOptions = function() {
       return {
-         uniqueKeys: true
+         uniqueKeys: true,
+         multiSelectVisibility: 'hidden'
       };
    };
    return BaseControl;

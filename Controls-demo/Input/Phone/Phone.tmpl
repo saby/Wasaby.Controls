@@ -1,11 +1,31 @@
-<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
-   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
-      <h2>Phone</h2>
-      <Controls.Label name="myLabel1" caption="Пример"/>
+<Controls-demo.Wrapper.Wrapper title="Phone">
+   <ws:componentClass>
+      <Controls.Popup.Opener.InfoBox name="infoBoxPhone"/>
       <Controls.Input.Phone
-         name="phone"
+         name="textPhone"
+         placeholder="{{_placeholder}}"
          bind:value="phoneValue"
+         tagStyle="{{_tagStyle}}"
+         readOnly="{{ _readOnly }}"
+         tooltip="{{_tooltip}}"
+         selectOnClick="{{_selectOnClick}}"
+         validationErrors="{{_validationErrors}}"
          attr:test_name="Phone_1"
+         attr:class="demo-TextBox"
+         on:tagHover="_tagStyleHandler()"
+         on:tagClick="_tagStyleClickHandler()"
       />
-   </div>
-</div>
+   </ws:componentClass>
+   <ws:componentProperty>
+      <Controls.Label name="myLabel1" caption="placeholder"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+      <Controls.Label caption="tooltip"/>
+      <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
+      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
+      <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
+                                   bind:readOnlyValue="_readOnly"
+                                   on:validationErrorsValueChanged="_validationChangedHandler()"
+                                   bind:validationErrorsValue="_validationErrorsValue"/>
+   </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

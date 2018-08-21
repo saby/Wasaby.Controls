@@ -14,13 +14,16 @@ define('Controls/Input/Search',
       /**
        * Search input.
        *
+       * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
+       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
+       *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
        * @control
        * @public
        * @category Input
-       * @author Золотова Э.Е.
+       * @author Зайцев А.С.
        */
 
       /**

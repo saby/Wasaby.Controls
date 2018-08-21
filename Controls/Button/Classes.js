@@ -2,9 +2,15 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
 
    'use strict';
    var classesOfButton = {
-      iconButtonBordered: {
+      iconButtonBorderedAdditional: {
          style: 'iconButtonBordered',
          type: 'iconButtonBordered'
+      },
+
+      iconButtonBordered: {
+         style: 'iconButtonBordered',
+         type: 'iconButtonBordered',
+         transparent: true
       },
 
       linkMain: {
@@ -60,7 +66,7 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
    };
    var Classes = {
 
-   /**
+      /**
      * Получить текущий стиль кнопки
      * @param {String} style
      * @returns {Object}

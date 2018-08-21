@@ -1,0 +1,41 @@
+<div class="demoWrapper">
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Back button</h2>
+            <Controls.Header.BackButton attr:class="ControlsDemo__header" on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
+        </div>
+        <div class="optionsBlock">
+            <h3>Options</h3>
+            <Controls.Label name="myLabel1" caption="style:"/>
+            <Controls.Input.ComboBox
+                    attr:class="ControlsDemo__style"
+                    source="{{_backStyleSource}}"
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_backSelectedStyle}}"
+                    on:selectedKeyChanged="backChangeStyle()"
+            />
+            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.Input.ComboBox
+                    attr:class="ControlsDemo__size"
+                    source="{{_backSizeSource}}"
+                    keyProperty="title"
+                    placeholder="select"
+                    displayProperty="title"
+                    emptyText="none"
+                    selectedKey="{{_backSelectedSize}}"
+                    on:selectedKeyChanged="backChangeSize()"
+            />
+            <Controls.Label name="myLabel1" caption="caption"/>
+            <Controls.Input.Text bind:value="_backCaption" attr:class="ControlsDemo__caption"/>
+        </div>
+        <div class="eventBlock">
+            <span>Event that surfaced:</span>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+            <br/>
+            <span class="ControlsDemo__eventName">{{_eventName}}</span>
+        </div>
+    </div>
+</div>

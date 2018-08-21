@@ -6,8 +6,9 @@ define('SBIS3.CONTROLS/Link/LinkFieldController', [
    'Core/Deferred',
    'Core/ParallelDeferred',
    'Core/core-instance',
-   'Core/helpers/Object/find'
-], function(Abstract, Deferred, ParallelDeferred, instance, objectFind){
+   'Core/helpers/Object/find',
+   'Core/core-merge'
+], function(Abstract, Deferred, ParallelDeferred, instance, objectFind, wsCoreMerge){
 
    'use strict';
 

@@ -1,7 +1,8 @@
 #!groovy
-echo "Задаем параметры сборки"
-def version = "3.18.420"
+import java.time.*
+import java.lang.Math
 
+def version = "3.18.500"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
@@ -11,8 +12,17 @@ def gitlabStatusUpdate() {
         updateGitlabCommitStatus state: 'success'
     }
 }
+def exception(err, reason) {
+    currentBuild.displayName = "#${env.BUILD_NUMBER} ${reason}"
+    error(err)
+
+}
+
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
 node('controls') {
+    LocalDateTime start_time = LocalDateTime.now();
+    echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
@@ -48,30 +58,22 @@ node('controls') {
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
-            booleanParam(defaultValue: false, description: "EXPERIMENTAL: Запуск интеграционных тестов в зависимости от измененных файлов", name: 'run_quick_int')
+            booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
         pipelineTriggers([])
     ])
 
-
-    if ( "${env.BUILD_NUMBER}" != "1" && !(params.run_reg || params.run_int || params.run_unit || params.run_quick_int)) {
-            currentBuild.result = 'FAILURE'
-            currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS NOT BUILD"
-            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-
-        }
-
-
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def inte = params.run_int
+        def all_inte = params.run_all_int
         def regr = params.run_reg
         def unit = params.run_unit
-        def quick_int = params.run_quick_int
+        def inte = params.run_int
+        def only_fail = params.RUN_ONLY_FAIL_TEST
         def changed_files
 
         try {
@@ -85,7 +87,7 @@ node('controls') {
 		def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
-
+        def run_test_fail = ""
 		def branch_atf
 		if (params.branch_atf) {
 			branch_atf = params.branch_atf
@@ -104,6 +106,9 @@ node('controls') {
             inte = true
             regr = true
             unit = true
+        }
+        if ( inte ) {
+            all_inte = false
         }
 
         echo "Выкачиваем хранилища"
@@ -132,11 +137,14 @@ node('controls') {
                         git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
-                        if ( quick_int ) {
-                            changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                        }
+                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        echo "Изменения были в файлах: ${changed_files}"
+
                     }
                     updateGitlabCommitStatus state: 'running'
+                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || all_inte || unit || inte || only_fail )) {
+                        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
+                    }
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -223,7 +231,39 @@ node('controls') {
                     }
                 }
             )
+
+        if ( only_fail ) {
+            run_test_fail = "-sf"
+            // если галки не отмечены, сами определим какие тесты перезапустить
+            if ( !inte && !regr && !all_inte ) {
+                step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+                script = "python3 ../fail_tests.py"
+                for ( type in ["int", "reg"] ) {
+                    dir("./controls/tests/${type}") {
+                    def result = sh returnStdout: true, script: script
+                    echo "${result}"
+                    if (type == "int") {
+                        if ( result.toBoolean() ) {
+                            inte = true
+                        } else {
+                            inte = false
+                            }
+                        }
+                    if (type == "reg") {
+                        if ( result.toBoolean() ) {
+                            regr = true
+                        } else {
+                            regr = false
+                            }
+                        }
+                    }
+                }
+                if (!inte && !regr) {
+                    exception('Нет тестов для перезапуска.', 'USER FAIL')
+                }
+            }
         }
+    }
         stage("Сборка компонент"){
             echo " Определяем SDK"
             dir("./constructor/Constructor/SDK") {
@@ -300,7 +340,7 @@ node('controls') {
             }
             echo items
         }
-        if ( inte || regr ) {
+        if ( all_inte || regr || inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -395,7 +435,7 @@ node('controls') {
                 }
             }
         }
-    if ( inte || regr ) {
+    if ( all_inte || regr || inte) {
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
 			soft_restart = "False"
@@ -471,40 +511,47 @@ node('controls') {
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             sh "sudo rm -rf ./test-reports"
             if ( currentBuild.result != null ) {
-                currentBuild.result = 'FAILURE'
-                currentBuild.displayName = "#${env.BUILD_NUMBER} SMOKE TEST FAIL"
-                gitlabStatusUpdate()
-                error('Стенд неработоспособен (не прошел smoke test).')
+                exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
+
             }
         }
 
-        def run_test_fail = ""
-        if (params.RUN_ONLY_FAIL_TEST == true){
-            run_test_fail = "-sf"
+
+        if ( only_fail ) {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        // EXPERIMENTAL
         def tests_for_run = ""
-        if ( quick_int ) {
-            step([$class: 'CopyArtifact', projectName: "coverage_${version}/coverage_${version}", filter: "**/result.json", selector: [$class: 'LastCompletedBuildSelector']])
-            echo "Изменения были в файлах: ${changed_files}"
-            dir("./controls/tests/int/coverage") {
-                def tests_files = sh returnStdout: true, script: "python3 ../../coverage_handler.py -c ${changed_files}"
-                if ( tests_files ) {
-                    tests_files = tests_files.replace('\n', '')
-                    echo "Будут запущены ${tests_files}"
-                    tests_for_run = "--files_to_start ${tests_files}"
+        if ( inte && !only_fail ) {
+            dir("./controls/tests") {
+                echo "Выкачиваем файл с зависимостями"
+                url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                script = """
+	                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+		            echo "result.json exitsts"; cp -fr tmp_result.json result.json
+		            else rm -f result.json
+	                fi
+	                """
+	                sh returnStdout: true, script: script
+                def exist_json = fileExists 'result.json'
+                if ( exist_json ) {
+                    def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
+                    if ( tests_files ) {
+                        tests_files = tests_files.replace('\n', '')
+                        echo "Будут запущены ${tests_files}"
+                        tests_for_run = "--files_to_start ${tests_files}"
+                    } else {
+                        echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                    }
                 } else {
-                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                    echo "Файл с покрытием не найден. Будут запущены все тесты."
                 }
             }
-
         }
         parallel (
             int_test: {
-                echo "Запускаем интеграционные тесты"
                 stage("Инт.тесты"){
-                    if ( inte ){
+                    if ( all_inte || inte ){
+                        echo "Запускаем интеграционные тесты"
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
@@ -518,8 +565,8 @@ node('controls') {
             },
             reg_test: {
                 stage("Рег.тесты"){
-                    echo "Запускаем тесты верстки"
                     if ( regr ){
+                        echo "Запускаем тесты верстки"
                         sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                         dir("./controls/tests/reg"){
                             sh """
@@ -550,7 +597,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || inte ){
+    if ( regr || all_inte || inte){
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
@@ -563,4 +610,9 @@ node('controls') {
     gitlabStatusUpdate()
         }
     }
+LocalDateTime end_time = LocalDateTime.now();
+echo "Время завершения: ${end_time}"
+Duration duration = Duration.between(end_time, start_time);
+diff_time = Math.abs(duration.toMinutes());
+echo "Время сборки: ${diff_time} мин."
 }

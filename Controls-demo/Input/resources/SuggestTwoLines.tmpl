@@ -1,0 +1,28 @@
+<Controls.Input.Suggest
+        value="{{_options.suggestValue}}"
+        displayProperty="title"
+        searchParam="title"
+        autoDropDown="{{true}}"
+        source="{{_suggestSource()}}"
+        minSearchLength="1"
+        on:valueChanged="_changeValueHandler()">
+    <ws:navigation source="page" view="page">
+        <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+    </ws:navigation>
+    <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+        <ws:templateOptions demoClass="demo-SuggestInputList">
+            <ws:itemSuggestTemplate>
+                <div class="controls-demo-SuggestV__full">
+                    <div class="controls-demo-SuggestV__info">
+                        <div class="controls-demo-SuggestV__first">
+                            {{itemSuggestTemplate.itemData.item.get('title')}}
+                        </div>
+                        <div class="controls-demo-SuggestV__second">
+                            {{itemSuggestTemplate.itemData.item.get('example')}}
+                        </div>
+                    </div>
+                </div>
+            </ws:itemSuggestTemplate>
+        </ws:templateOptions>
+    </ws:suggestTemplate>
+</Controls.Input.Suggest>

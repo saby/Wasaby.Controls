@@ -4,13 +4,13 @@ define('Controls/Input/interface/IInputTag', [
    /**
     * Interface for input tags (colored indicators in the right top corner).
     *
-    * @mixin Controls/Input/interface/IInputTag
+    * @interface Controls/Input/interface/IInputTag
     * @public
     */
 
    /**
     * @name Controls/Input/interface/IInputTag#tagStyle
-    * @cfg {String | undefined} Tag style (colored indicator).
+    * @cfg {String} Tag style (colored indicator).
     * @variant primary
     * @variant done
     * @variant attention

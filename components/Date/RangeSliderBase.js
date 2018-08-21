@@ -6,10 +6,10 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
    'SBIS3.CONTROLS/Mixins/DateRangeMixin',
    'SBIS3.CONTROLS/Mixins/PickerMixin',
    'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
-   'Core/helpers/Date/getFormattedDateRange',
+   'Controls/Calendar/Utils',
    'SBIS3.CONTROLS/Link',
    'css!SBIS3.CONTROLS/Date/RangeSliderBase/DateRangeSliderBase'
-], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, getFormattedDateRange) {
+], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateControlsUtils) {
    'use strict';
 
    /**
@@ -62,6 +62,17 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
              */
             emptyCaption: rk('Период не указан'),
 
+            /**
+             * @cfg {String} Шаблон строки месяца. В шаблон передается дата первого числа рисуемого месяца и функция
+             * форматирования дат {@link Core/helpers/Date/format}
+             */
+            monthTemplate: null,
+
+            /**
+             * @cfg {Function} Функция форматирования заголовка.
+             */
+            captionFormatter: null,
+
             locked: true
          },
          _cssRangeSlider: {
@@ -87,6 +98,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
 
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
+         opts.captionFormatter = opts.captionFormatter || dateControlsUtils.formatDateRangeCaption;
          opts._caption = this._getCaption(opts);
          opts._isMinWidth = this._isMinWidth(opts);
          opts._prevNextButtonsEnabledClass = opts.enabled ? ' controls-DateRangeSlider__prevNextButtons-enabled' : ' controls-DateRangeSlider__prevNextButtons-disabled';
@@ -142,17 +154,10 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
 
       _getCaption: function (opts) {
          opts = opts || this._options;
-         // В качестве пустого значения используем неразрывный пробел @nbsp;('\xA0') что бы не ехала верстка
-         return getFormattedDateRange(
+         return opts.captionFormatter(
             opts.startValue,
             opts.endValue,
-            {
-               contractToMonth: true,
-               fullNameOfMonth: true,
-               contractToQuarter: true,
-               contractToHalfYear: true,
-               emptyPeriodTitle: opts.showUndefined ? opts.emptyCaption : '\xA0'
-            }
+            opts.showUndefined ? opts.emptyCaption : null
          );
       },
 

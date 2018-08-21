@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/ColorStyle', [
     * @class SBIS3.CONTROLS.ColorGroup
     * @extends SBIS3.CONTROLS/Radio/Group
     * @public
-    * @author Борисов П.С.
+    * @author Авраменко А.С.
     */
 
    var ColorGroup = RadioGroup.extend(/** @lends SBIS3.CONTROLS.ColorGroup.prototype */ {

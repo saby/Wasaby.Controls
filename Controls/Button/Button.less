@@ -13,14 +13,22 @@
 }
 
 .controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_readOnly {
+  background-color: @background-color-IconButton_transparent;
+}
+
+.controls-Button_type-iconButtonBordered_transparent, .controls-Button_type-iconButtonBordered_transparent_readOnly {
+  background-color: @background-color-IconButton;
+}
+
+.controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_readOnly,
+.controls-Button_type-iconButtonBordered_transparent, .controls-Button_type-iconButtonBordered_transparent_readOnly {
   border-radius: @border-radius-IconButton;
   border-style: @border-style-IconButton;
   border-width: @border-width-IconButton;
-  background-color: @background-color-IconButton;
   box-shadow: @box-shadow-IconButton;
 }
 
-.controls-Button_type-iconButtonBordered {
+.controls-Button_type-iconButtonBordered, .controls-Button_type-iconButtonBordered_transparent{
   cursor: pointer;
 }
 
@@ -30,15 +38,15 @@
 
 .controls-Button_type-iconButtonBordered_size-m {
   height: @height-IconButton_size-m;
-  width: @width-IconButton_size-m;
+  min-width: @width-IconButton_size-m;
 }
 
 .controls-Button_type-iconButtonBordered_size-l {
   height: @height-IconButton_size-l;
-  width: @width-IconButton_size-l;
+  min-width: @width-IconButton_size-l;
 }
 
-.controls-Button_type-iconButtonBordered_readOnly {
+.controls-Button_type-iconButtonBordered_readOnly, .controls-Button_type-iconButtonBordered_transparent_readOnly {
   color: @color-Button_type-IconButton_readOnly;
   border-color: @border-color-IconButton_readOnly;
 }
@@ -46,6 +54,10 @@
 .ws-is-no-touch {
   .controls-Button_type-iconButtonBordered:hover {
     background-color: @background-color-IconButton_hovered;
+  }
+
+  .controls-Button_type-iconButtonBordered_transparent:hover {
+    background-color: @background-color-IconButton_transparent_hovered;
   }
 
   .controls-Button_style-iconButtonBordered_iconStyle-done:hover {
@@ -70,6 +82,11 @@
 
 .controls-Button_type-iconButtonBordered:active {
   background-color: @background-color-IconButton_hovered;
+  box-shadow: @box-shadow-IconButton_activated;
+}
+
+.controls-Button_type-iconButtonBordered_transparent:active {
+  background-color: @background-color-IconButton_transparent_hovered;
   box-shadow: @box-shadow-IconButton_activated;
 }
 

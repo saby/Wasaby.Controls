@@ -1,0 +1,31 @@
+<div>
+   <ws:partial template="{{_options.content}}"
+               on:mousedown="_open()"/>
+
+   <Controls.Dropdown.Opener name="DropdownOpener"
+                             className="{{_options.className}}">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResult}}"
+                           onClose="{{_options.close}}"/>
+         <ws:templateOptions
+                 keyProperty="{{_options.keyProperty}}"
+                 parentProperty="{{_options.parentProperty}}"
+                 additionalProperty="{{_options.additionalProperty}}"
+                 nodeProperty="{{_options.nodeProperty}}"
+                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                 itemTemplate="{{_options.itemTemplate}}"
+                 headTemplate="{{_options.headTemplate}}"
+                 itemsGroup="{{_options.itemsGroup}}"
+                 dropdownClassName="{{_options.dropdownClassName}}"
+                 footerTemplate="{{_options.footerTemplate}}"
+                 headConfig="{{_options.headConfig}}"
+                 showHeader="{{_options.showHeader}}"
+                 selectedKeys="{{_options.selectedKeys}}"
+                 marker="{{_options.marker}}"
+                 emptyText="{{_getEmptyText()}}"
+                 icon="{{_options.icon}}"
+                 caption="{{_options.caption}}"
+                 typeShadow="{{_options.typeShadow}}"/>
+      </ws:popupOptions>
+   </Controls.Dropdown.Opener>
+</div>

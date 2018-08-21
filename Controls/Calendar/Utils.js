@@ -1,7 +1,9 @@
 define('Controls/Calendar/Utils', [
+   'Core/helpers/Date/getFormattedDateRange',
    'Core/helpers/i18n/locales',
    'Controls/Utils/Date'
 ], function(
+   getFormattedDateRange,
    locales,
    DateUtil
 ) {
@@ -33,6 +35,28 @@ define('Controls/Calendar/Utils', [
          return days.map(function(value, index) {
             return {caption: value, weekend: index === 5 || index === 6};
          });
+      },
+
+      /**
+       * Returns formatted date range for date range controls caption.
+       * @param startValue
+       * @param endValue
+       * @param emptyCaption
+       * @returns {*}
+       */
+      formatDateRangeCaption: function(startValue, endValue, emptyCaption) {
+         // As an empty value, use the non-breaking space @nbsp; ('\ xA0') that would not make layout
+         return getFormattedDateRange(
+            startValue,
+            endValue,
+            {
+               contractToMonth: true,
+               fullNameOfMonth: true,
+               contractToQuarter: true,
+               contractToHalfYear: true,
+               emptyPeriodTitle: emptyCaption || '\xA0'
+            }
+         );
       },
 
       /**

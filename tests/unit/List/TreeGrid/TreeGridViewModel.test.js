@@ -27,5 +27,14 @@ define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], f
          treeGridViewModel._onNodeRemoved(null, 1);
          assert.isTrue(notifiedOnNodeRemoved, 'Invalid call _notify("onNodeRemoved").');
       });
+      it('setRoot', function() {
+         var
+            setRootCalled = false;
+         treeGridViewModel._model.setRoot = function() {
+            setRootCalled = true;
+         };
+         treeGridViewModel.setRoot('testRoot');
+         assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
+      });
    });
 });

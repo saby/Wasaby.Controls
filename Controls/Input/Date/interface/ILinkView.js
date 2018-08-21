@@ -1,6 +1,10 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'WS.Data/Type/descriptor'
-], function(types) {
+   'WS.Data/Type/descriptor',
+   'Controls/Calendar/Utils'
+], function(
+   types,
+   dateControlsUtils
+) {
    'use strict';
 
    /**
@@ -52,7 +56,13 @@ define('Controls/Input/Date/interface/ILinkView', [
              * @name Controls/Input/Date/interface/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
              */
-            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED
+            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED,
+
+            /**
+             * @name Controls/Input/Date/interface/ILinkView#captionFormatter
+             * @cfg {Function} Caption formatting function.
+             */
+            captionFormatter: dateControlsUtils.formatDateRangeCaption
          };
       },
 
@@ -69,7 +79,8 @@ define('Controls/Input/Date/interface/ILinkView', [
             showNextArrow: types(Boolean),
             showPrevArrow: types(Boolean),
             showDeleteButton: types(Boolean),
-            emptyCaption: types(String)
+            emptyCaption: types(String),
+            captionFormatter: types(Function)
          };
       }
    };

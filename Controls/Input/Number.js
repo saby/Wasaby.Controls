@@ -6,9 +6,7 @@ define('Controls/Input/Number', [
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
    'Core/helpers/Function/runDelayed',
-
-   'Controls/Input/resources/InputRender/InputRender',
-   'tmpl!Controls/Input/resources/input'
+   'Core/IoC'
 ], function(
    Control,
    tmplNotify,
@@ -16,10 +14,14 @@ define('Controls/Input/Number', [
    types,
    NumberViewModel,
    inputHelper,
-   runDelayed) {
+   runDelayed,
+   IoC
+) {
 
    /**
-    * Number input.
+    * A component are used to let the user enter a number.
+    * To control the format of the input numbers, there is a {@link integersLength restriction of the integer part},
+    * the {@link precision number of characters} and the {@link showEmptyDecimals display of useless zeros} in the fractional part.
     * <a href="/materials/demo-ws4-input">Демо-пример</a>.
     *
     * @class Controls/Input/Number
@@ -32,8 +34,9 @@ define('Controls/Input/Number', [
     * @control
     * @public
     * @category Input
-    * @author Баранов М.А.
     * @demo Controls-demo/Input/Number/Number
+    *
+    * @author Зайцев А.С.
     */
 
    /**
@@ -43,7 +46,7 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#onlyPositive
-    * @cfg {Boolean} Allow only positive numbers.
+    * @cfg {Boolean} Determines whether only positive numbers can be entered in the field.
     */
 
    /**
@@ -53,14 +56,15 @@ define('Controls/Input/Number', [
 
    /**
     * @name Controls/Input/Number#showEmptyDecimals
-    * @cfg {Boolean} Show zeros when decimal part wasn't entered.
+    * @cfg {Boolean} Determines whether trailing zeros are shown in the fractional part.
     */
 
    /**
     * @name Controls/Input/Number#textAlign
     * @cfg {String} Text align.
-    * @variant 'left' default
-    * @variant 'right'
+    * @variant left
+    * @variant right
+    * @default left
     */
 
    'use strict';
@@ -83,6 +87,10 @@ define('Controls/Input/Number', [
       _notifyHandler: tmplNotify,
 
       _beforeMount: function(options) {
+         if (options.integersLength <= 0) {
+            IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+         }
+
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
@@ -95,6 +103,10 @@ define('Controls/Input/Number', [
       _beforeUpdate: function(newOptions) {
          var
             value;
+
+         if (newOptions.integersLength <= 0) {
+            IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + newOptions.integersLength + '. Integers length must be greater than 0.');
+         }
 
          //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
          if (this._options.value === newOptions.value) {

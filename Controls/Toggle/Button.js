@@ -6,43 +6,61 @@ define('Controls/Toggle/Button', [
    'css!Controls/Toggle/Button/Button'
 ], function(Control, Classes, template) {
    /**
-    * Button that switches between different states.
+    * Button that switches between different states. It support different display styles, icon display styles and sizes
+    *
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
     * @class Controls/Toggle/Button
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
+    *
+    * @demo Controls-demo/Buttons/Toggle/ToggleDemo
     */
 
    /**
     * @name Controls/Toggle/Button#iconStyle
     * @cfg {String} Displaying icon style.
-    * @variant default Icon has default display style in this type of button.
-    * @variant attention Icon has attention display style.
-    * @variant error Icon has error display style.
-    * @variant done Icon has done icon style.
+    * @variant default Default icon display style.  It is different for different toggle button styles. It is default value.
+    * @variant attention Attention icon display style.
+    * @variant error Error icon display style.
+    * @variant done Done icon display style.
     */
 
    /**
     * @name Controls/Toggle/Button#style
     * @cfg {String} Display style of button.
-    * @variant iconButtonBordered Button display as icon with border.
-    * @variant linkMain Button display as main link style.
+    * @variant iconButtonBordered Bordered icon toggle button display style.
+    * @variant linkMain Main link toggle button display style. It is default value.
+    * @variant buttonLinkMain Main link button display style.
+    * @variant buttonLinkAdditional Additional link button display style.
     */
 
    /**
     * @name Controls/Toggle/Button#size
     * @cfg {String} Size of the button.
-    * @variant s Button has s size.
-    * @variant m Button has m size.
-    * @variant l Button has l size.
+    * @variant s Small button size.
+    * @variant m Medium button size.
+    * @variant l Large button size. It is default value.
     */
 
    /**
-    * @name Controls/Toggle/Button#caption
-    * @cfg {String} Button text.
+    * @name Controls/Toggle/Button#icons
+    * @cfg {Array} Set of icons. Button with zero icons - button without icons.
+    * Button with one icon have one icon and it isn't toggled.
+    * Button with two icons have one icon, but it is different in free and toggled states.
+    * If button has more than two icons, it work only with first and second captions.
+    */
+
+   /**
+    * @name Controls/Toggle/Button#captions
+    * @cfg {Array} Set of captions. Button with zero icons - button without caption.
+    * Button with one caption have one caption and it isn't toggled.
+    * Button with two caption have one caption, but it is different in free and toggled states.
+    * If button has more than two captions, it work only with first and second captions.
     */
 
    var _private = {
@@ -53,13 +71,14 @@ define('Controls/Toggle/Button', [
          self._type = currentButtonClass.type;
          self._typeWithSize = self._type + '_size-' + options.size;
          self._styleWithIconStyle = self._style + '_iconStyle-' + options.iconStyle;
-         self._state = (options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._state = (options.value && currentButtonClass.toggled ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
+         self._icon = (options.icons ? (!options.value &&  options.icons[1] ? options.icons[1] : options.icons[0]) : '');
       }
    };
    var ToggleButton = Control.extend({
       _template: template,
       _beforeMount: function(options) {
-         this._type = 'toggle';
          _private.optionsGeneration(this, options);
       },
       _clickHandler: function() {

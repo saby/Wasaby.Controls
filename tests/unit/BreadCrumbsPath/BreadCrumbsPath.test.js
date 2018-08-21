@@ -1,11 +1,13 @@
 define([
    'Controls/BreadCrumbs/Path',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
+   'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred'
 ], function(
    Path,
    BreadCrumbsUtil,
+   getWidthUtil,
    FontLoadUtil,
    Deferred
 ) {
@@ -13,8 +15,8 @@ define([
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
-         getWidth = BreadCrumbsUtil.getWidth;
-         BreadCrumbsUtil.getWidth = function() {
+         getWidth = getWidthUtil.getWidth;
+         getWidthUtil.getWidth = function() {
             return backButtonWidth;
          };
          getMaxCrumbsWidth = BreadCrumbsUtil.getMaxCrumbsWidth;
@@ -67,7 +69,7 @@ define([
       });
       describe('_afterMount', function() {
          afterEach(function() {
-            BreadCrumbsUtil.getWidth = getWidth;
+            getWidthUtil.getWidth = getWidth;
             BreadCrumbsUtil.getMaxCrumbsWidth = getMaxCrumbsWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw = calculateBreadCrumbsToDraw;
          });
@@ -135,18 +137,20 @@ define([
       });
 
       it('_onItemClick', function() {
-         path._notify = function(e, item) {
+         path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[1], item[0]);
+               assert.equal(path._options.items[1], args[0]);
+               assert.isFalse(!!args[1]);
             }
          };
          path._onItemClick({}, path._options.items[1]);
       });
 
       it('_onBackButtonClick', function() {
-         path._notify = function(e, item) {
+         path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[0], item[0]);
+               assert.equal(path._options.items[0], args[0]);
+               assert.isTrue(args[1]);
             }
          };
          path._onBackButtonClick({}, path._options.items[0]);

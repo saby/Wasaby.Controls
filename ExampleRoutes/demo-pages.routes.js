@@ -104,6 +104,105 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: чекбокс
+      '/demo-ws4-checkbox': function(req, res) {
+         requirejs('Controls-demo/Checkbox/standartDemoCheckboxWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Checkbox/standartDemoCheckboxWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: заголовки(разделители) и кнопка назад
+      '/demo-ws4-header-separator': function(req, res) {
+         requirejs('Controls-demo/Headers/standartDemoHeaderWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Headers/standartDemoHeaderWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Панель массовых операций
+      '/demo-ws4-operations-panel': function(req, res) {
+         requirejs('Controls-demo/OperationsPanel/PanelWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/OperationsPanel/PanelWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Кнопки
+      '/demo-ws4-switchers': function(req, res) {
+         requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Switch/standartDemoSwitchWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Переключатели
+      '/demo-ws4-buttons': function(req, res) {
+         requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с поиском
+      '/demo-ws4-search-container': function(req, res) {
+         requirejs('Controls-demo/Search/ContainerApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Search/ContainerApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с фильтрацией
+      '/demo-ws4-filter-container': function(req, res) {
+         requirejs('Controls-demo/Filter/ContainerApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Filter/ContainerApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с фильтрацией и поиском
+      '/demo-ws4-filter-search-new': function(req, res) {
+         requirejs('Controls-demo/FilterSearch/FilterSearchApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/FilterSearch/FilterSearchApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с engineBrowser
+      '/demo-ws4-engine-browser': function(req, res) {
+         requirejs('Controls-demo/EngineBrowser/BrowserApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/EngineBrowser/BrowserApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с кнопкой фильтров
+      '/demo-ws4-filter-button': function(req, res) {
+         requirejs('Controls-demo/Filter/Button/PanelVDomApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Filter/Button/PanelVDomApplication',
+            initDependencies: false
+         }, []);
+      },
+   
+      // Демо-пример: с панелью фильтров
+      '/demo-ws4-filter-button-panel': function(req, res) {
+         requirejs('Controls-demo/Filter/Button/PanelOptions/PanelVDomApplication');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/Filter/Button/PanelOptions/PanelVDomApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: операции над записью.
       '/demo-ws4-item-actions': function(req, res) {
          requirejs('Examples/List/ItemActions');
@@ -112,7 +211,6 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
-
 
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
