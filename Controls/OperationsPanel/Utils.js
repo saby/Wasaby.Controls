@@ -1,9 +1,11 @@
 define('Controls/OperationsPanel/Utils', [
    'tmpl!Controls/OperationsPanel/ItemTemplate',
-   'Controls/Utils/Toolbar'
+   'Controls/Utils/Toolbar',
+   'Controls/Utils/getWidth'
 ], function(
    itemTemplate,
-   tUtil
+   tUtil,
+   getWidthUtil
 ) {
    'use strict';
 
@@ -16,7 +18,7 @@ define('Controls/OperationsPanel/Utils', [
          if (initialized) {
             return;
          }
-         MENU_WIDTH = window && _private.getWidth('<span class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"><i class="icon-medium icon-ExpandDown"/></span>');
+         MENU_WIDTH = window && getWidthUtil.getWidth('<span class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"><i class="icon-medium icon-ExpandDown"/></span>');
 
          initialized = true;
       },
@@ -47,21 +49,7 @@ define('Controls/OperationsPanel/Utils', [
          document.body.removeChild(measurer);
 
          return itemsSizes;
-      },
-
-      getWidth: function(element) {
-         var
-            measurer = document.createElement('div'),
-            width;
-         measurer.classList.add('controls-UtilsOperationsPanel__measurer');
-
-         measurer.innerHTML = element;
-         document.body.appendChild(measurer);
-         width = measurer.clientWidth;
-         document.body.removeChild(measurer);
-         return width;
       }
-
    };
 
    return {

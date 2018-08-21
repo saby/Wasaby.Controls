@@ -1,10 +1,11 @@
-define('Controls/Utils/BreadCrumbsUtil', [
+define('Controls/BreadCrumbs/Utils', [
    'Controls/List/resources/utils/ItemsUtil',
+   'Controls/Utils/getWidth',
    'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate',
-   'css!Controls/Utils/BreadCrumbsUtil'
+   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate'
 ], function(
    ItemsUtil,
+   getWidthUtil,
    itemsTemplate,
    itemTemplate
 ) {
@@ -23,10 +24,10 @@ define('Controls/Utils/BreadCrumbsUtil', [
             return;
          }
          if (window) {
-            ARROW_WIDTH = _private.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-            HOME_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
-            BREAD_CRUMB_MIN_WIDTH = _private.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
-            DOTS_WIDTH = _private.getWidth(itemTemplate({
+            ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+            HOME_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
+            DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
                itemData: {
                   getPropValue: ItemsUtil.getPropertyValue,
                   item: {
@@ -73,33 +74,12 @@ define('Controls/Utils/BreadCrumbsUtil', [
          return itemsSizes;
       },
 
-      getWidth: function(element) {
-         var
-            measurer = document.createElement('div'),
-            width;
-         measurer.classList.add('controls-BreadCrumbsView__measurer');
-
-         if (typeof element === 'string') {
-            measurer.innerHTML = element;
-         } else {
-            measurer.appendChild(element);
-         }
-         document.body.appendChild(measurer);
-         width = measurer.clientWidth;
-         document.body.removeChild(measurer);
-         return width;
-      },
-
       canShrink: function(itemWidth, currentWidth, availableWidth) {
          return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
       }
    };
 
    return {
-      getWidth: function(element) {
-         return _private.getWidth(element);
-      },
-
       calculateBreadCrumbsToDraw: function(self, items, availableWidth) {
          _private.initializeConstants();
 
