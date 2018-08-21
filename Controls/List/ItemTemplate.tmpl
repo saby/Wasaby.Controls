@@ -5,7 +5,10 @@
     {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
      attr:key="{{itemData.item.getId()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
-        <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" attr:class="controls-ListView__checkbox js-controls-ListView__notEditable"/>
+        <ws:partial template="{{multiSelectTpl}}"  attr:class="controls-ListView__checkbox js-controls-ListView__notEditable">
+            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
+                                key="{{itemData.key}}" />
+        </ws:partial>
     </ws:if>
 
     <ws:if data="{{contentTemplate}}">
