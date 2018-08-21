@@ -85,7 +85,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (Base.isNewEnvironment()) {
                      self._popupIds.push(result);
 
-                     //Зовем перерисовку, чтобы создался emitter на скролл после открытия окна
+                     //Call redraw to create emitter on scroll after popup opening
                      self._forceUpdate();
                   } else {
                      self._action = result;
