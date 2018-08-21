@@ -361,6 +361,7 @@ define('Controls/History/Source', [
          if (meta.hasOwnProperty('$_history')) {
             return _private.updateRecent(this, data, meta);
          }
+         return _private.getSourceByMeta(this, meta).update(data, meta);
       },
 
       destroy: function(keys, meta) {
