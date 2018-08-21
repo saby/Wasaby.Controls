@@ -209,7 +209,10 @@ define('SBIS3.CONTROLS/TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
-         if (!constants.browser.chrome) {
+         //В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
+         //но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/
+         //Так что в Safari тоже нельзя убирать плейсхолдер
+         if (!constants.browser.chrome && !constants.browser.safari) {
             /*
              В IE есть баг что при установке фокуса в поле ввода, в котором есть плейсхолдер, стреляет событие input:
              https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/274987/
@@ -217,6 +220,13 @@ define('SBIS3.CONTROLS/TextBox', [
              лучше буду навешивать плейсхолдер только в хроме
              */
             //Плейсхолдер навешивается в шаблоне, иначе он будет моргать
+            if (constants.browser.isIE) {
+               //Оказывается, в IE событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
+               this._inputField.one('input', function(e) {
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+               });
+            }
             this._inputField.removeAttr('placeholder');
          }
          this._inputField

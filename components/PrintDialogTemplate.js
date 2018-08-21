@@ -45,6 +45,7 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
                      event.preventDefault();
                   });
                   self.getParent().show();
+                  self.getContainer().closest('.controls-PrintDialog__invisible').removeClass('controls-PrintDialog__invisible');
                } else {
                   //Если не нужно показывать наш диалог перед печатью, то скроем окно диалога и сразу отправим данные на печать
                   //Вешать класс ws-hidden нельзя, иначе в 59 хроме начинаются баги, подробности в ошибке
@@ -52,7 +53,10 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
                   self.getParent().getContainer().css('visibility', 'hidden');
                   //Из-за того, что нельзя навесить ws-hidden, нужно сдвинуть окно в левый верхний угол, чтобы оно не растягивало
                   //боди и на нем не появлялся скролл
-                  self.getParent()._window.css({'top': 0, 'left': 0});
+                  var window = self.getParent()._window;
+                  if (window) {
+                     window.css({'top': 0, 'left': 0});
+                  }
                   htmlView.print().addCallback(function () {
                      self.sendCommand('close');
                   });

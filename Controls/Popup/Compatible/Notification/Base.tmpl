@@ -1,0 +1,13 @@
+<div class="controls-Notification controls-Notification__{{_options.style}}"
+     attr:ws-no-focus="true"
+     on:mouseenter="_mouseenterHandler()"
+     on:mouseleave="_mouseleaveHandler()">
+   <div class="">
+      <ws:if data="{{_options.contentTemplate}}">
+         <ws:partial template="{{_options.contentTemplate}}" scope="{{_options.contentTemplateOptions}}"></ws:partial>
+      </ws:if>
+   </div>
+   <ws:if data="{{_options.iconClose}}">
+      <Controls.Button.Close class="controls-Notification__closeButton" style="light" on:click="_closeClick()"/>
+   </ws:if>
+</div>

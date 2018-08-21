@@ -120,10 +120,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _openComponent: function(meta, mode) {
+         var self = this;
          meta = meta || {};
          meta.mode = mode || meta.mode || this._options.mode; //todo в 3.17.300 убрать аргумент mode, его через execute проставить нельзя
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta);
+         if (this._isDialogClosing()) {
+            this._dialog.once('onAfterClose', function() {
+               self._createComponent(config, meta);
+            });
+         }
+         else {
+            this._createComponent(config, meta);
+         }
       },
 
       _buildComponentConfig: function(meta) {
@@ -260,8 +268,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          }
 
-         //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
+         //Определяем связь popupMixin и панели по опенерам. в цепочке могут появиться vdom компоненты, поэтому старый механизм может работать с ошибками
+         var popupMixin = $(target).closest('.controls-FloatArea');
+         if (popupMixin.length) {
+            opener = popupMixin.wsControl().getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               opener = opener.getOpener && opener.getOpener() || (opener.getParent && opener.getParent());
+            }
+         }
+
+         //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay');
          return !!infoBox.length;
       },
 

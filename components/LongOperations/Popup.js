@@ -636,7 +636,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._loadingIndicator.close();
                   self._loadingIndicator = null;
                   require('Core/WindowManager').releaseZIndex(zIndex);
-                  self.moveToTop();
                }, TIME_EXPOSITION);
             });
          },

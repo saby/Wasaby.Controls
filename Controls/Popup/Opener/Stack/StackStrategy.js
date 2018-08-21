@@ -9,8 +9,8 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       getPanelWidth: function(item, tCoords, maxPanelWidth) {
          var panelWidth;
          var maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
-         var minWidth = item.popupOptions.minWidth;
-         var maxWidth = item.popupOptions.maxWidth;
+         var minWidth = parseInt(item.popupOptions.minWidth, 10);
+         var maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
          if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
