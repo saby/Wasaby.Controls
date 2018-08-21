@@ -13,14 +13,14 @@
 
 <ws:template name="tagresolver">
     <ws:if data="{{_options.href}}">
-        <a><ws:partial template="buttonContent"/></a>
+        <a attr:class="controls-BaseButton_withHref"><ws:partial template="buttonContent"/></a>
     </ws:if>
     <ws:else>
-        <span><ws:partial template="buttonContent"/></span>
+        <span attr:class="controls-BaseButton"><ws:partial template="buttonContent"/></span>
     </ws:else>
 </ws:template>
 
-<ws:partial template="tagresolver" attr:class="controls-BaseButton_withHref controls-Button_style-{{_style}}{{_state}}
+<ws:partial template="tagresolver" attr:class="controls-Button_style-{{_style}}{{_state}}
              controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_type-{{_typeWithSize}}
              {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
