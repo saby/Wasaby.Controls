@@ -113,6 +113,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
                this._childConfig = this._options.templateOptions || {};
+               this._childControlName = this._options.template;
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
