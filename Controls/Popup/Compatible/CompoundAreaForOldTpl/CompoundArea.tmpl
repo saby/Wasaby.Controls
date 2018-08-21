@@ -5,7 +5,7 @@
       <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
-      <Controls.Popup.Templates.Stack.StackTemplate showMaximizedButton="{{_options.canMaximize}}" on:maximized="_changeMaximizedMode()">
+      <Controls.Popup.Templates.Stack.StackTemplate showMaximizedButton="{{_options.canMaximize}}" closeButtonStyle="{{_options.closeButtonStyle}}" on:maximized="_changeMaximizedMode()">
          <ws:contentArea>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:contentArea>
