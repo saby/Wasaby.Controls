@@ -17,7 +17,7 @@
    </div>
     <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
         <div    on:click="_itemClickHandler(itemData.item, true)"
-                class="controls-DropdownList__row_pin {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__row_unpin icon-PinOff' : 'icon-PinNull'}}"></div>
+                class="controls-DropdownList__row_pin{{itemData.isSwiped ? '_swiped'}} {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__row_unpin icon-PinOff' : 'icon-PinNull'}}"></div>
     </ws:if>
    <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow icon-MarkCRightLight"></div>
 </div>

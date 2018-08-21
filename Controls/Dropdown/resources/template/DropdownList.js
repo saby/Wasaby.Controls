@@ -170,6 +170,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
+
+         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left') {
+               this._listModel.setSwipeItem(itemData);
+            }
+            if (event.nativeEvent.direction === 'right') {
+               this._listModel.removeSwipeItem();
+            }
+         },
+
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             var result = {
                action: pinClicked ? 'pinClicked' : 'itemClick',

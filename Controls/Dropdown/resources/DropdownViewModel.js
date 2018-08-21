@@ -115,6 +115,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
 
             //Draw the separator to split history and nohistory items.
             //Separator is needed only when list has both history and nohistory items
@@ -136,6 +137,14 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
          _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
+         },
+         setSwipeItem: function(itemData) {
+            this._swipeItem = itemData;
+            this._nextVersion();
+         },
+         removeSwipeItem: function() {
+            this._swipeItem = null;
+            this._nextVersion();
          },
          hasHierarchy: function() {
             if (!this._options.parentProperty || !this._options.nodeProperty) {
