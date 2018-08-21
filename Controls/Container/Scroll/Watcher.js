@@ -141,8 +141,7 @@ define('Controls/Container/Scroll/Watcher',
          onRegisterNewComponent: function(self, component, withObserver) {
             if (this._sizeCache.clientHeight <= this._sizeCache.scrollHeight) {
                self._registrar.startOnceTarget(component, 'cantScroll');
-            }
-            else {
+            } else {
                self._registrar.startOnceTarget(component, 'canScroll');
             }
 
