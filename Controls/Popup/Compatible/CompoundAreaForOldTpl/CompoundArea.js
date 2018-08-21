@@ -652,7 +652,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(id, popupConfig.popupOptions);
                }
 
-               if (visible) {
+               if (visible && !this._isVisible) {
                   // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
                   // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
                   // на новую, поставим на время пересчета класс `ws-invisible`
