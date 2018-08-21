@@ -16,8 +16,11 @@
     "include": [
       "SBIS3.CONTROLS/Filter/Button",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
       "SBIS3.CONTROLS/Filter/Button/Line",
-      "SBIS3.CONTROLS/Filter/Button/Line/*"
+      "SBIS3.CONTROLS/Filter/Button/Line/*",
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
     ],
     "exlucde": [
       "css!*"
@@ -45,7 +48,10 @@
       "SBIS3.CONTROLS/Filter/Button",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
       "SBIS3.CONTROLS/Filter/Button/Line",
-      "SBIS3.CONTROLS/Filter/Button/Line/*"
+      "SBIS3.CONTROLS/Filter/Button/Line/*",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
     ],
     "output": "sbis3controls-filterpicker.package.js"
   },
