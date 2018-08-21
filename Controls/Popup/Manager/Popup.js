@@ -4,9 +4,10 @@ define('Controls/Popup/Manager/Popup',
       'tmpl!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
+      'Controls/Popup/PopupContext',
       'css!Controls/Popup/Manager/Popup'
    ],
-   function(Control, template, runDelayed, CoreConstants) {
+   function(Control, template, runDelayed, CoreConstants, PopupContext) {
       'use strict';
 
       var Popup = Control.extend({
@@ -117,6 +118,12 @@ define('Controls/Popup/Manager/Popup',
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
+         },
+
+         _getChildContext: function() {
+            return {
+               stickyCfg: new PopupContext(this._options.position)
+            };
          }
       });
 
