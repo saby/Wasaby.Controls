@@ -59,6 +59,11 @@
                                  </ws:if>
                                  <Controls.Popup.Manager.Container attr:id="popup"
                                                                    eventHandler="{{content._managerEventHandler}}"/>
+                                 <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
+                                    <ws:for data="i in _options.scripts">
+                                       <ws:partial template="{{ i }}"/>
+                                    </ws:for>
+                                 </ws:if>
                                  <script key="bundles" type="text/javascript"
                                          src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                                  <script key="require" type="text/javascript"
@@ -80,7 +85,7 @@
                                  <div>
                                     <Controls.Application._JsLinks attr:tabindex="-1"
                                                                    appRoot="{{ appRoot }}"/>
-                                    <ws:if data="{{ _options.scripts }}">
+                                    <ws:if data="{{ _options.scripts && !_options.beforeScripts }}">
                                        <ws:for data="i in _options.scripts">
                                           <ws:partial template="{{ i }}"/>
                                        </ws:for>
