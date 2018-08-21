@@ -103,6 +103,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _beforeCloseHandler: function(event) {
+            //Если позвали закрытие панели до того, как построился VDOM компонент - дожидаемся когда он построится
+            //Только после этого закрываем панель
             if (!this._isVDomTemplateMounted) {
                this._closeAfterMount = true;
                event.setResult(false);
