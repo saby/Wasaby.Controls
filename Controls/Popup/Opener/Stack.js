@@ -31,7 +31,7 @@ define('Controls/Popup/Opener/Stack',
             return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
          },
 
-         _getStackConfig: function (config) {
+         _getStackConfig: function(config) {
             config = config || {};
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;

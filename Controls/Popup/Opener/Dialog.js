@@ -24,7 +24,7 @@ define('Controls/Popup/Opener/Dialog',
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
          },
 
-         _getDialogConfig: function (config) {
+         _getDialogConfig: function(config) {
             config = config || {};
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
