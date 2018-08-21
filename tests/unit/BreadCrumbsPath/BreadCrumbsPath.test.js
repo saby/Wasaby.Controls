@@ -1,11 +1,13 @@
 define([
    'Controls/BreadCrumbs/Path',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
+   'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred'
 ], function(
    Path,
    BreadCrumbsUtil,
+   getWidthUtil,
    FontLoadUtil,
    Deferred
 ) {
@@ -13,8 +15,8 @@ define([
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
-         getWidth = BreadCrumbsUtil.getWidth;
-         BreadCrumbsUtil.getWidth = function() {
+         getWidth = getWidthUtil.getWidth;
+         getWidthUtil.getWidth = function() {
             return backButtonWidth;
          };
          getMaxCrumbsWidth = BreadCrumbsUtil.getMaxCrumbsWidth;
@@ -67,7 +69,7 @@ define([
       });
       describe('_afterMount', function() {
          afterEach(function() {
-            BreadCrumbsUtil.getWidth = getWidth;
+            getWidthUtil.getWidth = getWidth;
             BreadCrumbsUtil.getMaxCrumbsWidth = getMaxCrumbsWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw = calculateBreadCrumbsToDraw;
          });
