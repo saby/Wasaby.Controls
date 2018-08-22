@@ -337,7 +337,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._updatePreviewClearStop();
             }
             if (!this._waitIndicatorStopper) {
-               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, this._waitIndicatorStopper = new Deferred());
+               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:300}, this._waitIndicatorStopper = new Deferred());
             }
          },
 
