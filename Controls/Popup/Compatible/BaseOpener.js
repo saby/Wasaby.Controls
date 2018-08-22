@@ -221,7 +221,10 @@ function(cMerge,
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
 
-         //InfoBox
+         /**
+          * InfoBox в своем шаблоне имеет опции с именами template и templateOptions.
+          * нужно их положить в innerComponentOptions.templateOptions.
+          */
          if (cfg.componentOptions.innerComponentOptions.template) {
             cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
          }

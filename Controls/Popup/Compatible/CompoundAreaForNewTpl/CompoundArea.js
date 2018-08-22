@@ -71,6 +71,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
                   } else {
+                     // Если нам передали шаблон строкой, то компонент уже построен. Обратимся к нему через DOM.
                      self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
                      if (self._options._initCompoundArea) {
                         self._notifyOnSizeChanged(self, self);
