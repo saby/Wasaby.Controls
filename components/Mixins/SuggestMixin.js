@@ -461,7 +461,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
       _showLoadingIndicator: function () {
          if (this._loadingIndicator === undefined) {
             var holder = this._getLoadingContainer() || this.getContainer();
-            this._loadingIndicator = $('<div class="controls-Suggest__loadingIndicator">').appendTo(holder.addClass('controls-Suggest__loadingContainer'));
+            this._loadingIndicator = $('<div class="controls-Suggest__loadingIndicator controls-Suggest__loadingIndicator-position">').appendTo(holder.addClass('controls-Suggest__loadingContainer'));
          }
          //показываем ромашку, только когда пикер скрыт. В противном случае будет две ромашки: эта и ромашка в списке
          if (this._picker && !this._picker.isVisible()) {
