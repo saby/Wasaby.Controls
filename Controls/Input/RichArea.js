@@ -23,12 +23,6 @@ define('Controls/Input/RichArea', [
       _beforeMount: function(opts) {
          if (opts.json) {
             this._htmlJson = new HtmlJson();
-            
-            if (!this._htmlJson.setJson) {
-               this._htmlJson.setJson = function(json) {
-                  this._options.json = json;
-               };
-            }
             this._value = this._jsonToHtml(typeof opts.json === 'string' ? JSON.parse(opts.json) : opts.json);
          } else {
             this._value = opts.value;
