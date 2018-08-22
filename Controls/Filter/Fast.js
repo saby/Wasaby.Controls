@@ -185,6 +185,13 @@ define('Controls/Filter/Fast',
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._setText();
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (this._options.items !== newOptions.items) {
+               _private.prepareItems(this, newOptions.items);
+               this._setText();
+            }
          }
       });
    
