@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       _createComponent: function(config, meta) {
          var componentName = this._getComponentName(meta),
             self = this;
-         
+
          if (this._isNeedToRedrawDialog()) {
             this._reloadTemplate(config);
          } else {
@@ -245,7 +245,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                return 'Lib/Control/Dialog/Dialog';
          }
       },
-      
+
       _documentClickHandler: function(event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
@@ -371,7 +371,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
          var handlers = this._getDialogHandlers(meta);
-         
+
          for (var name in handlers) {
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
@@ -386,7 +386,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          return config;
       },
-      
+
       _getDialogHandlers: function(meta) {
          var self = this;
          return {
@@ -405,7 +405,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          };
       },
-      
+
       _saveAutoHideState: function(meta, config) {
          if (!this._options.closeByFocusOut) {
             this._openedPanelConfig = {
@@ -492,6 +492,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
+            this._documentClickHandler = undefined;
          }
       }
    };
