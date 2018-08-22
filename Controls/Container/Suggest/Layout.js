@@ -59,7 +59,7 @@ define('Controls/Container/Suggest/Layout',
                }
 
                return resultObj;
-            }
+            };
             var suggestBCR = boundingClientToJSON(self._children.suggestionsContainer.getBoundingClientRect());
             var containerBCR =  boundingClientToJSON(self._container.getBoundingClientRect());
             var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
