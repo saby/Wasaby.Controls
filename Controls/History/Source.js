@@ -6,6 +6,7 @@ define('Controls/History/Source', [
    'WS.Data/Entity/OptionsMixin',
    'WS.Data/Source/ISource',
    'Core/ParallelDeferred',
+   'Core/Deferred',
    'WS.Data/Collection/RecordSet',
    'Controls/History/Constants',
    'WS.Data/Entity/Model',
@@ -17,6 +18,7 @@ define('Controls/History/Source', [
    OptionsMixin,
    ISource,
    ParallelDeferred,
+   Deferred,
    RecordSet,
    Constants,
    Model,
@@ -277,20 +279,24 @@ define('Controls/History/Source', [
          }
       },
 
-      updatePinned: function(self, item) {
+      updatePinned: function(self, item, meta) {
          var pinned = self._history.pinned;
          if (item.get('pinned')) {
             item.set('pinned', false);
             pinned.remove(pinned.getRecordById(item.getId()));
          } else {
-            item.set('pinned', true);
-            pinned.add(this.getRawHistoryItem(self, item.getId()));
-            _private.checkPinnedAmountAfterAdd(pinned);
+            if (_private.checkPinnedAmount(pinned)) {
+               item.set('pinned', true);
+               pinned.add(this.getRawHistoryItem(self, item.getId()));
+            } else {
+               return false;
+            }
          }
          self.historySource.saveHistory(self._history);
+         return _private.getSourceByMeta(self, meta).update(item, meta);
       },
 
-      updateRecent: function(self, item) {
+      updateRecent: function(self, item, meta) {
          var id = item.getId();
          var recent = self._history.recent;
          var hItem = recent.getRecordById(id);
@@ -306,6 +312,7 @@ define('Controls/History/Source', [
             recent.prepend(records);
             self.historySource.saveHistory(self._history);
          }
+         return _private.getSourceByMeta(self, meta).update(item, meta);
       },
 
       getRawHistoryItem: function(self, id, hId) {
@@ -320,11 +327,9 @@ define('Controls/History/Source', [
             adapter: self._history.recent.getAdapter()
          });
       },
-      
-      checkPinnedAmountAfterAdd: function(pinned) {
-         if (pinned.getCount() > Constants.MAX_HISTORY) {
-            pinned.removeAt(Constants.MAX_HISTORY);
-         }
+
+      checkPinnedAmount: function(pinned) {
+         return pinned.getCount() !== Constants.MAX_HISTORY;
       }
    };
 
@@ -354,11 +359,12 @@ define('Controls/History/Source', [
       },
 
       update: function(data, meta) {
+         var self = this;
          if (meta.hasOwnProperty('$_pinned')) {
-            _private.updatePinned(this, data);
+            return Deferred.success(_private.updatePinned(self, data, meta));
          }
          if (meta.hasOwnProperty('$_history')) {
-            _private.updateRecent(this, data);
+            return Deferred.success(_private.updateRecent(self, data, meta));
          }
          return _private.getSourceByMeta(this, meta).update(data, meta);
       },
