@@ -44,8 +44,25 @@ define('Controls/Container/Suggest/Layout',
          },
          
          getSizes: function(self, dropDownContainer) {
-            var suggestBCR = self._children.suggestionsContainer.getBoundingClientRect().toJSON();
-            var containerBCR =  self._container.getBoundingClientRect().toJSON();
+            var boundingClientToJSON = function(bc) {
+               var resultObj = {};
+
+
+               // firefox bug, clientRect object haven't method toJSON
+               if (bc.toJSON) {
+                  resultObj = bc.toJSON();
+               } else {
+                  for (var i in bc) {
+                     if (bc.hasOwnProperty(i)) {
+                        resultObj[i] = bc[i];
+                     }
+                  }
+               }
+
+               return resultObj;
+            }
+            var suggestBCR = boundingClientToJSON(self._children.suggestionsContainer.getBoundingClientRect());
+            var containerBCR =  boundingClientToJSON(self._container.getBoundingClientRect());
             var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
             
             /* because dropDownContainer can have height smaller, than window height */
