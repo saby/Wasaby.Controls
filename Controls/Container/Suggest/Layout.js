@@ -47,7 +47,6 @@ define('Controls/Container/Suggest/Layout',
             var boundingClientToJSON = function(bc) {
                var resultObj = {};
 
-
                // firefox bug, clientRect object haven't method toJSON
                if (bc.toJSON) {
                   resultObj = bc.toJSON();
