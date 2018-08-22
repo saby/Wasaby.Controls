@@ -5175,15 +5175,17 @@ define('SBIS3.CONTROLS/ListView',
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
                this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
+                  //Снимаем выделение до перезагрузки данных, т.к. удаляемые записи могут понадобиться, для определения
+                  //иерархии в режиме массового выделения(useSelectAll = true).
+                  self.removeItemsSelection(idArray);
+
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
-                        self.removeItemsSelection(idArray);
                         return result;
                      });
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
-                     self.removeItemsSelection(idArray);
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
