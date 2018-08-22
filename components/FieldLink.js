@@ -1200,7 +1200,7 @@ define('SBIS3.CONTROLS/FieldLink',
    
           _showLoadingIndicator: function() {
              FieldLink.superclass._showLoadingIndicator.call(this);
-             this._loadingIndicator.addClass('controls-FieldLink__indicator');
+             this._loadingIndicator.addClass('controls-FieldLink__indicator-position').removeClass('controls-Suggest__loadingIndicator-position');
           },
 
           _checkListItemRevert: function(){
