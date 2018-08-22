@@ -414,7 +414,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (self._options.hasOwnProperty('json')) {
                   self._htmlJson = new HtmlJson();
 
-                  // TODO удалить этот костыль в 510
                   if (!self._htmlJson.setJson) {
                      self._htmlJson.setJson = function(json) {
                         this._options.json = json;

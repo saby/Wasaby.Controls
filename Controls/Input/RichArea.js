@@ -23,8 +23,7 @@ define('Controls/Input/RichArea', [
       _beforeMount: function(opts) {
          if (opts.json) {
             this._htmlJson = new HtmlJson();
-
-            // TODO удалить этот костыль в 510
+            
             if (!this._htmlJson.setJson) {
                this._htmlJson.setJson = function(json) {
                   this._options.json = json;
