@@ -31,7 +31,7 @@ define('Controls/Popup/Opener/Dialog',
          open: function(config) {
             config = _private.getDialogConfig(config);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
-         },
+         }
       });
 
       Dialog._private = _private;
