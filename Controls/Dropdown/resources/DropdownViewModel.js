@@ -34,7 +34,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
             return itemInHistory && !nextItemInHistory;
          },
-         
+
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
             return self._itemsModel._display.getGroupItems(key).length === 0;
@@ -115,6 +115,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
 
             //Draw the separator to split history and nohistory items.
             //Separator is needed only when list has both history and nohistory items
@@ -136,6 +137,10 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
          _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
+         },
+         setSwipeItem: function(itemData) {
+            this._swipeItem = itemData;
+            this._nextVersion();
          },
          hasHierarchy: function() {
             if (!this._options.parentProperty || !this._options.nodeProperty) {

@@ -19,6 +19,7 @@
       </ws:if>
       <ws:else>
          <ws:partial
+            on:swipe="_onItemSwipe(listModel.getCurrent().item)"
             on:click="_itemClickHandler(listModel.getCurrent().item)"
             on:mouseenter="_itemMouseEnter(listModel.getCurrent().item, listModel.getCurrent().hasChildren)"
             template="{{listModel.getCurrent().template || itemTemplate || defaultItemTemplate}}"

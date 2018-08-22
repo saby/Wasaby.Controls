@@ -31,14 +31,14 @@ define('Controls/History/Menu',
        */
 
       'use strict';
-   
+
       var _private = {
          getMetaPinned: function(item) {
             return {
                $_pinned: !item.get('pinned')
             };
          },
-      
+
          getMetaHistory: function() {
             return  {
                $_history: true
@@ -48,7 +48,7 @@ define('Controls/History/Menu',
             return merge(_private.getMetaHistory(), filter);
          }
       };
-   
+
       var HistoryMenu = Menu.extend({
          _itemTemplate: itemTemplate,
          _filter: null,
@@ -56,7 +56,7 @@ define('Controls/History/Menu',
          _beforeMount: function(options) {
             this._filter = _private.prepareFilter(options.filter);
          },
-         
+
          _beforeUpdate: function(newOptions) {
             if (!isEqual(this._options.filter, newOptions.filter)) {
                this._filter = _private.prepareFilter(newOptions.filter);
@@ -70,13 +70,25 @@ define('Controls/History/Menu',
          },
 
          _onPinClickHandler: function(event, items) {
-            this._options.source.update(items[0], _private.getMetaPinned(items[0]));
+            var self = this;
+            this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function(result) {
+               if (!result) {
+                  self._children.notificationOpener.open({
+                     template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                     templateOptions: {
+                        style: 'error',
+                        text: 'Невозможно закрепить более 10 пунктов',
+                        icon: 'Alert'
+                     }
+                  });
+               }
+            });
             this._items = this._options.source.getItems();
          }
       });
-   
+
       HistoryMenu._private = _private;
-      
+
       return HistoryMenu;
    }
 );
