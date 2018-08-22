@@ -15,6 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
+      'Core/core-instance',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -32,7 +33,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cEventBus,
       ManagerController,
       InstantiableMixin,
-      callNext
+      callNext,
+      cInstance
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -292,10 +294,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this.printReport(arg);
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notifyVDOM('resize', null, { bubbling: true });
-            } else if (commandName === 'registerPendingOperation') {
-               return this._registerChildPendingOperation(arg);
-            } else if (commandName === 'unregisterPendingOperation') {
-               return this._unregisterChildPendingOperation(arg);
+            } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
+               // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
+               if (!cInstance.instanceOfMixin(this._childControl, 'Lib/Mixins/PendingOperationParentMixin')) {
+                  if (commandName === 'registerPendingOperation') {
+                     return this._registerChildPendingOperation(arg);
+                  }
+                  if (commandName === 'unregisterPendingOperation') {
+                     return this._unregisterChildPendingOperation(arg);
+                  }
+               }
             } else {
                return CompoundArea.superclass.handleCommand.apply(this, arguments);
             }
