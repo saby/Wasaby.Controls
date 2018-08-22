@@ -316,8 +316,8 @@ function(cMerge,
 
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = this._getDimensions(templateClass);
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var dimensions = templateClass ? this._getDimensions(templateClass) : {};
+         var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
          var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
 
          if (!cfg.minWidth) {

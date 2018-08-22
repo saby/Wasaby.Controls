@@ -1,6 +1,6 @@
 define('Controls/BreadCrumbs', [
    'Core/Control',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/BreadCrumbs'
 ], function(

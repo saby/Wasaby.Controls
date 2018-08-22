@@ -115,6 +115,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
                this._childConfig = this._options.templateOptions || {};
+               this._childControlName = this._options.template;
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
@@ -161,6 +162,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
+               self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
@@ -219,7 +221,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                runDelayed(function() {
                   runDelayed(function() {
                      self._notifyCompound('onResize');
-                     self._fixIos();
                      if (self._options.catchFocus) {
                         doAutofocus(self._childControl._container);
                      }
