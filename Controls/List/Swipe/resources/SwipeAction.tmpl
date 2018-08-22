@@ -1,4 +1,9 @@
-<div class="controls-itemActionsV__action  controls-itemActionsV__action_padding_swipe"
+<div class="controls-itemActionsV__action
+            controls-itemActionsV__action_padding_swipe
+            {{!!action.style ? 'controls-itemActionsV__action_' + action.style}}
+            {{!!action.iconDone ? ' controls-itemActionsV__action_done'}}
+            {{!!action.iconError ? ' controls-itemActionsV__action_error'}}
+            {{action.iconStyle ? ' action_icon_style_' + action.iconStyle  : 'action_icon_style_default'}}"
       title="{{!!action.title ? action.title}}"
       style="{{'height:' + action.height}}"
       on:click="_onItemActionsClick(action, itemData)">
