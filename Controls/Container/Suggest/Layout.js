@@ -62,7 +62,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          getDropDownContainerSize: function(container) {
-            container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0];
+            container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
             return container.getBoundingClientRect();
          },
    
