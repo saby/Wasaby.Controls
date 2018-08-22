@@ -6,6 +6,7 @@ define('Controls/History/Source', [
    'WS.Data/Entity/OptionsMixin',
    'WS.Data/Source/ISource',
    'Core/ParallelDeferred',
+   'Core/Deferred',
    'WS.Data/Collection/RecordSet',
    'Controls/History/Constants',
    'WS.Data/Entity/Model',
@@ -16,6 +17,7 @@ define('Controls/History/Source', [
    OptionsMixin,
    ISource,
    ParallelDeferred,
+   Deferred,
    RecordSet,
    Constants,
    Model,
@@ -355,11 +357,12 @@ define('Controls/History/Source', [
       },
 
       update: function(data, meta) {
+         var self = this;
          if (meta.hasOwnProperty('$_pinned')) {
-            return _private.updatePinned(this, data, meta);
+            return Deferred.success(_private.updatePinned(self, data, meta));
          }
          if (meta.hasOwnProperty('$_history')) {
-            return _private.updateRecent(this, data, meta);
+            return Deferred.success(_private.updateRecent(self, data, meta));
          }
          return _private.getSourceByMeta(this, meta).update(data, meta);
       },

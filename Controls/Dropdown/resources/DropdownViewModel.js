@@ -34,7 +34,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
             return itemInHistory && !nextItemInHistory;
          },
-         
+
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
             return self._itemsModel._display.getGroupItems(key).length === 0;
@@ -140,10 +140,6 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._nextVersion();
-         },
-         removeSwipeItem: function() {
-            this._swipeItem = null;
             this._nextVersion();
          },
          hasHierarchy: function() {

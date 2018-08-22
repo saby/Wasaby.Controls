@@ -12,15 +12,9 @@
 	font-size: @icon-small-size;
 	font-family: @icon-font;
 	color: @color-Dropdown-pin;
-}
-.controls-DropdownList__row_pin_swiped {
-	position: absolute;
-	.align-items(center);
-	right: @spacing_DropdownList-pin;
-	width:  @width-Dropdown-pin;
-	font-size: @icon-small-size;
-	font-family: @icon-font;
-	color: @color-Dropdown-pin_hovered;
+	&.controls-DropdownList__row_pin_swiped {
+		.inline-flexbox();
+	}
 }
 
 .ws-is-no-touch .controls-DropdownList__row:hover .controls-DropdownList__row_pin {
