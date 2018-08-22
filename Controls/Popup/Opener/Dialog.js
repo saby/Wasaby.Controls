@@ -12,6 +12,15 @@ define('Controls/Popup/Opener/Dialog',
        * @category Popup
        * @extends Controls/Popup/Opener/Base
        */
+
+      var _private = {
+         getDialogConfig: function(config) {
+            config = config || {};
+            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+            return config;
+         }
+      };
+
       var Dialog = Base.extend({
 
          /**
@@ -20,16 +29,12 @@ define('Controls/Popup/Opener/Dialog',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            config = this._getDialogConfig(config);
+            config = _private.getDialogConfig(config);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
          },
-
-         _getDialogConfig: function(config) {
-            config = config || {};
-            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-            return config;
-         },
       });
+
+      Dialog._private = _private;
 
       return Dialog;
    }
