@@ -85,6 +85,12 @@
                                  <div>
                                     <Controls.Application._JsLinks attr:tabindex="-1"
                                                                    appRoot="{{ appRoot }}"/>
+
+                                    <!--
+                                       beforeScripts - опция для переноса скриптов перед вставкой серверных скриптов
+                                       то есть, потребовалась задача вставлять jquery до вставки скриптов, ведь они тут могут полезть в jquery
+                                    /-->
+
                                     <ws:if data="{{ _options.scripts && !_options.beforeScripts }}">
                                        <ws:for data="i in _options.scripts">
                                           <ws:partial template="{{ i }}"/>
