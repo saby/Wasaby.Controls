@@ -95,6 +95,13 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function (NumberTextBox) {
                 assert.deepEqual(NTB._getCaretPosition(), [1, 1]);
             });
         });
+        describe('setDecimals', function() {
+            it('14 -> 1', function() {
+                assert.equal('1.234', NTB.getText());
+                NTB.setDecimals(1);
+                assert.equal('1.2', NTB.getText());
+            });
+        });
         afterEach(function () {
             NTB.destroy();
             NTB = undefined;

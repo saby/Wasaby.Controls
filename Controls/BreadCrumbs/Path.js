@@ -1,6 +1,7 @@
 define('Controls/BreadCrumbs/Path', [
    'Core/Control',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
+   'Controls/Utils/getWidth',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/Path/Path',
@@ -9,6 +10,7 @@ define('Controls/BreadCrumbs/Path', [
 ], function(
    Control,
    BreadCrumbsUtil,
+   getWidthUtil,
    ItemsUtil,
    FontLoadUtil,
    template,
@@ -41,7 +43,7 @@ define('Controls/BreadCrumbs/Path', [
          self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
             self._breadCrumbsItems = items.slice(1);
-            backButtonWidth = BreadCrumbsUtil.getWidth(backButtonTemplate({
+            backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                _options: {
                   caption: self._backButtonCaption,
                   style: 'default',

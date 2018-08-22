@@ -56,6 +56,13 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
               assert.deepEqual(MTB._getCaretPosition(), [1,1]);
            });
         });
+       describe('setDecimals', function() {
+          it('2 -> 1', function() {
+             assert.equal('1 234.56', MTB.getText());
+             MTB.setDecimals(1);
+             assert.equal('1 234.5', MTB.getText());
+          });
+       });
         afterEach(function () {
            MTB.destroy();
            MTB = undefined;

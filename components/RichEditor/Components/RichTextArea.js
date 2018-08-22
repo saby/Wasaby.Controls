@@ -112,6 +112,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             defaultYoutubeWidth: 430,
             minYoutubeWidth: 350,
             //dataReviewPaddings: 6,
+            baseFontSize: 14,
             styles: {
                title: {
                   inline: 'span',
@@ -1202,7 +1203,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!editor) {
                   return;
                }
-               var defaults = this.getCurrentFormats();
                if (cConstants.browser.firefox) {
                   this._clearBrDataMceBogus();
                }
@@ -1211,21 +1211,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this.setFontStyle(formats.id);
                }
                else {
-                  var isTheSame = Object.keys(defaults).every(function(v) {
-                     return defaults[v] === formats[v];
-                  });
-                  if (isTheSame) {
-                     return;
-                  }
                   var formatter = editor.formatter;
                   for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
                      formatter.remove(names[i], {value: undefined}, null, true);
                   }
-                  var sameFont = formats.fontsize === this.getCurrentFormats(['fontsize']).fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  if (!sameFont) {
-                     this._setFontSize(formats.fontsize);
-                  }
+                  this._setFontSize(formats.fontsize);
                   var node = this._getCurrentFormatNode();
                   if (this._applyTextDecorationUnderlineAndLinethrough(node, false) && !node.attributes.length) {
                      var nodes = [].slice.call(node.childNodes);
@@ -1244,14 +1235,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         hasOther = formats[name] || hasOther;
                      }
                   }
-                  if (formats.color !== this.getCurrentFormats(['color']).color) {
-                     formatter.apply('forecolor', {value: formats.color});
-                     if (formats.underline && formats.strikethrough) {
-                        this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
-                     }
-                     hasOther = true;
+                  formatter.apply('forecolor', {value: formats.color});
+                  if (formats.underline && formats.strikethrough) {
+                     this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
-                  if (sameFont && !hasOther) {
+                  hasOther = true;
+                  // Добавил проверку, что это не размер по умолчанию
+                  // https://online.sbis.ru/opendoc.html?guid=89964a3c-98b4-4411-9c61-5de10da28ed5
+                  if (formats.fontsize !== constants.baseFontSize && !hasOther) {
                      // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
@@ -2990,7 +2981,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (needStop) {
                   evt.preventDefault();
                   evt.stopPropagation();
-                  LayoutManager.scrollToElement(this._inputControl, true);
+
+                  // При прокручивании Internet Explorer выводит нативный скролл, сдвигая влево ScrollContainer
+                  if (!(BROWSER.isIE && _getTrueIEVersion() < 12)) {
+                     LayoutManager.scrollToElement(this._inputControl, true);
+                  }
                }
             },
             _getAdjacentTextNodesValue: function(node, toEnd) {
@@ -3130,9 +3125,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj) {
                      self._startWaitIndicator(rk('Загрузка изображения...'), 1000);
                      var $img = this.getTarget();
-                     //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
-                     $img[0].style.width = '';
-                     $img[0].style.height = '';
                      var width = $img[0].style.width || ($img.width() + 'px');
                      var isPixels = width.charAt(width.length - 1) !== '%';
                      self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length -

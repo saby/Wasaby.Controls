@@ -1,8 +1,7 @@
 define('Controls/Utils/DateRangeUtil', [
-   'Core/helpers/Date/getPeriodLength',
    'Core/helpers/Date/getPeriodType',
    'Core/helpers/Date/periodTypes'
-], function(getPeriodLength, getPeriodType, periodTypes) {
+], function(getPeriodType, periodTypes) {
    'use strict';
 
    var utils = {
@@ -16,11 +15,11 @@ define('Controls/Utils/DateRangeUtil', [
        * @param direction Shift direction.
        */
       shiftPeriod: function(start, end, direction) {
-         var delta = utils.getPeriodLengthInMonths(start, end);
-         if (delta) {
-            return utils.shiftPeriodByMonth(start, end, direction * delta);
-         } else {
-            return utils.shiftPeriodByDays(start, end, direction * getPeriodLength(start, end));
+         var periodType = getPeriodType(start, end);
+         if (periodType === periodTypes.day || periodType === periodTypes.days) {
+            return utils.shiftPeriodByDays(start, end, direction * utils.gePeriodLengthInDays(start, end));
+         } else if (periodType) {
+            return utils.shiftPeriodByMonth(start, end, direction * utils.getPeriodLengthInMonths(start, end));
          }
       },
 
@@ -51,26 +50,24 @@ define('Controls/Utils/DateRangeUtil', [
       },
 
       /**
-       * Specifies the type of period: month, quarter, six months or a year.
-       * Returns the length of this period in months. If the period does not represent a whole month, quarter or year,
+       * Returns the length of this period in months. If the period does not represent a whole month
        * it returns undefined.
        * @param start {Date}
        * @param end {Date}
        */
       getPeriodLengthInMonths: function(start, end) {
-         var periodType = getPeriodType(start, end);
-         if (periodType === 'month') {
-            return 1;
-         }
-         if (periodType === periodTypes.quarter) {
-            return 3;
-         }
-         if (periodType === periodTypes.halfyear) {
-            return 6;
-         }
-         if (periodType === periodTypes.year) {
-            return 12;
-         }
+         return (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth() + 1);
+      },
+
+      /**
+       * Returns the length of this period in days.
+       * it returns undefined.
+       * @param start {Date}
+       * @param end {Date}
+       */
+      gePeriodLengthInDays: function(start, end) {
+         var oneDay = 24 * 60 * 60 * 1000;
+         return Math.ceil(Math.abs((start.getTime() - end.getTime()) / (oneDay))) + 1;
       },
 
       SHIFT_DIRECTION: {
