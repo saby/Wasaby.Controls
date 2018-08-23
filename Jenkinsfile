@@ -458,7 +458,10 @@ node('controls') {
                 #BRANCH=True
                 [regression]
                 IMAGE_DIR = capture
-                RUN_REGRESSION=True"""
+                RUN_REGRESSION=True
+				[filestostart]
+				test_vdom_notification.py
+				"""
         }
 
         dir("./controls/tests/int"){
