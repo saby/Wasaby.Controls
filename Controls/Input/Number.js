@@ -123,12 +123,22 @@ define('Controls/Input/Number', [
           * Избавиться от костыля по https://online.sbis.ru/opendoc.html?guid=6136ae81-ef5a-4267-9d04-a416eabacfdc
           */
          if (this._isFocus) {
-            // Нужно обновлять пока в поле не будет обновлено значение из модели.
+            //Пробуем выделить текст, если он уже поменялся в поле.
+            //Если не поменялся, то пробуем снова
+            trySelect.call(this, 0);
+         }
+
+         function trySelect(callCount) {
+            //Подстраховка от зацикливания
+            if (callCount > 20) {
+               return;
+            }
+
             if (this._children.input.value === this._numberViewModel.getValue()) {
                this._children.input.select();
                this._isFocus = false;
             } else {
-               this._forceUpdate();
+               runDelayed(trySelect.bind(this, ++callCount));
             }
          }
       },
