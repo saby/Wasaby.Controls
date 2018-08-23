@@ -11,11 +11,15 @@ define('Controls/Operations/Panel/View', [
 
    var _private = {
       recalculateToolbarItems: function(self, items) {
-         var toolbarBlock = self._children.toolbarBlock;
+         var
+            toolbarWidth,
+            toolbarBlock = self._children.toolbarBlock;
          if (items && toolbarBlock) {
+            //In ie clientWidth is 0. But in fact, the element already exists in the DOM and it is visible.
+            toolbarWidth = parseInt(getComputedStyle(toolbarBlock).width, 10);
             self._toolbarSource = new Memory({
                idProperty: 'id',
-               data: WidthUtils.fillItemsType(self, items, toolbarBlock.clientWidth).getRawData()
+               data: WidthUtils.fillItemsType(self, items, toolbarWidth).getRawData()
             });
             self._forceUpdate();
          }
