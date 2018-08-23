@@ -1,0 +1,40 @@
+<div class="demo__scroll">
+    <h1>Scrolls</h1>
+    <h2>Scrolling in accordion</h2>
+    <Controls.Container.Scroll style="inverted" attr:class="demo__navigation_scroll">
+        <div attr:class="demo__navigation">
+            <ws:for data="item in _menuItems">
+                <div attr:class="demo__item_nav">{{item}}</div>
+            </ws:for>
+        </div>
+    </Controls.Container.Scroll>
+
+    <h2>Scrolling one area to another</h2>
+    <Controls.Container.Scroll attr:class="demo__external_scrollable_area">
+        <div>
+            <div attr:class="demo_padding_text">{{_demoText}}</div>
+            <Controls.Container.Scroll attr:class="demo__internal_scrollable_area" scrollbarVisible="{{false}}">
+                <ws:for data="index in _numberItems">
+                    <div>
+                        <span attr:class="icon-16 icon-TFImage icon-attention"></span>
+                        <span>Example {{index}}</span>
+                    </div>
+                </ws:for>
+            </Controls.Container.Scroll>
+            <div attr:class="demo_padding_text">{{_demoText}}</div>
+        </div>
+    </Controls.Container.Scroll>
+
+
+    <h2>Scrolling and sticking headers</h2>
+    <Controls.Container.Scroll attr:class="demo_scroll_with_grid">
+        <div>
+            <div attr:class="demo_padding_text">{{_demoText}}</div>
+            <Controls.Grid
+                    header="{{_gridHeader}}"
+                    source="{{_viewSource}}"
+                    columns="{{_gridColumns}}">
+            </Controls.Grid>
+        </div>
+    </Controls.Container.Scroll>
+</div>

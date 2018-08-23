@@ -1,0 +1,40 @@
+.demo__scroll {
+  margin-left: 30%;
+  max-width: 40%;
+}
+
+.demo__navigation_scroll {
+  width: 200px;
+  max-height: 400px;
+}
+
+.demo__navigation {
+  color: #FFFFFF;
+  background: #2c3e50;
+}
+
+.demo__item_nav {
+  line-height: 46px;
+  margin-left: 10px;
+}
+
+.demo__external_scrollable_area {
+  max-height: 300px;
+}
+
+.demo__internal_scrollable_area {
+  max-height: 200px;
+  margin: 10px 0;
+}
+
+.demo_padding_text {
+  padding: 0 30px;
+}
+
+.demo_scroll_with_grid {
+  max-height: 400px;
+}
+
+.demo_record {
+  padding: 3px;
+}
