@@ -26,10 +26,10 @@ define('Controls/FormController', [
             if (cfg.isNewRecord) {
                this._isNewRecord = cfg.isNewRecord;
             }
-         } else if (cfg.keyProperty !== undefined && cfg.keyProperty !== null) {
-            // если в опции не пришел рекорд, смотрим на ключ keyProperty, который попробуем прочитать
+         } else if (cfg.key !== undefined && cfg.key !== null) {
+            // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
             // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-            var readDef = cfg.dataSource.read(cfg.keyProperty);
+            var readDef = cfg.dataSource.read(cfg.key);
             readDef.addCallback(function(record) {
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._record = record;
@@ -40,7 +40,7 @@ define('Controls/FormController', [
                return record;
             });
             readDef.addErrback(function(e) {
-               IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.keyProperty, e);
+               IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._readInMounting = { isError: true, result: e };
                throw e;
@@ -109,9 +109,9 @@ define('Controls/FormController', [
             if (this._options.isNewRecord) {
                this._isNewRecord = this._options.isNewRecord;
             }
-         } else if (this._options.keyProperty !== undefined && this._options.keyProperty !== null) {
+         } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
-            this.read(this._options.keyProperty);
+            this.read(this._options.key);
          } else {
             // если нет ни рекорда ни ключа - создадим рекорд
             this.create();
