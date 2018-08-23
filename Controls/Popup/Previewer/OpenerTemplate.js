@@ -14,7 +14,7 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          _template: template,
 
          _beforeMount: function(options) {
-            if (typeof window !== 'undefined') {
+            if (typeof window !== 'undefined' && options.contentTemplateName) {
                var def = new Deferred();
                require([options.contentTemplateName], function() {
                   def.callback();

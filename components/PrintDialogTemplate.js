@@ -44,7 +44,6 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
                   $(htmlView.getIframeDocument()).delegate('a', 'click', function(event) {
                      event.preventDefault();
                   });
-                  self.getParent().show();
                   self.getContainer().closest('.controls-PrintDialog__invisible').removeClass('controls-PrintDialog__invisible');
                } else {
                   //Если не нужно показывать наш диалог перед печатью, то скроем окно диалога и сразу отправим данные на печать

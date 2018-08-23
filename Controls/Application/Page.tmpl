@@ -20,7 +20,6 @@
                <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.Popup.Manager>
-                        <Controls.Container.BatchUpdater>
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.DragNDrop.Container name="dragNDropContainer">
                               <body
@@ -60,6 +59,11 @@
                               </ws:if>
                               <Controls.Popup.Manager.Container attr:id="popup"
                                                                 eventHandler="{{content._managerEventHandler}}"/>
+                                 <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
+                                    <ws:for data="i in _options.scripts">
+                                       <ws:partial template="{{ i }}"/>
+                                    </ws:for>
+                                 </ws:if>
                               <script key="bundles" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                               <script key="require" type="text/javascript"
@@ -81,7 +85,13 @@
                                  <div>
                                     <Controls.Application._JsLinks attr:tabindex="-1"
                                                                    appRoot="{{ appRoot }}"/>
-                                    <ws:if data="{{ _options.scripts }}">
+
+                                    <!--
+                                       beforeScripts - опция для переноса скриптов перед вставкой серверных скриптов
+                                       то есть, потребовалась задача вставлять jquery до вставки скриптов, ведь они тут могут полезть в jquery
+                                    /-->
+
+                                    <ws:if data="{{ _options.scripts && !_options.beforeScripts }}">
                                        <ws:for data="i in _options.scripts">
                                           <ws:partial template="{{ i }}"/>
                                        </ws:for>
@@ -95,7 +105,6 @@
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>
-                        </Controls.Container.BatchUpdater>
                      </Controls.Popup.Manager>
                   </Controls.Event.Listener>
                </Controls.Event.Listener>
