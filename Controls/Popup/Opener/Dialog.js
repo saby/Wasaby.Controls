@@ -16,6 +16,8 @@ define('Controls/Popup/Opener/Dialog',
       var _private = {
          getDialogConfig: function(config) {
             config = config || {};
+
+            //The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
          }

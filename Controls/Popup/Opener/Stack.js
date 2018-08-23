@@ -22,6 +22,8 @@ define('Controls/Popup/Opener/Stack',
       var _private = {
          getStackConfig: function(config) {
             config = config || {};
+
+            //The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
          }
