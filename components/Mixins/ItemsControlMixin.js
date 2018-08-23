@@ -748,6 +748,10 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * @cfg {String} Устанавливает шаблон отображения содержимого каждого элемента коллекции.
              * @remark
              * При создании элемента данный шаблон будет автоматически помещён в контейнер со служебными атрибутами.
+             * @example
+             * <pre>
+             *    {{item.get("title")}}
+             * </pre>
              */
             itemContentTpl : null,
             /**

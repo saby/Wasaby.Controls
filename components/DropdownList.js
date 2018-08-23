@@ -596,7 +596,10 @@ define('SBIS3.CONTROLS/DropdownList',
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
 
-                  selectedItemIndex = this._currentSelection.indexOf(itemId);
+                  //Делаем проверку вхождения в выбранные ключи,
+                  //Т.к. ключи могут различаться по типу (0 !== '0')
+                  selectedItemIndex = this._currentSelection.indexOf(itemId) === -1 ? this._currentSelection.indexOf(itemId + '') : this._currentSelection.indexOf(itemId);
+
                   //Добавляем/Удаляем id из набора выбранных ключей
                   if (selected && selectedItemIndex === -1) {
                      this._currentSelection.push(itemId);
@@ -735,6 +738,14 @@ define('SBIS3.CONTROLS/DropdownList',
          },
          _dataLoadedCallback: function() {
             var item;
+            
+            /* Зачем тут такая проверка:
+               _dataLoadedCallback при первой загрузке вызывается после события onItemsReady, в этом событии
+               могут что-то поменять в контексте (особенно актуально для быстрого фильтра), и это может вызвать перестроение
+               выпадающего списка. */
+            if (this.isDestroyed()) {
+               return;
+            }
             this._setHeadVariables();
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
@@ -795,8 +806,7 @@ define('SBIS3.CONTROLS/DropdownList',
             if (id !== undefined) {
                //Попадаем сюда, когда в selectedKeys установлены ключи, которых нет в наборе данных
                //В этом случае выбираем первый элемент как выбранный.
-               //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
-               keys.splice(0, keys.length, id);
+               this.addItemsSelection([id]);
             }
          },
          _setHasMoreButtonVisibility: function(){

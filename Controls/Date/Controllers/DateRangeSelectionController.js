@@ -3,8 +3,7 @@ define('Controls/Date/Controllers/DateRangeSelectionController', [
    'Controls/Date/Controllers/RangeSelectionController',
    'Controls/Date/interface/IDateRangeSelectable',
    'Controls/Calendar/Utils',
-   'Controls/Utils/Date',
-   'css!Controls/Date/Controllers/DateRangeSelectionController'
+   'Controls/Utils/Date'
 ], function(
    coreMerge,
    RangeSelectionController,
@@ -60,6 +59,7 @@ define('Controls/Date/Controllers/DateRangeSelectionController', [
 
       _isExternalChanged: function(valueName, options, oldOptions) {
          return options.hasOwnProperty(valueName) &&
+
             // DateUtil.isDatesEqual(oldOptions[valueName], this['_' + valueName]) &&
             !DateUtil.isDatesEqual(oldOptions[valueName], options[valueName]);
       },

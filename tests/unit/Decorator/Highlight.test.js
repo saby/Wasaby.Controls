@@ -61,6 +61,39 @@ define(
                   }
                ]);
             });
+            it('A few words to highlight.', function() {
+               result = parseText('Lorem ipsum dolor sit amet.Hello ipsum child dolor.', 'ipsum dolor');
+               assert.deepEqual(result, [
+                  {
+                     type: 'text',
+                     value: 'Lorem '
+                  },
+                  {
+                     type: 'found',
+                     value: 'ipsum dolor'
+                  },
+                  {
+                     type: 'text',
+                     value: ' sit amet.Hello '
+                  },
+                  {
+                     type: 'found',
+                     value: 'ipsum'
+                  },
+                  {
+                     type: 'text',
+                     value: ' child '
+                  },
+                  {
+                     type: 'found',
+                     value: 'dolor'
+                  },
+                  {
+                     type: 'text',
+                     value: '.'
+                  }
+               ]);
+            });
          });
       });
    }

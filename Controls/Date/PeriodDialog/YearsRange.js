@@ -1,9 +1,5 @@
 define('Controls/Date/PeriodDialog/YearsRange', [
    'Core/Control',
-   'Core/core-merge',
-   'Core/helpers/Date/getFormattedDateRange',
-   'Core/helpers/date-helpers',
-   'Core/helpers/i18n/locales',
    'Controls/Date/model/DateRange',
    'Controls/Date/Utils/RangeSelection',
    'Controls/Utils/Date',
@@ -11,10 +7,6 @@ define('Controls/Date/PeriodDialog/YearsRange', [
    'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
-   coreMerge,
-   getFormattedDateRange,
-   dateHelpers,
-   locales,
    DateRangeModel,
    rangeSelectionUtils,
    dateUtils,

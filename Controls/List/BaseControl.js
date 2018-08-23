@@ -9,7 +9,6 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
@@ -27,7 +26,6 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   multiSelectTpl,
    RecordSet,
    tUtil,
    aUtil
@@ -380,7 +378,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -395,7 +393,6 @@ define('Controls/List/BaseControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
-      _multiSelectTpl: multiSelectTpl,
 
       _needScrollCalculation: false,
       _loadOffset: 100,

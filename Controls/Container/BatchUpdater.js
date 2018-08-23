@@ -44,11 +44,23 @@ define('Controls/Container/BatchUpdater',
                self.pDef = new ParallelDeferred();
 
                setTimeout(function() {
+                  var updated = false;
                   var cbarr = self.callbackArray;
-                  self.pDef.done().getResult().addCallback(function() {
-                     for (var i = 0; i < cbarr.length; i++) {
-                        cbarr[i].call();
+
+                  function update() {
+                     if (!updated) {
+                        updated = true;
+                        for (var i = 0; i < cbarr.length; i++) {
+                           cbarr[i].call();
+                        }
                      }
+                  }
+
+                  setTimeout(function batchUpdateTimeout() {
+                     update();
+                  }, 2000);
+                  self.pDef.done().getResult().addCallback(function() {
+                     update();
                   });
                   self.pDef = null;
                }, 0);

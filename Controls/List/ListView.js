@@ -23,10 +23,10 @@ define('Controls/List/ListView', [
       resizeNotifyOnListChanged: function(self) {
          if (self._listChanged) {
             self._listChanged = false;
-            
+
             //command to scroll watcher
             self._notify('resize', [], {bubbling: true});
-            
+
             //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
             self._notify('checkScroll', [], {bubbling: true});
          }
@@ -36,6 +36,8 @@ define('Controls/List/ListView', [
    var ListView = BaseControl.extend(
       {
          _listModel: null,
+         _lockForUpdate: false,
+         _queue: null,
          _template: ListViewTpl,
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: defaultItemTemplate,
@@ -44,8 +46,13 @@ define('Controls/List/ListView', [
          constructor: function(cfg) {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
+            this._queue = [];
             this._onListChangeFnc = function() {
-               _private.onListChange(self);
+               if (self._lockForUpdate) {
+                  self._queue.push(_private.onListChange.bind(null, self));
+               } else {
+                  _private.onListChange(self);
+               }
             };
          },
 
@@ -67,6 +74,7 @@ define('Controls/List/ListView', [
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._lockForUpdate = true;
          },
 
          _afterMount: function() {
@@ -74,7 +82,14 @@ define('Controls/List/ListView', [
          },
 
          _afterUpdate: function() {
+            this._lockForUpdate = false;
             _private.resizeNotifyOnListChanged(this);
+            if (this._queue.length > 0) {
+               for (var i = 0; i < this._queue.length; i++) {
+                  this._queue[i]();
+               }
+               this._queue = [];
+            }
          },
 
          _onItemClick: function(e, dispItem) {

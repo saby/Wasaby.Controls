@@ -14,6 +14,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Entity/InstantiableMixin',
+      'Core/helpers/Function/callNext',
+      'Core/core-instance',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -30,7 +32,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       DialogRecord,
       cEventBus,
       ManagerController,
-      InstantiableMixin
+      InstantiableMixin,
+      callNext,
+      cInstance
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -41,6 +45,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
+      }
+
+      function popupAfterUpdated(item, container) {
+         if (item.isHiddenForRecalc) {
+            // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+            item.isHiddenForRecalc = false;
+            runDelayed(function() {
+               item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
+               container.className = container.className.replace('ws-invisible', '');
+            });
+         }
       }
 
       var logger = IoC.resolve('ILogger');
@@ -100,6 +115,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
                this._childConfig = this._options.templateOptions || {};
+               this._childControlName = this._options.template;
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
@@ -130,6 +146,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                rebuildDeferred;
 
             self._childConfig._compoundArea = self;
+
+            self.once('onInit', function() {
+               // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
+               // созданием нового, поэтому делаем на onInit
+               if (self._options._initCompoundArea) {
+                  self._options._initCompoundArea(self);
+               }
+               self.setEnabled(self._enabled);
+            });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
                cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
@@ -137,18 +162,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
+               self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
-                  self.setEnabled(self._enabled);
                });
             });
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             return rebuildDeferred;
          },
@@ -171,10 +192,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._childConfig = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
 
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
-
             self._pending = self._pending || [];
             self._pendingTrace = self._pendingTrace || [];
             self._waiting = self._waiting || [];
@@ -190,27 +207,38 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self._logicParent.waitForPopupCreated = true;
 
-            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            // лишних свойств, которые еще не применены к дому
-            // панельки с этим начали вылезать плавненько
-            runDelayed(function() {
-               // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
-               // подразумевается, что фокус уже внутри панели
-               self.once('onInitComplete', function() {
-                  if (self._options.catchFocus) {
-                     doAutofocus(self._childControl._container);
-                  }
-               });
-               self.rebuildChildControl().addCallback(function() {
+            // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
+            self.subscribe('onResize', function() {
+               this._notifyVDOM('resize', null, { bubbling: true });
+            });
+
+            self.once('onInitComplete', function() {
+               if (self._options.catchFocus) {
+                  doAutofocus(self._childControl._container);
+               }
+            });
+            self.rebuildChildControl().addCallback(function() {
+               runDelayed(function() {
                   runDelayed(function() {
-                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     runDelayed(function() {
-                        self._notifyCompound('onResize');
-                     });
+                     self._notifyCompound('onResize');
+                     if (self._options.catchFocus) {
+                        doAutofocus(self._childControl._container);
+                     }
                   });
                });
             });
+         },
+
+         _fixIos: function() {
+
+            //todo https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
+            var container = this._childControl && this._childControl.getContainer();
+
+            //На ios появилась бага, у панели контактов после открытия не вызывается браузерная перерисовка. вызываю вручную
+            if (container && CoreConstants.browser.isMobileIOS) {
+               container = container.get ? container.get(0) : container;
+               container.style.webkitTransform = 'scale(1)';
+            }
          },
 
          isOpened: function() {
@@ -222,7 +250,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
             if (hasHeader) {
                if (customHeaderContainer.length) {
-                  customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
+                     customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
+                  }
                   this._prependCustomHeader(customHeaderContainer);
                } else {
                   this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
@@ -236,7 +266,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _prependCustomHeader: function(customHead) {
-            var container = $('.controls-DialogTemplate', this.getContainer());
+            var container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
             container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
             if (this._options.type === 'dialog') {
@@ -264,10 +294,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return this.printReport(arg);
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
                this._notifyVDOM('resize', null, { bubbling: true });
-            } else if (commandName === 'registerPendingOperation') {
-               return this._registerChildPendingOperation(arg);
-            } else if (commandName === 'unregisterPendingOperation') {
-               return this._unregisterChildPendingOperation(arg);
+            } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
+               // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
+               if (!cInstance.instanceOfMixin(this._childControl, 'Lib/Mixins/PendingOperationParentMixin')) {
+                  if (commandName === 'registerPendingOperation') {
+                     return this._registerChildPendingOperation(arg);
+                  }
+                  if (commandName === 'unregisterPendingOperation') {
+                     return this._unregisterChildPendingOperation(arg);
+                  }
+               }
             } else {
                return CompoundArea.superclass.handleCommand.apply(this, arguments);
             }
@@ -288,14 +324,40 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._hoverTimer = null;
             }
          },
-         _mouseleaveHandler: function() {
-            if (this._options.hoverTarget) {
+         _mouseleaveHandler: function(event) {
+            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
+            if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
                this._hoverTimer = setTimeout(function() {
                   _this.hide();
                }, 1000);
             }
+         },
+
+         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
+         _isLinkedPanel: function(event) {
+            var target = $(event.nativeEvent.relatedTarget);
+            var compoundArea = target.closest('.controls-CompoundArea');
+            var opener;
+
+            if (compoundArea.length) {
+               opener = compoundArea[0].controlNodes[0].control.getOpener();
+            }
+
+            var popupMixin = target.closest('.controls-Menu, .controls-FloatArea');
+            if (popupMixin.length) {
+               opener = popupMixin.wsControl().getOpener();
+            }
+            return this._checkLink(opener);
+         },
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
+         _checkLink: function(opener) {
+            while (opener && opener._moduleName !== this._moduleName) {
+               opener = opener.getParent && opener.getParent();
+            }
+            return opener === this;
          },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
@@ -595,6 +657,28 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
                   ManagerController.reindex();
                   ManagerController.update(id, popupConfig.popupOptions);
+               }
+
+               if (visible && !this._isVisible) {
+                  // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
+                  // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
+                  // на новую, поставим на время пересчета класс `ws-invisible`
+                  popupConfig.popupOptions.className += ' ws-invisible';
+                  popupContainer.className += ' ws-invisible';
+
+                  // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
+                  popupConfig.isHiddenForRecalc = true;
+
+                  // Нужно убрать класс `ws-invisible` после того как будет пересчитана позиция. Чтобы понять, когда
+                  // это произошло, нужно пропатчить elementAfterUpdated в контроллере попапа, чтобы он поддерживал
+                  // CompoundArea
+                  if (!popupConfig.controller._modifiedByCompoundArea) {
+                     popupConfig.controller._modifiedByCompoundArea = true;
+                     popupConfig.controller.elementAfterUpdated = callNext(
+                        popupConfig.controller.elementAfterUpdated,
+                        popupAfterUpdated
+                     );
+                  }
                }
 
                this._isVisible = visible;

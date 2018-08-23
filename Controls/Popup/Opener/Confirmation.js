@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/Confirmation',
        * @control
        * @public
        * @category Popup
-       * @author Степин Павел Владимирович
+       * @author Красильников А.С.
        */
 
       /**

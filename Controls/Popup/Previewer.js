@@ -11,13 +11,22 @@ define('Controls/Popup/Previewer',
       /**
        * @class Controls/Popup/Previewer
        * @extends Core/Control
-       * @public
+       * @author Красильников А.С.
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
        *
        * @name Controls/Popup/Previewer#template
        * @cfg {Content} Mini card contents.
+       */
+
+      /**
+       * @name Controls/Popup/Previewer#trigger
+       * @cfg {String} Event name trigger the opening or closing of the template.
+       * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
+       * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
+       * @default hoverAndClick
        */
       var _private = {
          getType: function(eventType) {
@@ -120,7 +129,7 @@ define('Controls/Popup/Previewer',
                   this._cancel(event, 'closing');
                   break;
                case 'mouseleave':
-                  if (this._enableClose) {
+                  if (this._enableClose && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
                      this._close(event, 'hover');
                   }
                   break;
@@ -130,6 +139,12 @@ define('Controls/Popup/Previewer',
             }
          }
       });
+
+      Previewer.getDefaultOptions = function() {
+         return {
+            trigger: 'hoverAndClick'
+         };   
+      };
 
       return Previewer;
    }

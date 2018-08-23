@@ -3,9 +3,8 @@ define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
    'Core/helpers/Date/getPeriodType',
    'Core/helpers/Date/getPeriodLengthInMonthByType',
    'Core/helpers/Date/periodTypes',
-   'Controls/Utils/Date',
    'Controls/Utils/DateRangeUtil'
-], function(cAbstract, getPeriodType, getPeriodLengthInMonthByType, periodTypes, dateUtils, dateRangeUtil) {
+], function(cAbstract, getPeriodType, getPeriodLengthInMonthByType, periodTypes, dateRangeUtil) {
 
    /**
     * Контроллер, позволяющий связывать контролы выбора периодов

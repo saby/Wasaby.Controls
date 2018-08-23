@@ -17,6 +17,7 @@ define('Controls/Filter/Button/Panel', [
     * @mixes Controls/interface/IFilterPanel
     * @control
     * @public
+    * @author Герасимов А.М.
     *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.

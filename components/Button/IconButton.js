@@ -22,7 +22,7 @@ function(WSButton, IconButtonUtil) {
     * @extends WSControls/Buttons/Button
     * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
     * @demo Examples/IconButton/MyIconButton/MyIconButton
-    * @author Борисов П.С.
+    * @author Михайловский Д.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

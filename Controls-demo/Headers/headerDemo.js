@@ -13,41 +13,29 @@ define('Controls-demo/Headers/headerDemo', [
    var headerSizeSource = new MemorySource({
       idProperty: 'title',
       data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         },
-         {
-            title: 'xl'
-         }
+         { title: 's'  },
+         { title: 'm'  },
+         { title: 'l'  },
+         { title: 'xl' }
       ]
    });
 
    var headerStyleSource = new MemorySource({
       idProperty: 'title',
       data: [
-         {
-            title: 'primary'
-         },
-         {
-            title: 'secondary'
-         }
+         { title: 'primary'   },
+         { title: 'secondary' }
       ]
    });
 
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _selectedSize: 'm',
+         _headerSelectedSize: 'm',
          _selectedStyle: 'primary',
          _headerSizeSource: headerSizeSource,
          _headerStyleSource: headerStyleSource,
-         _caption: 'test',
+         _caption: 'Header',
          _readOnly: false,
          _eventName: 'no event',
 
@@ -60,7 +48,7 @@ define('Controls-demo/Headers/headerDemo', [
          },
 
          changeSize: function(e, key) {
-            this._selectedSize = key;
+            this._headerSelectedSize = key;
          },
 
          changeStyle: function(e, key) {

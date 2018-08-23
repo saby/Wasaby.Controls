@@ -137,10 +137,12 @@ define('Controls/Filter/Controller',
          
          updateFilterItems: function(self, newItems) {
             if (self._filterButtonItems) {
+               self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
                _private.mergeFilterItems(self._filterButtonItems, newItems);
             }
    
             if (self._fastFilterItems) {
+               self._fastFilterItems = _private.cloneItems(self._fastFilterItems);
                _private.mergeFilterItems(self._fastFilterItems, newItems);
             }
          },
@@ -191,7 +193,15 @@ define('Controls/Filter/Controller',
          
          notifyFilterChanged: function(self) {
             self._notify('filterChanged', [self._filter]);
-         }
+         },
+   
+         cloneItems: function(items) {
+            if (items['[WS.Data/Entity/CloneableMixin]']) {
+               return items.clone();
+            } else {
+               return clone(items);
+            }
+         },
       };
       
       /**

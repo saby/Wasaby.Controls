@@ -5,7 +5,6 @@ define('Controls/Date/PeriodDialog/MonthsRange', [
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
    'Controls/Date/PeriodDialog/MonthsRangeItem',
-   'Controls/Utils/Date',
    'tmpl!Controls/Date/PeriodDialog/MonthsRange',
    'css!Controls/Date/Utils/RangeSelection'
 ], function(
@@ -15,7 +14,6 @@ define('Controls/Date/PeriodDialog/MonthsRange', [
    DateRangeModel,
    CalendarControlsUtils,
    MonthsRangeItem,
-   dateUtils,
    componentTmpl
 ) {
 
