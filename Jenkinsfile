@@ -460,7 +460,7 @@ node('controls') {
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True
 				[filestostart]
-				test_vdom_notification.py
+				test_vdom_engine_browser_old.py
 				"""
         }
 
