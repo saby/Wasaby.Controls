@@ -1,0 +1,77 @@
+<Controls.Application title="Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах"
+appRoot="/materials/" head='<link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css" />'>
+
+   <div class="examples-Swipe" tabindex="0">
+      <h1>Демо-примеры. Свайп</h1>
+      <h2>Начало работы</h2>
+      <p>Для работы с демо-примером переведите веб-браузер Google Chrome в режим эмуляции мобильного устройства.
+      Для этого выполните следующие действия:</p>
+      <ol>
+         <li>Откройте в веб-браузере Google Chrome инструмент разработчика Chrome DevToos, нажав клавишу F12.</li>
+         <li>Нажмите комбинацию клавиш <b>Ctrl + Shift + M</b>, чтобы переключиться в режим отладки мобильного устройства.
+         Теперь курсор мыши будет имитировать прикосновения к тач-экрану.
+         На верхней панели выберите устройство "iPad", масштаб 100% и горизонтальную ориентацию.</li>
+      </ol>
+
+      <h2>Свайп влево и вправо</h2>
+
+      <p>Если в реестре одна высота строк и один набор операций над каждой записи, то на каждой строке кнопки отображаемые по свайпу выглядят одинаково.</p>
+
+      <p>Если в реестре высота строк разная или разный набор операций над записями, то размер и расположение кнопок отображаемых по свайпу для каждой записи такого реестра зависит от высоты строки и количества команд .</p>
+
+      <p>Если в реестре предусмотрено отображение чекбокса по ховеру, то по свайпу слева направо работает отметка записи.</p>
+
+
+      <div class="demo-Grid">
+         <div class="demo-Grid__container">
+            <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+               <Controls.Container.MultiSelector name="MultiSelector">
+                  <Controls.List.MultiSelector>
+                     <Controls.List.Container>
+                        <Controls.Grid
+                                attr:class="demo-Grid__control test_grid_4"
+                                markedKey="{{5}}"
+                                multiSelectVisibility="visible"
+                                stickyFields="{{['photo']}}"
+                                bind:selectedKeys="_selectedKeys"
+                                itemActions="{{_itemActions}}"
+                        >
+                           <ws:columns>
+                              <ws:Object template="tmpl!Examples/Swipe/templates/DemoTasksPhoto" width="auto" />
+                              <ws:Object width="1fr">
+                                 <ws:template>
+                                    <ws:partial template="tmpl!Examples/Swipe/templates/DemoTasksDescr" my_height="{{_height}}" />
+                                 </ws:template>
+                              </ws:Object>
+                              <ws:Object template="tmpl!Examples/Swipe/templates/DemoTasksReceived" width="auto" />
+                           </ws:columns>
+                        </Controls.Grid>
+                     </Controls.List.Container>
+                  </Controls.List.MultiSelector>
+               </Controls.Container.MultiSelector>
+            </Controls.Container.Data>
+         </div>
+      </div>
+
+      <h3>Выберите количество операций над записями</h3>
+
+      <ws:for data="act in _actions">
+          <div
+            attr:class="examples-Swipe__height_button {{act === _itemActions.length ? 'examples-Swipe__height_button_selected'}}"
+            on:click="_onActClick(act)">
+               {{ act }}
+         </div>
+      </ws:for>
+
+      <div class="height_now_is_{{_height}}">
+         <h3>Выберите высоту для последнего элемента коллекции</h3>
+      </div>
+
+      <ws:for data="height in _heightS">
+          <div
+              attr:class="examples-Swipe__height_button {{height === _height ? 'examples-Swipe__height_button_selected'}}"
+              on:click="_onHeightClick(height)">{{ height }}</div>
+      </ws:for>
+
+   </div>
+</Controls.Application>
