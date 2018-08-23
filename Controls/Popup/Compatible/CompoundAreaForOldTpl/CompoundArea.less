@@ -65,12 +65,6 @@
    .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
       z-index: 50;
    }
-   //На ios всплыла бага, вызванная тем, что на странице много блоков с классом overflow-scrolling-touch
-   //Из-за этого скролл контейнер в попапе открывается с прозрачным фоном. хак это лечит
-   //todo в 500 версию избаовляемся от множественных классов overflow-scrolling-touch. Как сделаем, нужно выпилить это
-   .controls-StackTemplate__content-area {
-      overflow: auto;
-   }
 }
 
 .controls-CompoundArea__container {
@@ -99,6 +93,15 @@
    .controls-DialogTemplate {
       background: none;
       border: none;
+   }
+}
+
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   //На ios всплыла бага, вызванная тем, что на странице много блоков с классом overflow-scrolling-touch
+   //Из-за этого скролл контейнер в попапе открывается с прозрачным фоном. хак это лечит
+   //todo в 500 версию избаовляемся от множественных классов overflow-scrolling-touch. Как сделаем, нужно выпилить это
+   .controls-CompoundArea .controls-StackTemplate__content-area {
+      overflow: auto;
    }
 }
 
