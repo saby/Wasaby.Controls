@@ -117,6 +117,20 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
+
+         /**
+          * TODO: Добавлено по https://online.sbis.ru/opendoc.html?guid=7f1dc55d-86c1-4f9b-ac07-b9f9e8284671
+          * Избавиться от костыля по https://online.sbis.ru/opendoc.html?guid=6136ae81-ef5a-4267-9d04-a416eabacfdc
+          */
+         if (this._isFocus) {
+            // Нужно обновлять пока в поле не будет обновлено значение из модели.
+            if (this._children.input.value === this._numberViewModel.getValue()) {
+               this._children.input.select();
+               this._isFocus = false;
+            } else {
+               this._forceUpdate();
+            }
+         }
       },
 
       _inputCompletedHandler: function(event, value) {
@@ -148,9 +162,11 @@ define('Controls/Input/Number', [
             value = this._numberViewModel.updateValue(value + '.0');
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
-                  runDelayed(function() {
+                  this._isFocus = true;
+
+                  /*runDelayed(function() {
                      self._children.input.select();
-                  });
+                  });*/
                } else {
                   runDelayed(function() {
                      self._children.input.setSelectionRange(value.length - 2, value.length - 2);
