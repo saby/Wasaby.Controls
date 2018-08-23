@@ -492,6 +492,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
+
+            // Очистим ссылку на обработчик клика, чтобы DialogMixin не остался в памяти
             this._documentClickHandler = undefined;
          }
       }
