@@ -117,6 +117,32 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
+
+         //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
+         if (this._isFocus) {
+            /**
+             * TODO
+             * В библиотеке dom.js есть ошибка, из-за которой на этапе _afterUpdate в инпуте может находиться старое значение
+             * В 500-й версии перешли на библиотеку inferno, где этой ошибки нет
+             * Добавляем у себя костыль с попытками повторно выделить текст, если он ещё не поменялся
+             * В 500 костыль удален
+             */
+            trySelect.call(this, 0);
+         }
+
+         function trySelect(callCount) {
+            //Подстраховка от зацикливания
+            if (callCount > 20) {
+               return;
+            }
+
+            if (this._children.input.value === this._numberViewModel.getValue()) {
+               this._children.input.select();
+               this._isFocus = false;
+            } else {
+               runDelayed(trySelect.bind(this, ++callCount));
+            }
+         }
       },
 
       _inputCompletedHandler: function(event, value) {
@@ -148,9 +174,11 @@ define('Controls/Input/Number', [
             value = this._numberViewModel.updateValue(value + '.0');
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
-                  runDelayed(function() {
+                  this._isFocus = true;
+
+                  /*runDelayed(function() {
                      self._children.input.select();
-                  });
+                  });*/
                } else {
                   runDelayed(function() {
                      self._children.input.setSelectionRange(value.length - 2, value.length - 2);
