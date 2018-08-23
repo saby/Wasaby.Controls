@@ -1,5 +1,6 @@
 .controls-Dropdown {
    display: inline-block;
+   cursor: pointer;
 }
 
 .controls-Dropdown__wrapper {
@@ -15,12 +16,9 @@
 .controls-Dropdown__text {
    box-sizing: border-box;
    .text-overflow();
-}
-
-.controls-Dropdown__text_enabled {
    &:hover {
-      text-decoration: underline;
       cursor: pointer;
+      text-decoration: underline;
       .controls-BaseButton__text {
          text-decoration: underline;
       }
