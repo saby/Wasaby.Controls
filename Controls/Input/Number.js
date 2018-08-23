@@ -118,6 +118,7 @@ define('Controls/Input/Number', [
             this._caretPosition = null;
          }
 
+         //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
          if (this._isFocus) {
             /**
              * TODO
