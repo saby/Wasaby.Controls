@@ -103,7 +103,7 @@ define([
              eventNotifyed = false;
    
          listView._notify = function(event) {
-            if (event === 'resize') {
+            if (event === 'controlResize') {
                eventNotifyed = true;
             }
          };
