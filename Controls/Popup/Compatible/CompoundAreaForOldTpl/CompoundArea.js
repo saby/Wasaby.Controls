@@ -188,6 +188,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
 
+            // Убрать по ошибке
+            // https://online.sbis.ru/opendoc.html?guid=309b8bec-7233-4919-9820-797742cb2f49
+            self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
+
             var container = self._container.length ? self._container[0] : self._container;
             container.wsControl = self;
 
