@@ -2,7 +2,10 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
    function(require, Deferred, moduleStubs) {
 
       function isNewEnvironment() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
+         var cn = document.getElementsByTagName('html')[0].controlNodes,
+            compat = cn && cn[0] && cn[0].options && cn[0].options.compat || false;
+         //существуют Application.Compatible - там все старое
+         return !!cn && (!compat);
       }
 
       return function(path, config) {
