@@ -1,10 +1,10 @@
 define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred', 'Core/moduleStubs'],
    function(require, Deferred, moduleStubs) {
-
       function isNewEnvironment() {
          var cn = document.getElementsByTagName('html')[0].controlNodes,
             compat = cn && cn[0] && cn[0].options && cn[0].options.compat || false;
-         //Существуют Application.Compatible - там все старое
+
+         // Существуют Application.Compatible - там все старое
          return !!cn && (!compat);
       }
 
@@ -39,12 +39,9 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                   });
                });
                return dfr;
-            } else {
-               return new Component[0](config);
             }
-
+            return new Component[0](config);
          });
          return result;
       };
-   }
-);
+   });
