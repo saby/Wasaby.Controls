@@ -4,7 +4,7 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
       function isNewEnvironment() {
          var cn = document.getElementsByTagName('html')[0].controlNodes,
             compat = cn && cn[0] && cn[0].options && cn[0].options.compat || false;
-         //существуют Application.Compatible - там все старое
+         //РЎСѓС‰РµСЃС‚РІСѓСЋС‚ Application.Compatible - С‚Р°Рј РІСЃРµ СЃС‚Р°СЂРѕРµ
          return !!cn && (!compat);
       }
 
