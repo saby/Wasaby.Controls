@@ -47,8 +47,8 @@ define('Controls/Event/Registrar',
             for (var i in this._registry) {
                if (this._registry.hasOwnProperty(i)) {
                   var obj = this._registry[i];
-                  if (obj[i].component === target) {
-                     argsClone = arguments.clone();
+                  if (obj.component === target) {
+                     argsClone = Array.prototype.slice.call(arguments);
                      argsClone.splice(0, 1);
                      obj && obj.callback.apply(obj.component, argsClone);
                   }

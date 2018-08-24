@@ -20,9 +20,7 @@
       <ws:if data="{{_pagingState.visible}}">
          <ws:partial template="content"
                      attr:class="controls-Scroll__content_paging"
-                     on:listTop="_scrollReachTopHandler()"
-                     on:scrollMove="_scrollMoveHandler()"
-                     on:listBottom="_scrollReachBottomHandler()"/>
+                     on:scrollMove="_scrollMoveHandler()"/>
       </ws:if>
       <ws:else>
          <ws:partial template="content"/>
