@@ -1,0 +1,52 @@
+{
+  "Controls/Input/Text": {
+    "name": "Controls/Input/Text",
+    "title": "Single-line text input.",
+    "className": "Controls/Input/Text",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Text",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "placeholder": {
+            "type": "function|String",
+            "title": "Input's placeholder text."
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "constraint": {
+            "type": "String",
+            "title": "Regular expression for input filtration."
+          },
+          "maxLength": {
+            "type": "Number",
+            "title": "Maximum number of characters that user can enter in the field."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Indicates whether control will react to user actions."
+          },
+          "trim": {
+            "type": "Boolean",
+            "default": false,
+            "title": "If true, removes whitespaces from both sides of a string when input is completed."
+          },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          }
+        }
+      }
+    }
+  }
+}

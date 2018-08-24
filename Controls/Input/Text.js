@@ -127,7 +127,7 @@ define('Controls/Input/Text',
          return {
             trim: types(Boolean),
             selectOnClick: types(Boolean),
-            placeholder: types(String),
+           // placeholder: types(String),
             constraint: types(String),
             value: types(String),
             maxLength: types(Number)

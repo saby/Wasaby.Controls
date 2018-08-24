@@ -12,13 +12,16 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
 
       var stringTmpl = Control.extend({
          _template: template,
+         _beforeMount: function(opt) {
+            //console.log(opt);
+         },
          _valueChangedHandler: function(event, tmp) {
             this._notify('valueChanged', [tmp]);
          },
          _comboBoxSource: function() {
             return new Memory({
                idProperty: 'title',
-               data: this._options.source
+               data: this._options
             });
          }
       });

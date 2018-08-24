@@ -1,50 +1,48 @@
-<ws:template name="string">
+<ws:template name="String">
     <Controls-demo.PropertyGrid.StringTemplate
-            bind:value="item.value"
-            readOnly="{{item.readOnly}}"
-            caption="{{item.id}}"
+           bind:value="itemValue"
+            caption="{{name}}"
             source="{{item.source}}"
             config="{{item.config}}"
            >
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
-<ws:template name="number">
+<ws:template name="Number">
     <Controls-demo.PropertyGrid.NumberTemplate
-            bind:value="item.value"
+            bind:value="itemValue"
             readOnly="{{item.readOnly}}"
-            caption="{{item.id}}">
+            caption="{{name}}">
     </Controls-demo.PropertyGrid.NumberTemplate>
 </ws:template>
 
-<ws:template name="boolean">
+<ws:template name="Boolean">
     <Controls-demo.PropertyGrid.BooleanTemplate
-            bind:value="item.value"
-            caption="{{item.id}}">
+            bind:value="itemValue"
+            caption="{{name}}">
     </Controls-demo.PropertyGrid.BooleanTemplate>
 </ws:template>
 
 <ws:template name="enum">
-
     <Controls-demo.PropertyGrid.EnumTemplate
-            bind:value="item.value"
+            bind:value="itemValue"
             displayProperty="{{item.displayProperty}}"
             keyProperty="{{item.keyProperty}}"
             readOnly="{{item.readOnly}}"
             emptyText="{{item.emptyText}}"
             source="{{item.source}}"
-            caption="{{item.id}}">
+            caption="{{name}}">
     </Controls-demo.PropertyGrid.EnumTemplate>
 </ws:template>
 
-<ws:template name="funct">
+<ws:template name="function|String">
     <Controls-demo.PropertyGrid.StringOrFunctionTemplate
-            bind:value="item.value"
+            bind:value="itemValue"
             flag="{{item.flag}}"
             readOnly="{{item.readOnly}}"
-            caption="{{item.id}}">
+            caption="{{name}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
 </ws:template>
 
 
-<ws:partial template="{{item.type}}" item="{{item}}"/>
+<ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}"/>
