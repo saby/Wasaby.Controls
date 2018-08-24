@@ -158,6 +158,7 @@ define('Controls/Toolbar', [
       _onResult: function(result) {
          if (result.action === 'itemClick') {
             this._onItemClick(result.event, result.data[0]);
+            
             //Toolbar may be closed by toolbar parent in item click handler and menuOpener does not exist.
             if (this._children.menuOpener) {
                this._children.menuOpener.close();
