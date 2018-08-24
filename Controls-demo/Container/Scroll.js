@@ -7,15 +7,6 @@ define('Controls-demo/Container/Scroll',
       'css!Controls-demo/Container/Scroll'
    ],
    function(Control, MemorySource, ScrollData, template) {
-      var scrollStyleSource = new MemorySource({
-         idProperty: 'title',
-         data: [{
-            title: 'normal'
-         }, {
-            title: 'inverted'
-         }]
-      });
-
       return Control.extend({
          _template: template,
          _pagingVisible: false,
@@ -26,7 +17,14 @@ define('Controls-demo/Container/Scroll',
          _scrollStyleSource: null,
 
          _beforeMount: function() {
-            this._scrollStyleSource = scrollStyleSource;
+            this._scrollStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [{
+                  title: 'normal'
+               }, {
+                  title: 'inverted'
+               }]
+            });
          },
 
          _getChildContext: function() {
