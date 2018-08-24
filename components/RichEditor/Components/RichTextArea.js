@@ -415,10 +415,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var self = this;
                if (self._options.hasOwnProperty('json')) {
                   self._htmlJson = new HtmlJson();
-                  self._isJsonString = typeof self._options.json === 'string';
-                  if (self._isJsonString) {
-                     self._options.json = JSON.parse(self._options.json);
-                  }
                   self.setJson(self._options.json);
 
                   self.subscribe('onTextChange', function(e, text) {
