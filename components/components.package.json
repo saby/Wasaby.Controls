@@ -134,9 +134,21 @@
       "SBIS3.CONTROLS/Tree/*"
     ],
     "exclude": [
-      "css!*"
+      "css!*",
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
     ],
     "output": "sbis3controls-tree.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-treecompositeview.package.js"
   },
   {
     "include": [
