@@ -16,9 +16,8 @@ define('Controls/Popup/Compatible/Layer', [
    'use strict';
 
    var loadDeferred;
-   var jQueryModuleName = 'cdn!jquery/3.3.1/jquery-min.js';
    var compatibleDeps = [
-      jQueryModuleName,
+      'cdn!jquery/3.3.1/jquery-min.js',
       'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -223,7 +222,6 @@ define('Controls/Popup/Compatible/Layer', [
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
-            var loadDepsDef = new Deferred();
             loadDeferred = new Deferred();
 
             deps = (deps || []).concat(compatibleDeps);
@@ -231,45 +229,37 @@ define('Controls/Popup/Compatible/Layer', [
             var parallelDef = new ParallelDeferred(),
                result;
 
-            // Сначала отдельно загрузим jQuery, чтобы можно было безопасно загружать другие модули,
-            // которые могут ее использовать
-            moduleStubs.require([jQueryModuleName]).addCallback(function() {
-               moduleStubs.require(deps).addCallback(function(_result) {
-                  if (window && window.$) {
-                     Constants.$win = $(window);
-                     Constants.$doc = $(document);
-                     Constants.$body = $('body');
-                  }
+            var loadDepsDef = moduleStubs.require(deps).addCallback(function(_result) {
+               if (window && window.$) {
+                  Constants.$win = $(window);
+                  Constants.$doc = $(document);
+                  Constants.$body = $('body');
+               }
 
-                  // constants.compat = tempCompatVal; //TODO выпилить
-                  (function($) {
-                     $.fn.wsControl = function() {
-                        var control = null,
-                           element;
-                        try {
-                           element = this[0];
-                           while (element) {
-                              if (element.wsControl) {
-                                 control = element.wsControl;
-                                 break;
-                              }
-                              element = element.parentNode;
+               // constants.compat = tempCompatVal; //TODO выпилить
+               (function($) {
+                  $.fn.wsControl = function() {
+                     var control = null,
+                        element;
+                     try {
+                        element = this[0];
+                        while (element) {
+                           if (element.wsControl) {
+                              control = element.wsControl;
+                              break;
                            }
-                        } catch (e) {
+                           element = element.parentNode;
                         }
-                        return control;
-                     };
-                  })(jQuery);
+                     } catch (e) {
+                     }
+                     return control;
+                  };
+               })(jQuery);
 
-                  result = _result;
-                  loadDepsDef.callback(result);
-               }).addErrback(function(e) {
-                  IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
-                  loadDepsDef.errback(e);
-               });
+               result = _result;
+            }).addErrback(function(e) {
+               IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
             });
-
-
             parallelDef.push(loadDepsDef);
             var parallelDefRes = parallelDef.done().getResult();
 
