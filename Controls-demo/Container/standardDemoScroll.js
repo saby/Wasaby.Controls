@@ -8,7 +8,44 @@ define('Controls-demo/Container/standardDemoScroll', [
 
     var
         VAT = 18,
-        COEFFICIENT_OF_PROFIT = 1.25;
+        COEFFICIENT_OF_PROFIT = 1.25,
+        menuItems = ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
+            'Calendar', 'My Page', 'Our Company'],
+        viewSource = new MemorySource({
+            data: _getDemoData()
+        }),
+        gridColumns = [{
+            width: '40%',
+            displayProperty: 'name'
+        }, {
+            displayProperty: 'amount'
+        }, {
+            displayProperty: 'costPrice'
+        }, {
+            displayProperty: 'price'
+        }, {
+            displayProperty: 'VAT_sum'
+        }, {
+            displayProperty: 'VAT'
+        }, {
+            displayProperty: 'sum'
+        }],
+        gridHeader = [{
+            title: 'Name'
+        }, {
+            title: 'Amount'
+        }, {
+            title: 'Cost price'
+        }, {
+            title: 'Price'
+        }, {
+            title: 'VAT'
+        }, {
+            title: '%'
+        }, {
+            title: 'Sum'
+        }];
+
 
     function _getDemoData() {
         return [
@@ -48,49 +85,22 @@ define('Controls-demo/Container/standardDemoScroll', [
 
     return Control.extend({
         _template: template,
-        _menuItems: ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
-            'Calendar', 'My Page', 'Our Company'],
+        _menuItems: null,
         _numberItems: 15,
         _demoText: 'Develop the theme of the "Scroll Container" component for Presto and Retail projects.\
             In the repository https://git.sbis.ru/sbis/themes in the corresponding modules it is necessary to determine\
             less-variable for the theme\'s coefficients in accordance with the specification and the auto-documentation\
             for the component (see references in the overarching task).',
 
-        _viewSource: new MemorySource({
-            data: _getDemoData()
-        }),
+        _viewSource: null,
+        _gridColumns: null,
+        _gridHeader: null,
 
-        _gridColumns: [{
-            width: '40%',
-            displayProperty: 'name'
-        }, {
-            displayProperty: 'amount'
-        }, {
-            displayProperty: 'costPrice'
-        }, {
-            displayProperty: 'price'
-        }, {
-            displayProperty: 'VAT_sum'
-        }, {
-            displayProperty: 'VAT'
-        }, {
-            displayProperty: 'sum'
-        }],
-
-        _gridHeader: [{
-            title: 'Name'
-        }, {
-            title: 'Amount'
-        }, {
-            title: 'Cost price'
-        }, {
-            title: 'Price'
-        }, {
-            title: 'VAT'
-        }, {
-            title: '%'
-        }, {
-            title: 'Sum'
-        }]
+        _beforeMount: function() {
+            this._menuItems = menuItems;
+            this._viewSource = viewSource;
+            this._gridColumns = gridColumns;
+            this._gridHeader = gridHeader;
+        }
     });
 });

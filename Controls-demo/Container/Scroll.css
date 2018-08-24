@@ -1,23 +1,23 @@
-.demo_wrapper {
+.ControlsDemo-wrapper {
     display: flex;
     justify-content: space-around;
 }
 
-.demo__options_block {
+.ControlsDemo-options_block {
     padding: 3em;
     background-color: #e0e6f5;
 }
 
-.demo_options_wrapper,
-.demo_settings_wrapper {
+.ControlsDemo-options_wrapper,
+.ControlsDemo-settings_wrapper {
     display: grid;
 }
 
-.demo__example_block {
+.ControlsDemo-example_block {
     padding: 3em;
     background-color: #e6edf0;
 }
 
-.demo_scroll_container {
+.ControlsDemo-scroll_container {
     max-height: 400px;
 }

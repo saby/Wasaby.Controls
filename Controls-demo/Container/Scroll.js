@@ -23,7 +23,11 @@ define('Controls-demo/Container/Scroll',
          _shadowVisible: true,
          _numberOfRecords: 50,
          _selectedStyle: 'normal',
-         _scrollStyleSource: scrollStyleSource,
+         _scrollStyleSource: null,
+
+         _beforeMount: function() {
+            this._scrollStyleSource = scrollStyleSource;
+         },
 
          _getChildContext: function() {
             return {
