@@ -35,10 +35,6 @@ define('Controls/Application/_Head',
             return Array.isArray(this._options.theme);
          },
          getCssWithTheme: function(value, theme) {
-            if (this._options.appRoot) {
-               value = this._options.appRoot + value;
-               value = value.replace('//', '/');
-            }
             return  value.replace('.css', '') + '_' + theme + '.css';
          }
       });

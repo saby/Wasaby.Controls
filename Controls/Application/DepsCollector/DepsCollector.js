@@ -8,12 +8,32 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       SINGLE: 2
    };
 
-   function addBuildNumber(link, buildNumber) {
-      if (buildNumber) {
-         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildNumber + '$&');
+   function getLinkWithAppRoot(value, appRoot) {
+      if (appRoot) {
+         value = appRoot + value;
+         value = value.replace('//', '/');
+      }
+      return value;
+   }
+
+   function getLinkWithBuildNumber(link, buildnumber) {
+      if (buildnumber) {
+         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildnumber + '$&');
       } else {
          return link;
       }
+   }
+
+   function checkResourcesPrefix(link) {
+      var path = link.split('/');
+      if(path[0] === '') {
+         path.shift();
+      }
+      if(path[0] !== 'resources') {
+         path.unshift('resources');
+      }
+      var res = path.join('/');
+      return '/' + res;
    }
 
    function isJs(key) {
@@ -95,11 +115,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
        * @param modInfo - contains info about path to module files
        * @param bundlesRoute - contains info about custom packets with modules
        */
-      constructor: function(modDeps, modInfo, bundlesRoute, buildNumber) {
+      constructor: function(modDeps, modInfo, bundlesRoute, buildNumber, appRoot) {
          this.modDeps = modDeps;
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
          this.buildNumber = buildNumber;
+         this.appRoot = appRoot;
       },
       collectDependencies: function(deps) {
          var files = {js: [], css: []};
@@ -109,19 +130,26 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          for (var key in packages) {
             if (packages.hasOwnProperty(key)) {
                if (key.slice(key.length - 3, key.length) === 'css') {
-                  files.css.push(addBuildNumber(key, this.buildNumber));
+                  files.css.push(this.fixLink(key));
                   var corrJs = key.replace(/.css$/, '.js');
                   if (!packages[corrJs] && packages[key] === DEPTYPES.BUNDLE) {
-                     files.js.push(addBuildNumber(corrJs, this.buildNumber));
+                     files.js.push(this.fixLink(corrJs));
                   }
                } else if (key.slice(key.length - 2, key.length) === 'js') {
-                  files.js.push(addBuildNumber(key, this.buildNumber));
+                  files.js.push(this.fixLink(key));
                } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
-                  files.js.push(addBuildNumber(key, this.buildNumber));
+                  files.js.push(this.fixLink(key));
                }
             }
          }
          return files;
+      },
+      fixLink:  function fixLinkName(link) {
+         var res = link;
+         res = checkResourcesPrefix(res);
+         res = getLinkWithBuildNumber(res, this.buildNumber);
+         res = getLinkWithAppRoot(res, this.appRoot);
+         return res;
       }
    });
 
