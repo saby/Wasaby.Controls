@@ -188,8 +188,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             var self = this;
 
-            // Убрать по ошибке
-            // https://online.sbis.ru/opendoc.html?guid=309b8bec-7233-4919-9820-797742cb2f49
+            // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
+            // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
+            // CompoundArea мы точно знаем, что внутри находится CompoundControl и фокус нужно распространять
+            // по правилам AreaAbstract.compatible для контролов WS3
             self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
 
             var container = self._container.length ? self._container[0] : self._container;
