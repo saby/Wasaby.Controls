@@ -307,7 +307,7 @@ define('Controls/Container/Scroll',
             _scrollMoveHandler: function(e, scrollData) {
                if (scrollData.position === 'up') {
                   this._pagingState.stateUp = 'disabled';
-               } else if (scrollData.position === 'down'){
+               } else if (scrollData.position === 'down') {
                   this._pagingState.stateDown = 'disabled';
                } else {
                   this._pagingState.stateUp = 'normal';
