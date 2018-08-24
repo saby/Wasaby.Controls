@@ -40,7 +40,7 @@ define('Controls/Operations/MultiSelector', [
       },
 
       _afterUpdate: function() {
-         this._notify('resize', [], {bubbling: true});
+         this._notify('controlResize', [], {bubbling: true});
       },
 
       _updateSelection: function(selection) {

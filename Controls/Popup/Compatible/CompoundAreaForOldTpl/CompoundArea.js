@@ -293,7 +293,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } if (commandName === 'printReport') {
                return this.printReport(arg);
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
-               this._notifyVDOM('resize', null, { bubbling: true });
+               this._notifyVDOM('controlResize', null, { bubbling: true });
             } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
                // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
                if (!cInstance.instanceOfMixin(this._childControl, 'Lib/Mixins/PendingOperationParentMixin')) {
