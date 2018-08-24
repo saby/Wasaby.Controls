@@ -37,7 +37,6 @@ define('Controls/Popup/Opener/BaseOpener',
        */
       var Base = Control.extend({
          _template: Template,
-         _popupIds: undefined,
 
          _beforeMount: function() {
             this._popupIds = [];
@@ -66,11 +65,6 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
-               return;
-            }
-            this._isExecuting = true;
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -84,27 +78,37 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
+         _isPopupCreating: function() {
+            return ManagerController.isPopupCreating(this._getCurrentPopupId());
+         },
+
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
-               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                  self._isExecuting = false;
-                  if (Base.isNewEnvironment()) {
-                     self._popupIds.push(result);
 
-                     //Call redraw to create emitter on scroll after popup opening
-                     self._forceUpdate();
-                  } else {
-                     self._action = result;
-                  }
-               });
+               if (!self._isPopupCreating()) {
+                  Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
+                     if (Base.isNewEnvironment()) {
+                        self._popupIds.push(result);
+
+                        //Call redraw to create emitter on scroll after popup opening
+                        self._forceUpdate();
+                     } else {
+                        self._action = result;
+                     }
+                  });
+               }
             });
          },
 
          // Ленивая загрузка шаблона
          _requireModules: function(config, controller) {
+            if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
+               return (new Deferred()).errback('Protection against multiple invocation of the open method');
+            }
+
             var deps = [];
             if (this._needRequireModule(config.template)) {
                deps.push(config.template);
