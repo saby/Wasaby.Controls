@@ -18,6 +18,16 @@
   },
   {
     "include": [
+      "SBIS3.CONTROLS/Browser/ColumnsEditor",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-columnseditor.package.js"
+  },
+  {
+    "include": [
       "SBIS3.CONTROLS/Filter/Button",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
       "SBIS3.CONTROLS/Filter/Button/Line",
