@@ -8,8 +8,8 @@
             on:maximized="_maximized()"
             on:keyup="_keyUp()"
             on:transitionend="_animated()"
-            on:resize="_update()">
+            on:controlResize="_update()">
     </ws:partial>
-    <Controls.Event.Emitter event="resize" on:resize="_delayedUpdate()"/>
+    <Controls.Event.Emitter event="controlResize" on:controlResize="_delayedUpdate()"/>
     <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
 </div>

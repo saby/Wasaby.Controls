@@ -17,16 +17,22 @@ define('Controls/Container/Scroll/Watcher',
 
       var SCROLL_LOAD_OFFSET = 100;
       var global = (function() {
-         return this || (0, eval)('this'); 
+         return this || (0, eval)('this');
       })();
 
       var _private = {
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             if (clientHeight < scrollHeight) {
-               _private.start(self, 'canScroll');
+               if (self._canScrollCache !== true) {
+                  self._canScrollCache = true;
+                  _private.start(self, 'canScroll');
+               }
             } else {
-               _private.start(self, 'cantScroll');
+               if (self._canScrollCache !== false) {
+                  self._canScrollCache = false;
+                  _private.start(self, 'cantScroll');
+               }
             }
          },
 
@@ -48,29 +54,63 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         onInitScroll: function(self, container) {
-            var scrollTop, clientHeight, scrollHeight;
+         calcSizeCache: function(self, container) {
+            var clientHeight, scrollHeight;
 
-            scrollTop = container.scrollTop;
             clientHeight = container.clientHeight;
             scrollHeight = container.scrollHeight;
-
-            _private.sendCanScroll(self, clientHeight, scrollHeight, scrollTop);
+            self._sizeCache = {
+               scrollHeight: scrollHeight,
+               clientHeight: clientHeight
+            };
          },
 
-         onChangeScroll: function(self, container) {
-            var scrollTop, clientHeight, scrollHeight;
+         onResizeContainer: function(self, container, withObserver) {
+            _private.calcSizeCache(self, container);
+            container.scrollTop = self._scrollTopCache;
+            _private.sendCanScroll(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight);
+            if (!withObserver) {
+               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+            }
 
-            scrollTop = container.scrollTop;
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
+         },
 
-            _private.sendCanScroll(self, clientHeight, scrollHeight);
-            _private.sendEdgePositions(self, clientHeight, scrollHeight, scrollTop);
+         onScrollContainer: function(self, container, withObserver) {
+            var curPosition;
+            self._scrollTopCache = container.scrollTop;
+            if (!self._sizeCache.clientHeight) {
+               _private.calcSizeCache(self, container);
+            }
+
+            if (self._scrollTopCache <= 0) {
+               curPosition = 'up';
+            } else if (self._scrollTopCache + self._sizeCache.clientHeight >= self._sizeCache.scrollHeight) {
+               curPosition = 'down';
+            } else {
+               curPosition = 'middle';
+            }
+
+            if (self._scrollPositionCache !== curPosition) {
+               _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               self._scrollPositionCache = curPosition;
+               self._scrollTopTimer = null;
+            } else {
+               if (!self._scrollTopTimer) {
+                  self._scrollTopTimer = setTimeout(function() {
+                     if (self._scrollTopTimer) {
+                        _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+                        if (!withObserver) {
+                           _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                        }
+                        self._scrollTopTimer = null;
+                     }
+                  }, 100);
+               }
+            }
+
          },
 
          initIntersectionObserver: function(self, elements) {
-
             self._observer = new IntersectionObserver(function(changes) {
                for (var i = 0; i < changes.length; i++) {
                   if (changes[i].isIntersecting) {
@@ -98,74 +138,92 @@ define('Controls/Container/Scroll/Watcher',
             self._observer.observe(elements.bottomListTrigger);
          },
 
+         onRegisterNewComponent: function(self, component, withObserver) {
+            if (this._sizeCache.clientHeight <= this._sizeCache.scrollHeight) {
+               self._registrar.startOnceTarget(component, 'cantScroll');
+            } else {
+               self._registrar.startOnceTarget(component, 'canScroll');
+            }
+
+            if (!withObserver) {
+               //TODO надо кидать не всем компонентам, а адресно одному
+               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+            }
+         },
+
          doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
-               self._container.scrollTop = 0;
+               container.scrollTop = 0;
             } else {
-               var clientHeight = container.clientHeight, scrollHeight;
+               var clientHeight = self._sizeCache.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
-                  scrollHeight = container.scrollHeight;
-                  self._container.scrollTop = scrollHeight - clientHeight;
+                  scrollHeight = self._sizeCache.scrollHeight;
+                  container.scrollTop = scrollHeight - clientHeight;
                } else {
                   if (scrollParam === 'pageUp') {
-                     self._container.scrollTop -= clientHeight;
+                     container.scrollTop -= clientHeight;
                   } else {
-                     self._container.scrollTop += clientHeight;
+                     container.scrollTop += clientHeight;
                   }
                }
             }
          },
 
-         start: function(self, eventType, scrollTop) {
-            self._registrar.start(eventType, scrollTop);
-            self._notify(eventType, [scrollTop]);
+
+         start: function(self, eventType, params) {
+            self._registrar.start(eventType, params);
+            self._notify(eventType, [params]);
          }
       };
 
       var Scroll = Control.extend({
          _template: template,
          _observer: null,
+         _registrar: null,
+         _sizeCache: null,
+         _scrollTopCache: 0,
+         _scrollTopTimer: null,
+         _scrollPositionCache: null,
+         _canScrollCache: null,
 
+         constructor: function() {
+            Scroll.superclass.constructor.apply(this, arguments);
+            this._sizeCache = {};
+         },
 
          _beforeMount: function() {
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
          _afterMount: function() {
-            this._notify('register', ['resize', this, this._resizeHandler], {bubbling: true});
+            _private.calcSizeCache(this, this._container);
+            _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
 
          _scrollHandler: function(e) {
-            var self = this;
-
-            // подписка на скролл через debounce. Нужно подобрать оптимальное значение,
-            // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
-            debounce(function() {
-               _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
-               if (!self._observer) {
-                  _private.onChangeScroll(self, e.target);
-               }
-            }, 100, true)();
+            _private.onScrollContainer(this, this._container, !!this._observer);
          },
 
-         _resizeHandler: function() {
-            _private.onChangeScroll(this, this._container);
+         //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
+         _resizeHandler: function(force) {
+            _private.onResizeContainer(this, this._container, force !== undefined ? false : !!this._observer);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
-               _private.onInitScroll(this, this._container);
-
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
                if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
-                  _private.initIntersectionObserver(this, triggers);
-               } else {
-                  _private.onChangeScroll(this, this._container);
+                  if (!this._observer) {
+                     _private.initIntersectionObserver(this, triggers);
+                  }
                }
+
+               _private.onRegisterNewComponent(this, this._container, component, callback, !!this._observer);
             }
          },
 
@@ -183,18 +241,15 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-
          _beforeUnmount: function() {
             if (this._observer) {
                this._observer.disconnect();
                this._observer = null;
             }
-            this._notify('unregister', ['resize', this], {bubbling: true});
+            this._notify('unregister', ['controlResize', this], {bubbling: true});
             this._registrar.destroy();
+            this._sizeCache = null;
          }
-
-
-
       });
 
       Scroll.getOptionTypes = function() {

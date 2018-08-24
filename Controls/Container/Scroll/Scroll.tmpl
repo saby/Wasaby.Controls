@@ -7,7 +7,7 @@
                      {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                      {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
                      {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-              on:resize="_resizeHandler()"
+              on:controlResize="_resizeHandler()"
               on:scroll="_scrollHandler()">
             <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
          </div>
@@ -55,7 +55,7 @@
                                on:onArrowClick="_arrowClickHandler()"/>
       </ws:if>
 
-      <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
+      <Controls.Event.Emitter event="controlResize" on:controlResize="_resizeHandler()"/>
    </div>
 </ws:template>
 
