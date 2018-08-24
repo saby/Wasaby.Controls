@@ -1,31 +1,34 @@
 <ws:template name="String">
+
     <Controls-demo.PropertyGrid.StringTemplate
-           bind:value="itemValue"
+           bind:value="itemValue[name]"
             caption="{{name}}"
+           readOnly="{{item.readOnly}}"
             source="{{item.source}}"
             config="{{item.config}}"
+           on:valueChanged="_valueChangedHandler()"
            >
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
 <ws:template name="Number">
     <Controls-demo.PropertyGrid.NumberTemplate
-            bind:value="itemValue"
-            readOnly="{{item.readOnly}}"
+            bind:value="itemValue[name]"
+
             caption="{{name}}">
     </Controls-demo.PropertyGrid.NumberTemplate>
 </ws:template>
 
 <ws:template name="Boolean">
     <Controls-demo.PropertyGrid.BooleanTemplate
-            bind:value="itemValue"
+            bind:value="itemValue[name]"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.BooleanTemplate>
 </ws:template>
 
 <ws:template name="enum">
     <Controls-demo.PropertyGrid.EnumTemplate
-            bind:value="itemValue"
+            bind:value="itemValue[name]"
             displayProperty="{{item.displayProperty}}"
             keyProperty="{{item.keyProperty}}"
             readOnly="{{item.readOnly}}"
@@ -37,7 +40,7 @@
 
 <ws:template name="function|String">
     <Controls-demo.PropertyGrid.StringOrFunctionTemplate
-            bind:value="itemValue"
+            bind:value="itemValue[name]"
             flag="{{item.flag}}"
             readOnly="{{item.readOnly}}"
             caption="{{name}}">
@@ -45,4 +48,4 @@
 </ws:template>
 
 
-<ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}"/>
+<ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}"  />

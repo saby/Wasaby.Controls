@@ -26,8 +26,7 @@ define('Controls/PropertyGrid', [
       _template: template,
       _index: '',
       _valueChangedHandler: function(event, index) {
-         // this._options.items[index].value = value;
-         this._notify('itemsChanged', [this._options.items]);
+         this._notify('itemsChanged', [this._options.scopeObject[index]]);
       },
       _valueChanged: function(event, value) {
          this._notify('valueChanged', [value]);
@@ -35,12 +34,9 @@ define('Controls/PropertyGrid', [
       _selectedKeyChanged: function(event, value) {
          this._notify('selectedKeyChanged', [value]);
       },
-
       _visibilityChangedHandler: function(event, index, visibility) {
-         // this._options.items[index].visibility = visibility;
          this._notify('visibilityChanged', [visibility]);
       }
    });
-
    return PropertyGrid;
 });

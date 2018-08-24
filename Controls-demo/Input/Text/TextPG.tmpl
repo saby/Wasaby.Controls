@@ -1,7 +1,7 @@
 <div class="controls-demo_Wrapper">
     <div class="controls-demo_options-wrapper">
-        <Controls.PropertyGrid items="{{_metaData}}" scope="{{_textOptions}}"
-                               attr:class="controls-FilterPanel__PropertyGrid">
+        <Controls.PropertyGrid items="{{_metaData}}" scopeObject="{{_textOptions}}"
+                               attr:class="controls-FilterPanel__PropertyGrid" on:itemsChanged="_valueChangedHandler()">
             <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
         </Controls.PropertyGrid>
     </div>
@@ -11,6 +11,7 @@
             <Controls.Input.Text
                     scope="{{_textOptions}}"
                     bind:value="_textOptions.value"
+
                     on:valueChanged="_valueChanged()"
                     on:tagHover="_tagStyleHandler()"
                     on:tagClick="_tagStyleClickHandler()"

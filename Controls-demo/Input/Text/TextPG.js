@@ -3,6 +3,7 @@ define('Controls-demo/Input/Text/TextPG',
       'Core/Control',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
+      'Core/core-merge',
       'tmpl!Controls-demo/Input/Text/TextPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
@@ -12,7 +13,7 @@ define('Controls-demo/Input/Text/TextPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, MemorySource, Chain, template, myTmpl, config) {
+   function(Control, MemorySource, Chain, cMerge, template, myTmpl, config) {
       'use strict';
       var sourcePeriod = [
          { key: 1, title: 'done' },
@@ -48,51 +49,25 @@ define('Controls-demo/Input/Text/TextPG',
          }
       }; // настройки для редакторов
 
-      var result = (function(defaults, params) {
-         var obj = Object.create(defaults);
-
-         // debugger;
-         var merge = function(result, params) {
-            for (var key in params) {
-               if (params.hasOwnProperty(key)) {
-                  if (key in result && typeof params[key] === 'object' && typeof result[key] === 'object') {
-                     merge(result[key], params[key]);
-                  } else {
-                     result[key] = params[key];
-                  }
-               }
-            }
-         };
-         merge(obj, params);
-         return obj;
-      })(config['Controls/Input/Text'].properties['ws-config'].options, dataObject); // добавляем настройки редактора к json файлу
-
-
       var TextPG = Control.extend({
          _template: template,
-         _metaData: config['Controls/Input/Text'].properties['ws-config'].options,
+         _metaData: null,
          _events: '',
+         _textOptions: null,
          _my: myTmpl,
-         _textOptions: textOptions,
          someScope: null,
          _beforeMount: function() {
-            // this.someScope = {};
-            // for (var i in config) {
-            //
-            // }
+            this._textOptions = textOptions;
+            this._metaData = config['Controls/Input/Text'].properties['ws-config'].options;
+            this._metaData = cMerge(this._metaData, dataObject);
+
             console.log(this._metaData);
          },
-
-         //
-         // _afterMount: function() {
-         //
-         // },
-
-         _itemsSimple: config['Controls/Input/Text'].properties['ws-config'].options,
          _valueChanged: function(event, value) {
             this._events += 'valueChanged : ' + value + '\n';
             this._notify('textValueChanged', [this._options.caption + ': ' + value]);
             this._notify('valueChanged', [value]);
+            this._forceUpdate();
 
             // console.log(result);
          },
@@ -105,7 +80,10 @@ define('Controls-demo/Input/Text/TextPG',
 
             // console.log(this._config['Controls/Input/Text'].properties['ws-config'].options);
          },
-
+         _valueChangedHandler: function() {
+            // this._options.items[index].value = value;
+            this._forceUpdate();
+         },
 
          _tagStyleClickHandler: function() {
             this._events += 'tagClick\r\n';

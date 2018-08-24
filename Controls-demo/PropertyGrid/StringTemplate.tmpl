@@ -1,7 +1,7 @@
 <div>
 <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
 <ws:if data="{{!_options.source}}">
-    <Controls.Input.Text value="{{_options.value}}"
+    <Controls.Input.Text bind:value="_options.value"
                          readOnly="{{_options.readOnly}}" attr:class="demo-TextBox"
                          on:valueChanged="_valueChangedHandler()"/>
 </ws:if>
