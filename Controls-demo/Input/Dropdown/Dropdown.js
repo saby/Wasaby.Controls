@@ -15,111 +15,6 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
 
    'use strict';
 
-   var simpleItems = [
-         {id: 1, title: 'All directions'},
-         {id: 2, title: 'Incoming'},
-         {id: 3, title: 'Outgoing'}
-      ],
-
-      subItems = [
-         {id: 1, title: 'In any state', text: 'In any state'},
-         {id: 2, title: 'In progress', text: 'In progress'},
-         {id: 3, title: 'Completed', text: 'Completed'},
-         {id: 4, title: 'positive', text: 'Completed positive', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
-         {id: 5, title: 'negative', text: 'Completed negative', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
-         {id: 6, title: 'Deleted', text: 'Deleted'},
-         {id: 7, title: 'Drafts', text: 'Drafts'}
-      ],
-
-      hierarchyItems = [
-         {id: 1, title: 'Task in development', parent: null, '@parent': false},
-         {id: 2, title: 'Error in development', parent: null, '@parent': false},
-         {id: 3, title: 'Application', parent: null, '@parent': false},
-         {id: 4, title: 'Assignment', parent: null, '@parent': true},
-         {id: 5, title: 'Approval', parent: null, '@parent': false},
-         {id: 6, title: 'Working out', parent: null, '@parent': false},
-         {id: 7, title: 'Assignment for accounting', parent: 4, '@parent': false},
-         {id: 8, title: 'Assignment for delivery', parent: 4, '@parent': false},
-         {id: 9, title: 'Assignment for logisticians', parent: 4, '@parent': false}
-      ],
-
-      iconItems = [
-         {id: 1, title: 'In the work', icon: 'icon-small icon-Trade icon-primary'},
-         {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock icon-primary'},
-         {id: 3, title: 'Completed', icon: 'icon-small icon-Successful icon-done'},
-         {id: 4, title: 'Not done', icon: 'icon-small icon-Decline icon-error'}
-      ],
-
-      myTemplateItems = [
-         {id: 1, title: 'Subdivision'},
-         {id: 2, title: 'Separate unit', icon: 'icon-size icon-16 icon-Company icon-primary',
-            comment: 'A territorially separated subdivision with its own address. For him, you can specify a legal entity'},
-         {id: 3, title: 'Working group', icon: 'icon-size icon-16 icon-Groups icon-primary',
-            comment: 'It is not a full-fledged podcasting, it serves for grouping. As a unit, the employees will have a higher department or office'}
-      ],
-
-      emptyItems = [
-         {id: 1, title: 'Yaroslavl'},
-         {id: 2, title: 'Moscow'},
-         {id: 3, title: 'St-Petersburg'}
-      ],
-
-      titleItems = [
-         {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp icon-primary'},
-         {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown icon-primary'}
-      ],
-
-
-      duplicateItems = [
-         {id: 1, title: 'Payment of tax'},
-         {id: 2, title: 'Payment to the supplier'},
-         {id: 3, title: 'Settlements with suppliers and buyers'},
-         {id: 4, title: 'Settlements with employees'},
-         {id: 5, title: 'Transfers of money'},
-         {id: 6, title: 'Taxes and payments to the budget'},
-         {id: 7, title: 'Loans and credits'}
-      ],
-      footerItems = [
-         {id: 1, title: 'Trading'},
-         {id: 2, title: 'Software development'},
-         {id: 3, title: 'Beauty saloon'}
-      ],
-
-      defaultItems = [
-         {
-            id: '1',
-            title: 'Запись 1'
-         },
-         {
-            id: '2',
-            title: 'Запись 2'
-         },
-         {
-            id: '3',
-            title: 'Запись 3'
-         },
-         {
-            id: '4',
-            title: 'It is not a full-fledged podcasting, it serves for grouping'
-         },
-         {
-            id: '5',
-            title: 'Запись 5'
-         },
-         {
-            id: '6',
-            title: 'Запись 6'
-         },
-         {
-            id: '7',
-            title: 'Запись 7'
-         },
-         {
-            id: '8',
-            title: 'Запись 8'
-         }
-      ];
-
    var DropdownDemo = Control.extend({
       _template: template,
       _simpleItems: null,
@@ -148,16 +43,110 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeys2: null,
 
       _beforeMount: function() {
-         this._simpleItems = simpleItems;
-         this._subItems = subItems;
-         this._hierarchyItems = hierarchyItems;
-         this._iconItems = iconItems;
-         this._myTemplateItems = myTemplateItems;
-         this._emptyItems = emptyItems;
-         this._titleItems = titleItems;
-         this._duplicateItems = duplicateItems;
-         this._footerItems = footerItems;
-         this._defaultItems = defaultItems;
+         this._simpleItems = [
+            {id: 1, title: 'All directions'},
+            {id: 2, title: 'Incoming'},
+            {id: 3, title: 'Outgoing'}
+         ];
+
+         this._subItems = [
+            {id: 1, title: 'In any state', text: 'In any state'},
+            {id: 2, title: 'In progress', text: 'In progress'},
+            {id: 3, title: 'Completed', text: 'Completed'},
+            {id: 4, title: 'positive', text: 'Completed positive', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
+            {id: 5, title: 'negative', text: 'Completed negative', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
+            {id: 6, title: 'Deleted', text: 'Deleted'},
+            {id: 7, title: 'Drafts', text: 'Drafts'}
+         ];
+
+         this._hierarchyItems = [
+            {id: 1, title: 'Task in development', parent: null, '@parent': false},
+            {id: 2, title: 'Error in development', parent: null, '@parent': false},
+            {id: 3, title: 'Application', parent: null, '@parent': false},
+            {id: 4, title: 'Assignment', parent: null, '@parent': true},
+            {id: 5, title: 'Approval', parent: null, '@parent': false},
+            {id: 6, title: 'Working out', parent: null, '@parent': false},
+            {id: 7, title: 'Assignment for accounting', parent: 4, '@parent': false},
+            {id: 8, title: 'Assignment for delivery', parent: 4, '@parent': false},
+            {id: 9, title: 'Assignment for logisticians', parent: 4, '@parent': false}
+         ];
+
+         this._iconItems = [
+            {id: 1, title: 'In the work', icon: 'icon-small icon-Trade icon-primary'},
+            {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock icon-primary'},
+            {id: 3, title: 'Completed', icon: 'icon-small icon-Successful icon-done'},
+            {id: 4, title: 'Not done', icon: 'icon-small icon-Decline icon-error'}
+         ];
+
+         this._myTemplateItems = [
+            {id: 1, title: 'Subdivision'},
+            {id: 2, title: 'Separate unit', icon: 'icon-size icon-16 icon-Company icon-primary',
+               comment: 'A territorially separated subdivision with its own address. For him, you can specify a legal entity'},
+            {id: 3, title: 'Working group', icon: 'icon-size icon-16 icon-Groups icon-primary',
+               comment: 'It is not a full-fledged podcasting, it serves for grouping. As a unit, the employees will have a higher department or office'}
+         ];
+
+         this._emptyItems = [
+            {id: 1, title: 'Yaroslavl'},
+            {id: 2, title: 'Moscow'},
+            {id: 3, title: 'St-Petersburg'}
+         ];
+
+         this._titleItems = [
+            {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp icon-primary'},
+            {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown icon-primary'}
+         ];
+
+         this._duplicateItems = [
+            {id: 1, title: 'Payment of tax'},
+            {id: 2, title: 'Payment to the supplier'},
+            {id: 3, title: 'Settlements with suppliers and buyers'},
+            {id: 4, title: 'Settlements with employees'},
+            {id: 5, title: 'Transfers of money'},
+            {id: 6, title: 'Taxes and payments to the budget'},
+            {id: 7, title: 'Loans and credits'}
+         ];
+
+         this._footerItems = [
+            {id: 1, title: 'Trading'},
+            {id: 2, title: 'Software development'},
+            {id: 3, title: 'Beauty saloon'}
+         ];
+
+         this._defaultItems = [
+            {
+               id: '1',
+               title: 'Запись 1'
+            },
+            {
+               id: '2',
+               title: 'Запись 2'
+            },
+            {
+               id: '3',
+               title: 'Запись 3'
+            },
+            {
+               id: '4',
+               title: 'It is not a full-fledged podcasting, it serves for grouping'
+            },
+            {
+               id: '5',
+               title: 'Запись 5'
+            },
+            {
+               id: '6',
+               title: 'Запись 6'
+            },
+            {
+               id: '7',
+               title: 'Запись 7'
+            },
+            {
+               id: '8',
+               title: 'Запись 8'
+            }
+         ];
          this._selectedKeysSimple = [1];
          this._selectedKeysSub = [1];
          this._selectedKeysHierarchy = [8];
