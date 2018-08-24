@@ -42,9 +42,17 @@
   ],
   "exclude": [
     "Controls/Filter/Button/_FilterCompatible",
-    "Controls/Filter/Button/OldPanelOpener"
+    "Controls/Filter/Button/OldPanelOpener",
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
   ],
   "output": "controls-filter.package.js"
+}, {
+  "include": [
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
+  ],
+  "output": "controls-filter-panel.package.js"
 }, {
   "include": [
     "Controls/Filter/Button/_FilterCompatible",
