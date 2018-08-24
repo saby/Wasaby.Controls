@@ -50,6 +50,7 @@ define('Controls-demo/Input/Text/TextPG',
 
       var result = (function(defaults, params) {
          var obj = Object.create(defaults);
+
          // debugger;
          var merge = function(result, params) {
             for (var key in params) {

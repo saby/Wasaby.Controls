@@ -11,7 +11,6 @@ define('Controls/Input/Text',
       'tmpl!Controls/Input/resources/input'
    ],
    function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
-
       'use strict';
 
       /**
@@ -93,13 +92,13 @@ define('Controls/Input/Text',
 
          _afterUpdate: function(oldOptions) {
             if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+               this._children.input.setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
          },
 
          _inputCompletedHandler: function() {
-            //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
+            // Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
             if (this._options.trim) {
                var newValue = this._options.value.trim();
                if (newValue !== this._options.value) {
@@ -111,7 +110,7 @@ define('Controls/Input/Text',
          },
          _notifyHandler: tmplNotify,
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
+            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
          }
       });
 
@@ -127,7 +126,8 @@ define('Controls/Input/Text',
          return {
             trim: types(Boolean),
             selectOnClick: types(Boolean),
-           // placeholder: types(String),
+
+            // placeholder: types(String),
             constraint: types(String),
             value: types(String),
             maxLength: types(Number)
@@ -135,5 +135,4 @@ define('Controls/Input/Text',
       };
 
       return TextBox;
-   }
-);
+   });
