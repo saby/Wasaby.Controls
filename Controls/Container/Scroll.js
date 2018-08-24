@@ -304,17 +304,15 @@ define('Controls/Container/Scroll',
                this._children.scrollWatcher.doScroll(scrollParam);
             },
 
-            _scrollReachTopHandler: function() {
-               this._pagingState.stateUp = 'disabled';
-            },
-
-            _scrollReachBottomHandler: function() {
-               this._pagingState.stateDown = 'disabled';
-            },
-
-            _scrollMoveHandler: function() {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
+            _scrollMoveHandler: function(e, scrollData) {
+               if (scrollData.position === 'up') {
+                  this._pagingState.stateUp = 'disabled';
+               } else if (scrollData.position === 'down') {
+                  this._pagingState.stateDown = 'disabled';
+               } else {
+                  this._pagingState.stateUp = 'normal';
+                  this._pagingState.stateDown = 'normal';
+               }
             },
 
             _mouseenterHandler: function() {
