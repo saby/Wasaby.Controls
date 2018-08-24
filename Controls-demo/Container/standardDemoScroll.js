@@ -8,43 +8,7 @@ define('Controls-demo/Container/standardDemoScroll', [
 
     var
         VAT = 18,
-        COEFFICIENT_OF_PROFIT = 1.25,
-        menuItems = ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
-            'Calendar', 'My Page', 'Our Company'],
-        viewSource = new MemorySource({
-            data: _getDemoData()
-        }),
-        gridColumns = [{
-            width: '40%',
-            displayProperty: 'name'
-        }, {
-            displayProperty: 'amount'
-        }, {
-            displayProperty: 'costPrice'
-        }, {
-            displayProperty: 'price'
-        }, {
-            displayProperty: 'VAT_sum'
-        }, {
-            displayProperty: 'VAT'
-        }, {
-            displayProperty: 'sum'
-        }],
-        gridHeader = [{
-            title: 'Name'
-        }, {
-            title: 'Amount'
-        }, {
-            title: 'Cost price'
-        }, {
-            title: 'Price'
-        }, {
-            title: 'VAT'
-        }, {
-            title: '%'
-        }, {
-            title: 'Sum'
-        }];
+        COEFFICIENT_OF_PROFIT = 1.25;
 
 
     function _getDemoData() {
@@ -97,6 +61,44 @@ define('Controls-demo/Container/standardDemoScroll', [
         _gridHeader: null,
 
         _beforeMount: function() {
+            var
+                menuItems = ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
+                    'Calendar', 'My Page', 'Our Company'],
+                viewSource = new MemorySource({
+                    data: _getDemoData()
+                }),
+                gridColumns = [{
+                    width: '40%',
+                    displayProperty: 'name'
+                }, {
+                    displayProperty: 'amount'
+                }, {
+                    displayProperty: 'costPrice'
+                }, {
+                    displayProperty: 'price'
+                }, {
+                    displayProperty: 'VAT_sum'
+                }, {
+                    displayProperty: 'VAT'
+                }, {
+                    displayProperty: 'sum'
+                }],
+                gridHeader = [{
+                    title: 'Name'
+                }, {
+                    title: 'Amount'
+                }, {
+                    title: 'Cost price'
+                }, {
+                    title: 'Price'
+                }, {
+                    title: 'VAT'
+                }, {
+                    title: '%'
+                }, {
+                    title: 'Sum'
+                }];
+
             this._menuItems = menuItems;
             this._viewSource = viewSource;
             this._gridColumns = gridColumns;
