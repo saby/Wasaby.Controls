@@ -552,7 +552,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var count = hasSheets ? sampleRows[0].length : 0;
                   options.columnBindingMapping = hasSheets ? Object.keys(columnBindingMapping).reduce(function (result, property) {
                      var index = columnBindingMapping[property];
-                     if (index < count) {
+                     if (0 <= index && index < count) {
                         result[property] = index;
                      }
                      return result;
