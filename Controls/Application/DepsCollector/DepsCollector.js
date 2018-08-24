@@ -26,10 +26,10 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function checkResourcesPrefix(link) {
       var path = link.split('/');
-      if(path[0] === '') {
+      if (path[0] === '') {
          path.shift();
       }
-      if(path[0] !== 'resources') {
+      if (path[0] !== 'resources') {
          path.unshift('resources');
       }
       var res = path.join('/');
@@ -144,7 +144,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          }
          return files;
       },
-      fixLink:  function fixLinkName(link) {
+      fixLink: function fixLinkName(link) {
          var res = link;
          res = checkResourcesPrefix(res);
          res = getLinkWithBuildNumber(res, this.buildNumber);
