@@ -68,7 +68,6 @@ define('Controls-demo/OperationsPanel/Panel', [
       }];
 
 
-
    var _private = {
       getPanelSource: function(key) {
          var data = [];
@@ -92,17 +91,23 @@ define('Controls-demo/OperationsPanel/Panel', [
       _eventName: '',
       _multiSelectorVisibility: true,
       _rightTemplate: true,
-      _rightTemplateTpl: RightTemplate,
-      _viewSource: new MemorySource({
-         idProperty: 'id',
-         data: DEMO_ITEMS
-      }),
-      _sourceConfig: new MemorySource({
-         idProperty: 'id',
-         data: DEMO_ITEMS
-      }),
+      _rightTemplateTpl:null,
+      _viewSource: null,
+      _sourceConfig: null,
       _sourceNumber: 1,
-      _source: _private.getPanelSource(1),
+      _source: null,
+      _beforeMount: function() {
+         this._rightTemplateTpl = RightTemplate;
+         this._viewSource = new MemorySource({
+            idProperty: 'id',
+            data: DEMO_ITEMS
+         });
+         this._sourceConfig = new MemorySource({
+            idProperty: 'id',
+            data: DEMO_ITEMS
+         });
+         this._source = _private.getPanelSource(1);
+      },
       sourceChange: function(e, key) {
          this._sourceNumber = key;
          this._source = _private.getPanelSource(key);

@@ -37,10 +37,11 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    var demoSwitchableArea = Control.extend({
       _template: template,
       _demoSelectedKey: '1',
-      _items: items,
+      _items: null,
       constructor: function() {
          demoSwitchableArea.superclass.constructor.apply(this, arguments);
          this.headDataCtxField = new HeadDataContext();
+         this._items = items;
       },
       _getChildContext: function() {
          return {

@@ -122,18 +122,23 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
 
    var RadioGroupDemo = Control.extend({
       _template: template,
-      _source: source,
-      _sourceOfSource: sourceOfSource,
+      _source: null,
+      _sourceOfSource: null,
       _selectKey: null,
       _selectedSource: 'source',
       _selectedDirection: 'vertical',
-      _directionSource: directionSource,
-      _sourceContentTemplate: sourceContentTemplate,
+      _directionSource: null,
+      _sourceContentTemplate: null,
       _selectedContentTemplate: 'default',
       _contentTemplate: '',
       _eventName: 'no event',
       _displayProperty: 'title',
-
+      _beforeMount: function () {
+         this._source = source;
+         this._sourceOfSource = sourceOfSource;
+         this._directionSource = directionSource;
+         this._sourceContentTemplate = sourceContentTemplate;
+      },
       changeKey: function(e, key) {
          this._selectKey = key;
          this._eventName = 'selectedKeyChanged';

@@ -135,13 +135,30 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
 
       var PanelVDom = Control.extend({
          _template: template,
-         _itemTemplate: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel'},
+         _itemTemplate: null,
          _addTemplate: null,
-         _itemsSimple: itemsSimple,
+         _itemsSimple: null,
          _hasItemTemplateProperty: false,
          _eventNameFilter: 'no event',
          _eventNameItems: 'no event',
-
+         _title: 'Отбираются',
+         _alignFilterSource: null,
+         _selectedKeyOrientation: 'left',
+         _selectedKeyStyle: 'primary',
+         _spaceTemplateKeys: null,
+         _spaceTemplateSource: null,
+         _spaceTemplate: false,
+         _additionalBlock: false,
+         _historyBlock: false,
+         _items: null,
+         _beforeMount: function() {
+            this._itemTemplate = { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel' };
+            this._itemsSimple = itemsSimple;
+            this._alignFilterSource = alignFilterSource;
+            this._spaceTemplateKeys = [1];
+            this._spaceTemplateSource = spaceTemplateSource;
+            this._items = items;
+         },
          reset: function() {
             this._eventNameFilter = 'no event';
             this._eventNameItems = 'no event';
@@ -172,20 +189,6 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
                this._itemTemplateProperty = null;
             }
          },
-
-         _title: 'Отбираются',
-
-         _alignFilterSource: alignFilterSource,
-         _selectedKeyOrientation: 'left',
-         _selectedKeyStyle: 'primary',
-         _spaceTemplateKeys: [1],
-         _spaceTemplateSource: spaceTemplateSource,
-         _spaceTemplate: false,
-         _additionalBlock: false,
-         _historyBlock: false,
-
-         _items: items
-
       });
 
       return PanelVDom;

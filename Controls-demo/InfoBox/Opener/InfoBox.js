@@ -146,8 +146,11 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
 
       var InfoBox = Control.extend({
          _template: template,
-         _blocks: blocks,
+         _blocks: null,
          _minTargetMode: false,
+         _bedoreMount: function() {
+            this._blocks = blocks;
+         },
 
          _open: function(e, cfg){
             cfg.target = e.target;

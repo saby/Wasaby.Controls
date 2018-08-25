@@ -5,9 +5,9 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
-], function (Control,
-             MemorySource,
-             template) {
+], function(Control,
+   MemorySource,
+   template) {
    'use strict';
 
    var styleSource = new MemorySource({
@@ -109,20 +109,26 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
       {
          _template: template,
          _selectedStyle: 'buttonLinkMain',
-         _styleSource: styleSource,
+         _styleSource: null,
          _selectedSize: 'm',
-         _sizeSource: sizeSource,
+         _sizeSource: null,
          _captions: null,
          _selectedCaptions: 'without caption',
-         _captionsSource: captionsSource,
+         _captionsSource: null,
          _selectedIcons: 'single icon',
-         _iconsSource: iconsSource,
-         _icons: ['icon-16 icon-Send'],
-         _iconStyleSource: iconStyleSource,
+         _iconsSource: null,
+         _icons: null,
+         _iconStyleSource: null,
          _selectedIconStyle: 'default',
          _tooltip: '',
          _eventName: 'no event',
-
+         _beforeMount: function() {
+            this._styleSource = styleSource;
+            this._sizeSource = sizeSource;
+            this._captionsSource = captionsSource;
+            this._iconsSource = iconsSource;
+            this._icons = ['icon-16 icon-Send'];
+         },
          clickHandler: function(e) {
             this._eventName = 'click';
          },
@@ -158,6 +164,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          reset: function() {
             this._eventName = 'no event';
          }
-      });
+      }
+   );
    return ModuleClass;
 });

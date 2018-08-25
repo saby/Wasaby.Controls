@@ -239,14 +239,23 @@ define('Controls-demo/Tabs/Buttons', [
       SelectedKey5: '2',
       SelectedKey6: '1',
       SelectedKey7: '3',
-      _source1: source1,
-      _source2: source2,
-      _source3: source3,
-      _source4: source4,
-      _source5: source5,
-      _source6: source6,
-      _source7: source7,
+      _source1: null,
+      _source2: null,
+      _source3: null,
+      _source4: null,
+      _source5: null,
+      _source6: null,
+      _source7: null,
       _spaceTemplate: spaceTemplate,
+      _beforeMount: function() {
+         this._source1 = source1;
+         this._source2 = source2;
+         this._source3 = source3;
+         this._source4 = source4;
+         this._source5 = source5;
+         this._source6 = source6;
+         this._source7 = source7;
+      },
       _setSource: function() {
          this._source6 = newSource6;
          source6.destroy();

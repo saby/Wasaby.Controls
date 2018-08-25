@@ -36,27 +36,32 @@ define('Controls-demo/List/Mover', [
       _template: template,
       _countClicked: 0,
       _reloadCaption: 'Reload',
-      _columns: [{
-         displayProperty: 'Наименование'
-      }],
-      _treeSource: new TreeMemory({
-         idProperty: 'id',
-         data: GridData.catalog
-      }),
-      _itemActionsTree: [{
-         id: 0,
-         icon: 'icon-Move icon-primary',
-         showType: 2
-      }],
-      _selectedKeys: [],
-      _filter: {
-         'ВидДерева': 'Только узлы'
-      },
+      _columns: null,
+      _treeSource: null,
+      _itemActionsTree: null,
+      _selectedKeys: null,
+      _filter: null,
       _viewSource: _private.createSource(demoItems),
       _viewSourceSecond: _private.createSource(demoItems),
 
       _beforeMount: function() {
          var self = this;
+         this._columns = [{
+            displayProperty: 'Наименование'
+         }];
+         this._filter = {
+            'ВидДерева': 'Только узлы'
+         };
+         this._treeSource = new TreeMemory({
+            idProperty: 'id',
+            data: GridData.catalog
+         });
+         this._itemActionsTree = [{
+            id: 0,
+            icon: 'icon-Move icon-primary',
+            showType: 2
+         }];
+         this._selectedKeys = [];
          this._itemActions = this._createItemsActions('listMover');
          this._itemActionsSecond = this._createItemsActions('listSecondMover');
          this._itemActionsThird = this._createItemsActions('dialogMover');

@@ -104,28 +104,35 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    
    var SearchContainer = Control.extend({
       _template: template,
-      _navigation: {
-         source: 'page',
-         view: 'page',
-         sourceConfig: {
-            pageSize: 20,
-            page: 0,
-            mode: 'totalCount'
-         }
-      },
-      _filter: {},
-      _search: {},
-      _filterSearch: {},
-      _filterSearchTabs: {},
+      _navigation: null,
       _searchValue: '',
-      _fastFilterData: filterData,
-      _fullFastFilterData: filterDepData,
-      _filterButtonData: filterButtonData,
+      _filter: null,
+      _search: null,
+      _filterSearch: null,
+      _filterSearchTabs: null,
+      _fastFilterData: null,
+      _fullFastFilterData: null,
+      _filterButtonData: null,
       _tabSelectedKey: 'employees',
       _searchValueWithFilters: '',
       _searchValueWithFiltersTabs: '',
-      
       _beforeMount: function() {
+         this._navigation = {
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 20,
+               page: 0,
+               mode: 'totalCount'
+            }
+         };
+         this._filter = {};
+         this._search = {};
+         this._filterSearch = {};
+         this._filterSearchTabs = {};
+         this._fastFilterData = filterData;
+         this._fullFastFilterData = filterDepData;
+         this._filterButtonData = filterButtonData;
          this._source = new MemorySource({
             data: memorySourceData,
             idProperty: 'id'

@@ -4,7 +4,12 @@ define('Controls-demo/Input/Text/Text', [
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template) {
    'use strict';
-
+   var item = [
+      { title: '[0-9]', example: 'You can use only digits' },
+      { title: '[a-zA-Z]', example: 'You can use only letters' },
+      { title: '[a-z]', example: 'You can use only lowercase letters' },
+      { title: '[A-Z]', example: 'You can use only uppercase letters' }
+   ];
    var VdomDemoText = Control.extend({
       _template: template,
       _text1: '',
@@ -16,13 +21,11 @@ define('Controls-demo/Input/Text/Text', [
       _example: '',
       _selectOnClick: false,
       _readOnly: false,
-      _items: [
-         { title: '[0-9]', example: 'You can use only digits' },
-         { title: '[a-zA-Z]', example: 'You can use only letters' },
-         { title: '[a-z]', example: 'You can use only lowercase letters' },
-         { title: '[A-Z]', example: 'You can use only uppercase letters' }
-      ],
+      _items: null,
       _tooltip: 'Text',
+      _beforeMount: function() {
+         this._items = item;
+      },
       _tagStyleHandler: function() {
          this._children.infoBox.open({
             target: this._children.textBox._container,

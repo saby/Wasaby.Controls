@@ -23,12 +23,15 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _orientationSource: orientationSource,
+         _orientationSource: null,
          _selectedOrientation: 'horizontal',
          _caption1: 'on',
          _caption2: 'off',
          _tooltip: '',
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._orientationSource = orientationSource;
+         },
 
          changeOrientation: function(e, key) {
             this._selectedOrientation = key;

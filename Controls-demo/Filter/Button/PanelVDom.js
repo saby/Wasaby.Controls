@@ -96,17 +96,21 @@ define('Controls-demo/Filter/Button/PanelVDom',
 
       var PanelVDom = Control.extend({
          _template: template,
-
+         _itemsSimple: null,
+         _itemsTemplate: null,
+         _items: null,
+         _itemsHistory: null,
+         _beforeMount: function() {
+            this._itemsSimple = itemsSimple;
+            this._itemsTemplate = itemsTemplate;
+            this._items = items;
+            this._itemsHistory = items;
+         },
          _filterChangedHandler: function(event, filter) {
             Chain(this._items).each(function(item) {
                item.textValue = filter[item.id];
             });
-         },
-
-         _itemsSimple: itemsSimple,
-         _itemsTemplate: itemsTemplate,
-         _items: items,
-         _itemsHistory: items
+         }
 
       });
       return PanelVDom;

@@ -92,21 +92,8 @@ define('Controls-demo/List/EditInPlace', [
       _handleItemClick: false,
       _handleClickError: false,
       _readOnly: false,
-      _editingItem: new Model({
-         rawData: {
-            id: 2,
-            title: 'Editing starts before mounting to DOM',
-            randomField: 'text'
-         }
-      }),
-      _addItem: new Model({
-         rawData: {
-            id: 3,
-            title: 'Adding starts before mounting to DOM',
-            randomField: 'text'
-         }
-      }),
-
+      _editingItem: null,
+      _addItem: null,
       _beforeMount: function() {
          this._viewSource = new MemorySource({
             idProperty: 'id',
@@ -127,6 +114,20 @@ define('Controls-demo/List/EditInPlace', [
          this._viewSource5 = new MemorySource({
             idProperty: 'id',
             data: srcData5
+         });
+         this._editingItem = new Model({
+            rawData: {
+               id: 2,
+               title: 'Editing starts before mounting to DOM',
+               randomField: 'text'
+            }
+         });
+         this._addItem = new Model({
+            rawData: {
+               id: 3,
+               title: 'Adding starts before mounting to DOM',
+               randomField: 'text'
+            }
          });
       },
 

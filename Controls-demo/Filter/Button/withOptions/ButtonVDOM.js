@@ -111,13 +111,28 @@ define('Controls-demo/Filter/Button/withOptions/ButtonVDOM',
       var PanelVDom = Control.extend({
          _template: template,
          _suggestValue: 'items 1',
-         _itemsSimple: items1,
+         _itemsSimple: null,
          _templateName: 'custom',
-         _templateNameItems: _templateNameItems,
-
+         _templateNameItems: null,
+         _alignFilterSource: null,
+         _selectedKeyOrientation: 'left',
+         _lineSpaceValue: false,
+         _spaceTemplate: 'default',
+         _itemsSpaceTemplate: null,
+         _spaceTemplateSource: null,
+         _spaceTemplateKeys: null,
+         _items: null,
          _eventNameFilter: 'no event',
          _eventNameItems: 'no event',
-
+         _beforeMount: function() {
+            this._templateNameItems = _templateNameItems;
+            this._alignFilterSource = alignFilterSource;
+            this._itemsSpaceTemplate = _itemsSpaceTemplate;
+            this._spaceTemplateSource = spaceTemplateSource;
+            this._spaceTemplateKeys = [1];
+            this._items = _items;
+            this._itemsSimple = items1;
+         },
          reset: function() {
             this._eventNameFilter = 'no event';
             this._eventNameItems = 'no event';
@@ -138,16 +153,6 @@ define('Controls-demo/Filter/Button/withOptions/ButtonVDOM',
                this._itemsSimple = items2;
             }
          },
-
-         _alignFilterSource: alignFilterSource,
-         _selectedKeyOrientation: 'left',
-         _lineSpaceValue: false,
-         _spaceTemplate: 'default',
-         _itemsSpaceTemplate: _itemsSpaceTemplate,
-         _spaceTemplateSource: spaceTemplateSource,
-         _spaceTemplateKeys: [1],
-         _items: _items
-
       });
 
       return PanelVDom;

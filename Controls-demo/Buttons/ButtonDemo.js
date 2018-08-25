@@ -5,9 +5,9 @@ define('Controls-demo/Buttons/ButtonDemo', [
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
-], function (Control,
-             MemorySource,
-             template) {
+], function(Control,
+   MemorySource,
+   template) {
    'use strict';
 
    var minimumNumberOfSize = new MemorySource({
@@ -120,16 +120,20 @@ define('Controls-demo/Buttons/ButtonDemo', [
       {
          _template: template,
          _selectedStyle: 'iconButtonBorderedAdditional',
-         _styleSource: styleSource,
+         _styleSource: null,
          _selectedSize: 'm',
-         _sizeSource: minimumNumberOfSize,
+         _sizeSource: null,
          _caption: '',
          _icon: 'icon-16 icon-Send',
-         _iconStyleSource: iconStyleSource,
+         _iconStyleSource: null,
          _selectedIconStyle: 'default',
          _tooltip: '',
          _eventName: 'no event',
-
+         _beforeMount: function() {
+            this._styleSource = styleSource;
+            this._sizeSource = minimumNumberOfSize;
+            this._iconStyleSource = iconStyleSource;
+         },
          clickHandler: function(e) {
             this._eventName = 'click';
          },
@@ -153,6 +157,7 @@ define('Controls-demo/Buttons/ButtonDemo', [
          reset: function() {
             this._eventName = 'no event';
          }
-      });
+      }
+   );
    return ModuleClass;
 });

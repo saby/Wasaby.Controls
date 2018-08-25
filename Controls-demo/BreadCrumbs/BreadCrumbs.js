@@ -2,7 +2,6 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
    'tmpl!Controls-demo/BreadCrumbs/BreadCrumbs'
 ], function(Control, template) {
-
    var data = [
       {
          id: 1,
@@ -38,13 +37,18 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
 
    var BreadCrumbs = Control.extend({
       _template: template,
-      items: data,
-      items1: [data[0]],
-      items2: [data[0], data[5]],
-      items3: [{id: 5, title: 'Recor'}, data[5]],
+      items: null,
+      items1: null,
+      items2: null,
+      items3: null,
       info: '',
       _arrowActivated: false,
-
+      _beforeMount: function() {
+         this.items = data;
+         this.items1 = [data[0]];
+         this.items2 = [data[0], data[5]];
+         this.items3 = [{ id: 5, title: 'Recor' }, data[5]];
+      },
       _onItemClick: function(e, item) {
          this.info = item.id;
          this._arrowActivated = false;

@@ -23,7 +23,7 @@ define('Controls-demo/Layouts/SearchLayout', [
    template,
    MemorySource) {
    'use strict';
-   
+
    var sourceData = [
       { id: 1, firstName: 'Sasha', lastName: 'aaaa' },
       { id: 2, firstName: 'Dmitry', lastName: 'aaaa' },
@@ -159,27 +159,33 @@ define('Controls-demo/Layouts/SearchLayout', [
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
-         _dataSource: new MemorySource({
-            idProperty: 'id',
-            data: sourceData
-         }),
-         _filterSource: filterSourceData,
+         _dataSource: null,
+         _filterSource: null,
          _switchValue: false,
-
-         _fastFilterSource: new MemorySource({
-            idProperty: 'id',
-            data: filterData
-         }),
-         _navigation: {
-            source: 'page',
-            view: 'page',
-            sourceConfig: {
-               pageSize: 20,
-               page: 0,
-               mode: 'totalCount'
-            }
-         },
-         _fastFilterData: filterData
+         _fastFilterSource: null,
+         _navigation: null,
+         _fastFilterData: null,
+         _beforeMount: function() {
+            this._dataSource = new MemorySource({
+               idProperty: 'id',
+               data: sourceData
+            });
+            this._filterSource = filterSourceData;
+            this._fastFilterData = filterData;
+            this._fastFilterSource = new MemorySource({
+               idProperty: 'id',
+               data: filterData
+            });
+            this._navigation = {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 20,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            };
+         }
       });
    return ModuleClass;
 });

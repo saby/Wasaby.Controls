@@ -49,7 +49,10 @@ define('Controls-demo/Checkbox/Checkbox', [
          _tooltip: 'tooltip',
          _value: false,
          _eventName: 'no event',
-         _source: source,
+         _source: null,
+         _beforeMount:function(){
+            this._source = source;
+         },
          reset: function() {
             this._eventName = 'no event';
          },

@@ -26,8 +26,11 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
       {
          _template: template,
          _iconSelectedStyle: 'primary',
-         _iconStyleSource: iconStyleSource,
+         _iconStyleSource: null,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._iconStyleSource = iconStyleSource;
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

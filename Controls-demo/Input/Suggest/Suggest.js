@@ -82,6 +82,12 @@ define('Controls-demo/Input/Suggest/Suggest', [
          self._source = new MemorySource(cfg);
       }
    };
+   var item =[
+      {title: '[0-9]', example: 'You can use only digits'},
+      {title: '[a-zA-Z]', example: 'You can use only letters'},
+      {title: '[a-z]', example: 'You can use only lowercase letters'},
+      {title: '[A-Z]', example: 'You can use only uppercase letters'}
+   ];
    var VDomSuggest = Control.extend({
       _template: template,
       _source: null,
@@ -105,24 +111,25 @@ define('Controls-demo/Input/Suggest/Suggest', [
       _readOnly: false,
       _pageSize: '2',
       _page: '0',
-      _parameters: [
-         {title: 'age'},
-         {title: 'title'}
-      ],
-      _itemTpl: [
-         {id: '1', title: 'default'},
-         {id: '2', title: 'custom'}
-      ],
-      _sourceData: [
-         {id: '1', title: 'men'},
-         {id: '2', title: 'women'}
-      ],
-      _items: [
-         {title: '[0-9]', example: 'You can use only digits'},
-         {title: '[a-zA-Z]', example: 'You can use only letters'},
-         {title: '[a-z]', example: 'You can use only lowercase letters'},
-         {title: '[A-Z]', example: 'You can use only uppercase letters'}
-      ],
+      _parameters: null,
+      _itemTpl: null,
+      _sourceData: null,
+      _items: null,
+      _beforeMount: function() {
+         this._items = item;
+         this._parameters = [
+            {title: 'age'},
+            {title: 'title'}
+         ];
+         this._itemTpl = [
+            {id: '1', title: 'default'},
+            {id: '2', title: 'custom'}
+         ];
+         this._sourceData = [
+            {id: '1', title: 'men'},
+            {id: '2', title: 'women'}
+         ];
+      },
       _validationChangedHandler: function() {
          if (this._validationErrorsValue) {
             this._validationErrors = ['Some error'];

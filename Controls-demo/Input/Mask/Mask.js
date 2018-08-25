@@ -10,6 +10,15 @@ define('Controls-demo/Input/Mask/Mask',
    ],
    function(Control, template, Formatter, Memory) {
       'use strict';
+      var items = [
+         { title: 'dd dd dddddd', example: 'You can use mask of Russian passport' },
+         {
+            title: 'ddd-ddd-ddd dd',
+            example: 'You can use mask of INILA(Insurance Number of Individual Ledger Account)'
+         },
+         { title: '(ddd(ddd)ddd)', example: '' },
+         { title: 'd\\{1,3}l\\{1,3}', example: '' }
+      ];
 
       var Mask = Control.extend({
          _template: template,
@@ -21,15 +30,10 @@ define('Controls-demo/Input/Mask/Mask',
          _example: '',
          _tooltip: 'Mask',
          _readOnly: false,
-         _items: [
-            { title: 'dd dd dddddd', example: 'You can use mask of Russian passport' },
-            {
-               title: 'ddd-ddd-ddd dd',
-               example: 'You can use mask of INILA(Insurance Number of Individual Ledger Account)'
-            },
-            { title: '(ddd(ddd)ddd)', example: '' },
-            { title: 'd\\{1,3}l\\{1,3}', example: '' }
-         ],
+         _items: null,
+         _beforeMount: function() {
+            this._items = items;
+         },
          _tagStyleHandler: function() {
             this._children.infoBoxMask.open({
                target: this._children.textMask._container,

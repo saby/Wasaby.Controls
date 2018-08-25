@@ -5,7 +5,6 @@ define('Controls-demo/Confirmation/Confirmation',
       'Controls-demo/Confirmation/resources/detailsComponent'
    ],
    function(Control, template) {
-
       'use strict';
 
       var MESSAGE = 'Message';
@@ -101,11 +100,12 @@ define('Controls-demo/Confirmation/Confirmation',
 
       var InfoBox = Control.extend({
          _template: template,
-         _blocks: blocks,
+         _blocks: null,
          _result: '',
 
          _beforeMount: function() {
             this._onResultHandler = this._onResultHandler.bind(this);
+            this._blocks = blocks;
          },
 
          _open: function(e, cfg) {
@@ -124,5 +124,4 @@ define('Controls-demo/Confirmation/Confirmation',
       });
 
       return InfoBox;
-   }
-);
+   });

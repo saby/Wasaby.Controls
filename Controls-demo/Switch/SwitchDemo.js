@@ -22,11 +22,14 @@ define('Controls-demo/Switch/SwitchDemo', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _captionPositionSource: captionPositionSource,
+         _captionPositionSource: null,
          _selectedCaptionPosition: 'left',
          _caption: 'on',
          _tooltip: '',
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._captionPositionSource = captionPositionSource;
+         },
 
          changeCaptionPosition: function(e, key) {
             this._selectedCaptionPosition = key;

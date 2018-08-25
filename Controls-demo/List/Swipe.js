@@ -10,22 +10,20 @@ define('Controls-demo/List/Swipe', [
 ], function(BaseControl,
    template,
    MemorySource,
-   RecordSet
-
-) {
+   RecordSet) {
    'use strict';
    var showType = {
 
-      //show only in Menu
+      // show only in Menu
       MENU: 0,
 
-      //show in Menu and Toolbar
+      // show in Menu and Toolbar
       MENU_TOOLBAR: 1,
 
-      //show only in Toolbar
+      // show only in Toolbar
       TOOLBAR: 2
    };
-   
+
    var srcData = [
          {
             id: 1
@@ -215,7 +213,8 @@ define('Controls-demo/List/Swipe', [
                handler: function() {
                   console.log('action delete Click');
                }
-            }, {
+            },
+            {
                id: 5,
                title: 'прочитано',
                icon: 'icon-primary icon-CbPlus',
@@ -224,7 +223,7 @@ define('Controls-demo/List/Swipe', [
                   console.log('action read Click');
                }
             },
-         
+
             {
                id: 6,
                icon: 'icon-Lightning icon-error',
@@ -269,7 +268,7 @@ define('Controls-demo/List/Swipe', [
                   console.log('action delete Click');
                }
             },
-      
+
             {
                id: 5,
                icon: 'icon-Lightning icon-error',
@@ -278,7 +277,8 @@ define('Controls-demo/List/Swipe', [
                handler: function() {
                   console.log('action delete Click');
                }
-            }, {
+            },
+            {
                id: 6,
                title: 'прочитано',
 
@@ -287,7 +287,7 @@ define('Controls-demo/List/Swipe', [
                   console.log('action read Click');
                }
             },
-         
+
             {
                id: 7,
                icon: 'icon-Pack icon-error',
@@ -332,7 +332,8 @@ define('Controls-demo/List/Swipe', [
                handler: function() {
                   console.log('action delete Click');
                }
-            }, {
+            },
+            {
                id: 5,
                title: 'прочитано',
                icon: 'icon-primary icon-CbPlus',
@@ -340,7 +341,7 @@ define('Controls-demo/List/Swipe', [
                   console.log('action read Click');
                }
             },
-            
+
             {
                id: 6,
                icon: 'icon-Lightning icon-error',
@@ -372,10 +373,10 @@ define('Controls-demo/List/Swipe', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _actions: [1, 2, 3, 4, 5, 6, 7, 8],
-         _heightS: [37, 38, 44, 52, 72, 73, 75, 85, 92, 107, 108, 109, 110, 120, 133, 134, 157, 158, 169, 170, 181, 182, 184, 223, 224, 263, 264, 303, 304, 350, 400, 500, 600 ],
+         _actions: null,
+         _heightS: null,
          _height: 37,
-         _itemActions: _actionsArrays[5],
+         _itemActions: null,
          _template: template,
          _onActionClick: function(event, action, item) {
             console.log(arguments);
@@ -387,12 +388,14 @@ define('Controls-demo/List/Swipe', [
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
 
-            //this._onActClick = this._onActClick.bind(this);
+            // this._onActClick = this._onActClick.bind(this);
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: srcData
             });
-
+            this._actions = [1, 2, 3, 4, 5, 6, 7, 8];
+            this._heightS = [37, 38, 44, 52, 72, 73, 75, 85, 92, 107, 108, 109, 110, 120, 133, 134, 157, 158, 169, 170, 181, 182, 184, 223, 224, 263, 264, 303, 304, 350, 400, 500, 600];
+            this._itemActions = _actionsArrays[5];
          },
          _onHeightClick: function(event, height) {
             this._height = height;
@@ -401,6 +404,7 @@ define('Controls-demo/List/Swipe', [
          _onActClick: function(event, act) {
             this._itemActions = _actionsArrays[act];
          }
-      });
+      }
+   );
    return ModuleClass;
 });

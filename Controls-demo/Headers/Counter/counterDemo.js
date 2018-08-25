@@ -45,10 +45,14 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _template: template,
          _counterSelectedSize: 'l',
          _counterSelectedStyle: 'primary',
-         _counterSizeSource: counterSizeSource,
-         _counterStyleSource: counterStyleSource,
+         _counterSizeSource: null,
+         _counterStyleSource: null,
          _counterCaption: '12',
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._counterSizeSource = counterSizeSource;
+            this._counterStyleSource = counterStyleSource;
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

@@ -33,11 +33,15 @@ define('Controls-demo/Headers/headerDemo', [
          _template: template,
          _headerSelectedSize: 'm',
          _selectedStyle: 'primary',
-         _headerSizeSource: headerSizeSource,
-         _headerStyleSource: headerStyleSource,
+         _headerSizeSource: null,
+         _headerStyleSource: null,
          _caption: 'Header',
          _readOnly: false,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._headerSizeSource = headerSizeSource;
+            this._headerStyleSource = headerStyleSource;
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

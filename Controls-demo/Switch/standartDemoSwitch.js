@@ -23,7 +23,7 @@ define('Controls-demo/Switch/standartDemoSwitch', [
 
    var ModuleClass = Control.extend({
       _template: template,
-      _source: source,
+      _source: null,
       _selectKey: '1',
       _selectKey2: '1',
       _selectKey3: '',
@@ -33,6 +33,9 @@ define('Controls-demo/Switch/standartDemoSwitch', [
       value3: true,
       value4: false,
       value5: true,
+      _beforeMount: function() {
+         this._source = source;
+      },
 
       changeKey: function(e, radioIndex, key) {
          switch (radioIndex) {

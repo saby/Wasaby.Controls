@@ -5,9 +5,9 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
-], function (Control,
-             MemorySource,
-             template) {
+], function(Control,
+   MemorySource,
+   template) {
    'use strict';
 
    var closeStyleSource = new MemorySource({
@@ -29,9 +29,11 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
       {
          _template: template,
          _closeSelectedStyle: 'default',
-         _closeStyleSource: closeStyleSource,
+         _closeStyleSource: null,
          _eventName: 'no event',
-
+         _beforeMount: function() {
+            this._closeStyleSource = closeStyleSource;
+         },
          clickHandler: function(e) {
             this._eventName = 'click';
          },
@@ -43,6 +45,7 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
          reset: function() {
             this._eventName = 'no event';
          }
-      });
+      }
+   );
    return ModuleClass;
 });

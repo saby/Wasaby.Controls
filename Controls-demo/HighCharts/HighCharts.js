@@ -29,22 +29,23 @@ define('Controls-demo/HighCharts/HighCharts', [
 
    return Control.extend({
       _template: template,
+      _wsSeries: null,
+      _wsAxis: null,
 
       _beforeMount: function() {
          this._filter = '1';
          this._configState = '1';
          this._chartConfig = _chartConfig1;
          this._dataSource = new DemoSource();
+         this._wsSeries = [{
+            sourceFieldX: 'title',
+            sourceFieldY: 'value',
+            type: 'pie'
+         }];
+         this._wsAxis = [{
+            title: 'Title'
+         }];
       },
-
-      _wsSeries: [{
-         sourceFieldX: 'title',
-         sourceFieldY: 'value',
-         type: 'pie'
-      }],
-      _wsAxis: [{
-         title: 'Title'
-      }],
       _updateConfig: function() {
          if (this._configState === '1') {
             this._configState = '2';

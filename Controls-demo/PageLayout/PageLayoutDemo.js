@@ -59,11 +59,13 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
    var demoBrowserTabs = Control.extend({
       _template: template,
       _demoTabsSelectedKey: '1',
-      _demoTabsSource: demoTabsSource,
-      _demoTabsSource2: demoTabsSource2,
+      _demoTabsSource: null,
+      _demoTabsSource2: null,
       constructor: function() {
          demoBrowserTabs.superclass.constructor.apply(this, arguments);
          this.headDataCtxField = new HeadDataContext();
+         this._demoTabsSource = demoTabsSource;
+         this._demoTabsSource2 = demoTabsSource2;
       },
       _getChildContext: function() {
          return {

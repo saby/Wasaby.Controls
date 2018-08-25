@@ -40,13 +40,15 @@ define('Controls-demo/FilterButton/Panel/Panel',
 
       var Panel = Control.extend({
 
+         _template: template,
+         sourceDropdown: null,
+         _text: '',
          _filterChangedHandler: function() {
             this._text += 'Стреляет filterChanged\n';
          },
-
-         _template: template,
-         sourceDropdown: sourceDropdown,
-         _text: ''
+         _beforeMount: function() {
+            this.sourceDropdown = sourceDropdown;
+         },
 
       });
 

@@ -29,10 +29,13 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
       {
          _template: template,
          _separatorSelectedStyle: 'secondary',
-         _separatorStyleSource: separatorStyleSource,
+         _separatorStyleSource: null,
          _bold: true,
          _activeFlag: false,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._separatorStyleSource = separatorStyleSource;
+         },
 
          activatedHandler: function(e) {
             this._activeFlag = true;
