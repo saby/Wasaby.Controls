@@ -45,6 +45,10 @@
       "path": "%cd%/node_modules/ws-data/WS.Data"
     },
     {
+      "name": "Data",
+      "path": "%cd%/node_modules/ws-data/Data"
+    },
+    {
       "name": "SBIS3.CONTROLS",
       "path": "%cd%/SBIS3.CONTROLS"
     },
@@ -58,6 +62,10 @@
     },
     {
       "name": "ControlsSandbox",
+      "path": "%cd%/pages/sandbox"
+    },
+    {
+      "name": "Data",
       "path": "%cd%/pages/sandbox"
     }
   ]

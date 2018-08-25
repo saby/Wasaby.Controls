@@ -270,7 +270,7 @@ app.get('/app/*', function(req, res){
    var html = tpl({
       lite: true,
       wsRoot: '/WS.Core/',
-      resoureceRoot: '/',
+      resourceRoot: '/',
       application: req.query.app
    });
 
