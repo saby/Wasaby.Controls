@@ -14,7 +14,11 @@
 /sbis3-ws
 /View
 /Core
+/builderCfg.json
 /components/Core
+/application
+/application/*
+/package-lock.json
 /ws-data
 /cdn
 /node_modules
