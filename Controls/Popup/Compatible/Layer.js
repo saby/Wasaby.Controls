@@ -224,6 +224,12 @@ define('Controls/Popup/Compatible/Layer', [
          if (!loadDeferred) {
             loadDeferred = new Deferred();
 
+            /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
+            * например, autosize*/
+            if (window.jQuery) {
+               compatibleDeps.splice(0, 1);
+            }
+
             deps = (deps || []).concat(compatibleDeps);
 
             var parallelDef = new ParallelDeferred(),
