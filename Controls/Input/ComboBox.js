@@ -22,7 +22,7 @@ define('Controls/Input/ComboBox',
        * @control
        * @public
        * @category Input
-       * @author Красильников А.С.
+       * @author Зайцев А.С.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
        */

@@ -59,6 +59,7 @@ define('Controls-demo/Checkbox/Checkbox', [
             var self = this;
             this._source.read(key).addCallback(function(item) {
                self._value = item.get('value');
+               self._forceUpdate();
             });
          },
          setTristate: function(e, value) {

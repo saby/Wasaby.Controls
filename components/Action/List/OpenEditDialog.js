@@ -50,12 +50,17 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
    var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS/Action/List/OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
+       * Событие происходит перед тем, как компонент выполняет синхронизацию изменений со связанным списком, если такой установлен в опции linkedObject.
+       * Такая синхронизация выполняется каждый раз при удалении или редактировании записи.
+       * В обработчике события onUpdateModel можно отметить базовую логику сохранения записи (см. {@link /doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/ Синхронизация изменений со списком} )
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
        * @param {String} additionalData.key Идентификатор сохранённой записи.
-       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции idProperty.
        * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
+       * Когда параметр установлен в значение true, это значит что запись не существует в источнике данных. Значение false говорит об уже существующей в БД записи.
+       * Параметр используется в прикладных целях при создании обработчиков на событие.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
@@ -92,7 +97,10 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
             /**
              * @cfg {String} Устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
-            urlProperty: ''
+            urlProperty: '',
+
+            //Закрытие работает на основе внутреннего алгоритма, а не системе фокусов
+            closeByFocusOut: false
          },
          /**
           * Ключ модели из связного списка

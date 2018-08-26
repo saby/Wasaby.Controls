@@ -112,6 +112,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             defaultYoutubeWidth: 430,
             minYoutubeWidth: 350,
             //dataReviewPaddings: 6,
+            baseFontSize: 14,
             styles: {
                title: {
                   inline: 'span',
@@ -413,11 +414,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var self = this;
                if (self._options.hasOwnProperty('json')) {
                   self._htmlJson = new HtmlJson();
-
-                  // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
-                  self._htmlJson.setJson = function(json) {
-                     this._options.json = json;
-                  };
+                  if (typeof self._options.json === 'string') {
+                     self.isJsonString = true;
+                     self._options.json = JSON.parse(self._options.json);
+                  }
                   self.setJson(self._options.json);
 
                   self.subscribe('onTextChange', function(e, text) {
@@ -427,7 +427,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var div = document.createElement('div');
                      div.innerHTML = text;
                      self._options.json = domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self._options.json]);
+                     self._notify('onJsonChange', [self.isJsonString ? JSON.stringify(self._options.json) : self._options.json]);
                   });
                }
                this._updateDataReview(this.getText());
@@ -1239,7 +1239,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
                   hasOther = true;
-                  if (!hasOther) {
+                  // Добавил проверку, что это не размер по умолчанию
+                  // https://online.sbis.ru/opendoc.html?guid=89964a3c-98b4-4411-9c61-5de10da28ed5
+                  if (formats.fontsize !== constants.baseFontSize && !hasOther) {
                      // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.

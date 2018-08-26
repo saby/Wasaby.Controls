@@ -50,7 +50,7 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot);
          },
          _getChildContext: function() {
             return {

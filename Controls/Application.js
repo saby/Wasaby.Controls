@@ -21,6 +21,7 @@ define('Controls/Application',
     * @extends Core/Control
     * @control
     * @public
+    * @author Зуев Д.В.
     */
 
    function(Base,

@@ -31,7 +31,7 @@ define('Controls/Filter/Button',
        * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        *
        * @css @height_FilterButton Height of button.
        * @css @color_FilterButton-icon Color of button icon.

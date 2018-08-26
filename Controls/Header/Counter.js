@@ -16,6 +16,7 @@ define('Controls/Header/Counter', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Михайловский Д.С.
     *
     * @demo Controls-demo/Headers/Counter/counterDemo
     *

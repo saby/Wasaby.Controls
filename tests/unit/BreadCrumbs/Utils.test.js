@@ -1,5 +1,5 @@
 define([
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred'
 ], function(
@@ -7,7 +7,7 @@ define([
    FontLoadUtil,
    Deferred
 ) {
-   describe('Controls.Utils.BreadCrumbsUtil', function() {
+   describe('Controls.BreadCrumbs.Utils', function() {
       var data;
       beforeEach(function() {
          FontLoadUtil.waitForFontLoad = function() {

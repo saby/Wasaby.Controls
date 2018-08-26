@@ -35,16 +35,7 @@ define('Controls/Application/_Head',
             return Array.isArray(this._options.theme);
          },
          getCssWithTheme: function(value, theme) {
-            if (this._options.appRoot) {
-               value = this._options.appRoot + value;
-               value = value.replace('//', '/');
-            }
-            var forReplace = '.min.css';
-
-            if (value.indexOf(forReplace) === -1) {
-               forReplace = '.css';
-            }
-            return  value.replace(forReplace, '') + '_' + theme + forReplace;
+            return  value.replace(/(.min.css$|.css$)/g, '') + '_' + theme + '.css';
          }
       });
       Page.contextTypes = function() {

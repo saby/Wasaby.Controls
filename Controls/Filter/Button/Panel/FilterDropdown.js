@@ -15,6 +15,7 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
     * @mixes Controls/interface/ITextValue
     * @control
     * @public
+    * @author Герасимов А.М.
     */
 
    'use strict';

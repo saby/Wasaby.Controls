@@ -84,7 +84,10 @@ define('SBIS3.CONTROLS/ControlHierarchyManager', [], function () {
       },
 
       _findContainer: function(control, container){
-         return $(control._container).find($(container)).length || $(control._container).get(0) == container || control._container == container;
+         return $(control._container).find($(container)).length ||
+            $(control._container).get(0) == container ||
+            control._container == container ||
+            $(control._container).get(0) == $(container).get(0);
       },
 
       _checkIndexInclusion: function(component, target){

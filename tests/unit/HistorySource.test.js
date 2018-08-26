@@ -247,19 +247,17 @@ define(
                historyItems = hSource.getItems();
                assert.equal(historyItems.at('1').get('pinned'), false);
             });
-            it('checkPinnedAmountAfterAdd', function() {
+            it('checkPinnedAmount', function() {
                let list = new RecordSet();
-               
+
                for (var i = 0; i < Constants.MAX_HISTORY; i++) {
                   list.add(new Model());
                }
-   
-               historySource._private.checkPinnedAmountAfterAdd(list);
-               assert.isTrue(list.getCount() === Constants.MAX_HISTORY);
-   
-               list.add(new Model());
-               historySource._private.checkPinnedAmountAfterAdd(list);
-               assert.isTrue(list.getCount() === Constants.MAX_HISTORY);
+
+               assert.isFalse(historySource._private.checkPinnedAmount(list));
+
+               list.remove(list.at(9));
+               assert.isTrue(historySource._private.checkPinnedAmount(list));
             });
             it('updateRecent', function() {
                let meta = {

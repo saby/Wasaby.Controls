@@ -23,7 +23,7 @@ define('Controls/Dropdown/Controller',
        * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/IGroupedView
-       * @author Золотова Э.Е.
+       * @author Красильников А.С.
        * @control
        * @public
        */

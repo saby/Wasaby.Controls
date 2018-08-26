@@ -25,7 +25,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        * @extends Core/Control
        * @control
        * @public
-       * @author Зуев Д.В.
+       * @author Красильников А.С.
        */
 
    /**

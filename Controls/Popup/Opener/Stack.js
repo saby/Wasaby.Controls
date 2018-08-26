@@ -14,9 +14,21 @@ define('Controls/Popup/Opener/Stack',
        * @class Controls/Popup/Opener/Stack
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */
+
+      var _private = {
+         getStackConfig: function(config) {
+            config = config || {};
+
+            //The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+            return config;
+         }
+      };
+
       var Stack = BaseOpener.extend({
 
          /**
@@ -25,7 +37,7 @@ define('Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function(config) {
-            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+            config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
             return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
          },
@@ -34,6 +46,8 @@ define('Controls/Popup/Opener/Stack',
             config._type = 'stack'; // for compoundArea
          }
       });
+
+      Stack._private = _private;
 
       return Stack;
    });

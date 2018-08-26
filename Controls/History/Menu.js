@@ -70,7 +70,19 @@ define('Controls/History/Menu',
          },
 
          _onPinClickHandler: function(event, items) {
-            this._options.source.update(items[0], _private.getMetaPinned(items[0]));
+            var self = this;
+            this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function(result) {
+               if (!result) {
+                  self._children.notificationOpener.open({
+                     template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                     templateOptions: {
+                        style: 'error',
+                        text: 'Невозможно закрепить более 10 пунктов',
+                        icon: 'Alert'
+                     }
+                  });
+               }
+            });
             this._items = this._options.source.getItems();
          }
       });

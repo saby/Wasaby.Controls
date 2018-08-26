@@ -46,7 +46,7 @@
             </ws:else>
          </ws:if>
          <ws:else>
-            <link rel="stylesheet" class="css-bundles" href="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" type="text/css" key="{{ 'css_' + index }}" />
+            <link rel="stylesheet" class="css-bundles" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}" />
          </ws:else>
       </ws:for>
    </ws:if>

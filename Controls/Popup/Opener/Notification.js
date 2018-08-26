@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Notification',
        * @class Controls/Popup/Opener/Notification
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */
