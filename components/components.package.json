@@ -34,7 +34,8 @@
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
       "SBIS3.CONTROLS/Filter/Button/Line",
       "SBIS3.CONTROLS/Filter/Button/Line/*",
-      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/HistoryController"
     ],
     "exlucde": [
       "css!*"
@@ -65,7 +66,12 @@
       "SBIS3.CONTROLS/Filter/Button/Line/*",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
-      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/FilterPanel",
+      "SBIS3.CONTROLS/Filter/Panel/*",
+      "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
+      "SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil",
+      "SBIS3.CONTROLS/Filter/HistoryController"
     ],
     "output": "sbis3controls-filterpicker.package.js"
   },
