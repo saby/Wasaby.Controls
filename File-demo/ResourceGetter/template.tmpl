@@ -1,29 +1,20 @@
-<Controls.Application title="Демо-пример: работа с File/ResourceGetter/DropArea."
-   appRoot="/materials/" head='<link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css" />'>
+<Controls.Application title="Демо-пример: работа с File/ResourceGetter/DropArea." head='<link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css" />'>
    <div class="content">
       <div class="options">
-         <Controls.Input.Number attr:class="option" bind:value="_maxFileSize" placeholder="Макс. размер файла" onlyPositive="{{true}}"
-            precision="{{0}}" integersLength="{{3}}" tooltip="в МБ" />
-         <Controls.Input.Text attr:class="option" bind:value="_extensions" placeholder="Список расширений " tooltip="Можно передать 'image', 'audio', 'video'"/>
-         <Controls.Input.Text attr:class="option" bind:value="_dragText" tooltip="Текст подсказки во время перемещения файлов "/>
+         <Controls.Input.Number attr:class="option" bind:value="_maxFileSize" placeholder="Макс. размер файла" onlyPositive="{{true}}" precision="{{0}}" integersLength="{{3}}" tooltip="в МБ" />
+         <Controls.Input.Text attr:class="option" bind:value="_extensions" placeholder="Список расширений " tooltip="Можно передать 'image', 'audio', 'video'"         />
+         <Controls.Input.Text attr:class="option" bind:value="_dragText" tooltip="Текст подсказки во время перемещения файлов " />
          <Controls.Input.Text attr:class="option" bind:value="_dropText" tooltip="Текст подсказки во время перемещения файлов непосредственно над областью "/>
          <Controls.Input.Text attr:class="option" bind:value="_dragSubtitle" tooltip="Текст дополнительной подсказки во время перемещения файлов "/>
          <Controls.Input.Text attr:class="option" bind:value="_dropSubtitle" tooltip="Текст дополнительной подсказки во время перемещения файлов непосредственно над областью "/>
          <br/>
          <Controls.Button caption="Применить" on:click="applyOptions()" />
       </div>
-      <div id="basket" class="{{'basket ' + (_isDragEnter ? 'basket-dragEnter')}}">
-         <div class="{{_canDrop ? 'basket-canDrop'}}">
-            {{basketState}}
-         </div>
-      </div>
-      <div>
-         <h3>В корзине:</h3>
-         <ol>
+      <div id="basket" class="basket">
+            <b>Файлов: {{_itemsList.length}} </b>
             <ws:for data="item in _itemsList">
-               <li>{{item}}</li>
+               <p>{{item}}</p>
             </ws:for>
-         </ol>
       </div>
    </div>
 </Controls.Application>

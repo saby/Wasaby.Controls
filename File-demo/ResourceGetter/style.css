@@ -1,36 +1,22 @@
-/*#0055BB*/
-
-ol {
-   margin: 20px;
-}
-
 .content {
    display: flex;
+   width:800px;
 }
 
 .content>div {
-   overflow-y: auto;
    padding: 5px;
-   border: 1px solid #ccc;
-   margin-right: 10px;
-   width: 350px;
-   height: 250px;
 }
-
+.options{
+   width: 25%;
+}
 .option {
    margin-bottom: 10px;
-   width: 200px;
 }
 
 .basket {
+   width: 75%;
    background: #e6e6e6;
-   font-size: 22px;
-   display: -webkit-box;
-   display: -ms-flexbox;
-   -webkit-box-pack: center;
-   -ms-flex-pack: center;
-   justify-content: center;
-   -webkit-box-align: center;
-   -ms-flex-align: center;
+   font-size: 16px;
+   text-align: center;
    color: #989898;
 }

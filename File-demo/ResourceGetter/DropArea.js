@@ -11,16 +11,16 @@ define('File-demo/ResourceGetter/DropArea', [
 
    var module = Control.extend({
       _template: template,
-      _dragText: 'Тащи сюда',
-      _dropText: 'Бросай!',
-      _dragSubtitle:'dragSubtitle',
-      _dropSubtitle:'dropSubtitle',
+      _dragText: 'dragText',
+      _dropText: 'dropText',
+      _dragSubtitle: 'dragSubtitle',
+      _dropSubtitle: 'dropSubtitle',
       _itemsList: ['Picture.jpg', 'Code.js'],
       _afterMount: function () {
          this.applyOptions();
       },
       applyOptions: function () {
-         if (this.getter){
+         if (this.getter) {
             this.getter.destroy();
          }
          this.getter = new DropArea({
@@ -33,14 +33,11 @@ define('File-demo/ResourceGetter/DropArea', [
             maxSize: this._maxFileSize || 0,
             ondrop: this.onDrop.bind(this)
          });
-         this.basketState = 'Перетащи что-нибудь;)';
-         this._forceUpdate();
       },
       onDrop: function (files) {
-         this.basketState = 'Поймал!';
          for (var file of files) {
             if (file instanceof Error) {
-               this.basketState = file.message + '\n' + file.details;
+               this._itemsList.push(file.fileName+': '+file.message + '. ' + file.details);
                continue;
             }
             this._itemsList.push(file.getName())
