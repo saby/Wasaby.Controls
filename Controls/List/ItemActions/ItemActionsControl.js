@@ -36,8 +36,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                   if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
                      action.iconError = true;
                   }
-               } else {
-                  action.iconClass = ACTION_ICON_CLASS;
                }
                actions.push(action);
             }
