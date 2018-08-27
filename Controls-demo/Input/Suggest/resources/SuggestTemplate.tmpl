@@ -2,7 +2,7 @@
 <Controls.Container.Suggest.List>
     <Controls.List displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass}}"  >
         <ws:itemTemplate>
-            <ws:partial template="{{ _options.itemSuggestTemplate==='custom' ? _custom : _def }}" firstLine="{{ _options.firstLine}}" secondLine="{{ _options.secondLine}}" />
+            <ws:partial template="{{ _options.itemSuggestTemplate==='custom' ? _custom : _def }}" title="{{ _options.title}}" comment="{{ _options.comment}}" />
         </ws:itemTemplate>
     </Controls.List>
 </Controls.Container.Suggest.List>

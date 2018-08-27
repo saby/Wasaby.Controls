@@ -1,20 +1,15 @@
 <ws:template name="String">
-
     <Controls-demo.PropertyGrid.StringTemplate
            bind:value="itemValue[name]"
             caption="{{name}}"
-           readOnly="{{item.readOnly}}"
-            source="{{item.source}}"
-            config="{{item.config}}"
-           on:valueChanged="_valueChangedHandler()"
-           >
+           scope="{{item}}"
+           on:valueChanged="_valueChangedHandler()">
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
 <ws:template name="Number">
     <Controls-demo.PropertyGrid.NumberTemplate
             bind:value="itemValue[name]"
-
             caption="{{name}}">
     </Controls-demo.PropertyGrid.NumberTemplate>
 </ws:template>
@@ -29,11 +24,7 @@
 <ws:template name="enum">
     <Controls-demo.PropertyGrid.EnumTemplate
             bind:value="itemValue[name]"
-            displayProperty="{{item.displayProperty}}"
-            keyProperty="{{item.keyProperty}}"
-            readOnly="{{item.readOnly}}"
-            emptyText="{{item.emptyText}}"
-            source="{{item.source}}"
+            scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.EnumTemplate>
 </ws:template>

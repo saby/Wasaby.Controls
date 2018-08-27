@@ -1,7 +1,7 @@
 <div class="controls-demo_Wrapper">
     <div class="controls-demo_options-wrapper">
         <Controls.PropertyGrid items="{{_metaData}}" scopeObject="{{_textOptions}}"
-                               attr:class="controls-FilterPanel__PropertyGrid" on:itemsChanged="_valueChangedHandler()">
+                               attr:class="controls-FilterPanel__PropertyGrid" on:itemsChanged="_itemsChangedHandler()">
             <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
         </Controls.PropertyGrid>
     </div>

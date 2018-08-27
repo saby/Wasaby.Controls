@@ -10,6 +10,17 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "done": "done",
+              "attention": "attention",
+              "error": "error",
+              "info": "info"
+            }
+          },
           "placeholder": {
             "type": "function|String",
             "title": "Input's placeholder text."

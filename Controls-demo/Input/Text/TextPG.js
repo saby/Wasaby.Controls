@@ -42,10 +42,21 @@ define('Controls-demo/Input/Text/TextPG',
 
       var dataObject = {
          value: {
-            readOnly: true
+            readOnly: true,
+            placeholder: 'Input',
+            tooltip: 'fjfff'
+         },
+         tagStyle: {
+            emptyText: 'none',
+            placeholder: 'select'
          },
          constraint: {
-            source: constraintSource
+            source: constraintSource,
+            config: {
+               template: 'custom',
+               value: 'title',
+               comment: 'example'
+            }
          }
       }; // настройки для редакторов
 
@@ -80,7 +91,7 @@ define('Controls-demo/Input/Text/TextPG',
 
             // console.log(this._config['Controls/Input/Text'].properties['ws-config'].options);
          },
-         _valueChangedHandler: function() {
+         _itemsChangedHandler: function() {
             // this._options.items[index].value = value;
             this._forceUpdate();
          },
