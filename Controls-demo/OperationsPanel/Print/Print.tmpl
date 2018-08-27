@@ -1,0 +1,13 @@
+<div>
+    <Controls.Printer.Printer
+            name="printer"
+            printTemplate="tmpl!Controls-demo/OperationsPanel/Print/contentTemplate"
+            source="{{_source}}">
+    </Controls.Printer.Printer>
+    <span class="asLink ControlsDemo-Printer__print"
+          on:click="_clickHandler('printer')">печать</span>
+    <Controls.Toggle.Checkbox caption="Показать диалог печати"
+                              value="{{_showPrintDialog}}"
+                              attr:class="ControlsDemo-Printer__printDialogToggle"
+                              on:valueChanged="_togglePrintDialog()" />
+</div>

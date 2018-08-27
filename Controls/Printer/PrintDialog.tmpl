@@ -1,0 +1,15 @@
+<Controls.Popup.Templates.Dialog.DialogTemplate attr:class="{{_hideDialog ? 'ws-hidden' : ''}}"
+                                                caption="{[Предварительный просмотр]}">
+    <ws:topArea>
+        <Controls.Button attr:class="controls-PrintDialogV__button"
+                         caption="{[Распечатать]}"
+                         style="buttonPrimary"
+                         on:click="_onPrintClick()"/>
+    </ws:topArea>
+    <ws:contentArea>
+        <Controls.Container.Scroll>
+            <iframe class="controls-PrintDialogV__content"
+                    name="iframe"></iframe>
+        </Controls.Container.Scroll>
+    </ws:contentArea>
+</Controls.Popup.Templates.Dialog.DialogTemplate>
