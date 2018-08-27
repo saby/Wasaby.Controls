@@ -1,14 +1,16 @@
 .content {
    display: flex;
-   width:800px;
+   width: 800px;
 }
 
 .content>div {
    padding: 5px;
 }
-.options{
+
+.options {
    width: 25%;
 }
+
 .option {
    margin-bottom: 10px;
 }

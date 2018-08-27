@@ -37,7 +37,7 @@ define('File-demo/ResourceGetter/DropArea', [
       onDrop: function (files) {
          for (var file of files) {
             if (file instanceof Error) {
-               this._itemsList.push(file.fileName+': '+file.message + '. ' + file.details);
+               this._itemsList.push(file.fileName + ': ' + file.message + '. ' + file.details);
                continue;
             }
             this._itemsList.push(file.getName())
