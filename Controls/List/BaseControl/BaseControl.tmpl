@@ -37,7 +37,11 @@
             <ws:partial template="{{_options.viewName}}"/>
          </ws:viewTemplate>
          <ws:multiSelectTpl>
-            <ws:partial template ="{{_multiSelectTpl}}"/>
+             <ws:if data="{{_options.multiSelectVisibility}}">
+                 <Controls.Container.Async name="multiSelectContainer" templateName="tmpl!Controls/List/BaseControl/multiSelect">
+                     <ws:partial template="{{'tmpl!Controls/List/BaseControl/multiSelect'}}" />
+                 </Controls.Container.Async>
+             </ws:if>
          </ws:multiSelectTpl>
       </ws:partial>
    </ws:template>

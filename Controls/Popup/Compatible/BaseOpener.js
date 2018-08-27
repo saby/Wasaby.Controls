@@ -39,6 +39,10 @@ function(cMerge,
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
          }
 
+         if (cfg.closeButtonStyle) {
+            cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
+         }
+
          if (cfg.record) { // от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
@@ -94,6 +98,7 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+         cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
@@ -193,6 +198,11 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+
+               //magic of old floatarea
+               if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
+                  cfg.horizontalAlign = {side: cfg.side === 'right' ? 'left' : 'right'};
+               }
             }
          }
 
@@ -210,9 +220,20 @@ function(cMerge,
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
          }
+
+         cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+
+         /**
+          * InfoBox в своем шаблоне имеет опции с именами template и templateOptions.
+          * нужно их положить в innerComponentOptions.templateOptions.
+          */
+         if (cfg.componentOptions.innerComponentOptions.template) {
+            cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
+         }
+
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
@@ -313,8 +334,8 @@ function(cMerge,
 
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = this._getDimensions(templateClass);
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var dimensions = templateClass ? this._getDimensions(templateClass) : {};
+         var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
          var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
 
          if (!cfg.minWidth) {

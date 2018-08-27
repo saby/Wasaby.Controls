@@ -14,18 +14,7 @@ define('Controls/interface/ISource', [
     */
 
    /**
-    * @name Controls/interface/ISource#itemTemplate
-    * @cfg {Function} Template for item render.
-    */
-
-   /**
     * @name Controls/interface/ISource#keyProperty
     * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
-
-   /**
-    * @name Controls/interface/ISource#itemTemplateProperty
-    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
-    */
-
 });

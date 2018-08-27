@@ -16,10 +16,12 @@ define('Controls/Button/Menu',
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IGroupedView
        * @control
        * @public
+       * @author Михайловский Д.С.
        * @category Button
        * @demo Controls-demo/Dropdown/MenuVdom
        */
@@ -92,23 +94,24 @@ define('Controls/Button/Menu',
 
       var Menu = Control.extend({
          _template: template,
+         _filter: null,
 
          _beforeMount: function(options) {
             _private.cssStyleGeneration(this, options);
-            this._filter = this._options.filter;
+            this._filter = options.filter;
          },
 
          _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }
-         
+
       });
 
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
             style: 'buttonDefault',
-            size: 'default',
+            size: 'm',
             filter: {}
          };
       };

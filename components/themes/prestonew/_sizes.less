@@ -712,10 +712,10 @@
 @vertical-padding_InputArea: round(7px * @multiplier);
 
 //headers
-@font-size_Header__caption_size-xl:   round(40px * @multiplier);
-@font-size_Header__caption_size-l:    round(32px * @multiplier);
-@font-size_Header__caption_size-m: round(28px * @multiplier);
-@font-size_Header__caption_size-s:    round(24px * @multiplier);
+@font-size_Heading__caption_size-xl:   round(40px * @multiplier);
+@font-size_Heading__caption_size-l:    round(32px * @multiplier);
+@font-size_Heading__caption_size-m: round(28px * @multiplier);
+@font-size_Heading__caption_size-s:    round(24px * @multiplier);
 @padding_HeaderCounter-between-counter-caption: round(8px * @multiplier);
 @font-size_Counter_size-l:     round(32px * @multiplier);
 @font-size_Counter_size-s:     round(28px * @multiplier);
@@ -755,9 +755,9 @@
 @padding-Separator:     0;
 @size-Separator:        auto;
 @height-BackButton:                    round(50px * @multiplier);
-@font-size_BackButton__caption_size-l: @font-size_Header__caption_size-l;
-@font-size_BackButton__caption_size-m: @font-size_Header__caption_size-l;
-@font-size_BackButton__caption_size-s: @font-size_Header__caption_size-l;
+@font-size_BackButton__caption_size-l: @font-size_Heading__caption_size-l;
+@font-size_BackButton__caption_size-m: @font-size_Heading__caption_size-l;
+@font-size_BackButton__caption_size-s: @font-size_Heading__caption_size-l;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @height-IconButton_size-m:               round(44px * @multiplier);
@@ -770,10 +770,13 @@
 @box-shadow-IconButton_activated:        none;
 //toggle-button
 @border-radius-ToggleButton:         @border-radius_Button_default;
-@min-width-ToggleButton_style_linkMain_size-m:    @min-width_Button-Vdom;
-@min-width-ToggleButton_style_linkMain_size-l:          @min-width_Button-Vdom;
+@min-width-ToggleButton_size-s:    @min-width_Button-Vdom;
+@min-width-ToggleButton_size-m:    @min-width_Button-Vdom;
+@min-width-ToggleButton_size-l:          @min-width_Button-Vdom;
 @border-width_ToggleButton:          2px;
-@height-ToggleButton_style_linkMain_size-m:   @height_Button_m;
-@height-ToggleButton_style_linkMain_size-l:         @height_Button-Vdom_l;
+@height-ToggleButton_size-s:         @height_Button_m;
+@height-ToggleButton_size-m:   @height_Button_m;
+@height-ToggleButton_size-l:         @height_Button-Vdom_l;
+@padding_ToggleButton-wrapper_s: @padding_Button-wrapper_default;
 @padding_ToggleButton-wrapper_m: @padding_Button-wrapper_default;
 @padding_ToggleButton-wrapper_l:     @padding_Button-wrapper_l;

@@ -17,6 +17,30 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          return self;
       };
       
+      var getContainer = function(size) {
+         return {
+            getBoundingClientRect: function() {
+               return {
+                  toJSON: function() {
+                     return size;
+                  }
+               };
+            }
+         };
+      };
+   
+      var getDropDownContainer = function(height) {
+         return {
+            getBoundingClientRect: function() {
+               return {
+                  bottom: 0,
+                     top: 0,
+                     height: height
+               };
+            }
+         };
+      };
+      
       it('Suggest::_private.hasMore', function () {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
          assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
@@ -66,14 +90,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
    
          suggestComponent._options.suggestStyle = 'overInput';
-         suggestComponent._options.value = '';
+         suggestComponent._searchValue = '';
          suggestComponent._close();
          assert.equal(value, 'test');
-         assert.equal(suggestComponent._searchValue, '');
    
-         suggestComponent._options.value = 'test';
+         suggestComponent._searchValue = 'test';
          suggestComponent._close();
          assert.equal(value, '');
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_private.open', function (done) {
@@ -155,67 +179,57 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          var suggestHeight = 200;
    
          self._children = {
-            suggestionsContainer: {
-               getBoundingClientRect: function() {
-                  return {
-                     height: suggestHeight
-                  };
-               },
-               offsetHeight: 200 //suggestHeight
-            }
+            suggestionsContainer: getContainer({
+               top: 0,
+               bottom: 0,
+               get height() {
+                 return suggestHeight;
+               }
+            })
          };
-         var mockContainer = {};
-         mockContainer.getBoundingClientRect = function() {
-            return {
-               bottom: 324,
-               top: 300//bottom of input
-            };
-         };
-         self._container = mockContainer;
+         self._container = getContainer({
+            bottom: 324,
+            top: 300
+         });
          
          self._orient = null;
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 900}), '-down');
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 400}), '-up');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-up');
          
          self._orient = null;
          self._options.suggestStyle = 'overInput';
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 900}), '-down');
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 400}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-down');
          
          /* a special case, when suggest must opened down */
          suggestHeight = 400;
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 500}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(500)), '-down');
       });
    
       it('Suggest::_private.calcHeight', function() {
          var self = getComponentObject();
-         var suggestHeight;
-      
-         self._children = {
-            suggestionsContainer: {
-               getBoundingClientRect: function() {
-                  return {
-                     height: suggestHeight
-                  };
-               },
-            }
-         };
-         var mockContainer = {};
-         mockContainer.getBoundingClientRect = function() {
-            return {
-               bottom: 324,
-               top: 300//bottom of input
-            };
-         };
-         self._container = mockContainer;
-         self._height = 'auto';
-         suggestHeight = 200;
-         assert.equal(Suggest._private.calcHeight(self, '-down', {innerHeight: 900}), 'auto');
-         assert.equal(Suggest._private.calcHeight(self, '-down', {innerHeight: 400}), '76px');
+         var suggestHeight = 200;
    
-         assert.equal(Suggest._private.calcHeight(self, '-up', {innerHeight: 900}), 'auto');
+         self._children = {
+            suggestionsContainer: getContainer({
+               top: 0,
+               bottom: 0,
+               get height() {
+                  return suggestHeight;
+               }
+            })
+         };
+         self._container = getContainer({
+            bottom: 324,
+            top: 300
+         });
+         self._height = 'auto';
+         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(900)), 'auto');
+         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(400)), '76px');
+   
+         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(900)), 'auto');
          suggestHeight = 400;
-         assert.equal(Suggest._private.calcHeight(self, '-up', {innerHeight: 400}), '300px');
+         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(400)), '300px');
       });
    
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {

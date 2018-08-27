@@ -18,5 +18,5 @@
                contentTemplate="{{_options.contentTemplate}}"
                icon="{{_icon}}"
                text="{{_text}}"
-               class="controls-Dropdown__{{_isEmptyItem ? 'emptyItem' : 'defaultItem'}}"/>
+               class="{{!_options.readOnly ? 'controls-Dropdown__' + (_isEmptyItem ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}}"/>
 </Controls.Dropdown.Controller>

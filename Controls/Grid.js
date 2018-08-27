@@ -13,6 +13,7 @@ define('Controls/Grid', [
     * @class Controls/Grid
     * @extends Controls/List
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -27,7 +28,7 @@ define('Controls/Grid', [
     */
 
    var
-      Grid = List.extend({
+      Grid = List.extend(/** @lends Controls/Grid */{
          _viewName: 'Controls/List/Grid/GridView',
          _viewTemplate: 'Controls/List/ListControl',
          _getModelConstructor: function() {

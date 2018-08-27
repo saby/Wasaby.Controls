@@ -29,6 +29,7 @@ define(
          newRecord: 'newTestRecord',
          handlers: 'testHandlers',
          linkedContext: 'testLinkedContext',
+         closeButtonStyle: 'testStyle',
          border: false,
          autoShow: false,
          autoCloseOnHide: false,
@@ -112,6 +113,10 @@ define(
             config.verticalAlign = 'test';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction,config.verticalAlign.side);
+            delete config.direction;
+            config.side = 'right';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.direction, 'left');
          });
 
          it('_setSizes', function() {
@@ -156,11 +161,13 @@ define(
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
             assert.equal(config.template, 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
             newConfig.minWidth = 100;
             newConfig.maximized = false;
             newConfig.canMaximize = true;
+            newConfig.maxWidth = 150;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);

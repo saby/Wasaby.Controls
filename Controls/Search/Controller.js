@@ -1,3 +1,4 @@
+
 define('Controls/Search/Controller',
    [
       'Core/Control',

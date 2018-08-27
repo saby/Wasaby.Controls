@@ -6,7 +6,7 @@ define('Controls/List/ListViewModel',
    function(ItemsViewModel, VersionableMixin, ItemsUtil) {
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
 

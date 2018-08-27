@@ -15,6 +15,7 @@ define('Controls/Toggle/Button', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     *
     * @demo Controls-demo/Buttons/Toggle/ToggleDemo

@@ -593,7 +593,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          if (this.isVisible()) {
             cWindowManager.releaseZIndex(this._zIndex);
             this._container.css('z-index', this._getZIndex());
-            ModalOverlay.adjust();
+            ModalOverlay.adjust(this.isModal() ? this._zIndex : null);
          }
       },
 

@@ -1,8 +1,6 @@
 define('Controls/Date/PeriodDialog', [
    'Core/Control',
    'Core/core-merge',
-   'Core/helpers/Date/getFormattedDateRange',
-   'Core/helpers/i18n/locales',
    'Controls/Date/interface/IRangeSelectable',
    'Controls/Date/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
@@ -16,8 +14,6 @@ define('Controls/Date/PeriodDialog', [
 ], function(
    BaseControl,
    coreMerge,
-   getFormattedDateRange,
-   locales,
    IRangeSelectable,
    EventProxyMixin,
    DateRangeModel,

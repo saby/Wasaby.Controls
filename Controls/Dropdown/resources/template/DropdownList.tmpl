@@ -9,7 +9,8 @@
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
-   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
+   <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll"
+                              shadowVisible="{{false}}">
       <div>
          <ws:partial template="tmpl!Controls/Dropdown/resources/template/For"
                      listModel="{{_listModel}}"
@@ -23,7 +24,7 @@
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_options.additionalProperty}}">
-            <div class="controls-DropdownList__additional">
+            <div class="controls-DropdownList__additional" on:mouseenter="_additionMouseenter()">
                <Controls.Button.BigSeparator bind:value="_expanded" on:valueChanged="_toggleExpanded()" attr:class="controls-DropdownList__additional-button"/>
             </div>
          </ws:if>
@@ -36,7 +37,7 @@
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
-   <Controls.Event.Emitter if="{{_hasHierarchy}}" event="mousemove" on:mousemove="_mousemoveHandler()"/>
+   <Controls.Event.Emitter event="mousemove" on:mousemove="_mousemoveHandler()"/>
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"

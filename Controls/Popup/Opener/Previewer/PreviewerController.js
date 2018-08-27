@@ -27,17 +27,20 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
             return PreviewerController.superclass.elementCreated.apply(this, arguments);
          },
 
-         elementDestroyed: function(element, container) {
+         elementDestroyed: function(element) {
             this._openedPopupId = null;
             this._destroyDeferred = new Deferred();
 
-            container.classList.add('controls-PreviewerController_close');
+            //https://online.sbis.ru/opendoc.html?guid=0970b6a0-e38d-4b46-bd83-4e994444671a
+            element.popupState = 'destroying';
+            element.popupOptions.className = (element.popupOptions.className || '') + ' controls-PreviewerController_close';
 
             return this._destroyDeferred;
          },
 
-         elementAnimated: function(element, container) {
-            if (container.classList.contains('controls-PreviewerController_close')) {
+         elementAnimated: function(element) {
+            if (element.popupState === 'destroying') {
+               element.popupState = 'destroyed';
                this._destroyDeferred.callback();
             }
          }
