@@ -48,7 +48,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
             /* Костыль до 400. В 400 сделано распростронение resize */
             var self = this;
             self._resizeTimeout = setTimeout(function() {
-               self._children.scroll._children.scrollWatcher._resizeHandler();
+               self._children.scroll._children.scrollWatcher._resizeHandler(true);
             });
          },
          

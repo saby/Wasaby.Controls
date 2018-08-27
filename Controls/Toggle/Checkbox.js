@@ -16,6 +16,7 @@ define('Controls/Toggle/Checkbox', [
     * @mixes Controls/interface/ITooltip
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     * @demo Controls-demo/Checkbox/Checkbox
     *

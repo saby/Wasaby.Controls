@@ -87,6 +87,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             Utils.logger.log(this._moduleName + '::$constructor()', 'option "dialogComponent" is deprecated and will be removed in 3.8.0');
             this._options.template = this._options.dialogComponent;
          }
+         if (isNewEnvironment()) {
+            if (this._options.closeByFocusOut === undefined) {
+               this._options.closeByFocusOut = true;
+            }
+         }
          this._documentClickHandler = this._documentClickHandler.bind(this);
          document.addEventListener('mousedown', this._documentClickHandler);
          document.addEventListener('touchstart', this._documentClickHandler);
@@ -120,10 +125,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _openComponent: function(meta, mode) {
+         var self = this;
          meta = meta || {};
          meta.mode = mode || meta.mode || this._options.mode; //todo в 3.17.300 убрать аргумент mode, его через execute проставить нельзя
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta);
+         if (this._isDialogClosing()) {
+            this._dialog.once('onAfterClose', function() {
+               self._createComponent(config, meta);
+            });
+         }
+         else {
+            this._createComponent(config, meta);
+         }
       },
 
       _buildComponentConfig: function(meta) {
@@ -134,7 +147,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       _createComponent: function(config, meta) {
          var componentName = this._getComponentName(meta),
             self = this;
-         
+
          if (this._isNeedToRedrawDialog()) {
             this._reloadTemplate(config);
          } else {
@@ -143,20 +156,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                try {
                   var deps = [];
                   if (isNewEnvironment()) {
-                     config._mode = meta.mode;
-                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', 'Controls/Popup/Compatible/Layer'];
-                     if (meta.mode !== 'dialog' && config.isStack === true) {
-                        deps.push('Controls/Popup/Opener/Stack/StackController');
-                        config._type = 'stack';
-                        config.className = (config.className || '') + ' controls-Stack';
-                     } else if (meta.mode !== 'dialog' && config.isStack === false && config.target) {
-                        deps.push('Controls/Popup/Opener/Sticky/StickyController');
-                        config._type = 'sticky';
-                     } else {
-                        deps.push('Controls/Popup/Opener/Dialog/DialogController');
-                        config._type = 'dialog';
-                     }
-                     deps.push(config.template);
+                     deps = self._prepareCfgForNewEnvironment(meta, config);
                      requirejs(deps, function(BaseOpener, CompatibleOpener, CompatibleLayer, Strategy, cfgTemplate) {
                         CompatibleLayer.load().addCallback(function() {
                            config._initCompoundArea = function(compoundArea) {
@@ -171,18 +171,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                   } else {
                      deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', config.template];
                      requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
-                        if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
-                           CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
-                           config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
-                           config.componentOptions._initCompoundArea = function(compoundArea) {
-                              var dialog = self._dialog;
-                              if (dialog._recalcPosition) {
-                                 dialog._recalcPosition();
-                              }
-                              dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
-                           };
-                        }
-                        config._openFromAction = true;
+                        self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
                         self._dialog = new Component(config);
                      });
                   }
@@ -192,6 +181,39 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }.bind(this));
 
          }
+      },
+
+      _prepareCfgForNewEnvironment: function(meta,cfg) {
+         cfg._mode = meta.mode;
+         var dependencies = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', 'Controls/Popup/Compatible/Layer'];
+         if (meta.mode !== 'dialog' && cfg.isStack === true) {
+            dependencies.push('Controls/Popup/Opener/Stack/StackController');
+            cfg._type = 'stack';
+            cfg.className = (cfg.className || '') + ' controls-Stack';
+         } else if (meta.mode !== 'dialog' && cfg.isStack === false && cfg.target) {
+            dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
+            cfg._type = 'sticky';
+         } else {
+            dependencies.push('Controls/Popup/Opener/Dialog/DialogController');
+            cfg._type = 'dialog';
+         }
+         dependencies.push(cfg.template);
+         return dependencies
+      },
+
+      _prepareCfgForOldEnvironment: function(self, BaseOpener, CompatibleOpener, cfgTemplate, config) {
+         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+            CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
+            config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
+            config.componentOptions._initCompoundArea = function() {
+               var dialog = self._dialog;
+               if (dialog._recalcPosition) {
+                  dialog._recalcPosition();
+               }
+               dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
+            };
+         }
+         config._openFromAction = true;
       },
 
       _reloadTemplate: function(config) {
@@ -223,7 +245,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                return 'Lib/Control/Dialog/Dialog';
          }
       },
-      
+
       _documentClickHandler: function(event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
@@ -260,8 +282,20 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          }
 
-         //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
+         //Определяем связь popupMixin и панели по опенерам. в цепочке могут появиться vdom компоненты, поэтому старый механизм может работать с ошибками
+         var popupMixin = $(target).closest('.controls-FloatArea');
+         if (popupMixin.length) {
+            opener = popupMixin.wsControl().getOpener();
+            while (opener) {
+               if (opener === this._dialog) {
+                  return true;
+               }
+               opener = opener.getOpener && opener.getOpener() || (opener.getParent && opener.getParent());
+            }
+         }
+
+         //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay');
          return !!infoBox.length;
       },
 
@@ -337,7 +371,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
          var handlers = this._getDialogHandlers(meta);
-         
+
          for (var name in handlers) {
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
@@ -352,7 +386,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          return config;
       },
-      
+
       _getDialogHandlers: function(meta) {
          var self = this;
          return {
@@ -371,7 +405,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          };
       },
-      
+
       _saveAutoHideState: function(meta, config) {
          if (!this._options.closeByFocusOut) {
             this._openedPanelConfig = {
@@ -458,6 +492,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
+
+            // Очистим ссылку на обработчик клика, чтобы DialogMixin не остался в памяти
+            this._documentClickHandler = undefined;
          }
       }
    };
@@ -465,7 +502,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
    //TODO start compatible block for VDOM
    function isNewEnvironment() {
-      return !!document.getElementsByTagName('html')[0].controlNodes;
+      return document && document.getElementsByTagName('html')[0].controlNodes;
    }
 
    //TODO end compatible block for VDOM

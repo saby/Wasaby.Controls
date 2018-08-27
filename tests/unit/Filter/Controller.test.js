@@ -201,6 +201,45 @@ define(['Controls/Filter/Controller'], function(Filter){
          assert.deepEqual(filterLayout._filter, resultFilter);
          assert.isTrue(filterChangedNotifyed);
       });
+   
+      it('_private.updateFilterItems', function() {
+         var self = {};
+         
+         var fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }];
+   
+         var fbItems = [{
+            id: 'testId2',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }];
+         
+         var newItems = [{
+            id: 'testId2',
+            value: '123',
+            resetValue: ''
+         }];
+         
+         self._filterButtonItems = fbItems;
+         self._fastFilterItems = fastFilterItems;
+         Filter._private.updateFilterItems(self, newItems);
+         
+         assert.isTrue(self._filterButtonItems !== fbItems, 'FilterButton items must be changed');
+         assert.isTrue(self._fastFilterItems !== fastFilterItems, 'FastFilter items items must be changed');
+         assert.equal(self._fastFilterItems[1].value, '123');
+         assert.equal(self._filterButtonItems[0].value, '123');
+      });
       
    });
    

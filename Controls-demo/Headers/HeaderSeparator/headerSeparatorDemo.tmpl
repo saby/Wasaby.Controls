@@ -1,13 +1,14 @@
 <div class="demoWrapper">
-    <div class="testBlock" test_name="HeaderCapture">
+    <div class="testBlock">
         <div class="exampleBlock">
             <h2>Header-separator</h2>
-            <Controls.Header.Separator on:activated="activatedHandler()" on:deactivated="deactivatedHandler()"  style="{{_iconSelectedStyle}}"/>
+            <Controls.Header.Separator attr:class="ControlsDemo__separator" on:activated="activatedHandler()" on:deactivated="deactivatedHandler()"  style="{{_iconSelectedStyle}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="style(только для тем carry и presto):"/>
             <Controls.Input.ComboBox
+                    attr:class="ControlsDemo__style"
                     source="{{_iconStyleSource}}"
                     keyProperty="title"
                     placeholder="select"
@@ -21,7 +22,7 @@
             <span>Event that surfaced:</span>
             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
             <br/>
-            <span>{{_eventName}}</span>
+            <span class="ControlsDemo__eventName">{{_eventName}}</span>
         </div>
     </div>
 </div>

@@ -1,23 +1,23 @@
 <div>
    <div class="controls-VDomSearch__row" test_name="area_1" >
-      <Controls.Container.Input.Search on:search="_changeValueSearchHandler()">
+      <Controls.Search.Input.Container on:search="_changeValueSearchHandler()">
          <Controls.Input.Search bind:value="_value" attr:test_name="search_dark"
                                 attr:class="test-input-search"
                         on:valueChanged="_changeValuesHandler()"/>
-      </Controls.Container.Input.Search>
+      </Controls.Search.Input.Container>
    </div>
    <div class="controls-VDomSearch__row" test_name="area_2" >
-      <Controls.Container.Input.Search on:search="_changeValueSearchHandler()">
+      <Controls.Search.Input.Container on:search="_changeValueSearchHandler()">
          <Controls.Input.Search bind:value="_value2" style="header" attr:test_name="search_transparent"
                                 attr:class="test-input-search"
                         on:valueChanged="_changeValuesHandler()"/>
-      </Controls.Container.Input.Search>
+      </Controls.Search.Input.Container>
    </div>
    <div class="controls-VDomSearch__row" test_name="area_3" >
-      <Controls.Container.Input.Search on:search="_changeValueSearchHandler()">
+      <Controls.Search.Input.Container on:search="_changeValueSearchHandler()">
          <Controls.Input.Search readOnly="{{true}}" attr:test_name="search_disabled"
                                 attr:class="test-input-search"/>
-      </Controls.Container.Input.Search>
+      </Controls.Search.Input.Container>
    </div>
 <div>Стреляет valueChanged:
    <Controls.Input.Area value="{{textValue}}" attr:test_name="valueChanged"></Controls.Input.Area>

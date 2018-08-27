@@ -156,6 +156,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
+   
+         _additionMouseenter: function() {
+            if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
+            }
+         },
+         
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
@@ -163,6 +170,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
+
+         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left') {
+               this._listModel.setSwipeItem(itemData);
+            }
+            if (event.nativeEvent.direction === 'right') {
+               this._listModel.setSwipeItem(null);
+            }
+         },
+
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             var result = {
                action: pinClicked ? 'pinClicked' : 'itemClick',

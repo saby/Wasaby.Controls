@@ -496,10 +496,10 @@ define([
 
 
             //прокручиваем к низу, проверяем состояние пэйджинга
-            BaseControl._private.onScrollListEdge(ctrl, 'down');
+            BaseControl._private.handleListScroll(ctrl, 300, 'down');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'disabled', stateEnd: 'disabled'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            BaseControl._private.handleListScroll(ctrl, '200');
+            BaseControl._private.handleListScroll(ctrl, 200, 'middle');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             BaseControl._private.onScrollHide(ctrl);

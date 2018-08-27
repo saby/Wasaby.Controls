@@ -14,17 +14,15 @@ define(
                self = {};
             });
 
-            //TODO: брать skip после https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
-            it.skip('listTop', function() {
+            it('listTop', function() {
                listScrollHandler.call(self, null, 'listTop', {});
                assert.deepEqual(self, {
                   _listTop: true
                });
             });
 
-            //TODO: брать skip после https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
-            it.skip('scrollMove', function() {
-               listScrollHandler.call(self, null, 'scrollMove');
+            it('scrollMove', function() {
+               listScrollHandler.call(self, null, 'scrollMove', {});
                assert.deepEqual(self, {
                   _listTop: false
                });
@@ -42,22 +40,6 @@ define(
                listScrollHandler.call(self, null, 'cantScroll');
                assert.deepEqual(self, {
                   _scrolling: false
-               });
-            });
-
-            //TODO: удалить после выполнения https://online.sbis.ru/opendoc.html?guid=e7b57af4-478d-432a-b5c2-b5d2e33d55b2
-            it('_listScrollHandler', function() {
-               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: -100});
-               assert.deepEqual(self, {});
-
-               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 0});
-               assert.deepEqual(self, {});
-
-               self._time = Date.now() - 200;
-               listScrollHandler.call(self, null, 'scrollMove', {scrollTop: 100});
-               delete self._time;
-               assert.deepEqual(self, {
-                  _listTop: false
                });
             });
          });

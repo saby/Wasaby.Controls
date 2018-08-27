@@ -96,7 +96,7 @@ define('SBIS3.CONTROLS/Image',
           * @remark Контрол image создастся с уже заданным адресом файла с картинкой (c атрибутом src в теге <img>).
           * @class SBIS3.CONTROLS/Image
           * @extends Lib/Control/CompoundControl/CompoundControl
-          * @author Волоцкой В.Д.
+          * @author Крайнов Д.О.
           *
           * @ignoreOptions validators
           * @ignoreEvents onAfterLoad onChange onStateChange

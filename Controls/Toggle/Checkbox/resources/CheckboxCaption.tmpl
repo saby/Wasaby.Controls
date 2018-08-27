@@ -1,8 +1,5 @@
-<div class="controls-Checkbox__caption controls-Checkbox__caption-color__{{readOnly ? 'disabled':'enabled'}}">
-    <ws:if data="{{caption}}">
+<ws:if data="{{caption}}">
+    <div class="controls-Checkbox__caption controls-Checkbox__caption-color__{{readOnly ? 'disabled':'enabled'}}">
         <ws:partial template="{{caption}}"/>
-    </ws:if>
-    <ws:else>
-        &nbsp;
-    </ws:else>
-</div>
+    </div>
+</ws:if>

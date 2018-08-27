@@ -36,7 +36,7 @@ define('Controls/Input/Number', [
     * @category Input
     * @demo Controls-demo/Input/Number/Number
     *
-    * @author Журавлев Максим Сергеевич
+    * @author Зайцев А.С.
     */
 
    /**
@@ -129,6 +129,12 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
+
+         //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
+         if (this._isFocus) {
+            this._children.input.select();
+            this._isFocus = false;
+         }
       },
 
       _inputCompletedHandler: function(event, value) {
@@ -160,10 +166,9 @@ define('Controls/Input/Number', [
             value = this._numberViewModel.updateValue(value + '.0');
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
-                  runDelayed(function() {
-                     self._children.input.select();
-                  });
+                  this._isFocus = true;
                } else {
+                  // TODO: сделать аналогично как input.select() https://online.sbis.ru/opendoc.html?guid=6136ae81-ef5a-4267-9d04-a416eabacfdc
                   runDelayed(function() {
                      self._children.input.setSelectionRange(value.length - 2, value.length - 2);
                   });

@@ -7,7 +7,7 @@ define('Controls/List/ItemsViewModel',
 
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
       var _private = {

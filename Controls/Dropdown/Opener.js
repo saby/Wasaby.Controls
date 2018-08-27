@@ -12,6 +12,7 @@ define('Controls/Dropdown/Opener',
        * @extends Controls/Popup/Opener/Sticky
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        */
       var _private = {

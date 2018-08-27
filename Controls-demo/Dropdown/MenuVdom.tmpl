@@ -75,7 +75,18 @@
          footerTemplate="tmpl!Controls-demo/Dropdown/resources/footerTemplate"
          source="{{_getMultiData()}}"
       />
-   </div>
+	</div>
+
+	<div style="padding: 5px;">readOnly
+		<Controls.Input.Dropdown
+				on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
+				bind:selectedKeys="_selectedKeys0"
+				name="myDropdownList0"
+				keyProperty="id"
+				readOnly="{{true}}"
+				source="{{_getDefaultMemory()}}"
+		/>
+	</div>
    <h2>MenuButton</h2>
    <div test_name="capture_menu">
       <div style="padding: 5px;">Меню с дополнительными данными
@@ -83,6 +94,8 @@
             name="myMenuButton11"
             attr:test_name="dop_menu"
             keyProperty="id"
+			parentProperty="parent"
+			nodeProperty="@parent"
             additionalProperty="additional"
             style="linkMain"
             icon="icon-medium icon-Author"

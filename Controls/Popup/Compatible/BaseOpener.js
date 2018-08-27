@@ -39,6 +39,10 @@ function(cMerge,
             cfg.templateOptions.hoverTarget = cfg.hoverTarget;
          }
 
+         if (cfg.closeButtonStyle) {
+            cfg.templateOptions.closeButtonStyle = cfg.closeButtonStyle;
+         }
+
          if (cfg.record) { // от RecordFloatArea
             cfg.templateOptions.record = cfg.record;
          }
@@ -99,7 +103,7 @@ function(cMerge,
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
 
-         if (cfg.canMaximize) {
+         if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;
             cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
@@ -161,17 +165,6 @@ function(cMerge,
             }
          }
 
-         if (cfg.hasOwnProperty('offset')) {
-            if (cfg.offset.x) {
-               cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
-            }
-            if (cfg.offset.y) {
-               cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
-            }
-         }
-
          if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
             cfg.corner = {};
             if (cfg.hasOwnProperty('side')) {
@@ -187,6 +180,16 @@ function(cMerge,
             delete cfg.verticalAlign;
          }
 
+         if (!cfg.hasOwnProperty('direction')) {
+            //Значения по умолчанию. взято из floatArea.js
+            var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
+            if (side === 'left') {
+               cfg.direction = 'right';
+            } else if (side === 'right') {
+               cfg.direction = 'left';
+            }
+         }
+
          if (cfg.hasOwnProperty('direction')) {
             if (cfg.direction === 'right' || cfg.direction === 'left') {
                if (typeof cfg.horizontalAlign !== 'object') {
@@ -194,15 +197,42 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+
+               //magic of old floatarea
+               if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
+                  cfg.horizontalAlign = {side: cfg.side === 'right' ? 'left' : 'right'};
+               }
+            }
+         }
+
+         if (cfg.hasOwnProperty('offset')) {
+            if (cfg.offset.x) {
+               cfg.horizontalAlign = cfg.horizontalAlign || {};
+               cfg.horizontalAlign.offset = cfg.offset.x;
+            }
+            if (cfg.offset.y) {
+               cfg.verticalAlign = cfg.verticalAlign || {};
+               cfg.verticalAlign.offset = cfg.offset.y;
             }
          }
 
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
          }
+
+         cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+
+         /**
+          * InfoBox в своем шаблоне имеет опции с именами template и templateOptions.
+          * нужно их положить в innerComponentOptions.templateOptions.
+          */
+         if (cfg.componentOptions.innerComponentOptions.template) {
+            cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
+         }
+
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
@@ -210,6 +240,10 @@ function(cMerge,
 
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
+         }
+
+         if (cfg.onCloseHandler) {
+            cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
          this._setSizes(cfg, templateClass);
@@ -299,8 +333,8 @@ function(cMerge,
 
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = this._getDimensions(templateClass);
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var dimensions = templateClass ? this._getDimensions(templateClass) : {};
+         var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
          var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
 
          if (!cfg.minWidth) {

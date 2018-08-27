@@ -28,7 +28,9 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          //Устанавливаем неустановленные опции в дефолтные значения
          cMerge(options, {
             resizable: false,
-            visible: false,
+
+            //на vdom не работает опция visible у диалогов. Поэтому сами будем скрывать окно печати стилями.
+            className: 'controls-PrintDialog__invisible',
             isStack: true,
             task_1174068748: true,
             template: 'SBIS3.CONTROLS/PrintDialogTemplate',

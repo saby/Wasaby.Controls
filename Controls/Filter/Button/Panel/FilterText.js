@@ -10,6 +10,7 @@ define('Controls/Filter/Button/Panel/FilterText', [
     * @extends Controls/Control
     * @control
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

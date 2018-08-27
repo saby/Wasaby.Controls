@@ -384,15 +384,16 @@
             left: 0;
             right: 0;
             font-size: 14px;
-            max-height: 18px;
-            line-height: 18px;
+            min-height: 20px;
+            max-height: 20px;
+            line-height: 20px;
+            padding: 3px 4px;
             background-color: #fff;
             border-top: 1px solid #E4E4E4;
          }
          &.controls-CompositeView__item-withTitle {
             .controls-CompositeView__tileTitle {
                display: block;
-               padding: 0 4px;
             }
          }
          &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
@@ -402,14 +403,8 @@
             }
             .controls-CompositeView__tileTitle {
                display: block;
-               min-height: 18px;
-               max-height: 36px;
+               max-height: 40px;
                background-color: #E1ECF6;
-               padding: 4px;
-
-               .controls-CompositeView__tileTitle-text {
-                  max-height: 36px;
-               }
             }
          }
       }

@@ -43,23 +43,56 @@ define('Controls/Container/Suggest/Layout',
             });
          },
          
-         getSizes: function(self) {
+         getSizes: function(self, dropDownContainer) {
+            var boundingClientToJSON = function(bc) {
+               var resultObj = {};
+
+               // firefox bug, clientRect object haven't method toJSON
+               if (bc.toJSON) {
+                  resultObj = bc.toJSON();
+               } else {
+                  for (var i in bc) {
+                     if (bc.hasOwnProperty(i)) {
+                        resultObj[i] = bc[i];
+                     }
+                  }
+               }
+
+               return resultObj;
+            };
+            var suggestBCR = boundingClientToJSON(self._children.suggestionsContainer.getBoundingClientRect());
+            var containerBCR =  boundingClientToJSON(self._container.getBoundingClientRect());
+            var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
+            
+            /* because dropDownContainer can have height smaller, than window height */
+            function fixSizesByDDContainer(size) {
+               size.top -= dropDownContainerBCR.top;
+               size.bottom -= dropDownContainerBCR.top;
+               return size;
+            }
+            
             return {
-               suggest: self._children.suggestionsContainer.getBoundingClientRect(),
-               container: self._container.getBoundingClientRect()
+               suggest: fixSizesByDDContainer(suggestBCR),
+               container: fixSizesByDDContainer(containerBCR)
             };
          },
+         
+         getDropDownContainerSize: function(container) {
+            container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
+            return container.getBoundingClientRect();
+         },
    
-         calcOrient: function(self, win) {
+         calcOrient: function(self, dropDownContainer) {
             /* calculate algorithm:
                - bottom of suggest behind the screen -> change orient, need to revert (-up)
                - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
                - bottom of suggest on screen -> default orient (-down)
              */
-            var sizes = _private.getSizes(self),
+            var sizes = _private.getSizes(self, dropDownContainer),
                suggestHeight = sizes.suggest.height,
                containerSize = sizes.container,
-               needToRevert = suggestHeight + containerSize.bottom > (win || window).innerHeight,
+               dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer),
+               needToRevert = suggestHeight + containerSize.bottom > dropDownContainerSize.height,
                newOrient;
             
             if (needToRevert && self._options.suggestStyle !== 'overInput') {
@@ -84,12 +117,12 @@ define('Controls/Container/Suggest/Layout',
           * @param self
           * @param currentOrient orient of suggestions container
           * @param sizes size of suggestions container and input container
-          * @param win window
+          * @param dropDownContainer container for dropDown
           * @returns {string}
           */
-         calcHeight: function(self, currentOrient, win) {
-            var sizes = _private.getSizes(self);
-            var windowHeight = (win || window).innerHeight;
+         calcHeight: function(self, currentOrient, dropDownContainer) {
+            var sizes = _private.getSizes(self, dropDownContainer);
+            var dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
             var suggestSize = sizes.suggest;
             var containerSize = sizes.container;
             var containerOptionToGet = {
@@ -102,8 +135,8 @@ define('Controls/Container/Suggest/Layout',
             
             if (suggestBottomSideCoord < 0) {
                height = suggestSize.height + suggestBottomSideCoord + 'px';
-            } else if (suggestBottomSideCoord > windowHeight) {
-               height = suggestSize.height - (suggestBottomSideCoord - windowHeight) + 'px';
+            } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
+               height = suggestSize.height - (suggestBottomSideCoord - dropDownContainerSize.height) + 'px';
             }
             
             return height;
@@ -135,19 +168,26 @@ define('Controls/Container/Suggest/Layout',
                self._isFooterShown = _private.shouldShowFooter(self, resultData);
             }
          },
-         
-         updateFilter: function(self, searchValue, tabId) {
-            var filter = clone(self._options.filter) || {};
+   
+         prepareFilter: function(self, filter, searchValue, tabId) {
+            var preparedFilter = clone(filter) || {};
+            
             if (tabId) {
-               filter.currentTab = tabId;
+               preparedFilter.currentTab = tabId;
             }
-            filter[self._options.searchParam] = searchValue;
-            self._filter = filter;
+   
+            preparedFilter[self._options.searchParam] = searchValue;
+            
+            return preparedFilter;
+         },
+         
+         setFilter: function(self, filter) {
+            self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey);
          },
          
          updateSuggestState: function(self) {
             if (_private.shouldSearch(self, self._searchValue)) {
-               _private.updateFilter(self, self._searchValue, self._tabsSelectedKey);
+               _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
                //autoDropDown - close only on Esc key or deactivate
@@ -218,6 +258,10 @@ define('Controls/Container/Suggest/Layout',
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
          },
+         
+         _afterMount: function() {
+            _private.setFilter(this, this._options.filter);
+         },
    
          _beforeUnmount: function() {
             this._searchResult = null;
@@ -230,6 +274,10 @@ define('Controls/Container/Suggest/Layout',
          _beforeUpdate: function(newOptions) {
             if (!newOptions.suggestState) {
                _private.resetSizesState(this);
+            }
+            
+            if (this._options.filter !== newOptions.filter) {
+               _private.setFilter(this, newOptions.filter);
             }
          },
    
@@ -268,9 +316,11 @@ define('Controls/Container/Suggest/Layout',
          
          
          // <editor-fold desc="handlers">
-         
+
          _close: function() {
-            if (this._options.suggestStyle === 'overInput') {
+            /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
+               Notify event only if value is not empty, because event listeners expect, that the value is really changed */
+            if (this._searchValue) {
                this._searchValue = '';
                this._notify('valueChanged', ['']);
             }
@@ -302,7 +352,12 @@ define('Controls/Container/Suggest/Layout',
    
          _tabsSelectedKeyChanged: function(event, key) {
             this._searchDelay = 0;
-            _private.updateFilter(this, this._searchValue, key);
+            
+            // change only filter for query, tabSelectedKey will be changed after processing query result,
+            // otherwise interface will blink
+            if (this._tabsSelectedKey !== key) {
+               this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key);
+            }
             
             // move focus from tabs to input, after change tab
             this.activate();
