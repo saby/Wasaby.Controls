@@ -23,7 +23,6 @@ define('Controls/Event/Listener',
             this._forceUpdate = function() {
                // Do nothing
                // This method will be called because of handling event.
-               // But BatchUpdater controls updates of inner controls independently
             };
          },
          _beforeMount: function(newOptions) {
