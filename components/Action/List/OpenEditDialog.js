@@ -726,6 +726,9 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
 
       destroy: function() {
          $(document).unbind('keydown keyup', this._setOpeningModeHandler);
+         if (this._overlay) {
+            this._overlay.remove();
+         }
          OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });
