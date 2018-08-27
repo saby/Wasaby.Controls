@@ -11,6 +11,7 @@ define('Controls/Operations/Panel', [
     * @class Controls/Operations/Panel
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/interface/IExpandable
     * @control
