@@ -30,7 +30,6 @@ define('Controls/Printer/Printer', [
     * @cfg {String}
     * @name Controls/Printer/Printer#printTemplate Name of the template that will be used for printing.
     */
-   '';
    var Printer = Control.extend(/** @lends Controls/Printer/Printer */ {
       _template: template,
 
