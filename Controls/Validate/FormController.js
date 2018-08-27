@@ -40,7 +40,7 @@ define('Controls/Validate/FormController',
                var
                   key;
 
-               // Проходимся по объекту с ошибками и ставим фокус в первое невалидное поле
+               // Walking through object with errors and focusing first not valid field.
                for (key in results) {
                   if (results[key]) {
                      this._validates[key].activate();

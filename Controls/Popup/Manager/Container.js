@@ -62,9 +62,8 @@ define('Controls/Popup/Manager/Container',
          },
          _popupDestroyed: function(event, popupId) {
             if (this[popupId + '_activeElement']) {
-               // мне нужно фокусировать на _afterUnmount, когда на фокусировку не стрельнет _popupDeactivated,
-               // но _afterUnmount не существует, так что я вызываю setTimeout на _beforeUnmount попапа,
-               // чтобы дождаться нужного состояния
+               // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
+               // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
                setTimeout(function() {
                   this[popupId + '_activeElement'].focus();
                   delete this[popupId + '_activeElement'];
