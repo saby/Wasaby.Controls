@@ -22,7 +22,7 @@ define(
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123');
          });
@@ -42,7 +42,7 @@ define(
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123');
          });
@@ -62,7 +62,7 @@ define(
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123.456');
          });
@@ -82,7 +82,7 @@ define(
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '0');
          });
