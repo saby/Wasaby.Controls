@@ -42,7 +42,16 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           */
          close: function() {
             this._notify('close', [], {bubbling: true});
+         },
+
+         _onMouseDown: function(event) {
+            this._children.dragNDrop.startDragNDrop(null, event);
+         },
+
+         _onDragMove: function(event, dragObject) {
+            this._notify('dialogDrag', [dragObject.offset]);
          }
+
       });
       return DialogTemplate;
    }
