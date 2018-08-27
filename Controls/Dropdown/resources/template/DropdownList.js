@@ -57,6 +57,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _hasHierarchy: false,
+         _listModel: null,
 
          constructor: function(config) {
             var self = this;
@@ -220,6 +221,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
             return {
                ScrollData: this._scrollData
             };
+         },
+         _beforeUnmount: function() {
+            if (this._listModel) {
+               this._listModel.destroy();
+               this._listModel = null;
+            }
          }
       });
 
