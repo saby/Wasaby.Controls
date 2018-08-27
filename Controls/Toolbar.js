@@ -20,6 +20,7 @@ define('Controls/Toolbar', [
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/List/interface/IHierarchy
     * @control
     * @public
