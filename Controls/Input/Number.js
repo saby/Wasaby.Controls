@@ -72,7 +72,8 @@ define('Controls/Input/Number', [
                processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
             self._numberViewModel.updateValue(processedVal);
 
-            // Костыль, до выполнения ошибки: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
             target.value = self._numberViewModel.getDisplayValue();
          }
       }
@@ -176,7 +177,8 @@ define('Controls/Input/Number', [
          if (this._options.precision !== 0 && value && value.indexOf('.') === -1) {
             value = this._numberViewModel.updateValue(value + '.0');
 
-            // Костыль, до выполнения ошибки: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
             e.target.value = this._numberViewModel.getDisplayValue();
 
             if (!this._options.readOnly) {
