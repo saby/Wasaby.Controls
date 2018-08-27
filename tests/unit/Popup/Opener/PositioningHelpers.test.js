@@ -296,13 +296,13 @@ define(
                assert.equal(container.style.height, 10);
             });
 
-            it('dialog dragger position', function() {
+            it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
                let position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
                assert.equal(position.left, itemPosition.left);
                assert.equal(position.top, itemPosition.top);
 
-               let itemPosition = {left: 600, top: 500};
+               itemPosition = {left: 600, top: 500};
                position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
                assert.equal(position.left, 400);
                assert.equal(position.top, 300);
