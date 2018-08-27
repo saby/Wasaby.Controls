@@ -10,14 +10,14 @@
                         displayProperty="title"
                         bind:selectedKey="_selectedStyle"/>
 
-                <Controls.Toggle.Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible"/>
-                <Controls.Toggle.Checkbox bind:value="_shadowVisible" caption="shadowVisible"/>
+                <Controls.Toggle.Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:test_name="scrollbarVisible"/>
+                <Controls.Toggle.Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:test_name="shadowVisible"/>
             </div>
 
             <h3>Settings</h3>
             <div class="ControlsDemo-settings_wrapper">
                 <Controls.Label caption="Number of records"/>
-                <Controls.Input.Number precision="{{0}}" integersLength="{{3}}" bind:value="_numberOfRecords"/>
+                <Controls.Input.Number precision="{{0}}" integersLength="{{3}}" bind:value="_numberOfRecords" attr:test_name="numberOfRecords"/>
                 <Controls.Toggle.Switch caption="Activate paging" bind:value="_pagingVisible"/>
             </div>
         </div>
