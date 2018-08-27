@@ -47,11 +47,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
 
       /**
-       * Задержка обновления изображения предпросмотра
+       * Минимальный интервал между обновлениями изображения предпросмотра
        * @private
        * @type {number}
        */
       var PREVIEW_DELAY = 750;
+
+      /**
+       * Масштаб  изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_SCALE = 0.4;
 
 
 
@@ -379,17 +386,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
             if (!size) {
-               this._previewSize = size = {width: 1920, height: 0};
+               this._previewSize = size = {width:1920, height:0};
             }
             this._waitIndicatorStart();
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
                function (url) {
-                  var img = this._preview[0];
-                  img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
-                  img.src = url;
-                  img.title = options.previewTitle;
-                  this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+                  var cache = new Image();
+                  cache.onload = cache.onerror = function () {
+                     this._updatePreviewClearStop();
+                     var img = this._preview[0];
+                     img.src = url;
+                     img.width = PREVIEW_SCALE*cache.width;
+                     img.title = options.previewTitle;
+                     this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+                  }.bind(this);
+                  cache.onerror = this._updatePreviewClearStop.bind(this);
+                  cache.src = url;
                }.bind(this),
                this._updatePreviewClearStop.bind(this)
             );
