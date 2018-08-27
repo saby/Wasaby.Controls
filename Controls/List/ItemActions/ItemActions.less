@@ -92,10 +92,9 @@
   color: @warning-color;
 }
 
-.controls-Toolbar__menu-position {
-   .icon-size {
-      .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
-   }
+//since Opener does not know the specific size of the icon
+.controls-Toolbar__menu-position .icon-size{
+  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
 
 .controls-itemActionsV__action_icon {
