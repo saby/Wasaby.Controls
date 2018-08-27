@@ -689,7 +689,9 @@
       "SBIS3.CONTROLS/Suggest/*"
     ],
     "exclude": [
-      "css!*"
+      "css!*",
+      "SBIS3.CONTROLS/Suggest/SuggestView/*",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll/*"
     ],
     "output": "sbis3controls-suggest.package.js"
   },
