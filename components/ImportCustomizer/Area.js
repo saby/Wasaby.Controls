@@ -546,6 +546,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Опции под-компонента "columnBinding"
             if (isUsedSubview.columnBinding) {
                var sampleRows = hasSheets ? sheet.sampleRows : [];
+               var columnBindingMapping = options.columnBindingMapping;
+               if (columnBindingMapping) {
+                  // Очистить заначение опции columnBindingMapping от избыточных данных (всех полей с несуществующими индексами):
+                  var count = hasSheets ? sampleRows[0].length : 0;
+                  options.columnBindingMapping = hasSheets ? Object.keys(columnBindingMapping).reduce(function (result, property) {
+                     var index = columnBindingMapping[property];
+                     if (0 <= index && index < count) {
+                        result[property] = index;
+                     }
+                     return result;
+                  }, {}) : [];
+               }
                scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, objectSelectByNames(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
             }
             // Опции под-компонента "mapping"

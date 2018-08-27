@@ -8,35 +8,33 @@
  * Created by am.gerasimov on 12.10.2016.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
+define(['SBIS3.CONTROLS/History/HistoryList'], function(HistoryList) {
 
    'use strict';
-   describe('SBIS3.CONTROLS/History/HistoryList', function () {
-      
+   describe('SBIS3.CONTROLS/History/HistoryList', function() {
+
       var preloadHistory = function(historyList, callback) {
          historyList.getHistory(true).addCallback(function(history) {
             callback();
             return history;
          });
       };
-      
-      beforeEach(function() {
-         if (typeof $ === 'undefined') {
-            this.skip();
-         }
-      });
 
-      describe('.prepend', function (){
+      describe('.prepend', function() {
          var obj = { myData: 123 };
 
          describe('simple prepend', function() {
             var List;
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestPrepend'});
-               preloadHistory(List, function() {
-                  List.prepend(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestPrepend'});
+                  preloadHistory(List, function() {
+                     List.prepend(obj);
+                     done();
+                  });
+               }
             });
 
             it('.should return { myData: 123 }', function() {
@@ -56,12 +54,16 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
          describe('equal object Prepend', function() {
             var List;
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestEqualPrepend'});
-               preloadHistory(List, function() {
-                  List.prepend(obj);
-                  List.prepend(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestEqualPrepend'});
+                  preloadHistory(List, function() {
+                     List.prepend(obj);
+                     List.prepend(obj);
+                     done();
+                  });
+               }
             });
 
             it('.should return { myData: 123 }', function() {
@@ -81,17 +83,21 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
          describe('equal object move top', function() {
             var List;
             var newData;
-            
+
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestPrependMove'});
-               preloadHistory(List, function() {
-                  List.prepend(obj);
-                  List.prepend(obj);
-                  newData = {myData: 234};
-                  List.prepend(newData);
-                  List.prepend(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestPrependMove'});
+                  preloadHistory(List, function() {
+                     List.prepend(obj);
+                     List.prepend(obj);
+                     newData = {myData: 234};
+                     List.prepend(newData);
+                     List.prepend(obj);
+                     done();
+                  });
+               }
             });
 
             it('.should return { myData: 123 }', function() {
@@ -109,18 +115,22 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
          });
       });
 
-      describe('.append', function (){
+      describe('.append', function() {
          var obj = { myData: 123 };
 
          describe('simple append', function() {
             var List;
-            
+
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestAppend'});
-               preloadHistory(List, function() {
-                  List.append(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestAppend'});
+                  preloadHistory(List, function() {
+                     List.append(obj);
+                     done();
+                  });
+               }
             });
 
             it('.should return { myData: 123 }', function() {
@@ -139,14 +149,18 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
          describe('equal object append', function() {
             var List;
-            
+
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestEqualAppend'});
-               preloadHistory(List, function() {
-                  List.append(obj);
-                  List.append(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestEqualAppend'});
+                  preloadHistory(List, function() {
+                     List.append(obj);
+                     List.append(obj);
+                     done();
+                  });
+               }
             });
 
             it('.should return { myData: 123 }', function() {
@@ -165,19 +179,23 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
          describe('equal object move top', function() {
             var List, newData;
-            
+
             before(function(done) {
-               List = new HistoryList({historyId: 'mySuperTestMoveAppend'});
-               preloadHistory(List, function() {
-                  List.append(obj);
-                  List.append(obj);
-                  newData = {myData: 234};
-                  List.append(newData);
-                  List.append(obj);
-                  done();
-               });
+               if (typeof $ === 'undefined') {
+                  this.skip();
+               } else {
+                  List = new HistoryList({historyId: 'mySuperTestMoveAppend'});
+                  preloadHistory(List, function() {
+                     List.append(obj);
+                     List.append(obj);
+                     newData = {myData: 234};
+                     List.append(newData);
+                     List.append(obj);
+                     done();
+                  });
+               }
             });
-            
+
             it('.should return { myData: 123 }', function() {
                assert.deepEqual(List.at(0).get('data').getRawData(), obj);
             });
@@ -193,20 +211,24 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
          });
       });
 
-      describe('.assign', function (){
+      describe('.assign', function() {
          var List;
          var obj;
 
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestAssign'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.append({test: 'test'});
-               List.assign(obj);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestAssign'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.append({test: 'test'});
+                  List.assign(obj);
+                  done();
+               });
+            }
          });
-         
+
          it('.should equal { myData: 123 }', function() {
             assert.deepEqual(List.at(0).get('data').getRawData(), { myData: 123 });
          });
@@ -221,17 +243,21 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
       });
 
-      describe('.clear', function (){
+      describe('.clear', function() {
          var List;
          var obj;
-         
+
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestClear'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestClear'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  done();
+               });
+            }
          });
 
          it('.should return 2', function() {
@@ -245,18 +271,22 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
       });
 
-      describe('.remove', function (){
+      describe('.remove', function() {
          var List;
          var obj;
-         
+
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestRemove'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               List.remove({myData: 123});
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestRemove'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  List.remove({myData: 123});
+                  done();
+               });
+            }
          });
 
          it('.should return 1', function() {
@@ -269,18 +299,22 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
       });
 
-      describe('.removeAt', function (){
+      describe('.removeAt', function() {
          var List;
          var obj;
 
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestRemoveAt'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               List.removeAt(0);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestRemoveAt'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  List.removeAt(0);
+                  done();
+               });
+            }
          });
 
          it('.should return 1', function() {
@@ -293,17 +327,21 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
       });
 
-      describe('.at', function (){
+      describe('.at', function() {
          var List;
          var obj;
-         
+
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestAt'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestAt'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  done();
+               });
+            }
          });
 
          it('.should return { myData: 123 }', function() {
@@ -316,17 +354,21 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
       });
 
-      describe('.getIndex', function (){
+      describe('.getIndex', function() {
          var List;
          var obj;
-         
+
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestGetIndex'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestGetIndex'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  done();
+               });
+            }
          });
 
          it('.should return 0', function() {
@@ -338,28 +380,28 @@ define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
          });
       });
 
-      describe('.getCount', function (){
+      describe('.getCount', function() {
          var List;
          var obj;
-         
+
          before(function(done) {
-            List = new HistoryList({historyId: 'mySuperTestGetCount'});
-            preloadHistory(List, function() {
-               obj = [{myData: 123}, {myData: 234}];
-               List.assign(obj);
-               done();
-            });
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               List = new HistoryList({historyId: 'mySuperTestGetCount'});
+               preloadHistory(List, function() {
+                  obj = [{myData: 123}, {myData: 234}];
+                  List.assign(obj);
+                  done();
+               });
+            }
          });
 
-         it('.should return 2', function() {
+         it('.should return 2, then 3', function() {
             assert.equal(List.getCount(), 2);
             List.append({});
-         });
-
-         it('.should return 3', function() {
             assert.equal(List.getCount(), 3);
          });
-
       });
    });
 });
