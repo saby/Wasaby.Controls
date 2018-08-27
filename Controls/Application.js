@@ -56,7 +56,7 @@ define('Controls/Application',
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             if (detection.isMobilePlatform) {
-               bodyClasses += this._scrollingClass;
+               bodyClasses += ' ' + this._scrollingClass;
             }
 
             return bodyClasses;
