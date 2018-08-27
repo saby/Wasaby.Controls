@@ -73,7 +73,7 @@ define('Controls/Input/Number', [
             self._numberViewModel.updateValue(processedVal);
 
             // Костыль, до выполнения ошибки: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
-            target.value = processedVal;
+            target.value = self._numberViewModel.getDisplayValue();
          }
       }
    };
@@ -177,7 +177,8 @@ define('Controls/Input/Number', [
             value = this._numberViewModel.updateValue(value + '.0');
 
             // Костыль, до выполнения ошибки: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
-            e.target.value = value;
+            e.target.value = this._numberViewModel.getDisplayValue();
+
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
                   this._isFocus = true;
