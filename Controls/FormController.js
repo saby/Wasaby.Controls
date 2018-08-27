@@ -24,7 +24,7 @@ define('Controls/FormController', [
                this._isNewRecord = cfg.isNewRecord;
             }
          } else if (cfg.idValue !== undefined && cfg.idValue !== null) {
-            var readDef = cfg.dataSource.read(cfg.idValue);
+            var readDef = cfg.dataSource.read(cfg.idValue, cfg.readMetaData);
             readDef.addCallback(function(record) {
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._record = record;
