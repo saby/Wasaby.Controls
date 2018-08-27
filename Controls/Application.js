@@ -55,7 +55,7 @@ define('Controls/Application',
             //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
-            if (detection.isMobilePlatform) {
+            if (detection.isMobileIOS) {
                bodyClasses += ' ' + this._scrollingClass;
             }
 
