@@ -229,16 +229,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Browser",
-      "SBIS3.CONTROLS/Browser/*"
-    ],
-    "exclude": [
-      "css!*"
-    ],
-    "output": "sbis3controls-controls-browser.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/Action/List/Sum",
       "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate",
       "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/*"
