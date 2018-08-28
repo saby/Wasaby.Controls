@@ -18,7 +18,7 @@ define('Controls/StickyHeader',
 
          _isIntersecting: null,
 
-         _isMobileAndroid: detection.isMobileAndroid,
+         _isMobile: detection.isMobilePlatform,
 
          _beforeMount: function() {
             this._isIntersecting = {
