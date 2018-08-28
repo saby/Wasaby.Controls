@@ -438,8 +438,8 @@ node('controls') {
     if ( all_inte || regr || inte) {
         def soft_restart = "True"
         if ( params.browser_type in ['ie', 'edge'] ){
-			soft_restart = "False"
-		}
+            soft_restart = "False"
+        }
 
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
@@ -455,6 +455,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
+            SHOW_CHECK_LOG = True
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
 
         if ( "${params.theme}" != "online" ) {
@@ -499,7 +500,7 @@ node('controls') {
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True
-				"""
+                """
         }
 
         dir("./controls/tests/int"){
@@ -527,12 +528,12 @@ node('controls') {
                 echo "Выкачиваем файл с зависимостями"
                 url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                 script = """
-	                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-		            echo "result.json exitsts"; cp -fr tmp_result.json result.json
-		            else rm -f result.json
-	                fi
-	                """
-	                sh returnStdout: true, script: script
+                    if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+                    echo "result.json exitsts"; cp -fr tmp_result.json result.json
+                    else rm -f result.json
+                    fi
+                    """
+                    sh returnStdout: true, script: script
                 def exist_json = fileExists 'result.json'
                 if ( exist_json ) {
                     def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
