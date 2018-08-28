@@ -176,6 +176,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          //AreaAbstract.js::getReadyDeferred
+         //getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
+         //не завершится деферред
          _getReadyDeferred: function() {
             var self = this;
             if (this._childControl.getReadyDeferred) {
