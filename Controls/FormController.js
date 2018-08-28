@@ -151,7 +151,7 @@ define('Controls/FormController', [
                   this._updateByPopup = false;
                   if (!res.validationErrors) {
                      // если нет ошибок в валидации, просто завершаем пендинг с результатом
-                  def.callback(res);
+                     def.callback(res);
                   } else {
                      // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
                      // чтобы оно не сработало, когда пендинг завершится.
@@ -186,20 +186,20 @@ define('Controls/FormController', [
                });
             } else {
                var confirmDef = self._children.popupOpener.open({
-               message: rk('Сохранить изменения?'),
-               details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-               type: 'yesnocancel'
-            }).addCallback(function(answer) {
+                  message: rk('Сохранить изменения?'),
+                  details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
+                  type: 'yesnocancel'
+               }).addCallback(function(answer) {
                   self._confirmDef = null;
-               updating.call(self, answer);
+                  updating.call(self, answer);
                   return answer;
                }).addErrback(function(e) {
                   self._confirmDef = null;
                   return e;
-            });
+               });
                this._confirmDef = confirmDef;
                return confirmDef;
-         }
+            }
          }
       },
 
