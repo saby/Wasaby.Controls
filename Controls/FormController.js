@@ -119,6 +119,18 @@ define('Controls/FormController', [
       },
       _beforeUnmount: function() {
          this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+         this._tryDeleteNewRecord();
+      },
+      _tryDeleteNewRecord: function() {
+         var def;
+         if (this._isNewRecord && this._record) {
+            def = this._options.dataSource.destroy(this._record.getId());
+         } else {
+            def = new Deferred();
+            def.callback();
+         }
+         return def;
       },
       _onPropertyChange: function(event, fields) {
          if (!this._propertyChangeNotified) {
@@ -233,9 +245,14 @@ define('Controls/FormController', [
          return res;
       },
       _readHandler: function(record) {
-         this._wasRead = true;
-         this._isNewRecord = false;
-         this._forceUpdate();
+         // when FormController read record, its need to check previous record was saved or not.
+         // If its not saved but was created, previous record trying to delete.
+         var deleteDef = this._tryDeleteNewRecord();
+         deleteDef.addBoth(function() {
+            this._wasRead = true;
+            this._isNewRecord = false;
+            this._forceUpdate();
+         }.bind(this));
          return record;
       },
 
