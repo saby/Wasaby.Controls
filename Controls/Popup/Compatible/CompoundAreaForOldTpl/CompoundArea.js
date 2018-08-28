@@ -643,6 +643,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _toggleVisible: function(visible) {
             var
+               prevVisible = this._isVisible,
                popupContainer = this.getContainer().closest('.controls-Popup')[0],
                id = this._getPopupId(),
                popupConfig = this._getManagerConfig();
@@ -665,7 +666,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(id, popupConfig.popupOptions);
                }
 
-               if (visible && !this._isVisible) {
+               if (visible && !prevVisible) {
                   // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
                   // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
                   // на новую, поставим на время пересчета класс `ws-invisible`
@@ -688,6 +689,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
 
                this._isVisible = visible;
+
+               if (visible !== prevVisible) {
+                  // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+                  // стреляя событием onAfterVisibilityChange
+                  this._notifyCompound('onAfterVisibilityChange', visible);
+               }
             }
          },
          setOffset: function(newOffset) {

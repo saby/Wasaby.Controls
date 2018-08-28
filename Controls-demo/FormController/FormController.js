@@ -27,7 +27,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
          var initValues = config.initValues;
-         var finishDef = this._children.registrator.finishPendingOperations(false);
+         var finishDef = this._children.registrator.finishPendingOperations();
 
          initValues.id = this.idCount;
 
@@ -56,7 +56,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
 
-         var finishDef = this._children.registrator.finishPendingOperations(true);
+         var finishDef = this._children.registrator.finishPendingOperations();
 
          finishDef.addCallback(function(finishResult) {
             self._key = config.key;
