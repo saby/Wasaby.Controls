@@ -11,7 +11,7 @@ define('Controls/Popup/Previewer',
       /**
        * @class Controls/Popup/Previewer
        * @extends Core/Control
-       * @author Красильников А.С.
+       * @public
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
@@ -100,8 +100,7 @@ define('Controls/Popup/Previewer',
 
          _contentMousedownHandler: function(event) {
             /**
-             * If you click on the content in the display mode on hover,
-             * then cancel the show, because the click is written applied reaction.
+             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
              */
             if (this._options.trigger === 'hover') {
                this._cancel(event, 'opening');
