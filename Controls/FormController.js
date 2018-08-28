@@ -319,6 +319,9 @@ define('Controls/FormController', [
             return record;
          });
          return resultDef;
+      },
+      validate: function() {
+         return this._children.validation.submit();
       }
    });
 
