@@ -246,8 +246,8 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Save",
-      "SBIS3.CONTROLS/Save/*",
+      "SBIS3.CONTROLS/Action/Save",
+      "SBIS3.CONTROLS/Action/Save/*",
       "SBIS3.CONTROLS/Action/List/Save"
     ],
     "exclude": [
@@ -257,10 +257,10 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Selector/*",
-      "SBIS3.CONTROLS/resources/SelectionDialog/*",
-      "SBIS3.CONTROLS/resources/SelectionDialog",
-      "SBIS3.CONTROLS/SelectorAction"
+      "SBIS3.CONTROLS/Action/Selector/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog",
+      "SBIS3.CONTROLS/Action/SelectorAction"
     ],
     "exclude": [
       "css!*"
