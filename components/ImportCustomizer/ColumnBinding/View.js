@@ -8,7 +8,6 @@
 define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
    [
       'Core/core-merge',
-      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
@@ -18,7 +17,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'css!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View'
    ],
 
-   function (cMerge, cObjectIsEqual, CompoundControl, objectChange, RecordSet, dotTplFn) {
+   function (cMerge, CompoundControl, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       /**
