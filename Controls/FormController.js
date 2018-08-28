@@ -119,6 +119,7 @@ define('Controls/FormController', [
       },
       _beforeUnmount: function() {
          this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
       },
