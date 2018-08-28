@@ -43,6 +43,11 @@ x{}
    user-select: none;
 }
 
+//Необходимо навесить z-index на индикатор и контент для правильный работы контекста z-index`ов
+.controls-loading-indicator, .controls-loading-indicator_content {
+   z-index: 1;
+}
+
 .controls-loading-indicator_global {
    position: fixed;
    left: 0;
