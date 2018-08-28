@@ -18,11 +18,14 @@ define(
                   getValue: function() {
                      return '123.000';
                   },
+                  getDisplayValue: function() {
+                     return '123.000';
+                  },
                   updateValue: function(processedVal) {
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123');
          });
@@ -38,11 +41,14 @@ define(
                   getValue: function() {
                      return '123.';
                   },
+                  getDisplayValue: function() {
+                     return '123.';
+                  },
                   updateValue: function(processedVal) {
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123');
          });
@@ -58,11 +64,14 @@ define(
                   getValue: function() {
                      return '123.456';
                   },
+                  getDisplayValue: function() {
+                     return '123.456';
+                  },
                   updateValue: function(processedVal) {
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '123.456');
          });
@@ -78,11 +87,14 @@ define(
                   getValue: function() {
                      return '0';
                   },
+                  getDisplayValue: function() {
+                     return '0';
+                  },
                   updateValue: function(processedVal) {
                      res = processedVal;
                   }
                }
-            });
+            }, {});
 
             assert.equal(res, '0');
          });

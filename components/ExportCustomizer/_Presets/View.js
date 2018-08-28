@@ -868,6 +868,27 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
+          * Обнулить в текущем пресете указанный uuid стилевого эксель-файла (ввиду его отсутствия)
+          *
+          * @public
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @return {Core/Deferred}
+          */
+         nullifyUuid: function (fileUuid) {
+            if (fileUuid) {
+               var preset = this._findPresetById(this._options.selectedId);
+               if (preset && preset.isStorable && preset.fileUuid === fileUuid) {
+                  preset.fileUuid = null;
+                  if (this._fileUuid === fileUuid) {
+                     this._fileUuid = null;
+                  }
+                  return this._saveCustoms();
+               }
+            }
+            return Deferred.success();
+         },
+
+         /**
           * Установить указанные настраиваемые значения компонента
           *
           * @public
