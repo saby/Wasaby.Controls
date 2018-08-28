@@ -63,7 +63,12 @@ define('Controls-demo/Input/Area/Area', [
       },
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
+      },
+
+      paste_text: function(e) {
+         this._children.textArea.paste('567');
       }
+
    });
    return VdomDemoArea;
 });

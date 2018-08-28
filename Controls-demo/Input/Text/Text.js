@@ -47,7 +47,12 @@ define('Controls-demo/Input/Text/Text', [
       },
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
+      },
+
+      paste_text: function(e) {
+         this._children.textBox.paste('567');
       }
+
    });
    return VdomDemoText;
 });
