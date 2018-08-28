@@ -15,7 +15,7 @@ define('Controls/Popup/InfoBox',
        *
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
-       * @interface Controls/interface/IStickyOpener
+       * @mixes Controls/interface/IStickyOpener
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox

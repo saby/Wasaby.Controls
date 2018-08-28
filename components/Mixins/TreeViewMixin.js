@@ -100,9 +100,9 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
              * @variant onlyChangeOrder Разрешено только изменение порядка.
              * @variant onlyChangeParent Разрешено только перемещение в папку.
              * @variant separateParent Нельзя перемещать лист между папками и папку между листами.
-             * @remark Дополнительная информация в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Типы отношений в таблицах БД}.
-             * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
-             * Подробнее о том, как перемещать записи в списках, читайте в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
+             * @remark Дополнительная информация в статье {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Типы отношений в таблицах БД}.
+             * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link /docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
+             * Подробнее о том, как перемещать записи в списках, читайте в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
              */
             itemsDragNDrop: 'allow'
          }
@@ -113,7 +113,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
        * - Если активен элемент (лист), внутри открытой папки (узла/скрытого узла) - id этой папки
        * - В остальных случаях вернет id текущей папки (узла/скрытого узла)
        *
-       * Подробнее о типах данных иерархического списка можно прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Иерархия}.
+       * Подробнее о типах данных иерархического списка можно прочитать в разделе {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/ Иерархия}.
        */
       getActiveNodeKey: function() {
          var
@@ -356,6 +356,11 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
                   }
                }
             }
+         },
+         _onVirtualScrollWindowChange: function() {
+            //При виртуальном скроле, из дома может удалиться/добавиться папка у которой есть folderFooter.
+            //В таком случае пересоздадим футреры там где они необходимы.
+            this._createAllFolderFooters();
          },
          _toggleGroup: function(groupId, flag) {
             var

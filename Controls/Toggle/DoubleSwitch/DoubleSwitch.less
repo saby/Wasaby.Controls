@@ -81,14 +81,16 @@
    color: @color_Switch-text_disabled_unselected;
 }
 
-.controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
-   .controls-SwitchCircle__borderCircle_enabled {
-      fill: @color_ToggleCircle_outerCircle_enabled_hovered;
-   }
-}
-
 .ws-is-no-touch {
    .controls-DoubleSwitch__text_enabled_unselected:hover {
       text-decoration: underline;
+   }
+
+   // CSS cascade is needed because you can move mouse to any place of toggle, and internal part of it must be highlighted.
+   // Two hover class because first hover class set in js.
+   .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
+      .controls-SwitchCircle__borderCircle_enabled {
+         fill: @color_ToggleCircle_outerCircle_enabled_hovered;
+      }
    }
 }

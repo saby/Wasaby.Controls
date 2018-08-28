@@ -1,8 +1,10 @@
 define(
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Controls/Popup/Opener/Dialog',
+      'Controls/Popup/Opener/Stack'
    ],
-   function(BaseOpener) {
+   function(BaseOpener, Dialog, Stack) {
 
       'use strict';
 
@@ -22,6 +24,28 @@ define(
 
             clearPopupIds(popupIds, false, 'single');
             assert.deepEqual(popupIds, []);
+         });
+      });
+
+      describe('Controls.Popup.Opener.Dialog', () => {
+         it('getConfig', () => {
+            let getDialogConfig = Dialog._private.getDialogConfig;
+            let config = getDialogConfig();
+            assert.equal(config.isDefaultOpener, true);
+
+            config = getDialogConfig({isDefaultOpener: false});
+            assert.equal(config.isDefaultOpener, false);
+         });
+      });
+
+      describe('Controls.Popup.Opener.Stack', () => {
+         it('getConfig', () => {
+            let getStackConfig = Stack._private.getStackConfig;
+            let config = getStackConfig();
+            assert.equal(config.isDefaultOpener, true);
+
+            config = getStackConfig({isDefaultOpener: false});
+            assert.equal(config.isDefaultOpener, false);
          });
       });
    }

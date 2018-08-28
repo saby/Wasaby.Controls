@@ -14,7 +14,7 @@
     <ws:if data="{{_options.showMaximizedButton}}">
         <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
     </ws:if>
-    <Controls.Button.Close attr:class="controls-StackTemplate__close_button" on:click="close()"/>
+    <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>
     <div class="controls-StackTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}"></ws:partial>
     </div>

@@ -23,10 +23,11 @@
 <ws:template name="columnContent">
    <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
       <ws:partial template="{{multiSelectTpl}}"
-                  triState="{{itemData.dispItem.isNode()}}"
-                  multiSelectStatus="{{itemData.multiSelectStatus}}"
-                  key="{{itemData.key}}"
-                  attr:class="controls-GridView__checkbox"/>
+                  attr:class="controls-GridView__checkbox">
+         <ws:templateOptions triState="{{itemData.dispItem.isNode()}}"
+                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             key="{{itemData.key}}" />
+      </ws:partial>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.isNotFullGridSupport}}">

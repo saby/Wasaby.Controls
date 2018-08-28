@@ -340,9 +340,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           *
           * @protected
           * @param {string} reason Причина или вид изменения
-          * @param {*} [info] Дополнительные данные
+          * @param {*} [args] Дополнительные аргументы
           */
-         _onChangePresets: function (reason/*, inf*/) {
+         _onChangePresets: function (reason/*, ...args*/) {
             // Выбраны новые предустановленные настройки экспорта
             var views = this._views;
             var values = views.presets.getValues();
@@ -391,9 +391,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "columnBinder"
           *
           * @protected
-          * @param {*} [data] Дополнительные данные
+          * @param {string} reason Причина или вид изменения
+          * @param {*} [args] Дополнительные аргументы
           */
-         _onChangeColumnBinder: function (data) {
+         _onChangeColumnBinder: function (reason/*, ...inf*/) {
             // Изменился набор экспортируемых полей
             var views = this._views;
             var values = views.columnBinder.getValues();
@@ -415,20 +416,26 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           * Обработчик "subviewChanged" для под-компонента "formatter"
           *
           * @protected
-          * @param {*} [data] Дополнительные данные
+          * @param {string} reason Причина или вид изменения
+          * @param {*} [args] Дополнительные аргументы
           */
-         _onChangeFormatter: function (data) {
+         _onChangeFormatter: function (reason/*, ...args*/) {
             // Изменилось форматирование эксель-файла
             var views = this._views;
             var values = views.formatter.getValues();
-            var fileUuid = values.fileUuid;
-            if (fileUuid) {
-               var options = this._options;
-               options.fileUuid = fileUuid;
-               options.isTemporaryFile = true;
-               var presetsView = views.presets;
-               if (presetsView) {
-                  /*return*/ presetsView.restate({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
+            if (reason === 'uuidNullified') {
+               views.presets.nullifyUuid(arguments[1]);
+            }
+            else {
+               var fileUuid = values.fileUuid;
+               if (fileUuid) {
+                  var options = this._options;
+                  options.fileUuid = fileUuid;
+                  options.isTemporaryFile = true;
+                  var presetsView = views.presets;
+                  if (presetsView) {
+                     /*return*/ presetsView.restate({fileUuid:fileUuid}, this._makeMeta('formatter', [].slice.call(arguments)));
+                  }
                }
             }
          },
