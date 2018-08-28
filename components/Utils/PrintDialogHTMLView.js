@@ -41,6 +41,9 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
                handlers: {
                   onAfterShow: function() {
                      def.callback();
+                  },
+                  onDestroy: function() {
+                     action.destroy();
                   }
                }
             }
@@ -55,5 +58,5 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          action.execute();
          return def;
       });
-   }
+   };
 });

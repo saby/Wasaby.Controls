@@ -8,10 +8,9 @@ define('Controls/Container/Scroll/Watcher',
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/debounce',
       'Core/detection'
    ],
-   function(Control, template, Registrar, debounce, detection) {
+   function(Control, template, Registrar, detection) {
 
       'use strict';
 
