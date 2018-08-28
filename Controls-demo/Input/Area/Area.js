@@ -1,10 +1,19 @@
 define('Controls-demo/Input/Area/Area', [
    'Core/Control',
    'tmpl!Controls-demo/Input/Area/Area',
+   'WS.Data/Source/Memory',   
    'css!Controls-demo/Input/resources/VdomInputs'
-], function(Control, template) {
+], function(Control, template, MemorySource) {
 
    'use strict';
+   
+   var newLineKeySource = new MemorySource({
+      idProperty: 'title',
+      data: [
+         { title: 'enter' },
+         { title: 'ctrlEnter' }
+      ]
+   });
 
    var VdomDemoArea = Control.extend({
       _template: template,
@@ -19,6 +28,13 @@ define('Controls-demo/Input/Area/Area', [
       _example: '',
       _selectOnClick: false,
       _tagStyle: 'error',
+
+      _newLineKey: 'enter',
+      _newLineKeySource: newLineKeySource,
+      changeNewLineKey: function(e, key) {
+         this._newLineKey = key;
+      },
+
       _items: [
          {title: '[0-9]', example: 'You can use only digits'},
          {title: '[a-zA-Z]', example: 'You can use only letters'},
