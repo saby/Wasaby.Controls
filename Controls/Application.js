@@ -103,6 +103,7 @@ define('Controls/Application',
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
+            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
