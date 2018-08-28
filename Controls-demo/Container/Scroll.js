@@ -9,7 +9,7 @@ define('Controls-demo/Container/Scroll',
    function(Control, MemorySource, ScrollData, template) {
       return Control.extend({
          _template: template,
-         _pagingVisible: false,
+         _pagingVisible: true,
          _scrollbarVisible: true,
          _shadowVisible: true,
          _numberOfRecords: 50,
