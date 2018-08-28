@@ -7,6 +7,12 @@ define('Controls/FormController', [
 ], function(Control, tmpl, Model, Deferred, IoC) {
    'use strict';
 
+
+   /**
+    * @name Controls/FormController#readMetaData
+    * @cfg {String} Additional meta data what will be argument of read method called when key option is exists
+    */
+
    var module = Control.extend({
       _template: tmpl,
       _record: null,
@@ -111,7 +117,7 @@ define('Controls/FormController', [
             }
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
-            this.read(this._options.key);
+            this.read(this._options.key, this._options.readMetaData);
          } else {
             // если нет ни рекорда ни ключа - создадим рекорд
             this.create();
