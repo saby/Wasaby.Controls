@@ -230,6 +230,10 @@ define('Controls/Popup/Compatible/Layer', [
             * например, autosize*/
             if (window.jQuery) {
                compatibleDeps.splice(0, 1);
+
+               // также не будем загружать jQuery отдельно, до загрузки остальных зависимостей,
+               // так как он уже есть на странице
+               jQueryModuleName = '';
             }
 
             deps = (deps || []).concat(compatibleDeps);
