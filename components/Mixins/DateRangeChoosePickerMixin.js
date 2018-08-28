@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
-   'SBIS3.CONTROLS/Date/RangeChoose',
    'Core/core-instance'
-], function (DateRangeChoose, cInstance) {
+], function (cInstance) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS/Mixins/RangeMixin) и SBIS3.CONTROLS.PickerMixin.
@@ -121,6 +120,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
          _chooserControl: null
       },
 
+      _chooserClass: null,
+
       $constructor: function () {
          if (!(cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/RangeMixin' ||
                cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/DateRangeMixin')))) {
@@ -131,12 +132,18 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
          }
       },
 
-      before: {
-         showPicker: function () {
+      around: {
+         showPicker: function(parentFnc) {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
                this._chooserControl.updateIcons();
                this._chooserControl._onShow();
+               parentFnc.call(this);
+            } else {
+               requirejs(['SBIS3.CONTROLS/Date/RangeChoose'], function(RangeChoose) {
+                  this._chooserClass = RangeChoose;
+                  parentFnc.call(this);
+               }.bind(this));
             }
          }
       },
@@ -178,7 +185,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
             }
 
             // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
-            self._chooserControl = new DateRangeChoose(opts);
+            self._chooserControl = new this._chooserClass(opts);
 
             // Добавляем в пикер
             this._picker.getContainer().append(element);
