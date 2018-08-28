@@ -99,7 +99,16 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            /**
+             * If you click on the content in the display mode on hover,
+             * then cancel the show, because the click is written applied reaction.
+             */
+            if (this._options.trigger === 'hover') {
+               this._cancel(event, 'opening');
+            } else {
+               this._open(event);
+            }
+
             event.stopPropagation();
          },
 
