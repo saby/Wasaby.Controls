@@ -64,6 +64,18 @@ define('Controls-demo/Popup/PopupPage',
                isCompoundTemplate: true
             });
          },
+         openStackWithPending: function() {
+            this._children.openStackWithPending.open({
+               opener: this._children.stackButton3,
+               isCompoundTemplate: true
+            });
+         },
+         openStackWithFormController: function() {
+            this._children.openStackWithFormController.open({
+               opener: this._children.stackButton4,
+               isCompoundTemplate: true
+            });
+         },
 
          _onResult: function (result) {
             if( result ){

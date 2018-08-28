@@ -414,10 +414,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var self = this;
                if (self._options.hasOwnProperty('json')) {
                   self._htmlJson = new HtmlJson();
-                  if (typeof self._options.json === 'string') {
-                     self.isJsonString = true;
-                     self._options.json = JSON.parse(self._options.json);
-                  }
                   self.setJson(self._options.json);
 
                   self.subscribe('onTextChange', function(e, text) {
@@ -426,8 +422,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                      var div = document.createElement('div');
                      div.innerHTML = text;
-                     self._options.json = domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self.isJsonString ? JSON.stringify(self._options.json) : self._options.json]);
+                     self._options.json = typeof self._options.json === 'string'
+                        ? JSON.stringify(domToJson(div).slice(1))
+                        : domToJson(div).slice(1);
+                     self._notify('onJsonChange', [self._options.json]);
                   });
                }
                this._updateDataReview(this.getText());
@@ -692,7 +690,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             setJson: function(json) {
                this._options.json = json;
-               this._htmlJson.setJson(json);
+               this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
                this.setText(this._htmlJson.render());
             },
             _performByReadyCallback: function() {

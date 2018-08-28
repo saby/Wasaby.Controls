@@ -46,7 +46,29 @@ define('Controls/Popup/Manager/Container',
          },
 
          _popupDeactivated: function(event, popupId) {
-            this._notify('popupDeactivated', [popupId], { bubbling: true });
+            var isPopupExists = this._children[popupId];
+            if (isPopupExists) {
+               if (!this[popupId + '_activeElement']) {
+                  this[popupId + '_activeElement'] = document.activeElement;
+               }
+               var popup = this._children[popupId],
+                  registrator = this._children[popupId + '_registrator'];
+               popup._container.focus();
+               var finishDef = registrator.finishPendingOperations();
+               finishDef.addCallback(function() {
+                  this._notify('popupDeactivated', [popupId], { bubbling: true });
+               }.bind(this));
+            }
+         },
+         _popupDestroyed: function(event, popupId) {
+            if (this[popupId + '_activeElement']) {
+               // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
+               // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
+               setTimeout(function() {
+                  this[popupId + '_activeElement'].focus();
+                  delete this[popupId + '_activeElement'];
+               }.bind(this), 0);
+            }
          },
 
          _overlayClickHandler: function(event) {

@@ -144,9 +144,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollListEdge: function(self, direction) {
-         if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScrollEdge(direction);
-         }
+
       },
 
       scrollToEdge: function(self, direction) {
@@ -257,15 +255,18 @@ define('Controls/List/BaseControl', [
 
       /**
        * Обработать прокрутку списка виртуальным скроллом
-       * @param scrollTop
        */
-      handleListScroll: function(self, scrollTop) {
+      handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScroll(scrollTop);
+            if (position === 'middle') {
+               self._scrollPagingCtr.handleScroll(scrollTop);
+            } else {
+               self._scrollPagingCtr.handleScrollEdge(position);
+            }
          }
       },
 
@@ -366,6 +367,7 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -532,7 +534,7 @@ define('Controls/List/BaseControl', [
             case 'loadBottom': _private.onScrollLoadEdge(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
          }

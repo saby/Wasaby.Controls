@@ -103,6 +103,15 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+      
+      // Демо-пример: работа с File/ResourceGetter/DropArea.
+      '/demo-ws4-drop-area': function(req, res) {
+         requirejs('File-demo/ResourceGetter/DropArea');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'File-demo/ResourceGetter/DropArea',
+            initDependencies: false
+         }, []);
+      },
 
       // Демо-пример: чекбокс
       '/demo-ws4-checkbox': function(req, res) {

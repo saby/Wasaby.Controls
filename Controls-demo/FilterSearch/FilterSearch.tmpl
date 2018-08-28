@@ -111,7 +111,7 @@
             <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__4">
                 <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List.</h3>
                 <h3>Filters are located in the tabs.</h3>
-                <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
                     <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
                         <Controls.Search.Controller searchParam="department">
                             <div>

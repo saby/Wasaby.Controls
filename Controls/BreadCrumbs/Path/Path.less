@@ -61,11 +61,19 @@
    .controls-BreadCrumbsPath__backButton:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-block;
    }
-
 }
 
 //Класс сделан только для удобства замеров
 .controls-BreadCrumbsPath__backButtonMeasurer {
    font-family: @font-family_BreadCrumbs, "Courier New";
    font-weight: @font-weight_Back;
+}
+
+.ws-is-ie {
+   .controls-BreadCrumbsPath__backButtonArrow {
+      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
+      top: 50%;
+      bottom: 50%;
+      transform: translateY(-50%);
+   }
 }

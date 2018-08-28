@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/head',
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'css!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View'
    ],
 
-   function (cMerge, cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
+   function (cMerge, cObjectIsEqual, CompoundControl, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       /**
@@ -179,32 +180,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            var options = this._options;
-            var prevMapping = options.mapping;
-            var has = {};
-            for (var name in values) {
-               var value = values[name];
-               switch (name) {
-                  case 'rows':
-                  case 'fields':
-                     break;
-                  case 'mapping':
-                     value = value || {};
-                     break;
-                  case 'skippedRows':
-                     value = 0 < value ? value : 0;
-                     break;
-                  default:
-                     continue;
-               }
-               if (name === 'skippedRows' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
-               }
+            if ('mapping' in values && !values.mapping) {
+               values.mapping = {};
             }
+            if ('skippedRows' in values && !(0 < values.skippedRows)) {
+               values.skippedRows = 0;
+            }
+            var options = this._options;
+            var changes = objectChange(options, values, {rows:true, fields:true, mapping:true, skippedRows:false});
             var grid = this._grid;
-            if (has.rows || has.fields) {
-               if (!has.mapping && !('mapping' in values)) {
+            if ('rows' in changes || 'fields' in changes) {
+               if (!('mapping' in changes) && !('mapping' in values)) {
                   options.mapping = {};
                }
                var inf = this._makeUpdateInfo(options);
@@ -212,13 +198,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                grid.setItems(inf.rows);
             }
             else {
-               if (!has.mapping) {
+               if (!('mapping' in changes)) {
                   options.mapping = {};
                }
-               if (has.skippedRows) {
+               if ('skippedRows' in changes) {
                   this._updateSkippedRows();
                }
-               if (has.mapping && options.fields) {
+               if ('mapping' in changes && options.fields) {
                   var rows = options.rows;
                   var len = rows && rows.length ? rows[0].length : 0;
                   if (len) {
