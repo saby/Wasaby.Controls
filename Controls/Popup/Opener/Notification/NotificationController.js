@@ -15,8 +15,8 @@ define('Controls/Popup/Opener/Notification/NotificationController',
        * @extends Controls/Popup/Opener/BaseController
        */
       var NotificationController = BaseController.extend({
-         constructor: function(cfg) {
-            NotificationController.superclass.constructor.call(this, cfg);
+         constructor: function() {
+            NotificationController.superclass.constructor.call(this, arguments);
             this._stack = new List();
          },
 

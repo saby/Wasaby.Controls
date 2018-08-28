@@ -73,9 +73,7 @@ define('Controls/Input/Text',
          _template: template,
          _caretPosition: null,
 
-         constructor: function(options) {
-            TextBox.superclass.constructor.call(this, options);
-
+         _beforeMount: function(options) {
             this._textViewModel = new TextViewModel({
                constraint: options.constraint,
                maxLength: options.maxLength,

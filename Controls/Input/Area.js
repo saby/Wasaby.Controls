@@ -98,8 +98,7 @@ define('Controls/Input/Area', [
 
       _multiline: undefined,
 
-      constructor: function(options) {
-         Area.superclass.constructor.call(this, options);
+      _beforeMount: function(options) {
 
          //'_multiline' is responsible for adding multi-line field classes to InputRender
          //Should be set before the component is mounted into DOM to avoid content jumps

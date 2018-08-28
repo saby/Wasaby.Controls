@@ -120,8 +120,8 @@ define('Controls/Popup/Opener/Stack/StackController',
 
       var StackController = BaseController.extend({
          _destroyDeferred: {},
-         constructor: function(cfg) {
-            StackController.superclass.constructor.call(this, cfg);
+         constructor: function() {
+            StackController.superclass.constructor.call(this, arguments);
             this._stack = new List();
             _private.elementDestroyed.bind(this);
             this._fixTemplateAnimation.bind(this);
