@@ -59,5 +59,37 @@
         }
       }
     }
+  },
+  "Controls/Toggle/Switch": {
+    "name": "Controls/Toggle/Switch",
+    "title": "Switch control.",
+    "className": "Controls/Toggle/Switch",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/Switch",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "value": {
+            "type": "Boolean",
+            "title": "Current state."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+
+          "caption": {
+            "type": "String",
+            "title": "Title."
+          }
+        }
+      }
+    }
   }
 }

@@ -1,0 +1,37 @@
+
+<div class="controls-demo_Wrapper">
+    <div class="controls-demo_options-wrapper">
+
+        <Controls.PropertyGrid items="{{_options.description}}"
+                               data="{{_options.dataObject}}"
+                               scopeObject="{{_options.txtOpt}}"
+                               content="{{_options.content}}"
+                               attr:class="controls-FilterPanel__PropertyGrid"
+                               on:itemsChanged="_valueChangedHandler()">
+            <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
+        </Controls.PropertyGrid>
+    </div>
+    <div class="controls-demo_event-example__wrapper " >
+        <div class="controls-demo_example-wrapper">
+            <ws:partial template="{{_options.content}}"
+                        scope="{{_options.txtOpt}}"
+                        bind:value="_options.txtOpt.value"
+                       />
+            <!--<Controls.Input.Text-->
+                    <!--scope="{{_options.txtOpt}}"-->
+                    <!--bind:value="_options.txtOpt.value"-->
+                    <!--attr:id="main_field"-->
+                    <!--attr:class="demo-TextBox"-->
+            <!--/>-->
+        </div>
+        <div class="controls-demo_event-wrapper">
+
+            <Controls.Container.Scroll
+                    attr:style="height: 100px; border-width:thin"
+                    scrollbarVisible="{{true}}"
+                    shadowVisible="{{true}}">
+                <pre>{{myEvent}}</pre>
+            </Controls.Container.Scroll>
+        </div>
+    </div>
+</div>

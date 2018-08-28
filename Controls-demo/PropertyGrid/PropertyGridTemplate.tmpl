@@ -2,14 +2,14 @@
     <Controls-demo.PropertyGrid.StringTemplate
            bind:value="itemValue[name]"
             caption="{{name}}"
-           scope="{{item}}"
-           on:valueChanged="_valueChangedHandler()">
+           scope="{{item}}"  >
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
 <ws:template name="Number">
     <Controls-demo.PropertyGrid.NumberTemplate
             bind:value="itemValue[name]"
+            scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.NumberTemplate>
 </ws:template>
@@ -32,8 +32,7 @@
 <ws:template name="function|String">
     <Controls-demo.PropertyGrid.StringOrFunctionTemplate
             bind:value="itemValue[name]"
-            flag="{{item.flag}}"
-            readOnly="{{item.readOnly}}"
+            scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
 </ws:template>
