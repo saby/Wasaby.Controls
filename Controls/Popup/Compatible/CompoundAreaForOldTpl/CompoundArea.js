@@ -184,7 +184,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-            var self = this;
+            var
+               self = this,
+               isLoadCompleted;
 
             // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
             // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
@@ -211,8 +213,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._notifyVDOM = self._notify;
             self._notify = self._notifyCompound;
 
-            self._logicParent.waitForPopupCreated = true;
-
             // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
             self.subscribe('onResize', function() {
                this._notifyVDOM('resize', null, { bubbling: true });
@@ -220,6 +220,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self.once('onInitComplete', function() {
                if (self._options.catchFocus) {
+                  // Запоминаем, была ли область полностью загружена, когда мы в первый раз вызвали для нее autofocus
+                  isLoadCompleted = self._childControl.isAllReady && self._childControl.isAllReady();
                   doAutofocus(self._childControl._container);
                }
             });
@@ -227,7 +229,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                runDelayed(function() {
                   runDelayed(function() {
                      self._notifyCompound('onResize');
-                     if (self._options.catchFocus) {
+
+                     // Если при первом вызове autofocus, область была загружена не до конца, ее содержимое за это время
+                     // могло измениться, и мог измениться контрол, на который должен попасть фокус, поэтому вызываем
+                     // autofocus еще раз, чтобы фокус попал туда куда нужно
+                     if (self._options.catchFocus && !isLoadCompleted) {
                         doAutofocus(self._childControl._container);
                      }
                   });
