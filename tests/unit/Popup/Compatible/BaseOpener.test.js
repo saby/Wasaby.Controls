@@ -113,7 +113,7 @@ define(
             assert.isFalse(!!config.horizontalAlign.offset);
             assert.isTrue(config.isModal);
             config.direction = 'right';
-            config.horizontalAlign = 'test';
+            config.horizontalAlign = 'left';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction,config.horizontalAlign.side);
             config.direction = 'top';
@@ -124,6 +124,12 @@ define(
             config.side = 'right';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.direction, 'left');
+            config.direction = 'top';
+            config.horizontalAlign = 'left';
+            config.verticalAlign = 'top';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.horizontalAlign.side, 'left');
+
          });
 
          it('_setSizes', function() {
@@ -203,7 +209,8 @@ define(
             let newConfig = {};
             newConfig.templateOptions = config.templateOptions;
             newConfig.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
-            newConfig.onResultHandler = 'testHandler';
+            newConfig.onResultHandler = 'onResultHandler';
+            newConfig.onCloseHandler = 'onCloseHandler';
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.innerComponentOptions, config.templateOptions);
@@ -211,6 +218,7 @@ define(
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
+            assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);
          });
 
          it('_prepareConfigFromNewToOld', function() {
@@ -251,7 +259,7 @@ define(
                   side: 'top'
                },
                corner: {
-                  vertical: 'bottom',
+                  vertical: 'bottom'
                },
                mode: 'floatArea'
             };
