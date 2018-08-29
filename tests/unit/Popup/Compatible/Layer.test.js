@@ -9,8 +9,11 @@ define(
       'use strict';
 
       describe('Controls/Popup/Compatible/Layer', function() {
-         it('check deps loaded and deferred', function(done) {
-            var deferred = new Deferred();
+         var deferred = new Deferred();
+         it('check deps loaded', function(done) {
+            Layer.isNewEnvironment = function() {
+               return true
+            };
             Layer.load(null, true).addCallback(function() {
                assert.isTrue(require.defined('Core/Control'));
                assert.isTrue(require.defined('Lib/Control/Control.compatible'));
@@ -23,11 +26,14 @@ define(
                done();
                return deferred;
             });
+         });
+         it('check deferred not ready', function(done) {
             Layer.load().addCallback(function() {
 
                //Если из колбэка вернули другой деферед, то проверяем, что дефереды не стали зависимыми
                //Т.е. на момент второй загрузки Layer, деферед вернувшийся из 1 загрузки ещё не завершился
                assert.equal(deferred.isReady(), false);
+               done();
             });
 
          });
