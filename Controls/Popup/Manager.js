@@ -118,7 +118,15 @@ define('Controls/Popup/Manager',
          getItemContainer: function(id) {
             var popupContainer = ManagerController.getContainer();
             var item = popupContainer && popupContainer._children[id];
-            return item && item._container;
+            var container = item && item._container;
+
+            // При работе popup'ов внутри слоя совместимости, _container может быть обернут
+            // в jQuery. Так как система работает с нативными элементами, нужно в таком случае
+            // снять jQuery-обертку
+            if (container && container.jquery) {
+               container = container[0];
+            }
+            return container;
          },
 
          redrawItems: function(items) {
