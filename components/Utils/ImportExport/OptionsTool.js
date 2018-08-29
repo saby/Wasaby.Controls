@@ -1,8 +1,9 @@
 /**
- * Вспомогательный класс для работы с опциями компонента
+ * Вспомогательный класс для работы с опциями компонента.
  *
  * @public
  * @class SBIS3.CONTROLS/Utils/ImportExport/OptionsTool
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
    [
