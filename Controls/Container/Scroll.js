@@ -270,7 +270,7 @@ define('Controls/Container/Scroll',
 
             _beforeUpdate: function(options, context) {
                this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
-               this._updateStickyHeaderContext();
+               this._updateStickyHeaderContext(options.shadowVisible);
             },
 
             _afterUpdate: function() {
@@ -381,8 +381,8 @@ define('Controls/Container/Scroll',
                event.stopPropagation();
             },
 
-            _updateStickyHeaderContext: function() {
-               var shadowVisible = this._options.shadowVisible && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
+            _updateStickyHeaderContext: function(shadowVisible) {
+               shadowVisible = (shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
 
                if (this._stickyHeaderContext.shadowVisible !== shadowVisible) {
                   this._stickyHeaderContext.shadowVisible = shadowVisible;

@@ -4,6 +4,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
       'WS.Data/Source/Memory',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter',
 
+      'Controls/Heading',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/News',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Employees',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Violations',

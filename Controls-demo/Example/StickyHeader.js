@@ -1,7 +1,7 @@
-define('Controls-demo/Example/Input',
+define('Controls-demo/Example/StickyHeader',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input'
+      'tmpl!Controls-demo/Example/StickyHeader'
    ],
    function(Control, template) {
 

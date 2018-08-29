@@ -18,6 +18,7 @@ define('Controls/Container/Scroll/Model/StickyHeader',
 
          /**
           * @type {String|null} The ID of the sticking header.
+          * @private
           */
          _stickyHeaderId: null,
 
