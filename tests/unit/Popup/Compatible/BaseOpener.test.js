@@ -224,6 +224,7 @@ define(
                y:25
             };
             config.target = 'testTarget';
+            config.className = 'testClass';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.componentOptions, config.templateOptions);
@@ -233,6 +234,7 @@ define(
             assert.equal(newConfig.target, config.target);
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
+            assert.equal(newConfig.dialogOptions.className, config.className);
             assert.isFalse(newConfig.dialogOptions.border);
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);
