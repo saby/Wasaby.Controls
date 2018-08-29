@@ -24,6 +24,9 @@ define(
                return deferred;
             });
             Layer.load().addCallback(function() {
+
+               //Если из колбэка вернули другой деферед, то проверяем, что дефереды не стали зависимыми
+               //Т.е. на момент второй загрузки Layer, деферед вернувшийся из 1 загрузки ещё не завершился
                assert.equal(deferred.isReady(), false);
             });
 
