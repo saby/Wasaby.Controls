@@ -162,6 +162,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
+               self._getReadyDeferred();
                self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
@@ -172,6 +173,22 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
 
             return rebuildDeferred;
+         },
+
+         //AreaAbstract.js::getReadyDeferred
+         //getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
+         //не завершится деферред
+         _getReadyDeferred: function() {
+            var self = this;
+            if (this._childControl.getReadyDeferred) {
+               var def = this._childControl.getReadyDeferred();
+               if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
+                  self._toggleVisible(false);
+                  def.addCallback(function() {
+                     self._toggleVisible(true);
+                  });
+               }
+            }
          },
 
          _afterMount: function(cfg) {
