@@ -52,6 +52,11 @@ define('Controls-demo/Input/Number/Number', [
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
+
+      paste_text: function(e) {
+         this._children.textNumber.paste('567');
+      }
+
    });
    return VdomDemoNumber;
 });
