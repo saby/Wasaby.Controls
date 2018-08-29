@@ -10,7 +10,7 @@ define('Controls/FormController', [
 
    /**
     * @name Controls/FormController#readMetaData
-    * @cfg {String} Additional meta data what will be argument of read method called when key option is exists
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists
     */
 
    var module = Control.extend({
