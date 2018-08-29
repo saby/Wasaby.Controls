@@ -23,21 +23,6 @@ define('Controls-demo/FilterButton/Panel/Panel',
        */
 
       'use strict';
-
-
-      var sourceDropdown = {
-         module: 'WS.Data/Source/Memory',
-         options: {
-            data: [
-               {key: 1, title: 'все страны'},
-               {key: 2, title: 'Россия'},
-               {key: 3, title: 'США'},
-               {key: 4, title: 'Великобритания'}
-            ],
-            idProperty: 'key'
-         }
-      };
-
       var Panel = Control.extend({
 
          _template: template,
@@ -47,7 +32,18 @@ define('Controls-demo/FilterButton/Panel/Panel',
             this._text += 'Стреляет filterChanged\n';
          },
          _beforeMount: function() {
-            this.sourceDropdown = sourceDropdown;
+            this.sourceDropdown = {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {key: 1, title: 'все страны'},
+                     {key: 2, title: 'Россия'},
+                     {key: 3, title: 'США'},
+                     {key: 4, title: 'Великобритания'}
+                  ],
+                  idProperty: 'key'
+               }
+            };
          },
 
       });

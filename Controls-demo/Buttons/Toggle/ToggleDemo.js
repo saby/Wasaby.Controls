@@ -10,100 +10,6 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
    template) {
    'use strict';
 
-   var styleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'iconButtonBordered'
-         },
-         {
-            title: 'linkMain'
-         },
-         {
-            title: 'buttonLinkMain'
-         },
-         {
-            title: 'buttonLinkAdditional'
-         }
-      ]
-   });
-
-   var captionsSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'save/change',
-            captions: ['save', 'change']
-         },
-         {
-            title: 'on/off',
-            captions: ['on', 'off']
-         },
-         {
-            title: 'without caption',
-            captions: null
-         },
-         {
-            title: 'single caption',
-            captions: ['single caption']
-         }
-      ]
-   });
-
-   var iconsSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'list/tile',
-            icons: ['icon-16 icon-ArrangeList', 'icon-16 icon-ArrangePreview']
-         },
-         {
-            title: 'bottomContent/rightContent',
-            icons: ['icon-16 icon-ArrangeList04', 'icon-16 icon-ArrangeList03']
-         },
-         {
-            title: 'without icons',
-            icons: null
-         },
-         {
-            title: 'single icon',
-            icons: ['icon-16 icon-Send']
-         }
-      ]
-   });
-
-   var iconStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'done'
-         },
-         {
-            title: 'attention'
-         },
-         {
-            title: 'error'
-         }
-      ]
-   });
-
-   var sizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
 
    var ModuleClass = Control.extend(
       {
@@ -123,10 +29,96 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._styleSource = styleSource;
-            this._sizeSource = sizeSource;
-            this._captionsSource = captionsSource;
-            this._iconsSource = iconsSource;
+            this._iconStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'default'
+                  },
+                  {
+                     title: 'done'
+                  },
+                  {
+                     title: 'attention'
+                  },
+                  {
+                     title: 'error'
+                  }
+               ]
+            });
+            this._styleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'iconButtonBordered'
+                  },
+                  {
+                     title: 'linkMain'
+                  },
+                  {
+                     title: 'buttonLinkMain'
+                  },
+                  {
+                     title: 'buttonLinkAdditional'
+                  }
+               ]
+            });
+            this._sizeSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 's'
+                  },
+                  {
+                     title: 'm'
+                  },
+                  {
+                     title: 'l'
+                  }
+               ]
+            });
+            this._captionsSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'save/change',
+                     captions: ['save', 'change']
+                  },
+                  {
+                     title: 'on/off',
+                     captions: ['on', 'off']
+                  },
+                  {
+                     title: 'without caption',
+                     captions: null
+                  },
+                  {
+                     title: 'single caption',
+                     captions: ['single caption']
+                  }
+               ]
+            });
+            this._iconsSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'list/tile',
+                     icons: ['icon-16 icon-ArrangeList', 'icon-16 icon-ArrangePreview']
+                  },
+                  {
+                     title: 'bottomContent/rightContent',
+                     icons: ['icon-16 icon-ArrangeList04', 'icon-16 icon-ArrangeList03']
+                  },
+                  {
+                     title: 'without icons',
+                     icons: null
+                  },
+                  {
+                     title: 'single icon',
+                     icons: ['icon-16 icon-Send']
+                  }
+               ]
+            });
             this._icons = ['icon-16 icon-Send'];
          },
          clickHandler: function(e) {
@@ -140,7 +132,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          changeCaptions: function(e, key) {
             this._selectedCaptions = key;
             var self = this;
-            captionsSource.read(key).addCallback(function(item) {
+            this._captionsSource.read(key).addCallback(function(item) {
                self._captions = item.get('captions');
             });
          },
@@ -148,7 +140,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          changeIcons: function(e, key) {
             this._selectedIcons = key;
             var self = this;
-            iconsSource.read(key).addCallback(function(item) {
+            this._iconsSource.read(key).addCallback(function(item) {
                self._icons = item.get('icons');
             });
          },

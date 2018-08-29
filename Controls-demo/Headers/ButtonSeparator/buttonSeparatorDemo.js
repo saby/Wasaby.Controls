@@ -9,22 +9,6 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var separatorStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'additional'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -34,7 +18,20 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
          _activeFlag: false,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._separatorStyleSource = separatorStyleSource;
+            this._separatorStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'additional'
+                  },
+                  {
+                     title: 'primary'
+                  }
+               ]
+            });
          },
 
          activatedHandler: function(e) {

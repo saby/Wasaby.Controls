@@ -39,7 +39,9 @@ define('Controls/Toggle/Switch', [
 
    var Switch = Control.extend({
       _template: template,
-
+      _beforeMount: function() {
+        debugger;
+      },
       _clickHandler: function(e) {
          if (!this._options.readOnly) {
             this._notify('valueChanged', [!this._options.value]);

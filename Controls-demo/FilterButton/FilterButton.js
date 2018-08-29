@@ -9,26 +9,23 @@ define('Controls-demo/FilterButton/FilterButton',
 
    function(Control, template) {
       'use strict';
-
-      var sourceDropdown = {
-         module: 'WS.Data/Source/Memory',
-         options: {
-            data: [
-               { key: 1, title: 'все страны' },
-               { key: 2, title: 'Россия' },
-               { key: 3, title: 'США' },
-               { key: 4, title: 'Великобритания' }
-            ],
-            idProperty: 'key'
-         }
-      };
-
       var FilterButton = Control.extend({
 
          _template: template,
          sourceDropdown: null,
          _beforeMount: function() {
-            this.sourceDropdown = sourceDropdown;
+            this.sourceDropdown = {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     { key: 1, title: 'все страны' },
+                     { key: 2, title: 'Россия' },
+                     { key: 3, title: 'США' },
+                     { key: 4, title: 'Великобритания' }
+                  ],
+                  idProperty: 'key'
+               }
+            };
          }
 
       });

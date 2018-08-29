@@ -10,21 +10,6 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
    template) {
    'use strict';
 
-   var closeStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         },
-         {
-            title: 'light'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -32,7 +17,20 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
          _closeStyleSource: null,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._closeStyleSource = closeStyleSource;
+            this._closeStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'default'
+                  },
+                  {
+                     title: 'primary'
+                  },
+                  {
+                     title: 'light'
+                  }
+               ]
+            });
          },
          clickHandler: function(e) {
             this._eventName = 'click';

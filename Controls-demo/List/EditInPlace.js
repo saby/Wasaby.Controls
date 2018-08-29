@@ -15,74 +15,6 @@ define('Controls-demo/List/EditInPlace', [
    'use strict';
 
    var counter = 10;
-
-   var srcData = [
-      {
-         id: 1,
-         title: 'Not editable'
-      },
-      {
-         id: 2,
-         title: 'Another record will open on editing'
-      },
-      {
-         id: 3,
-         title: 'Returns Deferred and after 3 seconds editing will start'
-      },
-      {
-         id: 4,
-         title: 'Record1'
-      },
-      {
-         id: 5,
-         title: 'Record2'
-      },
-      {
-         id: 6,
-         title: 'Record3'
-      }
-   ],
-   srcData2 = [
-      {
-         id: 1,
-         title: 'Notebook ASUS X550LC-XO228H 6'
-      },
-      {
-         id: 2,
-         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 7'
-      }
-   ],
-   srcData3 = [
-      {
-         id: 1,
-         title: 'Notebook Lenovo G505 59426068 8'
-      },
-      {
-         id: 2,
-         title: 'Lenovo 9'
-      }
-   ],
-   srcData4 = [
-      {
-         id: 1,
-         title: 'Notebook Lenovo G505 59426068 14'
-      },
-      {
-         id: 2,
-         title: 'Editing starts before mounting to DOM'
-      }
-   ],
-   srcData5 = [
-      {
-         id: 1,
-         title: 'Notebook ASUS X550LC-XO228H 16'
-      },
-      {
-         id: 2,
-         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
-      }
-   ];
-
    var EditInPlace = Control.extend({
       _template: template,
       editingConfig: null,
@@ -97,23 +29,84 @@ define('Controls-demo/List/EditInPlace', [
       _beforeMount: function() {
          this._viewSource = new MemorySource({
             idProperty: 'id',
-            data: srcData
+            data: [
+               {
+                  id: 1,
+                  title: 'Not editable'
+               },
+               {
+                  id: 2,
+                  title: 'Another record will open on editing'
+               },
+               {
+                  id: 3,
+                  title: 'Returns Deferred and after 3 seconds editing will start'
+               },
+               {
+                  id: 4,
+                  title: 'Record1'
+               },
+               {
+                  id: 5,
+                  title: 'Record2'
+               },
+               {
+                  id: 6,
+                  title: 'Record3'
+               }
+            ]
          });
          this._viewSource2 = new MemorySource({
             idProperty: 'id',
-            data: srcData2
+            data: [
+               {
+                  id: 1,
+                  title: 'Notebook ASUS X550LC-XO228H 6'
+               },
+               {
+                  id: 2,
+                  title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 7'
+               }
+            ]
          });
          this._viewSource3 = new MemorySource({
             idProperty: 'id',
-            data: srcData3
+            data: [
+               {
+                  id: 1,
+                  title: 'Notebook Lenovo G505 59426068 8'
+               },
+               {
+                  id: 2,
+                  title: 'Lenovo 9'
+               }
+            ]
          });
          this._viewSource4 = new MemorySource({
             idProperty: 'id',
-            data: srcData4
+            data: [
+               {
+                  id: 1,
+                  title: 'Notebook Lenovo G505 59426068 14'
+               },
+               {
+                  id: 2,
+                  title: 'Editing starts before mounting to DOM'
+               }
+            ]
          });
          this._viewSource5 = new MemorySource({
             idProperty: 'id',
-            data: srcData5
+            data: [
+               {
+                  id: 1,
+                  title: 'Notebook ASUS X550LC-XO228H 16'
+               },
+               {
+                  id: 2,
+                  title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
+               }
+            ]
          });
          this._editingItem = new Model({
             rawData: {

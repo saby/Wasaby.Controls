@@ -16,121 +16,6 @@ define('Controls-demo/Menu/MenuVdom', [
    'css!Controls-demo/Dropdown/MenuVdom'
 ], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants, Query, Deferred, SbisAdapter) {
    'use strict';
-   var recordData = {
-      pinned: {
-         _type: 'recordset',
-         d: [
-            [
-               '1', null, 'TEST_HISTORY_ID_V1'
-            ],
-            [
-               '2', null, 'TEST_HISTORY_ID_V1'
-            ]
-         ],
-         s: [
-            { n: 'ObjectId', t: 'Строка' },
-            { n: 'ObjectData', t: 'Строка' },
-            { n: 'HistoryId', t: 'Строка' }
-         ]
-      },
-      frequent: {
-         _type: 'recordset',
-         d: [
-            [
-               '3', null, 'TEST_HISTORY_ID_V1'
-            ],
-
-            [
-               '4', null, 'TEST_HISTORY_ID_V1'
-            ]
-         ],
-         s: [
-            { n: 'ObjectId', t: 'Строка' },
-            { n: 'ObjectData', t: 'Строка' },
-            { n: 'HistoryId', t: 'Строка' }
-         ]
-      },
-      recent: {
-         _type: 'recordset',
-         d: [
-            [
-               '5', null, 'TEST_HISTORY_ID_V1'
-            ]
-         ],
-         s: [
-            { n: 'ObjectId', t: 'Строка' },
-            { n: 'ObjectData', t: 'Строка' },
-            { n: 'HistoryId', t: 'Строка' }
-         ]
-      }
-   };
-   var items = [
-      {
-         id: '1',
-         title: 'Запись 1 с длинным названием'
-      },
-      {
-         id: '2',
-         title: 'Запись 2'
-      },
-      {
-         id: '3',
-         title: 'Запись 3'
-      },
-      {
-         id: '4',
-         title: 'Запись 4'
-      },
-      {
-         id: '5',
-         title: 'Запись 5'
-      },
-      {
-         id: '6',
-         title: 'Запись 6'
-      },
-      {
-         id: '7',
-         title: 'Запись 7'
-      },
-      {
-         id: '8',
-         title: 'Запись 8'
-      },
-      {
-         id: '9',
-         title: 'Запись 9'
-      },
-      {
-         id: '10',
-         title: 'Запись 10'
-      },
-      {
-         id: '11',
-         title: 'Запись 11'
-      },
-      {
-         id: '12',
-         title: 'Запись 12'
-      },
-      {
-         id: '13',
-         title: 'Запись 13'
-      },
-      {
-         id: '14',
-         title: 'Запись 14'
-      },
-      {
-         id: '15',
-         title: 'Запись 15'
-      },
-      {
-         id: '16',
-         title: 'Запись 16'
-      },
-   ];
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -138,7 +23,120 @@ define('Controls-demo/Menu/MenuVdom', [
          _itemsGroup: null,
          _defaultItems: null,
          _beforeMount: function() {
-            this._defaultItems = items;
+            this.recordData = {
+               pinned: {
+                  _type: 'recordset',
+                  d: [
+                     [
+                        '1', null, 'TEST_HISTORY_ID_V1'
+                     ],
+                     [
+                        '2', null, 'TEST_HISTORY_ID_V1'
+                     ]
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               },
+               frequent: {
+                  _type: 'recordset',
+                  d: [
+                     [
+                        '3', null, 'TEST_HISTORY_ID_V1'
+                     ],
+
+                     [
+                        '4', null, 'TEST_HISTORY_ID_V1'
+                     ]
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               },
+               recent: {
+                  _type: 'recordset',
+                  d: [
+                     [
+                        '5', null, 'TEST_HISTORY_ID_V1'
+                     ]
+                  ],
+                  s: [
+                     { n: 'ObjectId', t: 'Строка' },
+                     { n: 'ObjectData', t: 'Строка' },
+                     { n: 'HistoryId', t: 'Строка' }
+                  ]
+               }
+            };
+            this._defaultItems = [
+               {
+                  id: '1',
+                  title: 'Запись 1 с длинным названием'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               },
+               {
+                  id: '4',
+                  title: 'Запись 4'
+               },
+               {
+                  id: '5',
+                  title: 'Запись 5'
+               },
+               {
+                  id: '6',
+                  title: 'Запись 6'
+               },
+               {
+                  id: '7',
+                  title: 'Запись 7'
+               },
+               {
+                  id: '8',
+                  title: 'Запись 8'
+               },
+               {
+                  id: '9',
+                  title: 'Запись 9'
+               },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '11',
+                  title: 'Запись 11'
+               },
+               {
+                  id: '12',
+                  title: 'Запись 12'
+               },
+               {
+                  id: '13',
+                  title: 'Запись 13'
+               },
+               {
+                  id: '14',
+                  title: 'Запись 14'
+               },
+               {
+                  id: '15',
+                  title: 'Запись 15'
+               },
+               {
+                  id: '16',
+                  title: 'Запись 16'
+               },
+            ];
             this._itemsGroupText = {
                method: function(item) {
                   if (item.get('group') === 'hidden' || !item.get('group')) {
@@ -161,9 +159,9 @@ define('Controls-demo/Menu/MenuVdom', [
          _createMemory: function(items) {
             var srcData = new DataSet({
                rawData: {
-                  frequent: this._createRecordSet(recordData.frequent),
-                  pinned: this._createRecordSet(recordData.pinned),
-                  recent: this._createRecordSet(recordData.recent)
+                  frequent: this._createRecordSet( this.recordData.frequent),
+                  pinned: this._createRecordSet( this.recordData.pinned),
+                  recent: this._createRecordSet( this.recordData.recent)
                },
                itemsProperty: '',
                idProperty: 'ObjectId'

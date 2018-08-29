@@ -16,110 +16,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
              SingleItemTemplate
 ) {
    'use strict';
-   var source = new MemorySource({
-      idProperty: 'id',
-      displayProperty: 'caption',
-      data: [
-         {
-            id: '1',
-            title: 'Title1',
-            caption: 'Additional caption1'
-         },
-         {
-            id: '2',
-            title: 'Title2',
-            caption: 'Additional caption2'
-         },
-         {
-            id: '3',
-            title: 'Title3',
-            templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
-            caption: 'Additional caption3'
-         },
-         {
-            id: '4',
-            title: 'Title4',
-            caption: 'Additional caption4'
-         },
-         {
-            id: '5',
-            title: 'Title5',
-            caption: 'Additional caption5'
-         },
-         {
-            id: '6',
-            title: 'Title6',
-            caption: 'Additional caption6'
-         }
-      ]
-   });
-
-   var source2 = new MemorySource({
-      idProperty: 'id',
-      data: [
-         {
-            id: '1',
-            title: 'Header1',
-            caption: 'Caption1'
-         },
-         {
-            id: '2',
-            title: 'Header2',
-            caption: 'Caption2'
-         },
-         {
-            id: '3',
-            title: 'Header3',
-            caption: 'Caption3'
-         },
-         {
-            id: '4',
-            title: 'Header4',
-            caption: 'Caption4'
-         }
-      ]
-   });
-
-   var sourceOfSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'source',
-            source: source
-         },
-         {
-            title: 'source2',
-            source: source2
-         }
-      ]
-   });
-
-   var directionSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'horizontal'
-         },
-         {
-            title: 'vertical'
-         }
-      ]
-   });
-
-   var sourceContentTemplate = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default',
-            template: ''
-         },
-         {
-            title: 'custom',
-            template: 'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate'
-         }
-      ]
-   });
-
    var RadioGroupDemo = Control.extend({
       _template: template,
       _source: null,
@@ -132,12 +28,108 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       _selectedContentTemplate: 'default',
       _contentTemplate: '',
       _eventName: 'no event',
+      source2: null,
       _displayProperty: 'title',
-      _beforeMount: function () {
-         this._source = source;
-         this._sourceOfSource = sourceOfSource;
-         this._directionSource = directionSource;
-         this._sourceContentTemplate = sourceContentTemplate;
+      _beforeMount: function() {
+         this.source2 = new MemorySource({
+            idProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'Header1',
+                  caption: 'Caption1'
+               },
+               {
+                  id: '2',
+                  title: 'Header2',
+                  caption: 'Caption2'
+               },
+               {
+                  id: '3',
+                  title: 'Header3',
+                  caption: 'Caption3'
+               },
+               {
+                  id: '4',
+                  title: 'Header4',
+                  caption: 'Caption4'
+               }
+            ]
+         });
+         this._source = new MemorySource({
+            idProperty: 'id',
+            displayProperty: 'caption',
+            data: [
+               {
+                  id: '1',
+                  title: 'Title1',
+                  caption: 'Additional caption1'
+               },
+               {
+                  id: '2',
+                  title: 'Title2',
+                  caption: 'Additional caption2'
+               },
+               {
+                  id: '3',
+                  title: 'Title3',
+                  templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+                  caption: 'Additional caption3'
+               },
+               {
+                  id: '4',
+                  title: 'Title4',
+                  caption: 'Additional caption4'
+               },
+               {
+                  id: '5',
+                  title: 'Title5',
+                  caption: 'Additional caption5'
+               },
+               {
+                  id: '6',
+                  title: 'Title6',
+                  caption: 'Additional caption6'
+               }
+            ]
+         });
+         this._sourceOfSource = new MemorySource({
+            idProperty: 'title',
+            data: [
+               {
+                  title: 'source',
+                  source: this.source
+               },
+               {
+                  title: 'source2',
+                  source: this.source2
+               }
+            ]
+         });
+         this._directionSource = new MemorySource({
+            idProperty: 'title',
+            data: [
+               {
+                  title: 'horizontal'
+               },
+               {
+                  title: 'vertical'
+               }
+            ]
+         });
+         this._sourceContentTemplate = new MemorySource({
+            idProperty: 'title',
+            data: [
+               {
+                  title: 'default',
+                  template: ''
+               },
+               {
+                  title: 'custom',
+                  template: 'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate'
+               }
+            ]
+         });
       },
       changeKey: function(e, key) {
          this._selectKey = key;
@@ -146,7 +138,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       changeSource: function(e, key) {
          this._selectedSource = key;
          var self = this;
-         sourceOfSource.read(key).addCallback(function(model) {
+         this._sourceOfSource.read(key).addCallback(function(model) {
             self._source = model.get('source');
             self._forceUpdate();
          });
@@ -157,7 +149,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       changeContentTemplate: function(e, key) {
          this._selectedContentTemplate = key;
          var self = this;
-         sourceContentTemplate.read(key).addCallback(function(model) {
+         this._sourceContentTemplate.read(key).addCallback(function(model) {
             self._contentTemplate = model.get('template');
             self._forceUpdate();
          });

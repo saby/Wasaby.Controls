@@ -14,48 +14,6 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
             HeadDataContext
 ) {
    'use strict';
-   var demoTabsSource = new MemorySource({
-         idProperty: 'id',
-         data: [
-            {
-               id: '1',
-               title: 'very',
-               itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
-            },
-            {
-               id: '2',
-               title: 'hard',
-               itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
-            },
-            {
-               id: '3',
-               title: 'invent',
-               itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
-            },
-            {
-               id: '4',
-               title: 'tabs',
-               itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
-            },
-            {
-               id: '5',
-               title: 'titles',
-               itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
-            }
-         ]
-      });
-
-   var demoTabsSource2 = new MemorySource({
-      idProperty: 'id',
-      data: [
-         {
-            id: '1',
-            title: 'very',
-            itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
-         }
-      ]
-   });
-
    var demoBrowserTabs = Control.extend({
       _template: template,
       _demoTabsSelectedKey: '1',
@@ -64,8 +22,46 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
       constructor: function() {
          demoBrowserTabs.superclass.constructor.apply(this, arguments);
          this.headDataCtxField = new HeadDataContext();
-         this._demoTabsSource = demoTabsSource;
-         this._demoTabsSource2 = demoTabsSource2;
+         this._demoTabsSource = new MemorySource({
+            idProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'very',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               },
+               {
+                  id: '2',
+                  title: 'hard',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+               },
+               {
+                  id: '3',
+                  title: 'invent',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               },
+               {
+                  id: '4',
+                  title: 'tabs',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+               },
+               {
+                  id: '5',
+                  title: 'titles',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+               }
+            ]
+         });
+         this._demoTabsSource2 = new MemorySource({
+            idProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'very',
+                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+               }
+            ]
+         });
       },
       _getChildContext: function() {
          return {

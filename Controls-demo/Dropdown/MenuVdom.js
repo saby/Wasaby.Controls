@@ -17,46 +17,6 @@ define('Controls-demo/Dropdown/MenuVdom', [
 ], function(Control, template, cClone, Memory, ControlsConstants) {
    'use strict';
 
-   var defaultItems = [
-      {
-         id: '1',
-         title: 'Запись 1'
-      },
-      {
-         id: '2',
-         title: 'Запись 2'
-      },
-      {
-         id: '3',
-         group: 'group 2',
-         title: 'Запись 3'
-      },
-      {
-         id: '4',
-         group: 'group 2',
-         title: 'Запись 4'
-      },
-      {
-         id: '5',
-         group: 'group 3',
-         title: 'Запись 5'
-      },
-      {
-         id: '6',
-         group: 'group 3',
-         title: 'Запись 6'
-      },
-      {
-         id: '7',
-         group: 'group 4',
-         title: 'Запись 7'
-      },
-      {
-         id: '8',
-         group: 'group 3',
-         title: 'Запись 8'
-      }
-   ];
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -71,7 +31,46 @@ define('Controls-demo/Dropdown/MenuVdom', [
          _defaultItems: null,
          _itemsGroup: null,
          _beforeMount: function() {
-            this._defaultItems = defaultItems;
+            this._defaultItems = [
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  group: 'group 2',
+                  title: 'Запись 3'
+               },
+               {
+                  id: '4',
+                  group: 'group 2',
+                  title: 'Запись 4'
+               },
+               {
+                  id: '5',
+                  group: 'group 3',
+                  title: 'Запись 5'
+               },
+               {
+                  id: '6',
+                  group: 'group 3',
+                  title: 'Запись 6'
+               },
+               {
+                  id: '7',
+                  group: 'group 4',
+                  title: 'Запись 7'
+               },
+               {
+                  id: '8',
+                  group: 'group 3',
+                  title: 'Запись 8'
+               }
+            ];
             this._selectedKeysEmpty = ['1'];
             this._selectedKeys0 = ['8'];
             this._selectedKeys1 = ['2'];

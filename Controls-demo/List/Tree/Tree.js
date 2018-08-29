@@ -10,64 +10,6 @@ define('Controls-demo/List/Tree/Tree', [
    'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
 ], function(BaseControl, GridData, template, MemorySource, ControlsConstants) {
    'use strict';
-
-   var showType = {
-
-      // show only in Menu
-      MENU: 0,
-
-      // show in Menu and Toolbar
-      MENU_TOOLBAR: 1,
-
-      // show only in Toolbar
-      TOOLBAR: 2
-   };
-
-   var _firstItemActionsArray = [
-      {
-         id: 5,
-         title: 'прочитано',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action read Click');
-         }
-      },
-      {
-         id: 1,
-         icon: 'icon-primary icon-PhoneNull',
-         title: 'phone',
-         handler: function(item) {
-            console.log('action phone Click ', item);
-         }
-      },
-      {
-         id: 2,
-         icon: 'icon-primary icon-EmptyMessage',
-         title: 'message',
-         handler: function() {
-            alert('Message Click');
-         }
-      },
-      {
-         id: 3,
-         icon: 'icon-primary icon-Profile',
-         title: 'profile',
-         showType: showType.MENU_TOOLBAR,
-         handler: function() {
-            console.log('action profile Click');
-         }
-      },
-      {
-         id: 4,
-         icon: 'icon-Erase icon-error',
-         title: 'delete pls',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action delete Click');
-         }
-      }
-   ];
-
    var
       ModuleClass = BaseControl.extend({
          _template: template,
@@ -77,6 +19,7 @@ define('Controls-demo/List/Tree/Tree', [
          _viewSource: null,
          gridData: null,
          gridColumns: null,
+         showType: null,
          _beforeMount: function() {
             this.gridColumns = [
                {
@@ -85,12 +28,63 @@ define('Controls-demo/List/Tree/Tree', [
                   template: 'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
                }
             ];
+            this.showType = {
+               // show only in Menu
+               MENU: 0,
+               // show in Menu and Toolbar
+               MENU_TOOLBAR: 1,
+               // show only in Toolbar
+               TOOLBAR: 2
+            };
             this.gridData = GridData;
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: GridData.catalog
             });
-            this._itemActions = _firstItemActionsArray;
+            this._itemActions = [
+               {
+                  id: 5,
+                  title: 'прочитано',
+                  showType: this.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action read Click');
+                  }
+               },
+               {
+                  id: 1,
+                  icon: 'icon-primary icon-PhoneNull',
+                  title: 'phone',
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-primary icon-EmptyMessage',
+                  title: 'message',
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-primary icon-Profile',
+                  title: 'profile',
+                  showType: this.showType.MENU_TOOLBAR,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase icon-error',
+                  title: 'delete pls',
+                  showType: this.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
             this._itemsGroup = {
                method: function(item, index, displayItem) {
                   return item.get('Группа');

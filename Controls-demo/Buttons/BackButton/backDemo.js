@@ -9,34 +9,6 @@ define('Controls-demo/Buttons/BackButton/backDemo', [
    MemorySource,
    template) {
    'use strict';
-
-   var backStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'default'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
-   var backSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -47,8 +19,31 @@ define('Controls-demo/Buttons/BackButton/backDemo', [
          _backCaption: 'Back',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._backStyleSource = backStyleSource;
-            this._backSizeSource = backSizeSource;
+            this._backStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'default'
+                  },
+                  {
+                     title: 'primary'
+                  }
+               ]
+            });
+            this._backSizeSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 's'
+                  },
+                  {
+                     title: 'm'
+                  },
+                  {
+                     title: 'l'
+                  }
+               ]
+            });
          },
          clickHandler: function(e) {
             this._eventName = 'click';

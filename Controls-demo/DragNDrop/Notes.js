@@ -9,31 +9,7 @@ define('Controls-demo/DragNDrop/Notes', [
    'css!Controls-demo/DragNDrop/Notes/Notes'
 ], function(BaseControl, cClone, cInstance, Memory, template, EntityTriangle, EntityNote) {
    'use strict';
-   var items = [{
-      id: 0,
-      title: 'Заметка 1',
-      dragging: false,
-      position: {
-         top: 700,
-         left: 5
-      },
-      size: {
-         width: 150,
-         height: 50
-      }
-   }, {
-      id: 1,
-      title: 'Заметка 2',
-      dragging: false,
-      position: {
-         top: 755,
-         left: 5
-      },
-      size: {
-         width: 150,
-         height: 50
-      }
-   }];
+
    var Notes = BaseControl.extend({
       _template: template,
       _itemActions: undefined,
@@ -60,7 +36,31 @@ define('Controls-demo/DragNDrop/Notes', [
       },
 
       _beforeMount: function() {
-         this._items = items;
+         this._items = [{
+            id: 0,
+            title: 'Заметка 1',
+            dragging: false,
+            position: {
+               top: 700,
+               left: 5
+            },
+            size: {
+               width: 150,
+               height: 50
+            }
+         }, {
+            id: 1,
+            title: 'Заметка 2',
+            dragging: false,
+            position: {
+               top: 755,
+               left: 5
+            },
+            size: {
+               width: 150,
+               height: 50
+            }
+         }];
          this._viewSource = new Memory({
             idProperty: 'id',
             data: this._items

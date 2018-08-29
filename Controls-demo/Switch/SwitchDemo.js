@@ -6,19 +6,6 @@ define('Controls-demo/Switch/SwitchDemo', [
    'css!Controls-demo/Switch/UnionSwitchDemo'
 ], function(Control, MemorySource, template) {
    'use strict';
-
-   var captionPositionSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'left'
-         },
-         {
-            title: 'right'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -28,7 +15,17 @@ define('Controls-demo/Switch/SwitchDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._captionPositionSource = captionPositionSource;
+            this._captionPositionSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'left'
+                  },
+                  {
+                     title: 'right'
+                  }
+               ]
+            });
          },
 
          changeCaptionPosition: function(e, key) {

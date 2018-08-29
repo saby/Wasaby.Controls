@@ -8,30 +8,6 @@ define('Controls-demo/List/Mover', [
    'css!Controls-demo/List/Mover/Mover'
 ], function(BaseControl, cClone, Memory, TreeMemory, GridData, template) {
    'use strict';
-
-   var demoItems = [{
-      id: 0,
-      title: 'Перемещение записей 1'
-   }, {
-      id: 1,
-      title: 'Перемещение записей 2'
-   }, {
-      id: 2,
-      title: 'Перемещение записей 3'
-   }, {
-      id: 3,
-      title: 'Перемещение записей 4'
-   }];
-
-   var _private = {
-      createSource: function(items) {
-         return new Memory({
-            idProperty: 'id',
-            data: cClone(items)
-         });
-      }
-   };
-
    return BaseControl.extend({
       _template: template,
       _countClicked: 0,
@@ -41,11 +17,36 @@ define('Controls-demo/List/Mover', [
       _itemActionsTree: null,
       _selectedKeys: null,
       _filter: null,
-      _viewSource: _private.createSource(demoItems),
-      _viewSourceSecond: _private.createSource(demoItems),
+      demoItems: null,
+      _viewSource: null,
+      _viewSourceSecond: null,
+      _private: null,
 
       _beforeMount: function() {
          var self = this;
+         this._private = {
+            createSource: function(items) {
+               return new Memory({
+                  idProperty: 'id',
+                  data: cClone(items)
+               });
+            }
+         };
+         this.demoItems = [{
+            id: 0,
+            title: 'Перемещение записей 1'
+         }, {
+            id: 1,
+            title: 'Перемещение записей 2'
+         }, {
+            id: 2,
+            title: 'Перемещение записей 3'
+         }, {
+            id: 3,
+            title: 'Перемещение записей 4'
+         }];
+         this._viewSource = this._private.createSource(this.demoItems);
+         this._viewSourceSecond = this._private.createSource(this.demoItems);
          this._columns = [{
             displayProperty: 'Наименование'
          }];

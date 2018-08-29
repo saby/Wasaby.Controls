@@ -7,19 +7,6 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
    'css!Controls-demo/Switch/DoubleSwitchDemo'
 ], function(Control, MemorySource, template) {
    'use strict';
-
-   var orientationSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'horizontal'
-         },
-         {
-            title: 'vertical'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -30,7 +17,17 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._orientationSource = orientationSource;
+            this._orientationSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'horizontal'
+                  },
+                  {
+                     title: 'vertical'
+                  }
+               ]
+            });
          },
 
          changeOrientation: function(e, key) {

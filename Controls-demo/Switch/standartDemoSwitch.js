@@ -5,22 +5,6 @@ define('Controls-demo/Switch/standartDemoSwitch', [
    'css!Controls-demo/Switch/standartDemoSwitch'
 ], function(Control, template, MemorySource) {
    'use strict';
-
-   var source = new MemorySource({
-      idProperty: 'id',
-      displayProperty: 'caption',
-      data: [
-         {
-            id: '1',
-            title: 'State1'
-         },
-         {
-            id: '2',
-            title: 'State2'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend({
       _template: template,
       _source: null,
@@ -34,7 +18,20 @@ define('Controls-demo/Switch/standartDemoSwitch', [
       value4: false,
       value5: true,
       _beforeMount: function() {
-         this._source = source;
+         this._source = new MemorySource({
+            idProperty: 'id',
+            displayProperty: 'caption',
+            data: [
+               {
+                  id: '1',
+                  title: 'State1'
+               },
+               {
+                  id: '2',
+                  title: 'State2'
+               }
+            ]
+         });
       },
 
       changeKey: function(e, radioIndex, key) {

@@ -18,139 +18,6 @@ define('Controls-demo/List/Grid/Grid', [
    'Controls/Render/Money/Money'
 ], function(BaseControl, GridData, template, MemorySource) {
    'use strict';
-
-   var showType = {
-
-      // show only in Menu
-      MENU: 0,
-
-      // show in Menu and Toolbar
-      MENU_TOOLBAR: 1,
-
-      // show only in Toolbar
-      TOOLBAR: 2
-   };
-
-   var _firstItemActionsArray = [
-      {
-         id: 5,
-         title: 'прочитано',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action read Click');
-         }
-      },
-      {
-         id: 1,
-         icon: 'icon-primary icon-PhoneNull',
-         title: 'phone',
-         handler: function(item) {
-            console.log('action phone Click ', item);
-         }
-      },
-      {
-         id: 2,
-         icon: 'icon-primary icon-EmptyMessage',
-         title: 'message',
-         handler: function() {
-            alert('Message Click');
-         }
-      },
-      {
-         id: 3,
-         icon: 'icon-primary icon-Profile',
-         title: 'profile',
-         showType: showType.MENU_TOOLBAR,
-         handler: function() {
-            console.log('action profile Click');
-         }
-      },
-      {
-         id: 4,
-         icon: 'icon-Erase icon-error',
-         title: 'delete pls',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action delete Click');
-         }
-      }
-   ];
-   var _gridColumns = [
-      {
-         displayProperty: 'name',
-         width: '1fr',
-         template: 'tmpl!Controls-demo/List/Grid/DemoName'
-      },
-      {
-         displayProperty: 'price',
-         width: 'auto',
-         align: 'right',
-         template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
-      },
-      {
-         displayProperty: 'balance',
-         width: 'auto',
-         align: 'right',
-         template: 'tmpl!Controls-demo/List/Grid/DemoBalancePrice'
-      },
-      {
-         displayProperty: 'reserve',
-         width: 'auto',
-         align: 'right'
-      },
-      {
-         displayProperty: 'costPrice',
-         width: 'auto',
-         align: 'right',
-         template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
-      },
-      {
-         displayProperty: 'balanceCostSumm',
-         width: 'auto',
-         align: 'right',
-         template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
-      }
-   ];
-   var _gridHeader = [
-      {
-         title: ''
-      },
-      {
-         title: 'Цена',
-         align: 'right'
-      },
-      {
-         title: 'Остаток',
-         align: 'right'
-      },
-      {
-         title: 'Резерв',
-         align: 'right'
-      },
-      {
-         title: 'Себест.',
-         align: 'right',
-         template: 'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice'
-      },
-      {
-         title: 'Сумма остатка',
-         align: 'right'
-      }
-   ];
-   var _tasksColumns = [
-      {
-         template: 'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
-         width: 'auto'
-      },
-      {
-         template: 'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
-         width: '1fr'
-      },
-      {
-         template: 'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
-         width: 'auto'
-      }
-   ];
    var
 
       ModuleClass = BaseControl.extend({
@@ -162,6 +29,7 @@ define('Controls-demo/List/Grid/Grid', [
          gridColumns: null,
          gridHeader: null,
          tasksColumns: null,
+         showType: null,
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
                if (action.id === 2 || action.id === 3) {
@@ -182,15 +50,142 @@ define('Controls-demo/List/Grid/Grid', [
             this._actionClicked = action.title;
          },
          _beforeMount: function() {
+            this.showType = {
+
+               // show only in Menu
+               MENU: 0,
+
+               // show in Menu and Toolbar
+               MENU_TOOLBAR: 1,
+
+               // show only in Toolbar
+               TOOLBAR: 2
+            };
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: GridData.catalog
             });
-            this._itemActions = _firstItemActionsArray;
-            this.gridColumns = _gridColumns;
+            this._itemActions = [
+               {
+                  id: 5,
+                  title: 'прочитано',
+                  showType: this.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action read Click');
+                  }
+               },
+               {
+                  id: 1,
+                  icon: 'icon-primary icon-PhoneNull',
+                  title: 'phone',
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-primary icon-EmptyMessage',
+                  title: 'message',
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-primary icon-Profile',
+                  title: 'profile',
+                  showType: this.showType.MENU_TOOLBAR,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase icon-error',
+                  title: 'delete pls',
+                  showType: this.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
+            this.gridColumns = [
+               {
+                  displayProperty: 'name',
+                  width: '1fr',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoName'
+               },
+               {
+                  displayProperty: 'price',
+                  width: 'auto',
+                  align: 'right',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               },
+               {
+                  displayProperty: 'balance',
+                  width: 'auto',
+                  align: 'right',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoBalancePrice'
+               },
+               {
+                  displayProperty: 'reserve',
+                  width: 'auto',
+                  align: 'right'
+               },
+               {
+                  displayProperty: 'costPrice',
+                  width: 'auto',
+                  align: 'right',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               },
+               {
+                  displayProperty: 'balanceCostSumm',
+                  width: 'auto',
+                  align: 'right',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               }
+            ];
             this.gridData = GridData;
-            this.gridHeader = _gridHeader;
-            this.tasksColumns = _tasksColumns;
+            this.gridHeader = [
+               {
+                  title: ''
+               },
+               {
+                  title: 'Цена',
+                  align: 'right'
+               },
+               {
+                  title: 'Остаток',
+                  align: 'right'
+               },
+               {
+                  title: 'Резерв',
+                  align: 'right'
+               },
+               {
+                  title: 'Себест.',
+                  align: 'right',
+                  template: 'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice'
+               },
+               {
+                  title: 'Сумма остатка',
+                  align: 'right'
+               }
+            ];
+            this.tasksColumns = [
+               {
+                  template: 'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
+                  width: 'auto'
+               },
+               {
+                  template: 'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
+                  width: '1fr'
+               },
+               {
+                  template: 'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
+                  width: 'auto'
+               }
+            ];
          }
       });
 

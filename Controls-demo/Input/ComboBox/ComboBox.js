@@ -21,37 +21,6 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             self._source = new Memory(cfg);
          }
       };
-      var defaultItems = [
-         { id: '1', title: 'Shakerato', text: 'It is an iced coffee made by shaking espresso and ice cubes.' },
-         { id: '2', title: 'Espresso Romano', text: 'It is a shot of espresso with a slice of lemon served on the side.' },
-         { id: '3', title: 'Melya', text: 'It is coffee flavoured with cocoa powder and honey.' },
-         { id: '4', title: 'Guillermo', text: 'Originally one or two shots of hot espresso poured over slices of lime.' },
-         { id: '5', title: 'Freddo Espresso', text: 'It is a foam-covered iced coffee made from espresso.' },
-         { id: '6', title: 'Palazzo', text: 'It is two shots of espresso, chilled immediately after brewing and mixed with sweetened cream.' },
-         { id: '7', title: 'Frappe', text: 'Greek frappe is a foam-covered iced coffee drink made from spray-dried instant coffee.' }
-      ];
-      var customItems = [
-         { id: '1', title: 'Corrido', text: 'It is a popular narrative song and poetry that form a ballad.' },
-         { id: '2', title: 'Heavy metal', text: 'It is characterized by loud distorted guitars, emphatic rhythms, dense bass-and-drum sound, and vigorous vocals.' },
-         { id: '3', title: 'Soul', text: 'It combines elements of African-American gospel music, rhythm and blues and jazz.' },
-         { id: '4', title: 'Austropop ', text: 'It comprises several musical styles, from traditional pop music to rock.' },
-         { id: '5', title: 'Noise', text: 'Noise music is a category of music that is characterised by the expressive use of noise within a musical context.' },
-         { id: '6', title: 'Jazz-funk', text: 'It is characterized by a strong back beat, electrified sounds and an early prevalence of analog synthesizers.' },
-         { id: '7', title: 'Vispop', text: 'It is typically performed by a singer-songwriter playing an acoustic guitar, and the lyrics often expresses social commentary.' }
-      ];
-      var itemTemp = [
-         { id: '1', title: 'default' },
-         { id: '2', title: 'custom' }
-      ];
-      var sourceData = [
-         { id: '1', title: 'coffee' },
-         { id: '2', title: 'music' }
-      ];
-      var parameters = [
-         { title: 'id' },
-         { title: 'title' },
-         { title: 'text' }
-      ];
       var ComboBox = Control.extend({
          _template: template,
          _events: '',
@@ -74,11 +43,37 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          _parameters: null,
          _beforeMount: function() {
             _cmbSource.createMemory(this);
-            this._defaultItems = defaultItems;
-            this._customItems = customItems;
-            this._itemTemp = itemTemp;
-            this._sourceData = sourceData;
-            this._parameters = parameters;
+            this._defaultItems = [
+               { id: '1', title: 'Shakerato', text: 'It is an iced coffee made by shaking espresso and ice cubes.' },
+               { id: '2', title: 'Espresso Romano', text: 'It is a shot of espresso with a slice of lemon served on the side.' },
+               { id: '3', title: 'Melya', text: 'It is coffee flavoured with cocoa powder and honey.' },
+               { id: '4', title: 'Guillermo', text: 'Originally one or two shots of hot espresso poured over slices of lime.' },
+               { id: '5', title: 'Freddo Espresso', text: 'It is a foam-covered iced coffee made from espresso.' },
+               { id: '6', title: 'Palazzo', text: 'It is two shots of espresso, chilled immediately after brewing and mixed with sweetened cream.' },
+               { id: '7', title: 'Frappe', text: 'Greek frappe is a foam-covered iced coffee drink made from spray-dried instant coffee.' }
+            ];
+            this._customItems = [
+               { id: '1', title: 'Corrido', text: 'It is a popular narrative song and poetry that form a ballad.' },
+               { id: '2', title: 'Heavy metal', text: 'It is characterized by loud distorted guitars, emphatic rhythms, dense bass-and-drum sound, and vigorous vocals.' },
+               { id: '3', title: 'Soul', text: 'It combines elements of African-American gospel music, rhythm and blues and jazz.' },
+               { id: '4', title: 'Austropop ', text: 'It comprises several musical styles, from traditional pop music to rock.' },
+               { id: '5', title: 'Noise', text: 'Noise music is a category of music that is characterised by the expressive use of noise within a musical context.' },
+               { id: '6', title: 'Jazz-funk', text: 'It is characterized by a strong back beat, electrified sounds and an early prevalence of analog synthesizers.' },
+               { id: '7', title: 'Vispop', text: 'It is typically performed by a singer-songwriter playing an acoustic guitar, and the lyrics often expresses social commentary.' }
+            ];
+            this._itemTemp = [
+               { id: '1', title: 'default' },
+               { id: '2', title: 'custom' }
+            ];
+            this._sourceData = [
+               { id: '1', title: 'coffee' },
+               { id: '2', title: 'music' }
+            ];
+            this._parameters = [
+               { title: 'id' },
+               { title: 'title' },
+               { title: 'text' }
+            ];
          },
          _beforeUpdate: function() {
             _cmbSource.createMemory(this);

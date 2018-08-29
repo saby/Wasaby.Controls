@@ -9,19 +9,6 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var iconStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -29,7 +16,17 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
          _iconStyleSource: null,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._iconStyleSource = iconStyleSource;
+            this._iconStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'primary'
+                  }
+               ]
+            });
          },
 
          activatedHandler: function(e) {

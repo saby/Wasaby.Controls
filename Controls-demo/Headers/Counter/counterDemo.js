@@ -9,37 +9,6 @@ define('Controls-demo/Headers/Counter/counterDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var counterSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
-   var counterStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'primary'
-         },
-         {
-            title: 'disabled'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -50,8 +19,34 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _counterCaption: '12',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._counterSizeSource = counterSizeSource;
-            this._counterStyleSource = counterStyleSource;
+            this._counterSizeSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 's'
+                  },
+                  {
+                     title: 'm'
+                  },
+                  {
+                     title: 'l'
+                  }
+               ]
+            });
+            this._counterStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'primary'
+                  },
+                  {
+                     title: 'disabled'
+                  }
+               ]
+            });
          },
 
          activatedHandler: function(e) {

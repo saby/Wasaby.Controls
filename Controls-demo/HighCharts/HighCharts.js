@@ -3,30 +3,6 @@ define('Controls-demo/HighCharts/HighCharts', [
    'tmpl!Controls-demo/HighCharts/HighCharts',
    'Controls-demo/HighCharts/DemoSource'
 ], function(Control, template, DemoSource) {
-
-   var _chartConfig1 = {
-         credits: {
-            enabled: false
-         },
-         title: {
-            text: 'Example1'
-         },
-         chart: {
-
-         }
-      },
-      _chartConfig2 = {
-         credits: {
-            enabled: false
-         },
-         title: {
-            text: 'Example2'
-         },
-         chart: {
-
-         }
-      };
-
    return Control.extend({
       _template: template,
       _wsSeries: null,
@@ -35,7 +11,17 @@ define('Controls-demo/HighCharts/HighCharts', [
       _beforeMount: function() {
          this._filter = '1';
          this._configState = '1';
-         this._chartConfig = _chartConfig1;
+         this._chartConfig = {
+            credits: {
+               enabled: false
+            },
+            title: {
+               text: 'Example1'
+            },
+            chart: {
+
+            }
+         };
          this._dataSource = new DemoSource();
          this._wsSeries = [{
             sourceFieldX: 'title',
@@ -49,10 +35,30 @@ define('Controls-demo/HighCharts/HighCharts', [
       _updateConfig: function() {
          if (this._configState === '1') {
             this._configState = '2';
-            this._chartConfig = _chartConfig2;
+            this._chartConfig = {
+               credits: {
+                  enabled: false
+               },
+               title: {
+                  text: 'Example2'
+               },
+               chart: {
+
+               }
+            };
          } else {
             this._configState = '1';
-            this._chartConfig = _chartConfig1;
+            this._chartConfig = {
+               credits: {
+                  enabled: false
+               },
+               title: {
+                  text: 'Example1'
+               },
+               chart: {
+
+               }
+            };
          }
       },
 
