@@ -461,7 +461,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCommit && saving && saving.isClone && !fileUuid) {
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
             }
-            var deleteUuid = isCommit ? (saving && saving.isClone ? null : options.primaryUuid) : fileUuid;
+            var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;
             if (deleteUuid) {
                this._callFormatterDelete(deleteUuid);
             }
