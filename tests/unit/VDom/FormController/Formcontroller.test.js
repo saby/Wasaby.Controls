@@ -64,7 +64,20 @@ define([
             var updateId = stepCfg.updateId;
             var answer = stepCfg.answer;
             var checkCfg = stepCfg.checkCfg;
+            var checkFn = stepCfg.checkFn;
             var def = new Deferred();
+
+            var stepCallback = function stepCallback() {
+               waiting(function() {
+                  checkCfg && check(checkCfg);
+                  checkFn && checkFn(testControl);
+                  def.callback();
+               });
+            };
+            var stepErrback = function stepErrback(e) {
+               def.errback(e);
+            };
+
             switch (action) {
                case 'create':
                   var initValues = {
@@ -72,49 +85,19 @@ define([
                      emailText: 'no@email.com'
                   };
                   control._children.formControllerInst.__$resultForTests = answer;
-                  control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(function() {
-                     waiting(function() {
-                        check(checkCfg);
-                        def.callback();
-                     });
-                  }, function(e) {
-                     def.errback(e);
-                  });
+                  control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
                   break;
                case 'read':
                   control._children.formControllerInst.__$resultForTests = answer;
                   waiting(function() {
-                     control._read({ key: updateId, ResultForTests: answer }).addCallbacks(function() {
-                        waiting(function() {
-                           check(checkCfg);
-                           waiting(function() {
-                              def.callback();
-                           });
-                        });
-                     }, function(e) {
-                        def.errback(e);
-                     });
+                     control._read({ key: updateId, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
                   });
                   break;
                case 'update':
-                  control._update().addCallbacks(function() {
-                     waiting(function() {
-                        check(checkCfg);
-                        def.callback();
-                     });
-                  }, function(e) {
-                     def.errback(e);
-                  });
+                  control._update().addCallbacks(stepCallback, stepErrback);
                   break;
                case 'delete':
-                  control._delete().addCallbacks(function() {
-                     waiting(function() {
-                        check(checkCfg);
-                        def.callback();
-                     });
-                  }, function(e) {
-                     def.errback(e);
-                  });
+                  control._delete().addCallbacks(stepCallback, stepErrback);
                   break;
             }
             return def;
@@ -294,6 +277,37 @@ define([
          });
 
       }).timeout(6000);
+
+      it('FormController - try delete', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  },
+                  {
+                     action: 'read',
+                     updateId: 0,
+                     answer: false,
+                     checkFn: function(control) {
+                        assert.equal(control._children.formControllerInst._deletedId, 1);
+                     }
+                  },
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      });
 
       afterEach(function() {
          if (testControl) {

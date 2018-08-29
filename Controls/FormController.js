@@ -126,7 +126,11 @@ define('Controls/FormController', [
       _tryDeleteNewRecord: function() {
          var def;
          if (this._isNewRecord && this._record) {
-            def = this._options.dataSource.destroy(this._record.getId());
+            var id = this._record.getId();
+            def = this._options.dataSource.destroy(id);
+            def.addBoth(function() {
+               this._deletedId = id;
+            }.bind(this));
          } else {
             def = new Deferred();
             def.callback();
