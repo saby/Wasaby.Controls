@@ -139,7 +139,7 @@ define(['Controls/Button'], function (Button) {
                style: 'test',
                size: 'size'
             };
-            Button.prototype.constructor(opt);
+            Button.prototype._beforeMount(opt);
             assert(optionsCorrect);
          });
 
