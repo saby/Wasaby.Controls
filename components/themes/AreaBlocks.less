@@ -1,10 +1,21 @@
 .ws-Block {
    position: relative;
-   border: @spacing_Block / 2 + @border-width_Block solid @bg_BlockLayout;
+   border-style: solid;
+   border-width: @spacing_Block / 2 + @border-width_Block;
    .box-sizing();
    .for(6, { &_style_@{_i} {
       background-color: ~"@{bg_Block_style-@{_i}}";
    } });
+
+   body.ws-is-mobile-platform & {
+      border-color: transparent;
+      outline: @spacing_Block / 2 + @border-width_Block solid @bg_BlockLayout;
+      outline-offset: -(@spacing_Block / 2 + @border-width_Block);
+   }
+
+   body.ws-is-desktop-platform & {
+      border-color: @bg_BlockLayout;
+   }
 
    /**
     * TODO: pointer-events работает в ie начиная с 11 версии.
