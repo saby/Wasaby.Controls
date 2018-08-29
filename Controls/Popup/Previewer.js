@@ -100,7 +100,15 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            /**
+             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+             */
+            if (this._options.trigger === 'hover') {
+               this._cancel(event, 'opening');
+            } else {
+               this._open(event);
+            }
+
             event.stopPropagation();
          },
 
