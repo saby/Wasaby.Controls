@@ -319,6 +319,14 @@ define('Controls/FormController', [
             return record;
          });
          return resultDef;
+      },
+
+      /**
+       * Starts validating process.
+       * @returns {Core/Deferred} deferred of result of validation
+       */
+      validate: function() {
+         return this._children.validation.submit();
       }
    });
 
