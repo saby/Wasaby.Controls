@@ -310,6 +310,10 @@ function(cMerge,
             newCfg.dialogOptions.closeOnTargetScroll = true;
          }
 
+         if (cfg.className) {
+            newCfg.dialogOptions.className = cfg.className;
+         }
+
          if (newCfg.target) {
             this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
