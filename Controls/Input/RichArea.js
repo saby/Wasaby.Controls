@@ -23,12 +23,7 @@ define('Controls/Input/RichArea', [
       _beforeMount: function(opts) {
          if (opts.json) {
             this._htmlJson = new HtmlJson();
-
-            // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
-            this._htmlJson.setJson = function(json) {
-               this._options.json = json;
-            };
-            this._value = this._jsonToHtml(opts.json);
+            this._value = this._jsonToHtml(typeof opts.json === 'string' ? JSON.parse(opts.json) : opts.json);
          } else {
             this._value = opts.value;
          }
@@ -39,9 +34,13 @@ define('Controls/Input/RichArea', [
 
       _beforeUpdate: function(opts) {
          if (opts.json) {
-            var isOldJson = opts.json === this._htmlJson._options.json;
+            var isOldJson = opts.json === (
+               typeof opts.json === 'string'
+                  ? JSON.stringify(this._htmlJson._options.json || this._htmlJson.json)
+                  : this._htmlJson._options.json || this._htmlJson.json
+            );
             if (!isOldJson) {
-               this._value = this._jsonToHtml(opts.json);
+               this._value = this._jsonToHtml(typeof opts.json === 'string' ? JSON.parse(opts.json) : opts.json);
             }
          } else {
             this._value = opts.value;
@@ -59,7 +58,9 @@ define('Controls/Input/RichArea', [
 
       _onTextChanged: function(e, value) {
          if (this._options.json) {
-            this._notify('jsonChanged', [this._valueToJson(value)]);
+            this._notify('jsonChanged', [typeof this._options.json === 'string'
+               ? JSON.stringify(this._valueToJson(value))
+               : this._valueToJson(value)]);
          } else {
             this._notify('valueChanged', [value]);
          }
@@ -119,7 +120,7 @@ define('Controls/Input/RichArea', [
          return json;
       },
       _jsonToHtml: function(json) {
-         this._htmlJson._options.json = json;
+         this._htmlJson.setJson(json);
          return this._htmlJson.render();
       },
       showCodeSample: function() {

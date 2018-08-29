@@ -357,6 +357,11 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
                }
             }
          },
+         _onVirtualScrollWindowChange: function() {
+            //При виртуальном скроле, из дома может удалиться/добавиться папка у которой есть folderFooter.
+            //В таком случае пересоздадим футреры там где они необходимы.
+            this._createAllFolderFooters();
+         },
          _toggleGroup: function(groupId, flag) {
             var
                groupItems,

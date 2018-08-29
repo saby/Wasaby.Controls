@@ -1,4 +1,4 @@
-<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}"
+<div config="{{_options.__$config}}" data-component="{{_moduleName}}" class="{{_className}}" hasMarkup="true"
      on:close="closeHandler()" on:keydown="_keyDown()" on:keyup="_keyUp()"
      on:mouseenter="_mouseenterHandler()" on:mouseleave="_mouseleaveHandler()">
    <ws:if data="{{_options.type === 'base'}}">
@@ -18,5 +18,5 @@
          </ws:contentArea>
       </Controls.Popup.Templates.Dialog.DialogTemplate>
    </ws:else>
-   <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
+   <Controls.Event.Emitter event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>

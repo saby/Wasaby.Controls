@@ -72,6 +72,7 @@ define('Controls/Tabs/Buttons', [
      * @class Controls/Tabs/Buttons
      * @extends Core/Control
      * @mixes Controls/interface/ISource
+     * @mixes Controls/interface/IItemTemplate
      * @mixes Controls/interface/ISingleSelectable
      * @control
      * @public

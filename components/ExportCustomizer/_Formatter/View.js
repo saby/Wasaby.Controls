@@ -47,11 +47,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
 
       /**
-       * Задержка обновления изображения предпросмотра
+       * Минимальный интервал между обновлениями изображения предпросмотра
        * @private
        * @type {number}
        */
       var PREVIEW_DELAY = 750;
+
+      /**
+       * Масштаб  изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_SCALE = 0.4;
 
 
 
@@ -142,12 +149,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                var options = this._options;
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
-                  if (!options.primaryUuid) {
-                     this._callFormatterCreate();
-                  }
-                  else {
-                     this._updatePreview();
-                  }
+                  this._checkExistence().addCallback(function () {
+                     /*if (!options.primaryUuid) {
+                        this._callFormatterCreate();
+                     }
+                     else {*/
+                        this._updatePreview();
+                     /*}*/
+                  }.bind(this));
                }
             }
             else {
@@ -187,6 +196,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                else {
                   this._callFormatterOpen(useApp);
                }
+            }
+         },
+
+         /**
+          * Проверить существование стилевого файла, указанного в опции primaryUuid. Если его не существует, то значение опции будет обнулено
+          *
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _checkExistence: function () {
+            var options = this._options;
+            var fileUuid = options.primaryUuid;
+            if (fileUuid) {
+               return this._callFormatterIsExists(fileUuid).addCallback(function (isSuccess) {
+                  if (!isSuccess) {
+                     options.primaryUuid = null;
+                     this.sendCommand('subviewChanged', 'uuidNullified', fileUuid);
+                  }
+               }.bind(this));
+            }
+            else {
+               return Deferred.success();
             }
          },
 
@@ -244,6 +275,17 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             // Запустить индикатор сразу
             this._waitIndicatorStart();
             return promise;
+         },
+
+         /**
+          * Вызвать метод форматера "isExists"
+          *
+          * @protected
+          * @param {string} [fileUuid] Uuid стилевого эксель-файла
+          * @return {Core/Deferred<boolean>}
+          */
+         _callFormatterIsExists: function (fileUuid) {
+            return this._exportFormatter.isExists(fileUuid);
          },
 
          /**
@@ -337,7 +379,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._updatePreviewClearStop();
             }
             if (!this._waitIndicatorStopper) {
-               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:0}, this._waitIndicatorStopper = new Deferred());
+               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:300}, this._waitIndicatorStopper = new Deferred());
             }
          },
 
@@ -379,17 +421,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreviewStart: coreDebounce(function () {
             var size = this._previewSize;
             if (!size) {
-               this._previewSize = size = {width: 1920, height: 0};
+               this._previewSize = size = {width:1920, height:0};
             }
             this._waitIndicatorStart();
             var options = this._options;
             this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
                function (url) {
-                  var img = this._preview[0];
-                  img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
-                  img.src = url;
-                  img.title = options.previewTitle;
-                  this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+                  var cache = new Image();
+                  cache.onload = cache.onerror = function () {
+                     this._updatePreviewClearStop();
+                     var img = this._preview[0];
+                     img.src = url;
+                     img.width = PREVIEW_SCALE*cache.width;
+                     img.title = options.previewTitle;
+                     this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+                  }.bind(this);
+                  cache.onerror = this._updatePreviewClearStop.bind(this);
+                  cache.src = url;
                }.bind(this),
                this._updatePreviewClearStop.bind(this)
             );
@@ -413,7 +461,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCommit && saving && saving.isClone && !fileUuid) {
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
             }
-            var deleteUuid = isCommit ? (saving && saving.isClone ? null : options.primaryUuid) : fileUuid;
+            var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;
             if (deleteUuid) {
                this._callFormatterDelete(deleteUuid);
             }
@@ -448,37 +496,63 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
             if (changes) {
-               var fieldIds = options.fieldIds;
-               var hasFields = !!(fieldIds && fieldIds.length);
-               var methods = [];
-               if (hasFields) {
-                  var isConsumerChanged = 'consumerId' in changes;
-                  var reason = meta ? meta.reason : null;
-                  var arg = meta && meta.args ? meta.args[0] : null;
-                  //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
-                  if ((!isConsumerChanged && 'fieldIds' in changes) || (reason === 'clone' && arg && arg.isChanged)) {
-                     if (!options.fileUuid) {
-                        var primaryUuid = options.primaryUuid;
-                        methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
-                     }
-                     else {
-                        methods.push('update');
-                     }
+               var isConsumerChanged = 'consumerId' in changes;
+               var isFieldsChanged = 'fieldIds' in changes;
+               if (isConsumerChanged && options.primaryUuid) {
+                  this._checkExistence().addCallback(this._restate.bind(this, isConsumerChanged, isFieldsChanged, meta));
+               }
+               else {
+                  this._restate(isConsumerChanged, isFieldsChanged, meta);
+               }
+            }
+         },
+
+         /**
+          * Доустановить настраиваемые значения компонента
+          *
+          * @protected
+          * @param {boolean} isConsumerChanged Было ли изменено значение consumerId
+          * @param {boolean} isFieldsChanged Было ли изменено значение fieldIds
+          * @param {object} meta Дополнительная информация об изменении
+          */
+         _restate: function (isConsumerChanged, isFieldsChanged, meta) {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            var hasFields = !!(fieldIds && fieldIds.length);
+            var methods = [];
+            if (hasFields) {
+               var reason = meta ? meta.reason : null;
+               var arg = meta && meta.args ? meta.args[0] : null;
+               //Если не поменялся consumerId, но поменялись поля; или если это клонирование с изменением
+               if ((!isConsumerChanged && isFieldsChanged) || (reason === 'clone' && arg && arg.isChanged)) {
+                  if (!options.fileUuid) {
+                     var primaryUuid = options.primaryUuid;
+                     methods.push(primaryUuid ? {method:'clone', args:[primaryUuid, true]} : 'create');
+                  }
+                  else {
+                     methods.push('update');
+                  }
+               }
+               else
+               if (isConsumerChanged && reason === 'select') {
+                  if (!options.primaryUuid) {
+                     methods.push('create');
                   }
                   else
-                  if (isConsumerChanged && (reason === 'select' && arg && arg.isChanged)) {
+                  if (arg && arg.isChanged) {
+                     // Стилевой эксель-файл устарел, обновить его
                      methods.push({method:'update', args:[options.primaryUuid]});
                   }
                }
-               if (methods.length) {
-                  this._callFormatterMethods(methods);
-               }
-               else {
-                  this._updatePreview();
-               }
-               this.setEnabled(hasFields);
-               this.setVisible(hasFields);
             }
+            if (methods.length) {
+               this._callFormatterMethods(methods);
+            }
+            else {
+               this._updatePreview();
+            }
+            this.setEnabled(hasFields);
+            this.setVisible(hasFields);
          },
 
          /**

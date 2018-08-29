@@ -414,11 +414,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var self = this;
                if (self._options.hasOwnProperty('json')) {
                   self._htmlJson = new HtmlJson();
-
-                  // TODO удалить этот костыль после мержа https://online.sbis.ru/opendoc.html?guid=a7319d65-b213-4629-b714-583be0129137
-                  self._htmlJson.setJson = function(json) {
-                     this._options.json = json;
-                  };
                   self.setJson(self._options.json);
 
                   self.subscribe('onTextChange', function(e, text) {
@@ -427,7 +422,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                      var div = document.createElement('div');
                      div.innerHTML = text;
-                     self._options.json = domToJson(div).slice(1);
+                     self._options.json = typeof self._options.json === 'string'
+                        ? JSON.stringify(domToJson(div).slice(1))
+                        : domToJson(div).slice(1);
                      self._notify('onJsonChange', [self._options.json]);
                   });
                }
@@ -693,7 +690,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             setJson: function(json) {
                this._options.json = json;
-               this._htmlJson.setJson(json);
+               this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
                this.setText(this._htmlJson.render());
             },
             _performByReadyCallback: function() {

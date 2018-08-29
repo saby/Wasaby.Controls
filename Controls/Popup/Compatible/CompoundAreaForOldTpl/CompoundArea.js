@@ -15,6 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
+      'Core/core-instance',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -32,7 +33,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cEventBus,
       ManagerController,
       InstantiableMixin,
-      callNext
+      callNext,
+      cInstance
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -113,6 +115,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
                this._childConfig = this._options.templateOptions || {};
+               this._childControlName = this._options.template;
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
@@ -182,6 +185,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.deprecatedContr(this._options);
 
             var self = this;
+
+            // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
+            // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
+            // CompoundArea мы точно знаем, что внутри находится CompoundControl и фокус нужно распространять
+            // по правилам AreaAbstract.compatible для контролов WS3
+            self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
 
             var container = self._container.length ? self._container[0] : self._container;
             container.wsControl = self;
@@ -290,11 +299,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } if (commandName === 'printReport') {
                return this.printReport(arg);
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
-               this._notifyVDOM('resize', null, { bubbling: true });
-            } else if (commandName === 'registerPendingOperation') {
-               return this._registerChildPendingOperation(arg);
-            } else if (commandName === 'unregisterPendingOperation') {
-               return this._unregisterChildPendingOperation(arg);
+               this._notifyVDOM('controlResize', null, { bubbling: true });
+            } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
+               // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
+               if (!cInstance.instanceOfMixin(this._childControl, 'Lib/Mixins/PendingOperationParentMixin')) {
+                  if (commandName === 'registerPendingOperation') {
+                     return this._registerChildPendingOperation(arg);
+                  }
+                  if (commandName === 'unregisterPendingOperation') {
+                     return this._unregisterChildPendingOperation(arg);
+                  }
+               }
             } else {
                return CompoundArea.superclass.handleCommand.apply(this, arguments);
             }
@@ -628,6 +643,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _toggleVisible: function(visible) {
             var
+               prevVisible = this._isVisible,
                popupContainer = this.getContainer().closest('.controls-Popup')[0],
                id = this._getPopupId(),
                popupConfig = this._getManagerConfig();
@@ -650,7 +666,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(id, popupConfig.popupOptions);
                }
 
-               if (visible && !this._isVisible) {
+               if (visible && !prevVisible) {
                   // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
                   // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
                   // на новую, поставим на время пересчета класс `ws-invisible`
@@ -673,6 +689,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
 
                this._isVisible = visible;
+
+               if (visible !== prevVisible) {
+                  // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+                  // стреляя событием onAfterVisibilityChange
+                  this._notifyCompound('onAfterVisibilityChange', visible);
+               }
             }
          },
          setOffset: function(newOffset) {

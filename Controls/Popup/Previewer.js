@@ -11,13 +11,22 @@ define('Controls/Popup/Previewer',
       /**
        * @class Controls/Popup/Previewer
        * @extends Core/Control
-       * @author Красильников А.С.
+       * @public
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
        *
        * @name Controls/Popup/Previewer#template
        * @cfg {Content} Mini card contents.
+       */
+
+      /**
+       * @name Controls/Popup/Previewer#trigger
+       * @cfg {String} Event name trigger the opening or closing of the template.
+       * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
+       * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
+       * @default hoverAndClick
        */
       var _private = {
          getType: function(eventType) {
@@ -64,6 +73,7 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             if (this._isNewEnvironment()) {
+               this._close(event); // close opened popup to avoid jerking the content for repositioning
                this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
             } else {
                this._children.openerPreviewer.open(_private.getCfg(this, event), type);
@@ -90,7 +100,15 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            /**
+             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+             */
+            if (this._options.trigger === 'hover') {
+               this._cancel(event, 'opening');
+            } else {
+               this._open(event);
+            }
+
             event.stopPropagation();
          },
 
@@ -120,7 +138,7 @@ define('Controls/Popup/Previewer',
                   this._cancel(event, 'closing');
                   break;
                case 'mouseleave':
-                  if (this._enableClose) {
+                  if (this._enableClose && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
                      this._close(event, 'hover');
                   }
                   break;
@@ -130,6 +148,12 @@ define('Controls/Popup/Previewer',
             }
          }
       });
+
+      Previewer.getDefaultOptions = function() {
+         return {
+            trigger: 'hoverAndClick'
+         };   
+      };
 
       return Previewer;
    }

@@ -1093,56 +1093,58 @@ define('SBIS3.CONTROLS/ListView',
             this._topWrapper = $('.controls-ListView__virtualScrollTop', this.getContainer());
             this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', this.getContainer());
 
-            this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
-               var itemsToAdd = [],
-                  itemsToRemove = [],
-                  addPosition = config.addPosition,
-                  prevDomNode,
-                  item;
-               for (var i = config.add[0]; i <= config.add[1]; i++) {
-                  item = this._getItemsProjection().at(i);
-                  if (item) {
-                     itemsToAdd.push(item);
-                  }
-               }
-               for (var i = config.remove[0]; i <= config.remove[1]; i++) {
-                  item = this._getItemsProjection().at(i);
-                  if (item) {
-                     itemsToRemove.push(item);
-                  }
-               }
+            this.subscribeTo(this._virtualScrollController, 'onWindowChange', this._onVirtualScrollWindowChange.bind(this));
+         },
 
-               // Если есть добавление по месту в начале списка, то надо добавлять записи после него,
-               // а не самом начале контейнера
-               var editingTr = this._isAddAtTop();
-               if (editingTr && addPosition === 0) {
-                  addPosition += 1;
-                  prevDomNode = editingTr;
+         _onVirtualScrollWindowChange: function(event, config) {
+            var itemsToAdd = [],
+               itemsToRemove = [],
+               addPosition = config.addPosition,
+               prevDomNode,
+               item;
+            for (var i = config.add[0]; i <= config.add[1]; i++) {
+               item = this._getItemsProjection().at(i);
+               if (item) {
+                  itemsToAdd.push(item);
                }
-               this._addItems(itemsToAdd, addPosition, prevDomNode);
-
-               // Оживляем компоненты после отрисовки виртуальным скролом
-               if (this._revivePackageParams.revive !== false) {
-                  this._reviveItems(this._revivePackageParams.light, true);
+            }
+            for (var i = config.remove[0]; i <= config.remove[1]; i++) {
+               item = this._getItemsProjection().at(i);
+               if (item) {
+                  itemsToRemove.push(item);
                }
-               this._revivePackageParams.processed = true;
+            }
 
-               if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
-                  this._itemsToolbar.hide();
-               }
-               this._removeItemsLight(itemsToRemove);
+            // Если есть добавление по месту в начале списка, то надо добавлять записи после него,
+            // а не самом начале контейнера
+            var editingTr = this._isAddAtTop();
+            if (editingTr && addPosition === 0) {
+               addPosition += 1;
+               prevDomNode = editingTr;
+            }
+            this._addItems(itemsToAdd, addPosition, prevDomNode);
 
-               //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
-               //если они до этого были выделены.
-               this._drawSelectedItems(this._options.selectedKeys, {});
+            // Оживляем компоненты после отрисовки виртуальным скролом
+            if (this._revivePackageParams.revive !== false) {
+               this._reviveItems(this._revivePackageParams.light, true);
+            }
+            this._revivePackageParams.processed = true;
 
-               this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
-               this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
-               if (this._virtualScrollResetStickyHead) {
-                  this._notifyOnSizeChanged();
-                  this._virtualScrollResetStickyHead = false;
-               }
-            }.bind(this));
+            if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
+               this._itemsToolbar.hide();
+            }
+            this._removeItemsLight(itemsToRemove);
+
+            //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
+            //если они до этого были выделены.
+            this._drawSelectedItems(this._options.selectedKeys, {});
+
+            this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
+            this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
+            if (this._virtualScrollResetStickyHead) {
+               this._notifyOnSizeChanged();
+               this._virtualScrollResetStickyHead = false;
+            }
          },
 
          _toggleEventHandlers: function(container, bind) {
@@ -5165,15 +5167,17 @@ define('SBIS3.CONTROLS/ListView',
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
                this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
+                  //Снимаем выделение до перезагрузки данных, т.к. удаляемые записи могут понадобиться, для определения
+                  //иерархии в режиме массового выделения(useSelectAll = true).
+                  self.removeItemsSelection(idArray);
+
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
-                        self.removeItemsSelection(idArray);
                         return result;
                      });
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
-                     self.removeItemsSelection(idArray);
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;

@@ -46,36 +46,44 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
+               var replaceVDOMContainer = function() {
+                  var
+                     rootContainer = self._getRootContainer(),
+                     additionalEventProperties = {
+                        'on:close': self._createEventProperty(self._onCloseHandler),
+                        'on:resize': self._createEventProperty(self._onResizeHandler),
+                        'on:sendresult': self._createEventProperty(self._onResultHandler),
+                        'on:register': self._createEventProperty(self._onRegisterHandler),
+                        'on:unregister': self._createEventProperty(self._onRegisterHandler)
+                     };
+
+                  //Отлавливаем события с дочернего vdom компонента
+                  for (var event in additionalEventProperties) {
+                     if (additionalEventProperties.hasOwnProperty(event)) {
+                        rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
+                        rootContainer.eventProperties[event].push(additionalEventProperties[event]);
+                     }
+                  }
+               };
 
                require([this._options.innerComponentOptions.template], function() {
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
-
-                     var replaceVDOMContainer = function() {
-                        var
-                           rootContainer = self._getRootContainer(),
-                           additionalEventProperties = {
-                              'on:close': self._createEventProperty(self._onCloseHandler),
-                              'on:resize': self._createEventProperty(self._onResizeHandler),
-                              'on:sendresult': self._createEventProperty(self._onResultHandler),
-                              'on:register': self._createEventProperty(self._onRegisterHandler),
-                              'on:unregister': self._createEventProperty(self._onRegisterHandler)
-                           };
-
-                        //Отлавливаем события с дочернего vdom компонента
-                        for (var event in additionalEventProperties) {
-                           if (additionalEventProperties.hasOwnProperty(event)) {
-                              rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
-                              rootContainer.eventProperties[event].push(additionalEventProperties[event]);
-                           }
-                        }
-                     };
-                     self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
-                        replaceVDOMContainer();
-                     });
-
+                  } else {
+                     // Если нам передали шаблон строкой, то компонент уже построен. Обратимся к нему через DOM.
+                     self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
+                     if (self._options._initCompoundArea) {
+                        self._notifyOnSizeChanged(self, self);
+                        self._options._initCompoundArea(self);
+                     }
+                     replaceVDOMContainer();
                   }
+
+                  self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
+                     replaceVDOMContainer();
+                  });
+
                   def.callback();
                });
 
