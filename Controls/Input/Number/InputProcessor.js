@@ -149,16 +149,6 @@ define('Controls/Input/Number/InputProcessor',
                         //Inserting dot in integers part moves cursor to decimals part
                         splitValue.insert = '';
                         shift += splitValue.after.indexOf('.') + 1;
-
-                        /**
-                         * if you enter a '.' in front of the '.' then nothing else is needed
-                         */
-                        if (splitValue.after[0] === '.') {
-                           return {
-                              value: _private.getValueWithDelimiters(splitValue),
-                              position: _private.getCursorPosition(splitValue, shift)
-                           };
-                        }
                      }
                   }
 
@@ -181,7 +171,7 @@ define('Controls/Input/Number/InputProcessor',
                      }
                   } else {
                      //If before value is '0' and input is valid, then we should delete before value
-                     if (splitValue.before === '0' && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
+                     if (splitValue.before === '0' && splitValue.insert.length && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
                         splitValue.before = '';
                      }
 
