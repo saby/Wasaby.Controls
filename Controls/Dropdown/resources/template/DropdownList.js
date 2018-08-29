@@ -57,6 +57,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _hasHierarchy: false,
+         _listModel: null,
 
          constructor: function(config) {
             var self = this;
@@ -170,6 +171,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
+
+         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left') {
+               this._listModel.setSwipeItem(itemData);
+            }
+            if (event.nativeEvent.direction === 'right') {
+               this._listModel.setSwipeItem(null);
+            }
+         },
+
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             var result = {
                action: pinClicked ? 'pinClicked' : 'itemClick',
@@ -210,6 +221,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
             return {
                ScrollData: this._scrollData
             };
+         },
+         _beforeUnmount: function() {
+            if (this._listModel) {
+               this._listModel.destroy();
+               this._listModel = null;
+            }
          }
       });
 

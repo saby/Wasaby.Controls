@@ -87,6 +87,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             Utils.logger.log(this._moduleName + '::$constructor()', 'option "dialogComponent" is deprecated and will be removed in 3.8.0');
             this._options.template = this._options.dialogComponent;
          }
+         if (isNewEnvironment()) {
+            if (this._options.closeByFocusOut === undefined) {
+               this._options.closeByFocusOut = true;
+            }
+         }
          this._documentClickHandler = this._documentClickHandler.bind(this);
          document.addEventListener('mousedown', this._documentClickHandler);
          document.addEventListener('touchstart', this._documentClickHandler);
@@ -142,7 +147,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       _createComponent: function(config, meta) {
          var componentName = this._getComponentName(meta),
             self = this;
-         
+
          if (this._isNeedToRedrawDialog()) {
             this._reloadTemplate(config);
          } else {
@@ -240,7 +245,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                return 'Lib/Control/Dialog/Dialog';
          }
       },
-      
+
       _documentClickHandler: function(event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
          if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
@@ -366,7 +371,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
          var handlers = this._getDialogHandlers(meta);
-         
+
          for (var name in handlers) {
             if (handlers.hasOwnProperty(name)) {
                if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
@@ -381,7 +386,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          return config;
       },
-      
+
       _getDialogHandlers: function(meta) {
          var self = this;
          return {
@@ -400,7 +405,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          };
       },
-      
+
       _saveAutoHideState: function(meta, config) {
          if (!this._options.closeByFocusOut) {
             this._openedPanelConfig = {
@@ -487,6 +492,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             this._dialog = undefined;
             document.removeEventListener('mousedown', this._documentClickHandler);
             document.removeEventListener('touchstart', this._documentClickHandler);
+
+            // Очистим ссылку на обработчик клика, чтобы DialogMixin не остался в памяти
+            this._documentClickHandler = undefined;
          }
       }
    };
@@ -494,7 +502,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
    //TODO start compatible block for VDOM
    function isNewEnvironment() {
-      return !!document.getElementsByTagName('html')[0].controlNodes;
+      return document && document.getElementsByTagName('html')[0].controlNodes;
    }
 
    //TODO end compatible block for VDOM

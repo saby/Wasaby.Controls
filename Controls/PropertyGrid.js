@@ -13,6 +13,7 @@ define('Controls/PropertyGrid', [
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @control
     * @public
     * @author Золотова Э.Е.

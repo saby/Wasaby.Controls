@@ -40,7 +40,7 @@ define('Controls/Validate/FormController',
                var
                   key;
 
-               //Проходимся по объекту с ошибками и ставим фокус в первое невалидное поле
+               // Walking through object with errors and focusing first not valid field.
                for (key in results) {
                   if (results[key]) {
                      this._validates[key].activate();
@@ -59,8 +59,14 @@ define('Controls/Validate/FormController',
             this._validates.forEach(function(validate) {
                validate.setValidationResult(null);
             });
+         },
+         isValid: function() {
+            var results = {}, i = 0;
+            this._validates.forEach(function(validate) {
+               results[i++] = validate.isValid();
+            });
+            return results;
          }
       });
       return Form;
-   }
-);
+   });

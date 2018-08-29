@@ -43,23 +43,56 @@ define('Controls/Container/Suggest/Layout',
             });
          },
          
-         getSizes: function(self) {
+         getSizes: function(self, dropDownContainer) {
+            var boundingClientToJSON = function(bc) {
+               var resultObj = {};
+
+               // firefox bug, clientRect object haven't method toJSON
+               if (bc.toJSON) {
+                  resultObj = bc.toJSON();
+               } else {
+                  for (var i in bc) {
+                     if (bc.hasOwnProperty(i)) {
+                        resultObj[i] = bc[i];
+                     }
+                  }
+               }
+
+               return resultObj;
+            };
+            var suggestBCR = boundingClientToJSON(self._children.suggestionsContainer.getBoundingClientRect());
+            var containerBCR =  boundingClientToJSON(self._container.getBoundingClientRect());
+            var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
+            
+            /* because dropDownContainer can have height smaller, than window height */
+            function fixSizesByDDContainer(size) {
+               size.top -= dropDownContainerBCR.top;
+               size.bottom -= dropDownContainerBCR.top;
+               return size;
+            }
+            
             return {
-               suggest: self._children.suggestionsContainer.getBoundingClientRect(),
-               container: self._container.getBoundingClientRect()
+               suggest: fixSizesByDDContainer(suggestBCR),
+               container: fixSizesByDDContainer(containerBCR)
             };
          },
+         
+         getDropDownContainerSize: function(container) {
+            container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
+            return container.getBoundingClientRect();
+         },
    
-         calcOrient: function(self, win) {
+         calcOrient: function(self, dropDownContainer) {
             /* calculate algorithm:
                - bottom of suggest behind the screen -> change orient, need to revert (-up)
                - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
                - bottom of suggest on screen -> default orient (-down)
              */
-            var sizes = _private.getSizes(self),
+            var sizes = _private.getSizes(self, dropDownContainer),
                suggestHeight = sizes.suggest.height,
                containerSize = sizes.container,
-               needToRevert = suggestHeight + containerSize.bottom > (win || window).innerHeight,
+               dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer),
+               needToRevert = suggestHeight + containerSize.bottom > dropDownContainerSize.height,
                newOrient;
             
             if (needToRevert && self._options.suggestStyle !== 'overInput') {
@@ -84,12 +117,12 @@ define('Controls/Container/Suggest/Layout',
           * @param self
           * @param currentOrient orient of suggestions container
           * @param sizes size of suggestions container and input container
-          * @param win window
+          * @param dropDownContainer container for dropDown
           * @returns {string}
           */
-         calcHeight: function(self, currentOrient, win) {
-            var sizes = _private.getSizes(self);
-            var windowHeight = (win || window).innerHeight;
+         calcHeight: function(self, currentOrient, dropDownContainer) {
+            var sizes = _private.getSizes(self, dropDownContainer);
+            var dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
             var suggestSize = sizes.suggest;
             var containerSize = sizes.container;
             var containerOptionToGet = {
@@ -102,8 +135,8 @@ define('Controls/Container/Suggest/Layout',
             
             if (suggestBottomSideCoord < 0) {
                height = suggestSize.height + suggestBottomSideCoord + 'px';
-            } else if (suggestBottomSideCoord > windowHeight) {
-               height = suggestSize.height - (suggestBottomSideCoord - windowHeight) + 'px';
+            } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
+               height = suggestSize.height - (suggestBottomSideCoord - dropDownContainerSize.height) + 'px';
             }
             
             return height;

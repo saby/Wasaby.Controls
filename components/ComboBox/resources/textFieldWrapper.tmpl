@@ -12,6 +12,6 @@
     placeholder="{{' '}}"
     autocorrect="off"
 />
-<ws:if data="{{ enabled && placeholder }}">
+<ws:if data="{{ enabled && placeholder && editable }}">
     <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
 </ws:if>
