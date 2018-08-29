@@ -6,6 +6,14 @@
    flex-direction: column;
 }
 
+.controls-Scroll_webkitOverflowScrollingAuto .controls-Scroll__content {
+   -webkit-overflow-scrolling: auto;
+}
+
+.controls-Scroll_webkitOverflowScrollingTouch .controls-Scroll .controls-Scroll__content {
+   -webkit-overflow-scrolling: touch;
+}
+
 .controls-Scroll__scrollbar {
    position: absolute;
    top: 0;
@@ -20,7 +28,6 @@
    display: flex;
    max-height: inherit;
    flex-direction: column;
-   -webkit-overflow-scrolling: touch;
 
    z-index: 1;
 }
@@ -47,16 +54,16 @@
 .controls-Scroll__shadow_top {
    top: 0;
    background: linear-gradient(
-           to bottom,
-           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+      to bottom,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
    );
 }
 
 .controls-Scroll__shadow_bottom {
    bottom: 0;
    background: linear-gradient(
-           to top,
-           @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+      to top,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
    );
 }
 
