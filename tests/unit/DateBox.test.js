@@ -84,16 +84,24 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
 
       // this.ctx.initialDate = new Date(2016, 1, 2, 3, 4, 5, 6);
       //
-      this.ctx.controlClass = DateBox;
       // Добавляем опции нужные конкретно этим тестам.
       // Подумать как можно переиспользовать настройки DateBox и базовые общие тесты для DatePicker.
       // this.ctx.controlConfig = {
       //    date: this.ctx.initialDate
       // };
-      this.ctx.controlConfig = {};
+
+      before(function() {
+         this.controlClass = DateBox;
+      });
+
+      beforeEach(function() {
+         this.controlConfig = {};
+      });
 
       describe('initialization', function () {
-         this.ctx.controlConfig.validators = [];
+         before(function() {
+            this.controlConfig.validators = [];
+         });
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
          controlTestCase();
 
@@ -107,7 +115,9 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('auto set century with YY year mask', function () {
-         this.ctx.controlConfig.mask = 'DD.MM.YY';
+         before(function() {
+            this.controlConfig.mask = 'DD.MM.YY';
+         });
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
          controlTestCase();
 
@@ -288,4 +298,3 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
    });
 });
-
