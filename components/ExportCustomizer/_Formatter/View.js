@@ -47,6 +47,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
 
       /**
+       * Задержка блокировки интерфейса при начале редактирования пользователем стилевого эксель-файла
+       * @private
+       * @type {number}
+       */
+      var LOCK_DELAY = 750;
+
+      /**
        * Минимальный интервал между обновлениями изображения предпросмотра
        * @private
        * @type {number}
@@ -119,6 +126,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _preview: null,
             // Размер области предпросмотра
             _previewSize: null,
+            // Происходит ли в данный момент процесс редактирования стилевого эксель-файла пользователем
+            _isEditing: null,
             // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
             _isAppAllowed: null
@@ -177,6 +186,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._startFormatEditing(selectedId === 'app');
             }.bind(this));
 
+            this.subscribeTo(this._exportFormatter, 'editStart', function () {
+               this._onFormatEditStarted();
+            }.bind(this));
+
+            this.subscribeTo(this._exportFormatter, 'edit', function () {
+               this._onFormatEdited();
+            }.bind(this));
+
+            this.subscribeTo(this._exportFormatter, 'editEnd', function (evtName, isChanged) {
+               this._onFormatEditEnded(isChanged);
+            }.bind(this));
+
             this._preview.on('click', this._startFormatEditing.bind(this, false));
          },
 
@@ -197,6 +218,52 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   this._callFormatterOpen(useApp);
                }
             }
+         },
+
+         /**
+          * Обработчик начала редактирования пользователем стилевого эксель-файла
+          *
+          * @protected
+          */
+         _onFormatEditStarted: function () {
+            this._isEditing = true;
+            // Заблокировать интерфейс с небольшой задержкой, так как при первом открытии экселя (при редактировании в приложении) файл откроется
+            // заблокирован и сессия редактирования сразу завершиться. При снятии блокировки в экселе будет начата новая сессия редактирования
+            setTimeout(function () {
+               if (this._isEditing) {
+                  this.setEnabled(false);
+               }
+            }.bind(this), LOCK_DELAY);
+         },
+
+         /**
+          * Обработчик единичного изменения при редактировании пользователем стилевого эксель-файла
+          *
+          * @protected
+          */
+         _onFormatEdited: function () {
+         },
+
+         /**
+          * Обработчик завершения редактирования пользователем стилевого эксель-файла
+          *
+          * @protected
+          * @param {boolean} isChanged При редактировании были
+          */
+         _onFormatEditEnded: function (isChanged) {
+            this._isEditing = null;
+            this.setEnabled(true);
+            if (isChanged) {
+               this.sendCommand('subviewChanged', 'afterOpen');
+               this._updatePreview();
+            }
+            else
+            if (this._deleteNotChanged) {
+               var options = this._options;
+               this._callFormatterDelete(options.fileUuid);
+               options.fileUuid = null;
+            }
+            this._deleteNotChanged = null;
          },
 
          /**
@@ -294,25 +361,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           * @param {boolean} useApp Открыть в отдельном приложении
           * @param {boolean} deleteNotChanged Удалить файл если он не будет изменён
-          * return {Core/Deferred}
           */
          _callFormatterOpen: function (useApp, deleteNotChanged) {
             var options = this._options;
             var fieldIds = options.fieldIds;
-            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
-               function (result) {
-                  if (result) {
-                     this.sendCommand('subviewChanged', 'afterOpen');
-                     this._updatePreview();
-                  }
-                  else
-                  if (deleteNotChanged) {
-                     this._callFormatterDelete(options.fileUuid);
-                     options.fileUuid = null;
-                  }
-               }.bind(this),
+            this._deleteNotChanged = deleteNotChanged;
+            /*return*/ this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams)/*.addCallbacks(
+               this._onFormatEditEnded.bind(this),
                function (err) { return err; }
-            );
+            )*/;
          },
 
          /**
