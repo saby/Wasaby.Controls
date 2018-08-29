@@ -51,7 +51,7 @@ define('Controls/StickyHeader',
           * type {Boolean} Determines whether the component is built on the Android mobile platform.
           * @private
           */
-         _shouldBeMobileAndroid: detection.isMobileAndroid,
+         _shouldBeMobilePlatform: detection.isMobilePlatform,
 
          constructor: function() {
             StickyHeader.superclass.constructor.call(this);
