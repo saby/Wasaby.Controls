@@ -10,7 +10,7 @@ define('Controls-demo/Async/AsyncDemo', [
          var self = this;
          if(receivedState) {
             self.data = receivedState;
-            self.is_OK = window.$is_OK$;
+            self.is_OK = window.$is_OK$ ? 'true' : 'false';
             return;
          } else {
             var def = new Deferred();
