@@ -34,7 +34,12 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
          HierarchySelection.superclass.constructor.call(this, options);
          this._markedTree = new RecordSet({
             rawData: options.markedTree || [],
-            idProperty: ID_FIELD
+            idProperty: ID_FIELD,
+            format: {
+               id: 'string',
+               status: 'integer',
+               parent: 'string'
+            }
          });
       },
 
