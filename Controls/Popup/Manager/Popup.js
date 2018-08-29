@@ -36,7 +36,10 @@ define('Controls/Popup/Manager/Popup',
          _afterMount: function() {
             // todo doautofocus
             this._notify('popupCreated', [this._options.id], {bubbling: true});
-            if (this._options.autofocus) {
+
+            // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
+            // сама управляет фокусом внутри себя
+            if (this._options.autofocus && !this._options.isCompoundTemplate) {
                this.activate();
             }
          },
