@@ -27,6 +27,9 @@ define('Controls/Container/Scroll',
        * @author Журавлев М.С.
        * @category Container
        * @demo Controls-demo/Container/Scroll
+       *
+       * @cssModifier controls-Scroll_webkitOverflowScrollingAuto Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
+       * @cssModifier controls-Scroll_webkitOverflowScrollingTouch Use momentum-based scrolling, where the content continues to scroll for a while after finishing the scroll gesture and removing your finger from the touchscreen.
        */
 
       /**
