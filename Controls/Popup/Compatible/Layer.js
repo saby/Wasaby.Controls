@@ -18,7 +18,6 @@ define('Controls/Popup/Compatible/Layer', [
    var loadDeferred;
    var jQueryModuleName = 'cdn!jquery/3.3.1/jquery-min.js';
    var compatibleDeps = [
-      jQueryModuleName,
       'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -223,6 +222,7 @@ define('Controls/Popup/Compatible/Layer', [
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
+            var mainDeferred;
             var loadDepsDef = new Deferred();
             loadDeferred = new Deferred();
 
@@ -233,7 +233,15 @@ define('Controls/Popup/Compatible/Layer', [
 
             // Сначала отдельно загрузим jQuery, чтобы можно было безопасно загружать другие модули,
             // которые могут ее использовать
-            moduleStubs.require([jQueryModuleName]).addCallback(function() {
+            //load jquery if it was not loaded
+            if (window && window.$ && window.$.fn && window.$.fn.jquery === '3.3.1') {
+               mainDeferred = new Deferred();
+               mainDeferred.callback();
+            } else {
+               mainDeferred = moduleStubs.require([jQueryModuleName]);
+            }
+
+            mainDeferred.addCallback(function loadDeps() {
                moduleStubs.require(deps).addCallback(function(_result) {
                   if (window && window.$) {
                      Constants.$win = $(window);
@@ -268,7 +276,6 @@ define('Controls/Popup/Compatible/Layer', [
                   loadDepsDef.errback(e);
                });
             });
-
 
             parallelDef.push(loadDepsDef);
             var parallelDefRes = parallelDef.done().getResult();
