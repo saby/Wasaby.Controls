@@ -402,25 +402,25 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
+            }
         }
-        }
-
-        stage("Unit тесты"){
-            if ( unit ){
-                echo "Запускаем юнит тесты"
-                dir(workspace){
-                    sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/"
-                }
-                dir("./controls"){
-                    sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                    parallel (
-                        isolated: {
-                            sh "sh ./bin/test-isolated"
-                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-                        },
-                        browser: {
+        parallel(
+            unit: {
+                stage ("Unit тесты"){
+                    if ( unit ){
+                        echo "Запускаем юнит тесты"
+                        dir(workspace){
+                            sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
+                            sh "cp -rf ./ws_data/WS.Data ./controls/components/"
+                            sh "cp -rf ./ws_data/WS.Data ./controls/"
+                        }
+                        dir("./controls"){
+                            sh "npm config set registry http://npmregistry.sbis.ru:81/"
+                            echo "run isolated"
+                            sh """
+                            export test_report="artifacts/test-isolated-report.xml"
+                            sh ./bin/test-isolated"""
+                            echo "run browser"
                             sh """
                             export test_url_host=${env.NODE_NAME}
                             export test_server_port=10253
@@ -431,159 +431,159 @@ node('controls') {
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
-                    )
-                }
-            }
-        }
-    if ( all_inte || regr || inte) {
-        def soft_restart = "True"
-        if ( params.browser_type in ['ie', 'edge'] ){
-            soft_restart = "False"
-        }
-
-        writeFile file: "./controls/tests/int/config.ini", text:
-            """# UTF-8
-            [general]
-            browser = ${params.browser_type}
-            SITE = http://${NODE_NAME}:30010
-            SERVER = test-autotest-db1:5434
-            BASE_VERSION = css_${NODE_NAME}${ver}1
-            DO_NOT_RESTART = True
-            SOFT_RESTART = ${soft_restart}
-            NO_RESOURCES = True
-            DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly
-            ELEMENT_OUTPUT_LOG = locator
-            WAIT_ELEMENT_LOAD = 20
-            SHOW_CHECK_LOG = True
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
-
-        if ( "${params.theme}" != "online" ) {
-            writeFile file: "./controls/tests/reg/config.ini",
-            text:
-                """# UTF-8
-                [general]
-                browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30010
-                DO_NOT_RESTART = True
-                SOFT_RESTART = False
-                NO_RESOURCES = True
-                DELAY_RUN_TESTS = 2
-                TAGS_TO_START = ${params.theme}
-                ELEMENT_OUTPUT_LOG = locator
-                WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1:5434
-                BASE_VERSION = css_${NODE_NAME}${ver}1
-                #BRANCH=True
-                [regression]
-                IMAGE_DIR = capture_${params.theme}
-                RUN_REGRESSION=True"""
-        } else {
-            writeFile file: "./controls/tests/reg/config.ini",
-            text:
-                """# UTF-8
-                [general]
-                browser = ${params.browser_type}
-                SITE = http://${NODE_NAME}:30010
-                DO_NOT_RESTART = True
-                SOFT_RESTART = False
-                NO_RESOURCES = True
-                DELAY_RUN_TESTS = 2
-                TAGS_TO_START = ${params.theme}
-                ELEMENT_OUTPUT_LOG = locator
-                WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-                SERVER = test-autotest-db1:5434
-                BASE_VERSION = css_${NODE_NAME}${ver}1
-                #BRANCH=True
-                [regression]
-                IMAGE_DIR = capture
-                RUN_REGRESSION=True
-                """
-        }
-
-        dir("./controls/tests/int"){
-            sh"""
-                source /home/sbis/venv_for_test/bin/activate
-                ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
-                deactivate
-
-            """
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            sh "sudo rm -rf ./test-reports"
-            if ( currentBuild.result != null ) {
-                exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
-
-            }
-        }
-
-
-        if ( only_fail ) {
-            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-        }
-        def tests_for_run = ""
-        if ( inte && !only_fail ) {
-            dir("./controls/tests") {
-                echo "Выкачиваем файл с зависимостями"
-                url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
-                script = """
-                    if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-                    echo "result.json exitsts"; cp -fr tmp_result.json result.json
-                    else rm -f result.json
-                    fi
-                    """
-                    sh returnStdout: true, script: script
-                def exist_json = fileExists 'result.json'
-                if ( exist_json ) {
-                    def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
-                    if ( tests_files ) {
-                        tests_files = tests_files.replace('\n', '')
-                        echo "Будут запущены ${tests_files}"
-                        tests_for_run = "--files_to_start ${tests_files}"
-                    } else {
-                        echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
-                    }
-                } else {
-                    echo "Файл с покрытием не найден. Будут запущены все тесты."
-                }
-            }
-        }
-        parallel (
-            int_test: {
-                stage("Инт.тесты"){
-                    if ( all_inte || inte ){
-                        echo "Запускаем интеграционные тесты"
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-                            deactivate
-                            """
-                        }
-
                     }
                 }
             },
-            reg_test: {
-                stage("Рег.тесты"){
-                    if ( regr ){
-                        echo "Запускаем тесты верстки"
-                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                        dir("./controls/tests/reg"){
-                            sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
-                                deactivate
-                            """
+            int_reg: {
+                    if ( all_inte || regr || inte) {
+                        def soft_restart = "True"
+                        if ( params.browser_type in ['ie', 'edge'] ){
+                            soft_restart = "False"
                         }
+                    writeFile file: "./controls/tests/int/config.ini", text:
+                        """# UTF-8
+                        [general]
+                        browser = ${params.browser_type}
+                        SITE = http://${NODE_NAME}:30010
+                        SERVER = test-autotest-db1:5434
+                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        DO_NOT_RESTART = True
+                        SOFT_RESTART = ${soft_restart}
+                        NO_RESOURCES = True
+                        DELAY_RUN_TESTS = 2
+                        TAGS_NOT_TO_START = iOSOnly
+                        ELEMENT_OUTPUT_LOG = locator
+                        WAIT_ELEMENT_LOAD = 20
+                        SHOW_CHECK_LOG = True
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
 
+                    if ( "${params.theme}" != "online" ) {
+                        writeFile file: "./controls/tests/reg/config.ini",
+                        text:
+                            """# UTF-8
+                            [general]
+                            browser = ${params.browser_type}
+                            SITE = http://${NODE_NAME}:30010
+                            DO_NOT_RESTART = True
+                            SOFT_RESTART = False
+                            NO_RESOURCES = True
+                            DELAY_RUN_TESTS = 2
+                            TAGS_TO_START = ${params.theme}
+                            ELEMENT_OUTPUT_LOG = locator
+                            WAIT_ELEMENT_LOAD = 20
+                            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                            SERVER = test-autotest-db1:5434
+                            BASE_VERSION = css_${NODE_NAME}${ver}1
+                            #BRANCH=True
+                            [regression]
+                            IMAGE_DIR = capture_${params.theme}
+                            RUN_REGRESSION=True"""
+                    } else {
+                        writeFile file: "./controls/tests/reg/config.ini",
+                        text:
+                            """# UTF-8
+                            [general]
+                            browser = ${params.browser_type}
+                            SITE = http://${NODE_NAME}:30010
+                            DO_NOT_RESTART = True
+                            SOFT_RESTART = False
+                            NO_RESOURCES = True
+                            DELAY_RUN_TESTS = 2
+                            TAGS_TO_START = ${params.theme}
+                            ELEMENT_OUTPUT_LOG = locator
+                            WAIT_ELEMENT_LOAD = 20
+                            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                            SERVER = test-autotest-db1:5434
+                            BASE_VERSION = css_${NODE_NAME}${ver}1
+                            #BRANCH=True
+                            [regression]
+                            IMAGE_DIR = capture
+                            RUN_REGRESSION=True
+                            """
                     }
+
+                    dir("./controls/tests/int"){
+                        sh"""
+                            source /home/sbis/venv_for_test/bin/activate
+                            ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
+                            deactivate
+
+                        """
+                        junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+                        sh "sudo rm -rf ./test-reports"
+                        if ( currentBuild.result != null ) {
+                            exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
+
+                        }
+                    }
+
+
+                    if ( only_fail ) {
+                        step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+                    }
+                    def tests_for_run = ""
+                    if ( inte && !only_fail ) {
+                        dir("./controls/tests") {
+                            echo "Выкачиваем файл с зависимостями"
+                            url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                            script = """
+                                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+                                echo "result.json exitsts"; cp -fr tmp_result.json result.json
+                                else rm -f result.json
+                                fi
+                                """
+                                sh returnStdout: true, script: script
+                            def exist_json = fileExists 'result.json'
+                            if ( exist_json ) {
+                                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
+                                if ( tests_files ) {
+                                    tests_files = tests_files.replace('\n', '')
+                                    echo "Будут запущены ${tests_files}"
+                                    tests_for_run = "--files_to_start ${tests_files}"
+                                } else {
+                                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                                }
+                            } else {
+                                echo "Файл с покрытием не найден. Будут запущены все тесты."
+                            }
+                        }
+                    }
+                    parallel (
+                        int_test: {
+                            stage("Инт.тесты"){
+                                if ( all_inte || inte ){
+                                    echo "Запускаем интеграционные тесты"
+                                    dir("./controls/tests/int"){
+                                        sh """
+                                        source /home/sbis/venv_for_test/bin/activate
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                        deactivate
+                                        """
+                                    }
+
+                                }
+                            }
+                        },
+                        reg_test: {
+                            stage("Рег.тесты"){
+                                if ( regr ){
+                                    echo "Запускаем тесты верстки"
+                                    sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                                    dir("./controls/tests/reg"){
+                                        sh """
+                                            source /home/sbis/venv_for_test/bin/activate
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                            deactivate
+                                        """
+                                    }
+
+                                }
+                            }
+                        }
+                    )
                 }
             }
-
         )
-    }
 } catch (err) {
     echo "ERROR: ${err}"
     currentBuild.result = 'FAILURE'
