@@ -125,13 +125,6 @@ define([
       });
 
       afterEach(function () {
-         testControl.__$destroyFromDirtyChecking = true;
-         if (testControl._children.Form) {
-            testControl._children.Form.__$destroyFromDirtyChecking = true;
-         }
-         if (testControl._children.validate) {
-            testControl._children.validate.__$destroyFromDirtyChecking = true;
-         }
          testControl && testControl.destroy();
       });
    });
