@@ -2,7 +2,7 @@
    <ws:for data="key, value in data">
       <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}">
          <div>
-            <ws:partial template="{{ value }}" caption="{{is_OK}}" value="{{is_OK}}"></ws:partial>
+            <ws:partial template="{{ value }}" value="{{is_OK}}"></ws:partial>
          </div>
       </Controls.Container.Async>
    </ws:for>
@@ -14,7 +14,7 @@
          if(isDebug && /scripts_[0-9]+/g.test(arr[i].attributes.key)) {
             isDebug = false;
          }
-         if(!isDebug && /controls-button/ig.test(arr[i].src)) {
+         if(!isDebug && /controls-input/ig.test(arr[i].src)) {
             is_ok = true;
             break;
          }

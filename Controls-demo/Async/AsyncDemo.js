@@ -4,7 +4,7 @@ define('Controls-demo/Async/AsyncDemo', [
    'tmpl!Controls-demo/Async/AsyncDemo'
 ], function(Control, Deferred, template) {
 
-   var AsyndDemo = Control.extend({
+   var AsyncDemo = Control.extend({
       _template: template,
       _beforeMount: function(options, context, receivedState) {
          var self = this;
@@ -15,8 +15,8 @@ define('Controls-demo/Async/AsyncDemo', [
          } else {
             var def = new Deferred();
             setTimeout(function() {
-               self.data = ['Controls/Button', 'Controls/Input/Text'];
-               self.is_OK = true;
+               self.data = ['Controls/Input/Text'];
+               self.is_OK = 'true';
                def.callback(self.data);
             }, 300);
             return def;
@@ -25,5 +25,5 @@ define('Controls-demo/Async/AsyncDemo', [
 
    });
 
-   return AsyndDemo;
+   return AsyncDemo;
 });
