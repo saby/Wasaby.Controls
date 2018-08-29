@@ -248,13 +248,13 @@ define(
                height: 300
             };
             it('dialog positioning base', function() {
-               let position = Dialog.getPosition(1920, 1080, sizes , {});
+               let position = Dialog.getPosition(1920, 1080, sizes , {popupOptions: {}});
                assert.equal(position.top, 390);
                assert.equal(position.left, 860);
             });
 
             it('dialog positioning overflow container', function() {
-               let position = Dialog.getPosition(300, 300, sizes , {});
+               let position = Dialog.getPosition(300, 300, sizes, {popupOptions: {}});
                assert.equal(position.top, 0);
                assert.equal(position.left, 50);
                assert.equal(position.width, undefined);
@@ -266,7 +266,7 @@ define(
                   minWidth: 300,
                   maxWidth: 600
                };
-               let position = Dialog.getPosition(500, 500, sizes , popupOptions);
+               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 500);
             });
@@ -276,7 +276,7 @@ define(
                   minWidth: 600,
                   maxWidth: 700
                };
-               let position = Dialog.getPosition(500, 500, sizes , popupOptions);
+               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 600);
             });
@@ -297,6 +297,17 @@ define(
                assert.equal(container.style.height, 10);
             });
 
+            it('dialog draggable position', function() {
+               let itemPosition = {left: 100, top: 100};
+               let position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
+               assert.equal(position.left, itemPosition.left);
+               assert.equal(position.top, itemPosition.top);
+
+               itemPosition = {left: 600, top: 500};
+               position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
+               assert.equal(position.left, 400);
+               assert.equal(position.top, 300);
+            });
          });
 
          describe('Stack', function() {

@@ -87,6 +87,24 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupDragStart: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
+               return true;
+            }
+            return false;
+         },
+
+         popupDragEnd: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragEnd(element, offset);
+               return true;
+            }
+            return false;
+         },
+
          popupResult: function(id) {
             var args = Array.prototype.slice.call(arguments, 1);
             return _private.fireEventHandler.apply(_private, [id, 'onResult'].concat(args));
