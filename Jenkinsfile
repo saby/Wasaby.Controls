@@ -422,7 +422,7 @@ node('controls') {
                                 export test_report="artifacts/test-isolated-report.xml"
                                 sh ./bin/test-isolated"""
                             }
-                            stage("browser") {
+                            stage("browser"){
                                 echo "run browser"
                                 sh """
                                 export test_url_host=${env.NODE_NAME}
