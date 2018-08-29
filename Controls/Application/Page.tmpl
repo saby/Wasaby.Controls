@@ -19,7 +19,7 @@
             <Controls.Event.Listener name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.Event.Listener name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Listener name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.Popup.Manager>
+                     <Controls.Popup.Manager width="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.DragNDrop.Container name="dragNDropContainer">
                               <body
