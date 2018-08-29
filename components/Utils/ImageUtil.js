@@ -1,15 +1,16 @@
 /**
  * Created by ps.borisov on 08.10.2015.
  */
-define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], function (Deferred, constants) {
+define('SBIS3.CONTROLS/Utils/ImageUtil', ['Core/Deferred', 'Core/constants'], function(Deferred, constants) {
    'use strict';
+
    /**
     * @class SBIS3.CONTROLS/Utils/ImageUtil
     * @author Крайнов Д.О.
     * @public
     */
    var ImageUtil = /** @lends SBIS3.CONTROLS/Utils/ImageUtil.prototype */ {
-       /**
+      /**
         *
         * @param target
         * @returns {{width, height}}
@@ -17,24 +18,31 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
       getDimensions: function(target) {
          var
             doc = document.documentElement,
-         //коэффициент отступа
+
+            //коэффициент отступа
             perIndent = 0.05,
-         //минимальная ширина/длина модального окна
+
+            //минимальная ширина/длина модального окна
             dialogDimensionMin = 200,
-         //ширина окна документа
+
+            //ширина окна документа
             docWidth = doc.clientWidth,
-         //длина окна документа
+
+            //длина окна документа
             docHeight = doc.clientHeight,
-         //расчет процента превышения размера изображения над размером документа
-            perDimension = function (docDimension, imgDimension) {
+
+            //расчет процента превышения размера изображения над размером документа
+            perDimension = function(docDimension, imgDimension) {
                return docDimension > imgDimension ? 1 : docDimension / imgDimension;
             },
-         //выбор наибольшего соотношения сторон по которому производить уменьшение изображения
-            perMostSide = function (dimensions) {
+
+            //выбор наибольшего соотношения сторон по которому производить уменьшение изображения
+            perMostSide = function(dimensions) {
                var
                   widthPer = perDimension(dimensions.docW, dimensions.imgW),
                   heightPer = perDimension(dimensions.docH, dimensions.imgH),
-               //чем больше процент, тем меньше соотношение сторон
+
+                  //чем больше процент, тем меньше соотношение сторон
                   isHeightMostSide = widthPer >= heightPer,
                   mostSidePer = 0;
                if (widthPer !== heightPer) {
@@ -45,18 +53,21 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
                }
                return mostSidePer;
             },
-         //расчёт сторон окна для оптимального просмотра изображения
-            sideDimension = function (docDimension, imgDimension, percentageRatio) {
+
+            //расчёт сторон окна для оптимального просмотра изображения
+            sideDimension = function(docDimension, imgDimension, percentageRatio) {
                if (percentageRatio) {
                   imgDimension *= percentageRatio;
                }
                return imgDimension < dialogDimensionMin ? dialogDimensionMin : imgDimension;
             },
+
             //функция получение реального размера изображения тк в ie8 нет naturalHeight/width
             naturalSizes = this.getNaturalSizes(target),
             targetWidth = naturalSizes.width,
             targetHeight =  naturalSizes.height,
-         //процент уменьшения изображения
+
+            //процент уменьшения изображения
             perRatio = perMostSide({
                docW: docWidth,
                docH: docHeight,
@@ -68,7 +79,8 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
             height: sideDimension(docHeight, targetHeight, perRatio)
          };
       },
-       /**
+
+      /**
         *
         * @param DOMelement
         * @returns {{width: (Number|number), height: (Number|number)}}
@@ -78,19 +90,20 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
          img.src = DOMelement.src;
          return {width: img.width || DOMelement.naturalWidth, height: img.height || DOMelement.naturalHeight};
       },
+
       /**
        * Помогает перегрузить картинку, если url не изменился, а картинка изменилась
        * @param {String|jQuery|HTMLElement}img - картинка, которую надо перерисовать
        * @param [url] - адрес, откуда брать картинку
        * @param {Function} [errback]  - метод, выполняемый при возникновении ошибки
        */
-      reloadImage: function (img, url) {
+      reloadImage: function(img, url) {
          var
             element,
             xhr,
             imgReady =  new Deferred();
 
-         imgReady.addErrback(function (e) {
+         imgReady.addErrback(function(e) {
             return e;
          });
 
@@ -105,47 +118,30 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
 
          function loadImage(img, url) {
             var
-               onLoadHandler = function(){
+               onLoadHandler = function() {
                   imgReady.callback();
                   img.removeEventListener('load', onLoadHandler);
                   img.removeEventListener('error', onErrorHandler);
                },
-               onErrorHandler = function(){
-                   imgReady.errback();
-                   img.removeEventListener('error',onErrorHandler);
-                   img.removeEventListener('load',onLoadHandler);
+               onErrorHandler = function() {
+                  imgReady.errback();
+                  img.removeEventListener('error', onErrorHandler);
+                  img.removeEventListener('load', onLoadHandler);
                },
-               listenImage = function(img){
-                   img.addEventListener('load', onLoadHandler);
-                   img.addEventListener('error', onErrorHandler);
+               listenImage = function(img) {
+                  img.addEventListener('load', onLoadHandler);
+                  img.addEventListener('error', onErrorHandler);
                };
-            if (constants.browser.firefox || constants.browser.isIE12) {
-               if (url.indexOf('id=') > -1) {
-                  url = url.replace(/\?id=(.+?)&/, function (a, b) {
-                     return a.replace(b, (new Date().getTime()));
-                  });
-               } else {
-                  url += (url.indexOf('?') > -1 ? '&' : '?') + ('&t=' + (new Date().getTime()));
-               }
-               listenImage(img);
-               img.setAttribute('src', url);
+
+            if (url.indexOf('id=') > -1) {
+               url = url.replace(/\?id=(.+?)&/, function(a, b) {
+                  return a.replace(b, (new Date().getTime()));
+               });
             } else {
-               xhr = new XMLHttpRequest();
-               xhr.open('GET', url, true);
-               xhr.responseType = 'blob';
-               xhr.onreadystatechange = function () {
-                  if (xhr.readyState === 4) {
-                     if (xhr.status >= 200 && xhr.status < 400) {
-                        listenImage(img);
-                        img.setAttribute('originsrc', url);
-                        img.setAttribute('src', constants.browser.chrome ? url : URL.createObjectURL(xhr.response));
-                     } else {
-                        onErrorHandler();
-                     }
-                  }
-               };
-               xhr.send(null);
+               url += (url.indexOf('?') > -1 ? '&' : '?') + ('&t=' + (new Date().getTime()));
             }
+            listenImage(img);
+            img.setAttribute('src', url);
          }
 
          function reload(elem) {
