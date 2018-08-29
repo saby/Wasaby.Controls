@@ -1,4 +1,10 @@
-<ws:template name="buttonContent">
+<a attr:class="controls-BaseButton_withHref controls-Button_style-{{_style}}{{_state}}
+             controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
+             controls-Button_type-{{_typeWithSize}}
+             {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
+    attr:title="{{_options.tooltip}}"
+    on:click="_clickHandler()"
+    attr:href="{{_options.href}}">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}}">
         <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon {{_icon}} {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + _state}}"></i>
@@ -9,22 +15,4 @@
            </span>
         </ws:if>
     </span>
-</ws:template>
-
-<ws:template name="tagresolver">
-    <ws:if data="{{_options.href}}">
-        <a attr:class="controls-BaseButton_withHref"><ws:partial template="buttonContent"/></a>
-    </ws:if>
-    <ws:else>
-        <span attr:class="controls-BaseButton"><ws:partial template="buttonContent"/></span>
-    </ws:else>
-</ws:template>
-
-<ws:partial template="tagresolver" attr:class="controls-Button_style-{{_style}}{{_state}}
-             controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
-             controls-Button_type-{{_typeWithSize}}
-             {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
-    attr:title="{{_options.tooltip}}"
-    on:click="_clickHandler()"
-    attr:href="{{_options.href}}">
-</ws:partial>
+</a>
