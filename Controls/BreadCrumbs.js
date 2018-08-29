@@ -1,6 +1,6 @@
 define('Controls/BreadCrumbs', [
    'Core/Control',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/BreadCrumbs/Utils',
    'Controls/Utils/FontLoadUtil',
    'tmpl!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
@@ -19,6 +19,7 @@ define('Controls/BreadCrumbs', [
     * @mixes Controls/interface/IBreadCrumbs
     * @control
     * @public
+    * @author Зайцев А.С.
     *
     * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */

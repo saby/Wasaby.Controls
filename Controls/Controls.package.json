@@ -40,10 +40,18 @@
     "Controls/Filter/*"
   ],
   "exclude": [
-    "Controls/Filter/_FilterCompatible",
-    "Controls/Filter/OldPanelOpener"
+    "Controls/Filter/Button/_FilterCompatible",
+    "Controls/Filter/Button/OldPanelOpener",
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
   ],
   "output": "controls-filter.package.js"
+}, {
+  "include": [
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
+  ],
+  "output": "controls-filter-panel.package.js"
 }, {
   "include": [
     "Controls/Filter/Button/_FilterCompatible",
@@ -66,12 +74,14 @@
     "Controls/Input/*"
   ],
   "exclude": [
-    "Controls/Input/RichArea"
+    "Controls/Input/RichArea",
+    "Controls/Input/RichArea/*"
   ],
   "output": "controls-input.package.js"
 }, {
   "include": [
-    "Controls/Input/RichArea"
+    "Controls/Input/RichArea",
+    "Controls/Input/RichArea/*"
   ],
   "output": "controls-richarea.package.js"
 }, {
@@ -118,7 +128,8 @@
   "output": "controls-toggle.package.js"
 }, {
   "include": [
-    "Controls/Utils/*"
+    "Controls/Utils/*",
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-utils.package.js"
 }, {
@@ -141,6 +152,9 @@
 }, {
   "include": [
     "Controls/Calendar/*"
+  ],
+  "exclude": [
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
 }]

@@ -1,4 +1,5 @@
 <div>
+   <ws:partial template="{{_options.content}}" on:toggleIndicator="_toggleIndicatorHandler()" attr:class="controls-loading-indicator_content"/>
    <ws:if data="{{ isLoading }}">
       <div class="controls-loading-indicator
       {{isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local'}}
@@ -12,5 +13,4 @@
          </ws:if>
       </div>
    </ws:if>
-   <ws:partial template="{{_options.content}}" on:toggleIndicator="_toggleIndicatorHandler()"/>
 </div>

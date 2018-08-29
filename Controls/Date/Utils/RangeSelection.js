@@ -1,8 +1,6 @@
 define('Controls/Date/Utils/RangeSelection', [
-   'Core/helpers/Object/isEmpty',
    'Controls/Utils/Date'
 ], function(
-   isEmpty,
    DateUtil
 ) {
    'use strict';

@@ -18,7 +18,7 @@
          tooltip="{{_tooltip}}"
          on:tagHover="_tagStyleHandler()"
          on:tagClick="_tagStyleClickHandler()"
-         attr:class="demo-TextBox"
+         attr:class="demo-TextBox ControlsDemo-Text__demo"
       />
    </ws:componentClass>
    <ws:componentProperty>
@@ -35,10 +35,13 @@
        <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
       <div>
          <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
-         <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick"
+         <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick" attr:class="ControlsDemo-Text__propertyGrid"
                                       bind:readOnlyValue="_readOnly"
                                       on:validationErrorsValueChanged="valueChangedHandler()"
                                       bind:validationErrorsValue="_validationErrorsValue"/>
+      </div>
+      <div>
+         <Controls.Button attr:class="demo-pasteButton" on:click="paste_text()" style="linkMain3" caption="paste"/>
       </div>
       <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
    </ws:componentProperty>

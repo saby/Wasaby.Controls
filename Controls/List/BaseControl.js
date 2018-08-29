@@ -9,7 +9,6 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
@@ -27,7 +26,6 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   multiSelectTpl,
    RecordSet,
    tUtil,
    aUtil
@@ -146,9 +144,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollListEdge: function(self, direction) {
-         if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScrollEdge(direction);
-         }
+
       },
 
       scrollToEdge: function(self, direction) {
@@ -259,15 +255,18 @@ define('Controls/List/BaseControl', [
 
       /**
        * Обработать прокрутку списка виртуальным скроллом
-       * @param scrollTop
        */
-      handleListScroll: function(self, scrollTop) {
+      handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScroll(scrollTop);
+            if (position === 'middle') {
+               self._scrollPagingCtr.handleScroll(scrollTop);
+            } else {
+               self._scrollPagingCtr.handleScrollEdge(position);
+            }
          }
       },
 
@@ -368,6 +367,7 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -380,7 +380,7 @@ define('Controls/List/BaseControl', [
     * @category List
     */
 
-   var BaseControl = Control.extend({
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -395,7 +395,6 @@ define('Controls/List/BaseControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
-      _multiSelectTpl: multiSelectTpl,
 
       _needScrollCalculation: false,
       _loadOffset: 100,
@@ -505,6 +504,10 @@ define('Controls/List/BaseControl', [
             this._scrollPagingCtr.destroy();
          }
 
+         if (this._listViewModel) {
+            this._listViewModel.destroy();
+         }
+
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
@@ -531,7 +534,7 @@ define('Controls/List/BaseControl', [
             case 'loadBottom': _private.onScrollLoadEdge(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
          }

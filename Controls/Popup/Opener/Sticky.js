@@ -9,7 +9,7 @@ define('Controls/Popup/Opener/Sticky',
        * @class Controls/Popup/Opener/Sticky
        * @mixes Controls/interface/IStickyOpener
        * @control
-       * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/Base
        */

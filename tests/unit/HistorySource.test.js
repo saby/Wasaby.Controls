@@ -8,9 +8,10 @@ define(
       'WS.Data/Adapter/Sbis',
       'WS.Data/Entity/Model',
       'Core/Deferred',
-      'WS.Data/Query/Query'
+      'WS.Data/Query/Query',
+      'Controls/History/Constants'
    ],
-   (historySource, historyService, DataSet, Memory, RecordSet, SbisAdapter, Model, Deferred, Query) => {
+   (historySource, historyService, DataSet, Memory, RecordSet, SbisAdapter, Model, Deferred, Query, Constants) => {
       describe('History Source', () => {
          let items = [
             {
@@ -245,6 +246,18 @@ define(
                hSource.update(myItem, meta);
                historyItems = hSource.getItems();
                assert.equal(historyItems.at('1').get('pinned'), false);
+            });
+            it('checkPinnedAmount', function() {
+               let list = new RecordSet();
+
+               for (var i = 0; i < Constants.MAX_HISTORY; i++) {
+                  list.add(new Model());
+               }
+
+               assert.isFalse(historySource._private.checkPinnedAmount(list));
+
+               list.remove(list.at(9));
+               assert.isTrue(historySource._private.checkPinnedAmount(list));
             });
             it('updateRecent', function() {
                let meta = {

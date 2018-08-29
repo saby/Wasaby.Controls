@@ -9,9 +9,7 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
       
       /**
        * Сслыка, которая может использоваться в качестве метки поля связи.
-       * Так же можно положить её в placeholder поля связи.
-       * Клик по ссылке посылает комманду showSelector. Если ссылка используется в качестве метки,
-       * то нужно задать опцию {@link owner}, чтобы комманду обработало поле связи с имененем, указанном в {@link owner}.
+       * Пример создания метки в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/config/#_3 статье}.
        * @class SBIS3.CONTROLS/FieldLink/Link
        * @extends WSControls/Buttons/ButtonBase
        * @mixes SBIS3.CONTROLS/FieldLink/LinkDocs
@@ -26,6 +24,13 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
       var FieldLink_Link = ButtonBase.extend({
          _dotTplFn: dotTplFn,
          $constructor: function() {
+
+            /**
+             * @command showSelector
+             * @name SBIS3.CONTROLS/FieldLink/Link#showSelector
+             * @type {string}
+             */
+
             this._options.command = 'showSelector';
             // Если ссылка находится внутри поля связи (placeholder) фокус принимать она не должна.
             this._options.activableByClick = false;

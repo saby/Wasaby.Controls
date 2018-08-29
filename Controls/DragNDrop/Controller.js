@@ -39,6 +39,24 @@ define('Controls/DragNDrop/Controller',
                y: moseEvent.pageY - startEvent.pageY,
                x: moseEvent.pageX - startEvent.pageX
             };
+         },
+         onMove: function(self, nativeEvent) {
+            var
+               dragObject;
+
+            if (self._startEvent) {
+               dragObject = self._getDragObject(nativeEvent, self._startEvent);
+               if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
+                  self._insideDragging = true;
+                  self._notify('_documentDragStart', [dragObject], {bubbling: true});
+               }
+               if (self._documentDragging) {
+                  self._notify('dragMove', [dragObject]);
+                  if (self._options.draggingTemplate) {
+                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
+                  }
+               }
+            }
          }
       };
 
@@ -58,29 +76,16 @@ define('Controls/DragNDrop/Controller',
          },
 
          _onMouseMove: function(event) {
-            var
-               dragObject,
-               startEvent = this._startEvent,
-               nativeEvent = event.nativeEvent;
-
             //необходимо проверять нажата ли кнопка при перемещении
-            if (!nativeEvent.buttons) {
+            if (!event.nativeEvent.buttons) {
                this._dragNDropEnded(event);
             }
 
-            if (this._startEvent) {
-               dragObject = this._getDragObject(nativeEvent, startEvent);
-               if (!this._documentDragging && _private.isDragStarted(startEvent, nativeEvent)) {
-                  this._insideDragging = true;
-                  this._notify('_documentDragStart', [dragObject], {bubbling: true});
-               }
-               if (this._documentDragging) {
-                  this._notify('dragMove', [dragObject]);
-                  if (this._options.draggingTemplate) {
-                     this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
-                  }
-               }
-            }
+            _private.onMove(this, event.nativeEvent);
+         },
+
+         _onTouchMove: function(event) {
+            _private.onMove(this, event.nativeEvent);
          },
 
          _onMouseUp: function(event) {
@@ -145,7 +150,7 @@ define('Controls/DragNDrop/Controller',
 
          _registerMouseMove: function() {
             this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
-            this._notify('register', ['touchmove', this, this._onMouseMove], {bubbling: true});
+            this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
          },
 
          _unregisterMouseMove: function() {

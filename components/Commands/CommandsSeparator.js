@@ -32,6 +32,14 @@ define('SBIS3.CONTROLS/Commands/CommandsSeparator', [
    var CommandsSeparator = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+         _options: {
+
+            // CommandsSeparator не должен активироваться по клику так же как MenuItem. Иначе, если открыть меню ->
+            // кликнуть по разделителю -> закрыть меню, уничтожается *активный* CommandSeparator, что приводит к
+            // восстановлению фокуса, когда это не нужно
+            activableByClick: false
+
+         }
       }
    });
 

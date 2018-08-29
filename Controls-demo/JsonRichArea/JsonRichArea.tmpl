@@ -1,6 +1,7 @@
 <div>
    <b><u>Controls/Input/RichArea, работающий через json:</u></b>
    <Controls.Input.RichArea
+         attr:class="ControlsDemo-JsonRichArea__richArea"
          name="richArea"
          json="{{json}}"
          on:jsonChanged="changeJson()"
@@ -12,6 +13,7 @@
    <b><u>Core/HtmlJson, построенный на том же json, для проверки поимки события:</u></b>
    <br />
    <Core.HtmlJson
+         attr:class="ControlsDemo-JsonRichArea__htmlJson"
          json="{{json}}"
    />
    <br />

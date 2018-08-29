@@ -16,6 +16,7 @@ define('Controls/Input/Dropdown',
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
@@ -23,6 +24,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
+       * @author Зайцев А.С.
        * @category Input
        * @demo Controls-demo/Dropdown/MenuVdom
        */

@@ -43,6 +43,7 @@ define('Controls/Container/List',
          resolveOptions: function(self, options) {
             self._options = options;
             self._filter = options.filter;
+            self._source = options.source;
             self._navigation = options.navigation;
          },
          
@@ -249,10 +250,15 @@ define('Controls/Container/List',
          _beforeUpdate: function(newOptions, context) {
             if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
                var currentFilter = _private.getFilterFromContext(this, this._context);
+               var source = this._source;
+               
                _private.resolveOptions(this, newOptions);
                
                if (this._searchMode) {
                   _private.cachedSourceFix(this);
+                  
+                  /* back memory source if now searchMode is on. (Will used cached source by task https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63) */
+                  this._source = source;
                }
                
                /* create searchController with new options */

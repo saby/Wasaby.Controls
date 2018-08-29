@@ -1071,7 +1071,7 @@ define('SBIS3.CONTROLS/FieldLink',
 
              if (!this._options.multiselect && keysArrLen) {
                 this._destroyCompatPlaceholder();
-             } else if (!this._compatPlaceholder) {
+             } else if (!this._compatPlaceholder && this.isEnabled()) {
                 this._createCompatiblePlaceholder();
              }
 
@@ -1194,6 +1194,15 @@ define('SBIS3.CONTROLS/FieldLink',
                    onShow: this._checkListItemRevert.bind(this)
                 }
              };
+          },
+   
+          _getLoadingContainer: function() {
+             return this.getContainer().find('.controls-FieldLink__fieldWrapper');
+          },
+   
+          _showLoadingIndicator: function() {
+             FieldLink.superclass._showLoadingIndicator.call(this);
+             this._loadingIndicator.addClass('controls-FieldLink__indicator-position').removeClass('controls-Suggest__loadingIndicator-position');
           },
 
           _checkListItemRevert: function(){

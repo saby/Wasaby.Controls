@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/MoneyTextBoxDocs',
        * @css @font-size_MoneyTextBox-decimals Размер шрифта копеек и точки в денежном поле.
        * @css @color_MoneyTextBox-decimals Цвет копеек и точки в денежном поле.
        * @public
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
    }
 );

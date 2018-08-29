@@ -128,6 +128,36 @@ define(
             assert.equal(indices.length, 1);
             assert.equal(indices[0], 0);
          });
+
+         it('add maximized popup', function() {
+            let Manager = getManager();
+            let id0 = Manager.show({
+               isModal: false,
+               maximize: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._hasMaximizePopup, true);
+
+            let id1 = Manager.show({
+               isModal: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._popupItems.at(1).hasMaximizePopup, true);
+
+            Manager.remove(id0);
+
+            assert.equal(Manager._hasMaximizePopup, false);
+
+            let id2 = Manager.show({
+               isModal: true,
+               testOption: 'created'
+            }, new BaseController());
+
+            assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
+
+         });
       });
    }
 );

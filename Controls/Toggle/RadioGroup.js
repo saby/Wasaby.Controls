@@ -15,9 +15,11 @@ define('Controls/Toggle/RadioGroup', [
     * @class Controls/Toggle/RadioGroup
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/ISingleSelectable
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemo
     *

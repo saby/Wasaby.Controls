@@ -62,5 +62,16 @@ define(
                title: 'Запись 1'
             }]);
          });
+
+         it('_beforeMount', () => {
+            let newOptions = {
+               filter: {
+                  test: 'test'
+               }
+            };
+            assert.equal(menu._filter, null);
+            menu._beforeMount(newOptions);
+            assert.equal(menu._filter, newOptions.filter);
+         });
       })
    });

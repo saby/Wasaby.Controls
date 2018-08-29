@@ -32,7 +32,7 @@ define('Controls/Input/Text',
        * @category Input
        * @demo Controls-demo/Input/Text/Text
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Зайцев А.С.
        */
 
 

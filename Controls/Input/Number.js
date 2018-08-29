@@ -36,7 +36,7 @@ define('Controls/Input/Number', [
     * @category Input
     * @demo Controls-demo/Input/Number/Number
     *
-    * @author Журавлев Максим Сергеевич
+    * @author Зайцев А.С.
     */
 
    /**
@@ -70,11 +70,15 @@ define('Controls/Input/Number', [
    'use strict';
 
    var _private = {
-      trimEmptyDecimals: function(self) {
+      trimEmptyDecimals: function(self, target) {
          if (!self._options.showEmptyDecimals) {
             var
                processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
             self._numberViewModel.updateValue(processedVal);
+
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            target.value = self._numberViewModel.getDisplayValue();
          }
       }
    };
@@ -129,6 +133,12 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
+
+         //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
+         if (this._isFocus) {
+            this._children.input.select();
+            this._isFocus = false;
+         }
       },
 
       _inputCompletedHandler: function(event, value) {
@@ -151,19 +161,23 @@ define('Controls/Input/Number', [
          return isNaN(val) ? undefined : val;
       },
 
-      _focusinHandler: function() {
+      _focusinHandler: function(e) {
          var
             self = this,
             value = this._numberViewModel.getValue();
 
          if (this._options.precision !== 0 && value && value.indexOf('.') === -1) {
             value = this._numberViewModel.updateValue(value + '.0');
+
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            e.target.value = this._numberViewModel.getDisplayValue();
+
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
-                  runDelayed(function() {
-                     self._children.input.select();
-                  });
+                  this._isFocus = true;
                } else {
+                  // TODO: сделать аналогично как input.select() https://online.sbis.ru/opendoc.html?guid=6136ae81-ef5a-4267-9d04-a416eabacfdc
                   runDelayed(function() {
                      self._children.input.setSelectionRange(value.length - 2, value.length - 2);
                   });
@@ -172,12 +186,12 @@ define('Controls/Input/Number', [
          }
       },
 
-      _focusoutHandler: function() {
-         _private.trimEmptyDecimals(this);
+      _focusoutHandler: function(e) {
+         _private.trimEmptyDecimals(this, e.target);
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
       }
    });
 

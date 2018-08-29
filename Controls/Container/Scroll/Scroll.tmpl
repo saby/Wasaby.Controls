@@ -6,8 +6,8 @@
               class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup
                      {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                      {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                     {{_displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-              on:resize="_resizeHandler()"
+                     {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _styleHideScrollbar === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+              on:controlResize="_resizeHandler()"
               on:scroll="_scrollHandler()">
             <ws:partial template="{{_options.content}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
          </span>
@@ -20,9 +20,7 @@
       <ws:if data="{{_pagingState.visible}}">
          <ws:partial template="content"
                      attr:class="controls-Scroll__content_paging"
-                     on:listTop="_scrollReachTopHandler()"
-                     on:scrollMove="_scrollMoveHandler()"
-                     on:listBottom="_scrollReachBottomHandler()"/>
+                     on:scrollMove="_scrollMoveHandler()"/>
       </ws:if>
       <ws:else>
          <ws:partial template="content"/>
@@ -55,7 +53,7 @@
                                on:onArrowClick="_arrowClickHandler()"/>
       </ws:if>
 
-      <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
+      <Controls.Event.Emitter event="controlResize" on:controlResize="_resizeHandler()"/>
    </div>
 </ws:template>
 

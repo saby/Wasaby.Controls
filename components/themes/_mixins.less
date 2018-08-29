@@ -5,11 +5,6 @@
 }
 
 .user-select(@select: none) {
-  -webkit-touch-callout: @select;
-  -webkit-user-select: @select;
-  -khtml-user-select: @select;
-  -moz-user-select: @select;
-  -ms-user-select: @select;
   user-select: @select;
 }
 .icon-16() {
@@ -116,20 +111,14 @@
 }
 
 .box-sizing(@type: border-box) {
-  -webkit-box-sizing: @type;
-  -moz-box-sizing: @type;
   box-sizing: @type;
 }
 
 .box-shadow(@string) {
-  -webkit-box-shadow: @string;
-  -moz-box-shadow: @string;
   box-shadow: @string;
 }
 
 .border-radius(@radius: 5px) {
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
   border-radius: @radius;
 }
 
@@ -189,8 +178,6 @@
 }
 
 .opacity(@opacity: 0.5) {
-  -webkit-opacity: @opacity;
-  -moz-opacity: @opacity;
   opacity: @opacity;
 }
 
@@ -213,9 +200,6 @@
 }
 
 .animation(@name, @duration: 300ms, @delay: 0ms, @ease: ease) {
-  -webkit-animation: @name @duration @delay @ease;
-  -moz-animation: @name @duration @delay @ease;
-  -ms-animation: @name @duration @delay @ease;
   animation: @name @duration @delay @ease
 }
 
@@ -227,10 +211,6 @@
 }
 
 .transform(@string){
-  -webkit-transform: @string;
-  -moz-transform: @string;
-  -ms-transform: @string;
-  -o-transform: @string;
   transform: @string;
 }
 
@@ -297,118 +277,59 @@
 
 .inline-flexbox() {
   display: inline-flex;
-  display: -ms-flexbox; // в ie10 нет inline-flex ("https://msdn.microsoft.com/en-us/library/hh673531(v=vs.85).aspx")
-  display: -ms-inline-flexbox;
-  display: -webkit-inline-flex;
 }
 
 .flexbox() {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 .flex-direction(@direction: row){
-  -webkit-flex-direction: @direction;
-  -moz-flex-direction: @direction;
-  -ms-flex-direction: @direction;
   flex-direction: @direction;
 }
 .flex-wrap(@wrap) {
   flex-wrap: @wrap;
-  -ms-flex-wrap: @wrap;
-  -webkit-flex-wrap: @wrap;
 }
 // Use .flex-shrink() forced: in IE10-11 flex-shrink is 0 by default (1 is default value defined in the specification)
 .flex-shrink(@shrink: 1) {
-   -webkit-flex-shrink: @shrink;
-   -ms-flex-negative: @shrink; //ie10
-   -ms-flex-shrink: @shrink;
    flex-shrink: @shrink;
 }
 // Cross-axis Alignment
 // - applies to: flex items
 // auto | flex-start | flex-end | center | baseline | stretch
 .align-self(@align: auto) {
-  .ms-flex-align-self(@align); // IE10
-  -webkit-align-self: @align;
-      -ms-align-self: @align;
-          align-self: @align;
-}
-.ms-flex-align-self(@align) when (@align = flex-start) {
-  -ms-flex-item-align: start;
+  align-self: @align;
 }
 
-.ms-flex-align-self(@align) when (@align = flex-end) {
-  -ms-flex-item-align: end;
-}
-
-.ms-flex-align-self(@align) when (@align = auto), (@align = center), (@align = baseline), (@align = stretch) {
-  -ms-flex-item-align: @align;
-}
 // Flex Direction and Wrap
 // - applies to: flex containers
 // <flex-direction> || <flex-wrap>
 .flex-flow(@flow) {
-  -webkit-flex-flow: @flow;
-      -ms-flex-flow: @flow;
-          flex-flow: @flow;
+  flex-flow: @flow;
 }
 // Flex basis
 // - the initial main size of the flex item
 // - applies to: flex itemsnitial main size of the flex item
 // <width>
 .flex-basis(@width: auto) {
-  -webkit-flex-basis: @width;
-  -ms-flex-preferred-size:@width;
-  -ms-flex-basis: @width;
   flex-basis: @width;
 }
 .flex-grow(@grow: 0) {
-   -webkit-flex-grow: @grow;
-   -ms-flex-positive: @grow;//ie10
-   -ms-flex-grow: @grow;
    flex-grow: @grow;
 }
 // Packing Flex Lines
 // - applies to: multi-line flex containers
 // flex-start | flex-end | center | space-between | space-around | stretch
 .align-content(@align: stretch) {
-  -webkit-align-content: @align;
-      -ms-align-content: @align;
           align-content: @align;
 }
 
 .justify-content(@justify: flex-start) {
-   -webkit-justify-content: @justify;
-   -ms-justify-content: @justify;
    justify-content: @justify;
-   //ie 10 fix
-   & when (@justify = space-between) {
-      -ms-flex-pack: justify;
-   }
-   & when (@justify = flex-end) {
-      -ms-flex-pack: end;
-   }
-   & when (@justify = flex-start) {
-      -ms-flex-pack: start;
-   }
-   & when (@justify = center) {
-      -ms-flex-pack: center;
-   }
 }
 .align-items(@align: stretch) {
-   -webkit-align-items: @align;
-   -ms-flex-align: @align; //ie10
-   -ms-align-items: @align;
    align-items: @align;
 }
 
 .order(@val) {
-  -webkit-box-ordinal-group: @val;
-  -moz-box-ordinal-group: @val;
-  -ms-flex-order: @val;
-  -webkit-order: @val;
   order: @val;
 }
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
@@ -550,9 +471,6 @@
 }
 
 .hyphens(@hyphenation) {
-  -webkit-hyphens: @hyphenation;
-  -moz-hyphens: @hyphenation;
-  -ms-hyphens: @hyphenation;
   hyphens: @hyphenation;
 }
 

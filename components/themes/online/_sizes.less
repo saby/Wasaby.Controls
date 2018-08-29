@@ -86,6 +86,7 @@
 @spacing_stackTemplate_head-maximized:          0 84px 0 12px;
 @top-space_stackTemplate_close-button:          5px;
 @top-space_stackTemplate_maximized-button:      7px;
+@right-space_stackTemplate_maximized-button:    44px;
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //DialogTemplate
@@ -377,7 +378,7 @@
 @spacing_DropdownList_arrowSubMenu:28px;
 @spacing_DropdownList_cross:       30px;
 @padding_DropdownList-item:     5px;
-@spacing_DropdownList-item-history: @spacing_DropdownList_arrowSubMenu;
+@spacing_DropdownList-item-history: 32px;
 @width_DropdownList-marker:     6px;
 @height_DropdownList-marker:    8px;
 @margin-top_DropdownList:       -8px;
@@ -655,6 +656,9 @@
 @width_ToggleCircle:                     12px;
 @height_ToggleCircle:                    12px;
 
+//ExportCustomizer
+@min-height_ExportCustomizer-Formatter-View-preview: 50px;
+
 //Path
 @font-size_Path-backButtonArrow:                      @default-icon-size;
 @spacing_Path-between-home-and-backButton:            8px;
@@ -671,11 +675,12 @@
 @height_BreadCrumbs-menuItem:                                32px;
 
 //FastFilter
-@icon-size_FastFilter:                      @icon-size_default;
+@icon-size_FastFilter-iconReset:                      @icon-size_default;
 @spacing_FastFilter-item:                   0;
 @height_FastFilter-iconArrow:               9px;
 @width_FastFilter-iconArrow:                16px;
-@margin-bottom_FastFilter-popup:            2px;
+@margin-top_FastFilter-popup:               @margin-top_DropdownList;
+@margin-left_FastFilter-popup:              2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @height-IconButton_size-m:               24px;
@@ -719,12 +724,13 @@
 //toggleButton
 @border-width_ToggleButton:               1px;
 @border-radius-ToggleButton:              2px;
-@height-ToggleButton_style_linkMain_size-m:              24px;
-@min-width-ToggleButton_style_linkMain_size-m:           24px;
+@height-ToggleButton_size-s:              24px;
+@min-width-ToggleButton_size-s:           24px;
 @height-ToggleButton_size-m:        28px;
 @min-width-ToggleButton_size-m:     28px;
-@height-ToggleButton_style_linkMain_size-l:              32px;
-@min-width-ToggleButton_style_linkMain_size-l:           32px;
+@height-ToggleButton_size-l:              32px;
+@min-width-ToggleButton_size-l:           32px;
+@padding_ToggleButton-wrapper_s:    0;
 @padding_ToggleButton-wrapper_m:    0;
 @padding_ToggleButton-wrapper_l:          0;
 //Notification
@@ -771,3 +777,5 @@
 //MasterList
 @border-width_MasterList-right: 3px;
 @border-width_MasterList-selected-item: 1px 0 1px 0;
+//ComboBox
+@margin-top_ComboBox-popup: -@border-width_InputRender;

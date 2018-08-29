@@ -150,14 +150,39 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
       },
       init: function() {
          Button.superclass.init.call(this);
-         this.subscribe('onAfterShow', function() {
-            // событие стреляет рано. нужно дождаться, когда предки тоже успеют отобразиться в DOM
-            setTimeout(function () {
-               if (this._options.primary === true) {
-                  this._registerDefaultButton();
-               }
-            }.bind(this), 0);
-         }.bind(this));
+         this._tryRegisterPrimary();
+      },
+
+      _tryRegisterPrimary: function() {
+         var self = this;
+
+         function registerIfPrimary() {
+            if (self._options.primary === true && !self._defaultAction) {
+               self._registerDefaultButton();
+            }
+         }
+
+         // Пробуем зарегистрироваться в качестве кнопки по умолчанию сразу, и подписываемся на onAfterVisibilityChange
+         // на случай если кнопка или какой-то из ее родителей еще скрыт
+         registerIfPrimary();
+         self.subscribe('onAfterVisibilityChange', function() {
+            registerIfPrimary();
+         });
+      },
+
+      // Нужно стрелять событием onAfterVisibilityChange при изменении видимости кнопки.
+      // ButtonBase этого не делает
+      _setVisibility: function() {
+         var
+            visibleBefore = this.isVisible(),
+            visibleAfter;
+
+         Button.superclass._setVisibility.apply(this, arguments);
+         visibleAfter = this.isVisible();
+
+         if (visibleAfter !== visibleBefore) {
+            this._notify('onAfterVisibilityChange', visibleAfter);
+         }
       },
 
       setCaption: function(caption) {
@@ -294,7 +319,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
 
             // action создаем только после отмены регистрации, иначе он зануляется
             this._defaultAction = function(e) {
-               if (this && this.isEnabled()) {
+               if (this && this.isEnabled() && this.isVisibleWithParents()) {
                   this._onClickHandler(e);
                   return false;
                } else {

@@ -19,6 +19,7 @@ define('Controls/List', [
     * @class Controls/List
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -27,12 +28,12 @@ define('Controls/List', [
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IEditInPlace
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */
 
-   var ListControl = Control.extend({
+   var ListControl = Control.extend(/** @lends Controls/List */{
       _template: ListControlTpl,
 
       _items: null,

@@ -164,39 +164,41 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
                 if(curStructure.hasOwnProperty(tplName)) {
                    newStructure[tplName] = curStructure[tplName];
                 } else if (newStructure.hasOwnProperty(tplName)) {
-                   delete newStructure[tplName]
+                   delete newStructure[tplName];
                 }
-             };
+             },
+            structureElement;
    
          noSaveFilters = noSaveFilters || [];
+   
+         newStructure.forEach(function(elem, index) {
+            var elemFromCurrentStructure = objectFind(currentStructure, function(elem) {
+               structureElement = newStructure[index];
+               /* По неустановленной причине, в структуре из истории могут появляться null'ы,
+                скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
+               if(!structureElement || noSaveFilters.indexOf(structureElement.filterField) !== -1) {
+                  return false;
+               } else {
+                  hasStructureElem = structureElement.internalValueField === elem.internalValueField;
          
-         for (var key in newStructure) {
-            if (newStructure.hasOwnProperty(key)) {
-               var elemFromCurrentStructure = objectFind(currentStructure, function(elem) {
-                  /* По неустановленной причине, в структуре из истории могут появляться null'ы,
-                   скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
-                  if(!newStructure[key] || noSaveFilters.indexOf(newStructure[key].filterField) !== -1) {
-                     return false;
-                  } else {
-                     hasStructureElem = newStructure[key].internalValueField === elem.internalValueField;
-
-                     if(hasStructureElem) {
-                        checkTpl(TPL_FIELD, elem, newStructure[key]);
-                        checkTpl(HISTORY_TPL_FIELD, elem, newStructure[key]);
-                     }
-                     return hasStructureElem;
+                  if(hasStructureElem) {
+                     checkTpl(TPL_FIELD, elem, structureElement);
+                     checkTpl(HISTORY_TPL_FIELD, elem, structureElement);
                   }
-               });
-
-               if(!elemFromCurrentStructure) {
-                  toDelete.push(key);
+                  return hasStructureElem;
                }
+            });
+   
+            if(!elemFromCurrentStructure) {
+               toDelete.push(structureElement);
             }
-         }
-
-         toDelete.forEach(function(elem) {
-            delete newStructure[elem];
          });
+
+         if (toDelete.length) {
+            toDelete.forEach(function(elem) {
+               newStructure.splice(newStructure.indexOf(elem), 1);
+            });
+         }
       },
 
       /* Нечестный способ удалить значения структуры по ключам фильтра.

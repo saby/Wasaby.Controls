@@ -1,9 +1,7 @@
 define('Controls/Date/Utils/DateRangeQuantum', [
-   'Core/helpers/Object/isEmpty',
-   'Controls/Utils/Date'
+   'Core/helpers/Object/isEmpty'
 ], function(
-   isEmpty,
-   DateUtil
+   isEmpty
 ) {
    'use strict';
 

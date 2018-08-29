@@ -16,8 +16,9 @@ define('Controls/Popup/Compatible/Layer', [
    'use strict';
 
    var loadDeferred;
+   var jQueryModuleName = 'cdn!jquery/3.3.1/jquery-min.js';
    var compatibleDeps = [
-      'cdn!jquery/3.3.1/jquery-min.js',
+      jQueryModuleName,
       'Core/Control',
       'Lib/Control/Control.compatible',
       'Lib/Control/AreaAbstract/AreaAbstract.compatible',
@@ -222,44 +223,59 @@ define('Controls/Popup/Compatible/Layer', [
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
+            var loadDepsDef = new Deferred();
             loadDeferred = new Deferred();
+
+            /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
+            * например, autosize*/
+            if (window.jQuery) {
+               compatibleDeps.splice(0, 1);
+            }
 
             deps = (deps || []).concat(compatibleDeps);
 
             var parallelDef = new ParallelDeferred(),
                result;
 
-            var loadDepsDef = moduleStubs.require(deps).addCallback(function(_result) {
-               if (window && window.$) {
-                  Constants.$win = $(window);
-                  Constants.$doc = $(document);
-                  Constants.$body = $('body');
-               }
+            // Сначала отдельно загрузим jQuery, чтобы можно было безопасно загружать другие модули,
+            // которые могут ее использовать
+            moduleStubs.require([jQueryModuleName]).addCallback(function() {
+               moduleStubs.require(deps).addCallback(function(_result) {
+                  if (window && window.$) {
+                     Constants.$win = $(window);
+                     Constants.$doc = $(document);
+                     Constants.$body = $('body');
+                  }
 
-               // constants.compat = tempCompatVal; //TODO выпилить
-               (function($) {
-                  $.fn.wsControl = function() {
-                     var control = null,
-                        element;
-                     try {
-                        element = this[0];
-                        while (element) {
-                           if (element.wsControl) {
-                              control = element.wsControl;
-                              break;
+                  // constants.compat = tempCompatVal; //TODO выпилить
+                  (function($) {
+                     $.fn.wsControl = function() {
+                        var control = null,
+                           element;
+                        try {
+                           element = this[0];
+                           while (element) {
+                              if (element.wsControl) {
+                                 control = element.wsControl;
+                                 break;
+                              }
+                              element = element.parentNode;
                            }
-                           element = element.parentNode;
+                        } catch (e) {
                         }
-                     } catch (e) {
-                     }
-                     return control;
-                  };
-               })(jQuery);
+                        return control;
+                     };
+                  })(jQuery);
 
-               result = _result;
-            }).addErrback(function(e) {
-               IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
+                  result = _result;
+                  loadDepsDef.callback(result);
+               }).addErrback(function(e) {
+                  IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
+                  loadDepsDef.errback(e);
+               });
             });
+
+
             parallelDef.push(loadDepsDef);
             var parallelDefRes = parallelDef.done().getResult();
 
@@ -295,9 +311,16 @@ define('Controls/Popup/Compatible/Layer', [
             return loadDeferred;
          }
          var fakeDeferred = new Deferred();
-         loadDeferred.addCallback(function() {
+
+         //Если из колбэка основного дефереда вернули другой деферед, то после того, как основной деферед получит статус
+         //isReady = true, он проигнорирует все колбэки, которые навешены после завершения.
+         if (loadDeferred.isReady()) {
             fakeDeferred.callback();
-         });
+         } else {
+            loadDeferred.addCallback(function() {
+               fakeDeferred.callback();
+            });
+         }
          return fakeDeferred;
       }
    };

@@ -12,6 +12,7 @@ define('Controls/TreeGrid', [
     * @class Controls/TreeGrid
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -22,10 +23,11 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/interface/ITreeControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 
-   var Tree = Grid.extend({
+   var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
       _viewName: 'Controls/List/TreeGridView/TreeGridView',
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {

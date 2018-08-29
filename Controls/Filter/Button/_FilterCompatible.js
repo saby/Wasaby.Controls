@@ -15,6 +15,7 @@ define('Controls/Filter/Button/_FilterCompatible',
        * @class Controls/Filter/Button/_FilterCompatible
        * @control
        * @public
+       * @author Герасимов А.М.
        */
       
       'use strict';

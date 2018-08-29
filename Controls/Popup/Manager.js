@@ -22,6 +22,11 @@ define('Controls/Popup/Manager',
             var self = this;
             var removeDeferred = element.controller.elementDestroyed(element, container, id);
             _private.redrawItems(self._popupItems);
+
+            if (element.popupOptions.maximize) {
+               self._hasMaximizePopup = false;
+            }
+
             return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
                _private.updateOverlay.call(self);
@@ -60,6 +65,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                element.controller.elementMaximized(element, _private.getItemContainer(id), state);
+               this._notify('managerPopupMaximized', [element, this._popupItems], {bubbling: true});
                return true;
             }
             return false;
@@ -124,6 +130,7 @@ define('Controls/Popup/Manager',
          _template: template,
          _afterMount: function() {
             ManagerController.setManager(this);
+            this._hasMaximizePopup = false;
             this._popupItems = new List();
          },
 
@@ -143,16 +150,24 @@ define('Controls/Popup/Manager',
           * @param controller стратегия позиционирования попапа
           */
          show: function(options, controller) {
-            var item = {
-               id: randomId('popup-'),
-               isModal: options.isModal,
-               controller: controller,
-               popupOptions: options
-            };
+            var item = this._createItemConfig(options, controller);
             controller.getDefaultConfig(item);
             _private.addElement.call(this, item);
             _private.redrawItems(this._popupItems);
             return item.id;
+         },
+
+         _createItemConfig: function(options, controller) {
+            if (!this._hasMaximizePopup && options.maximize) {
+               this._hasMaximizePopup = true;
+            }
+            return {
+               id: randomId('popup-'),
+               isModal: options.isModal,
+               controller: controller,
+               popupOptions: options,
+               hasMaximizePopup: this._hasMaximizePopup
+            };
          },
 
          /**

@@ -17,28 +17,28 @@ define(
       'use strict';
 
       describe('Controls.Controllers.QueryParamsController', function () {
-         var data, dataDown, dataRs, dataRsDown;
+         var data, databyLoad, dataRs, dataRsbyLoad;
 
          beforeEach(function() {
             data = [
-               {id : 1, title : 'Первый'},
-               {id : 2, title : 'Второй'},
-               {id : 3, title : 'Третий'},
-               {id : 4, title : 'Четвертый'}
+               {id : 1, title : 'Первый', field: 1},
+               {id : 2, title : 'Второй', field: 1},
+               {id : 3, title : 'Третий', field: 2},
+               {id : 4, title : 'Четвертый', field: 2}
             ];
-            dataDown = [
-               {id : 5, title : 'Первый'},
-               {id : 6, title : 'Второй'},
-               {id : 7, title : 'Третий'},
-               {id : 8, title : 'Четвертый'}
+            databyLoad = [
+               {id : 5, title : 'Первый', field: 3},
+               {id : 6, title : 'Второй', field: 3},
+               {id : 7, title : 'Третий', field: 3},
+               {id : 8, title : 'Четвертый', field: 3}
             ];
             dataRs = new RecordSet({
                rawData: data,
                idProperty : 'id'
             });
 
-            dataRsDown = new RecordSet({
-               rawData: dataDown,
+            dataRsbyLoad = new RecordSet({
+               rawData: databyLoad,
                keyProperty : 'id'
             })
 
@@ -69,8 +69,8 @@ define(
                assert.isTrue(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
 
 
-               dataRsDown.setMetaData({more: false});
-               pNav.calculateState(dataRsDown, 'down');
+               dataRsbyLoad.setMetaData({more: false});
+               pNav.calculateState(dataRsbyLoad, 'down');
 
                assert.equal(3, pNav._nextPage, 'State nextPage is incorrect after load down');
                assert.isFalse(pNav._more, 'State more is incorrect after load down');
@@ -93,8 +93,8 @@ define(
                assert.isTrue(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
                assert.isFalse(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
 
-               dataRsDown.setMetaData({more: 8});
-               pNav.calculateState(dataRsDown, 'down');
+               dataRsbyLoad.setMetaData({more: 8});
+               pNav.calculateState(dataRsbyLoad, 'down');
                assert.equal(2, pNav._nextPage, 'State nextPage is incorrect after load down');
                assert.equal(8, pNav._more, 'State more is incorrect after load down');
                assert.isFalse(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after load down');
@@ -140,8 +140,9 @@ define(
          describe('PositionNavigation', function () {
             it('prepareSource', function () {
                var pNav = new PositionNavigation({
-                  page: 1,
-                  pageSize: 4
+                  field: 'field',
+                  direction: 'both',
+                  position: 1
                });
                var source = new SbisService({
                   endpoint: 'ОбъектБл',
@@ -151,6 +152,138 @@ define(
                var options = source.getOptions();
                assert.equal(SbisService.prototype.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
 
+            });
+
+            it('calculate state with first query', function () {
+               var pNav = new PositionNavigation({
+                  field: 'field',
+                  pageSize: 4,
+                  direction: 'after',
+                  position: 1
+               });
+
+               assert.deepEqual({before: false, after: false}, pNav._more, 'Calculate state: wrong _more value');
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true});
+               pNav.calculateState(dataRs);
+               assert.deepEqual({before: false, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+
+               pNav = new PositionNavigation({
+                  field: ['field', 'id'],
+                  direction: 'both',
+                  position: 1
+               });
+
+               //first query with direction: both and multiple "field" value
+               dataRs.setMetaData({more: {after: true, before: false}});
+               pNav.calculateState(dataRs);
+               assert.deepEqual({before: false, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual([1, 1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+            });
+
+            it('calculate state with load to direction query', function () {
+               var pNav = new PositionNavigation({
+                  field: 'field',
+                  direction: 'after',
+                  position: 1
+               });
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true});
+               pNav.calculateState(dataRs);
+               assert.isTrue(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
+
+               //load down
+               dataRsbyLoad.setMetaData({more: false});
+               pNav.calculateState(dataRsbyLoad, 'down');
+               assert.isFalse(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
+               assert.deepEqual({before: false, after: false}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([3], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+               /**/
+
+               pNav = new PositionNavigation({
+                  field: ['field', 'id'],
+                  direction: 'both',
+                  position: 1
+               });
+
+               //first query with direction: both
+               dataRs.setMetaData({more: {after: true, before: true}});
+               pNav.calculateState(dataRs);
+               assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
+
+               //load up
+               dataRsbyLoad.setMetaData({more: true});
+               pNav.calculateState(dataRsbyLoad, 'up');
+               assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
+               assert.deepEqual({before: true, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual([3, 5], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+            });
+
+
+            it('prepare query params first load', function () {
+               var params, pNav;
+               pNav = new PositionNavigation({
+                  field: 'field',
+                  pageSize: 4,
+                  direction: 'after',
+                  position: 1
+               });
+
+               params = pNav.prepareQueryParams();
+               assert.deepEqual({filter : {'field>=' : 1}}, params, 'Wrong query params');
+
+
+               pNav = new PositionNavigation({
+                  field: ['field', 'id'],
+                  pageSize: 4,
+                  direction: 'before',
+                  position: [2, 1]
+               });
+
+               params = pNav.prepareQueryParams();
+               assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}}, params, 'Wrong query params');
+
+
+               pNav = new PositionNavigation({
+                  field: ['field'],
+                  pageSize: 4,
+                  direction: 'both',
+                  position: [3]
+               });
+
+               params = pNav.prepareQueryParams();
+               assert.deepEqual({filter : {'field~' : 3}}, params, 'Wrong query params');
+            });
+
+            it('prepare query params load to direction', function () {
+               var params, pNav;
+               pNav = new PositionNavigation({
+                  field: ['field', 'id'],
+                  direction: 'both',
+                  position: 1
+               });
+
+               //first query with direction: both
+               dataRs.setMetaData({more: {after: true, before: true}});
+               pNav.calculateState(dataRs);
+
+
+               params = pNav.prepareQueryParams('up');
+               assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}}, params, 'Wrong query params');
+
+
+               params = pNav.prepareQueryParams('down');
+               assert.deepEqual({filter : {'field>=' : 2, 'id>=' : 4}}, params, 'Wrong query params');
             });
          })
       });

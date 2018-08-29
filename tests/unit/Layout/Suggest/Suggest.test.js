@@ -17,6 +17,30 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          return self;
       };
       
+      var getContainer = function(size) {
+         return {
+            getBoundingClientRect: function() {
+               return {
+                  toJSON: function() {
+                     return size;
+                  }
+               };
+            }
+         };
+      };
+   
+      var getDropDownContainer = function(height) {
+         return {
+            getBoundingClientRect: function() {
+               return {
+                  bottom: 0,
+                     top: 0,
+                     height: height
+               };
+            }
+         };
+      };
+      
       it('Suggest::_private.hasMore', function () {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
          assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
@@ -57,13 +81,20 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
       it('Suggest::_close', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._options.suggestStyle = 'overInput';
          var value = 'test';
+         
          suggestComponent._notify = function(event, val) {
             if (event === 'valueChanged') {
                value = val[0];
             }
          };
+   
+         suggestComponent._options.suggestStyle = 'overInput';
+         suggestComponent._searchValue = '';
+         suggestComponent._close();
+         assert.equal(value, 'test');
+   
+         suggestComponent._searchValue = 'test';
          suggestComponent._close();
          assert.equal(value, '');
          assert.equal(suggestComponent._searchValue, '');
@@ -113,21 +144,33 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
       });
    
-      it('Suggest::_private.updateFilter', function () {
+      it('Suggest::_private.prepareFilter', function() {
          var self = getComponentObject();
          self._options.searchParam = 'searchParam';
-         self._options.filter = {
-            filterTest: 'filterTest'
-         };
-         var tab = 1;
-         var value = 'test';
          var resultFilter = {
             currentTab: 1,
             searchParam: 'test',
             filterTest: 'filterTest'
          };
    
-         Suggest._private.updateFilter(self, 'test', 1);
+         var filter = Suggest._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1);
+         assert.deepEqual(filter, resultFilter);
+      });
+   
+      it('Suggest::_private.setFilter', function() {
+         var self = getComponentObject();
+         self._options.searchParam = 'searchParam';
+         self._searchValue = 'test';
+         self._tabsSelectedKey = 1;
+         var filter = {
+            test: 'test'
+         };
+         var resultFilter = {
+            searchParam: 'test',
+            test: 'test',
+            currentTab: 1
+         };
+         Suggest._private.setFilter(self, filter);
          assert.deepEqual(self._filter, resultFilter);
       });
    
@@ -136,67 +179,57 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          var suggestHeight = 200;
    
          self._children = {
-            suggestionsContainer: {
-               getBoundingClientRect: function() {
-                  return {
-                     height: suggestHeight
-                  };
-               },
-               offsetHeight: 200 //suggestHeight
-            }
+            suggestionsContainer: getContainer({
+               top: 0,
+               bottom: 0,
+               get height() {
+                 return suggestHeight;
+               }
+            })
          };
-         var mockContainer = {};
-         mockContainer.getBoundingClientRect = function() {
-            return {
-               bottom: 324,
-               top: 300//bottom of input
-            };
-         };
-         self._container = mockContainer;
+         self._container = getContainer({
+            bottom: 324,
+            top: 300
+         });
          
          self._orient = null;
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 900}), '-down');
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 400}), '-up');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-up');
          
          self._orient = null;
          self._options.suggestStyle = 'overInput';
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 900}), '-down');
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 400}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-down');
          
          /* a special case, when suggest must opened down */
          suggestHeight = 400;
-         assert.equal(Suggest._private.calcOrient(self, {innerHeight: 500}), '-down');
+         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(500)), '-down');
       });
    
       it('Suggest::_private.calcHeight', function() {
          var self = getComponentObject();
-         var suggestHeight;
-      
-         self._children = {
-            suggestionsContainer: {
-               getBoundingClientRect: function() {
-                  return {
-                     height: suggestHeight
-                  };
-               },
-            }
-         };
-         var mockContainer = {};
-         mockContainer.getBoundingClientRect = function() {
-            return {
-               bottom: 324,
-               top: 300//bottom of input
-            };
-         };
-         self._container = mockContainer;
-         self._height = 'auto';
-         suggestHeight = 200;
-         assert.equal(Suggest._private.calcHeight(self, '-down', {innerHeight: 900}), 'auto');
-         assert.equal(Suggest._private.calcHeight(self, '-down', {innerHeight: 400}), '76px');
+         var suggestHeight = 200;
    
-         assert.equal(Suggest._private.calcHeight(self, '-up', {innerHeight: 900}), 'auto');
+         self._children = {
+            suggestionsContainer: getContainer({
+               top: 0,
+               bottom: 0,
+               get height() {
+                  return suggestHeight;
+               }
+            })
+         };
+         self._container = getContainer({
+            bottom: 324,
+            top: 300
+         });
+         self._height = 'auto';
+         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(900)), 'auto');
+         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(400)), '76px');
+   
+         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(900)), 'auto');
          suggestHeight = 400;
-         assert.equal(Suggest._private.calcHeight(self, '-up', {innerHeight: 400}), '300px');
+         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(400)), '300px');
       });
    
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
@@ -298,17 +331,24 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(self._tabsSelectedKey, 'testId2');
       });
    
-      it('Suggest::move focus to input after change tab', function() {
+      it('Suggest::_tabsSelectedKeyChanged', function() {
          var suggestComponent = new Suggest();
          var suggestActivated = false;
          suggestComponent.activate = function() {
             suggestActivated = true;
          };
+         suggestComponent._filter = {};
+         suggestComponent._filter.currentTab = null;
+         suggestComponent._tabsSelectedKey = 'checkChanged';
    
+         /* tabSelectedKey not changed, filter must be not changed too */
+         suggestComponent._tabsSelectedKeyChanged(null, 'checkChanged');
+         assert.equal(suggestComponent._filter.currentTab, null);
+   
+         /* tabSelectedKey changed, filter must be changed */
          suggestComponent._tabsSelectedKeyChanged(null, 'test');
-         
-         assert.isTrue(suggestActivated);
          assert.equal(suggestComponent._filter.currentTab, 'test');
+         assert.isTrue(suggestActivated);
       });
    
       it('Suggest::searchDelay on tabChange', function() {
