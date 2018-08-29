@@ -751,6 +751,35 @@ define([
          ctrl._onCheckBoxClick({}, 1, 1);
       });
 
+      it('_onItemClick', function() {
+         var cfg = {
+            keyProperty: 'id',
+            viewName: 'Controls/List/ListView',
+            source: source,
+            items: rs,
+            viewModelConstructor: ListViewModel
+         };
+         var originalEvent = {
+            target: {
+               closest: function(selector) {
+                  return selector === '.js-controls-ListView__checkbox';
+               }
+            }
+         };
+         var stopPropagationCalled = false;
+         var event = {
+            stopPropagation: function() {
+               stopPropagationCalled = true;
+            }
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl._onItemClick(event, rs.at(2), originalEvent);
+         assert.isTrue(stopPropagationCalled);
+         assert.equal(rs.at(2), ctrl._listViewModel._markedItem.getContents());
+      });
+
       describe('EditInPlace', function() {
          it('editItem', function(done) {
             var opt = {
