@@ -1,7 +1,7 @@
 define('Controls-demo/TestXslt/TestXslt', [
    'Core/Control',
    'tmpl!Controls-demo/TestXslt/TestXslt',
-   'Core/xslt-async', 
+   'Core/xslt-async',
    'css!Controls-demo/TestXslt/TestXslt'
 ], function(Control, template, Xslt) {
    'use strict';
@@ -11,7 +11,11 @@ define('Controls-demo/TestXslt/TestXslt', [
       xml: '',
       xsl: '',
       result: '',
+      status: 'Не проверено',
       change: function(e, target) {
+         if (this.status !== 'Не проверено') {
+            this.status = 'Не проверено';
+         }
          this[target] = e.target.value;
       },
       check: function() {
@@ -24,16 +28,10 @@ define('Controls-demo/TestXslt/TestXslt', [
          });
       },
       passed: function() {
-         this._children.infoBoxXslt.open({
-            target: this._children.check._container,
-            message: 'Correct'
-         });
+         this.status = 'Верно';
       },
       refused: function() {
-         this._children.infoBoxXslt.open({
-            target: this._children.check._container,
-            message: 'Wrong'
-         });
+         this.status = 'Неверно';
       }
    });
 });

@@ -1,8 +1,4 @@
 <div>
-   <Controls.Popup.Opener.InfoBox
-      name="infoBoxXslt"
-      attr:class="ControlsDemo-TestXslt__infobox"
-   />
 
    <Controls.Input.Area
       name="xml"
@@ -30,12 +26,13 @@
       on:input="change('result')"
       value="{{result}}"
    />
-
+   
    <Controls.Button
       name="check"
       attr:class="check ControlsDemo-TestXslt__check"
       caption="{{'проверить'}}"
       on:click="check()"
    />
+   <span class="ControlsDemo-TestXslt__status">{{ status }}</span>
 
 </div>
