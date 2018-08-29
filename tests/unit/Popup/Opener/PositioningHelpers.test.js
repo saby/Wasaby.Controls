@@ -193,6 +193,7 @@ define(
 
             it('Sticky state', function() {
                StickyController._checkContainer = () => { return false; };
+               StickyController._isElementVisible = () => { return true; };
                let itemConfig = {
                   popupOptions: {}
                };
