@@ -384,6 +384,12 @@ define('Controls/Container/Scroll',
                event.stopPropagation();
             },
 
+            /**
+             * Update the context value of sticky header.
+             * TODO: Плохой метод. Дублирование tmpl и вызов должен только в методе изменения видимости тени. Будет поправлено по https://online.sbis.ru/opendoc.html?guid=01c0fb63-9121-4ee4-a652-fe9c329eec8f
+             * @param shadowVisible
+             * @private
+             */
             _updateStickyHeaderContext: function(shadowVisible) {
                shadowVisible = (shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
 

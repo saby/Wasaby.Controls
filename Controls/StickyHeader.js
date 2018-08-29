@@ -51,7 +51,7 @@ define('Controls/StickyHeader',
           * type {Boolean} Determines whether the component is built on the Android mobile platform.
           * @private
           */
-         _shouldBeMobilePlatform: detection.isMobilePlatform,
+         _isMobilePlatform: detection.isMobilePlatform,
 
          constructor: function() {
             StickyHeader.superclass.constructor.call(this);
@@ -61,6 +61,7 @@ define('Controls/StickyHeader',
          _afterMount: function() {
             var children = this._children;
 
+            this._index = StickyHeader._index++;
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
                topTarget: children.observationTargetTop,
@@ -89,7 +90,7 @@ define('Controls/StickyHeader',
             this._model.update(entries);
 
             if (this._model.shouldBeFixed !== shouldBeFixed) {
-               this._updateOnFixation();
+               this._fixationStateChangeHandler();
             }
          },
 
@@ -97,9 +98,9 @@ define('Controls/StickyHeader',
           * To inform descendants about the fixing status. To update the state of the instance.
           * @private
           */
-         _updateOnFixation: function() {
+         _fixationStateChangeHandler: function() {
             var information = {
-               id: this.getId(),
+               id: this._index,
                shouldBeFixed: this._model.shouldBeFixed
             };
 
@@ -107,6 +108,8 @@ define('Controls/StickyHeader',
             this._notify('fixed', [information], {bubbling: true});
          }
       });
+
+      StickyHeader._index = 1;
 
       StickyHeader.contextTypes = function() {
          return {

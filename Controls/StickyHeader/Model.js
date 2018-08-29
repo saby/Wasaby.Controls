@@ -93,7 +93,7 @@ define('Controls/StickyHeader/Model',
          },
 
          /**
-          * Determines the content is fixed.
+          * Checks the content is fixed.
           * @returns {Boolean} Determines whether the content is fixed.
           * @private
           */

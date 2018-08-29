@@ -17,7 +17,7 @@ define('Controls/Container/Scroll/Model/StickyHeader',
       return simpleExtend.extend({
 
          /**
-          * @type {String|null} The ID of the sticking header.
+          * @type {Number|null} The ID of the sticking header.
           * @private
           */
          _stickyHeaderId: null,
@@ -35,7 +35,7 @@ define('Controls/Container/Scroll/Model/StickyHeader',
          },
 
          /**
-          * Determines the header is fixed.
+          * Checks the header is fixed.
           * @returns {boolean} Determines whether the header is fixed.
           */
          isFixed: function() {
