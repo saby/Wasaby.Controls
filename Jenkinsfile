@@ -417,11 +417,13 @@ node('controls') {
                         dir("./controls"){
                             sh "npm config set registry http://npmregistry.sbis.ru:81/"
                             stage("isolated") {
+                                echo "run isolated"
                                 sh """
                                 export test_report="artifacts/test-isolated-report.xml"
                                 sh ./bin/test-isolated"""
                             }
                             stage("browser") {
+                                echo "run browser"
                                 sh """
                                 export test_url_host=${env.NODE_NAME}
                                 export test_server_port=10253
