@@ -406,43 +406,42 @@ node('controls') {
         }
         parallel(
             unit: {
-                if ( unit ){
-                echo "Запускаем юнит тесты"
-                dir(workspace){
-                    sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                    sh "cp -rf ./ws_data/WS.Data ./controls/"
-                }
-                dir("./controls"){
-                    sh "npm config set registry http://npmregistry.sbis.ru:81/"
-
-                    stage("isolated") {
-                            sh """
-                            export test_report="artifacts/test-isolated-report.xml"
-                            sh ./bin/test-isolated"""
+                stage ("Unit тесты"){
+                    if ( unit ){
+                        echo "Запускаем юнит тесты"
+                        dir(workspace){
+                            sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
+                            sh "cp -rf ./ws_data/WS.Data ./controls/components/"
+                            sh "cp -rf ./ws_data/WS.Data ./controls/"
                         }
-                    stage("browser") {
-
-                            sh """
-                            export test_url_host=${env.NODE_NAME}
-                            export test_server_port=10253
-                            export test_url_port=10253
-                            export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.159.209
-                            export WEBDRIVER_remote_port=4444
-                            export test_report=artifacts/test-browser-report.xml
-                            sh ./bin/test-browser"""
+                        dir("./controls"){
+                            sh "npm config set registry http://npmregistry.sbis.ru:81/"
+                            stage("isolated") {
+                                sh """
+                                export test_report="artifacts/test-isolated-report.xml"
+                                sh ./bin/test-isolated"""
+                            }
+                            stage("browser") {
+                                sh """
+                                export test_url_host=${env.NODE_NAME}
+                                export test_server_port=10253
+                                export test_url_port=10253
+                                export WEBDRIVER_remote_enabled=1
+                                export WEBDRIVER_remote_host=10.76.159.209
+                                export WEBDRIVER_remote_port=4444
+                                export test_report=artifacts/test-browser-report.xml
+                                sh ./bin/test-browser"""
+                            }
                         }
                     }
                 }
             },
             int_reg: {
                     if ( all_inte || regr || inte) {
-                    def soft_restart = "True"
-                    if ( params.browser_type in ['ie', 'edge'] ){
-                        soft_restart = "False"
-                    }
-
+                        def soft_restart = "True"
+                        if ( params.browser_type in ['ie', 'edge'] ){
+                            soft_restart = "False"
+                        }
                     writeFile file: "./controls/tests/int/config.ini", text:
                         """# UTF-8
                         [general]
