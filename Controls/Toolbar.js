@@ -95,6 +95,7 @@ define('Controls/Toolbar', [
       _beforeMount: function(options, context, receivedState) {
          this._parentProperty = options.parentProperty;
          this._nodeProperty = options.nodeProperty;
+
          _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
