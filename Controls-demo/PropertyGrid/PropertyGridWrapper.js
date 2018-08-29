@@ -44,6 +44,9 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                notOrigin.apply(this, arguments);
                self._forceUpdate();
             };
+         },
+         _valueChangedHandler: function() {
+            this._forceUpdate();
          }
       });
       return PGWrapper;

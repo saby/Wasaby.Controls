@@ -31,6 +31,7 @@ define('Controls-demo/Input/Text/TextPG',
                   emptyText: 'none',
                   placeholder: 'select'
                },
+
                constraint: {
                   source: [
                      { id: 1, title: '[0-9]', example: 'You can use only digits' },
@@ -46,7 +47,7 @@ define('Controls-demo/Input/Text/TextPG',
                }
             };
             this._textOptions = {
-               name: 'Switch',
+               name: 'TextBox',
                placeholder: 'Input text',
                tagStyle: 'primary',
                constraint: '',
@@ -55,6 +56,7 @@ define('Controls-demo/Input/Text/TextPG',
                selectOnClick: true,
                readOnly: false,
                tooltip: 'myTooltip',
+               validationErrors: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

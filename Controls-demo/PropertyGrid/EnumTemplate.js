@@ -21,7 +21,11 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             }
          },
          _valueChangedHandler: function(event, tmp) {
-            this._notify('valueChanged', [tmp]);
+            if (!tmp) {
+               this._notify('valueChanged', undefined);
+            } else {
+               this._notify('valueChanged', [tmp]);
+            }
          },
          _comboBoxSource: function() {
             return new Memory({

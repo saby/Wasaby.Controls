@@ -36,6 +36,13 @@
             caption="{{name}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
 </ws:template>
+<ws:template name="Array">
+    <Controls-demo.PropertyGrid.ArrayTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.ArrayTemplate>
+</ws:template>
 
 
 <ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}"  />
