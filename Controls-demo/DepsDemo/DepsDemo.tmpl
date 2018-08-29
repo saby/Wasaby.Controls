@@ -1,0 +1,39 @@
+<div>
+   <Controls.Container.Async templateName="Controls/Input/Text">
+      <ws:partial template="{{content.resolvedTemplate}}" value="Test dependencies preload"></ws:partial>
+   </Controls.Container.Async>
+   <Controls.Button>
+      <ws:caption>
+         <span attr:class="checkSpan">{{is_OK}}</span>
+      </ws:caption>
+   </Controls.Button>
+   <script>
+      debugger;
+      function checkDebug(scripts) {
+         for (var i = 0; i < scripts.length; i++) {
+            if (/scripts_[0-9]+/g.test(scripts[i].attributes.key)) {
+               return false;
+            }
+         }
+         return true;
+      }
+      if (!window.once) {
+         window.once = true;
+         var arr = document.getElementsByTagName('script');
+         if (checkDebug(arr)) {
+            window.$is_OK$ = true;
+         } else {
+            var depArray = ['Controls/Input/Text', 'Controls/Button'];
+            var depName;
+            var allDepsDefined = true;
+            for (var j = 0; j < depArray.length; j++) {
+               depName = depArray[j];
+               if (!require.defined(depName)) {
+                  allDepsDefined = false;
+               }
+            }
+            window.$is_OK$ = allDepsDefined || isDebug;
+         }
+      }
+   </script>
+</div>
