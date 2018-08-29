@@ -86,6 +86,13 @@ define(
             };
             BaseOpener._prepareContext(newConfig);
             assert.isTrue(newConfig.templateOptions.handlers.onDestroy instanceof Function);
+            newConfig = {
+               templateOptions: {}
+            };
+            let parentContext = new Context();
+            BaseOpener._prepareContext(newConfig, parentContext);
+            assert.isTrue(cInstance.instanceOfModule(newConfig.templateOptions.context, 'Core/Abstract'));
+            assert.equal(newConfig.templateOptions.context.getPrevious(), parentContext);
          });
 
          it('_preparePopupCfgFromOldToNew', function() {
@@ -173,6 +180,17 @@ define(
             assert.equal(newConfig.minWidth, 200);
             assert.isTrue(newConfig.templateOptions.canMaximize);
             assert.equal(newConfig.templateOptions.templateOptions.isPanelMaximized, newConfig.maximized);
+            delete newConfig.context;
+            delete newConfig.templateOptions.context;
+            let parentContext = new Context();
+            newConfig.parent = {
+               getLinkedContext: function() {
+                  return parentContext;
+               }
+            };
+            BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            assert.isTrue(!!newConfig.templateOptions.context);
+            assert.equal(newConfig.templateOptions.context.getPrevious(), parentContext);
          });
 
          it('_getCaption', function() {
