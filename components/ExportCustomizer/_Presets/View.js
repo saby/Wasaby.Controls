@@ -218,7 +218,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
-                  this.sendCommand('subviewChanged', 'editEnd', true, {title:preset.title, action:isUpdate ? 'update' : 'create'}, isClone ? {isClone:isClone} : null).addCallback(function (result) {
+                  this.sendCommand('subviewChanged', 'editEnd', true, {id:preset.id, title:preset.title, action:isUpdate ? 'update' : 'create'}, isClone ? {isClone:isClone} : null).addCallback(function (result) {
                      if (!this._fileUuid) {
                         this._fileUuid = result;
                      }
@@ -524,7 +524,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                         this._selectPreset(preset, true);
                         this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                      }
-                     this.sendCommand('subviewChanged', 'delete', prevPreset.fileUuid, {title:prevPreset.title, action:'delete'});
+                     this.sendCommand('subviewChanged', 'delete', prevPreset.fileUuid, {id:prevPreset.id, title:prevPreset.title, action:'delete'});
                   //}
                   return true/*isSuccess*/;
                }.bind(this));

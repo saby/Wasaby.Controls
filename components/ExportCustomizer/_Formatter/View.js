@@ -384,7 +384,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * return {Core/Deferred}
           */
          _callFormatterDelete: function (fileUuid, historyInfo) {
-            return this._exportFormatter.remove(fileUuid, historyInfo).addErrback(
+            return this._exportFormatter.remove(fileUuid, this._options.serviceParams, historyInfo).addErrback(
                function (err) { return err; }
             );
          },
@@ -546,15 +546,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCommit) {
                if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
                   var args = {
+                     id: historyInfo.id,
                      action: historyInfo.action,
-                     nextUuid: fileUuid,
-                     nextTitle: historyInfo.title
+                     newUuid: fileUuid,
+                     newTitle: historyInfo.title
                   };
                   if (historyInfo.action === 'update') {
-                     args.previousUuid = options.primaryUuid;;
-                     args.previousTitle = historyInfo.title;
+                     args.fileUuid = options.primaryUuid;;
+                     args.title = historyInfo.title;
                   }
-                  this._exportFormatter.commit(args);
+                  this._exportFormatter.commit(args, options.serviceParams);
                }
                else {
                   //TODO Убрать это после того как метод будет добален
