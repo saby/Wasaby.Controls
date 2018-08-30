@@ -14,14 +14,17 @@ define('Controls-demo/FormController/FormController', [
 
    var module = Control.extend({
       _template: tmpl,
-      _dataSource: new MemorySource({
-         idProperty: 'id',
-         data: [{ id: 0 }]
-      }),
+      _dataSource: null,
       idCount: 1,
       _key: 0,
       _record: null,
       _recordAsText: '',
+      _beforeMount: function() {
+         this._dataSource = new MemorySource({
+            idProperty: 'id',
+            data: [{ id: 0 }]
+         });
+      },
 
       _create: function(config) {
          var self = this;
