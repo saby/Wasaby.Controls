@@ -8,10 +8,16 @@ import requests
 
 
 class JobRC:
+    """
+    Класс для работы с RC сборками
+    """
     JC_URL = 'http://jenkins-control.tensor.ru'
 
     def get_id_job(self, version):
-        """Возвращает id job"""
+        """Возвращает id job
+        :param version: Версия платформы
+        :return:
+        """
         result = []
         payload = {"users": [], "regex": ".*\((int|reg)-chrome\) {} controls.*".format(version), "host": "ci-platform.sbis.ru", "type_build": None}
         req = requests.post(self.JC_URL + '/api/acceptance/get_list', json=payload)
@@ -24,7 +30,10 @@ class JobRC:
         return result
 
     def get_fail_tests(self, jobs):
-        """Возвращает список упавших тестов и причину"""
+        """Возвращает список упавших тестов и причину
+        :param jobs: Список из id сборки и билдом
+        :return:
+        """
         tests = []
         for item in jobs:
             payload = {"build": item['last_build'], "id_job": item['_id']}
@@ -37,10 +46,10 @@ class JobRC:
                 data = {"suite":test['_id'], "tests": [(t['test'], t['description']) for t in test['tests']]}
                 tests.append(data)
         skip_tests = []
-        for t in tests:
-            for m in t['tests']:
-                skip_tests.append('{}.{}'.format(t['suite'], m[0]))
-                skip_tests.append('"{}"'.format(m[1] or 'Причина падения еще не определена'))
+        for suite in tests:
+            for test in suite['tests']:
+                skip_tests.append('{}.{}'.format(suite['suite'], test[0]))
+                skip_tests.append('"{}"'.format(test[1] or 'Причина падения еще не определена'))
         return ' '.join(skip_tests)
 
 if __name__ == '__main__':
