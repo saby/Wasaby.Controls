@@ -133,6 +133,7 @@ define('SBIS3.CONTROLS/Utils/ImageUtil', ['Core/Deferred', 'Core/constants'], fu
                   img.addEventListener('error', onErrorHandler);
                };
 
+            // Обновляем id url, чтобы пошел запрос за картинкой.
             if (url.indexOf('id=') > -1) {
                url = url.replace(/\?id=(.+?)&/, function(a, b) {
                   return a.replace(b, (new Date().getTime()));
