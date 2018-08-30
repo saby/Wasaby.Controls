@@ -49,7 +49,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "",
+                defaultValue: "4.12/pea/feature/skip_tests",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -60,6 +60,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+            booleanParam(defaultValue: false, description: "SKIP'нуть тесты, которые упали в RC", name: 'skip'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
             booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
@@ -73,6 +74,7 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
+        def skip = params.skip
         def only_fail = params.RUN_ONLY_FAIL_TEST
         def changed_files
 
@@ -548,6 +550,17 @@ node('controls') {
                             }
                         }
                     }
+                    def skip_tests = ""
+                    if ( skip ) {
+                         dir("./controls/tests") {
+                             def tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
+                             if ( tests_for_skip ) {
+                                  tests_for_skip = tests_for_skip.replace('\n', '')
+                                  echo "Будут скипнуты тесты: ${tests_for_skip}"
+                                  skip_tests = "--SKIP ${tests_for_skip}"
+                             }
+                         }
+                    }
                     parallel (
                         int_test: {
                             stage("Инт.тесты"){
@@ -556,7 +569,7 @@ node('controls') {
                                     dir("./controls/tests/int"){
                                         sh """
                                         source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} {skip_tests} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                         deactivate
                                         """
                                     }
@@ -572,7 +585,7 @@ node('controls') {
                                     dir("./controls/tests/reg"){
                                         sh """
                                             source /home/sbis/venv_for_test/bin/activate
-                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} {skip_tests} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                             deactivate
                                         """
                                     }
