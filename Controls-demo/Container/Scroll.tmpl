@@ -5,20 +5,21 @@
             <div class="ControlsDemo-options_wrapper">
                 <Controls.Label caption="style:"/>
                 <Controls.Input.ComboBox
+						attr:class="ControlsDemo-scrollStyleSource"
                         source="{{_scrollStyleSource}}"
                         keyProperty="title"
                         displayProperty="title"
                         bind:selectedKey="_selectedStyle"/>
 
-                <Controls.Toggle.Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:test_name="scrollbarVisible"/>
-                <Controls.Toggle.Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:test_name="shadowVisible"/>
+                <Controls.Toggle.Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:class="ControlsDemo-scrollbarVisible"/>
+                <Controls.Toggle.Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:class="ControlsDemo-shadowVisible"/>
             </div>
 
             <h3>Settings</h3>
             <div class="ControlsDemo-settings_wrapper">
                 <Controls.Label caption="Number of records"/>
-                <Controls.Input.Number precision="{{0}}" integersLength="{{3}}" bind:value="_numberOfRecords" attr:test_name="numberOfRecords"/>
-                <Controls.Toggle.Switch caption="Activate paging" bind:value="_pagingVisible"/>
+                <Controls.Input.Number precision="{{0}}" integersLength="{{3}}" bind:value="_numberOfRecords" attr:class="ControlsDemo-numberOfRecords"/>
+                <Controls.Toggle.Switch caption="Activate paging" bind:value="_pagingVisible" attr:class="ControlsDemo-pagingVisible"/>
             </div>
         </div>
 
