@@ -135,7 +135,7 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff ${env.BRANCH_NAME}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                        if ( changed_files != "" ) {
+                        if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
 
