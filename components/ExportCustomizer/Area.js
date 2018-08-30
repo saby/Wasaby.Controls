@@ -3,9 +3,12 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * 
+ * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Area
+ * @author Спирин В.А.
  * @extends SBIS3.CONTROLS/CompoundControl
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Area',
