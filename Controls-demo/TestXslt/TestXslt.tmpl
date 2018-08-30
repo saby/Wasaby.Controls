@@ -1,4 +1,5 @@
 <div>
+
    <Controls.Input.Area
       name="xml"
       placeholder="xml"
@@ -9,29 +10,29 @@
    />
 
    <Controls.Input.Area
-         name="xsl"
-         placeholder="xsl"
-         attr:class="xsl ControlsDemo-TestXslt__xsl"
-         minLines="{{20}}"
-         on:input="change('xsl')"
-         value="{{xsl}}"
+      name="xsl"
+      placeholder="xsl"
+      attr:class="xsl ControlsDemo-TestXslt__xsl"
+      minLines="{{20}}"
+      on:input="change('xsl')"
+      value="{{xsl}}"
    />
 
    <Controls.Input.Area
-         name="result"
-         placeholder="result"
-         attr:class="result ControlsDemo-TestXslt__result"
-         minLines="{{20}}"
-         on:input="change('result')"
-         value="{{result}}"
+      name="result"
+      placeholder="result"
+      attr:class="result ControlsDemo-TestXslt__result"
+      minLines="{{20}}"
+      on:input="change('result')"
+      value="{{result}}"
    />
-
+   
    <Controls.Button
-         name="check"
-         attr:class="check ControlsDemo-TestXslt__check"
-         caption="{{'проверить'}}"
-         on:click="check()"
+      name="check"
+      attr:class="check ControlsDemo-TestXslt__check"
+      caption="{{'проверить'}}"
+      on:click="check()"
    />
-
    <span class="ControlsDemo-TestXslt__status">{{ status }}</span>
+
 </div>

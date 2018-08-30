@@ -1,8 +1,8 @@
 <div>
    <ws:for data="index in 10">
       <div>
-         <Controls.Button caption="Кликни чтобы открыть {{index}} опенер" on:click="_openNotification(index)"/>
-         <Controls.Button caption="Кликни чтобы закрыть {{index}} опенер" on:click="_closeNotification(index)"/>
+         <Controls.Button caption="Кликни чтобы открыть {{index}} опенер" on:click="_openNotification(index)" class="ControlsDemo-NotificationDemo_open{{index}}"/>
+         <Controls.Button caption="Кликни чтобы закрыть {{index}} опенер" on:click="_closeNotification(index)" class="ControlsDemo-NotificationDemo_close{{index}}"/>
          <span>autoClose={{index > 5}}</span>
       </div>
       <Controls.Popup.Opener.Notification name="myOpener{{index}}">

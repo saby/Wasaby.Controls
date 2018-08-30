@@ -37,4 +37,12 @@ define('Controls/interface/IDropdown', [], function() {
     * @cfg {Boolean} Indicates whether folders should be displayed.
     */
 
+   /**
+    * @name Controls/Button/Menu#headConfig
+    * @cfg {Object} Menu style menuStyle
+    * @variant defaultHead The head with icon and caption
+    * @variant duplicateHead The icon set near first item
+    * @variant duplicateSelectedItem Duplicate the value of selected item.
+    */
+
 });

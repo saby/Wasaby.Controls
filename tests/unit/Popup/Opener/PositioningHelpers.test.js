@@ -299,13 +299,19 @@ define(
 
             it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
-               let position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
+               let position = Dialog.getPosition(800, 600, sizes, {
+                  position: itemPosition,
+                  dragged: true
+               });
                assert.equal(position.left, itemPosition.left);
                assert.equal(position.top, itemPosition.top);
 
-               itemPosition = {left: 600, top: 500};
-               position = Dialog.getPosition(800, 600, sizes, {position: itemPosition});
-               assert.equal(position.left, 400);
+               itemPosition = {left: 700, top: 500};
+               position = Dialog.getPosition(800, 600, sizes, {
+                  position: itemPosition,
+                  dragged: true
+               });
+               assert.equal(position.left, 600);
                assert.equal(position.top, 300);
             });
          });
