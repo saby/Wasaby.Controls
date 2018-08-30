@@ -60,7 +60,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "SKIP'нуть тесты, которые упали в RC", name: 'skip'),
+            booleanParam(defaultValue: false, description: "SKIP'нуть тесты, которые упали в RC", name: 'SKIP'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
             booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
@@ -74,7 +74,7 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
-        def skip = params.skip
+        def skip = params.SKIP
         def only_fail = params.RUN_ONLY_FAIL_TEST
         def changed_files
 
