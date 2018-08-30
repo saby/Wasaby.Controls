@@ -897,7 +897,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   self = this,
                   dialog,
                   prepareAndInsertContent = function(content) {
-                     content = this._clearPasteContent(content);
+                     content = self._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                      //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                      var editor = self._tinyEditor;
