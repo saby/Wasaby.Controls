@@ -19,7 +19,8 @@ class JobRC:
         :return:
         """
         result = []
-        payload = {"users": [], "regex": ".*\((int|reg)-chrome\) {} controls.*".format(version), "host": "ci-platform.sbis.ru", "type_build": None}
+        payload = {"users": [], "regex": ".*\((int|reg)-chrome\) {} controls.*".format(version),
+                   "host": "ci-platform.sbis.ru", "type_build": None}
         req = requests.post(self.JC_URL + '/api/acceptance/get_list', json=payload)
         req.raise_for_status()
         req_result = req.json()['result']['list']
@@ -54,7 +55,8 @@ class JobRC:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-sfrc', '--skip_from_rc', help='Получить список упавших тестов из RC. Опция принимает версию платформы')
+    parser.add_argument('-sfrc', '--skip_from_rc', help='Получить список упавших тестов из RC. '
+                                                        'Опция принимает версию платформы: 3.18.600')
     args = parser.parse_args()
     if args.skip_from_rc:
         jrc = JobRC()
