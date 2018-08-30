@@ -216,7 +216,7 @@ module.exports = function(Component) {
       '/demo-ws4-item-actions': function(req, res) {
          requirejs('Examples/List/ItemActions');
          res.render('tmpl!Controls/Application/Route', {
-            application: 'Examples/List/ItemActions',
+            application: 'Controls-demo/List/ItemActions',
             initDependencies: false
          }, []);
       },

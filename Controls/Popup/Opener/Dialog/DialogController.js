@@ -5,9 +5,9 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    ],
    function(BaseController, DialogStrategy) {
       var _private = {
-         prepareConfig: function(cfg, sizes) {
-            cfg.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes, cfg.popupOptions);
-            _private.fixCompatiblePosition(cfg);
+         prepareConfig: function(item, sizes) {
+            item.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes, item);
+            _private.fixCompatiblePosition(item);
          },
          fixCompatiblePosition: function(cfg) {
             //COMPATIBLE: for old windows user can set the coordinates relative to the body
@@ -47,6 +47,24 @@ define('Controls/Popup/Opener/Dialog/DialogController',
 
             /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
          },
+
+         popupDragStart: function(item, container, offset) {
+            if (!item.startPosition) {
+               item.startPosition = {
+                  left: item.position.left,
+                  top: item.position.top
+               };
+            }
+            item.dragged = true;
+            item.position.left = item.startPosition.left + offset.x;
+            item.position.top = item.startPosition.top + offset.y;
+            this.prepareConfig(item, container);
+         },
+
+         popupDragEnd: function(item) {
+            delete item.startPosition;
+         },
+
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
             _private.prepareConfig(cfg, sizes);
