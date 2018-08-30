@@ -116,6 +116,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _editor: null,
             // Кнопка удаления пресета
             _delete: null,
+            // Кнопка просмотра истории изменений
+            _history: null,
             // Идетификатор предыдущего выбранного пресета
             _previousId: null,
             // Компонент находится в моде редактирования
@@ -166,6 +168,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
                this._delete = this.getChildControlByName('controls-ExportCustomizer-Presets-View__delete');
             }
+            this._history = this.getChildControlByName('controls-ExportCustomizer-Presets-View__history');
             this._bindEvents();
             var options = this._options;
             if (this._storage) {
@@ -711,6 +714,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._storeSelectedId(options);
             this._switchDeleteButton(!!preset && preset.isStorable);
             this._checkEditorOkButton();
+            var history = this._history;
+            if (history) {
+               var isEnabled = preset.isStorable && !!preset.fileUuid;
+               history.setProperty('objectId', preset.fileUuid);
+               history.setVisible(isEnabled);
+            }
          },
 
          /**
