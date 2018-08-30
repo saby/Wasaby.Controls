@@ -1,6 +1,6 @@
 define('Controls-demo/List/ScrollPaging', [
    'Core/Control',
-   'tmpl!Controls-demo/List/ScrollPaging/ScrollPaging',
+   'wml!Controls-demo/List/ScrollPaging/ScrollPaging',
    'WS.Data/Source/Memory',
    'css!Controls-demo/List/ScrollPaging/ScrollPaging'
 ], function (BaseControl,

@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/PopupWithPending',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/PopupWithPending',
+      'wml!Controls-demo/Popup/PopupWithPending',
       'WS.Data/Entity/Record',
       'Core/Deferred'
    ],

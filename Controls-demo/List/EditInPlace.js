@@ -1,6 +1,6 @@
 define('Controls-demo/List/EditInPlace', [
    'Core/Control',
-   'tmpl!Controls-demo/List/EditInPlace/EditInPlace',
+   'wml!Controls-demo/List/EditInPlace/EditInPlace',
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
    'Core/Deferred',

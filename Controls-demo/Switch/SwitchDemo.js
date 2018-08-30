@@ -1,7 +1,7 @@
 define('Controls-demo/Switch/SwitchDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Switch/SwitchDemo',
+   'wml!Controls-demo/Switch/SwitchDemo',
    'css!Controls-demo/Headers/resetButton',
    'css!Controls-demo/Switch/UnionSwitchDemo'
 ], function(Control, MemorySource, template) {

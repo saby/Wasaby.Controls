@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Number/Number', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Number/Number',
+   'wml!Controls-demo/Input/Number/Number',
    'WS.Data/Source/Memory',
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template, Memory) {

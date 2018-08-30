@@ -5,7 +5,7 @@ define('Controls/Decorator/PhoneNumber',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorator/PhoneNumber/PhoneNumber',
+      'wml!Controls/Decorator/PhoneNumber/PhoneNumber',
       'Controls/Decorator/PhoneNumber/Dictionary'
    ],
    function(Control, descriptor, template, phoneCodeModule) {

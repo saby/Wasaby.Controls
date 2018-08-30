@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Mask/Mask',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Mask/Mask',
+      'wml!Controls-demo/Input/Mask/Mask',
       'Controls/Input/Mask/Formatter',
       'WS.Data/Source/Memory',
       'Controls/Input/Mask',

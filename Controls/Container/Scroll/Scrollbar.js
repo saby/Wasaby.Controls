@@ -2,7 +2,7 @@ define('Controls/Container/Scroll/Scrollbar',
    [
       'Core/Control',
       'Core/detection',
-      'tmpl!Controls/Container/Scroll/Scrollbar/Scrollbar',
+      'wml!Controls/Container/Scroll/Scrollbar/Scrollbar',
       'Controls/Event/Emitter',
       'css!Controls/Container/Scroll/Scrollbar/Scrollbar'
    ],

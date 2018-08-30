@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Opener/BaseOpener',
+      'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',

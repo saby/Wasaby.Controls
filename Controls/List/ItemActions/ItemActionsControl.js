@@ -1,6 +1,6 @@
 define('Controls/List/ItemActions/ItemActionsControl', [
    'Core/Control',
-   'tmpl!Controls/List/ItemActions/ItemActionsControl',
+   'wml!Controls/List/ItemActions/ItemActionsControl',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',

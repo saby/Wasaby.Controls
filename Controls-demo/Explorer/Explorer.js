@@ -1,6 +1,6 @@
 define('Controls-demo/Explorer/Explorer', [
    'Core/Control',
-   'tmpl!Controls-demo/Explorer/Explorer',
+   'wml!Controls-demo/Explorer/Explorer',
    'Controls-demo/Explorer/ExplorerMemory',
    'css!Controls-demo/Explorer/Explorer',
    'Controls/Explorer'

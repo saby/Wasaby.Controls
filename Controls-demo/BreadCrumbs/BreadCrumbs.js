@@ -1,6 +1,6 @@
 define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
-   'tmpl!Controls-demo/BreadCrumbs/BreadCrumbs'
+   'wml!Controls-demo/BreadCrumbs/BreadCrumbs'
 ], function(Control, template) {
 
    var data = [

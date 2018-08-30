@@ -1,7 +1,7 @@
 define('Controls/Popup/Manager',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Manager',
+      'wml!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/Number/randomId',
       'WS.Data/Collection/List'

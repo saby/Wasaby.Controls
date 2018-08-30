@@ -1,8 +1,8 @@
 define('Controls-demo/InfoBox/Opener/InfoBox',
    [
       'Core/Control',
-      'tmpl!Controls-demo/InfoBox/resources/content',
-      'tmpl!Controls-demo/InfoBox/Opener/InfoBox'
+      'wml!Controls-demo/InfoBox/resources/content',
+      'wml!Controls-demo/InfoBox/Opener/InfoBox'
    ],
    function(Control, contentTpl, template) {
 

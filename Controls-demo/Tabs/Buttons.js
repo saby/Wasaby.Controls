@@ -1,10 +1,10 @@
 define('Controls-demo/Tabs/Buttons', [
    'Core/Control',
-   'tmpl!Controls-demo/Tabs/Buttons/Buttons',
-   'tmpl!Controls-demo/Tabs/Buttons/resources/spaceTemplate',
-   'tmpl!Controls-demo/Tabs/Buttons/resources/itemTemplate',
-   'tmpl!Controls-demo/Tabs/Buttons/resources/mainTemplate',
-   'tmpl!Controls-demo/Tabs/Buttons/resources/photoContent',
+   'wml!Controls-demo/Tabs/Buttons/Buttons',
+   'wml!Controls-demo/Tabs/Buttons/resources/spaceTemplate',
+   'wml!Controls-demo/Tabs/Buttons/resources/itemTemplate',
+   'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+   'wml!Controls-demo/Tabs/Buttons/resources/photoContent',
    'WS.Data/Source/Memory',
    'css!Controls-demo/Tabs/Buttons/Buttons'
 ], function(

@@ -1,7 +1,7 @@
 
 define('Controls/PageLayout', [
    'Core/Control',
-   'tmpl!Controls/PageLayout/PageLayout',
+   'wml!Controls/PageLayout/PageLayout',
    'Controls/Controllers/SourceController',
    'css!Controls/PageLayout/PageLayout'
 ], function(Control, template, SourceController) {

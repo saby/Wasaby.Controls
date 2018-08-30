@@ -3,7 +3,7 @@
  */
 define('Controls/List/Paging/DigitButtons', [
    'Core/Control',
-   'tmpl!Controls/List/Paging/DigitButtons',
+   'wml!Controls/List/Paging/DigitButtons',
    'css!Controls/List/Paging/DigitButtons'
 ], function(BaseControl, template) {
    'use strict';

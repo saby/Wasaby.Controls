@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/Counter/counterDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/Counter/counterDemo',
+   'wml!Controls-demo/Headers/Counter/counterDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'

@@ -1,6 +1,6 @@
 define('Controls-demo/JsonRichArea/JsonRichArea', [
    'Core/Control',
-   'tmpl!Controls-demo/JsonRichArea/JsonRichArea'
+   'wml!Controls-demo/JsonRichArea/JsonRichArea'
 ], function(Control, template) {
    'use strict';
 

@@ -1,7 +1,7 @@
 define('Controls-demo/Decorators/Money/Money',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Decorators/Money/Money',
+      'wml!Controls-demo/Decorators/Money/Money',
 
       'Controls/Decorator/Money',
       'css!Controls-demo/Decorators/Money/Money'

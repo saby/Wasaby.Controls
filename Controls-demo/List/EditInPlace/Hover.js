@@ -1,6 +1,6 @@
 define('Controls-demo/List/EditInPlace/Hover', [
    'Core/Control',
-   'tmpl!Controls-demo/List/EditInPlace/Hover',
+   'wml!Controls-demo/List/EditInPlace/Hover',
    'WS.Data/Source/Memory',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function(Control,

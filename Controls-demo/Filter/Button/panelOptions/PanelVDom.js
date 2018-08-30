@@ -3,14 +3,14 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'Core/Control',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
-      'tmpl!Controls-demo/Filter/Button/panelOptions/PanelVDom',
+      'wml!Controls-demo/Filter/Button/panelOptions/PanelVDom',
 
-      'tmpl!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions',
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
+      'wml!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions',
+      'wml!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
 
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author',
+      'wml!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'wml!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
@@ -112,7 +112,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: sourcePeriod},
          {id: 'state', value: [1], resetValue: [1], source: sourceState},
          {id: 'sender', value: '', resetValue: ''},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: '', templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/author'},
          {id: 'responsible', value: '', resetValue: ''}
       ];
 
@@ -121,7 +121,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          {id: 'state', value: [1], resetValue: [1], source: sourceState},
          {id: 'limit', value: [1], resetValue: '', source: sourceLimit, visibility: false},
          {id: 'sender', value: '', resetValue: ''},
-         {id: 'author', value: 'Ivanov K.K.', resetValue: '', templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
+         {id: 'author', value: 'Ivanov K.K.', resetValue: '', templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/author'},
          {id: 'responsible', value: '', resetValue: ''},
          {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
          {id: 'operation', value: '', resetValue: '', visibility: false},
@@ -135,7 +135,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
 
       var PanelVDom = Control.extend({
          _template: template,
-         _itemTemplate: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel'},
+         _itemTemplate: { templateName: 'wml!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel'},
          _addTemplate: null,
          _itemsSimple: itemsSimple,
          _hasItemTemplateProperty: false,
@@ -158,7 +158,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          valueChangedHandler: function(event, value) {
             if (value) {
                this._itemsSimple = items;
-               this._addTemplate = {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
+               this._addTemplate = {templateName: 'wml!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
             } else {
                this._itemsSimple = itemsSimple;
                this._addTemplate = null;

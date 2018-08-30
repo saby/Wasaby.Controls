@@ -1,6 +1,6 @@
 define('Controls/FormController', [
    'Core/Control',
-   'tmpl!Controls/FormController/FormController',
+   'wml!Controls/FormController/FormController',
    'WS.Data/Entity/Model',
    'Core/Deferred',
    'Core/IoC'

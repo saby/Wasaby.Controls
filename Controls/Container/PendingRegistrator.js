@@ -1,6 +1,6 @@
 define('Controls/Container/PendingRegistrator', [
    'Core/Control',
-   'tmpl!Controls/Container/PendingRegistrator/PendingRegistrator',
+   'wml!Controls/Container/PendingRegistrator/PendingRegistrator',
    'Core/Deferred',
    'Core/ParallelDeferred',
    'Core/IoC'

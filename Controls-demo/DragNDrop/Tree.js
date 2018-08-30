@@ -2,7 +2,7 @@ define('Controls-demo/DragNDrop/Tree', [
    'Core/Control',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
-   'tmpl!Controls-demo/DragNDrop/Tree/Tree',
+   'wml!Controls-demo/DragNDrop/Tree/Tree',
    'Controls-demo/List/Tree/TreeMemory'
 ], function(BaseControl, DemoData, ListEntity, template, TreeMemory) {
 

@@ -4,7 +4,7 @@ define('Controls-demo/List/Mover', [
    'WS.Data/Source/Memory',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/List/Tree/GridData',
-   'tmpl!Controls-demo/List/Mover/Mover',
+   'wml!Controls-demo/List/Mover/Mover',
    'css!Controls-demo/List/Mover/Mover'
 ], function(BaseControl, cClone, Memory, TreeMemory, GridData, template) {
    'use strict';

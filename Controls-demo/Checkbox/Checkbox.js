@@ -1,6 +1,6 @@
 define('Controls-demo/Checkbox/Checkbox', [
    'Core/Control',
-   'tmpl!Controls-demo/Checkbox/Checkbox',
+   'wml!Controls-demo/Checkbox/Checkbox',
    'WS.Data/Source/Memory',
    'Controls/Toggle/Checkbox',
    'css!Controls-demo/Checkbox/Checkbox',

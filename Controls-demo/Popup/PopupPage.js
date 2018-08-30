@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/PopupPage',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/PopupPage',
+      'wml!Controls-demo/Popup/PopupPage',
       'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPage'
    ],

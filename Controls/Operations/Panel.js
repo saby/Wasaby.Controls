@@ -1,6 +1,6 @@
 define('Controls/Operations/Panel', [
    'Core/Control',
-   'tmpl!Controls/Operations/Panel/Panel'
+   'wml!Controls/Operations/Panel/Panel'
 ], function(Control, template) {
    'use strict';
 

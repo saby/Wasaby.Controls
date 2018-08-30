@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Lookup/Collection',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Lookup/Collection',
+      'wml!Controls-demo/Input/Lookup/Collection',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/Memory',
       'WS.Data/Source/DataSet',

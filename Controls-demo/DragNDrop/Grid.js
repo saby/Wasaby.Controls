@@ -2,7 +2,7 @@ define('Controls-demo/DragNDrop/Grid', [
    'Core/Control',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
-   'tmpl!Controls-demo/DragNDrop/Grid/Grid',
+   'wml!Controls-demo/DragNDrop/Grid/Grid',
    'WS.Data/Source/Memory'
 ], function(BaseControl, DemoData, ListEntity, template, MemorySource) {
 

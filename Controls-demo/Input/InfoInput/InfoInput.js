@@ -1,7 +1,7 @@
 define('Controls-demo/Input/InfoInput/InfoInput',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/InfoInput/InfoInput',
+      'wml!Controls-demo/Input/InfoInput/InfoInput',
    ],
    function(Control, template, Formatter) {
 

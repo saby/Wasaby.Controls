@@ -1,7 +1,7 @@
 define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Container',
+      'wml!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
       'css!Controls/Popup/Manager/Container'
    ],

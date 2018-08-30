@@ -1,6 +1,6 @@
 define('Controls/Toggle/Switch', [
    'Core/Control',
-   'tmpl!Controls/Toggle/Switch/Switch',
+   'wml!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/Switch/Switch',
    'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'

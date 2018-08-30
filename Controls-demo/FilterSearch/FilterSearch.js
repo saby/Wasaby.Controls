@@ -3,7 +3,7 @@
  */
 define('Controls-demo/FilterSearch/FilterSearch', [
    'Core/Control',
-   'tmpl!Controls-demo/FilterSearch/FilterSearch',
+   'wml!Controls-demo/FilterSearch/FilterSearch',
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',

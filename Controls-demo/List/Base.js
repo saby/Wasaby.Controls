@@ -3,7 +3,7 @@
  */
 define('Controls-demo/List/Base', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Base/Base',
+   'wml!Controls-demo/List/Base/Base',
    'WS.Data/Source/Memory',
    'css!Controls-demo/List/ScrollPaging/ScrollPaging'
 ], function (BaseControl,

@@ -1,6 +1,6 @@
 define('Controls-demo/Date/PeriodLiteDialog', [
    'Core/Control',
-   'tmpl!Controls-demo/Date/PeriodLiteDialog'
+   'wml!Controls-demo/Date/PeriodLiteDialog'
 ], function(
    BaseControl,
    template

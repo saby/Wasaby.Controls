@@ -5,7 +5,7 @@ define('Controls/Calendar/MonthSlider', [
    'Controls/Calendar/MonthSlider/Slider',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date',
-   'tmpl!Controls/Calendar/MonthSlider/MonthSlider',
+   'wml!Controls/Calendar/MonthSlider/MonthSlider',
    'css!Controls/Calendar/MonthSlider/MonthSlider'
 ], function(
    BaseControl,

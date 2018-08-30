@@ -1,6 +1,6 @@
 define('Controls-demo/Input/resources/TagStyle', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/resources/TagStyle',
+   'wml!Controls-demo/Input/resources/TagStyle',
    'WS.Data/Source/Memory'
 ],
 function(

@@ -1,7 +1,7 @@
 define('Controls/Dropdown/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/Controller',
+      'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'WS.Data/Chain',

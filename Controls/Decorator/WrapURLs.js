@@ -2,7 +2,7 @@ define('Controls/Decorator/WrapURLs',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorator/WrapURLs/WrapURLs'
+      'wml!Controls/Decorator/WrapURLs/WrapURLs'
    ],
    function(Control, descriptor, template) {
 

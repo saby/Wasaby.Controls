@@ -1,16 +1,16 @@
 define('Controls-demo/List/Grid/Grid', [
    'Core/Control',
    'Controls-demo/List/Grid/GridData',
-   'tmpl!Controls-demo/List/Grid/Grid',
+   'wml!Controls-demo/List/Grid/Grid',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/List/Grid/DemoItem',
-   'tmpl!Controls-demo/List/Grid/DemoBalancePrice',
-   'tmpl!Controls-demo/List/Grid/DemoCostPrice',
-   'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice',
-   'tmpl!Controls-demo/List/Grid/DemoName',
-   'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
-   'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
-   'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
+   'wml!Controls-demo/List/Grid/DemoItem',
+   'wml!Controls-demo/List/Grid/DemoBalancePrice',
+   'wml!Controls-demo/List/Grid/DemoCostPrice',
+   'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
+   'wml!Controls-demo/List/Grid/DemoName',
+   'wml!Controls-demo/List/Grid/DemoTasksPhoto',
+   'wml!Controls-demo/List/Grid/DemoTasksDescr',
+   'wml!Controls-demo/List/Grid/DemoTasksReceived',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
@@ -116,19 +116,19 @@ define('Controls-demo/List/Grid/Grid', [
             {
                displayProperty: 'name',
                width: '1fr',
-               template: 'tmpl!Controls-demo/List/Grid/DemoName'
+               template: 'wml!Controls-demo/List/Grid/DemoName'
             },
             {
                displayProperty: 'price',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balance',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoBalancePrice'
+               template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
             },
             {
                displayProperty: 'reserve',
@@ -139,13 +139,13 @@ define('Controls-demo/List/Grid/Grid', [
                displayProperty: 'costPrice',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balanceCostSumm',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             }
          ],
          gridHeader: [
@@ -167,7 +167,7 @@ define('Controls-demo/List/Grid/Grid', [
             {
                title: 'Себест.',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoHeaderCostPrice'
             },
             {
                title: 'Сумма остатка',
@@ -177,15 +177,15 @@ define('Controls-demo/List/Grid/Grid', [
 
          tasksColumns: [
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksPhoto',
                width: 'auto'
             },
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksDescr',
                width: '1fr'
             },
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksReceived',
                width: 'auto'
             }
          ]

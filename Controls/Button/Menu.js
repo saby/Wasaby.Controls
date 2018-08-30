@@ -1,7 +1,7 @@
 define('Controls/Button/Menu',
    [
       'Core/Control',
-      'tmpl!Controls/Button/Menu/Menu',
+      'wml!Controls/Button/Menu/Menu',
       'Controls/Button/Classes',
       'css!Controls/Button/Menu/Menu',
       'Controls/Button'

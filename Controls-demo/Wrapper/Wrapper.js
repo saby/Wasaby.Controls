@@ -1,7 +1,7 @@
 define('Controls-demo/Wrapper/Wrapper',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Wrapper/Wrapper'
+      'wml!Controls-demo/Wrapper/Wrapper'
 
    ],
    function(Control, template) {

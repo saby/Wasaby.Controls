@@ -1,9 +1,9 @@
 define('Controls-demo/List/Tree/TreeWithEditing', [
    'Core/Control',
    'Controls-demo/List/Tree/TreeWithEditingData',
-   'tmpl!Controls-demo/List/Tree/TreeWithEditing',
+   'wml!Controls-demo/List/Tree/TreeWithEditing',
    'Controls-demo/List/Tree/TreeMemory',
-   'tmpl!Controls-demo/List/Tree/treeEditingTemplate',
+   'wml!Controls-demo/List/Tree/treeEditingTemplate',
    'css!Controls-demo/List/Tree/Tree'
 ], function(
    BaseControl,

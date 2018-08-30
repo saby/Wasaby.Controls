@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Text/Text', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Text/Text',
+   'wml!Controls-demo/Input/Text/Text',
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template) {
    'use strict';

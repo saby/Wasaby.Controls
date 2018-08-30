@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/headerDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/headerDemo',
+   'wml!Controls-demo/Headers/headerDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'

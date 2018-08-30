@@ -3,7 +3,7 @@ define('Controls-demo/DragNDrop/Notes', [
    'Core/core-clone',
    'Core/core-instance',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/DragNDrop/Notes/Notes',
+   'wml!Controls-demo/DragNDrop/Notes/Notes',
    'Controls-demo/DragNDrop/Notes/EntityTriangle',
    'Controls-demo/DragNDrop/Notes/EntityNote',
    'css!Controls-demo/DragNDrop/Notes/Notes'

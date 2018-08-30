@@ -1,7 +1,7 @@
 define('Controls-demo/HighChartsLight/HighChartsLight',
    [
       'Core/Control',
-      'tmpl!Controls-demo/HighChartsLight/HighChartsLight',
+      'wml!Controls-demo/HighChartsLight/HighChartsLight',
       'css!Controls-demo/HighChartsLight/HighChartsLight'
    ],
    function(Control, template) {

@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Area/Area', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Area/Area',
+   'wml!Controls-demo/Input/Area/Area',
    'WS.Data/Source/Memory',   
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template, MemorySource) {

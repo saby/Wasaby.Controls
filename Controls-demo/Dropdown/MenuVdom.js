@@ -1,16 +1,16 @@
 define('Controls-demo/Dropdown/MenuVdom', [
    'Core/Control',
-   'tmpl!Controls-demo/Dropdown/MenuVdom',
+   'wml!Controls-demo/Dropdown/MenuVdom',
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'Controls/Constants',
-   'tmpl!Controls-demo/Dropdown/resources/itemTemplate1',
-   'tmpl!Controls-demo/Dropdown/resources/itemTemplateContent1',
-   'tmpl!Controls-demo/Dropdown/resources/ItemsTemplate2',
-   'tmpl!Controls-demo/Dropdown/resources/ItemsTemplateContent2',
-   'tmpl!Controls-demo/Dropdown/resources/headerTemplate',
-   'tmpl!Controls-demo/Dropdown/resources/footerTemplate',
-   'tmpl!Controls-demo/Dropdown/resources/contentTemplate',
+   'wml!Controls-demo/Dropdown/resources/itemTemplate1',
+   'wml!Controls-demo/Dropdown/resources/itemTemplateContent1',
+   'wml!Controls-demo/Dropdown/resources/ItemsTemplate2',
+   'wml!Controls-demo/Dropdown/resources/ItemsTemplateContent2',
+   'wml!Controls-demo/Dropdown/resources/headerTemplate',
+   'wml!Controls-demo/Dropdown/resources/footerTemplate',
+   'wml!Controls-demo/Dropdown/resources/contentTemplate',
    'css!Controls-demo/Dropdown/MenuVdom',
    'WS.Data/Collection/RecordSet' //TODO: удалить это когда появится асинк и технология патчинга jsLinks
    //сейчас зависимость тянется асинхронно и десериализовать данные пытаемся раньше, чем это произойдет
@@ -95,8 +95,8 @@ define('Controls-demo/Dropdown/MenuVdom', [
          },
          _getItemTemplateData: function() {
             var items = cClone(this._defaultItems);
-            items[0].myTemplate = 'tmpl!Controls-demo/Dropdown/resources/itemTemplate1';
-            items[4].myTemplate = 'tmpl!Controls-demo/Dropdown/resources/itemTemplate1';
+            items[0].myTemplate = 'wml!Controls-demo/Dropdown/resources/itemTemplate1';
+            items[4].myTemplate = 'wml!Controls-demo/Dropdown/resources/itemTemplate1';
             return this._createMemory(items);
          },
          _getIconItems: function() {

@@ -1,11 +1,11 @@
 define('Controls-demo/OperationsPanel/Demo', [
    'Core/Control',
-   'tmpl!Controls-demo/OperationsPanel/Demo/Demo',
+   'wml!Controls-demo/OperationsPanel/Demo/Demo',
    'WS.Data/Source/Memory',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
-   'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
+   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
 ], function(Control, template, Memory, TreeMemory, Data) {
    'use strict';
 
@@ -23,7 +23,7 @@ define('Controls-demo/OperationsPanel/Demo', [
          displayProperty: 'department'
       }],
       _gridColumns: [{
-         template: 'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
+         template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
       }],
 
       _moveDialogFilter: {

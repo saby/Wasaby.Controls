@@ -1,8 +1,8 @@
 define('Controls/Toggle/RadioGroup', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Toggle/RadioGroup/RadioGroup',
-   'tmpl!Controls/Toggle/RadioGroup/resources/ItemTemplate',
+   'wml!Controls/Toggle/RadioGroup/RadioGroup',
+   'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate',
    'css!Controls/Toggle/RadioGroup/RadioGroup',
    'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, SourceController, template, defaultItemTemplate) {

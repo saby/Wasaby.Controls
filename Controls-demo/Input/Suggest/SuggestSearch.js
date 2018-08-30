@@ -1,10 +1,10 @@
 define('Controls-demo/Input/Suggest/SuggestSearch', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Suggest/SuggestSearch',
+   'wml!Controls-demo/Input/Suggest/SuggestSearch',
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Entity/Model',
-   'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
+   'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
    'css!Controls-demo/Input/Suggest/Suggest',
    'css!Controls-demo/Input/resources/VDomInputs'
 ], function(Control, template, MemorySource, Deferred, Model, myTmpl) {

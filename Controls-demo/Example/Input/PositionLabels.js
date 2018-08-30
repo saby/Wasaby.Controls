@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input/PositionLabels',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/PositionLabels/PositionLabels',
+      'wml!Controls-demo/Example/Input/PositionLabels/PositionLabels',
 
       'Controls/Label',
       'Controls/Input/Text',

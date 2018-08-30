@@ -3,7 +3,7 @@ define('Controls-demo/List/Remove', [
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'Controls-demo/List/Remove/RemoveDemoSource',
-   'tmpl!Controls-demo/List/Remove/Remove',
+   'wml!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
 ], function(BaseControl, cClone, Memory, DemoSource, template) {
    'use strict';
