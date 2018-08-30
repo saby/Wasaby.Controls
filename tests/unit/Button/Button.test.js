@@ -173,7 +173,6 @@ define(['Controls/Button'], function (Button) {
             btn.saveOptions(opt);
             btn._clickHandler(customEvent);
             assert(eventBublle);
-            btn.destroy();
          });
 
          it('click to disabled button', function () {
@@ -184,7 +183,6 @@ define(['Controls/Button'], function (Button) {
             btn.saveOptions(opt);
             btn._clickHandler(customEvent);
             assert(!eventBublle);
-            btn.destroy();
          });
       });
    });
