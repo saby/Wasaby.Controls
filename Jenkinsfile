@@ -138,6 +138,19 @@ node('controls') {
                         if ( changed_files != "" ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
+
+                        def skip_tests = ""
+                    if ( skip ) {
+                         dir("./controls/tests") {
+                             def tests_for_skip = null
+                             tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
+                             if ( tests_for_skip != null ) {
+                                  tests_for_skip = tests_for_skip.replace('\n', '')
+                                  echo "Будут скипнуты тесты: ${tests_for_skip}"
+                                  skip_tests = "--SKIP ${tests_for_skip}"
+                             }
+                         }
+                    }
                     }
                     updateGitlabCommitStatus state: 'running'
                     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
@@ -549,8 +562,9 @@ node('controls') {
                     def skip_tests = ""
                     if ( skip ) {
                          dir("./controls/tests") {
-                             def tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
-                             if ( tests_for_skip != "" ) {
+                             def tests_for_skip = null
+                             tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
+                             if ( tests_for_skip != null ) {
                                   tests_for_skip = tests_for_skip.replace('\n', '')
                                   echo "Будут скипнуты тесты: ${tests_for_skip}"
                                   skip_tests = "--SKIP ${tests_for_skip}"
