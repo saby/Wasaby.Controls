@@ -6,7 +6,7 @@ define([
    'use strict';
 
    describe('FormController-tests', function() {
-      var testControl;
+      var testControl, testElement;
 
       function mountControl(moduleName) {
          var def = new Deferred();
@@ -128,9 +128,9 @@ define([
          }
          else {
             var el = document.body.querySelectorAll('#mocha')[0];
-            var newElement = document.createElement("div");
-            newElement.setAttribute('id', 'formControllerComponent');
-            el.appendChild(newElement);
+            var testElement = document.createElement("div");
+            testElement.setAttribute('id', 'formControllerComponent');
+            el.appendChild(testElement);
          }
 
       });
@@ -310,16 +310,8 @@ define([
       });
 
       afterEach(function() {
-         if (testControl) {
-            testControl.__$destroyFromDirtyChecking = true;
-            if (testControl._children.Form) {
-               testControl._children.Form.__$destroyFromDirtyChecking = true;
-            }
-            if (testControl._children.validate) {
-               testControl._children.validate.__$destroyFromDirtyChecking = true;
-            }
-            testControl.destroy();
-         }
+         testControl && testControl.destroy();
+         testElement && testElement.remove();
       });
    });
 });

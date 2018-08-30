@@ -2,13 +2,13 @@ define('Controls-demo/List/EditAndRemoveOperations', [
    'Core/Control',
    'tmpl!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
    'WS.Data/Source/Memory',
-   'WS.Data/Entity/Record',
+   'WS.Data/Entity/Model',
    'Core/Deferred',
    'Controls/Validate/Validators/IsRequired'
 ], function(Control,
    template,
    MemorySource,
-   Record,
+   Model,
    Deferred
 ) {
    'use strict';
@@ -108,8 +108,9 @@ define('Controls-demo/List/EditAndRemoveOperations', [
       _editOnClick: true,
       _singleEdit: false,
       _autoAdd: false,
-      _editingItem: Record.fromObject({ id: 2, title: 'редактирование стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
-      _addItem: Record.fromObject({ id: 3, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+      _editingItem: null,
+      _addItem: null,
+
       _showAction: function(action, item) {
          if (item.get('id') === 1 && action.id === 0) { //первую запись всё равно нельзя редактировать
             return false;
@@ -126,6 +127,22 @@ define('Controls-demo/List/EditAndRemoveOperations', [
          return true;
       },
       _beforeMount: function() {
+         this._editingItem = new Model({
+            rawData: {
+               id: 2,
+               title: 'редактирование стартует по опции',
+               description: 'а может и не стартует',
+               randomField: 'поле, которого нет'
+            }
+         });
+         this._addItem = new Model({
+            rawData: {
+               id: 3,
+               title: 'добавление стартует по опции',
+               description: 'а может и не стартует',
+               randomField: 'поле, которого нет'
+            }
+         });
          this._showAction = this._showAction.bind(this);
          this._itemActions =  [
             {
@@ -197,28 +214,14 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                return 'Cancel';
             case 2:
                return {
-                  item: Record.fromObject({
-                     id: 2,
-                     title: 'Другая запись',
-                     description: 'Описание вот такое'
+                  item: new Model({
+                     rawData: {
+                        id: 2,
+                        title: 'Другая запись',
+                        description: 'Описание вот такое'
+                     }
                   })
                };
-
-            // case 3:
-            //    var def = new Deferred();
-            //    def.addCallback(function(){
-            //       return {
-            //          item:Record.fromObject({
-            //             id: 3,
-            //             title: 'Запись из Deferred',
-            //             description: 'Хватит страдать'
-            //          })
-            //       }
-            //    });
-            //    setTimeout(function() {
-            //       def.callback();
-            //    }, 3000);
-            //    return def;
          }
       },
 
@@ -228,34 +231,15 @@ define('Controls-demo/List/EditAndRemoveOperations', [
 
       _onBeginAdd: function(e, item) {
          return {
-            item: Record.fromObject({
-               id: counter++,
-               title: '',
-               description: 'описание',
-               extraField: 'поле, которого нет у остальных itemов'
-            })
-         };
-      },
-
-      _cancelBeginAdd: function() {
-         return 'Cancel';
-      },
-
-      _deferredBeginAdd: function() {
-         var
-            options = {
-               item: Record.fromObject({
-                  id: 3,
+            item: new Model({
+               rawData: {
+                  id: counter++,
                   title: '',
                   description: 'описание',
                   extraField: 'поле, которого нет у остальных itemов'
-               })
-            },
-            def = new Deferred();
-         setTimeout(function() {
-            def.callback(options);
-         }, 2000);
-         return def;
+               }
+            })
+         };
       }
    });
    return EditInPlace;
