@@ -14,6 +14,18 @@ define('SBIS3.CONTROLS/NotificationPopup', [
     * @control
     * @public
     * @author Красильников А.С.
+    *
+    * @ignoreOptions contextRestriction independentContext modal validateIfHidden
+    *
+    * @ignoreMethod activateFirstControl activateLastControl addPendingOperation destroyChild detectNextActiveChildControl disableActiveCtrl
+    * @ignoreMethods getAllPendingInfo getImmediateChildControls getNamedGroup getNearestChildControlByName getResizer getToolBarCount
+    * @ignoreMethods hasActiveChildControl increaseToolBarCount isAllReady isModal isPage moveToTop setEnabled setSize waitAllPendingOperations
+    *
+    * @ignoreMethods _destroySuperClass _getControlsToBuild _isActiveByTabindex _keyboardHover _loadDescendents _onClickHandler
+    * @ignoreMethods _subscribeToWindowResize _templateInnerCallbackBeforeReady
+    *
+    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onReady onResize
+    *
     */
    function(InformationPopup, template, headerTpl, detection){
       'use strict';
