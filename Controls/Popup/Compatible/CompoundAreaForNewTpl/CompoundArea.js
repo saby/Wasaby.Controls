@@ -88,6 +88,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             if (rootContainer._compoundAreaEvents) {
                return;
             }
+
             //Отлавливаем события с дочернего vdom компонента
             for (var event in additionalEventProperties) {
                if (additionalEventProperties.hasOwnProperty(event)) {
