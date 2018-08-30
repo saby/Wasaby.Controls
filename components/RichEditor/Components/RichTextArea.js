@@ -864,6 +864,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Почистить контент из клипборда для его последующей вставки
+             * @param {string} content html-текст
+             * @return {string}
+             */
+            _clearPasteContent: function (content) {
+               if (!content) {
+                  return '';
+               }
+               var i = content.indexOf('<!--StartFragment-->');
+               if (i !== -1) {
+                  // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
+                  var j = content.indexOf('<!--EndFragment-->');
+                  content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
+               }
+               else {
+                  //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
+                  content = content.replace(/<!DOCTYPE[^>]*>|<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
+               }
+               return content;
+            },
+
+            /**
              * Метод открывает диалог, позволяющий добавлять контент с учетом стилей
              * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
              * @param target объект рядом с которым будет позиционироваться  диалог если нотификатор отсутствует
@@ -875,13 +897,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   self = this,
                   dialog,
                   prepareAndInsertContent = function(content) {
-                     var i = content.indexOf('<!--StartFragment-->');
-                     var isCleared = i !== -1;
-                     if (isCleared) {
-                        // Это фрагмент текста из MS Word - оставитьтолько непосредственно значимый фрагмент текста
-                        var j = content.indexOf('<!--EndFragment-->');
-                        content = content.substring(i + 20, j !== -1 ? j : content.length).trim();
-                     }
+                     content = this._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                      //_isPasteWithStyles = true нужно чтобы в нашем обработчике PastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                      var editor = self._tinyEditor;
@@ -891,10 +907,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         pastePlugin.clipboard.pasteHtml(content, false);
                      }
                      else {
-                        if (!isCleared) {
-                           //Вычищаем все ненужные теги, т.к. они в конечном счёте превращаютя в <p>
-                           content = content.replace(/<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
-                        }
                         var eventResult = editor.fire('PastePreProcess', {content: content});
                         self.insertHtml(eventResult.content);
                      }
@@ -2249,8 +2261,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
                // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
                // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
-               var isRichContent = cConstants.browser.isIE12 &&
-               cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+               var asRichContent = BROWSER.isIE12 && BROWSER.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
                e.content = e.content.replace('data-ws-is-rich-text="true"', '').trim();
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
@@ -2271,22 +2282,36 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!isRichContent) {
-                  if (options.editorConfig.paste_as_text) {
-                     //если данные не из БТР и не из word`a, то вставляем как текст
-                     //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
-                     if (this._clipboardText !== false) {
-                        e.content = this._getTextBeforePaste(this.getTinyEditor());
-                     }
-                  }
+               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText !== false) {
+                  //если данные не из БТР и не из word`a, то вставляем как текст
+                  //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
+
+                  //Проблема:
+                  //          после вставки текста могут возникать пробелы после <br> в начале строки
+                  //Решение:
+                  //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
+                  //             a)Подготовка текста
+                  //             b)Вставка текста
+                  //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
+                  var editor = this._tinyEditor;
+                  e.content = editor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
                }
             },
             _onPasteCallback: function(e) {
-               // А почему здесь берётся только простой текст?
-               this._clipboardText = e.clipboardData ?
-                  e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
-                  window.clipboardData.getData('text');
-               // editor.plugins.paste.clipboard.pasteFormat = 'html';
+               // Только если есть потребность использовать в методе _onPastePreProcessCallback this._clipboardText вместо e.content из tinymce
+               if (this._options.editorConfig.paste_as_text) {
+                  var clipboardData = e.clipboardData || window.clipboardData;
+                  if (BROWSER.safari && BROWSER.isMacOSDesktop) {
+                     // Если мак сафари, то в клипборде в текстовом виде каждый параграф заканчивается одинарных переводом строки (\n), а не двойным
+                     // (\n\n), как в хроме. И нет возможности отличить конец параграфа от простого перехода на новую строку после <br/>. Поэтому
+                     // поличим текст из html сами:
+                     // 1175818368 https://online.sbis.ru/opendoc.html?guid=5f01390b-7210-4e40-b168-c49265a71aa8
+                     this._clipboardText = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(clipboardData.getData('text/html'))));
+                  }
+                  else {
+                     this._clipboardText = clipboardData.getData(BROWSER.isMobileIOS ? 'text/plain' : 'text');
+                  }
+               }
             },
             _onPastePostProcessCallback: function(event) {
                var editor = this.getTinyEditor();
@@ -4050,16 +4075,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             },
 
-            _getTextBeforePaste: function(editor) {
-               //Проблема:
-               //          после вставки текста могут возникать пробелы после <br> в начале строки
-               //Решение:
-               //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
-               //             a)Подготовка текста
-               //             b)Вставка текста
-               //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
-               return this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
+            _htmlToText: function (html) {
+               if (!html) {
+                  return '';
+               }
+               var node = document.createElement('div');
+               node.innerHTML = html;
+               var texts = [];
+               var dom = this._tinyEditor.dom;
+               for (var i = 0, list = node.childNodes; i < list.length; i++) {
+                  var e = list[i];
+                  var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
+                  if (txt) {
+                     txt = txt.replace(/\xA0/g, ' ');
+                     if (texts.length && e.nodeType === 1 && dom.isBlock(e)) {
+                        texts.push('\r\n\r\n');
+                     }
+                     texts.push(txt);
+                  }
+               }
+               return texts.join('');
             },
+
             _fillImages: function(state) {
                var
                   temp = $('<div>' + this.getText() + '</div>');
