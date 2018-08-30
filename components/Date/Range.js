@@ -7,7 +7,6 @@ define('SBIS3.CONTROLS/Date/Range', [
    'SBIS3.CONTROLS/Mixins/RangeMixin',
    'SBIS3.CONTROLS/Mixins/DateRangeMixin',
    'SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin',
-   'SBIS3.CONTROLS/Date/RangeBigChoose',
    'SBIS3.CONTROLS/Utils/ControlsValidators',
    'i18n!SBIS3.CONTROLS/Date/Range',
    'SBIS3.CONTROLS/Date/Box',
@@ -15,7 +14,7 @@ define('SBIS3.CONTROLS/Date/Range', [
    'css!SBIS3.CONTROLS/Date/Range/DateRange',
    'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
    'css!SBIS3.CONTROLS/Date/Box/DateBox'
-], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoosePickerMixin, DateRangeBigChoose, ControlsValidators) {
+], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoosePickerMixin, ControlsValidators) {
    'use strict';
    /**
     * Класс контрола выбора диапазона дат.
@@ -145,8 +144,7 @@ define('SBIS3.CONTROLS/Date/Range', [
          _datePickerEnd: null,
          _dateRangeButton: null,
          _dateRangeChoose: null,
-         _calendarIsShow: false,
-         _chooseControlClass: DateRangeBigChoose
+         _calendarIsShow: false
       },
 
       _modifyOptions: function(options) {
@@ -271,7 +269,7 @@ define('SBIS3.CONTROLS/Date/Range', [
 
       _getDateRangeBigChooseConfig: function (element) {
          var config = DateRange.superclass._getDateRangeBigChooseConfig.apply(this, arguments);
-         config.headerType = DateRangeBigChoose.headerTypes.inputField;
+         config.headerType = this._chooserClass.headerTypes.inputField;
          return config;
       },
 
