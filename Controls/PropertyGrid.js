@@ -1,8 +1,7 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
    'tmpl!Controls/PropertyGrid/PropertyGrid',
-   'WS.Data/Utils',
-   'css!Controls/PropertyGrid/PropertyGrid'
+   'WS.Data/Utils'
 ], function(Control, template, Utils) {
    /**
     * Control PropertyGrid
