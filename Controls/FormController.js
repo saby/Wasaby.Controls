@@ -7,6 +7,12 @@ define('Controls/FormController', [
 ], function(Control, tmpl, Model, Deferred, IoC) {
    'use strict';
 
+
+   /**
+    * @name Controls/FormController#readMetaData
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists
+    */
+
    var module = Control.extend({
       _template: tmpl,
       _record: null,
@@ -29,7 +35,7 @@ define('Controls/FormController', [
          } else if (cfg.key !== undefined && cfg.key !== null) {
             // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
             // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-            var readDef = cfg.dataSource.read(cfg.key);
+            var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
             readDef.addCallback(function(record) {
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._record = record;
@@ -111,7 +117,7 @@ define('Controls/FormController', [
             }
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
-            this.read(this._options.key);
+            this.read(this._options.key, this._options.readMetaData);
          } else {
             // если нет ни рекорда ни ключа - создадим рекорд
             this.create();
@@ -319,6 +325,14 @@ define('Controls/FormController', [
             return record;
          });
          return resultDef;
+      },
+
+      /**
+       * Starts validating process.
+       * @returns {Core/Deferred} deferred of result of validation
+       */
+      validate: function() {
+         return this._children.validation.submit();
       }
    });
 

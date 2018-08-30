@@ -23,10 +23,7 @@ define('Controls/Application/_JsLinks',
             self.jsLinks = [];
             def.addCallback(function onLoad(res) {
                self.jsLinks = res.jsLinks;
-               self.cssLinks = [];
-               for (var i = 0; i < res.cssLinks.length; i++) {
-                  self.cssLinks.push(res.cssLinks[i].split(/.css$/)[0]);
-               }
+               self.cssLinks = res.cssLinks;
                self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
@@ -34,11 +31,7 @@ define('Controls/Application/_JsLinks',
             return innerDef;
          },
          getCssNameForDefine: function(cssLink) {
-            if (cssLink.indexOf('resources/') === 0 || cssLink.indexOf('/resources/') === 0) {
-               return cssLink.split('resources/')[1].replace(/\.min$/, '');
-            } else {
-               return cssLink;
-            }
+            return cssLink.replace('/resources/', '').replace(/\.min\..*$/, '');
          },
          getDefines: function() {
             if (!this.cssLinks) {
