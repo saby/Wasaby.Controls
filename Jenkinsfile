@@ -61,8 +61,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: true, description: "SKIP'нуть тесты, которые упали в RC", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int')
+            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
     ])
@@ -70,7 +69,6 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def all_inte = params.run_all_int
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
@@ -109,9 +107,6 @@ node('controls') {
             regr = true
             unit = true
         }
-        if ( inte ) {
-            all_inte = false
-        }
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -140,11 +135,12 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                        echo "Изменения были в файлах: ${changed_files}"
+                        if ( changed_files ) {
+                            echo "Изменения были в файлах: ${changed_files}"
 
                     }
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || all_inte || unit || inte || only_fail )) {
+                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
                         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
                     }
                     parallel (
@@ -237,7 +233,7 @@ node('controls') {
         if ( only_fail ) {
             run_test_fail = "-sf"
             // если галки не отмечены, сами определим какие тесты перезапустить
-            if ( !inte && !regr && !all_inte ) {
+            if ( !inte && !regr ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
                 for ( type in ["int", "reg"] ) {
@@ -342,7 +338,7 @@ node('controls') {
             }
             echo items
         }
-        if ( all_inte || regr || inte) {
+        if ( regr || inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -437,7 +433,7 @@ node('controls') {
                 }
             },
             int_reg: {
-                    if ( all_inte || regr || inte) {
+                    if ( regr || inte) {
                         def soft_restart = "True"
                         if ( params.browser_type in ['ie', 'edge'] ){
                             soft_restart = "False"
@@ -524,7 +520,7 @@ node('controls') {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
                     def tests_for_run = ""
-                    if ( inte && !only_fail ) {
+                    if ( inte && !only_fail && changed_files ) {
                         dir("./controls/tests") {
                             echo "Выкачиваем файл с зависимостями"
                             url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
@@ -554,7 +550,7 @@ node('controls') {
                     if ( skip ) {
                          dir("./controls/tests") {
                              def tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
-                             if ( tests_for_skip ) {
+                             if ( tests_for_skip.toBoolean() ) {
                                   tests_for_skip = tests_for_skip.replace('\n', '')
                                   echo "Будут скипнуты тесты: ${tests_for_skip}"
                                   skip_tests = "--SKIP ${tests_for_skip}"
@@ -564,7 +560,7 @@ node('controls') {
                     parallel (
                         int_test: {
                             stage("Инт.тесты"){
-                                if ( all_inte || inte ){
+                                if ( inte ){
                                     echo "Запускаем интеграционные тесты"
                                     dir("./controls/tests/int"){
                                         sh """
@@ -612,7 +608,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || all_inte || inte){
+    if ( regr || inte){
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         }
