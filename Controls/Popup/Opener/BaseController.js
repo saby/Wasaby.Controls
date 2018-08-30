@@ -2,10 +2,9 @@ define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, Deferred, ManagerController, Utils) {
+   function(CoreExtend, Deferred, Utils) {
       var _private = {
 
          /*
@@ -31,6 +30,13 @@ define('Controls/Popup/Opener/BaseController',
 
             document.body.removeChild(fakeDiv);
             return margins;
+         },
+
+         //Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
+         getManagerController: function() {
+            if (requirejs.defined('Controls/Popup/Manager/ManagerController')) {
+               return requirejs('Controls/Popup/Manager/ManagerController');
+            }
          }
       };
 
@@ -125,7 +131,8 @@ define('Controls/Popup/Opener/BaseController',
             return (new Deferred()).callback();
          },
          popupDeactivated: function(item) {
-            if (item.popupOptions.closeByExternalClick) {
+            var ManagerController = _private.getManagerController();
+            if (item.popupOptions.closeByExternalClick && ManagerController) {
                ManagerController.remove(item.id);
             }
          },
