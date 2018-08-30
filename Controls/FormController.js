@@ -10,7 +10,13 @@ define('Controls/FormController', [
 
    /**
     * @name Controls/FormController#readMetaData
-    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
+    * Also its default value for read method.
+    */
+   /**
+    * @name Controls/FormController#destroyMeta
+    * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
+    * Also its default value for destroy method.
     */
 
    var module = Control.extend({
@@ -133,7 +139,7 @@ define('Controls/FormController', [
          var def;
          if (this._isNewRecord && this._record) {
             var id = this._record.getId();
-            def = this._options.dataSource.destroy(id);
+            def = this._options.dataSource.destroy(id, this._options.destroyMeta);
             def.addBoth(function() {
                this._deletedId = id;
             }.bind(this));
@@ -251,6 +257,7 @@ define('Controls/FormController', [
          return record;
       },
       read: function(key, readMetaData) {
+         readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallback(this._readHandler.bind(this));
          return res;
@@ -334,6 +341,7 @@ define('Controls/FormController', [
          return updateDef;
       },
       delete: function(destroyMeta) {
+         destroyMeta = destroyMeta || this._options.destroyMeta;
          var self = this;
          var record = this._record;
          var resultDef = this._children.crud.delete(record, destroyMeta);
