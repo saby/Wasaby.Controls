@@ -275,6 +275,21 @@ define('Controls/FormController', [
       },
 
       update: function() {
+         var result = this._notify('requestCustomUpdate', [], {bubbling: true});
+         if (result instanceof Deferred) {
+            result.addCallback(function(defResult) {
+               if (defResult !== true) {
+                  this._update();
+               }
+               return defResult;
+            }.bind(this));
+         } else {
+            if (result !== true) {
+               this._update();
+            }
+         }
+      },
+      _update: function() {
          var self = this,
             record = this._record,
             updateDef = new Deferred();
