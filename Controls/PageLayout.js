@@ -48,7 +48,6 @@ define('Controls/PageLayout', [
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
             this._items = receivedState;
-            _private.updateOptions(this);
          } else {
             return _private.initItems(options.tabsSource, this).addCallback(function(items) {
                this._items = items;
