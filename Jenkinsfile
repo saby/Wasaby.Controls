@@ -143,6 +143,7 @@ node('controls') {
                     if ( skip ) {
                          dir("./tests") {
                              tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
+                             tests_for_skip = tests_for_skip.replace('\n', '')
                              if ( tests_for_skip != "" ) {
                                   tests_for_skip = tests_for_skip.replace('\n', '')
                                   echo "Будут скипнуты тесты: ${tests_for_skip}"
