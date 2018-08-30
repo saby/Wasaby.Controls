@@ -142,7 +142,8 @@ define('Controls/List', [
 
    ListControl.getDefaultOptions = function() {
       return {
-         multiSelectVisibility: 'hidden'
+         multiSelectVisibility: 'hidden',
+         style: 'default'
       };
    };
 
@@ -152,12 +153,6 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-
-   ListControl.getDefaultOptions = function() {
-      return {
-         style: 'default'
-      };
-   };
 
    return ListControl;
 });
