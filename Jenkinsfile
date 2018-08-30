@@ -134,7 +134,7 @@ node('controls') {
                         git checkout ${env.BRANCH_NAME}
                         git merge origin/rc-${version}
                         """
-                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        changed_files = sh (returnStdout: true, script: "git diff ${env.BRANCH_NAME}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files != "" ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
@@ -142,7 +142,7 @@ node('controls') {
                         def skip_tests = ""
                     if ( skip ) {
                          dir("./tests") {
-                             def tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
+                             def tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}| tr '\n' ' '"
                              if ( tests_for_skip ) {
                                   tests_for_skip = tests_for_skip.replace('\n', '')
                                   echo "Будут скипнуты тесты: ${tests_for_skip}"
