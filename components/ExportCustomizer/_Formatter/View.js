@@ -543,12 +543,34 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, historyInfo, saving));
             }
             //var isDifferent = fileUuid && this._isDifferent;
-            var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;
-            if (deleteUuid) {
-               this._callFormatterDelete(deleteUuid);
-            }
             if (isCommit) {
+               if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
+                  var args = {
+                     action: historyInfo.action,
+                     nextUuid: fileUuid,
+                     nextTitle: historyInfo.title
+                  };
+                  if (historyInfo.action === 'update') {
+                     args.previousUuid = options.primaryUuid;;
+                     args.previousTitle = historyInfo.title;
+                  }
+                  this._exportFormatter.commit(args);
+               }
+               else {
+                  //TODO Убрать это после того как метод будет добален
+                  if (fileUuid && !(saving && saving.isClone)) {
+                     var deleteUuid = options.primaryUuid;
+                     if (deleteUuid) {
+                        this._callFormatterDelete(deleteUuid);
+                     }
+                  }
+               }
                options.primaryUuid = fileUuid;
+            }
+            else {
+               if (fileUuid) {
+                  this._callFormatterDelete(fileUuid);
+               }
             }
             options.fileUuid = null;
             this._isDifferent = null;
