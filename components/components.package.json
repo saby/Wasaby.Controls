@@ -328,12 +328,14 @@
   {
     "include": [
       "SBIS3.CONTROLS/Date/Box",
-      "SBIS3.CONTROLS/Date/Box/*"
+      "SBIS3.CONTROLS/Date/Box/*",
+      "SBIS3.CONTROLS/Date/Picker",
+      "SBIS3.CONTROLS/Date/Picker/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-datebox.package.js"
+    "output": "sbis3controls-datepicker.package.js"
   },
   {
     "include": [
@@ -359,8 +361,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Date/RangeBigChoose",
-      "SBIS3.CONTROLS/Date/RangeBigChoose/*",
       "SBIS3.CONTROLS/Date/RangeChoose",
       "SBIS3.CONTROLS/Date/RangeChoose/*"
     ],
@@ -368,6 +368,26 @@
       "css!*"
     ],
     "output": "sbis3controls-daterangechoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/*"
+    ],
+    "exclude": [
+      "css!*",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "output": "sbis3controls-daterangebigchoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-daterangebigchooseutils.package.js"
   },
   {
     "include": [
@@ -385,19 +405,33 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Date/Picker",
-      "SBIS3.CONTROLS/Date/Picker/*",
-      "SBIS3.CONTROLS/Date/MonthPicker",
-      "SBIS3.CONTROLS/Date/MonthPicker/*",
-      "SBIS3.CONTROLS/Date/TimePicker",
-      "SBIS3.CONTROLS/Date/TimePicker/*",
       "SBIS3.CONTROLS/Date/MonthView",
       "SBIS3.CONTROLS/Date/MonthView/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-datepicker.package.js"
+    "output": "sbis3controls-datemonthview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/TimePicker",
+      "SBIS3.CONTROLS/Date/TimePicker/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-datetimepicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/MonthPicker",
+      "SBIS3.CONTROLS/Date/MonthPicker/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-datemonthpicker.package.js"
   },
   {
     "include": [
