@@ -380,10 +380,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
           * return {Core/Deferred}
           */
-         _callFormatterDelete: function (fileUuid) {
-            return this._exportFormatter.remove(fileUuid).addErrback(
+         _callFormatterDelete: function (fileUuid, historyInfo) {
+            return this._exportFormatter.remove(fileUuid, historyInfo).addErrback(
                function (err) { return err; }
             );
          },
@@ -515,10 +516,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @public
           * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
           * @return {Core/Deferred}
           */
-         remove: function (fileUuid) {
-            return this._callFormatterDelete(fileUuid);
+         remove: function (fileUuid, historyInfo) {
+            return this._callFormatterDelete(fileUuid, historyInfo);
          },
 
          /**
@@ -526,18 +528,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @public
           * @param {boolean} isCommit Сохранить или откатить изменения
-          * @param {object} saving Дополнительные опции сохранения
+          * @param {object} historyInfo Информация для сохранения истроии
+          * @param {object} [saving] Дополнительные опции сохранения (опционально)
           * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
           * @return {Core/Deferred<string>}
           */
-         endTransaction: function (isCommit, saving) {
+         endTransaction: function (isCommit, historyInfo, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (!isCommit) {
                options.consumerId = null;
             }
             if (isCommit && saving && saving.isClone && !fileUuid) {
-               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, saving));
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, historyInfo, saving));
             }
             //var isDifferent = fileUuid && this._isDifferent;
             var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;

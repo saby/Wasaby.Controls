@@ -376,13 +376,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                case 'editEnd':
                   this._isEditMode = null;
                   options.isTemporaryFile = null;
-                  result = formatter.endTransaction(args[0], args[1]);
+                  // Хотя fileUuid может быть пустым, но formatter ведёт историю
+                  result = formatter.endTransaction(args[0], args[1], args[2]);
                   break;
                case 'delete':
-                  var deleteUuid = args[0].fileUuid;
-                  if (deleteUuid) {
-                     formatter.remove(deleteUuid);
-                  }
+                  // Хотя fileUuid может быть пустым, но formatter ведёт историю
+                  formatter.remove(args[0], args[1]);
                   break;
             }
             if (formatterValues || formatterMeta) {
