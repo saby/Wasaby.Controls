@@ -351,12 +351,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
+            var formatter = views.formatter;
+            var result;
             switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
                   options.fieldIds = fieldIds.slice();
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
+                  // Здесь нет break, идём дальше
                case 'edit':
                   var consumer = args[0];
                   var consumerUuid = consumer.patternUuid || consumer.fileUuid;
@@ -371,18 +374,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   }
                   break;
                case 'editEnd':
-                  formatterMeta = {reason:'transaction', args:args};
                   this._isEditMode = null;
                   options.isTemporaryFile = null;
+                  result = formatter.endTransaction(args[0], args[1]);
                   break;
                case 'delete':
                   var deleteUuid = args[0].fileUuid;
                   if (deleteUuid) {
-                     formatterMeta = {reason:reason, args:[deleteUuid]};
+                     formatter.remove(deleteUuid);
                   }
                   break;
             }
-            var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
+            if (formatterValues || formatterMeta) {
+               /*result =*/ formatter.restate(formatterValues || {}, formatterMeta);
+            }
             this._updateCompleteButton(fieldIds);
             return result;
          },

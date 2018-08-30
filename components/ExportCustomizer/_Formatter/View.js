@@ -511,22 +511,33 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          }, PREVIEW_DELAY),
 
          /**
+          * Удалить стилевой эксель файл
+          *
+          * @public
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @return {Core/Deferred}
+          */
+         remove: function (fileUuid) {
+            return this._callFormatterDelete(fileUuid);
+         },
+
+         /**
           * Завершить транзакцию
           *
-          * @protected
+          * @public
           * @param {boolean} isCommit Сохранить или откатить изменения
           * @param {object} saving Дополнительные опции сохранения
           * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
           * @return {Core/Deferred<string>}
           */
-         _endTransaction: function (isCommit, saving) {
+         endTransaction: function (isCommit, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (!isCommit) {
                options.consumerId = null;
             }
             if (isCommit && saving && saving.isClone && !fileUuid) {
-               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, saving));
             }
             //var isDifferent = fileUuid && this._isDifferent;
             var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;
@@ -551,16 +562,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
-            }
-            if (meta) {
-               var args = meta.args;
-               switch (meta.reason) {
-                  case 'delete':
-                     this._callFormatterDelete(args[0]);
-                     return;
-                  case 'transaction':
-                     return this._endTransaction(args[0], args[1]);
-               }
             }
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
