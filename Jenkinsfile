@@ -60,8 +60,8 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: true, description: "SKIP'нуть тесты, которые упали в RC", name: 'SKIP'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'RUN_ONLY_FAIL_TEST'),
+            booleanParam(defaultValue: true, description: "SKIP'нуть тесты, которые упали в RC", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int')
             ]),
         pipelineTriggers([])
@@ -74,8 +74,8 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
-        def skip = params.SKIP
-        def only_fail = params.RUN_ONLY_FAIL_TEST
+        def skip = params.skip
+        def only_fail = params.run_only_fail_test
         def changed_files
 
         try {
