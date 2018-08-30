@@ -135,9 +135,9 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                        if ( changed_files ) {
+                        if ( changed_files.toBoolean() ) {
                             echo "Изменения были в файлах: ${changed_files}"
-
+                        }
                     }
                     updateGitlabCommitStatus state: 'running'
                     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
