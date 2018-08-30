@@ -260,6 +260,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _onFormatEdited: function () {
+            this._isDifferent = true;
+            this._updatePreview();
          },
 
          /**
