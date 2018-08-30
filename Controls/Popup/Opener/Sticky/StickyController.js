@@ -1,13 +1,15 @@
 define('Controls/Popup/Opener/Sticky/StickyController',
    [
       'Controls/Popup/Opener/BaseController',
+      'Controls/Popup/Manager/ManagerController',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Core/core-merge',
       'Core/core-clone',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
       'css!Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, isElementVisible, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -106,8 +108,13 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementUpdated: function(item) {
-            item.stickyState = 'updated';
-            item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+            if (this._isElementVisible(item.popupOptions.target)) {
+               item.stickyState = 'updated';
+               item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+            } else {
+               ManagerController.remove(item.id);
+            }
+
          },
 
          elementAfterUpdated: function(item, container) {
@@ -152,6 +159,10 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
             _private.prepareConfig(item, sizes);
+         },
+
+         _isElementVisible: function(target) {
+            return isElementVisible(target);
          }
       });
 

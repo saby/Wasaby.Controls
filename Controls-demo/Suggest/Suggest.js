@@ -73,7 +73,27 @@ define('Controls-demo/Suggest/Suggest', [
       { id: 56, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 57, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 58, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 59, title: 'Sasha', text: 'test', currentTab: 2 }
+      { id: 59, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 60, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 61, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 62, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 63, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 64, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 65, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 66, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 67, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 68, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 69, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 70, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 71, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 72, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 73, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 74, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 75, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 76, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 77, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 78, title: 'Sasha', text: 'test', currentTab: 1 },
+      { id: 79, title: 'Sasha', text: 'test', currentTab: 2 }
    ];
    
    var VDomSuggest = Control.extend({

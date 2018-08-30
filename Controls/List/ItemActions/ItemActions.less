@@ -92,6 +92,11 @@
   color: @warning-color;
 }
 
+//since Opener does not know the specific size of the icon
+.controls-itemActionsV__popup .icon-size{
+  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+}
+
 .controls-itemActionsV__action_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }

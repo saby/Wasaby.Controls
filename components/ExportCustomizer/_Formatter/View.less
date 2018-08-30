@@ -15,6 +15,10 @@
    color: @color_ExportCustomizer-Formatter-View-title;
 }
 
+.ws-disabled .controls-ExportCustomizer-Formatter-View__title {
+   color: @color_ExportCustomizer-Formatter-View-title_disabled;
+}
+
 .controls-ExportCustomizer-Formatter-View__formatterMenu {
    .flex-shrink(0);
    margin: @margin_ExportCustomizer-Formatter-View-formatterMenu;
@@ -31,7 +35,6 @@
 .controls-ExportCustomizer-Formatter-View__preview {
    position: relative;
    overflow: hidden;
-   text-align: center;
    //Чтобы не обрезался индикатор пока не успела подгрузиться картинка
    min-height: @min-height_ExportCustomizer-Formatter-View-preview;
 }
@@ -39,6 +42,10 @@
 .controls-ExportCustomizer-Formatter-View__preview img.ws-enabled {
    max-width: 100%;
    cursor: pointer;
+}
+
+.ws-disabled .controls-ExportCustomizer-Formatter-View__preview img {
+   cursor: default;
 }
 
 .controls-ExportCustomizer-Formatter-View__text {

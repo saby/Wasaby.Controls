@@ -19,6 +19,7 @@ define('Controls/List', [
     * @class Controls/List
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation

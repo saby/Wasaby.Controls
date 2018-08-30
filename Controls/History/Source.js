@@ -231,15 +231,15 @@ define('Controls/History/Source', [
             //removing group allows items to be shown in history items
             if (historyType === 'pinned') {
                item.set('pinned', true);
-               item.set('group', null);
+               item.has('group') && item.set('group', null);
             }
             if (historyType === 'recent') {
                item.set('recent', true);
-               item.set('group', null);
+               item.has('group') && item.set('group', null);
             }
             if (historyType === 'frequent') {
                item.set('frequent', true);
-               item.set('group', null);
+               item.has('group') && item.set('group', null);
             }
             item.set('HistoryId', historyId);
             items.add(item);
@@ -392,7 +392,8 @@ define('Controls/History/Source', [
                self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
                return new DataSet({
                   rawData: newItems.getRawData(),
-                  idProperty: newItems.getIdProperty()
+                  idProperty: newItems.getIdProperty(),
+                  adapter: newItems.getAdapter()
                });
             });
          }

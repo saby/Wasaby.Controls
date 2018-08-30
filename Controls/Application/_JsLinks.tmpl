@@ -4,7 +4,7 @@
    </ws:if>
    <ws:if data="{{ jsLinks }}">
       <ws:for data="index, value in jsLinks">
-         <script type="text/javascript" src="{{ _options.appRoot?(_options.appRoot+value).replace('//', '/'):value }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
+         <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
       </ws:for>
    </ws:if>
    <ws:if data="{{ receivedStateArr }}">

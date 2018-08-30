@@ -2,7 +2,7 @@
      attr:ws-no-focus="true"
      on:mouseenter="_mouseenterHandler()"
      on:mouseleave="_mouseleaveHandler()">
-   <div class="controls-Notification__content">
+   <div class="controls-Notification__content {{_options.iconClose ? 'controls-Notification__content-spacing'}}">
       <ws:if data="{{_options.contentTemplate}}">
          <ws:partial template="{{_options.contentTemplate}}"></ws:partial>
       </ws:if>

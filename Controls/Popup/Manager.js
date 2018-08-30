@@ -87,6 +87,24 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupDragStart: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
+               return true;
+            }
+            return false;
+         },
+
+         popupDragEnd: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragEnd(element, offset);
+               return true;
+            }
+            return false;
+         },
+
          popupResult: function(id) {
             var args = Array.prototype.slice.call(arguments, 1);
             return _private.fireEventHandler.apply(_private, [id, 'onResult'].concat(args));
@@ -118,7 +136,15 @@ define('Controls/Popup/Manager',
          getItemContainer: function(id) {
             var popupContainer = ManagerController.getContainer();
             var item = popupContainer && popupContainer._children[id];
-            return item && item._container;
+            var container = item && item._container;
+
+            // При работе popup'ов внутри слоя совместимости, _container может быть обернут
+            // в jQuery. Так как система работает с нативными элементами, нужно в таком случае
+            // снять jQuery-обертку
+            if (container && container.jquery) {
+               container = container[0];
+            }
+            return container;
          },
 
          redrawItems: function(items) {
