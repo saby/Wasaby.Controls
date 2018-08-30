@@ -243,6 +243,10 @@
             "type": "String",
             "title": "Name of the item property that uniquely identifies collection item."
           },
+          "displayProperty": {
+            "type": "String",
+            "title": "Name of the item property that content will be displayed. Only affects the value when selecting."
+          },
           "itemTemplateProperty": {
             "type": "String",
             "title": "Name of the item property that contains template for item render"
