@@ -1,27 +1,41 @@
-<div class="ws-flexbox ws-flex-column" style="height: 100%">
-   <div class="ws-flexbox ws-flex-column">
-      <Controls.Toggle.Switch caption="Activate paging" bind:value="_pagingVisible"/>
-      <Controls.Toggle.Switch caption="Activate thin scrollbar" bind:value="_scrollbarVisible" attr:test_name="scrollbarVisible"/>
-      <Controls.Toggle.Switch caption="Activate shadow" bind:value="_shadowVisible" attr:test_name="shadowVisible"/>
-      <Controls.Toggle.Switch caption="Activate inner scroll" bind:value="_innerScroll" attr:test_name="innerScroll"/>
-      <Controls.Input.Number precision="{{0}}" bind:value="_numberOfRecords" attr:style="width: 200px;" attr:test_name="numberOfRecords"/>
-   </div>
-   <Controls.Container.Scroll attr:style="height: 50%; width: 50%; margin: auto;"
-                              scrollbarVisible="{{_scrollbarVisible}}"
-                              shadowVisible="{{_shadowVisible}}"
-                              attr:test_name="Scroll_1">
+<div class="ControlsDemo-wrapper">
+    <div>
+        <div class="ControlsDemo-options_block">
+            <h3>Options</h3>
+            <div class="ControlsDemo-options_wrapper">
+                <Controls.Label caption="style:"/>
+                <Controls.Input.ComboBox
+						attr:class="ControlsDemo-scrollStyleSource"
+                        source="{{_scrollStyleSource}}"
+                        keyProperty="title"
+                        displayProperty="title"
+                        bind:selectedKey="_selectedStyle"/>
 
-      <div>
-         <ws:if data="{{_innerScroll}}">
-            <Controls.Container.Scroll attr:style="height: 300px;" attr:test_name="Scroll_2">
-               <ws:for data="index in _numberOfRecords">
-                  <div>Record {{index + 1}}</div>
-               </ws:for>
+                <Controls.Toggle.Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:class="ControlsDemo-scrollbarVisible"/>
+                <Controls.Toggle.Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:class="ControlsDemo-shadowVisible"/>
+            </div>
+
+            <h3>Settings</h3>
+            <div class="ControlsDemo-settings_wrapper">
+                <Controls.Label caption="Number of records"/>
+                <Controls.Input.Number precision="{{0}}" integersLength="{{3}}" bind:value="_numberOfRecords" attr:class="ControlsDemo-numberOfRecords"/>
+                <Controls.Toggle.Switch caption="Activate paging" bind:value="_pagingVisible" attr:class="ControlsDemo-pagingVisible"/>
+            </div>
+        </div>
+
+        <div class="ControlsDemo-example_block">
+            <h2>Scroll</h2>
+            <Controls.Container.Scroll attr:class="ControlsDemo-scroll_container"
+                                       scrollbarVisible="{{_scrollbarVisible}}"
+                                       shadowVisible="{{_shadowVisible}}"
+                                       style="{{_selectedStyle}}">
+
+                <div>
+                    <ws:for data="index in _numberOfRecords">
+                        <div class="ControlsDemo-record">Record {{index + 1}}</div>
+                    </ws:for>
+                </div>
             </Controls.Container.Scroll>
-         </ws:if>
-         <ws:for data="index in _numberOfRecords">
-            <div>Record {{index + 1}}</div>
-         </ws:for>
-      </div>
-   </Controls.Container.Scroll>
+        </div>
+    </div>
 </div>
