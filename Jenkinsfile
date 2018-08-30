@@ -146,6 +146,7 @@ node('controls') {
                              if ( tests_for_skip != '' ) {
                                   echo "Будут скипнуты тесты: ${tests_for_skip}"
                                   skip_tests = "--SKIP ${tests_for_skip}"
+                                  echo "${skip_tests} 124234"
                              }
                          }
                     }
