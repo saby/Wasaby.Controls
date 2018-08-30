@@ -124,6 +124,50 @@ define('Controls/Input/Number/InputProcessor',
              * @return {{value: (*|String), position: (*|Integer)}}
              */
             processInsert: function(splitValue, options, splitValueHelper) {
+               splitValue.cursorShift = 0;
+
+               // Check if we are trying to insert a float number
+               if (splitValue.insert.length > 1 && splitValue.insert.indexOf('.') !== -1) {
+                  // We must insert integers part into integers part, and decimals part into decimals part (right after dot)
+                  if (splitValueHelper.isInIntegersPart()) {
+                     var
+                        insertIntegers = splitValue.insert.split('.')[0],
+                        insertDecimals = splitValue.insert.split('.')[1];
+
+                     // First, insert the integer part at the cursor position
+                     splitValue.insert = insertIntegers;
+                     this.processIntegersInsert(splitValue, options, splitValueHelper);
+
+                     // Then generate a new splitValue object and insert the decimals part after the dot
+                     var val = _private.getValueWithDelimiters(splitValue);
+                     splitValue.before = val.split('.')[0] + '.';
+                     splitValue.after = val.split('.')[1];
+                     splitValue.insert = insertDecimals;
+                     this.processIntegersInsert(splitValue, options, splitValueHelper);
+                  } else {
+                     // When inserting float number into decimals part
+                     // we should remove dot and insert all symbols
+                     splitValue.insert = splitValue.insert.replace('.', '');
+                     this.processIntegersInsert(splitValue, options, splitValueHelper);
+                  }
+               } else {
+                  this.processIntegersInsert(splitValue, options, splitValueHelper);
+               }
+
+
+               return {
+                  value: _private.getValueWithDelimiters(splitValue),
+                  position: _private.getCursorPosition(splitValue, splitValue.cursorShift)
+               };
+            },
+
+            /**
+             * Handles insert, but only integer values. Used by 'processInsert' method
+             * @param splitValue
+             * @param options
+             * @param splitValueHelper
+             */
+            processIntegersInsert: function(splitValue, options, splitValueHelper) {
                var
                   shift = 0;
 
@@ -135,58 +179,58 @@ define('Controls/Input/Number/InputProcessor',
                ) {
                   splitValue.insert = '';
                } else {
-                  //Forbid inserting multiple zeroes at line start
+                  // Forbid inserting multiple zeroes at line start
                   if (!splitValueHelper.isEmptyField() && splitValueHelper.isAtLineStart() && splitValue.insert === '0' && splitValue.after[0] !== '.') {
                      splitValue.insert = '';
                   }
 
                   if (splitValue.insert === '.') {
-                     //Inserting dot in emty field results in '0.0'
+                     // Inserting dot in emty field results in '0.0'
                      if (splitValueHelper.isEmptyField()) {
                         splitValue.after = '.0';
                         splitValue.insert = '0';
                      } else if (splitValueHelper.isInIntegersPart()) {
-                        //Inserting dot in integers part moves cursor to decimals part
+                        // Inserting dot in integers part moves cursor to decimals part
                         splitValue.insert = '';
                         shift += splitValue.after.indexOf('.') + 1;
                      }
                   }
 
-                  //If field is empty or number doesn't contain dot, then we should add '.0' at the end
+                  // If field is empty or number doesn't contain dot, then we should add '.0' at the end
                   if ((splitValueHelper.isEmptyField() || !splitValueHelper.hasDot()) && options.precision !== 0) {
                      splitValue.after += '.0';
                   }
 
                   if (splitValue.insert === '-') {
-                     //Inserting '-' after '0' should result in '-0'
+                     // Inserting '-' after '0' should result in '-0'
                      if (splitValue.before === '0' && (splitValue.after === '' || splitValue.after === '.0')) {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
 
-                     //Inserting '-' in empty field should result in '-0.0'
+                     // Inserting '-' in empty field should result in '-0.0'
                      if (splitValue.before === '' && splitValue.after === '' || splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
                   } else {
-                     //If before value is '0' and input is valid, then we should delete before value
+                     // If before value is '0' and input is valid, then we should delete before value
                      if (splitValue.before === '0' && splitValue.insert.length && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
                         splitValue.before = '';
                      }
 
-                     //if before value is '-0', then we should delete '0'
+                     // if before value is '-0', then we should delete '0'
                      if (splitValue.before === '-0' && _private.validators.isValidInsert(_private.getClearValue(splitValue))) {
                         splitValue.before = '-';
                      }
                   }
 
-                  //If we insert first symbol in decimal part when it already contains '0', then we should erase '0'
+                  // If we insert first symbol in decimal part when it already contains '0', then we should erase '0'
                   if (splitValue.after === '0' && splitValue.before[splitValue.before.length - 1] === '.') {
                      splitValue.after = '';
                   }
 
-                  //If we have exceeded the maximum number in integers part, then we should move cursor after dot
+                  // If we have exceeded the maximum number in integers part, then we should move cursor after dot
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
                      if (options.precision !== 0) {
                         if (splitValue.after[0] === '.') {
@@ -204,13 +248,20 @@ define('Controls/Input/Number/InputProcessor',
                      splitValue.insert = '';
                   }
 
-                  //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
+                  // If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
                   if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
                      if (splitValue.after !== '') {
                         splitValue.before += splitValue.insert;
                         splitValue.after = splitValue.after.slice(splitValue.insert.length);
                      }
                      splitValue.insert = '';
+
+                     // Check whether we have exceeded the allowed number symbols in decimals part
+                     // and slice the extra if it is necessary
+                     var symbolsOverPrecisionCount = splitValue.before.split('.')[1].length - options.precision;
+                     if (symbolsOverPrecisionCount > 0) {
+                        splitValue.before = splitValue.before.slice(0, -symbolsOverPrecisionCount);
+                     }
                   }
 
                   if (!_private.validators.isNumber(_private.getClearValue(splitValue))) {
@@ -218,10 +269,7 @@ define('Controls/Input/Number/InputProcessor',
                   }
                }
 
-               return {
-                  value: _private.getValueWithDelimiters(splitValue),
-                  position: _private.getCursorPosition(splitValue, shift)
-               };
+               splitValue.cursorShift = shift;
             },
 
             /**
