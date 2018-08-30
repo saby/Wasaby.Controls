@@ -11,7 +11,7 @@ define('Controls/Popup/Previewer',
       /**
        * @class Controls/Popup/Previewer
        * @extends Core/Control
-       * @author Красильников А.С.
+       * @public
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
@@ -73,6 +73,7 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             if (this._isNewEnvironment()) {
+               this._close(event); // close opened popup to avoid jerking the content for repositioning
                this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
             } else {
                this._children.openerPreviewer.open(_private.getCfg(this, event), type);
@@ -99,7 +100,15 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            /**
+             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+             */
+            if (this._options.trigger === 'hover') {
+               this._cancel(event, 'opening');
+            } else {
+               this._open(event);
+            }
+
             event.stopPropagation();
          },
 

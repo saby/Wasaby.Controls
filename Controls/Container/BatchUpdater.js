@@ -26,9 +26,17 @@ define('Controls/Container/BatchUpdater',
        * @cfg {Content} Container contents.
        *
        */
-      var Async;
-      Async = Base.extend({
+      var BatchUpdater;
+      BatchUpdater = Base.extend({
          _template: template,
+         constructor: function() {
+            BatchUpdater.superclass.constructor.apply(this, arguments);
+            this._forceUpdate = function() {
+               // Do nothing
+               // This method will be called because of handling event.
+               // But BatchUpdater controls updates of inner controls independently
+            };
+         },
          requestHandler: function(evt, def, callback) {
             if (!(def instanceof Deferred)) {
                IoC.resolve('ILogger').error('Event batchUpdate should pass deferred in parameters');
@@ -74,6 +82,6 @@ define('Controls/Container/BatchUpdater',
             // But BatchUpdater controls updates of inner controls independently
          }
       });
-      return Async;
+      return BatchUpdater;
    }
 );

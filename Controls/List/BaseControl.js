@@ -581,7 +581,17 @@ define('Controls/List/BaseControl', [
          }
       },
 
-      _onItemClick: function(e, item) {
+      _onItemClick: function(e, item, originalEvent) {
+         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
+            /*
+             When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
+             We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
+             we'd be stopping the propagation of valueChanged event, not click event.
+             And even if we could stop propagation of the click event, we shouldn't do that because other components
+             can use it for their own reasons (e.g. something like TouchDetector can use it).
+             */
+            e.stopPropagation();
+         }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },

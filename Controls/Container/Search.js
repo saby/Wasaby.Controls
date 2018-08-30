@@ -8,16 +8,6 @@ define('Controls/Container/Search',
    
    function(Control, template, SearchContextField, IoC) {
       
-      /**
-       * Container for content that can be filtered by Controls/Input/Search.
-       *
-       * @class Controls/Container/Search
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
-      
       'use strict';
       
       var Search = Control.extend({
