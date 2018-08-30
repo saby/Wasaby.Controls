@@ -239,16 +239,24 @@ define('Controls/Popup/Opener/BaseOpener',
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
                var action;
                if (!opener || !opener._action) {
-                  action = new Action();
+                  action = new Action({
+                     closeByFocusOut: true,
+                  });
                } else {
                   action = opener._action;
                }
 
-               if (action.getDialog() && !isFormController) {
+               var dialog = action.getDialog();
+
+               if (dialog && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
-                  var compoundArea = action.getDialog()._getTemplateComponent();
+                  var compoundArea = dialog._getTemplateComponent();
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  if (compoundArea) {
+                     compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                     dialog.setTarget && dialog.setTarget($(newCfg.target));
+                     dialog._recalcPosition && dialog._recalcPosition();
+                  }
                } else {
                   action.closeDialog();
                   action.execute(newCfg);
