@@ -120,6 +120,7 @@ define('Controls/Popup/Opener/BaseController',
                   });
                }
             }
+            return (new Deferred()).callback();
          },
 
          /**
