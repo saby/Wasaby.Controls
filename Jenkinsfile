@@ -141,7 +141,7 @@ node('controls') {
 
                         def skip_tests = ""
                     if ( skip ) {
-                         dir("./controls/tests") {
+                         dir("./tests") {
                              def tests_for_skip = null
                              tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
                              if ( tests_for_skip != null ) {
