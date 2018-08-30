@@ -16,7 +16,6 @@ define('Controls/interface/IPrinter', [], function() {
    /**
     * Prints items.
     * @function Controls/interface/IPrinter#print
-    * @param {WS.Data/Query/Query} query Query that will be used to get data for printing.
     * @param {Object} params Additional information.
     * @param {String} params.name File name to use for exported file.
     * @param {Boolean} params.pageLandscape Determines whether the page will be in portrait or landscape orientation.
@@ -27,5 +26,10 @@ define('Controls/interface/IPrinter', [], function() {
    /**
     * @name Controls/interface/IPrinter#source
     * @cfg {WS.Data/Source/ISource} Object that implements ISource interface for data access.
+    */
+
+   /**
+    * @name Controls/interface/IPrinter#sorting
+    * @cfg {Object} Sorting config (object keys - field names; values - sorting type: 'ASC' - ascending or 'DESC' - descending).
     */
 });

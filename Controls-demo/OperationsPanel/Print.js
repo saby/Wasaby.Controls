@@ -22,11 +22,14 @@ define('Controls-demo/OperationsPanel/Print', [
 
    var Print = Control.extend({
       _template: template,
-      _query: null,
       _showPrintDialog: false,
-      _source: new Memory({
-         data: data
-      }),
+      _source: null,
+
+      _beforeMount: function() {
+         this._source = new Memory({
+            data: data
+         });
+      },
 
       _clickHandler: function(e, type) {
          var params = {
@@ -43,7 +46,7 @@ define('Controls-demo/OperationsPanel/Print', [
             name: 'имя'
          };
 
-         this._children[type].print(this._query, params);
+         this._children[type].print(params);
       },
 
       _togglePrintDialog: function(e, value) {
