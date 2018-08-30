@@ -585,34 +585,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        */
       Area.getOptionTypes = optionsTool.getOptionTypes.bind(optionsTool);
 
-      /**
-       * Показать сообщение пользователю
-       *
-       * @public
-       * @static
-       * @param {SBIS3.CONTROLS/SubmitPopup#SubmitPopupStatus} type Тип диалога (confirm, default, success, error)
-       * @param {string} title Заголовок сообщения
-       * @param {string} text Текст сообщения
-       * @return {Core/Deferred}
-       */
-      /*Area.showMessage = function (type, title, text) {
-         var isConfirm = type === 'confirm';
-         var promise = new Deferred();
-         var args = [{
-            status: type,
-            message: title,
-            details: text
-         }];
-         if (isConfirm) {
-            args.push(promise.callback.bind(promise, true), promise.callback.bind(promise, false));
-         }
-         else {
-            args.push(promise.callback.bind(promise, null));
-         }
-         InformationPopupManager[isConfirm ? 'showConfirmDialog' : 'showMessageDialog'].apply(InformationPopupManager, args);
-         return promise;
-      };*/
-
 
 
       // Private methods:
