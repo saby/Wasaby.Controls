@@ -5,6 +5,7 @@
    </ws:if>
    <ws:else data="{{_options.trigger === 'hover'}}">
       <ws:partial template="{{_options.content}}"
+                  on:mousedown="_contentMousedownHandler()"
                   on:mouseenter="_contentMouseenterHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:else>

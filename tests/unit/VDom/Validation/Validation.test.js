@@ -4,12 +4,13 @@ define([
    'use strict';
 
    describe('Validation-tests', function () {
-      var testControl;
+      var testControl, testElement;
       beforeEach(function () {
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
-         $('#mocha').append('<div id="component123"></div>');//Для добавления верстки на страницу
+         testElement = $('<div id="component123"></div>');
+         $('#mocha').append(testElement);//Для добавления верстки на страницу
       });
 
       function check(done, control, expected, callback) {
@@ -126,6 +127,7 @@ define([
 
       afterEach(function () {
          testControl && testControl.destroy();
+         testElement && testElement.remove();
       });
    });
 

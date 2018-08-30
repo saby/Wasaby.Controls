@@ -1,9 +1,8 @@
 define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
-   'SBIS3.CONTROLS/Date/RangeBigChoose',
    'Core/core-instance',
    'Core/deprecated',
    'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin'
-], function (DateRangeBigChoose, cInstance, deprecated, RangeSelectableViewMixin) {
+], function (cInstance, deprecated, RangeSelectableViewMixin) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS/Mixins/RangeMixin) и SBIS3.CONTROLS.PickerMixin.
@@ -106,21 +105,6 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          }
       },
 
-      before: {
-         showPicker: function () {
-            if (this._chooserControl) {
-               this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               this._chooserControl.updateViewAfterShow();
-            }
-         }
-      },
-      after: {
-         showPicker: function () {
-            // см комментарий в updateViewAfterShow
-            this._chooserControl.updateViewAfterShow();
-         }
-      },
-
       instead: {
          /**
           * Определение контента пикера. Переопределённый метод
@@ -133,7 +117,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
 
             this._picker.getContainer().empty();
             // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
-            self._chooserControl = new DateRangeBigChoose(this._getDateRangeBigChooseConfig(element));
+            self._chooserControl = new this._chooserClass(this._getDateRangeBigChooseConfig(element));
 
             // Добавляем в пикер
             this._picker.getContainer().append(element);
@@ -159,7 +143,22 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
                   opts.startValue = opts.endValue;
                }
             }
-            return opts
+            return opts;
+         },
+         showPicker: function(parentFnc) {
+            if (this._chooserControl) {
+               this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
+               this._chooserControl.updateViewAfterShow();
+               parentFnc.call(this);
+               // см комментарий в updateViewAfterShow
+               // this._chooserControl.updateViewAfterShow();
+            } else {
+               requirejs(['SBIS3.CONTROLS/Date/RangeBigChoose'], function(RangeChoose) {
+                  this._chooserClass = RangeChoose;
+                  parentFnc.call(this);
+                  this._chooserControl.updateViewAfterShow();
+               }.bind(this));
+            }
          },
          setStartValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
