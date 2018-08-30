@@ -67,6 +67,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        */
       var PREVIEW_SCALE = 0.4;
 
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_WIDTH = 1920;
+
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_HEIGHT = 0;
+
 
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
@@ -124,8 +138,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _formatterMenu: null,
             // Контрол предпросмотра
             _preview: null,
-            // Размер области предпросмотра
-            _previewSize: null,
             // Происходит ли в данный момент процесс редактирования стилевого эксель-файла пользователем
             _isEditing: null,
             // Стилевой эксель-файла изменён пользователем
@@ -356,7 +368,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<boolean>}
           */
          _callFormatterIsExists: function (fileUuid) {
-            return this._exportFormatter.isExists(fileUuid);
+            return this._exportFormatter.isExists(fileUuid).addErrback(
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Вызвать метод форматера "delete"
+          *
+          * @protected
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * return {Core/Deferred}
+          */
+         _callFormatterDelete: function (fileUuid) {
+            return this._exportFormatter.remove(fileUuid).addErrback(
+               function (err) { return err; }
+            );
          },
 
          /**
@@ -369,20 +396,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams);
-         },
-
-         /**
-          * Вызвать метод форматера "delete"
-          *
-          * @protected
-          * @param {string} fileUuid Uuid стилевого эксель-файла
-          * return {Core/Deferred}
-          */
-         _callFormatterDelete: function (fileUuid) {
-            return this._exportFormatter.remove(fileUuid).addCallbacks(
-               function (result) {},
-               function (err) { return err; }
-            );
          },
 
          /**
@@ -475,13 +488,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
-            var size = this._previewSize;
-            if (!size) {
-               this._previewSize = size = {width:1920, height:0};
-            }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT).addCallbacks(
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
