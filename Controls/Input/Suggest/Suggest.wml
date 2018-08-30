@@ -16,6 +16,7 @@
         bind:suggestState="_suggestState">
     <Controls.Input.resources.InputRender.InputRender
             size="{{ _options.size }}"
+            tooltip="{{_options.tooltip}}"
             viewModel="{{_simpleViewModel}}"
             trim="{{_options.trim}}"
             autocomplete="{{_options.autocomplete}}"
