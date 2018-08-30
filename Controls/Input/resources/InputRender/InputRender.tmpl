@@ -6,8 +6,7 @@
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
    {{ !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}"
-     title="{{_tooltip}}"
-   on:mouseenter="_mouseEnterHandler()">
+     title="{{_tooltip}}">
    <div
       class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
 
@@ -30,6 +29,7 @@
                on:change="_inputCompletedHandler()"
                on:focusin="_focusinHandler()"
                on:focusout="_focusoutHandler()"
+               on:mouseenter="_mouseEnterHandler()"
                attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
                value="{{ _options.viewModel.getDisplayValue() }}"
                readOnly="{{ _options.readOnly }}"
