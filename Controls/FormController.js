@@ -275,19 +275,35 @@ define('Controls/FormController', [
       },
 
       update: function() {
-         var result = this._notify('requestCustomUpdate', [], {bubbling: true});
-         if (result instanceof Deferred) {
-            result.addCallback(function(defResult) {
-               if (defResult !== true) {
-                  this._update();
-               }
-               return defResult;
-            }.bind(this));
-         } else {
+         var updateResult = new Deferred(),
+            self = this;
+
+         function updateCallback(result) {
+            // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-               this._update();
+               var res = self._update();
+               updateResult.dependOn(res);
+            } else {
+               updateResult.callback(true);
             }
          }
+
+         // maybe anybody want to do custom update. check it.
+         var result = this._notify('requestCustomUpdate', [], { bubbling: true });
+
+         if (result instanceof Deferred) {
+            result.addCallback(function(defResult) {
+               updateCallback(defResult);
+               return defResult;
+            });
+            result.addErrback(function(err) {
+               updateResult.errback(err);
+               return err;
+            });
+         } else {
+            updateCallback(result);
+         }
+         return updateResult;
       },
       _update: function() {
          var self = this,

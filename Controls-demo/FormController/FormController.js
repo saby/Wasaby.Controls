@@ -170,6 +170,9 @@ define('Controls-demo/FormController/FormController', [
             return e;
          });
          this._forceUpdate();
+      },
+      _requestCustomUpdate: function() {
+         return false;
       }
    });
 
