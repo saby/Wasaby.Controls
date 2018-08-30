@@ -7,12 +7,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
-      'Controls/Container/Scroll/Context',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
-      // TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
+   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
          setPopupOptions: function(self) {
             self._popupOptions = {
@@ -91,8 +89,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
-
-            this._scrollData = new ScrollData({ pagingVisible: false });
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -216,11 +212,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._listModel.toggleExpanded(this._expanded);
             this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();
-         },
-         _getChildContext: function() {
-            return {
-               ScrollData: this._scrollData
-            };
          },
          _beforeUnmount: function() {
             if (this._listModel) {
