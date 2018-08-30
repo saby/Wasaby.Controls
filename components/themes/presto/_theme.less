@@ -529,3 +529,10 @@ body {
     }
   }
 }
+
+/* Сслыки в операциях имеют font-size отличный от обычных ссылок,
+   более того, опция size там не поможет, т.к. в online size там m, а в presto xl.
+   В новом тулбаре это решено, там теперь лежат не ссылки */
+.controls-ItemActions .controls-Link {
+  font-size: @font-size_Link-l;
+}

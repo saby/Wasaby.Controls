@@ -31,10 +31,6 @@ define('Controls/Popup/Compatible/Layer', [
       defaultLicense: true
    };
 
-   function isNewEnvironment() {
-      return !!document.getElementsByTagName('html')[0].controlNodes;
-   }
-
    function loadDataProviders(parallelDef) {
       parallelDef.push(ExtensionsManager.loadExtensions().addErrback(function(err) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
@@ -217,8 +213,11 @@ define('Controls/Popup/Compatible/Layer', [
    }
 
    return {
+      isNewEnvironment: function() {
+         return !!document.getElementsByTagName('html')[0].controlNodes;
+      },
       load: function(deps, force) {
-         if (!isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
+         if (!this.isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
             return (new Deferred()).callback();
          }
          if (!loadDeferred) {
@@ -228,8 +227,12 @@ define('Controls/Popup/Compatible/Layer', [
 
             /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
             * например, autosize*/
-            if (window.jQuery) {
+            if (window && window.jQuery) {
                compatibleDeps.splice(0, 1);
+
+               // также не будем загружать jQuery отдельно, до загрузки остальных зависимостей,
+               // так как он уже есть на странице
+               jQueryModuleName = '';
             }
 
             deps = (deps || []).concat(compatibleDeps);
@@ -256,25 +259,26 @@ define('Controls/Popup/Compatible/Layer', [
                   }
 
                   // constants.compat = tempCompatVal; //TODO выпилить
-                  (function($) {
-                     $.fn.wsControl = function() {
-                        var control = null,
-                           element;
-                        try {
-                           element = this[0];
-                           while (element) {
-                              if (element.wsControl) {
-                                 control = element.wsControl;
-                                 break;
+                  if (window) {
+                     (function($) {
+                        $.fn.wsControl = function() {
+                           var control = null,
+                              element;
+                           try {
+                              element = this[0];
+                              while (element) {
+                                 if (element.wsControl) {
+                                    control = element.wsControl;
+                                    break;
+                                 }
+                                 element = element.parentNode;
                               }
-                              element = element.parentNode;
+                           } catch (e) {
                            }
-                        } catch (e) {
-                        }
-                        return control;
-                     };
-                  })(jQuery);
-
+                           return control;
+                        };
+                     })(jQuery);
+                  }
                   result = _result;
                   loadDepsDef.callback(result);
                }).addErrback(function(e) {
