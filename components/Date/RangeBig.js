@@ -1,10 +1,10 @@
 /*global define*/
 define('SBIS3.CONTROLS/Date/RangeBig', [
    'SBIS3.CONTROLS/Date/Range',
-   'SBIS3.CONTROLS/Date/RangeBigChoose',
    'css!SBIS3.CONTROLS/Date/RangeBig/DateRangeBig'
-], function (DateRange, DateRangeBigChoose) {
+], function (DateRange) {
    'use strict';
+
    /**
     * SBIS3.CONTROLS/Date/RangeBig
     * @class SBIS3.CONTROLS/Date/RangeBig
@@ -14,13 +14,11 @@ define('SBIS3.CONTROLS/Date/RangeBig', [
     *
     * @control
     * @public
+    * @deprecated Используйте {@link SBIS3.CONTROLS/Date/Range}
     *
     * @demo Examples/DateRangeBig/MyDateRangeBig/MyDateRangeBig
     */
    var DateRangeBig = DateRange.extend( /** @lends SBIS3.CONTROLS/Date/RangeBig.prototype */{
-      $protected: {
-         _chooseControlClass: DateRangeBigChoose
-      }
    });
    return DateRangeBig;
 });
