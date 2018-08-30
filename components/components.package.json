@@ -219,12 +219,53 @@
   {
     "include": [
       "SBIS3.CONTROLS/Action",
-      "SBIS3.CONTROLS/Action/*"
+      "SBIS3.CONTROLS/Action/OpenDialog",
+      "SBIS3.CONTROLS/Action/OpenDialogAction",
+      "SBIS3.CONTROLS/Action/DialogActionBase",
+      "SBIS3.CONTROLS/Action/ActionBase",
+      "SBIS3.CONTROLS/Action/Utils/*",
+      "SBIS3.CONTROLS/Action/Mixin/*",
+      "SBIS3.CONTROLS/Action/Compatible/*",
+      "SBIS3.CONTROLS/Action/List/Mixin/*"
     ],
     "exclude": [
       "css!*"
     ],
     "output": "sbis3controls-action.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/List/Sum",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-actionsum.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Save",
+      "SBIS3.CONTROLS/Action/Save/*",
+      "SBIS3.CONTROLS/Action/List/Save"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-actionsave.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Selector/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog",
+      "SBIS3.CONTROLS/Action/SelectorAction"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-actionselector.package.js"
   },
   {
     "include": [
@@ -712,7 +753,9 @@
     ],
     "exclude": [
       "css!*",
+      "SBIS3.CONTROLS/Suggest/SuggestView",
       "SBIS3.CONTROLS/Suggest/SuggestView/*",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll",
       "SBIS3.CONTROLS/Suggest/SuggestShowAll/*"
     ],
     "output": "sbis3controls-suggest.package.js"

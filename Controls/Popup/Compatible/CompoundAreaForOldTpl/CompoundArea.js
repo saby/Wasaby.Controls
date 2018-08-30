@@ -162,6 +162,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
+               self._getReadyDeferred();
                self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
@@ -174,6 +175,22 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return rebuildDeferred;
          },
 
+         //AreaAbstract.js::getReadyDeferred
+         //getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
+         //не завершится деферред
+         _getReadyDeferred: function() {
+            var self = this;
+            if (this._childControl.getReadyDeferred) {
+               var def = this._childControl.getReadyDeferred();
+               if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
+                  self._toggleVisible(false);
+                  def.addCallback(function() {
+                     self._toggleVisible(true);
+                  });
+               }
+            }
+         },
+
          _afterMount: function(cfg) {
             this._options = cfg;
             this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
@@ -184,7 +201,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-            var self = this;
+            var
+               self = this,
+               isLoadCompleted;
 
             // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
             // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
@@ -211,8 +230,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._notifyVDOM = self._notify;
             self._notify = self._notifyCompound;
 
-            self._logicParent.waitForPopupCreated = true;
-
             // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
             self.subscribe('onResize', function() {
                this._notifyVDOM('resize', null, { bubbling: true });
@@ -220,6 +237,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             self.once('onInitComplete', function() {
                if (self._options.catchFocus) {
+                  // Запоминаем, была ли область полностью загружена, когда мы в первый раз вызвали для нее autofocus
+                  isLoadCompleted = self._childControl.isAllReady && self._childControl.isAllReady();
                   doAutofocus(self._childControl._container);
                }
             });
@@ -227,7 +246,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                runDelayed(function() {
                   runDelayed(function() {
                      self._notifyCompound('onResize');
-                     if (self._options.catchFocus) {
+
+                     // Если при первом вызове autofocus, область была загружена не до конца, ее содержимое за это время
+                     // могло измениться, и мог измениться контрол, на который должен попасть фокус, поэтому вызываем
+                     // autofocus еще раз, чтобы фокус попал туда куда нужно
+                     if (self._options.catchFocus && !isLoadCompleted) {
                         doAutofocus(self._childControl._container);
                      }
                   });
@@ -643,6 +666,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _toggleVisible: function(visible) {
             var
+               prevVisible = this._isVisible,
                popupContainer = this.getContainer().closest('.controls-Popup')[0],
                id = this._getPopupId(),
                popupConfig = this._getManagerConfig();
@@ -665,7 +689,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(id, popupConfig.popupOptions);
                }
 
-               if (visible && !this._isVisible) {
+               if (visible && !prevVisible) {
                   // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
                   // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
                   // на новую, поставим на время пересчета класс `ws-invisible`
@@ -688,6 +712,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
 
                this._isVisible = visible;
+
+               if (visible !== prevVisible) {
+                  // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+                  // стреляя событием onAfterVisibilityChange
+                  this._notifyCompound('onAfterVisibilityChange', visible);
+               }
             }
          },
          setOffset: function(newOffset) {

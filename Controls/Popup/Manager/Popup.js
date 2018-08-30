@@ -38,13 +38,19 @@ define('Controls/Popup/Manager/Popup',
          _afterMount: function() {
             // todo doautofocus
             this._notify('popupCreated', [this._options.id], {bubbling: true});
-            if (this._options.autofocus) {
+
+            // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
+            // сама управляет фокусом внутри себя
+            if (this._options.autofocus && !this._options.isCompoundTemplate) {
                this.activate();
             }
          },
 
          _afterUpdate: function() {
             this._notify('popupAfterUpdated', [this._options.id], { bubbling: true });
+         },
+         _beforeUnmount: function() {
+            this._notify('popupDestroyed', [this._options.id], { bubbling: true });
          },
 
          /**
@@ -57,6 +63,15 @@ define('Controls/Popup/Manager/Popup',
          _maximized: function(event, state) {
             this._notify('popupMaximized', [this._options.id, state], { bubbling: true });
          },
+
+         _popupDragStart: function(event, offset) {
+            this._notify('popupDragStart', [this._options.id, offset], { bubbling: true });
+         },
+
+         _popupDragEnd: function() {
+            this._notify('popupDragEnd', [this._options.id], { bubbling: true });
+         },
+
          _animated: function() {
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },

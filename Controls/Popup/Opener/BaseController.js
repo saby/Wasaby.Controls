@@ -83,6 +83,15 @@ define('Controls/Popup/Opener/BaseController',
                ManagerController.remove(item.id);
             }
          },
+
+         popupDragStart: function(item, offset) {
+
+         },
+
+         popupDragEnd: function(item) {
+
+         },
+
          getDefaultConfig: function(item) {
             item.position = {
                top: -10000,
