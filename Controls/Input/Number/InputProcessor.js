@@ -126,6 +126,8 @@ define('Controls/Input/Number/InputProcessor',
             processInsert: function(splitValue, options, splitValueHelper) {
                splitValue.cursorShift = 0;
 
+               // Логика вставки числа с точкой будет переделана после того, как сделают новый стандарт.
+               // Поручение: https://online.sbis.ru/opendoc.html?guid=af0a4214-593a-4205-9c5d-b8dd26652734
                // Check if we are trying to insert a float number
                if (splitValue.insert.length > 1 && splitValue.insert.indexOf('.') !== -1) {
                   // We must insert integers part into integers part, and decimals part into decimals part (right after dot)
