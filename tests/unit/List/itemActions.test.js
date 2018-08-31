@@ -18,7 +18,7 @@ define([
    };
 
    describe('Controls.List.ItemActions', function() {
-      var data, source, listViewModel, rs, actions, cfg;
+      var data, listViewModel, rs, actions;
       beforeEach(function() {
          data = [
             {
@@ -52,10 +52,6 @@ define([
                type: 2
             }
          ];
-         source = new MemorySource({
-            idProperty: 'id',
-            data: data
-         });
          rs = new RecordSet({
             idProperty: 'id',
             rawData: data
@@ -129,7 +125,7 @@ define([
             itemActions: actions
          };
          var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg);
+         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
          assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
          listViewModel._notify('onListChange');
          assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
@@ -146,7 +142,8 @@ define([
             itemActionsPosition: 'outside'
          };
          var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg);
+         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
+         ctrl._saveContextObject({isTouch: {isTouch: false}});
          ctrl.saveOptions(cfg);
 
          ctrl._notify = function(eventName) {
@@ -177,7 +174,7 @@ define([
             }
          };
          var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeUpdate(cfg);
+         ctrl._beforeUpdate(cfg, {isTouch: {isTouch: false}});
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
 
@@ -203,6 +200,73 @@ define([
          var defOpts = ItemActionsControl.getDefaultOptions();
          assert.equal(defOpts.itemActionsPosition, 'inside');
          assert.isTrue(defOpts.itemActionVisibilityCallback());
+      });
+
+      it('updateItemActions, isTouch: false', function() {
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: [{
+               id: 0,
+               title: 'first',
+               showType: tUtil.showType.MENU
+            },
+            {
+               id: 1,
+               title: 'second',
+               showType: tUtil.showType.TOOLBAR
+            }],
+            itemActionsPosition: 'outside'
+         };
+         var ctrl = new ItemActionsControl(cfg);
+         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
+         ctrl._saveContextObject({isTouch: {isTouch: false}});
+         ctrl.saveOptions(cfg);
+
+         listViewModel.reset();
+         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
+         assert.deepEqual([{
+            id: 0,
+            title: 'first',
+            showType: tUtil.showType.MENU
+         },
+         {
+            id: 1,
+            title: 'second',
+            showType: tUtil.showType.TOOLBAR
+         }], listViewModel._actions[0].showed);
+      });
+
+      it('updateItemActions, isTouch: true', function() {
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: [{
+               id: 0,
+               title: 'first',
+               showType: tUtil.showType.MENU
+            },
+            {
+               id: 1,
+               title: 'second',
+               showType: tUtil.showType.TOOLBAR
+            }],
+            itemActionsPosition: 'outside'
+         };
+         var ctrl = new ItemActionsControl(cfg);
+         ctrl._beforeMount(cfg, {isTouch: {isTouch: true}});
+         ctrl._saveContextObject({isTouch: {isTouch: true}});
+         ctrl.saveOptions(cfg);
+
+         listViewModel.reset();
+         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
+         assert.deepEqual([{
+            id: 1,
+            title: 'second',
+            showType: tUtil.showType.TOOLBAR
+         }, {
+            id: 0,
+            title: 'first',
+            showType: tUtil.showType.MENU
+         }], listViewModel._actions[0].showed);
       });
 
       describe('Controls.List.Swipe.SwipeControl', function() {
