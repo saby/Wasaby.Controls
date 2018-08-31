@@ -10,12 +10,15 @@ define('Controls-demo/Calendar/MonthSlider', [
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
-         _month: new Date(2017, 0, 1),
-         _startValue: new Date(2017, 0, 1),
-         _endValue: new Date(2017, 0, 30),
+         _month: null,
+         _startValue: null,
+         _endValue: null,
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
+            this._month = new Date(2017, 0, 1);
+            this._startValue = new Date(2017, 0, 1);
+            this._endValue = new Date(2017, 0, 30);
          },
 
          _changeStartValue: function(event, days) {
@@ -26,6 +29,7 @@ define('Controls-demo/Calendar/MonthSlider', [
             this._month = new Date(this._month.getFullYear(), this._month.getMonth() + dMonth, 1);
             this._forceUpdate();
          }
-      });
+      }
+   );
    return ModuleClass;
 });

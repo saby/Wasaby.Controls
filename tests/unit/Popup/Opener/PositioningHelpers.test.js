@@ -1,5 +1,6 @@
 define(
    [
+      'Controls/Popup/Opener/BaseController',
       'Controls/Popup/Opener/Stack/StackStrategy',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Controls/Popup/Opener/Notification/NotificationStrategy',
@@ -10,7 +11,7 @@ define(
       'Core/Deferred'
    ],
 
-   function(Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, Deferred) {
+   function(BaseController, Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, Deferred) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -187,8 +188,8 @@ define(
                assert.isTrue(itemConfig.position.position === 'fixed');
 
                StickyController._checkContainer = () => { return false; };
-               StickyController.elementCreated(itemConfig);
-               assert.isTrue(itemConfig.position.position === undefined);
+               StickyController._elementCreated(itemConfig);
+               assert.isTrue(itemConfig.position.position === 'fixed');
             });
 
             it('Sticky state', function() {
@@ -197,16 +198,12 @@ define(
                let itemConfig = {
                   popupOptions: {}
                };
-               let result = StickyController.elementAfterUpdated(itemConfig);
-               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
+               let result = StickyController._elementAfterUpdated(itemConfig);
+               //false, т.к. попали в _elementAfterUpdated, но до этого не было _elementUpdated
                assert.equal(result, false);
 
-               StickyController.elementUpdated(itemConfig);
-               assert.equal(itemConfig.stickyState, 'updated');
-
-               StickyController.elementAfterUpdated(itemConfig);
-               //false, т.к. попали в elementAfterUpdated, но до этого не было elementUpdated
-               assert.equal(itemConfig.stickyState, 'afterUpdated');
+               StickyController._elementUpdated(itemConfig);
+               assert.equal(itemConfig.popupState, undefined); //ничего не произошло, т.к. не было создания
             });
 
             it('Sticky with option locationStrategy=fixed', function() {
@@ -292,7 +289,7 @@ define(
                      height: 10
                   }
                };
-               DialogController.elementUpdated(null, container);
+               DialogController._elementUpdated({}, container);
                assert.equal(container.style.width, 10);
                assert.equal(container.style.height, 10);
             });
@@ -410,35 +407,37 @@ define(
                StackController._private.prepareSizes = () => {}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
 
-               StackController.elementCreated(itemConfig, {});
+               StackController._elementCreated(itemConfig, {});
                //Зависит от того где запускаем тесты, под нодой или в браузере
-               assert.isTrue(itemConfig.stackState === 'opened' || itemConfig.stackState === 'creating');
+               assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_CREATED || itemConfig.popupState === BaseController.POPUP_STATE_CREATING);
 
                StackController.elementAnimated(itemConfig);
-               assert.equal(itemConfig.stackState, 'opened');
+               assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_CREATED);
 
                itemConfig.popupOptions.className = '';
-               StackController.elementUpdated(itemConfig, {});
-               StackController.elementUpdated(itemConfig, {});
-               StackController.elementUpdated(itemConfig, {});
+               StackController._elementUpdated(itemConfig, {});
+               StackController._elementUpdated(itemConfig, {});
+               StackController._elementUpdated(itemConfig, {});
                //класс обновился, потому что состояние было opened. После множ. update класс не задублировался
-               assert.isTrue(itemConfig.stackState === 'opened' && itemConfig.popupOptions.className === "controls-Stack");
+               assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_UPDATING && itemConfig.popupOptions.className === "controls-Stack");
 
-               itemConfig.stackState = 'notOpened';
+               StackController._elementAfterUpdated(itemConfig, {});
+               assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATED);
+
+               itemConfig.popupState = 'notOpened';
                itemConfig.popupOptions.className = '';
-               StackController.elementUpdated(itemConfig, {});
+               StackController._elementUpdated(itemConfig, {});
                //класс не обновился, потому что состояние не opened
                assert.equal(itemConfig.popupOptions.className, '');
 
-               StackController.elementDestroyed(itemConfig, {});
+               StackController._elementDestroyed(itemConfig, {});
                //Зависит от того где запускаем тесты, под нодой или в браузере
-               assert.isTrue(itemConfig.stackState === 'destroying' || itemConfig.stackState === 'destroyed');
+               assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_DESTROYING || itemConfig.popupState === BaseController.POPUP_STATE_DESTROYED);
 
-               itemConfig.stackState = 'destroying';
-               StackController._destroyDeferred[itemConfig.id] = new Deferred();
+               itemConfig._destroyDeferred.addCallback(function () {
+                  assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_DESTROYED);
+               });
                StackController.elementAnimated(itemConfig, {});
-               //Зависит от того где запускаем тесты, под нодой или в браузере
-               assert.equal(itemConfig.stackState, 'destroyed');
             });
 
             it('stack from target container', function() {

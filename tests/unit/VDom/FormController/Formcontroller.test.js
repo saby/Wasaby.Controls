@@ -100,6 +100,11 @@ define([
                   control._delete().addCallbacks(stepCallback, stepErrback);
                   break;
             }
+            if (typeof action === 'function') {
+               action(testControl);
+               def = new Deferred();
+               def.callback();
+            }
             return def;
          }
 
@@ -307,7 +312,100 @@ define([
                done(e);
             });
          });
-      });
+      }).timeout(6000);
+      it('FormController - requestCustomUpdate is true', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           return true;
+                        };
+                     }
+                  }, {
+                     action: 'update',
+                     answer: true,
+                     checkCfg: {
+                        key: 'now is ' + 1,
+                        name: 'no name',
+                        email: 'no@email.com',
+                        createButtonText: 'create with id = ' + 2,
+                        selectButtonsCount: 1
+                     }
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           return false;
+                        };
+                     }
+                  }, {
+                     action: 'update',
+                     answer: true,
+                     checkCfg: {
+                        key: 'now is ' + 1,
+                        name: 'no name',
+                        email: 'no@email.com',
+                        createButtonText: 'create with id = ' + 2,
+                        selectButtonsCount: 2
+                     }
+                  }, {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           var def = new Deferred();
+                           def.callback(true);
+                           return def;
+                        };
+                     }
+                  }, {
+                     action: 'update',
+                     answer: true,
+                     checkCfg: {
+                        key: 'now is ' + 2,
+                        name: 'no name',
+                        email: 'no@email.com',
+                        createButtonText: 'create with id = ' + 3,
+                        selectButtonsCount: 2
+                     }
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           var def = new Deferred();
+                           def.callback(false);
+                           return def;
+                        };
+                     }
+                  }, {
+                     action: 'update',
+                     answer: true,
+                     checkCfg: {
+                        key: 'now is ' + 2,
+                        name: 'no name',
+                        email: 'no@email.com',
+                        createButtonText: 'create with id = ' + 3,
+                        selectButtonsCount: 3
+                     }
+                  },
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      }).timeout(6000);
 
       afterEach(function() {
          testControl && testControl.destroy();

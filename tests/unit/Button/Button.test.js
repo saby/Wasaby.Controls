@@ -155,16 +155,18 @@ define(['Controls/Button'], function (Button) {
       });
       describe('click', function () {
          var customEvent = {}, eventBublle = true;
-         beforeEach(function () {
+
+         function initButton() {
             customEvent.stopPropagation = function () {
                eventBublle = false;
             };
             btn = new Button({
                style: 'buttonDefault'
             });
-         });
+         }
          
          it('click to enabled button', function () {
+            initButton();
             var opt = {
                readOnly: false
             };
@@ -174,6 +176,7 @@ define(['Controls/Button'], function (Button) {
          });
 
          it('click to disabled button', function () {
+            initButton();
             var opt = {
                readOnly: true
             };

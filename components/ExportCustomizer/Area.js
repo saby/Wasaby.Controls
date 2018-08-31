@@ -3,9 +3,12 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * 
+ * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Area
+ * @author Спирин В.А.
  * @extends SBIS3.CONTROLS/CompoundControl
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -175,6 +178,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
                outputCall: null,
+               /**
+                * @cfg {string} Имя объекта истории (опционально)
+                */
+               historyTarget: null,
 
                isTemporaryFile: null// {boolean} Текущее значение fileUuid в опциях указывает на временный файл
             },
@@ -236,13 +243,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = currentPreset.fieldIds.slice();
                   options.fileUuid = currentPreset.fileUuid;
                }
+               if (!options.historyTarget) {
+                  //TODO: Убрать после того, как опция начнёт приходить снаружи (как добавят в торгах)
+                  options.historyTarget = 'ExcelExport_' + options.serviceParams.FileName;
+               }
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
                   allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
-                  selectedId: options.selectedPresetId
+                  selectedId: options.selectedPresetId,
+                  historyTarget: options.historyTarget
                };
             }
             var fieldIds = options.fieldIds;
@@ -351,12 +363,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var fieldIds = values.fieldIds;
             var fileUuid = values.fileUuid;
             var formatterValues, formatterMeta;
+            var formatter = views.formatter;
+            var result;
             switch (reason) {
                case 'create':
                case 'clone':
                case 'select':
                   options.fieldIds = fieldIds.slice();
                   views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
+                  // Здесь нет break, идём дальше
                case 'edit':
                   var consumer = args[0];
                   var consumerUuid = consumer.patternUuid || consumer.fileUuid;
@@ -371,18 +386,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   }
                   break;
                case 'editEnd':
-                  formatterMeta = {reason:'transaction', args:args};
                   this._isEditMode = null;
                   options.isTemporaryFile = null;
+                  // Хотя fileUuid может быть пустым, но formatter ведёт историю
+                  result = formatter.endTransaction(args[0], args[1], args[2]);
                   break;
                case 'delete':
-                  var deleteUuid = args[0].fileUuid;
-                  if (deleteUuid) {
-                     formatterMeta = {reason:reason, args:[deleteUuid]};
-                  }
+                  // Хотя fileUuid может быть пустым, но formatter ведёт историю
+                  formatter.remove(args[0], args[1]);
                   break;
             }
-            var result = formatterValues || formatterMeta ? views.formatter.restate(formatterValues || {}, formatterMeta) : undefined;
+            if (formatterValues || formatterMeta) {
+               /*result =*/ formatter.restate(formatterValues || {}, formatterMeta);
+            }
             this._updateCompleteButton(fieldIds);
             return result;
          },
@@ -584,34 +600,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
        * @return {object}
        */
       Area.getOptionTypes = optionsTool.getOptionTypes.bind(optionsTool);
-
-      /**
-       * Показать сообщение пользователю
-       *
-       * @public
-       * @static
-       * @param {SBIS3.CONTROLS/SubmitPopup#SubmitPopupStatus} type Тип диалога (confirm, default, success, error)
-       * @param {string} title Заголовок сообщения
-       * @param {string} text Текст сообщения
-       * @return {Core/Deferred}
-       */
-      /*Area.showMessage = function (type, title, text) {
-         var isConfirm = type === 'confirm';
-         var promise = new Deferred();
-         var args = [{
-            status: type,
-            message: title,
-            details: text
-         }];
-         if (isConfirm) {
-            args.push(promise.callback.bind(promise, true), promise.callback.bind(promise, false));
-         }
-         else {
-            args.push(promise.callback.bind(promise, null));
-         }
-         InformationPopupManager[isConfirm ? 'showConfirmDialog' : 'showMessageDialog'].apply(InformationPopupManager, args);
-         return promise;
-      };*/
 
 
 
