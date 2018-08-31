@@ -1,6 +1,7 @@
 define('Controls/Calendar/MonthSlider', [
    'Core/Control',
    'Core/core-merge',
+   'Core/helpers/Date/format',
    'Controls/Date/interface/IMonth',
    'Controls/Calendar/MonthSlider/Slider',
    'Controls/Calendar/Utils',
@@ -10,6 +11,7 @@ define('Controls/Calendar/MonthSlider', [
 ], function(
    BaseControl,
    coreMerge,
+   formatDate,
    IMonth,
    Slider,
    calendarUtils,
@@ -55,7 +57,7 @@ define('Controls/Calendar/MonthSlider', [
       _animation: Slider.ANIMATIONS.slideLeft,
       _isHomeVisible: true,
       _days: [],
-
+      _formatDate: formatDate,
 
       _beforeMount: function(options) {
          // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
