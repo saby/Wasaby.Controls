@@ -7,6 +7,11 @@
       background-color: ~"@{bg_Block_style-@{_i}}";
    } });
 
+   /**
+    * On mobile devices due to the native rendering between the blocks when using the "border" is free space.
+    * The color of the blocks borders and the space background is different. There is no problem when using" outline".
+    * To abandon the "border" is impossible because "outline" is not included in the width value in the calculations.
+    */
    body.ws-is-mobile-platform & {
       border-color: transparent;
       outline: @spacing_Block / 2 + @border-width_Block solid @bg_BlockLayout;
