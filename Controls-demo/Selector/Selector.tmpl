@@ -1,0 +1,37 @@
+<div class="demo-selector">
+    <div class="demo-selector__block">
+        <div class="demo-selector__title">
+            <h3>Flat list single selection</h3>
+        </div>
+        <Controls.Button caption="open" style="buttonPrimary" on:click="_openFlatListSelector(false, 'flatListSelectorOpener')"/>
+        <Controls.Selector.Opener name="flatListSelectorOpener">
+            <ws:popupOptions template="Controls-demo/Selector/FlatListSelector/FlatListSelector">
+                <ws:eventHandlers onResult="{{_flatListCallback}}"/>
+            </ws:popupOptions>
+        </Controls.Selector.Opener>
+        <div class="demo-selector__results">
+            <h4>Selected:
+                <ws:for data="item in _flatListResult">
+                    <span>{{item.get('title')}}</span>
+                </ws:for></h4>
+        </div>
+    </div>
+    <div class="demo-selector__block">
+        <div class="demo-selector__title">
+            <h3>Flat list multi selection</h3>
+        </div>
+        <Controls.Button caption="open" style="buttonPrimary" on:click="_openFlatListSelector(true, 'flatListMultiSelectorOpener')"/>
+        <Controls.Selector.Opener name="flatListMultiSelectorOpener">
+            <ws:popupOptions template="Controls-demo/Selector/FlatListSelector/FlatListSelector">
+                <ws:eventHandlers onResult="{{_flatListMultiSelectCallback}}"/>
+            </ws:popupOptions>
+        </Controls.Selector.Opener>
+        <div class="demo-selector__results">
+            <h4>Selected:
+                <ws:for data="item in _flatListMultiSelectResult">
+                    <span>{{item.get('title')}}</span>
+                </ws:for>
+            </h4>
+        </div>
+    </div>
+</div>
