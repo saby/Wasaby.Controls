@@ -100,7 +100,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                /**
                 * @cfg {string|number} Идентификатор выбранного пресета. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
-               selectedId: undefined
+               selectedId: undefined,
+               /**
+                * @cfg {string} Имя объекта истории (опционально)
+                */
+               historyTarget: null
             },
             // Объект, предоставляющий методы загрузки и сохранения пользовательских пресетов
             _storage: null,
@@ -168,7 +172,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
                this._delete = this.getChildControlByName('controls-ExportCustomizer-Presets-View__delete');
             }
-            this._history = this.getChildControlByName('controls-ExportCustomizer-Presets-View__history');
+            var historyComponentName = 'controls-ExportCustomizer-Presets-View__history';
+            if (this.hasChildControlByName(historyComponentName)) {
+               this._history = this.getChildControlByName(historyComponentName);
+            }
             this._bindEvents();
             var options = this._options;
             if (this._storage) {
@@ -576,7 +583,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      listView.sendCommand('close');
                   }
                   this._isEditMode = true;
-                  this._switchDeleteButton(false);
+                  this._switchActionButtons(false);
                   this._switchEditor();
                   if (this.isEnabled()) {
                      this._initEditor(preset);
@@ -640,7 +647,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._editorOkButton = null;
             this._isEditMode = false;
             var preset = this._findPresetById(this._options.selectedId);
-            this._switchDeleteButton(preset && preset.isStorable);
+            this._switchActionButtons(preset && preset.isStorable);
             this._switchEditor();
             var editor = this._editor;
             editor._setKeyPressHandler(editor._origKeyPressHandler);
@@ -674,16 +681,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
-          * Переключить видимость кнопки удаления текущего пресета
+          * Переключить видимость кнопок действий с текущим пресетом
           *
           * @protected
           * @param {boolean} isOn Показать или скрыть
           */
-         _switchDeleteButton: function (isOn) {
-            var button = this._delete;
-            if (button) {
-               button.setVisible(isOn && !this._isEditMode);
-            }
+         _switchActionButtons: function (isOn) {
+            var isVisible = isOn && !this._isEditMode;
+            [this._delete, this._history].forEach(function (button) {
+               if (button) {
+                  button.setVisible(isVisible);
+               }
+            });
          },
 
          /**
@@ -712,12 +721,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._fileUuid = null;
             }
             this._storeSelectedId(options);
-            this._switchDeleteButton(!!preset && preset.isStorable);
+            this._switchActionButtons(!!preset && preset.isStorable);
             this._checkEditorOkButton();
             var history = this._history;
             if (history) {
-               var isEnabled = preset.isStorable && !!preset.fileUuid;
-               history.setProperty('objectId', preset.fileUuid);
+               var fileUuid = preset.fileUuid;
+               var isEnabled = preset.isStorable && !!fileUuid;
+               history.setProperty('objectId', isEnabled ? fileUuid : null);
                history.setVisible(isEnabled);
             }
          },

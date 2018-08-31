@@ -175,6 +175,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
                outputCall: null,
+               /**
+                * @cfg {string} Имя объекта истории (опционально)
+                */
+               historyTarget: null,
 
                isTemporaryFile: null// {boolean} Текущее значение fileUuid в опциях указывает на временный файл
             },
@@ -236,13 +240,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = currentPreset.fieldIds.slice();
                   options.fileUuid = currentPreset.fileUuid;
                }
+               if (!options.historyTarget) {
+                  //TODO: Убрать после того, как опция начнёт приходить снаружи (как добавят в торгах)
+                  options.historyTarget = 'ExcelExport_' + options.serviceParams.FileName;
+               }
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
                   allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
-                  selectedId: options.selectedPresetId
+                  selectedId: options.selectedPresetId,
+                  historyTarget: options.historyTarget
                };
             }
             var fieldIds = options.fieldIds;
