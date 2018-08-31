@@ -60,14 +60,18 @@
          />
       </ws:editorTpl>
    </SBIS3.CONTROLS.EditAtPlace>
-   <History.Button.Object
-      name="controls-ExportCustomizer-Presets-View__history"
-      objectName="{{namespace}}"
-      objectId="{{selectedId}}"
-      visible="{{!!selectedId}}"
-   />
+   <ws:if data="{{historyTarget}}">
+      <ws:partial
+         template="optional!History/Button/Object"
+         className="controls-ExportCustomizer-Presets-View__action controls-ExportCustomizer-Presets-View__action-first controls-ExportCustomizer-Presets-View__history"
+         name="controls-ExportCustomizer-Presets-View__history"
+         objectName="{{historyTarget}}"
+         guid="{{null}}"
+         visible="{{false}}"
+      />
+   </ws:if>
    <SBIS3.CONTROLS.Button.IconButton
-      className="controls-ExportCustomizer-Presets-View__delete"
+      className="controls-ExportCustomizer-Presets-View__action {{!historyTarget ? 'controls-ExportCustomizer-Presets-View__action-first' : ''}} controls-ExportCustomizer-Presets-View__delete"
       name="controls-ExportCustomizer-Presets-View__delete"
       icon="sprite:icon-16 icon-Erase icon-error"
       tooltip="{[НастройщикЭкспорта@@Удалить этот шаблон]}"
