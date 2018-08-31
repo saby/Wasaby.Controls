@@ -24,9 +24,12 @@
             <Controls.Container.Scroll
                     attr:style="height: 100px; border-width:thin"
                     scrollbarVisible="{{true}}"
-                    shadowVisible="{{true}}">
+                    shadowVisible="{{true}}"
+                    attr:class="PropertyGrid_events">
                 <pre>{{myEvent}}</pre>
             </Controls.Container.Scroll>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+
         </div>
     </div>
 </div>
