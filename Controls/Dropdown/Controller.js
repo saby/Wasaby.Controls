@@ -34,13 +34,6 @@ define('Controls/Dropdown/Controller',
        */
 
       /**
-       * @name Controls/Dropdown/Controller#headConfig
-       * @cfg {Object} Menu style menuStyle.
-       * @variant defaultHead The head with icon and caption.
-       * @variant duplicateHead The icon set under first item.
-       */
-
-      /**
        * @name Controls/Dropdown/Controller#typeShadow
        * @cfg {String} Specifies the type of shadow around the popup.
        * @variant default Default shadow.
@@ -108,6 +101,7 @@ define('Controls/Dropdown/Controller',
                   break;
                case 'footerClick':
                   this._notify('footerClick', [result.event]);
+                  this._children.DropdownOpener.close();
             }
          },
 

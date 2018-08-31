@@ -33,14 +33,6 @@ define('Controls/Button/Menu',
        */
 
       /**
-       * @name Controls/Button/Menu#headConfig
-       * @cfg {Object} Menu style menuStyle
-       * @variant defaultHead The head with icon and caption
-       * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
-       */
-
-      /**
        * @name Controls/Button/Menu#size
        * @cfg {String} Size of the menu button.
        * @variant s Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.
