@@ -222,12 +222,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
                   var isClone = !!preset.patternUuid;
+                  var isUpdate = preset.isStorable;
                   preset.title = editor.getText();
                   delete preset.isUnreal;
                   delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
-                  this.sendCommand('subviewChanged', 'editEnd', true, {isClone:isClone}).addCallback(function (result) {
+                  this.sendCommand('subviewChanged', 'editEnd', true, {id:preset.id, title:preset.title, action:isUpdate ? 'update' : 'create'}, isClone ? {isClone:isClone} : null).addCallback(function (result) {
                      if (!this._fileUuid) {
                         this._fileUuid = result;
                      }
@@ -246,7 +247,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (presetInfo) {
                      var preset = presetInfo.preset;
                      this._fileUuid = null;
-                     this.sendCommand('subviewChanged', 'editEnd', false);
+                     this.sendCommand('subviewChanged', 'editEnd', false, null);
                      if (preset.isUnreal) {
                         this._customs.splice(presetInfo.index, 1);
                         var previousId = this._previousId;
@@ -533,7 +534,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                         this._selectPreset(preset, true);
                         this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                      }
-                     this.sendCommand('subviewChanged', 'delete', prevPreset);
+                     this.sendCommand('subviewChanged', 'delete', prevPreset.fileUuid, {id:prevPreset.id, title:prevPreset.title, action:'delete'});
                   //}
                   return true/*isSuccess*/;
                }.bind(this));

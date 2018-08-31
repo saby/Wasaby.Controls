@@ -67,6 +67,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        */
       var PREVIEW_SCALE = 0.4;
 
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_WIDTH = 1920;
+
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_HEIGHT = 0;
+
 
 
       var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ExportCustomizer/_Formatter/View.prototype*/ {
@@ -124,8 +138,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _formatterMenu: null,
             // Контрол предпросмотра
             _preview: null,
-            // Размер области предпросмотра
-            _previewSize: null,
             // Происходит ли в данный момент процесс редактирования стилевого эксель-файла пользователем
             _isEditing: null,
             // Стилевой эксель-файла изменён пользователем
@@ -248,6 +260,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           */
          _onFormatEdited: function () {
+            this._isDifferent = true;
+            this._updatePreview();
          },
 
          /**
@@ -356,7 +370,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<boolean>}
           */
          _callFormatterIsExists: function (fileUuid) {
-            return this._exportFormatter.isExists(fileUuid);
+            return this._exportFormatter.isExists(fileUuid).addErrback(
+               function (err) { return err; }
+            );
+         },
+
+         /**
+          * Вызвать метод форматера "delete"
+          *
+          * @protected
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
+          * return {Core/Deferred}
+          */
+         _callFormatterDelete: function (fileUuid, historyInfo) {
+            return this._exportFormatter.remove(fileUuid, this._options.serviceParams, historyInfo).addErrback(
+               function (err) { return err; }
+            );
          },
 
          /**
@@ -369,20 +399,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams);
-         },
-
-         /**
-          * Вызвать метод форматера "delete"
-          *
-          * @protected
-          * @param {string} fileUuid Uuid стилевого эксель-файла
-          * return {Core/Deferred}
-          */
-         _callFormatterDelete: function (fileUuid) {
-            return this._exportFormatter.remove(fileUuid).addCallbacks(
-               function (result) {},
-               function (err) { return err; }
-            );
          },
 
          /**
@@ -475,13 +491,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
-            var size = this._previewSize;
-            if (!size) {
-               this._previewSize = size = {width:1920, height:0};
-            }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT).addCallbacks(
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
@@ -500,30 +512,66 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          }, PREVIEW_DELAY),
 
          /**
+          * Удалить стилевой эксель файл
+          *
+          * @public
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
+          * @return {Core/Deferred}
+          */
+         remove: function (fileUuid, historyInfo) {
+            return this._callFormatterDelete(fileUuid, historyInfo);
+         },
+
+         /**
           * Завершить транзакцию
           *
-          * @protected
+          * @public
           * @param {boolean} isCommit Сохранить или откатить изменения
-          * @param {object} saving Дополнительные опции сохранения
+          * @param {object} historyInfo Информация для сохранения истроии
+          * @param {object} [saving] Дополнительные опции сохранения (опционально)
           * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
           * @return {Core/Deferred<string>}
           */
-         _endTransaction: function (isCommit, saving) {
+         endTransaction: function (isCommit, historyInfo, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (!isCommit) {
                options.consumerId = null;
             }
             if (isCommit && saving && saving.isClone && !fileUuid) {
-               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, historyInfo, saving));
             }
             //var isDifferent = fileUuid && this._isDifferent;
-            var deleteUuid = isCommit ? ((saving && saving.isClone) || !fileUuid ? null : options.primaryUuid) : fileUuid;
-            if (deleteUuid) {
-               this._callFormatterDelete(deleteUuid);
-            }
             if (isCommit) {
+               if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
+                  var args = {
+                     id: historyInfo.id,
+                     action: historyInfo.action,
+                     newUuid: fileUuid,
+                     newTitle: historyInfo.title
+                  };
+                  if (historyInfo.action === 'update') {
+                     args.fileUuid = options.primaryUuid;;
+                     args.title = historyInfo.title;
+                  }
+                  this._exportFormatter.commit(args, options.serviceParams);
+               }
+               else {
+                  //TODO Убрать это после того как метод будет добален
+                  if (fileUuid && !(saving && saving.isClone)) {
+                     var deleteUuid = options.primaryUuid;
+                     if (deleteUuid) {
+                        this._callFormatterDelete(deleteUuid);
+                     }
+                  }
+               }
                options.primaryUuid = fileUuid;
+            }
+            else {
+               if (fileUuid) {
+                  this._callFormatterDelete(fileUuid);
+               }
             }
             options.fileUuid = null;
             this._isDifferent = null;
@@ -540,16 +588,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
-            }
-            if (meta) {
-               var args = meta.args;
-               switch (meta.reason) {
-                  case 'delete':
-                     this._callFormatterDelete(args[0]);
-                     return;
-                  case 'transaction':
-                     return this._endTransaction(args[0], args[1]);
-               }
             }
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
