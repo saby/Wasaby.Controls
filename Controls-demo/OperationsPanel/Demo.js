@@ -15,25 +15,28 @@ define('Controls-demo/OperationsPanel/Demo', [
       _panelSource: undefined,
       _nodeProperty: 'Раздел@',
       _parentProperty: 'Раздел',
-      _viewSource: new TreeMemory({
-         idProperty: 'id',
-         data: Data.employees
-      }),
-      _moveDialogColumns: [{
-         displayProperty: 'department'
-      }],
-      _gridColumns: [{
-         template: 'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
-      }],
-
-      _moveDialogFilter: {
-         onlyFolders: true
-      },
+      _viewSource: null,
+      _moveDialogColumns: null,
+      _gridColumns: null,
+      _moveDialogFilter: null,
 
       _beforeMount: function() {
          this._panelSource = this._getPanelSource([]);
          this._selectionChangeHandler = this._selectionChangeHandler.bind(this);
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+         this._moveDialogFilter = {
+            onlyFolders: true
+         };
+         this._gridColumns = [{
+            template: 'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
+         }];
+         this._moveDialogColumns = [{
+            displayProperty: 'department'
+         }];
+         this._viewSource = new TreeMemory({
+            idProperty: 'id',
+            data: Data.employees
+         });
       },
 
       _panelItemClick: function(event, item) {
