@@ -25,7 +25,7 @@ define('Controls/Container/MultiSelector', [
     * @public
     */
 
-   var MultiSelector = Control.extend({
+   var MultiSelector = Control.extend(/** @lends Controls/Container/MultiSelector.prototype */{
       _template: template,
       _multiselection: null,
       _items: null,

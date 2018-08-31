@@ -1,8 +1,8 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-define('Controls/Popup/Manager/ManagerController', [],
-   function() {
+define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseController'],
+   function(BaseController) {
       'use strict';
       return {
          _manager: null,
@@ -55,6 +55,11 @@ define('Controls/Popup/Manager/ManagerController', [],
 
          reindex: function() {
             return this._callManager('reindex', arguments);
+         },
+
+         isPopupCreating: function(id) {
+            var item = this.find(id);
+            return item && (item.popupState === BaseController.POPUP_STATE_INITIALIZING || item.popupState === BaseController.POPUP_STATE_CREATING);
          },
 
          _callManager: function(methodName, args) {

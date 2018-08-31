@@ -7,17 +7,6 @@ define('Controls/Container/Input/Search',
    
    function(Control, template, IoC) {
       
-      /**
-       * Container component for Input
-       * Notify bubbling event "search".
-       * Should be located inside Controls/Container/Search.
-       * @class Controls/Container/Input/Search
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
-      
       'use strict';
       
       var SearchContainer = Control.extend({

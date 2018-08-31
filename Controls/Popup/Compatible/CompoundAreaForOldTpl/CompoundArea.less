@@ -64,6 +64,12 @@
 
    .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
       z-index: 50;
+      top: @top_dialogTemplate_compatible_close-button;
+   }
+
+   //перебиваю стили, затащившиеся с areaAbstract
+   &.ws-window {
+      border: none;
    }
 }
 

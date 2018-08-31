@@ -1,13 +1,15 @@
 define('Controls/Popup/Opener/Sticky/StickyController',
    [
       'Controls/Popup/Opener/BaseController',
+      'Controls/Popup/Manager/ManagerController',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Core/core-merge',
       'Core/core-clone',
+      'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
       'css!Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, isElementVisible, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -100,39 +102,34 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var StickyController = BaseController.extend({
          elementCreated: function(item, container) {
             item.position.position = undefined;
-            if (this._checkContainer(item, container)) {
-               this.prepareConfig(item, container);
-            }
+            this.prepareConfig(item, container);
          },
 
          elementUpdated: function(item) {
-            item.stickyState = 'updated';
-            item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+            if (this._isElementVisible(item.popupOptions.target)) {
+               item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+            } else {
+               ManagerController.remove(item.id);
+            }
+
          },
 
          elementAfterUpdated: function(item, container) {
-            //We react only after the update phase from the controller
-            if (item.stickyState !== 'updated') {
-               return false;
-            }
-            if (this._checkContainer(item, container)) {
-               /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
-               var width = container.style.width;
-               var height = container.style.height;
-               container.style.width = 'auto';
-               container.style.height = 'auto';
+            /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            var width = container.style.width;
+            var height = container.style.height;
+            container.style.width = 'auto';
+            container.style.height = 'auto';
 
-               /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
 
-               this.prepareConfig(item, container);
+            this.prepareConfig(item, container);
 
-               /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
-               container.style.width = width;
-               container.style.height = height;
+            /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            container.style.width = width;
+            container.style.height = height;
 
-               /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
-            }
-            item.stickyState = 'afterUpdated';
+            /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             return true;
          },
 
@@ -152,6 +149,10 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
             _private.prepareConfig(item, sizes);
+         },
+
+         _isElementVisible: function(target) {
+            return isElementVisible(target);
          }
       });
 

@@ -7,6 +7,18 @@ define('Controls/FormController', [
 ], function(Control, tmpl, Model, Deferred, IoC) {
    'use strict';
 
+
+   /**
+    * @name Controls/FormController#readMetaData
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
+    * Also its default value for read method.
+    */
+   /**
+    * @name Controls/FormController#destroyMeta
+    * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
+    * Also its default value for destroy method.
+    */
+
    var module = Control.extend({
       _template: tmpl,
       _record: null,
@@ -29,7 +41,7 @@ define('Controls/FormController', [
          } else if (cfg.key !== undefined && cfg.key !== null) {
             // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
             // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-            var readDef = cfg.dataSource.read(cfg.key);
+            var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
             readDef.addCallback(function(record) {
                self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
                self._record = record;
@@ -111,7 +123,7 @@ define('Controls/FormController', [
             }
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
-            this.read(this._options.key);
+            this.read(this._options.key, this._options.readMetaData);
          } else {
             // если нет ни рекорда ни ключа - создадим рекорд
             this.create();
@@ -119,6 +131,23 @@ define('Controls/FormController', [
       },
       _beforeUnmount: function() {
          this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+
+         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+         this._tryDeleteNewRecord();
+      },
+      _tryDeleteNewRecord: function() {
+         var def;
+         if (this._isNewRecord && this._record) {
+            var id = this._record.getId();
+            def = this._options.dataSource.destroy(id, this._options.destroyMeta);
+            def.addBoth(function() {
+               this._deletedId = id;
+            }.bind(this));
+         } else {
+            def = new Deferred();
+            def.callback();
+         }
+         return def;
       },
       _onPropertyChange: function(event, fields) {
          if (!this._propertyChangeNotified) {
@@ -228,14 +257,20 @@ define('Controls/FormController', [
          return record;
       },
       read: function(key, readMetaData) {
+         readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallback(this._readHandler.bind(this));
          return res;
       },
       _readHandler: function(record) {
-         this._wasRead = true;
-         this._isNewRecord = false;
-         this._forceUpdate();
+         // when FormController read record, its need to check previous record was saved or not.
+         // If its not saved but was created, previous record trying to delete.
+         var deleteDef = this._tryDeleteNewRecord();
+         deleteDef.addBoth(function() {
+            this._wasRead = true;
+            this._isNewRecord = false;
+            this._forceUpdate();
+         }.bind(this));
          return record;
       },
 
@@ -306,6 +341,7 @@ define('Controls/FormController', [
          return updateDef;
       },
       delete: function(destroyMeta) {
+         destroyMeta = destroyMeta || this._options.destroyMeta;
          var self = this;
          var record = this._record;
          var resultDef = this._children.crud.delete(record, destroyMeta);
@@ -319,6 +355,14 @@ define('Controls/FormController', [
             return record;
          });
          return resultDef;
+      },
+
+      /**
+       * Starts validating process.
+       * @returns {Core/Deferred} deferred of result of validation
+       */
+      validate: function() {
+         return this._children.validation.submit();
       }
    });
 
