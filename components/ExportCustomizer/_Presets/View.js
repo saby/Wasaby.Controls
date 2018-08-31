@@ -728,7 +728,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             if (history) {
                var fileUuid = preset.fileUuid;
                var isEnabled = preset.isStorable && !!fileUuid;
-               history.setProperty('objectId', isEnabled ? fileUuid : null);
+               history.setProperty('guid', isEnabled ? fileUuid : null);
                history.setVisible(isEnabled);
             }
          },
