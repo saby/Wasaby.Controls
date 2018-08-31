@@ -14,7 +14,7 @@ define('Controls-demo/FormController/FormController', [
 
    var module = Control.extend({
       _template: tmpl,
-      _dataSource:null,
+      _dataSource: null,
       idCount: 1,
       _key: 0,
       _record: null,
@@ -173,6 +173,9 @@ define('Controls-demo/FormController/FormController', [
             return e;
          });
          this._forceUpdate();
+      },
+      _requestCustomUpdate: function() {
+         return false;
       }
    });
 
