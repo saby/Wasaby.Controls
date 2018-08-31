@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/ColorPicker',
    var ColorPicker = TextBox.extend( [PickerMixin],/** @lends SBIS3.CONTROLS/ColorPicker.prototype */{
       $protected: {
          _colorBox: null,
-         _byKeyUp: true,
+         _byKeyUp: false,
          _wasCreated: false,
          _options: {
             afterFieldWrapper: ColorSquareTpl,

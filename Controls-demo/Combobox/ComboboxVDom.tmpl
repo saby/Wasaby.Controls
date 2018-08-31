@@ -22,6 +22,7 @@
                                keyProperty="id"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey2"
+                               className="ControlsDemo-ComboboxVDOM__popupScroll"
                                attr:class="ControlsDemo-ComboboxVDOM__item"/>
    </div>
 
@@ -55,5 +56,15 @@
                                itemTemplate="tmpl!Controls-demo/Combobox/itemTemplateMultiline"
                                bind:selectedKey="_selectedKey6"
                                attr:class="ControlsDemo-ComboboxVDOM__itemBig"/>
+   </div>
+
+   <div class="ControlsDemo-ComboboxVDOM__wrapper">
+      <h4>ReadOnly</h4>
+      <Controls.Input.ComboBox source="{{_createMemory(_itemsRegions)}}"
+                               displayProperty="title"
+                               keyProperty="id"
+                               bind:selectedKey="_selectedKeyReadOnly"
+                               readOnly="{{true}}"
+                               attr:class="ControlsDemo-ComboboxVDOM__item"/>
    </div>
 </div>

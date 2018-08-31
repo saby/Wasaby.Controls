@@ -1,0 +1,16 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="Add template" attr:style="width: 500px;">
+   <ws:topArea>
+      <div class="ControlsDemo-InputDropdown__stackTopArea">
+         <Controls.Button caption="Save" style="linkMain" attr:class="ControlsDemo-InputDropdown__Button"/>
+         <Controls.Button caption="Add" on:click="_close()" attr:class="ControlsDemo-InputDropdown__Button"/>
+      </div>
+   </ws:topArea>
+   <ws:contentArea>
+      <div class="ControlsDemo-InputDropdown__inputBlock">
+         <Controls.Input.Text bind:value="_value1" placeholder="Name of template "
+                              attr:class="ControlsDemo-InputDropdown__textBox"/>
+         <Controls.Input.Text bind:value="_value2" placeholder="Short description" minLines="{{3}}"
+                              attr:class="ControlsDemo-InputDropdown__textBox"/>
+      </div>
+   </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>
