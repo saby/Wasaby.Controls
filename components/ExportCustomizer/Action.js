@@ -3,9 +3,12 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * 
+ * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Action
+ * @author Спирин В.А.
  * @extends SBIS3.CONTROLS/Action
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Action',
@@ -25,68 +28,79 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
       'use strict';
 
       /**
-       * @typedef {object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера (SBIS3.CONTROLS/Browser и его наследники)
-       * @property {string} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
-       * @property {string} title Отображаемое название колонки
-       * @property {string} [group] Идентификатор или название группы, к которой относится колонка (опционально)
-       * @property {boolean} [fixed] Обязательная колонка (опционально)
-       * @property {object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS/DataGridView
+       * @typedef {Object} BrowserColumnInfo Тип, содержащий информацию о колонке браузера (SBIS3.CONTROLS/Browser и его наследники)
+       * @property {String} id Идентификатор колонки (как правило, имя поля в базе данных или БЛ)
+       * @property {String} title Отображаемое название колонки.
+       * @property {String} [group] Идентификатор или название группы, к которой относится колонка.
+       * @property {Boolean} [fixed] Обязательная колонка.
+       * @property {Object} columnConfig Конфигурация колонки в формате, используемом компонентом SBIS3.CONTROLS/DataGridView
        */
 
       /**
-       * @typedef {object} ExportServiceParams Тип, содержащий информацию о прочих параметрах, необходимых для работы БЛ
-       * @property {string} MethodName Имя списочного метода, результат раболты которого будет сохранён в эксель-файл
-       * @property {WS.Data/Entity/Record} [Filter] Параметры фильтрации для списочного метода (опционально)
-       * @property {WS.Data/Entity/Record} [Pagination] Навигация для списочного метода (опционально)
-       * @property {string} [HierarchyField] Название поля иерархии (опционально)
-       * @property {string} FileName Название результирующего эксель-файла
+       * @typedef {Object} ExportServiceParams Тип, содержащий информацию о прочих параметрах, необходимых для работы БЛ.
+       * @property {String} MethodName Имя <a href="https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/">списочного метода БЛ</a>, результат работы которого будет сохранён в Excel-файл.
+       * Значение опции задаётся в формате "<Имя объекта БЛ>.<Имя списочного метода>".
+       * @property {WS.Data/Entity/Record} [Filter] <a href="https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/">Параметры фильтрации</a>.
+       * 
+       * Благодаря таким параметрам списочному методу можно передать дополнительные условия отбора записей. 
+       * 
+       * Следует понимать, что параметры фильтрации по умолчанию не обрабатываются списочным методом.
+       * Параметры фильтрации могут быть использованы при создании условий фильтрации (опция "Filter Condition" в настройках самого метода БЛ, интерфейс Genie), которые создаются в конфигурации списочного метода. 
+       * 
+       * Значение опции передаётся в аргумент "Фильтр" при вызове списочного метода.
+       * @property {WS.Data/Entity/Record} [Pagination] <a href="https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/">Параметры навигации</a>.
+       * 
+       * Значение опции передаётся в аргумент "Навигация" при вызове списочного метода.
+       * @property {String} [HierarchyField] Имя поля иерархии.
+       * Если опция не задана, то реестр выгружается плоским списком без учёта <a href="https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">иерархических отношений записей</a>.
+       * @property {String} FileName Имя экспортируемого Excel-файла. Расширение имени файла задавать не требуется.
        */
 
       /**
-       * @typedef {object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
-       * @property {string} endpoint Сервис, метод которого будет вызван
-       * @property {string} method Имя вызываемого метода
-       * @property {string} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
-       * @property {object} [args] Аргументы вызываемого метода (опционально)
+       * @typedef {Object} ExportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/Utils/ImportExport/RemoteCall}
+       * @property {String} endpoint Сервис, метод которого будет вызван
+       * @property {String} method Имя вызываемого метода
+       * @property {String} [idProperty] Имя свойства, в котором находится идентификатор (опционально, если вызову это не потребуется)
+       * @property {Object} [args] Аргументы вызываемого метода (опционально)
        * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
        * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
        */
 
       /**
-       * @typedef {object} ExportPreset Тип, содержащий информацию о предустановленных настройках экспорта
-       * @property {string|number} id Идентификатор пресета
-       * @property {string} title Отображаемое название пресета
-       * @property {Array<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
-       * @property {string} fileUuid Uuid стилевого эксель-файла
+       * @typedef {Object} ExportPreset Тип, содержащий информацию о предустановленных настройках экспорта
+       * @property {String|number} id Идентификатор пресета
+       * @property {String} title Отображаемое название пресета
+       * @property {Array.<string>} fieldIds Список привязки колонок в экспортируемом файле к полям данных
+       * @property {String} fileUuid Uuid стилевого эксель-файла
        */
 
       /**
-       * @typedef {object} ExportValidator Тип, описывающий валидаторы результатов редактирования
+       * @typedef {Object} ExportValidator Тип, описывающий валидаторы результатов редактирования
        * @property {function(object, function):(boolean|string)} validator Функция проверки. Принимает два аргумента. Первый - объект с проверяемыми данными. Второй - геттер опции по её имени. Геттер позволяет получить доступ к опциям, которые есть в настройщике экспорта в момент валидации. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
        * @property {Array<*>} [params] Дополнительные аргументы функции проверки, будут добавлены после основных (опционально)
-       * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
-       * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+       * @property {String} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+       * @property {Boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
        */
 
       /**
-       * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
-       * @property {Array<string>} fieldIds Список полей для колонок в экспортируемом файле
-       * @property {Array<string>} columnTitles Список отображаемых названий колонок в экспортируемом файле
-       * @property {string} fileUuid Uuid стилевого эксель-файла
-       * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ
+       * @typedef {Object} ExportResults Тип, содержащий информацию о результате редактирования
+       * @property {Array.<String>} fieldIds Список полей для колонок в экспортируемом файле
+       * @property {Array.<String>} columnTitles Список отображаемых названий колонок в экспортируемом файле
+       * @property {String} fileUuid 
+       * @property {ExportServiceParams} serviceParams Прочие параметры, необходимых для работы БЛ.
        */
 
       /**
        * Имя регистрации объекта, предоставляющего методы загрузки и сохранения пользовательских пресетов, в инжекторе зависимостей
        * @private
-       * @type {string}
+       * @type {String}
        */
       var _DI_STORAGE_NAME = 'ExportPresets.Loader';
 
       var ExportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ExportCustomizer/Action.prototype*/ {
 
          /**
-          * @typedef {object} ExportResults Тип, содержащий информацию о результате редактирования
+          * @typedef {Object} ExportResults Тип, содержащий информацию о результате редактирования
           * @property {*} [*] Базовые параметры экспортирования (опционально)
           */
 
@@ -98,40 +112,197 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          },
 
          /**
-          * Открыть настройщик экспорта. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
-          * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено результатом
-          * редактирования. Если же пользователь просто закрыл настройщик кнопкой "Закрыть", то обещание будет разрешено значением null.
+          * @description Открыть диалог "Настройщик экспорта".
           *
           * Все параметры этого метода в точности соответствуют собственным опциям класса {@link SBIS3.CONTROLS/ExportCustomizer/Area}.
-          * Любой из параметров этого метода может быть указан через шаблон в виде опции этого класса, если он известен на момент парсинга шаблона.
-          *
-          * @public
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта:
-          * @param {string} [options.dialogTitle] Заголовок диалога настройщика экспорта (опционально)
-          * @param {string} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования (опционально)
-          * @param {string} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets" (опционально)
-          * @param {string} [options.presetNewPresetTitle] Название для нового пресета в под-компоненте "presets" (опционально)
-          * @param {string} [options.columnBinderTitle] Заголовок под-компонента "columnBinder" (опционально)
-          * @param {string} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
-          * @param {string} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder" (опционально)
-          * @param {string} [options.columnBinderEmptyTitle] Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder" (опционально)
-          * @param {string} [options.formatterTitle] Заголовок под-компонента "formatter" (опционально)
-          * @param {string} [options.formatterMenuTitle] Заголовок меню выбора способа форматирования в под-компоненте "formatter" (опционально)
+          * Любой из параметров этого метода может быть указан через TMPL-шаблон в виде опции этого класса, если он известен на момент парсинга шаблона.
+          * 
+          * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
+          * @function
+          * @param {Object} options Мета-данные, задающие конфигурацию для диалога.
           * @param {ExportServiceParams} options.serviceParams Прочие параметры, необходимых для работы БЛ
-          * @param {boolean} [options.usePresets] Использовать пресеты (предустановленных настроек экспорта) (опционально)
-          * @param {Array<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта) (опционально)
-          * @param {string} options.presetNamespace Пространство имён для сохранения пользовательских пресетов (опционально)
-          * @param {string|number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
-          * @param {Array<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере
-          * @param {Array<string>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {object} options.fieldGroupTitles Список отображаемых названий групп полей (если используются идентификаторы групп)
-          * @param {string} options.fileUuid Uuid стилевого эксель-файла
-          * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
-          * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {Array.<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта).
+          * @param {String} options.presetNamespace Пространство имён для сохранения пользовательских пресетов.
+          * @param {String|Number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз.
+          * @param {Array.<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере.
+          * @param {Array.<String>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
+          * @param {Object} options.fieldGroupTitles Объект, в котором задаётся соответствие заголовка и идентификатора группы колонок.
+          *
+          * Формат объекта: "{<идентификатор>: <заголовок>}".
+          *
+          * В Редакторе колонок автоматически срабатывает группировка колонок по идентификаторам.
+          * @param {String} options.fileUuid Uuid идентификатор шаблона, определяющего стилевое отображение экспортируемого Excel-файла.
+          *
+          * При открытии диалога "Настройщика экспорта" со Стандартным шаблоном конфигурации для экспортируемого файла задаются предустановленны настройки отображения колонок и ячеек.
+          *
+          * Когда в Редакторе экспорта по умолчанию не заданы выбранные колонки, то при их выборе автоматически выполняется запрос к сервису приложения для получение Формата отображения.
+          *
+          * Предполагается, что значение данной опции передаётся автоматически, а "ручная" конфигурация опции выполняется прикладным разработчиком крайне редко.
+          * Однако для работы с такими шаблонами предусмотрено API, расположенное в сервисном модуле "ExcelExport" (принадлежит репозиторию <a href="https://git.sbis.ru/sbis/engine">SBIS.ENGINE</a>):
+          *
+          * - Excel.CreateTemplate(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName)
+          * - Excel.UpdateTemplate(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName, TemplateId)
+          * - Excel.DeleteTemplate(TemplateId)
+          * - Excel.TemplateTitles(TemplateId)
+          * - Excel.SaveCustom(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName, TemplateId, Sync)
+          *
+          * @param {Array.<ExportValidator>} options.validators Список валидаторов результатов редактирования.
           * @param {string} options.historyTarget Имя объекта истории (опционально)
-          * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
-          * @param {Lib/Control/Control} [options.opener] Компонент, инициировавщий открытие настройщика экспорта. Используется в отсутствие опции skipCustomization (опционально)
-          * @return {Deferred<ExportResults>}
+          * @param {String} [options.dialogTitle] Заголовок.
+          * @param {String} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования.
+          * @param {String} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets".
+          * @param {String} [options.presetNewPresetTitle] Название для нового пресета в под-компоненте "presets".
+          * @param {String} [options.columnBinderTitle] Заголовок под-компонента "columnBinder".
+          * @param {String} [options.columnBinderColumnsTitle] Заголовок столбца колонок файла в таблице соответствия под-компонента "columnBinder" (опционально)
+          * @param {String} [options.columnBinderFieldsTitle] Заголовок столбца полей данных в таблице соответствия под-компонента "columnBinder".
+          * @param {String} [options.columnBinderEmptyTitle] Отображаемый текст при пустом списке соответствий в под-компоненте "columnBinder".
+          * @param {String} [options.formatterTitle] Заголовок под-компонента "formatter".
+          * @param {String} [options.formatterMenuTitle] Заголовок меню выбора способа форматирования в под-компоненте "formatter".
+          * @param {Boolean} [options.usePresets] Использовать пресеты (предустановленных настроек экспорта).
+          * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода.
+          * @param {Boolean} [options.skipCustomization] Если опций установлена в true, то диалог "Настройщик экспорта" не будет открыт, а сразу начнётся экспорт в Excel файл.
+          * Для эскпорта будут использованы те параметры, что переданы в при вызове метода execute().
+          * @param {Lib/Control/Control} [options.opener] Экземпляр класса того компонента, который инициировал открытие "Настройщика экспорта".
+          * Используется, если не передана опция options.skipCustomization.
+          * @return {Deferred.<ExportResults>} Возвращает обещание, которое будет разрешено после завершения редактирования пользователем.
+          * В случае, если пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено результатом редактирования.
+          * Если же пользователь просто закрыл настройщик кнопкой "Закрыть", то обещание будет разрешено значением null.
+          * @example
+          * Пример 1. Конфигурация диалога "Настройщик экспорта" задана в JavaScript.
+          * <pre>
+          * // Подключаем на веб-страницу модули для экспорта реестра в Excel файл.
+          * require(['SBIS3.CONTROLS/ExportCustomizer/Action', 'WS.Data/Entity/Record', 'WS.Data/Collection/RecordSet'], function(ExportAction, Record, RecordSet) {
+          *
+          * // Создаём экземпляр записи с конфигурацией параметров фильтрации.
+          * // Один параметр с именем 'city' и значением 'Ярославль'.
+          *  var filter = new Record({
+          *     rawData: { city: 'Ярославль' }
+          * });
+          *
+          * // Экземпляр записи с конфигурацией параметров навигации
+          * var pagination = new Record({
+          *    rawData: {
+          *
+          *       // Запросить записи 10-ой страницы.
+          *       page: 10,
+          *
+          *       // По 20 записей на странице.
+          *       pageSize: 20
+          *    }
+          * });
+          *
+          * // Набор колонок для Редактора колонок.
+          * var allFieldsRecordSet = new RecordSet({
+          *     rawData: [
+          *        {
+          *           id: 1,
+          *           group: 'Base1'
+          *           columnConfig: [
+          *              {
+          *                 title: 'Идентификатор',
+          *                 field: '@Абонент'
+          *              },{
+          *                 title: 'ФИО',
+          *                 field: 'ФИО'
+          *              }
+          *           ]
+          *        },{
+          *           id: 2,
+          *           group: 'Base2'
+          *           columnConfig: [{
+          *              title: 'Дата_регистрации',
+          *              field: 'Дата_регистрации'
+          *           }]
+          *        }
+          *     ],
+          *     idProperty: 'id'
+          * });
+          *
+          * // Конфигурация Редактора экспорта и метода Excel.SaveCustom.
+          * var options = {
+          *
+          *    // Параметры для вызова метода Excel.SaveCustom.
+          *    serviceParams: {
+          *       MethodName: 'Phonebook.List',
+          *       FileName: 'Phonebook',
+          *       Filter: filter,
+          *       Pagination: pagination
+          *    },
+          *
+          *    // Набор колонок для Редактора колонок.
+          *    allFields: allFieldsRecordSet,
+          *
+          *    // Выбранные по умолчанию колонки.
+          *    fieldIds: [1, 2],
+          *
+          *    // Устанавливаем заголовки для групп колонок.
+          *    fieldGroupTitles: {
+          *       'Base1': 'Основные данные абонента',
+          *       'Base2': 'Дата'
+          *    },
+          *
+          *    // Информация для вызова метода удалённого сервиса для отправки данных вывода.
+          *    outputCall: {
+          *       endpoint: 'Excel',
+          *       method: 'SaveCustom',
+          *       args: serviceParams,
+          *       argsFilter: function (data) {
+          *          return {Fields:data.fieldIds, Titles:data.columnTitles, TemplateId:data.fileUuid, Sync:false};
+          *       }
+          *    }
+          * }
+          *
+          * // Начинаем выгрузку файла в Excel.
+          * (new ExportAction()).execute(options);
+          * });
+          * </pre>
+          *
+          * Пример 2. Конфигурация задана декларативно в TMPL-файле.
+          *
+          * Конфигурации Редактора экспорта и метода Excel.SaveCustom могут быть описаны декларативно в разметке родительского компонента.
+          * Тогда для экспорта файла достаточно вызвать метод execute() без аргументов.
+          *
+          * Опциям, переданным непосредственно в метод execute(), отдан больший приоритет над опциями в разметке. Их значения будут определять результирующую конфигурацию.
+          *
+          * TMPL-файл:
+          * <pre>
+          * <SBIS3.CONTROLS.ExportCustomizer.Action fieldIds="{{ [1, 2] }}">
+          *     <ws:serviceParams MethodName="Phonebook.List" FileName="Phonebook">
+          *         <ws:Filter city="Ярославль"/>
+          *         <ws:Pagination page="{{ 10 }}" pageSize="{{ 20 }}" />
+          *     </ws:serviceParams>
+          *    <ws:allFields>
+          *        <ws:Array>
+          *            <ws:Object id="{{ 1 }}" group="Base1">
+          *                 <ws:columnConfig>
+          *                     <ws:Array>
+          *                         <ws:Object title="Дата регистрации" field="Дата_регистрации" />
+          *                     </ws:Array>
+          *                 </ws:columnConfig>
+          *             </ws:Object>
+          *             <ws:Object id="{{ 2 }}" group="Base2">
+          *                 <ws:columnConfig>
+          *                     <ws:Array>
+          *                         <ws:Object title="Идентификатор" field="@Идентификатор" />
+          *                         <ws:Object title="ФИО" field="ФИО" />
+          *                     </ws:Array>
+          *                 </ws:columnConfig>
+          *             </ws:Object>
+          *         </ws:Array>
+          *     </ws:allFields>
+          *     <ws:fieldGroupTitles Base1="Основные данные абонента" Base2="Дата" />
+          * </SBIS3.CONTROLS.ExportCustomizer.Action>
+          * </pre>
+          *
+          * JavaScript-файл:
+          * <pre>
+          * // Подключаем на страницу модуль, в котором описано действие экспорта файла.
+          * require(['SBIS3.CONTROLS/ExportCustomizer/Action'], function(ExportAction) {
+          *
+          * // Начинаем выгрузку файла в Excel.
+          * (new ExportAction()).execute({});
+          * });
+          * </pre>
           */
          execute: function (options) {
             return ExportCustomizerAction.superclass.execute.apply(this, arguments);
@@ -140,7 +311,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          /**
           * Метод, выполняющий основное действие
           * @protected
-          * @param {object} data Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Object} data Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
          _doExecute: function (data) {
             if (!data || typeof data !== 'object') {
@@ -167,7 +338,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Выполнить экспорт немедленно (без отккрытия диалога настройщика экспорта)
           *
           * @protected
-          * @param {object} options Опции
+          * @param {Object} options Опции
           * @param {SBIS3.CONTROLS/Utils/ImportExport/OptionsTool} optionsTool Инструмент для работы с опциями
           */
          _immediate: function (options, optionsTool) {
@@ -185,7 +356,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Подготовиться к немедленному выполнению экспорта (без отккрытия диалога настройщика экспорта)
           *
           * @protected
-          * @param {object} options Опции
+          * @param {Object} options Опции
           * @return {Core/Deferred}
           */
          _prepareForImmediate: function (options) {
@@ -219,7 +390,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Открыть область редактирования настройщика экспорта
           *
           * @protected
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           * @param {Lib/Control/Control} [opener] Компонент, инициировавщий открытие настройщика экспорта, если есть (опционально)
           */
          _open: function (options, opener) {
@@ -264,7 +435,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Встроенный обработчик ошибок, возникших в результате выполнения Deferred-a, возвращённого методом  _doExecute
           * @protected
           * @param {Error} error Ошибка
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           */
          /*_handleError: function (err, options) {
          },*/
@@ -274,7 +445,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} data Данные события
+          * @param {Object} data Данные события
           */
          _onAreaComplete: function (evtName, data) {
             this._complete(true, data);
@@ -285,7 +456,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *
           * @protected
           * @param {Core/EventObject} evtName Дескриптор события
-          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Boolean} withAlert Показать пользователю предупреждение об ошибке
           * @param {Error|string} err Ошибка
           */
          _onAreaError: function (evtName, withAlert, err) {
@@ -314,8 +485,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Завершить работу и вернуть результат
           *
           * @protected
-          * @param {object} isSuccess Завершение является успешным, не ошибочным
-          * @param {object} outcome Результат
+          * @param {Object} isSuccess Завершение является успешным, не ошибочным
+          * @param {Object} outcome Результат
           */
          _complete: function (isSuccess, outcome) {
             var result = this._result;
@@ -335,7 +506,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * Завершить работу при возникновении ошибки
           *
           * @protected
-          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Boolean} withAlert Показать пользователю предупреждение об ошибке
           * @param {Error|string} err Ошибка
           */
          _completeWithError: function (withAlert, err) {
@@ -357,7 +528,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          /**
           * Отдать подписчикам событие и вернуть результат обработки, если есть. Если нет - вернуть результат редактирования
           * @protected
-          * @param {object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
+          * @param {Object} options Входные аргументы("мета-данные") настройщика экспорта (согласно описанию в методе {@link execute})
           * @param {ExportResults} results Результат редактирования
           * @return {object|*}
           */
