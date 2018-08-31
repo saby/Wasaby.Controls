@@ -1,4 +1,3 @@
-dataObject = undefined;
 define('Controls-demo/PropertyGrid/PropertyGridWrapper',
    [
       'Core/Control',
