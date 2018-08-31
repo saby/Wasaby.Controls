@@ -128,6 +128,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {string} options.fileUuid Uuid стилевого эксель-файла
           * @param {Array<ExportValidator>} options.validators Список валидаторов результатов редактирования (опционально)
           * @param {ExportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {string} options.historyTarget Имя объекта истории (опционально)
           * @param {boolean} [options.skipCustomization] Не открывать настройщик экспорта, начать экспорт сразу основываясь на предоставленных в опциях данных (опционально)
           * @param {Lib/Control/Control} [options.opener] Компонент, инициировавщий открытие настройщика экспорта. Используется в отсутствие опции skipCustomization (опционально)
           * @return {Deferred<ExportResults>}
