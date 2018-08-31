@@ -90,12 +90,24 @@
           },
           "readOnly": {
             "type": "Boolean",
-            "title": "Indicates whether control will react to user actions."
+            "title": "Determines whether control will react to user actions."
           },
-
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
           "caption": {
             "type": "String",
-            "title": "Title."
+            "title": "Caption text."
+          },
+          "captionPosition": {
+            "type": "enum",
+            "title": "Determines on which side of the button caption is located.",
+            "enum": {
+              "left": "Caption before toggle.",
+              "right": "Toggle before caption. It is default value."
+            }
           }
         }
       }
