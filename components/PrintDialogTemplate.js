@@ -15,17 +15,10 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
             _options: {
                autoWidth: true,
                needShowReportDialog: true,
-               caption: '',
                minHeight: 384,
-               maxHTMLLength: 3*1000*1000
+               maxHTMLLength: 10*1000*1000
             },
             _readyDeferred: undefined
-         },
-
-         _modifyOptions: function() {
-            var opts = PrintDialogTemplate.superclass._modifyOptions.apply(this, arguments);
-            opts.caption = opts.needShowReportDialog ? rk('Предварительный просмотр') : '';
-            return opts;
          },
 
          $constructor: function() {

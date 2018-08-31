@@ -46,6 +46,7 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
             className: !needShowReportDialog ? 'controls-PrintDialog__invisible' : '',
             isStack: true,
             task_1174068748: true,
+            caption: needShowReportDialog ? rk('Предварительный просмотр') : '',
             template: 'SBIS3.CONTROLS/PrintDialogTemplate',
             componentOptions: {
                minWidth: minWidth,
