@@ -7,9 +7,9 @@ import argparse
 import requests
 
 
-class JobRC:
+class JC:
     """
-    Класс для работы с RC сборками
+    Класс для работы с JC
     """
     JC_URL = 'http://jenkins-control.tensor.ru'
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                                         'Опция принимает версию платформы: 3.18.600')
     args = parser.parse_args()
     if args.skip_from_rc:
-        jrc = JobRC()
-        j_id = jrc.get_id_job(args.skip_from_rc)
-        result = jrc.get_fail_tests(j_id)
+        jc = JC()
+        j_id = jc.get_id_job(args.skip_from_rc)
+        result = jc.get_fail_tests(j_id)
         print(result)

@@ -49,7 +49,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "4.13/feature/pea/skip_tests",
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
