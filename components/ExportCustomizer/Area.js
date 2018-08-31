@@ -366,14 +366,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                case 'create':
                case 'clone':
                case 'select':
-                  options.fieldIds = fieldIds.slice();
-                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
+                  options.fieldIds = fieldIds ? fieldIds.slice() : null;
+                  views.columnBinder.restate({fieldIds:fieldIds ? fieldIds.slice() : null}, {source:'presets', reason:reason, args:args});
                   // Здесь нет break, идём дальше
                case 'edit':
                   var consumer = args[0];
-                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  var consumerUuid = consumer ? consumer.patternUuid || consumer.fileUuid : null;
                   options.fileUuid = fileUuid || consumerUuid;
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
+                  formatterValues = {fieldIds:fieldIds ? fieldIds.slice() : null, fileUuid:fileUuid, consumerId:consumer ? consumer.id : null, primaryUuid:consumerUuid};
                   formatterMeta = {reason:reason, args:args.slice(1)};
                   if (reason === 'edit') {
                      this._isEditMode = true;

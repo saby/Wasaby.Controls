@@ -530,7 +530,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                return this._saveCustoms().addCallback(function (/*isSuccess*/) {
                   //if (isSuccess) {
                      if (this._options.selectedId === id) {
-                        var preset = customs.length ? customs[index < customs.length ? index : index - 1] : null;
+                        var preset;
+                        if (customs.length) {
+                           preset = customs[index < customs.length ? index : index - 1];
+                        }
+                        else {
+                           var statics = this._options.statics;
+                           if (statics && statics.length) {
+                              preset = statics[0];
+                           }
+                        }
                         this._selectPreset(preset, true);
                         this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                      }
@@ -726,8 +735,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._checkEditorOkButton();
             var history = this._history;
             if (history) {
-               var fileUuid = preset.fileUuid;
-               var isEnabled = preset.isStorable && !!fileUuid;
+               var fileUuid = preset ? preset.fileUuid : null;
+               var isEnabled = !!preset && preset.isStorable && !!fileUuid;
                history.setProperty('guid', isEnabled ? fileUuid : null);
                history.setVisible(isEnabled);
             }
