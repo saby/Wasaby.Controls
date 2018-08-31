@@ -1,6 +1,4 @@
-define('Controls/Container/MultiSelector/selectionToRecord', [
-   'WS.Data/Entity/Record'
-], function(Record) {
+define('Controls/Container/MultiSelector/selectionToRecord', ['WS.Data/Entity/Record'], function(Record) {
    'use strict';
    
    var prepareArray = function(array) {
