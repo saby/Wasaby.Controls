@@ -1,7 +1,7 @@
 <div class="controls-InputRender
    controls-{{ _options.inputType }}-InputRender
    controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
-   controls-{{ _options.inputType }}-InputRender_state_{{ _getInputState() }}
+   controls-{{ _options.inputType }}-InputRender_state_{{ _inputState }}
    {{ _options.readOnly ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
    controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
