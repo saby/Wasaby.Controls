@@ -12,25 +12,63 @@
    height: 100%;
 }
 
+.controls-BackButton_style-default_size-l:before {
+   background-image: @background-image-BackButton_style-default_size-l;
+}
+
+.controls-BackButton_style-default_size-m:before {
+   background-image: @background-image-BackButton_style-default_size-m;
+}
+
+.controls-BackButton_style-default_size-s:before {
+   background-image: @background-image-BackButton_style-default_size-s;
+}
+
 .controls-BackButton_style-default:before {
-   background-image: @background-image-BackButton_style-default;
    background-repeat: no-repeat;
    content: '';
 }
 
+.controls-BackButton_style-primary_size-l:before {
+   background-image: @background-image-BackButton_style-primary_size-l;
+}
+
+.controls-BackButton_style-primary_size-m:before {
+   background-image: @background-image-BackButton_style-primary_size-m;
+}
+
+.controls-BackButton_style-primary_size-s:before {
+   background-image: @background-image-BackButton_style-primary_size-s;
+}
+
 .controls-BackButton_style-primary:before {
-   background-image: @background-image-BackButton_style-primary;
    background-repeat: no-repeat;
    content: '';
 }
 
 .controls-BackButton__wrapper:active {
-   .controls-BackButton_style-primary:before {
-      background-image: @background-image-BackButton_style-primary_hovered;
+   .controls-BackButton_style-primary_size-l:before {
+      background-image: @background-image-BackButton_style-primary_size-l_hovered;
    }
 
-   .controls-BackButton_style-default:before {
-      background-image: @background-image-BackButton_style-default_hovered;
+   .controls-BackButton_style-primary_size-m:before {
+      background-image: @background-image-BackButton_style-primary_size-m_hovered;
+   }
+
+   .controls-BackButton_style-primary_size-s:before {
+      background-image: @background-image-BackButton_style-primary_size-s_hovered;
+   }
+
+   .controls-BackButton_style-default_size-l:before {
+      background-image: @background-image-BackButton_style-default_size-l_hovered;
+   }
+
+   .controls-BackButton_style-default_size-m:before {
+      background-image: @background-image-BackButton_style-default_size-m_hovered;
+   }
+
+   .controls-BackButton_style-default_size-s:before {
+      background-image: @background-image-BackButton_style-default_size-s_hovered;
    }
 
    .controls-BackButton__caption_style-default {
@@ -44,14 +82,29 @@
 
 .ws-is-no-touch {
    .controls-BackButton__wrapper:hover {
-      .controls-BackButton_style-primary:before {
-         background-image: @background-image-BackButton_style-primary_hovered;
+      .controls-BackButton_style-primary_size-l:before {
+         background-image: @background-image-BackButton_style-primary_size-l_hovered;
       }
 
-      .controls-BackButton_style-default:before {
-         background-image: @background-image-BackButton_style-default_hovered;
+      .controls-BackButton_style-primary_size-m:before {
+         background-image: @background-image-BackButton_style-primary_size-m_hovered;
       }
 
+      .controls-BackButton_style-primary_size-s:before {
+         background-image: @background-image-BackButton_style-primary_size-s_hovered;
+      }
+
+      .controls-BackButton_style-default_size-l:before {
+         background-image: @background-image-BackButton_style-default_size-l_hovered;
+      }
+
+      .controls-BackButton_style-default_size-m:before {
+         background-image: @background-image-BackButton_style-default_size-m_hovered;
+      }
+
+      .controls-BackButton_style-default_size-s:before {
+         background-image: @background-image-BackButton_style-default_size-s_hovered;
+      }
       .controls-BackButton__caption_style-default {
          color: @color-BackButton__caption_style-default_hovered;
       }

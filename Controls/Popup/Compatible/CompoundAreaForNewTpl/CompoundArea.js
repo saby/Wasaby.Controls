@@ -46,25 +46,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
-               var replaceVDOMContainer = function() {
-                  var
-                     rootContainer = self._getRootContainer(),
-                     additionalEventProperties = {
-                        'on:close': self._createEventProperty(self._onCloseHandler),
-                        'on:resize': self._createEventProperty(self._onResizeHandler),
-                        'on:sendresult': self._createEventProperty(self._onResultHandler),
-                        'on:register': self._createEventProperty(self._onRegisterHandler),
-                        'on:unregister': self._createEventProperty(self._onRegisterHandler)
-                     };
-
-                  //Отлавливаем события с дочернего vdom компонента
-                  for (var event in additionalEventProperties) {
-                     if (additionalEventProperties.hasOwnProperty(event)) {
-                        rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
-                        rootContainer.eventProperties[event].push(additionalEventProperties[event]);
-                     }
-                  }
-               };
 
                require([this._options.innerComponentOptions.template], function() {
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
@@ -77,11 +58,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                         self._notifyOnSizeChanged(self, self);
                         self._options._initCompoundArea(self);
                      }
-                     replaceVDOMContainer();
+                     self._replaceVDOMContainer();
                   }
 
                   self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
-                     replaceVDOMContainer();
+                     self._replaceVDOMContainer();
                   });
 
                   def.callback();
@@ -89,6 +70,33 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                return def;
             });
+         },
+
+         _replaceVDOMContainer: function() {
+            var
+               rootContainer = this._getRootContainer(),
+               additionalEventProperties = {
+                  'on:close': this._onCloseHandler,
+                  'on:resize': this._onResizeHandler,
+                  'on:sendresult': this._onResultHandler,
+                  'on:register': this._onRegisterHandler,
+                  'on:unregister': this._onRegisterHandler
+               };
+
+            //todo Инферно на domNodeRemoved перестал удалять обработчики, которые навешивает compoundArea.
+            //Не понятно бага то или фича, пока решаем вопрос через флаг
+            if (rootContainer._compoundAreaEvents) {
+               return;
+            }
+
+            //Отлавливаем события с дочернего vdom компонента
+            for (var event in additionalEventProperties) {
+               if (additionalEventProperties.hasOwnProperty(event)) {
+                  rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
+                  rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
+               }
+            }
+            rootContainer._compoundAreaEvents = true;
          },
 
          _createEventProperty: function(handler) {
@@ -132,6 +140,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                self._isVDomTemplateMounted = true;
                if (self._closeAfterMount) {
                   self.sendCommand('close');
+               } else {
+                  self._replaceVDOMContainer();
                }
             };
          },
@@ -187,8 +197,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
          setInnerComponentOptions: function(newOptions) {
             //https://online.sbis.ru/opendoc.html?guid=037ab701-0148-478c-9ef0-07365d1fa3c1
-            this._vDomTemplate._options = newOptions;
-            this._vDomTemplate._forceUpdate();
+            if (this._vDomTemplate) { //могут позвать перерисоку до того, как компонент создался
+               this._vDomTemplate._options = newOptions;
+               this._vDomTemplate._forceUpdate();
+            }
          },
       });
 

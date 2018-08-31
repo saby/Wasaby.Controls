@@ -102,7 +102,7 @@ define('Controls-demo/Container/MyScroll',
             });
 
             this._messagesSource = new LocalSession({
-               keyProperty: 'id',
+               idProperty: 'id',
                prefix: 'DSMS'
             });
          },

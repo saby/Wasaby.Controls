@@ -2,10 +2,9 @@ define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'Controls/Popup/Manager/ManagerController',
       'WS.Data/Utils'
    ],
-   function(CoreExtend, Deferred, ManagerController, Utils) {
+   function(CoreExtend, Deferred, Utils) {
       var _private = {
 
          /*
@@ -31,6 +30,13 @@ define('Controls/Popup/Opener/BaseController',
 
             document.body.removeChild(fakeDiv);
             return margins;
+         },
+
+         //Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
+         getManagerController: function() {
+            if (requirejs.defined('Controls/Popup/Manager/ManagerController')) {
+               return requirejs('Controls/Popup/Manager/ManagerController');
+            }
          }
       };
 
@@ -42,6 +48,13 @@ define('Controls/Popup/Opener/BaseController',
        */
       var BaseController = CoreExtend.extend({
 
+         _elementCreated: function(item, container) {
+            if (this._checkContainer(item, container, 'elementCreated')) {
+               item.popupState = BaseController.POPUP_STATE_CREATED;
+               return this.elementCreated.apply(this, arguments);
+            }
+         },
+
          /**
           * Добавление нового элемента
           * @function Controls/Popup/Opener/BaseController#elementCreated
@@ -50,6 +63,17 @@ define('Controls/Popup/Opener/BaseController',
           */
          elementCreated: function(element, container) {
 
+         },
+
+         _elementUpdated: function(item, container) {
+            if (this._checkContainer(item, container, 'elementUpdated')) {
+               if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED) {
+                  item.popupState = BaseController.POPUP_STATE_UPDATING;
+                  this.elementUpdated.apply(this, arguments);
+                  return true;
+               }
+            }
+            return false;
          },
 
          /**
@@ -66,8 +90,37 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         _elementAfterUpdated: function(item, container) {
+            if (this._checkContainer(item, container, 'elementAfterUpdated')) {
+
+               //We react only after the update phase from the controller
+               if (item.popupState === BaseController.POPUP_STATE_UPDATING) {
+                  item.popupState = BaseController.POPUP_STATE_UPDATED;
+                  return this.elementAfterUpdated.apply(this, arguments);
+               }
+            }
+            return false;
+         },
+
          elementAfterUpdated: function(element, container) {
 
+         },
+
+         _elementDestroyed: function(item, container) {
+            if (this._checkContainer(item, container, 'elementDestroyed')) {
+               if (item.popupState === BaseController.POPUP_STATE_DESTROYED || item.popupState === BaseController.POPUP_STATE_DESTROYING) {
+                  return item._destroyDeferred;
+               }
+
+               if (item.popupState !== BaseController.POPUP_STATE_DESTROYED) {
+                  item.popupState = BaseController.POPUP_STATE_DESTROYING;
+                  item._destroyDeferred = this.elementDestroyed.apply(this, arguments);
+                  return item._destroyDeferred.addCallback(function() {
+                     item.popupState = BaseController.POPUP_STATE_DESTROYED;
+                  });
+               }
+            }
+            return (new Deferred()).callback();
          },
 
          /**
@@ -79,7 +132,8 @@ define('Controls/Popup/Opener/BaseController',
             return (new Deferred()).callback();
          },
          popupDeactivated: function(item) {
-            if (item.popupOptions.closeByExternalClick) {
+            var ManagerController = _private.getManagerController();
+            if (item.popupOptions.closeByExternalClick && ManagerController) {
                ManagerController.remove(item.id);
             }
          },
@@ -106,13 +160,21 @@ define('Controls/Popup/Opener/BaseController',
                margins: _private.getMargins(config, container)
             };
          },
-         _checkContainer: function(item, container) {
+         _checkContainer: function(item, container, stage) {
             if (!container) {
-               Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template);
+               Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template + ' на этапе ' + stage);
                return false;
             }
             return true;
          }
       });
+
+      BaseController.POPUP_STATE_INITIALIZING = 'initializing';
+      BaseController.POPUP_STATE_CREATING = 'creating';
+      BaseController.POPUP_STATE_CREATED = 'created';
+      BaseController.POPUP_STATE_UPDATING = 'updating';
+      BaseController.POPUP_STATE_UPDATED = 'updated';
+      BaseController.POPUP_STATE_DESTROYING = 'destroying';
+      BaseController.POPUP_STATE_DESTROYED = 'destroyed';
       return BaseController;
    });

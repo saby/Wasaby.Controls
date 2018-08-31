@@ -6,7 +6,6 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Base, template, Memory) {
-
       'use strict';
 
       var SuggestTwoLines = Base.extend({
@@ -31,5 +30,4 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
          }
       });
       return SuggestTwoLines;
-   }
-);
+   });

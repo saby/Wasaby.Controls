@@ -413,7 +413,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var self = this;
                if (self._options.hasOwnProperty('json')) {
-                  self._htmlJson = new HtmlJson();
                   self.setJson(self._options.json);
 
                   self.subscribe('onTextChange', function(e, text) {
@@ -688,7 +687,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
+            getJson: function() {
+               return this._options.json;
+            },
             setJson: function(json) {
+               if (!this._htmlJson) {
+                  this._htmlJson = new HtmlJson();
+               }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
                this.setText(this._htmlJson.render());
