@@ -1,8 +1,12 @@
 <ws:template name="content">
    <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Listener name="scrollDetect" register="scroll">
+         <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
+         Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
+         Таким образом мы избавляемся от лишней вложенности.
+         https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ready-solutions/blocks/-->
          <span name="content"
-              style="{{_displayState.heightFix ? '' : _styleHideScrollbar}}"
+              style="{{_displayState.heightFix ? '' : _contentStyles}}"
               class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup
                      {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                      {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}

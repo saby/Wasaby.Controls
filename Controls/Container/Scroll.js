@@ -268,6 +268,8 @@ define('Controls/Container/Scroll',
                this._displayState.shadowPosition = _private.getShadowPosition(this);
                this._updateStickyHeaderContext();
 
+               this._areaBlocksFix();
+
                this._forceUpdate();
             },
 
@@ -284,6 +286,21 @@ define('Controls/Container/Scroll',
                   this._updateStickyHeaderContext();
 
                   this._forceUpdate();
+               }
+            },
+
+            /**
+             * Если используем верстку блоков, то на content появится margin-right.
+             * Его нужно добавить к margin-right для скрытия нативного скролла.
+             * TODO: метод нужно порефакторить. Делаем для сдачи в план, в 600 будет переработано.
+             * https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
+             */
+            _areaBlocksFix: function() {
+               if (this._container.classList.contains('ws-BlockLayout')) {
+                  var marginRight = getComputedStyle(this._children.content).marginRight;
+                  this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
+                     return parseFloat(found) + parseFloat(marginRight);
+                  });
                }
             },
 
