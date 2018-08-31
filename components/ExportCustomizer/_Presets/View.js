@@ -229,9 +229,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   preset.isStorable = true;
                   this._previousId = null;
                   this.sendCommand('subviewChanged', 'editEnd', true, {id:preset.id, title:preset.title, action:isUpdate ? 'update' : 'create'}, isClone ? {isClone:isClone} : null).addCallback(function (result) {
-                     if (!this._fileUuid) {
+                     //if (!this._fileUuid) {
                         this._fileUuid = result;
-                     }
+                     //}
                      this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                         /*if (isSuccess) {*/
                            this._fileUuid = null;

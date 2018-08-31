@@ -542,6 +542,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (isCommit && saving && saving.isClone && !fileUuid) {
                return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, historyInfo, saving));
             }
+            var result;
             //var isDifferent = fileUuid && this._isDifferent;
             if (isCommit) {
                if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
@@ -556,6 +557,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                      args.title = historyInfo.title;
                   }
                   this._exportFormatter.commit(args, options.serviceParams);
+                  result = options.primaryUuid || fileUuid;
                }
                else {
                   //TODO Убрать это после того как метод будет добален
@@ -565,17 +567,19 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                         this._callFormatterDelete(deleteUuid);
                      }
                   }
+                  result = fileUuid;
+                  options.primaryUuid = fileUuid;
                }
-               options.primaryUuid = fileUuid;
             }
             else {
                if (fileUuid) {
                   this._callFormatterDelete(fileUuid);
                }
+               result = options.primaryUuid;
             }
             options.fileUuid = null;
             this._isDifferent = null;
-            return Deferred.success(fileUuid);
+            return Deferred.success(result);
          },
 
          /**
