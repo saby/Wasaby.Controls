@@ -9,10 +9,18 @@ define('Controls/Header/BackButton/BackStyles',
     * @mixin Controls/Header/BackButton/BackStyles
     * @public
     *
-    * @css @background-image-BackButton_style-default Default arrow image.
-    * @css @background-image-BackButton_style-primary Primary arrow image.
-    * @css @background-image-BackButton_style-default_hovered Default arrow image in the hovered state.
-    * @css @background-image-BackButton_style-primary_hovered Primary arrow image in the hovered state.
+    * @css @background-image-BackButton_style-default_size-s Small default arrow image.
+    * @css @background-image-BackButton_style-default_size-m Medium default arrow image.
+    * @css @background-image-BackButton_style-default_size-l Large default arrow image.
+    * @css @background-image-BackButton_style-primary_size-s Small primary arrow image.
+    * @css @background-image-BackButton_style-primary_size-m Medium primary arrow image.
+    * @css @background-image-BackButton_style-primary_size-l Large primary arrow image.
+    * @css @background-image-BackButton_style-default_size-s_hovered Small default arrow image in the hovered state.
+    * @css @background-image-BackButton_style-default_size-m_hovered Medium default arrow image in the hovered state.
+    * @css @background-image-BackButton_style-default_size-l_hovered Large default arrow image in the hovered state.
+    * @css @background-image-BackButton_style-primary_size-s_hovered Small primary arrow image in the hovered state.
+    * @css @background-image-BackButton_style-primary_size-m_hovered Medium primary arrow image in the hovered state.
+    * @css @background-image-BackButton_style-primary_size-l_hovered Large primary arrow image in the hovered state.
     * @css @color-BackButton__caption_style-default Default caption color.
     * @css @color-BackButton__caption_style-primary Primary caption color.
     * @css @color-BackButton__caption_style-default_hovered Default caption color in hovered state.

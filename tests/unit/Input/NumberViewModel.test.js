@@ -938,7 +938,25 @@ define(
                   },
                   inputType: 'insert'
                },
-               //-------------------------------------------------------------------------------------------------
+
+               {
+                  testName: 'Insert minus in decimals start, when max decimals length is reached',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '129.',
+                     insert: '-',
+                     after: '45',
+                     delete: ''
+                  },
+                  result: {
+                     value: '129.45',
+                     position: 4
+                  },
+                  inputType: 'insert'
+               },
+
                {
                   testName: 'Insert float to integers',
                   controlConfig: {
@@ -986,24 +1004,6 @@ define(
                   },
                   result: {
                      value: '1 234.78',
-                     position: 8
-                  },
-                  inputType: 'insert'
-               },
-
-               {
-                  testName: 'Insert float to decimals with precision (middle)',
-                  controlConfig: {
-                     precision: 2
-                  },
-                  splitValue: {
-                     before: '1 234.5',
-                     insert: '7.8',
-                     after: '6',
-                     delete: ''
-                  },
-                  result: {
-                     value: '1 234.57',
                      position: 8
                   },
                   inputType: 'insert'

@@ -100,7 +100,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                /**
                 * @cfg {string|number} Идентификатор выбранного пресета. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
-               selectedId: undefined
+               selectedId: undefined,
+               /**
+                * @cfg {string} Имя объекта истории (опционально)
+                */
+               historyTarget: null
             },
             // Объект, предоставляющий методы загрузки и сохранения пользовательских пресетов
             _storage: null,
@@ -116,6 +120,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             _editor: null,
             // Кнопка удаления пресета
             _delete: null,
+            // Кнопка просмотра истории изменений
+            _history: null,
             // Идетификатор предыдущего выбранного пресета
             _previousId: null,
             // Компонент находится в моде редактирования
@@ -166,6 +172,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._updateSelectorListOptions('_footerHandler', this._onAdd.bind(this));
                this._delete = this.getChildControlByName('controls-ExportCustomizer-Presets-View__delete');
             }
+            var historyComponentName = 'controls-ExportCustomizer-Presets-View__history';
+            if (this.hasChildControlByName(historyComponentName)) {
+               this._history = this.getChildControlByName(historyComponentName);
+            }
             this._bindEvents();
             var options = this._options;
             if (this._storage) {
@@ -212,15 +222,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
                   var isClone = !!preset.patternUuid;
+                  var isUpdate = preset.isStorable;
                   preset.title = editor.getText();
                   delete preset.isUnreal;
                   delete preset.patternUuid;
                   preset.isStorable = true;
                   this._previousId = null;
-                  this.sendCommand('subviewChanged', 'editEnd', true, {isClone:isClone}).addCallback(function (result) {
-                     if (!this._fileUuid) {
+                  this.sendCommand('subviewChanged', 'editEnd', true, {id:preset.id, title:preset.title, action:isUpdate ? 'update' : 'create'}, isClone ? {isClone:isClone} : null).addCallback(function (result) {
+                     //if (!this._fileUuid) {
                         this._fileUuid = result;
-                     }
+                     //}
                      this._saveSelectedPreset().addCallback(function (/*isSuccess*/) {
                         /*if (isSuccess) {*/
                            this._fileUuid = null;
@@ -236,7 +247,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   if (presetInfo) {
                      var preset = presetInfo.preset;
                      this._fileUuid = null;
-                     this.sendCommand('subviewChanged', 'editEnd', false);
+                     this.sendCommand('subviewChanged', 'editEnd', false, null);
                      if (preset.isUnreal) {
                         this._customs.splice(presetInfo.index, 1);
                         var previousId = this._previousId;
@@ -523,7 +534,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                         this._selectPreset(preset, true);
                         this.sendCommand('subviewChanged', 'select', preset, {isChanged:this._isOutdated(preset, true)});
                      }
-                     this.sendCommand('subviewChanged', 'delete', prevPreset);
+                     this.sendCommand('subviewChanged', 'delete', prevPreset.fileUuid, {id:prevPreset.id, title:prevPreset.title, action:'delete'});
                   //}
                   return true/*isSuccess*/;
                }.bind(this));
@@ -573,7 +584,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                      listView.sendCommand('close');
                   }
                   this._isEditMode = true;
-                  this._switchDeleteButton(false);
+                  this._switchActionButtons(false);
                   this._switchEditor();
                   if (this.isEnabled()) {
                      this._initEditor(preset);
@@ -637,7 +648,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             this._editorOkButton = null;
             this._isEditMode = false;
             var preset = this._findPresetById(this._options.selectedId);
-            this._switchDeleteButton(preset && preset.isStorable);
+            this._switchActionButtons(preset && preset.isStorable);
             this._switchEditor();
             var editor = this._editor;
             editor._setKeyPressHandler(editor._origKeyPressHandler);
@@ -671,16 +682,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          },
 
          /**
-          * Переключить видимость кнопки удаления текущего пресета
+          * Переключить видимость кнопок действий с текущим пресетом
           *
           * @protected
           * @param {boolean} isOn Показать или скрыть
           */
-         _switchDeleteButton: function (isOn) {
-            var button = this._delete;
-            if (button) {
-               button.setVisible(isOn && !this._isEditMode);
-            }
+         _switchActionButtons: function (isOn) {
+            var isVisible = isOn && !this._isEditMode;
+            [this._delete, this._history].forEach(function (button) {
+               if (button) {
+                  button.setVisible(isVisible);
+               }
+            });
          },
 
          /**
@@ -709,8 +722,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._fileUuid = null;
             }
             this._storeSelectedId(options);
-            this._switchDeleteButton(!!preset && preset.isStorable);
+            this._switchActionButtons(!!preset && preset.isStorable);
             this._checkEditorOkButton();
+            var history = this._history;
+            if (history) {
+               var fileUuid = preset.fileUuid;
+               var isEnabled = preset.isStorable && !!fileUuid;
+               history.setProperty('guid', isEnabled ? fileUuid : null);
+               history.setVisible(isEnabled);
+            }
          },
 
          /**

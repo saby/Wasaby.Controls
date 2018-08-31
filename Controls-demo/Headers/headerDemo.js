@@ -9,35 +9,34 @@ define('Controls-demo/Headers/headerDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var headerSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         { title: 's'  },
-         { title: 'm'  },
-         { title: 'l'  },
-         { title: 'xl' }
-      ]
-   });
-
-   var headerStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         { title: 'primary'   },
-         { title: 'secondary' }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
          _headerSelectedSize: 'm',
          _selectedStyle: 'primary',
-         _headerSizeSource: headerSizeSource,
-         _headerStyleSource: headerStyleSource,
+         _headerSizeSource: null,
+         _headerStyleSource: null,
          _caption: 'Header',
          _readOnly: false,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._headerSizeSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  { title: 's'  },
+                  { title: 'm'  },
+                  { title: 'l'  },
+                  { title: 'xl' }
+               ]
+            });
+            this._headerStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  { title: 'primary'   },
+                  { title: 'secondary' }
+               ]
+            });
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

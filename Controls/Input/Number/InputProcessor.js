@@ -250,13 +250,20 @@ define('Controls/Input/Number/InputProcessor',
                      splitValue.insert = '';
                   }
 
-                  // If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
-                  if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
-                     if (splitValue.after !== '') {
-                        splitValue.before += splitValue.insert;
-                        splitValue.after = splitValue.after.slice(splitValue.insert.length);
-                     }
+                  //This block must be executed when we know for sure that in the next step the number can not become non-valid
+                  if (!_private.validators.isNumber(_private.getClearValue(splitValue))) {
                      splitValue.insert = '';
+                  }
+
+                  //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
+                  if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
+                     // If the insert is at the end of the string, then we replace the symbol
+                     // Else - forbid input
+                     if (splitValue.after !== '') {
+                        splitValue.after = splitValue.after.slice(splitValue.insert.length);
+                     } else {
+                        splitValue.insert = '';
+                     }
 
                      // Check whether we have exceeded the allowed number symbols in decimals part
                      // and slice the extra if it is necessary
