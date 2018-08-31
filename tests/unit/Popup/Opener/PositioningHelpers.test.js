@@ -303,13 +303,15 @@ define(
                assert.equal(position.left, itemPosition.left);
                assert.equal(position.top, itemPosition.top);
 
-               itemPosition = {left: 700, top: 500};
+               itemPosition = {left: 700, top: 500, width: sizes.width, height: sizes.height};
                position = Dialog.getPosition(800, 600, sizes, {
                   position: itemPosition,
                   dragged: true
                });
                assert.equal(position.left, 600);
                assert.equal(position.top, 300);
+               assert.equal(position.width, sizes.width); //размеры не изменились
+               assert.equal(position.height, sizes.height);
             });
          });
 

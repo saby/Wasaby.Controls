@@ -27,7 +27,9 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
             top -= Math.max(0, dif);
             return {
                left: left,
-               top: top
+               top: top,
+               width: item.position.width,
+               height: item.position.height
             };
          }
 

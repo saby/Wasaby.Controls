@@ -234,6 +234,10 @@ function(cMerge,
             cfg.isModal = cfg.modal;
          }
 
+         if (cfg.hasOwnProperty('draggable')) {
+            cfg.templateOptions.draggable = cfg.draggable;
+         }
+
          cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
