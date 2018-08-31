@@ -2,7 +2,7 @@ define('Controls/Application/_JsLinks',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Application/_JsLinks',
+      'wml!Controls/Application/_JsLinks',
       'Controls/Application/HeadDataContext'
    ],
 

@@ -7,8 +7,8 @@ define('Controls/Application/Compatible', [
    'Core/RightsManager',
    'Core/Deferred',
    'Core/constants',
-   'tmpl!Controls/Application/Compatible',
-   'tmpl!Controls/Application/CompatibleScripts'
+   'wml!Controls/Application/Compatible',
+   'wml!Controls/Application/CompatibleScripts'
 ], function(Base,
    EventBus,
    RightsManager,
