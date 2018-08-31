@@ -1,0 +1,267 @@
+{
+  "Controls/Input/Text": {
+    "name": "Controls/Input/Text",
+    "title": "Single-line text input.",
+    "className": "Controls/Input/Text",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Text",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "done": "done",
+              "attention": "attention",
+              "error": "error",
+              "info": "info"
+            }
+          },
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Input's placeholder text."
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "maxLength": {
+            "type": "Number",
+            "title": "Maximum number of characters that user can enter in the field."
+          },
+          "trim": {
+            "type": "Boolean",
+            "default": false,
+            "title": "If true, removes whitespaces from both sides of a string when input is completed."
+          },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
+          "constraint": {
+            "type": "String",
+            "title": "Regular expression for input filtration."
+          }
+          }
+        }
+      }
+  },
+  "Controls/Toggle/Switch": {
+    "name": "Controls/Toggle/Switch",
+    "title": "Switch control.",
+    "className": "Controls/Toggle/Switch",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/Switch",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "value": {
+            "type": "Boolean",
+            "title": "Current state."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+
+          "caption": {
+            "type": "String",
+            "title": "Title."
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Area": {
+    "name": "Controls/Input/Area",
+    "title": "Multiline text input with autoheight.",
+    "className": "Controls/Input/Area",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Area",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "done": "done",
+              "attention": "attention",
+              "error": "error",
+              "info": "info"
+            }
+          },
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Input's placeholder text."
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "maxLength": {
+            "type": "Number",
+            "title": "Maximum number of characters that user can enter in the field."
+          },
+          "trim": {
+            "type": "Boolean",
+            "default": false,
+            "title": "If true, removes whitespaces from both sides of a string when input is completed."
+          },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
+          "constraint": {
+            "type": "String",
+            "title": "Regular expression for input filtration."
+          },
+          "minLines": {
+            "type": "Number",
+            "title": "Minimum number of lines (min height)."
+          },
+          "maxLines": {
+            "type": "Number",
+            "title": "Maximum number of lines (max height)."
+          },
+          "newLineKey": {
+            "type": "String",
+            "default": "enter",
+            "title": "The behavior of creating a new line."
+          }
+        }
+      }
+    }
+  },
+
+  "Controls/Input/ComboBox": {
+    "name": "Controls/Input/ComboBox",
+    "title": "Control \"ComboBox\"",
+    "className": "Controls/Input/ComboBox",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/ComboBox",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "done": "done",
+              "attention": "attention",
+              "error": "error",
+              "info": "info"
+            }
+          },
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Input's placeholder text."
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+
+          "emptyText": {
+            "type": "enum",
+            "title": "Add an empty item to the list with the given text.",
+            "enum": {
+              "true": "Add empty item with text 'Не выбрано'"
+            }
+          },
+          "selectedKey": {
+            "type": "Number",
+            "title": "Identifier of selected item."
+          },
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "displayProperty": {
+            "type": "String",
+            "title": "Name of the item property that content will be displayed. Only affects the value when selecting."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          }
+        }
+      }
+    }
+  }
+}

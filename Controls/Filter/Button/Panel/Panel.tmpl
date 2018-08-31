@@ -20,7 +20,7 @@
    <ws:contentArea>
       <div class="{{_options.panelStyle ? 'controls-FilterPanel__column'}}">
          <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
-            <Controls.PropertyGrid items="{{_items}}"
+            <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                    itemTemplate="{{_options.itemTemplate}}"
                                    itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                    on:valueChanged="_valueChangedHandler()"
