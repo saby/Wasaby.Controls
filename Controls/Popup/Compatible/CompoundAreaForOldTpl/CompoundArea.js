@@ -296,7 +296,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
             if (this._options.draggable) {
 
-               //Drag поддержат на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
+               //Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
                //mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
