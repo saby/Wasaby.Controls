@@ -2,10 +2,11 @@ define('Controls-demo/Popup/PopupPage',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/PopupPage',
+      'Core/helpers/Number/randomId',
       'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPage'
    ],
-   function (Control, template) {
+   function (Control, template, randomId) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -45,6 +46,17 @@ define('Controls-demo/Popup/PopupPage',
          openStack: function () {
             this._children.stack.open({
                opener: this._children.stackButton
+            });
+         },
+
+         openExecutingPopup: function () {
+            this._children.executingStack.open({
+               opener: this._children.stackButton,
+               templateOptions: {text: randomId('popup-random')}
+            });
+            this._children.executingStack.open({
+               opener: this._children.stackButton,
+               templateOptions: {text: randomId('popup-random')}
             });
          },
 
