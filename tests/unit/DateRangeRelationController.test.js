@@ -374,39 +374,36 @@ define([
       });
 
       describe('shift periods', function () {
-         [[
-            '1 day',
-            [new Date(2015, 0, 1), 1, { onlyByCapacity: true }, 5, 1, 'days'],
-            createDates(new Date(2014, 11, 31), 1, 1)
-         ], [
-            '1 year',
-            [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
-            createMonths(new Date(2014, 0, 1), 12, 12)
-         ]].forEach(function(test) {
+         [{
+            period: '1 day',
+            args: [new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 5, 1, 'days'],
+            dates: createDates(new Date(2014, 11, 31), 1, 1),
+            method: 'shiftPrev'
+         }, {
+            period: '1 year',
+            args: [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
+            dates: createMonths(new Date(2014, 0, 1), 12, 12),
+            method: 'shiftPrev'
+         }, {
+            period: '1 day',
+            args: [new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 5, 1, 'days'],
+            dates: createDates(new Date(2015, 0, 2), 1, 1),
+            method: 'shiftNext'
+         }, {
+            period: '1 year',
+            args: [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
+            dates: createMonths(new Date(2016, 0, 1), 12, 12),
+            method: 'shiftNext'
+         }].forEach(function(test) {
             it(`period ${test[0]}, shift prev`, function () {
-               initControls.apply(null, test[1]);
-               controller.shiftPrev();
+               const callback = sinon.spy();
+               initControls.apply(null, test.args);
+               controller.subscribe('onDatesChange', callback);
+               controller[test.method]();
                for (let [i, control] of controls.entries()) {
-                  assertRangeControl(control, test[2][i], `Control ${i}`);
+                  assertRangeControl(control, test.dates[i], `Control ${i}`);
                }
-            });
-         });
-
-         [[
-            '1 day',
-            [new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 5, 1, 'days'],
-            createDates(new Date(2015, 0, 2), 1, 1)
-         ], [
-            '1 year',
-            [new Date(2015, 0, 1), 12, {onlyByCapacity: true}],
-            createMonths(new Date(2016, 0, 1), 12, 12)
-         ]].forEach(function(test) {
-            it('period 1 day, shift next', function () {
-               initControls.apply(null, test[1]);
-               controller.shiftNext();
-               for (let [i, control] of controls.entries()) {
-                  assertRangeControl(control, test[2][i], `Control ${i}`);
-               }
+               assert(callback.calledOnce, `"onDatesChange" event callback called ${callback.callCount} times`);
             });
          });
 
