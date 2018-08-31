@@ -290,6 +290,10 @@ define('Controls/Container/Suggest/Layout',
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
+            
+            if (this._emptyTemplate !== newOptions.emptyTemplate) {
+               this._emptyTemplate = newOptions.emptyTemplate;
+            }
          },
    
          _afterUpdate: function() {
