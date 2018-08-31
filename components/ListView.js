@@ -4534,7 +4534,7 @@ define('SBIS3.CONTROLS/ListView',
           * При создании элемента коллекции происходит событие {@link onBeginAdd}.
           * @param {Object} [options] Параметры вызова команды.
           * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
-          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
+          * @param {WS.Data/Entity/Model} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
           * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
           * <ul>
           *     <li>top - отображается в начале списка;</li>
