@@ -85,6 +85,8 @@ node('controls') {
         def skip = params.skip
         def only_fail = params.run_only_fail_test
         def changed_files
+        def skip_tests_int = ""
+        def skip_tests_reg = ""
 
         try {
         echo "Чистим рабочую директорию"
@@ -557,10 +559,8 @@ node('controls') {
                             }
                         }
                     }
-                    def skip_tests_int = ""
-                    def skip_tests_reg = ""
+
                     if ( skip ) {
-                         echo env.version
                          skip_tests_int = getTestForSkip(version, 'int')
                          skip_tests_reg = getTestForSkip(version, 'reg')
                     }
