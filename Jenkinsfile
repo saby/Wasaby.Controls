@@ -60,7 +60,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "",
+                defaultValue: "rc-4.13",
                 description: '',
                 name: 'branch_atf'),
             choice(
