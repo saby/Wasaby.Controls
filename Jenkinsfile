@@ -144,8 +144,8 @@ node('controls') {
                     def skip_tests_reg = ""
                     if ( skip ) {
                          dir("./controls/tests") {
-                             tests_for_skip_int = sh returnStdout: true, script: """python3 helper.py --efrc "(int-chrome) ${version} controls""""
-                             tests_for_skip_reg = sh returnStdout: true, script: """python3 helper.py --efrc "(reg-chrome) ${version} controls""""
+                             tests_for_skip_int = sh returnStdout: true, script: """python3 helper.py --efrc \\"(int-chrome)\\ ${version}\\ controls\\""""
+                             tests_for_skip_reg = sh returnStdout: true, script: """python3 helper.py --efrc \\"(reg-chrome)\\ ${version}\\ controls\\""""
                              tests_for_skip_int = tests_for_skip_int.replace('\n', '')
                              tests_for_skip_reg = tests_for_skip_reg.replace('\n', '')
                              if ( tests_for_skip_int != '' ) {
