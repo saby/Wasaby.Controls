@@ -18,13 +18,13 @@ def exception(err, reason) {
 }
 
 def getTestForSkip(version, type) {
-     dir("./controls/tests") {
-         tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
-         tests_for_skip = tests_for_skip.replace('\n', '')
-         if ( tests_for_skip != '' ) {
-              echo "Будут скипнуты тесты: ${tests_for_skip}"
-              return "--SKIP ${tests_for_skip}"
-         }
+    dir("./controls/tests") {
+        tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
+        tests_for_skip = tests_for_skip.replace('\n', '')
+        if ( tests_for_skip != '' ) {
+            echo "Будут скипнуты тесты: ${tests_for_skip}"
+            return "--SKIP ${tests_for_skip}"
+        }
     }
     return ""
 }
