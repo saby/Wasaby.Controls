@@ -8,6 +8,9 @@ define('Controls/Popup/Manager/Container',
    function(Control, template, ManagerController) {
       'use strict';
 
+      //step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
+      var POPUP_ZINDEX_STEP = 10;
+
       var Container = Control.extend({
 
          /**
@@ -22,6 +25,7 @@ define('Controls/Popup/Manager/Container',
 
          _template: template,
          _overlayId: null,
+         _zIndexStep: POPUP_ZINDEX_STEP,
          _afterMount: function() {
             ManagerController.setContainer(this);
          },
@@ -46,13 +50,12 @@ define('Controls/Popup/Manager/Container',
          },
 
          _popupDeactivated: function(event, popupId) {
-            var isPopupExists = this._children[popupId];
-            if (isPopupExists) {
+            var popup = this._children[popupId];
+            if (popup) {
                if (!this[popupId + '_activeElement']) {
                   this[popupId + '_activeElement'] = document.activeElement;
                }
-               var popup = this._children[popupId],
-                  registrator = this._children[popupId + '_registrator'];
+               var registrator = this._children[popupId + '_registrator'];
                if (registrator) {
                   if (registrator._hasRegisteredPendings()) {
                      // if pendings is exist, take focus back while pendings are finishing
@@ -60,7 +63,13 @@ define('Controls/Popup/Manager/Container',
                   }
                   var finishDef = registrator.finishPendingOperations();
                   finishDef.addCallback(function() {
-                     this._notify('popupDeactivated', [popupId], { bubbling: true });
+                     //Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
+                     //Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
+                     if (popup && popup._options.isCompoundTemplate) {
+                        this._getCompoundArea().close();
+                     } else {
+                        this._notify('popupDeactivated', [popupId], { bubbling: true });
+                     }
                   }.bind(this));
                }
             }
@@ -78,8 +87,18 @@ define('Controls/Popup/Manager/Container',
 
          _overlayClickHandler: function(event) {
             event.preventDefault();
+         },
+
+         //TODO Compatible
+         //Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
+         //Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
+         //у compoundArea вызовется сразу destroy. такую логику прервать нельзя
+         _getCompoundArea: function(popupContainer) {
+            return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
          }
       });
 
+      //To calculate the zIndex in a compatible notification Manager
+      Container.POPUP_ZINDEX_STEP = POPUP_ZINDEX_STEP;
       return Container;
    });

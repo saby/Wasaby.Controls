@@ -10,7 +10,13 @@ define('Controls/FormController', [
 
    /**
     * @name Controls/FormController#readMetaData
-    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists
+    * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
+    * Also its default value for read method.
+    */
+   /**
+    * @name Controls/FormController#destroyMeta
+    * @cfg {Object} Additional meta data what will be argument of destroying of draft record.
+    * Also its default value for destroy method.
     */
 
    var module = Control.extend({
@@ -125,6 +131,23 @@ define('Controls/FormController', [
       },
       _beforeUnmount: function() {
          this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+
+         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+         this._tryDeleteNewRecord();
+      },
+      _tryDeleteNewRecord: function() {
+         var def;
+         if (this._isNewRecord && this._record) {
+            var id = this._record.getId();
+            def = this._options.dataSource.destroy(id, this._options.destroyMeta);
+            def.addBoth(function() {
+               this._deletedId = id;
+            }.bind(this));
+         } else {
+            def = new Deferred();
+            def.callback();
+         }
+         return def;
       },
       _onPropertyChange: function(event, fields) {
          if (!this._propertyChangeNotified) {
@@ -234,18 +257,55 @@ define('Controls/FormController', [
          return record;
       },
       read: function(key, readMetaData) {
+         readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallback(this._readHandler.bind(this));
          return res;
       },
       _readHandler: function(record) {
-         this._wasRead = true;
-         this._isNewRecord = false;
-         this._forceUpdate();
+         // when FormController read record, its need to check previous record was saved or not.
+         // If its not saved but was created, previous record trying to delete.
+         var deleteDef = this._tryDeleteNewRecord();
+         deleteDef.addBoth(function() {
+            this._wasRead = true;
+            this._isNewRecord = false;
+            this._forceUpdate();
+         }.bind(this));
          return record;
       },
 
       update: function() {
+         var updateResult = new Deferred(),
+            self = this;
+
+         function updateCallback(result) {
+            // if result is true, custom update called and we dont need to call original update.
+            if (result !== true) {
+               var res = self._update();
+               updateResult.dependOn(res);
+            } else {
+               updateResult.callback(true);
+            }
+         }
+
+         // maybe anybody want to do custom update. check it.
+         var result = this._notify('requestCustomUpdate', [], { bubbling: true });
+
+         if (result instanceof Deferred) {
+            result.addCallback(function(defResult) {
+               updateCallback(defResult);
+               return defResult;
+            });
+            result.addErrback(function(err) {
+               updateResult.errback(err);
+               return err;
+            });
+         } else {
+            updateCallback(result);
+         }
+         return updateResult;
+      },
+      _update: function() {
          var self = this,
             record = this._record,
             updateDef = new Deferred();
@@ -312,6 +372,7 @@ define('Controls/FormController', [
          return updateDef;
       },
       delete: function(destroyMeta) {
+         destroyMeta = destroyMeta || this._options.destroyMeta;
          var self = this;
          var record = this._record;
          var resultDef = this._children.crud.delete(record, destroyMeta);
