@@ -546,14 +546,21 @@ node('controls') {
                             }
                         }
                     }
-                    def skip_tests = ""
+                    def skip_tests_int = ""
+                    def skip_tests_reg = ""
                     if ( skip ) {
                          dir("./controls/tests") {
-                             tests_for_skip = sh returnStdout: true, script: "python3 helper.py --skip_from_rc ${version}"
-                                  tests_for_skip = tests_for_skip.replace('\n', '')
-                             if ( tests_for_skip != '' ) {
-                                  echo "Будут скипнуты тесты: ${tests_for_skip}"
-                                  skip_tests = "--SKIP ${tests_for_skip}"
+                             tests_for_skip_int = sh returnStdout: true, script: """python3 helper.py --efrc "(int-chrome) ${version} controls" """
+                             tests_for_skip_reg = sh returnStdout: true, script: """python3 helper.py --efrc "(reg-chrome) ${version} controls" """
+                             tests_for_skip_int = tests_for_skip_int.replace('\n', '')
+                             tests_for_skip_reg = tests_for_skip_reg.replace('\n', '')
+                             if ( tests_for_skip_int != '' ) {
+                                  echo "Будут скипнуты тесты: ${tests_for_skip_int}"
+                                  skip_tests_int = "--SKIP ${tests_for_skip_int}"
+                             }
+                             if ( tests_for_skip_reg != '' ) {
+                                  echo "Будут скипнуты тесты: ${tests_for_skip_reg}"
+                                  skip_tests_reg = "--SKIP ${tests_for_skip_reg}"
                              }
                          }
                     }
@@ -565,7 +572,7 @@ node('controls') {
                                     dir("./controls/tests/int"){
                                         sh """
                                         source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                         deactivate
                                         """
                                     }
@@ -581,7 +588,7 @@ node('controls') {
                                     dir("./controls/tests/reg"){
                                         sh """
                                             source /home/sbis/venv_for_test/bin/activate
-                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
                                             deactivate
                                         """
                                     }
