@@ -17,7 +17,7 @@ def exception(err, reason) {
     error(err)
 }
 
-def getTestForSkip(type) {
+def getTestForSkip(version, type) {
      dir("./controls/tests") {
          tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
          tests_for_skip = tests_for_skip.replace('\n', '')
@@ -560,8 +560,9 @@ node('controls') {
                     def skip_tests_int = ""
                     def skip_tests_reg = ""
                     if ( skip ) {
-                         skip_tests_int = getTestForSkip('int')
-                         skip_tests_reg = getTestForSkip('reg')
+                         echo env.version
+                         skip_tests_int = getTestForSkip(version, 'int')
+                         skip_tests_reg = getTestForSkip(version, 'reg')
                     }
                     parallel (
                         int_test: {
