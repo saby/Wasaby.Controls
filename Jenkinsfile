@@ -19,8 +19,7 @@ def exception(err, reason) {
 
 def getTestForSkip(type) {
      dir("./controls/tests") {
-         //tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
-         tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc 3.18.600 -tt ${type}"
+         tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
          tests_for_skip = tests_for_skip.replace('\n', '')
          if ( tests_for_skip != '' ) {
               echo "Будут скипнуты тесты: ${tests_for_skip}"
@@ -150,16 +149,6 @@ node('controls') {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-
-                    def skip_tests_int = ""
-                    def skip_tests_reg = ""
-                    if ( skip ) {
-                        skip_tests_int = getTestForSkip('int')
-                        skip_tests_reg = getTestForSkip('reg')
-                    }
-
-                    echo skip_tests_int
-                    echo skip_tests_reg
 
                     updateGitlabCommitStatus state: 'running'
                     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
@@ -571,20 +560,8 @@ node('controls') {
                     def skip_tests_int = ""
                     def skip_tests_reg = ""
                     if ( skip ) {
-                         dir("./controls/tests") {
-                             tests_for_skip_int = sh returnStdout: true, script: 'python3 helper.py --efrc "(int-chrome) ${version} controls"'
-                             tests_for_skip_reg = sh returnStdout: true, script: 'python3 helper.py --efrc "(reg-chrome) ${version} controls"'
-                             tests_for_skip_int = tests_for_skip_int.replace('\n', '')
-                             tests_for_skip_reg = tests_for_skip_reg.replace('\n', '')
-                             if ( tests_for_skip_int != '' ) {
-                                  echo "Будут скипнуты тесты: ${tests_for_skip_int}"
-                                  skip_tests_int = "--SKIP ${tests_for_skip_int}"
-                             }
-                             if ( tests_for_skip_reg != '' ) {
-                                  echo "Будут скипнуты тесты: ${tests_for_skip_reg}"
-                                  skip_tests_reg = "--SKIP ${tests_for_skip_reg}"
-                             }
-                         }
+                         skip_tests_int = getTestForSkip('int')
+                         skip_tests_reg = getTestForSkip('reg')
                     }
                     parallel (
                         int_test: {
