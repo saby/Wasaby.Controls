@@ -564,6 +564,8 @@ node('controls') {
                     if ( skip ) {
                          skip_tests_int = getTestForSkip(version, 'int')
                          skip_tests_reg = getTestForSkip(version, 'reg')
+                         echo "INT: ${skip_tests_int}"
+                         echo "REG: ${skip_tests_reg}"
                     }
                     parallel (
                         int_test: {
