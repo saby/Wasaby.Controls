@@ -13,12 +13,12 @@ class JC:
     """
     JC_URL = 'http://usd-comp91.corp.tensor.ru:5000'
 
-    def get_errors_from_rc(self, version, type):
+    def get_errors_from_rc(self, version, type_test):
         """Возвращает упавшие тесты и причину из последней RC сборки
         :param version: Версия платформы
-        :param type: Тип тестов
+        :param type_test: Тип тестов
         """
-        job = '({}-chrome) {} controls'.format(type, version)
+        job = '({}-chrome) {} controls'.format(type_test, version)
         payload = {'job_name': job}
         req = requests.post(self.JC_URL + '/api/test_result/errors_from_last_build', json=payload)
         req.raise_for_status()
