@@ -14,24 +14,22 @@ class JC:
     JC_URL = 'http://usd-comp91.corp.tensor.ru:5000'
 
     def get_errors_from_rc(self, version, type):
-        """Возвращает упавшие тесты и описание
-        :param job: Название сборки, напр. (int-chrome) 3.18.600 controls
+        """Возвращает упавшие тесты и причину из последней RC сборки
+        :param version: Версия платформы
+        :param type: Тип тестов
         """
-        reg_job = '(reg-chrome) {} controls'.format(version)
-        int_job = '(int-chrome) {} controls'.format(version)
-        if type == 'reg':
-            payload = {'job_name': reg_job}
-        elif type == 'int':
-            payload = {'job_name': int_job}
+        job = '({}-chrome) {} controls'.format(type, version)
+        payload = {'job_name': job}
         req = requests.post(self.JC_URL + '/api/test_result/errors_from_last_build', json=payload)
         req.raise_for_status()
         result = req.json()['result']
         if result['success']:
             data = result['data']
             test_for_skip = ''
+            default_description = 'Сборка не подписана, причина падения не определена'
             for item in data:
                 test_for_skip += '{}.{} "{}" '.format(item['suite'], item['test'],
-                                            item['description'] or 'Сборка не подписана, причина падения не определена')
+                                                      item['description'] or default_description)
             print(test_for_skip)
 
 
