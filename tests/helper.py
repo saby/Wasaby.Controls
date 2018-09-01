@@ -13,11 +13,16 @@ class JC:
     """
     JC_URL = 'http://usd-comp91.corp.tensor.ru:5000'
 
-    def get_errors_from_rc(self, job):
+    def get_errors_from_rc(self, version, type):
         """Возвращает упавшие тесты и описание
         :param job: Название сборки, напр. (int-chrome) 3.18.600 controls
         """
-        payload = {'job_name': job}
+        reg_job = '(reg-chrome) {} controls'.format(version)
+        int_job = '(int-chrome) {} controls'.format(version)
+        if type == 'reg':
+            payload = {'job_name': reg_job}
+        elif type == 'int':
+            payload = {'job_name': int_job}
         req = requests.post(self.JC_URL + '/api/test_result/errors_from_last_build', json=payload)
         req.raise_for_status()
         result = req.json()['result']
@@ -34,6 +39,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-efrc', '--errors_from_rc', help='Получить список упавших тестов из RC. '
                                                           'Опция принимает версию платформы: 3.18.600')
+    parser.add_argument('-tt', '--type_test', help='Тип тестов: int, reg')
     args = parser.parse_args()
     if args.errors_from_rc:
-        JC().get_errors_from_rc(args.errors_from_rc)
+        JC().get_errors_from_rc(args.errors_from_rc, args.type_test)
