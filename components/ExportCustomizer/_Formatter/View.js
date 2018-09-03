@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/Deferred',
       'Core/helpers/Function/debounce',
+      'Core/ParallelDeferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ObjectChange',
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {
+   function (Deferred, coreDebounce, ParallelDeferred, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -132,6 +133,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                 */
                consumerId: null
             },
+            // Массив обещаний, ожидающих результатов вызовов форматера
+            _promises: [],
             // Объект, предоставляющий методы форматирования стилевого эксель-файла
             _exportFormatter: null,
             // Контрол меню выбора способа форматирования
@@ -309,7 +312,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если указан, то будет произведено клонирование (опционально)
           * @param {boolean} [updateCloned] И сразу обновить колонки у только что клонированного стилевого эксель-файла (только при клонировании) (опционально)
           * @param {boolean} [isSilent] Не формирорвать событие (опционально)
-          * return {Core/Deferred}
+          * @return {Core/Deferred}
           */
          _callFormatterCreate: function (fileUuid, updateCloned, isSilent) {
             var isClone = !!fileUuid;
@@ -337,7 +340,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             );
             // Запустить индикатор сразу
             this._waitIndicatorStart();
-            return promise;
+            return this._keepInMindPromise(promise);
          },
 
          /**
@@ -345,7 +348,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} [fileUuid] Uuid стилевого эксель-файла. Если не указан, то будет использован текущий uuid из опций (опционально)
-          * return {Core/Deferred}
+          * @return {Core/Deferred}
           */
          _callFormatterUpdate: function (fileUuid) {
             var options = this._options;
@@ -359,7 +362,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             );
             // Запустить индикатор сразу
             this._waitIndicatorStart();
-            return promise;
+            return this._keepInMindPromise(promise);
          },
 
          /**
@@ -370,9 +373,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<boolean>}
           */
          _callFormatterIsExists: function (fileUuid) {
-            return this._exportFormatter.isExists(fileUuid).addErrback(
+            return this._keepInMindPromise(this._exportFormatter.isExists(fileUuid).addErrback(
                function (err) { return err; }
-            );
+            ));
          },
 
          /**
@@ -381,12 +384,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @protected
           * @param {string} fileUuid Uuid стилевого эксель-файла
           * @param {object} historyInfo Информация для сохранения истроии
-          * return {Core/Deferred}
+          * @return {Core/Deferred}
           */
          _callFormatterDelete: function (fileUuid, historyInfo) {
-            return this._exportFormatter.remove(fileUuid, this._options.serviceParams, historyInfo).addErrback(
+            return this._keepInMindPromise(this._exportFormatter.remove(fileUuid, this._options.serviceParams, historyInfo).addErrback(
                function (err) { return err; }
-            );
+            ));
          },
 
          /**
@@ -406,7 +409,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {Array<string>} fieldIds Список идентификаторв полей данных
-          * return {Array<string>}
+          * @return {Array<string>}
           */
          _getFieldTitles: function (fieldIds) {
             return fieldIds && fieldIds.length ? collectionSelectByIds(this._options.allFields, fieldIds, function (v) { return v.title; }) || [] : [];
@@ -417,7 +420,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {Array<string|object>} methods Список вызываемых методов
-          * return {Core/Deferred}
+          * @return {Core/Deferred}
           */
          _callFormatterMethods: function (methods) {
             if (methods && methods.length) {
@@ -438,6 +441,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }
                return promise;
             }
+         },
+
+         /**
+          * Иметь ввиду, что указанное обещание есть и выпоняется
+          *
+          * @protected
+          * @param {Core/Deferred} promise Обещание
+          * @return {Core/Deferred}
+          */
+         _keepInMindPromise: function (promise) {
+            var promises = this._promises;
+            promises.push(promise);
+            promise.addBoth(function () {
+               var i = promises.indexOf(promise);
+               if (i !== -1) {
+                  promises.splice(i, 1);
+               }
+            });
+            return promise;
          },
 
          /**
@@ -534,6 +556,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<string>}
           */
          endTransaction: function (isCommit, historyInfo, saving) {
+            var promises = this._promises;
+            if (promises.length) {
+               // Если есть незавершённые вызовы форматтера - дождаться их
+               var promise = new Deferred();
+               (new ParallelDeferred({steps:promises})).done().getResult().addCallback(function () {
+                  this.endTransaction(isCommit, historyInfo, saving).addCallback(promise.callback.bind(promise));
+               }.bind(this));
+               return promise;
+            }
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (!isCommit) {
@@ -545,31 +576,26 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var result;
             //var isDifferent = fileUuid && this._isDifferent;
             if (isCommit) {
-               if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
-                  var args = {
-                     id: historyInfo.id,
-                     action: historyInfo.action,
-                     newUuid: fileUuid,
-                     newTitle: historyInfo.title
-                  };
-                  if (historyInfo.action === 'update') {
-                     args.fileUuid = options.primaryUuid;;
-                     args.title = historyInfo.title;
-                  }
-                  this._exportFormatter.commit(args, options.serviceParams);
-                  result = options.primaryUuid || fileUuid;
+               var args = {
+                  id: historyInfo.id,
+                  action: historyInfo.action,
+                  newUuid: fileUuid,
+                  newTitle: historyInfo.title
+               };
+               if (historyInfo.action === 'update') {
+                  args.fileUuid = options.primaryUuid;
+                  args.title = historyInfo.title;
                }
-               else {
-                  //TODO Убрать это после того как метод будет добален
-                  if (fileUuid && !(saving && saving.isClone)) {
-                     var deleteUuid = options.primaryUuid;
-                     if (deleteUuid) {
-                        this._callFormatterDelete(deleteUuid);
-                     }
+               this._exportFormatter.commit(args, options.serviceParams);
+               result = options.primaryUuid || fileUuid;
+               /*if (fileUuid && !(saving && saving.isClone)) {
+                  var deleteUuid = options.primaryUuid;
+                  if (deleteUuid) {
+                     this._callFormatterDelete(deleteUuid);
                   }
-                  result = fileUuid;
-                  options.primaryUuid = fileUuid;
                }
+               result = fileUuid;
+               options.primaryUuid = fileUuid;*/
             }
             else {
                if (fileUuid) {
