@@ -147,7 +147,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _clickHandler: function(e) {
-            _private.saveSelection(this, e.target);
+            var self = this;
+
+            // We need to defer selection saving, because deselect can occur right after this handler
+            setTimeout(function() {
+               _private.saveSelection(self, e.target);
+            });
          },
 
          _selectionHandler: function(e) {
