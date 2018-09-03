@@ -9,7 +9,7 @@ define(
          var areaControl = new Area({});
 
          it('constructor', function () {
-            areaControl.constructor({
+            areaControl._beforeMount({
                minLines: 2
             });
 

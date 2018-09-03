@@ -33,9 +33,7 @@ define('Controls/Input/Phone',
 
          _viewModel: null,
 
-         constructor: function(options) {
-            Phone.superclass.constructor.call(this, options);
-
+         _beforeMount: function(options) {
             this._viewModel = new ViewModel({
                value: options.value
             });

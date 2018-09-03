@@ -34,11 +34,6 @@ define('Controls/Render/Money/Money', [
       Money = Control.extend({
          _template: Template,
 
-         constructor: function(cfg) {
-            this._options = cfg;
-            Money.superclass.constructor.apply(this, arguments);
-         },
-
          getModel: function() {
             var
                type = 'default',

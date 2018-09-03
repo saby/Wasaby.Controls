@@ -87,14 +87,15 @@ define('Controls/Toolbar', [
       _items: null,
       _popupOptions: null,
 
-      constructor: function(options) {
+      constructor: function() {
          this._onResult = this._onResult.bind(this);
          this._closeHandler = this._closeHandler.bind(this);
-         this._parentProperty = options.parentProperty;
-         this._nodeProperty = options.nodeProperty;
          Toolbar.superclass.constructor.apply(this, arguments);
       },
       _beforeMount: function(options, context, receivedState) {
+         this._parentProperty = options.parentProperty;
+         this._nodeProperty = options.nodeProperty;
+
          _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
