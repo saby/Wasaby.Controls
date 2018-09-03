@@ -296,12 +296,11 @@ define('Controls/Container/Scroll',
              * https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
              */
             _adjustContentMarginsForBlockRender: function() {
-               if (this._container.classList.contains('ws-BlockLayout')) {
-                  var marginRight = getComputedStyle(this._children.content).marginRight;
-                  this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
-                     return parseFloat(found) + parseFloat(marginRight);
-                  });
-               }
+               var marginRight = getComputedStyle(this._children.content).marginRight;
+
+               this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
+                  return parseFloat(found) + parseFloat(marginRight);
+               });
             },
 
             _resizeHandler: function() {
