@@ -1946,11 +1946,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   $scrollParent = this._inputControl.parent(),
                   scrollTop = $scrollParent.scrollTop(),
                   self = this;
-               require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
-                  new Dialog({
-                     name: 'imagePropertiesDialog',
+               require(['SBIS3.CONTROLS/Action/OpenDialog'], function (ActionOpenDialog) {
+                  (new ActionOpenDialog({
+                     handlers: {
+                        onBeforeShow: function() {
+                        },
+                        onAfterShow: function() {
+                           self._notify('onImagePropertiesDialogOpen');
+                        }
+                     }
+                  })).execute({
+                     mode: 'dialog',
+                     dialogOptions: {
+                        opener: self,
+                        autoHide: false,
+                        autoCloseOnHide: true
+                     },
                      template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                     parent: self,
                      componentOptions: {
                         naturalSize: {
                            width: image.naturalWidth,
@@ -1964,46 +1976,37 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            width: image.style.width || image.width + 'px' || '',
                            height: image.style.height || image.height + 'px' || ''
                         },
-                        editorWidth: self._inputControl.width()
-                     },
-                     handlers: {
-                        onBeforeShow: function() {
-                           CommandDispatcher.declareCommand(this, 'saveImage', function() {
-                              var promise = self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !==
-                                 'per');
-                              promise.addCallback(function() {
-                                 setTimeout(function() {
-                                    // После изменения размера слетает выделение - установить курсор ввода сразу после изображения
+                        editorWidth: self._inputControl.width(),
+                        result: (new Deferred()).addCallback(function (data) {
+                           self._changeImgSize($image, data.width, data.height, data.valueType !== 'per').addCallback(function() {
+                              setTimeout(function() {
+                                 // После изменения размера слетает выделение - установить курсор ввода сразу после изображения
+                                 // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                 var node = $image[0];
+                                 if (node.parentNode.classList.contains('image-template-center')) {
+                                    node = node.parentNode;
+                                 }
+                                 var next = node.nextSibling;
+                                 if (next) {
+                                    self._selectNewRng(next, next.nodeType === 3 && next.nodeValue.length &&
+                                    next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
+                                 }
+                                 else {
+                                    self._selectAfterNode(node);
+                                 }
+                                 if (scrollTop) {
+                                    $scrollParent.scrollTop(scrollTop);
+                                 }
+                                 else {
+                                    // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
+                                    // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
                                     // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
-                                    var node = $image[0];
-                                    if (node.parentNode.classList.contains('image-template-center')) {
-                                       node = node.parentNode;
-                                    }
-                                    var next = node.nextSibling;
-                                    if (next) {
-                                       self._selectNewRng(next, next.nodeType === 3 && next.nodeValue.length &&
-                                       next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
-                                    }
-                                    else {
-                                       self._selectAfterNode(node);
-                                    }
-                                    if (scrollTop) {
-                                       $scrollParent.scrollTop(scrollTop);
-                                    }
-                                    else {
-                                       // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
-                                       // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
-                                       // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
-                                       node.scrollIntoView(true);
-                                    }
-                                 }, 1);
-                              });
-                              editor.undoManager.add();
-                           }.bind(this));
-                        },
-                        onAfterShow: function() {
-                           self._notify('onImagePropertiesDialogOpen');
-                        }
+                                    node.scrollIntoView(true);
+                                 }
+                              }, 1);
+                           });
+                           editor.undoManager.add();
+                        })
                      }
                   });
                });
