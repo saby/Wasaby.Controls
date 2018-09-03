@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
    [
       'Core/CommandDispatcher',
       'Core/Deferred',
+      'Core/helpers/createGUID',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
@@ -22,7 +23,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (CommandDispatcher, Deferred, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
+   function (CommandDispatcher, Deferred, createGUID, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -563,7 +564,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          _createPreset: function (pattern) {
             var options = this._options;
             var preset = {
-               id: _makeId(),
+               id: createGUID(),
                title: ItemNamer.make(pattern ? pattern.title : options.newPresetTitle, [{list:options.statics, property:'title'}, {list:this._customs, property:'title'}]),
                fieldIds: pattern ? pattern.fieldIds.slice() : [],
                fileUuid: null,
@@ -1016,24 +1017,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
          }
          return -1;
       };
-
-      /**
-       * Создать новый идентификатору
-       *
-       * @private
-       * @return {string}
-       */
-      var _makeId = function () {
-         return [8, 4, 4, 4, 12].map(_uniqueHex).join('-');
-      };
-
-      /**
-       * Сгенерировать случайную hex-строку указанной длины
-       * @protected
-       * @param {number} n Длина строки
-       * @return {string}
-       */
-      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
 
 
 
