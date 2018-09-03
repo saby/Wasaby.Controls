@@ -214,7 +214,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(self._loading);
    
          setTimeout(function() {
-            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function() {
                assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
                done();
             });
