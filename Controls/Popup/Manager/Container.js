@@ -66,7 +66,7 @@ define('Controls/Popup/Manager/Container',
                      //Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
                      //Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
                      if (popup && popup._options.isCompoundTemplate) {
-                        this._getCompoundArea().close();
+                        this._getCompoundArea(popup._container).close();
                      } else {
                         this._notify('popupDeactivated', [popupId], { bubbling: true });
                      }
