@@ -208,7 +208,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                }
             };
             var defaults = this._options;
-            Area.getOwnOptionNames().forEach(function (name) {
+            Object.keys(options).concat(Area.getOwnOptionNames()).forEach(function (name) {
                var value = options[name];
                componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
             });
