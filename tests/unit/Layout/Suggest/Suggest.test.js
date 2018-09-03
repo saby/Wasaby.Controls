@@ -213,10 +213,12 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          
          assert.isFalse(self._loading);
    
-         requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function() {
-            assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник не доступен </div>');
-            done();
-         });
+         setTimeout(function() {
+            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+               assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
+               done();
+            });
+         }, 10);
       });
    
       it('Suggest::_private.calcHeight', function() {
