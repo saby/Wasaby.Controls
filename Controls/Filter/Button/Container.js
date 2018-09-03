@@ -18,7 +18,7 @@ define('Controls/Filter/Button/Container',
        *
        * @class Controls/Filter/Button/Container
        * @extends Core/Control
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */

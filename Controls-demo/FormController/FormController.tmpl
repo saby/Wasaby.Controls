@@ -16,9 +16,11 @@
          on:toggleIndicator="_alertHandler('FormController demo: toggleIndicator event. If you\'re seeing this message, some error is occured!')"
          on:pendingsFinished="_alertHandler('FormController demo: pendings finished')"
          on:update="_updateHandler()"
+
+         on:requestCustomUpdate="_requestCustomUpdate()"
 >
    <Controls.Container.PendingRegistrator name="registrator">
-      <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}" record="{{ _record }}" idValue="{{ _key }}">
+      <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}" record="{{ _record }}" key="{{ _key }}">
          <div attr:class="form-content">
             <div>
                <span attr:class="form-content__key">now is {{ _key }}</span>

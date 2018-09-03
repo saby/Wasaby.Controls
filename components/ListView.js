@@ -680,13 +680,13 @@ define('SBIS3.CONTROLS/ListView',
                }],
                /**
                 * @cfg {String|Boolean} Перемещение элементов с помощью курсора мыши.
-                * Подробнее в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
+                * Подробнее в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/dragndrop/ Перемещение записей в списках}.
                 * @variant "" Запрещено.
                 * @variant false Запрещено.
                 * @variant allow Разрешено.
                 * @variant true Разрешено.
                 * @remark Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/core/component/xhtml/">Вёрстка компонента</a>.
-                * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
+                * Для того чтобы добавить возможность перемещать элементы в списке, используйте опцию {@link /docs/js/SBIS3/CONTROLS/ListView/options/enabledMove/ enabledMove}.
                 */
                itemsDragNDrop: 'allow',
                elemClickHandler: null,
@@ -971,7 +971,7 @@ define('SBIS3.CONTROLS/ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Разрешает перемещать элементы в списке.
-                * @remark Перемещением с помощью курсора управляет опция {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Mixins/TreeViewMixin/options/itemsDragNDrop/ itemsDragNDrop}.
+                * @remark Перемещением с помощью курсора управляет опция {@link /docs/js/SBIS3/CONTROLS/Mixins/TreeViewMixin/options/itemsDragNDrop/ itemsDragNDrop}.
                 * Описание всех возможных типов перемещений описано в {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B5%D0%B9__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html стандарте разработки}.
                 */
                enabledMove: true,
@@ -1093,56 +1093,58 @@ define('SBIS3.CONTROLS/ListView',
             this._topWrapper = $('.controls-ListView__virtualScrollTop', this.getContainer());
             this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', this.getContainer());
 
-            this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
-               var itemsToAdd = [],
-                  itemsToRemove = [],
-                  addPosition = config.addPosition,
-                  prevDomNode,
-                  item;
-               for (var i = config.add[0]; i <= config.add[1]; i++) {
-                  item = this._getItemsProjection().at(i);
-                  if (item) {
-                     itemsToAdd.push(item);
-                  }
-               }
-               for (var i = config.remove[0]; i <= config.remove[1]; i++) {
-                  item = this._getItemsProjection().at(i);
-                  if (item) {
-                     itemsToRemove.push(item);
-                  }
-               }
+            this.subscribeTo(this._virtualScrollController, 'onWindowChange', this._onVirtualScrollWindowChange.bind(this));
+         },
 
-               // Если есть добавление по месту в начале списка, то надо добавлять записи после него,
-               // а не самом начале контейнера
-               var editingTr = this._isAddAtTop();
-               if (editingTr && addPosition === 0) {
-                  addPosition += 1;
-                  prevDomNode = editingTr;
+         _onVirtualScrollWindowChange: function(event, config) {
+            var itemsToAdd = [],
+               itemsToRemove = [],
+               addPosition = config.addPosition,
+               prevDomNode,
+               item;
+            for (var i = config.add[0]; i <= config.add[1]; i++) {
+               item = this._getItemsProjection().at(i);
+               if (item) {
+                  itemsToAdd.push(item);
                }
-               this._addItems(itemsToAdd, addPosition, prevDomNode);
-
-               // Оживляем компоненты после отрисовки виртуальным скролом
-               if (this._revivePackageParams.revive !== false) {
-                  this._reviveItems(this._revivePackageParams.light, true);
+            }
+            for (var i = config.remove[0]; i <= config.remove[1]; i++) {
+               item = this._getItemsProjection().at(i);
+               if (item) {
+                  itemsToRemove.push(item);
                }
-               this._revivePackageParams.processed = true;
+            }
 
-               if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
-                  this._itemsToolbar.hide();
-               }
-               this._removeItemsLight(itemsToRemove);
+            // Если есть добавление по месту в начале списка, то надо добавлять записи после него,
+            // а не самом начале контейнера
+            var editingTr = this._isAddAtTop();
+            if (editingTr && addPosition === 0) {
+               addPosition += 1;
+               prevDomNode = editingTr;
+            }
+            this._addItems(itemsToAdd, addPosition, prevDomNode);
 
-               //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
-               //если они до этого были выделены.
-               this._drawSelectedItems(this._options.selectedKeys, {});
+            // Оживляем компоненты после отрисовки виртуальным скролом
+            if (this._revivePackageParams.revive !== false) {
+               this._reviveItems(this._revivePackageParams.light, true);
+            }
+            this._revivePackageParams.processed = true;
 
-               this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
-               this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
-               if (this._virtualScrollResetStickyHead) {
-                  this._notifyOnSizeChanged();
-                  this._virtualScrollResetStickyHead = false;
-               }
-            }.bind(this));
+            if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
+               this._itemsToolbar.hide();
+            }
+            this._removeItemsLight(itemsToRemove);
+
+            //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
+            //если они до этого были выделены.
+            this._drawSelectedItems(this._options.selectedKeys, {});
+
+            this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
+            this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
+            if (this._virtualScrollResetStickyHead) {
+               this._notifyOnSizeChanged();
+               this._virtualScrollResetStickyHead = false;
+            }
          },
 
          _toggleEventHandlers: function(container, bind) {
@@ -3752,7 +3754,7 @@ define('SBIS3.CONTROLS/ListView',
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
                                  this._dogNailSavedMode = state.mode;
-                                 this._setInfiniteScrollState('up');
+                                 this._setInfiniteScrollState(state.mode === 'up' ? 'down' : 'up');
                                  this._scrollLoadNextPage();
                               }
                            }
@@ -5165,15 +5167,17 @@ define('SBIS3.CONTROLS/ListView',
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
                this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
+                  //Снимаем выделение до перезагрузки данных, т.к. удаляемые записи могут понадобиться, для определения
+                  //иерархии в режиме массового выделения(useSelectAll = true).
+                  self.removeItemsSelection(idArray);
+
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
-                        self.removeItemsSelection(idArray);
                         return result;
                      });
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
-                     self.removeItemsSelection(idArray);
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;

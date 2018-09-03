@@ -14,7 +14,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'use strict';
 
       /**
-       * @class Controls.Input.resources.InputRender.InputRender
+       * @class Controls/Input/resources/InputRender/InputRender
        * @extends Core/Control
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
@@ -58,6 +58,24 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          getTooltip: function(text, tooltip, hasHorizontalScroll) {
             return hasHorizontalScroll ? text : tooltip;
+         },
+
+         /**
+          * Returns the current input state, depending on the control config
+          * @param self
+          * @param options
+          * @return {String}
+          */
+         getInputState: function(self, options) {
+            if (options.validationErrors && options.validationErrors.length) {
+               return 'error';
+            } else if (options.readOnly) {
+               return 'disabled';
+            } else if (self._inputActive) {
+               return 'active';
+            } else {
+               return 'default';
+            }
          }
       };
 
@@ -67,6 +85,20 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: tmplNotify,
          _tooltip: '',
+
+         // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
+         _inputState: undefined,
+
+         // text field has focus
+         _inputActive: false,
+
+         _beforeMount: function(options) {
+            this._inputState = _private.getInputState(this, options);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            this._inputState = _private.getInputState(this, newOptions);
+         },
 
          _mouseEnterHandler: function() {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
@@ -126,22 +158,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._notify('inputCompleted', [this._options.viewModel.getValue()]);
          },
 
-         _getInputState: function() {
-            var
-               result;
-
-            if (this._options.validationErrors && this._options.validationErrors.length) {
-               result = 'error';
-            } else if (this._options.readOnly) {
-               result = 'disabled';
-            } else {
-               result = 'default';
-            }
-
-            return result;
-         },
-
          _focusinHandler: function(e) {
+            this._inputActive = true;
+
             if (!this._options.readOnly && this._options.selectOnClick) {
                //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
                if (cDetection.isIE) {
@@ -155,6 +174,8 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _focusoutHandler: function(e) {
+            this._inputActive = false;
+
             e.target.scrollLeft = 0;
          },
 

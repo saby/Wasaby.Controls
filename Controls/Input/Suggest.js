@@ -16,7 +16,7 @@ define('Controls/Input/Suggest',
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Suggest
-       * @extends Controls/Input/Text
+       * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
@@ -28,7 +28,7 @@ define('Controls/Input/Suggest',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Suggest/Suggest
-       * @author Журавлев Максим Сергеевич
+       * @author Зайцев А.С.
        */
       
       'use strict';

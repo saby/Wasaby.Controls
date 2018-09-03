@@ -20,6 +20,11 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          options = cfg || {},
          minWidth = cfg.minWidth || 398;
 
+      //minWidth передаем только в componentOptions, в опциях диалога он не нужен, т.к. ширина будет расчитана по контенту.
+      //В popup на vdom есть ошибка, что если задать minWidth, то ширина окна ограничивается этим minWidth, выписана задача
+      //на исправление https://online.sbis.ru/opendoc.html?guid=22280db9-fa89-45e0-8b33-2ea0a4251fc5
+      delete cfg.minWidth;
+
       return moduleStubs.require(['SBIS3.CONTROLS/Action/OpenDialog']).addCallback(function(result) {
          var
             def = new Deferred(),
@@ -28,17 +33,21 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          //Устанавливаем неустановленные опции в дефолтные значения
          cMerge(options, {
             resizable: false,
-            visible: false,
+
+            //на vdom не работает опция visible у диалогов. Поэтому сами будем скрывать окно печати стилями.
+            className: 'controls-PrintDialog__invisible',
             isStack: true,
             task_1174068748: true,
             template: 'SBIS3.CONTROLS/PrintDialogTemplate',
-            minWidth: minWidth,
             componentOptions: {
                minWidth: minWidth,
                htmlText: options.htmlText,
                handlers: {
                   onAfterShow: function() {
                      def.callback();
+                  },
+                  onDestroy: function() {
+                     action.destroy();
                   }
                }
             }
@@ -53,5 +62,5 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          action.execute();
          return def;
       });
-   }
+   };
 });

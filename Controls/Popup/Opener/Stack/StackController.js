@@ -28,7 +28,18 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = container.getElementsByClassName('controls-Popup__template')[0].clientWidth; // Берем размеры пользовательского шаблона без бордера
+            item.containerWidth = _private.getContainerWidth(item, container);
+         },
+
+         getContainerWidth: function(item, container) {
+            var template;
+            if (item.popupOptions.isCompoundTemplate) {
+               //Берем размеры прикладного шаблона
+               template = container.querySelector('.controls-CompoundArea__container').children[0];
+            } else {
+               template = container.querySelector('.controls-Popup__template');
+            }
+            return template.clientWidth; // Берем размеры пользовательского шаблона без бордера
          },
 
          getStackParentCoords: function() {
@@ -49,7 +60,6 @@ define('Controls/Popup/Opener/Stack/StackController',
          elementDestroyed: function(instance, item) {
             instance._stack.remove(item);
             instance._update();
-            item.stackState = 'destroyed';
             instance._destroyDeferred[item.id].callback();
             delete instance._destroyDeferred[item.id];
          },
@@ -63,7 +73,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             className = (className || '');
             className = _private.removeAnimationClasses(className);
             className = _private.addStackClasses(className);
-            return className;
+            return className.trim();
          },
 
          addStackClasses: function(className) {
@@ -90,6 +100,12 @@ define('Controls/Popup/Opener/Stack/StackController',
          setMaximizedState: function(item, state) {
             item.popupOptions.maximized = state;
             item.popupOptions.templateOptions.maximized = state;
+         },
+         getWindowSize: function() {
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight
+            };
          }
       };
 
@@ -111,27 +127,19 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementCreated: function(item, container) {
-            if (this._checkContainer(item, container)) {
-               _private.prepareSizes(item, container);
-               this._stack.add(item, 0);
-               if (HAS_ANIMATION) {
-                  item.popupOptions.className += ' controls-Stack__open';
-                  item.stackState = 'creating';
-               } else {
-                  item.stackState = 'opened';
-               }
-               this._update();
+            _private.prepareSizes(item, container);
+            this._stack.add(item, 0);
+            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
+               item.popupOptions.className += ' controls-Stack__open';
+               item.popupState = BaseController.POPUP_STATE_CREATING;
             }
+            this._update();
          },
 
          elementUpdated: function(item, container) {
-            if (item.stackState === 'opened') {
-               item.popupOptions.className = _private.prepareUpdateClassses(item.popupOptions.className);
-               if (this._checkContainer(item, container)) {
-                  _private.prepareSizes(item, container);
-                  this._update();
-               }
-            }
+            item.popupOptions.className = _private.prepareUpdateClassses(item.popupOptions.className);
+            _private.prepareSizes(item, container);
+            this._update();
          },
 
          elementMaximized: function(item, container, state) {
@@ -142,7 +150,6 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementDestroyed: function(item) {
             this._destroyDeferred[item.id] = new Deferred();
-            item.stackState = 'destroying';
             if (HAS_ANIMATION) {
                item.popupOptions.className += ' controls-Stack__close';
                this._fixTemplateAnimation(item);
@@ -155,10 +162,10 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementAnimated: function(item) {
             item.popupOptions.className = _private.removeAnimationClasses(item.popupOptions.className);
-            if (item.stackState === 'destroying') {
+            if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
                _private.elementDestroyed(this, item);
             } else {
-               item.stackState = 'opened';
+               item.popupState = BaseController.POPUP_STATE_CREATED;
                return true;
             }
          },
@@ -183,7 +190,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
-            if (HAS_ANIMATION) {
+            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                item.popupOptions.className += ' controls-Stack__waiting';
             }
 
@@ -191,6 +198,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.position = {
                top: -10000,
                left: -10000,
+               height: _private.getWindowSize().height,
                width: position.width || undefined
             };
          },

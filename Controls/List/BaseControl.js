@@ -9,7 +9,6 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'tmpl!Controls/List/BaseControl/multiSelect',
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
@@ -27,7 +26,6 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   multiSelectTpl,
    RecordSet,
    tUtil,
    aUtil
@@ -146,9 +144,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollListEdge: function(self, direction) {
-         if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScrollEdge(direction);
-         }
+
       },
 
       scrollToEdge: function(self, direction) {
@@ -259,15 +255,18 @@ define('Controls/List/BaseControl', [
 
       /**
        * Обработать прокрутку списка виртуальным скроллом
-       * @param scrollTop
        */
-      handleListScroll: function(self, scrollTop) {
+      handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.handleScroll(scrollTop);
+            if (position === 'middle') {
+               self._scrollPagingCtr.handleScroll(scrollTop);
+            } else {
+               self._scrollPagingCtr.handleScrollEdge(position);
+            }
          }
       },
 
@@ -368,6 +367,7 @@ define('Controls/List/BaseControl', [
     * @class Controls/List/BaseControl
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -395,7 +395,6 @@ define('Controls/List/BaseControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
-      _multiSelectTpl: multiSelectTpl,
 
       _needScrollCalculation: false,
       _loadOffset: 100,
@@ -535,7 +534,7 @@ define('Controls/List/BaseControl', [
             case 'loadBottom': _private.onScrollLoadEdge(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
          }
@@ -582,7 +581,17 @@ define('Controls/List/BaseControl', [
          }
       },
 
-      _onItemClick: function(e, item) {
+      _onItemClick: function(e, item, originalEvent) {
+         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
+            /*
+             When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
+             We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
+             we'd be stopping the propagation of valueChanged event, not click event.
+             And even if we could stop propagation of the click event, we shouldn't do that because other components
+             can use it for their own reasons (e.g. something like TouchDetector can use it).
+             */
+            e.stopPropagation();
+         }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
       },

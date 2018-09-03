@@ -3,7 +3,7 @@
         <div class="demo-SuggestWrapper">
             <h3>Suggest</h3>
             <Controls.Input.Suggest
-                    attr:test_name="Suggest"
+                    attr:class="ControlsDemo-Suggest__simple"
                     bind:value="_suggestValue"
                     displayProperty="text"
                     searchParam="title"
@@ -22,7 +22,7 @@
         <div class="demo-SuggestWrapper">
             <h3>Search suggest</h3>
             <Controls.Input.Search.Suggest
-                    attr:test_name="SuggestSearch"
+                    attr:class="ControlsDemo-Suggest__search"
                     bind:value="_suggest2Value"
                     bind:suggestState="_suggestState"
                     displayProperty="text"
@@ -42,6 +42,7 @@
         <div class="demo-SuggestWrapper">
             <h3>Suggest with no footer</h3>
             <Controls.Input.Suggest
+                    attr:class="ControlsDemo-Suggest__nofooter"
                     bind:value="_suggest5Value"
                     displayProperty="text"
                     searchParam="title"
@@ -63,7 +64,7 @@
         <div class="demo-SuggestWrapper">
             <h3>Suggest with tabs</h3>
             <Controls.Input.Suggest
-                    attr:test_name="SuggestWithTabs"
+                    attr:class="ControlsDemo-Suggest__simpleTabs"
                     bind:value="_suggest3Value"
                     displayProperty="text"
                     searchParam="title"
@@ -82,7 +83,7 @@
         <div class="demo-SuggestWrapper">
             <h3>Search suggest with tabs</h3>
             <Controls.Input.Search.Suggest
-                    attr:test_name="SuggestSearchWithTabs"
+                    attr:class="ControlsDemo-Suggest__searchTabs"
                     bind:value="_suggest4Value"
                     bind:suggestState="_suggestState1"
                     displayProperty="text"

@@ -1760,7 +1760,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             processedKeys = [];
          if (items && items.getCount()) {
             // пока не дойдем до корня (корень может быть undefined), с проверкой на зацикливание
-            while ((key !== null && key !== undefined) && key !== this.getRoot() && processedKeys.indexOf(key) === -1) {
+            while ((key !== null && key !== undefined) && String(key) !== String(this.getRoot()) && processedKeys.indexOf(key) === -1) {
                processedKeys.push(key);
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;

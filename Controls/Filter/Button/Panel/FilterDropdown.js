@@ -9,12 +9,14 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
     * @class Controls/Filter/Button/Panel/FilterDropdown
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/Input/interface/IDropdownEmptyText
     * @mixes Controls/interface/ITextValue
     * @control
     * @public
+    * @author Герасимов А.М.
     */
 
    'use strict';

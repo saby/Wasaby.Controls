@@ -19,7 +19,10 @@ function(cMerge,
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var
+            templateOptions = this._getTemplateOptions(templateClass),
+            parentContext;
+
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -48,6 +51,7 @@ function(cMerge,
          }
          if (cfg.parent) {
             cfg.templateOptions.__parentFromCfg = cfg.parent;
+            parentContext = cfg.parent.getLinkedContext && cfg.parent.getLinkedContext(); // получаем контекст родителя
          }
          if (cfg.opener) {
             cfg.templateOptions.__openerFromCfg = cfg.opener;
@@ -56,8 +60,8 @@ function(cMerge,
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
 
-         if (cfg.context) {
-            this._prepareContext(cfg);
+         if (cfg.context || parentContext) {
+            this._prepareContext(cfg, parentContext);
          }
 
          if (cfg.linkedContext) {
@@ -98,6 +102,7 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+         cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
@@ -111,18 +116,27 @@ function(cMerge,
          }
       },
 
-      _prepareContext: function(cfg) {
+      _prepareContext: function(cfg, parentContext) {
          var destroyDef = new Deferred(),
             destrFunc = function() {
                destroyDef.callback();
                destroyDef = null;
             };
 
-         if (cfg.context instanceof Context) {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-         } else {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-            cfg.templateOptions.context.setContextData(cfg.context);
+         if (cfg.context) {
+            if (cfg.context instanceof Context) {
+               // Если явно передан контекст, создаем дочерний от него, и передаем в опции открываемого компонента
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            } else {
+               // Если передан простой объект, создаем пустой контекст и заполняем его полями и значениями
+               // из переданного объекта
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+               cfg.templateOptions.context.setContextData(cfg.context);
+            }
+         } else if (parentContext) {
+            // Если контекст не передан, но задан родитель, то берем контекст родителя, создаем дочерний от него
+            // и передаем в опции открываемого компонента
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, parentContext);
          }
 
          if (!cfg.templateOptions.handlers) {
@@ -197,6 +211,11 @@ function(cMerge,
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
                cfg.verticalAlign = {side: cfg.direction};
+
+               //magic of old floatarea
+               if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
+                  cfg.horizontalAlign = {side: cfg.side === 'right' ? 'left' : 'right'};
+               }
             }
          }
 
@@ -214,9 +233,24 @@ function(cMerge,
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
          }
+
+         if (cfg.hasOwnProperty('draggable')) {
+            cfg.templateOptions.draggable = cfg.draggable;
+         }
+
+         cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+
+         /**
+          * InfoBox в своем шаблоне имеет опции с именами template и templateOptions.
+          * нужно их положить в innerComponentOptions.templateOptions.
+          */
+         if (cfg.componentOptions.innerComponentOptions.template) {
+            cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
+         }
+
          cfg.componentOptions.innerComponentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
@@ -293,6 +327,10 @@ function(cMerge,
             newCfg.dialogOptions.closeOnTargetScroll = true;
          }
 
+         if (cfg.className) {
+            newCfg.dialogOptions.className = cfg.className;
+         }
+
          if (newCfg.target) {
             this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
@@ -317,8 +355,8 @@ function(cMerge,
 
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
-         var dimensions = this._getDimensions(templateClass);
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var dimensions = templateClass ? this._getDimensions(templateClass) : {};
+         var templateOptions = templateClass ? this._getTemplateOptions(templateClass) : {};
          var minWidth = dimensions.minWidth || templateOptions.minWidth || dimensions.width || templateOptions.width;
 
          if (!cfg.minWidth) {

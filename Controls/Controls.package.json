@@ -41,9 +41,17 @@
   ],
   "exclude": [
     "Controls/Filter/Button/_FilterCompatible",
-    "Controls/Filter/Button/OldPanelOpener"
+    "Controls/Filter/Button/OldPanelOpener",
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
   ],
   "output": "controls-filter.package.js"
+}, {
+  "include": [
+    "Controls/Filter/Button/Panel",
+    "Controls/Filter/Button/Panel/*"
+  ],
+  "output": "controls-filter-panel.package.js"
 }, {
   "include": [
     "Controls/Filter/Button/_FilterCompatible",
@@ -120,7 +128,8 @@
   "output": "controls-toggle.package.js"
 }, {
   "include": [
-    "Controls/Utils/*"
+    "Controls/Utils/*",
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-utils.package.js"
 }, {
@@ -143,6 +152,9 @@
 }, {
   "include": [
     "Controls/Calendar/*"
+  ],
+  "exclude": [
+    "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
 }]

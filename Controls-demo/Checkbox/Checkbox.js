@@ -7,39 +7,6 @@ define('Controls-demo/Checkbox/Checkbox', [
 ], function(Control, template, MemorySource) {
    'use strict';
 
-   var source = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'true',
-            value: true
-         },
-         {
-            title: 'false',
-            value: false
-         }
-      ]
-   });
-
-   var tristateSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'true',
-            value: true
-         },
-         {
-            title: 'false',
-            value: false
-         },
-         {
-            title: 'null',
-            value: null
-         }
-      ]
-   });
-
-
    var ModuleClass = Control.extend(
       {
          _template: template,
@@ -49,7 +16,22 @@ define('Controls-demo/Checkbox/Checkbox', [
          _tooltip: 'tooltip',
          _value: false,
          _eventName: 'no event',
-         _source: source,
+         _source: null,
+         _beforeMount: function() {
+            this._source = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'true',
+                     value: true
+                  },
+                  {
+                     title: 'false',
+                     value: false
+                  }
+               ]
+            });
+         },
          reset: function() {
             this._eventName = 'no event';
          },
@@ -59,15 +41,45 @@ define('Controls-demo/Checkbox/Checkbox', [
             var self = this;
             this._source.read(key).addCallback(function(item) {
                self._value = item.get('value');
+               self._forceUpdate();
             });
          },
          setTristate: function(e, value) {
             if (value) {
-               this._source = tristateSource;
+               this._source = new MemorySource({
+                  idProperty: 'title',
+                  data: [
+                     {
+                        title: 'true',
+                        value: true
+                     },
+                     {
+                        title: 'false',
+                        value: false
+                     },
+                     {
+                        title: 'null',
+                        value: null
+                     }
+                  ]
+               });
             } else {
-               this._source = source;
+               this._source = new MemorySource({
+                  idProperty: 'title',
+                  data: [
+                     {
+                        title: 'true',
+                        value: true
+                     },
+                     {
+                        title: 'false',
+                        value: false
+                     }
+                  ]
+               });
             }
          }
-      });
+      }
+   );
    return ModuleClass;
 });

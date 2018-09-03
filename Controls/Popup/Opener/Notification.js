@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Notification',
        * @class Controls/Popup/Opener/Notification
        * @control
        * @public
+       * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
        */
@@ -22,9 +23,10 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Открыть нотификационное окно
           * @function Controls/Popup/Opener/Notification#open
-          * @param {popupOptions} popupOptions конфиг попапа.
+          * @param {popupOptions} [popupOptions] конфиг попапа.
           */
          open: function(popupOptions) {
+            popupOptions = popupOptions || {};
 
             //Убираем автофокусировку, чтобы не закрывались окна с autoHide true
             popupOptions.autofocus = false;

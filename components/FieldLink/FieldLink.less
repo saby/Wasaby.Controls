@@ -89,6 +89,9 @@
 }
 .controls-FieldLink__item-cross {
    color: @color_FieldLink_item-cross;
+   /* click on empty right item space must remove item, not activate */
+   padding-right: @spacing_FieldLink_item-cross;
+   margin-right: -@spacing_FieldLink_item-cross;
 }
 .controls-FieldLink__item-caption__underlined:hover {
    text-decoration: underline;
@@ -138,6 +141,11 @@
 .controls-FieldLink__showAllLinks-enabled {
    padding: 0 @spacing_FieldLink-showAllLinks_enabled 0 0;
 }
+
+.controls-FieldLink__indicator-position {
+   .order(1);
+}
+
 .controls-FieldLink__showAllLinks-disabled {
    background: @background_FieldLink-showAllLinks_disabled;
    position: relative; //todo: тени нет в стандарте, так что всё это не нужно

@@ -869,7 +869,7 @@
 @list-view-context-menu-close-top:              7px;
 @list-view-context-menu-close-color:            #CCC;
 @list-view-context-menu-close-hover-color:      @blue-dark-color;
-@list-view-scroll-spritesheet:                  url('img/ajax-loader-indicator.gif');
+@list-view-scroll-spritesheet:                  url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
 @list-view-close-button-font-family:            @default-icon-medium-font;
 @list-view-scroll-bg:                           @list-view-scroll-spritesheet 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
@@ -1709,7 +1709,7 @@
 @margin_ExportCustomizer-Area-body-columnBinder: 8px 0 32px 0;
 @margin_ExportCustomizer-Area-body-formatter: 0 0 12px 0;
 
-@max-width_ExportCustomizer-Presets-View-offset: 12px + 16px;
+@max-width_ExportCustomizer-Presets-View-offset: 12px + 16px + 6px + 16px;
 @color_ExportCustomizer-Presets-View-button: #8991A9;
 @max-width_ExportCustomizer-Presets-View-picker: 450px;
 @max-height_ExportCustomizer-Presets-View-picker: 38px + 16*32px;/*Ёмкость списка без прокрутки - 16 пресетов*/
@@ -1723,7 +1723,8 @@
 @margin_ExportCustomizer-Presets-View-add: 4px 12px 4px 12px;
 @margin_ExportCustomizer-Presets-View-editor-panel: 0 0 0 12px;
 @margin_ExportCustomizer-Presets-View-editor-panel-ok: 0 12px 0 0;
-@margin_ExportCustomizer-Presets-View-delete: 0 0 0 12px;
+@margin_ExportCustomizer-Presets-View-action-first: 0 0 0 12px;
+@margin_ExportCustomizer-Presets-View-action: 0 0 0 6px;
 
 @margin_ExportCustomizer-ColumnBinder-View-head: 0 0 8px 0;
 @padding_ExportCustomizer-ColumnBinder-View-title: 0 12px;
@@ -1745,6 +1746,7 @@
 @padding_ExportCustomizer-Formatter-View-title: 0 12px;
 @font-size_ExportCustomizer-Formatter-View-title: 15px;
 @color_ExportCustomizer-Formatter-View-title: #313E78;
+@color_ExportCustomizer-Formatter-View-title_disabled: @disabled-color;
 @margin_ExportCustomizer-Formatter-View-formatterMenu: 0 12px 0 0 ;
 @color_ExportCustomizer-Formatter-View-formatterMenu: #0055BB;
 @padding_ExportCustomizer-Formatter-View-text: 8px 12px 0 12px;
@@ -1934,7 +1936,7 @@
 @box-shadow_TinyMCE-images: 0px 0px 5px #587AB0;
 
 // HighChart
-@image_HighChart-loading-indicator: url('img/ajax-loader-indicator.gif');
+@image_HighChart-loading-indicator: url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
 
 //CloseButton
 @font-family_CloseButton_default: @default-icon-font;

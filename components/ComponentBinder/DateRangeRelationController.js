@@ -307,6 +307,7 @@ define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
             range = dateRangeUtil.shiftPeriod(dateRanges[i].getStartValue(), dateRanges[i].getEndValue(), delta);
             dateRanges[i].setRange(range[0], range[1], true);
          }
+         this._notify('onDatesChange');
       },
    });
 

@@ -150,24 +150,39 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
       },
       init: function() {
          Button.superclass.init.call(this);
-         this.subscribe('onAfterShow', function() {
-            // Нужно подождать, пока предки станут видимы. onAfterShow выстреливают "отложенным событием", то есть
-            // этот обработчик вызывается только тогда, когда завершены все "пакеты" (batches) в ControlBatchUpdater.
-            // Однако в 2016 году в AreaAbstract#destroy (сейчас в AreaAbstract.compatible#destroy) был добавлен код,
-            // удаляющий все незавершенные пакеты из ControlBatchUpdater'a. Это было сделано, так как в случае
-            // уничтожения не до конца созданного компонента (например переключение с не до конца загрузившейся
-            // вкладки в панели), в ControlBatchUpdater'e навсегда зависали незавершенные пакеты, что приводило
-            // к несрабатыванию отложенных обработчиков до перезагрузки страницы.
-            // Из-за этого, если во время появления primary-кнопки (например во FloatArea) произойдет уничтожение
-            // какого-то из компонентов (например вызовут rebuildMarkup у другого компонента в той же панели), onAfterShow
-            // сработает слишком рано, еще до отображения родителя. Поэтому мы ждем какое-то время, чтобы уже построенные
-            // родители могли отобразиться.
-            setTimeout(function () {
-               if (this._options.primary === true && !this._defaultAction) {
-                  this._registerDefaultButton();
-               }
-            }.bind(this), 600);
-         }.bind(this));
+         this._tryRegisterPrimary();
+      },
+
+      _tryRegisterPrimary: function() {
+         var self = this;
+
+         function registerIfPrimary() {
+            if (self._options.primary === true && !self._defaultAction) {
+               self._registerDefaultButton();
+            }
+         }
+
+         // Пробуем зарегистрироваться в качестве кнопки по умолчанию сразу, и подписываемся на onAfterVisibilityChange
+         // на случай если кнопка или какой-то из ее родителей еще скрыт
+         registerIfPrimary();
+         self.subscribe('onAfterVisibilityChange', function() {
+            registerIfPrimary();
+         });
+      },
+
+      // Нужно стрелять событием onAfterVisibilityChange при изменении видимости кнопки.
+      // ButtonBase этого не делает
+      _setVisibility: function() {
+         var
+            visibleBefore = this.isVisible(),
+            visibleAfter;
+
+         Button.superclass._setVisibility.apply(this, arguments);
+         visibleAfter = this.isVisible();
+
+         if (visibleAfter !== visibleBefore) {
+            this._notify('onAfterVisibilityChange', visibleAfter);
+         }
       },
 
       setCaption: function(caption) {
@@ -304,7 +319,7 @@ define('SBIS3.CONTROLS/WSControls/Buttons/Button', [
 
             // action создаем только после отмены регистрации, иначе он зануляется
             this._defaultAction = function(e) {
-               if (this && this.isEnabled()) {
+               if (this && this.isEnabled() && this.isVisibleWithParents()) {
                   this._onClickHandler(e);
                   return false;
                } else {

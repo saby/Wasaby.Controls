@@ -41,21 +41,54 @@ define('Controls/Decorator/Highlight',
       var _private = {
          separatorsRegExp: /\s/g,
 
-         /**
-           * Get the string to search converted to a regular expression.
-           * @example
-           * <pre>
-           *    var highlight = 'Текст для подсветки';
-           *    var highlightRegExp = getHighlightRegExp(highlight);
-           *    console.log(highlightRegExp) // /(Текст)?( ?для)?( ?подсветки)?/gi
-           * </pre>
-           * @param highlight Text to search.
-           * @returns {RegExp}
-           */
-         getHighlightRegExp: function(highlight) {
-            var highlightRegExpString = highlight.replace(this.separatorsRegExp, ')?(\\s?');
+         wordsRegExp: /.*?(?=\s|$)/gi,
 
-            return new RegExp('(' + RegExpUtil.escapeSpecialChars(highlightRegExpString) + ')?', 'gi');
+         wordsFilter: function(item, index) {
+            return index % 2 === 0;
+         },
+
+         transform: function(words) {
+            var result = '';
+            var length = words.length;
+            var iterator, word, followingWords;
+
+            for (iterator = 0; iterator < length; iterator++) {
+               word = words[iterator];
+
+               result += '(' + word;
+
+               followingWords = words.slice(iterator + 1).join('|');
+
+               if (followingWords) {
+                  result += '(\\s(?=' + followingWords + '))?';
+               }
+
+               result += ')?';
+            }
+
+            return result;
+         },
+
+         /**
+          * Get the string to search converted to a regular expression.
+          * Transformation:
+          * highlight = 'W1 W2 ... Wn'; n - the number of worlds;
+          * Wi = 'w1w2...wk'; wi - symbol on the i-th position; k - the number of characters in a word;
+          * highlightRegExp = /(W1(\s(?=W2|W3|...|Wn))?)?...(Wi(\s(?=Wi+1|Wi+2|...|Wn))?)?...(Wn)?/gi
+          * @example
+          * <pre>
+          *    getHighlightRegExp('Hello world') // /(Hello(\s(?=world))?)?(world)?/gi
+          * </pre>
+          * @param highlight Text to search.
+          * @returns {RegExp}
+          */
+         getHighlightRegExp: function(highlight) {
+            highlight = RegExpUtil.escapeSpecialChars(highlight);
+            var words = highlight.match(_private.wordsRegExp).filter(_private.wordsFilter);
+            var highlightRegExpString = _private.transform(words);
+
+
+            return new RegExp(highlightRegExpString, 'gi');
          },
 
          parseText: function(text, highlight) {
@@ -63,7 +96,7 @@ define('Controls/Decorator/Highlight',
                parsedText = [],
                highlightRegExp = this.getHighlightRegExp(highlight),
                exec, foundText, startingPosition;
-   
+
             // eslint-disable-next-line
             while (exec = highlightRegExp.exec(text)) {
                foundText = exec[0];
@@ -122,6 +155,12 @@ define('Controls/Decorator/Highlight',
          return {
             text: descriptor(String).required(),
             highlight: descriptor(String).required()
+         };
+      };
+
+      Highlight.getDefaultOptions = function() {
+         return {
+            class: 'controls-Highlight_found'
          };
       };
 

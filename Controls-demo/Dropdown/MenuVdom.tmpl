@@ -75,7 +75,7 @@
          footerTemplate="tmpl!Controls-demo/Dropdown/resources/footerTemplate"
          source="{{_getMultiData()}}"
       />
-   </div>
+	</div>
 
 	<div style="padding: 5px;">readOnly
 		<Controls.Input.Dropdown
@@ -94,6 +94,8 @@
             name="myMenuButton11"
             attr:test_name="dop_menu"
             keyProperty="id"
+			parentProperty="parent"
+			nodeProperty="@parent"
             additionalProperty="additional"
             style="linkMain"
             icon="icon-medium icon-Author"
@@ -226,10 +228,8 @@
               keyProperty="id"
               style="linkMain"
               icon="icon-medium icon-Author"
-              menuStyle="cross"
               source="{{_getDefaultMemory()}}"
               itemsGroup="{{_itemsGroup}}">
-         <ws:headConfig menuStyle="cross"/>
       </Controls.Button.MenuButton>
    </div>
 </div>

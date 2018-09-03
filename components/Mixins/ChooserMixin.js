@@ -63,20 +63,9 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
              */
             oldViews: false,
             /**
-             * @cfg {String} Устанавливает режим отображения диалога выбора элементов коллекции.
-             * * dialog Справочник отображается в новом диалоговом окне.
-             * * floatArea Справочник отображается во всплывающей панели.
-             * @remark
-             * Окно выбора будет отображаться в новом диалоге или на всплывающей панели.
-             * Подробно про диалог выбора элементов коллекции можно прочесть {@link https://wi.sbis.ru/docs/js/Lib/Control/FloatArea/FloatArea/ здесь}.
-             * @example
-             * Устанавливаем режим отображения {@link https://wi.sbis.ru/docs/js/Lib/Control/Dialog/Dialog/ справочника} для поля связи
-             * в новом диалоговом окне:
-             * ![](/ChooserMixin01.png)
-             * фрагмент верстки:
-             * <pre class="brush: xml">
-             *     <option name="chooserMode">dialog</option>
-             * </pre>
+             * @cfg {String} Режим отображения диалога выбора элементов коллекции.
+             * * dialog Отображение справочника в новом диалоговом окне. Когда установлена опция dialog, то открывается компонент {@link https://wi.sbis.ru/docs/js/Lib/Control/Dialog/Dialog/ Lib/Control/Dialog/Dialog}.
+             * * floatArea Отображение справочника во всплывающей панели. Для поля связи создание диалога описано в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/ Окно выбора из справочника}.
              * @see dictionaries
              */
             chooserMode: 'floatArea'

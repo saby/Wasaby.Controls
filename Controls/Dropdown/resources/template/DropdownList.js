@@ -7,12 +7,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'tmpl!Controls/Dropdown/resources/template/itemTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
-      'Controls/Container/Scroll/Context',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate, ScrollData) {
-      // TODO: Убрать определение контекста для Scroll, когда будет готова поддержка контекста для старого окружения.
+   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
          setPopupOptions: function(self) {
             self._popupOptions = {
@@ -57,6 +55,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _hasHierarchy: false,
+         _listModel: null,
 
          constructor: function(config) {
             var self = this;
@@ -82,6 +81,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                         iconSize = size;
                      }
                   });
+               } else if (config.iconPadding[config.parentProperty]) {
+                  this._headConfig.icon = config.iconPadding[config.parentProperty][1];
                }
                if (this._headConfig.menuStyle === 'duplicateHead') {
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
@@ -90,8 +91,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
-
-            this._scrollData = new ScrollData({ pagingVisible: false });
          },
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
@@ -156,6 +155,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
+   
+         _additionMouseenter: function() {
+            if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
+            }
+         },
+         
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
@@ -163,6 +169,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._notify('sendResult', [result]);
             }
          },
+
+         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left') {
+               this._listModel.setSwipeItem(itemData);
+            }
+            if (event.nativeEvent.direction === 'right') {
+               this._listModel.setSwipeItem(null);
+            }
+         },
+
          _itemClickHandler: function(event, item, pinClicked) { // todo нужно обсудить
             var result = {
                action: pinClicked ? 'pinClicked' : 'itemClick',
@@ -199,10 +215,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._hasHierarchy = this._listModel.hasHierarchy();
             this._forceUpdate();
          },
-         _getChildContext: function() {
-            return {
-               ScrollData: this._scrollData
-            };
+         _beforeUnmount: function() {
+            if (this._listModel) {
+               this._listModel.destroy();
+               this._listModel = null;
+            }
          }
       });
 

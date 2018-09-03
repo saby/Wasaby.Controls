@@ -9,10 +9,11 @@ define('Controls/Container/Filter',
       'Core/helpers/Object/isEqual',
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEmpty'
+      'Core/helpers/Object/isEmpty',
+      'Core/IoC'
    ],
    
-   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject) {
+   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, IoC) {
       
       'use strict';
       
@@ -36,7 +37,7 @@ define('Controls/Container/Filter',
             
             return result;
          },
-
+         
          getHistorySource: function(self, hId) {
             if (!self._historySource) {
                self._historySource = historyUtils.getHistorySource(hId);
@@ -50,13 +51,13 @@ define('Controls/Container/Filter',
             }
             var that = this;
             var recent, lastFilter;
-
+            
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: this.getHistorySource(self, id)
                });
             }
-
+            
             return self._sourceController.load({$_history: true}).addCallback(function() {
                recent = that.getHistorySource(self, id).getRecent();
                if (recent.getCount()) {
@@ -65,14 +66,14 @@ define('Controls/Container/Filter',
                }
             });
          },
-   
+         
          getFilterByItems: function(filterButtonItems, fastFilterItems) {
             var filter = {};
             
             function processItems(items) {
                Chain(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
-      
+                  
                   if (!isEqual(value, getPropValue(elem, 'resetValue'))) {
                      filter[getPropValue(elem, 'id')] = value;
                   }
@@ -97,18 +98,18 @@ define('Controls/Container/Filter',
                return historyItems;
             });
          },
-   
+         
          mergeFilterItems: function(items, historyItems) {
             Chain(items).each(function(item) {
                Chain(historyItems).each(function(historyItem) {
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
-
+                     
                      if (value !== undefined && value !== getPropValue(historyItem, 'resetValue')) {
                         setPropValue(item, 'value', value);
                      }
-
+                     
                      if (textValue !== undefined && item.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
                      }
@@ -117,36 +118,6 @@ define('Controls/Container/Filter',
             });
          }
       };
-   
-      /**
-       * Container for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
-       *
-       * <a href="/materials/demo-ws4-filter-container">Demo with Filter/Button and List component</a>.
-       * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List component</a>.
-       *
-       * @class Controls/Container/Filter
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
-   
-      /**
-       * @name Controls/Container/Filter#filterButtonSource
-       * @cfg {Array|Function} FilterButton structure
-       * @see Controls/Filter/Button#items
-       */
-   
-      /**
-       * @name Controls/Container/Filter#fastFilterSource
-       * @cfg {Array|Function} FastFilter structure
-       * @see Controls/Filter/FastFilter#items
-       */
-   
-      /**
-       * @name Controls/Container/Filter#historyId
-       * @cfg {String} The identifier under which the filter history will be saved.
-       */
       
       var Filter = Control.extend({
          
@@ -155,6 +126,11 @@ define('Controls/Container/Filter',
          _filter: null,
          _filterButtonItems: null,
          _fastFilterItems: null,
+         
+         constructor: function() {
+            IoC.resolve('ILogger').error('Controls/Container/Filter', 'Component is deprecated and will be deleted in 3.18.600, use Controls/Filter/Controller instead.');
+            Filter.superclass.constructor.apply(this, arguments);
+         },
          
          _beforeMount: function(options) {
             var itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource),
@@ -166,11 +142,11 @@ define('Controls/Container/Filter',
             
             return itemsDef;
          },
-
+         
          _itemsChanged: function(event, items) {
             var filter = _private.getFilterByItems(items);
             var meta;
-
+            
             if (this._options.historyId) {
                meta = {
                   '$_addFromData': true
@@ -180,7 +156,7 @@ define('Controls/Container/Filter',
             _private.resolveItems(this, this._options.historyId, this._options.filterButtonSource, this._options.fastFilterSource);
             this._filter = filter;
          },
-   
+         
          _getChildContext: function() {
             return {
                filterLayoutField: new FilterContextField({
@@ -192,7 +168,7 @@ define('Controls/Container/Filter',
             };
          }
       });
-   
+      
       Filter._private = _private;
       return Filter;
    });

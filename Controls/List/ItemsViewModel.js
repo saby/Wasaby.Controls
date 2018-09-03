@@ -7,7 +7,7 @@ define('Controls/List/ItemsViewModel',
 
       /**
        *
-       * @author Крайнов Дмитрий
+       * @author Авраменко А.С.
        * @public
        */
       var _private = {
@@ -215,7 +215,10 @@ define('Controls/List/ItemsViewModel',
 
          destroy: function() {
             ItemsViewModel.superclass.destroy.apply(this, arguments);
-            this._display = null;
+            if (this._display) {
+               this._display.destroy();
+               this._display = null;
+            }
             this._items = null;
             this._curIndex = null;
             this._onCollectionChangeFnc = null;

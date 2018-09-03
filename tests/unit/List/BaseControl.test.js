@@ -496,10 +496,10 @@ define([
 
 
             //прокручиваем к низу, проверяем состояние пэйджинга
-            BaseControl._private.onScrollListEdge(ctrl, 'down');
+            BaseControl._private.handleListScroll(ctrl, 300, 'down');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'disabled', stateEnd: 'disabled'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            BaseControl._private.handleListScroll(ctrl, '200');
+            BaseControl._private.handleListScroll(ctrl, 200, 'middle');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             BaseControl._private.onScrollHide(ctrl);
@@ -749,6 +749,35 @@ define([
             assert.equal(args[1], 1);
          };
          ctrl._onCheckBoxClick({}, 1, 1);
+      });
+
+      it('_onItemClick', function() {
+         var cfg = {
+            keyProperty: 'id',
+            viewName: 'Controls/List/ListView',
+            source: source,
+            items: rs,
+            viewModelConstructor: ListViewModel
+         };
+         var originalEvent = {
+            target: {
+               closest: function(selector) {
+                  return selector === '.js-controls-ListView__checkbox';
+               }
+            }
+         };
+         var stopPropagationCalled = false;
+         var event = {
+            stopPropagation: function() {
+               stopPropagationCalled = true;
+            }
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl._onItemClick(event, rs.at(2), originalEvent);
+         assert.isTrue(stopPropagationCalled);
+         assert.equal(rs.at(2), ctrl._listViewModel._markedItem.getContents());
       });
 
       describe('EditInPlace', function() {

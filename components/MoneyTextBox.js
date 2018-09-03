@@ -44,23 +44,22 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @mixes SBIS3.CONTROLS/MoneyTextBoxDocs
      * @public
      * @control
-     * @author Зайцев А.С.
+     * @author Журавлев М.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
             /**
-             * @cfg {string} Выравнивание текста относительно контейнера
-             * <pre>
-             *     <option name="textAlign">left</option>
-             * </pre>
+             * @cfg {String} Выравнивание текста относительно контейнера.
+             * @variant right Выравнивание справа относительно контейнера.
+             * @variant left Выравнивание слева относительно контейнера.
              */
             textAlign: 'right',
             _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
-             * @cfg {Number} Количество знаков после запятой
+             * @cfg {Number} Количество знаков после запятой.
              * Опция задаёт ограничение количества знаков дробной части числа.
              * @example
              * <pre>
@@ -71,15 +70,12 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              */
             decimals: 2,
             /**
-             * @cfg {Boolean} Требуется ли скрывать пустую дробную часть
+             * @cfg {Boolean} Требуется ли скрывать пустую дробную часть.
              * @example
-             * <pre>
-             *     <option name="hideEmptyDecimals">true</option>
-             * <pre>
              */
             hideEmptyDecimals: false,
             /**
-             * @cfg {Boolean} Показать разделители триад
+             * @cfg {Boolean} Показать разделители триад.
              * @example
              * <pre>
              *     <option name="delimiters">true</option>
@@ -90,7 +86,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
              */
             delimiters: true,
             /**
-             * @cfg {String} Денежное значение контрола
+             * @cfg {String} Денежное значение контрола.
              * @example
              * <pre>
              *     <option name="moneyValue">123.456</option>

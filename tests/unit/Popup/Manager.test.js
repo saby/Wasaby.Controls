@@ -17,6 +17,10 @@ define(
          return Manager;
       }
 
+      before(() => {
+         BaseController.prototype._checkContainer = () => { return true; };
+      });
+
       describe('Controls/Popup/Manager/ManagerController', () => {
          it('initialize', function() {
             //Manager and container doesn't initialized
@@ -70,10 +74,11 @@ define(
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
+            element = Manager.find(id);
+            element.popupState = 'created';
             id = Manager.update(id, {
                testOption: 'updated'
             });
-            element = Manager.find(id);
             assert.equal(element.popupOptions.testOption, 'updated');
          });
    
@@ -83,7 +88,8 @@ define(
                testOption: 'created'
             }, new BaseController());
             var eventCloseFired = false;
-   
+            element = Manager.find(id);
+            element.popupState = 'created';
             Manager.update(id, {
                eventHandlers: {
                   onClose: function() {

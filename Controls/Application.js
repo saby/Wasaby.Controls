@@ -4,6 +4,7 @@
 define('Controls/Application',
    [
       'Core/Control',
+      'Core/detection',
       'tmpl!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
@@ -21,9 +22,11 @@ define('Controls/Application',
     * @extends Core/Control
     * @control
     * @public
+    * @author Зуев Д.В.
     */
 
    function(Base,
+      detection,
       template,
       Deferred,
       BodyClasses,
@@ -51,11 +54,23 @@ define('Controls/Application',
          calculateBodyClasses: function() {
             //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
             //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
-            return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+            var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+
+            if (detection.isMobileIOS) {
+               bodyClasses += ' ' + this._scrollingClass;
+            }
+
+            return bodyClasses;
          }
       };
       var Page = Base.extend({
          _template: template,
+
+         /**
+          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for inner scrollable areas.
+          * @private
+          */
+         _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
@@ -87,6 +102,16 @@ define('Controls/Application',
                : compatibility.touch
                   ? 'ws-is-touch'
                   : 'ws-is-no-touch';
+         },
+
+         _popupCreatedHandler: function() {
+            this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+         },
+
+         _popupDestroyedHandler: function(event, element, popupItems) {
+            if (popupItems.getCount() === 0) {
+               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
+            }
          },
 
          _beforeMount: function(cfg, context, receivedState) {

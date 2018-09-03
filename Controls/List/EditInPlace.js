@@ -4,10 +4,10 @@ define('Controls/List/EditInPlace', [
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'Controls/List/resources/utils/ItemsUtil',
-   'Controls/Utils/BreadCrumbsUtil',
+   'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template, Deferred, Record, ItemsUtil, BreadCrumbsUtil, hasHorizontalScrollUtil) {
+], function(Control, template, Deferred, Record, ItemsUtil, getWidthUtil, hasHorizontalScrollUtil) {
 
    var
       typographyStyles = [
@@ -308,7 +308,7 @@ define('Controls/List/EditInPlace', [
                });
 
                for (var i = 0; i < target.value.length; i++) {
-                  currentWidth = BreadCrumbsUtil.getWidth(fakeElement);
+                  currentWidth = getWidthUtil.getWidth(fakeElement);
                   if (currentWidth > offset) {
                      break;
                   }

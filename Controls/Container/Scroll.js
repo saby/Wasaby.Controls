@@ -27,6 +27,9 @@ define('Controls/Container/Scroll',
        * @author Журавлев М.С.
        * @category Container
        * @demo Controls-demo/Container/Scroll
+       *
+       * @cssModifier controls-Scroll_webkitOverflowScrollingAuto Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
+       * @cssModifier controls-Scroll_webkitOverflowScrollingTouch Use momentum-based scrolling, where the content continues to scroll for a while after finishing the scroll gesture and removing your finger from the touchscreen.
        */
 
       /**
@@ -205,7 +208,7 @@ define('Controls/Container/Scroll',
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
 
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
-                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid || detection.isMac;
+                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
 
                      _private.updateDisplayState(self, displayState);
                      self._styleHideScrollbar = styleHideScrollbar;
@@ -304,17 +307,15 @@ define('Controls/Container/Scroll',
                this._children.scrollWatcher.doScroll(scrollParam);
             },
 
-            _scrollReachTopHandler: function() {
-               this._pagingState.stateUp = 'disabled';
-            },
-
-            _scrollReachBottomHandler: function() {
-               this._pagingState.stateDown = 'disabled';
-            },
-
-            _scrollMoveHandler: function() {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
+            _scrollMoveHandler: function(e, scrollData) {
+               if (scrollData.position === 'up') {
+                  this._pagingState.stateUp = 'disabled';
+               } else if (scrollData.position === 'down') {
+                  this._pagingState.stateDown = 'disabled';
+               } else {
+                  this._pagingState.stateUp = 'normal';
+                  this._pagingState.stateDown = 'normal';
+               }
             },
 
             _mouseenterHandler: function() {

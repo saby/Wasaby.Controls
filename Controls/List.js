@@ -19,6 +19,7 @@ define('Controls/List', [
     * @class Controls/List
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -27,7 +28,7 @@ define('Controls/List', [
     * @mixes Controls/List/interface/IListControl
     * @mixes Controls/interface/IEditInPlace
     * @control
-    * @author Крайнов Д.О.
+    * @author Авраменко А.С.
     * @public
     * @category List
     */
@@ -141,7 +142,8 @@ define('Controls/List', [
 
    ListControl.getDefaultOptions = function() {
       return {
-         multiSelectVisibility: 'hidden'
+         multiSelectVisibility: 'hidden',
+         style: 'default'
       };
    };
 
@@ -151,12 +153,6 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-
-   ListControl.getDefaultOptions = function() {
-      return {
-         style: 'default'
-      };
-   };
 
    return ListControl;
 });

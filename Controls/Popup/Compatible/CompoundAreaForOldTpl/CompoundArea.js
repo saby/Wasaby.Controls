@@ -14,6 +14,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
       'WS.Data/Entity/InstantiableMixin',
+      'Core/helpers/Function/callNext',
+      'Core/core-instance',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -30,7 +33,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       DialogRecord,
       cEventBus,
       ManagerController,
-      InstantiableMixin
+      InstantiableMixin,
+      callNext,
+      cInstance,
+      SyntheticEvent
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -41,6 +47,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       function finishResultOk(result) {
          return !(result instanceof Error || result === false);
+      }
+
+      function popupAfterUpdated(item, container) {
+         if (item.isHiddenForRecalc) {
+            // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+            item.isHiddenForRecalc = false;
+            runDelayed(function() {
+               item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
+               container.className = container.className.replace('ws-invisible', '');
+            });
+         }
       }
 
       var logger = IoC.resolve('ILogger');
@@ -100,6 +117,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _shouldUpdate: function(popupOptions) {
             if (popupOptions._compoundId !== this._compoundId) {
                this._childConfig = this._options.templateOptions || {};
+               this._childControlName = this._options.template;
                this.rebuildChildControl();
                this._compoundId = popupOptions._compoundId;
             }
@@ -132,6 +150,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._childConfig._compoundArea = self;
 
             self.once('onInit', function() {
+               // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
+               // созданием нового, поэтому делаем на onInit
+               if (self._options._initCompoundArea) {
+                  self._options._initCompoundArea(self);
+               }
                self.setEnabled(self._enabled);
             });
             self.once('onAfterLoad', function() {
@@ -141,6 +164,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             rebuildDeferred.addCallback(function() {
+               self._getReadyDeferred();
+               self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
@@ -149,11 +174,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
 
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
-
             return rebuildDeferred;
+         },
+
+         //AreaAbstract.js::getReadyDeferred
+         //getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
+         //не завершится деферред
+         _getReadyDeferred: function() {
+            var self = this;
+            if (this._childControl.getReadyDeferred) {
+               var def = this._childControl.getReadyDeferred();
+               if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
+                  self._toggleVisible(false);
+                  def.addCallback(function() {
+                     self._toggleVisible(true);
+                  });
+               }
+            }
          },
 
          _afterMount: function(cfg) {
@@ -166,17 +203,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-            var self = this;
+            var
+               self = this,
+               isLoadCompleted;
+
+            // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
+            // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
+            // CompoundArea мы точно знаем, что внутри находится CompoundControl и фокус нужно распространять
+            // по правилам AreaAbstract.compatible для контролов WS3
+            self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
 
             var container = self._container.length ? self._container[0] : self._container;
             container.wsControl = self;
 
             self._childConfig = self._options.templateOptions || {};
             self._compoundId = self._options._compoundId;
-
-            if (self._options._initCompoundArea) {
-               self._options._initCompoundArea(self);
-            }
 
             self._pending = self._pending || [];
             self._pendingTrace = self._pendingTrace || [];
@@ -191,29 +232,44 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._notifyVDOM = self._notify;
             self._notify = self._notifyCompound;
 
-            self._logicParent.waitForPopupCreated = true;
+            // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
+            self.subscribe('onResize', function() {
+               this._notifyVDOM('resize', null, { bubbling: true });
+            });
 
-            // Здесь нужно сделать явную асинхронность, потому что к этому моменту накопилась пачка стилей
-            // далее floatArea начинает люто дергать recalculateStyle и нужно, чтобы там не было
-            // лишних свойств, которые еще не применены к дому
-            // панельки с этим начали вылезать плавненько
-            runDelayed(function() {
-               // Перевести фокус в панель нужно на onInitComplete. В момент onAfterShow
-               // подразумевается, что фокус уже внутри панели
-               self.once('onInitComplete', function() {
-                  if (self._options.catchFocus) {
-                     doAutofocus(self._childControl._container);
-                  }
-               });
-               self.rebuildChildControl().addCallback(function() {
+            self.once('onInitComplete', function() {
+               if (self._options.catchFocus) {
+                  // Запоминаем, была ли область полностью загружена, когда мы в первый раз вызвали для нее autofocus
+                  isLoadCompleted = self._childControl.isAllReady && self._childControl.isAllReady();
+                  doAutofocus(self._childControl._container);
+               }
+            });
+            self.rebuildChildControl().addCallback(function() {
+               runDelayed(function() {
                   runDelayed(function() {
-                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     runDelayed(function() {
-                        self._notifyCompound('onResize');
-                     });
+                     self._notifyCompound('onResize');
+
+                     // Если при первом вызове autofocus, область была загружена не до конца, ее содержимое за это время
+                     // могло измениться, и мог измениться контрол, на который должен попасть фокус, поэтому вызываем
+                     // autofocus еще раз, чтобы фокус попал туда куда нужно
+                     if (self._options.catchFocus && !isLoadCompleted) {
+                        doAutofocus(self._childControl._container);
+                     }
                   });
                });
             });
+         },
+
+         _fixIos: function() {
+
+            //todo https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
+            var container = this._childControl && this._childControl.getContainer();
+
+            //На ios появилась бага, у панели контактов после открытия не вызывается браузерная перерисовка. вызываю вручную
+            if (container && CoreConstants.browser.isMobileIOS) {
+               container = container.get ? container.get(0) : container;
+               container.style.webkitTransform = 'scale(1)';
+            }
          },
 
          isOpened: function() {
@@ -237,6 +293,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._prependCustomHeader(customHeaderContainer);
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+            if (this._options.draggable) {
+
+               //Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
+               //mousedown на ней и проксируем его на dialogTemplate.
+               customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
+               customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
+            }
+         },
+
+         _headerMouseDown: function(event) {
+            var dialogTemplate = this._children.DialogTemplate;
+            if (dialogTemplate) {
+               dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },
 
@@ -268,11 +338,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } if (commandName === 'printReport') {
                return this.printReport(arg);
             } if (commandName === 'resize' || commandName === 'resizeYourself') {
-               this._notifyVDOM('resize', null, { bubbling: true });
-            } else if (commandName === 'registerPendingOperation') {
-               return this._registerChildPendingOperation(arg);
-            } else if (commandName === 'unregisterPendingOperation') {
-               return this._unregisterChildPendingOperation(arg);
+               this._notifyVDOM('controlResize', null, { bubbling: true });
+            } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
+               // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
+               if (!cInstance.instanceOfMixin(this._childControl, 'Lib/Mixins/PendingOperationParentMixin')) {
+                  if (commandName === 'registerPendingOperation') {
+                     return this._registerChildPendingOperation(arg);
+                  }
+                  if (commandName === 'unregisterPendingOperation') {
+                     return this._unregisterChildPendingOperation(arg);
+                  }
+               }
             } else {
                return CompoundArea.superclass.handleCommand.apply(this, arguments);
             }
@@ -306,14 +382,27 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
          _isLinkedPanel: function(event) {
-            var compoundArea = $(event.nativeEvent.relatedTarget).closest('.controls-CompoundArea');
+            var target = $(event.nativeEvent.relatedTarget);
+            var compoundArea = target.closest('.controls-CompoundArea');
+            var opener;
+
             if (compoundArea.length) {
-               var opener = compoundArea[0].controlNodes[0].control.getOpener();
-               while (opener && opener._moduleName !== this._moduleName) {
-                  opener = opener.getParent && opener.getParent();
-               }
-               return opener === this;
+               opener = compoundArea[0].controlNodes[0].control.getOpener();
             }
+
+            var popupMixin = target.closest('.controls-Menu, .controls-FloatArea');
+            if (popupMixin.length) {
+               opener = popupMixin.wsControl().getOpener();
+            }
+            return this._checkLink(opener);
+         },
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
+         _checkLink: function(opener) {
+            while (opener && opener._moduleName !== this._moduleName) {
+               opener = opener.getParent && opener.getParent();
+            }
+            return opener === this;
          },
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
@@ -593,6 +682,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _toggleVisible: function(visible) {
             var
+               prevVisible = this._isVisible,
                popupContainer = this.getContainer().closest('.controls-Popup')[0],
                id = this._getPopupId(),
                popupConfig = this._getManagerConfig();
@@ -615,7 +705,35 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(id, popupConfig.popupOptions);
                }
 
+               if (visible && !prevVisible) {
+                  // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
+                  // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
+                  // на новую, поставим на время пересчета класс `ws-invisible`
+                  popupConfig.popupOptions.className += ' ws-invisible';
+                  popupContainer.className += ' ws-invisible';
+
+                  // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
+                  popupConfig.isHiddenForRecalc = true;
+
+                  // Нужно убрать класс `ws-invisible` после того как будет пересчитана позиция. Чтобы понять, когда
+                  // это произошло, нужно пропатчить elementAfterUpdated в контроллере попапа, чтобы он поддерживал
+                  // CompoundArea
+                  if (!popupConfig.controller._modifiedByCompoundArea) {
+                     popupConfig.controller._modifiedByCompoundArea = true;
+                     popupConfig.controller.elementAfterUpdated = callNext(
+                        popupConfig.controller.elementAfterUpdated,
+                        popupAfterUpdated
+                     );
+                  }
+               }
+
                this._isVisible = visible;
+
+               if (visible !== prevVisible) {
+                  // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+                  // стреляя событием onAfterVisibilityChange
+                  this._notifyCompound('onAfterVisibilityChange', visible);
+               }
             }
          },
          setOffset: function(newOffset) {

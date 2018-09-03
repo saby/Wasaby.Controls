@@ -16,6 +16,7 @@ define('Controls/Input/Dropdown',
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
@@ -23,9 +24,9 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
-       * @author Красильников А.С.
+       * @author Зайцев А.С.
        * @category Input
-       * @demo Controls-demo/Dropdown/MenuVdom
+       * @demo Controls-demo/Input/Dropdown/Dropdown
        */
 
       /**
@@ -56,6 +57,15 @@ define('Controls/Input/Dropdown',
          _beforeMount: function() {
             this._setText = this._setText.bind(this);
          },
+
+         _afterMount: function(options) {
+            /*Updating the text in the header.
+            Since the text is set after loading source, the caption stored old value*/
+            if (options.showHeader && options.caption !== this._text) {
+               this._forceUpdate();
+            }
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._notify('textValueChanged', [this._text]);

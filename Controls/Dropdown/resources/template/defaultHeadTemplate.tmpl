@@ -8,3 +8,13 @@
       <div if="{{icon}}" class="{{icon}}"></div>
    </div>
 </ws:if>
+<ws:if data="{{menuStyle === 'duplicateSelectedItem'}}">
+   <div class="controls-DropdownList__head">
+      <div if="{{caption}}">{{caption}}</div>
+   </div>
+</ws:if>
+<ws:if data="{{menuStyle === 'titleHead'}}">
+   <div class="controls-DropdownList__head">
+      {{caption}}
+   </div>
+</ws:if>

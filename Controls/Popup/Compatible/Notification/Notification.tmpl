@@ -1,0 +1,26 @@
+<ws:if data="{{template}}">
+   <ws:partial attr:class="controls-Compatible_template" template="{{template}}" scope="{{...}}"/>
+</ws:if>
+<ws:else>
+   <div class="controls-Compatible controls-NotificationPopup">
+      <div class="controls-NotificationPopup__header {{closeButton ? 'controls-NotificationPopup__header-withCloseButton'}}">
+         <ws:if data="{{headerTemplate}}">
+            <ws:partial template="{{headerTemplate}}" scope="{{...}}"/>
+         </ws:if>
+         <ws:else>
+            <div class="controls-NotificationPopup__header_icon {{icon}}"></div>
+            <div class="controls-NotificationPopup__header_caption controls-Notification__simpleTemplate-message">{{caption}}</div>
+         </ws:else>
+      </div>
+      <ws:if data="{{bodyTemplate}}">
+         <div class="controls-NotificationPopup__body">
+            <ws:partial template="{{bodyTemplate}}" scope="{{...}}"/>
+         </div>
+      </ws:if>
+      <ws:if data="{{footerTemplate}}">
+         <div class="controls-NotificationPopup__footer">
+            <ws:partial template="{{footerTemplate}}" scope="{{...}}"/>
+         </div>
+      </ws:if>
+   </div>
+</ws:else>

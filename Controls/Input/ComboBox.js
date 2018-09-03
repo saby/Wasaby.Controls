@@ -15,6 +15,7 @@ define('Controls/Input/ComboBox',
        * @class Controls/Input/ComboBox
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputPlaceholder
@@ -22,7 +23,7 @@ define('Controls/Input/ComboBox',
        * @control
        * @public
        * @category Input
-       * @author Красильников А.С.
+       * @author Зайцев А.С.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
        */

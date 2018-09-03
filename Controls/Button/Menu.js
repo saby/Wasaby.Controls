@@ -2,11 +2,11 @@ define('Controls/Button/Menu',
    [
       'Core/Control',
       'tmpl!Controls/Button/Menu/Menu',
-      'Controls/Button/Classes',
+      'Controls/Button/Menu/MenuUtils',
       'css!Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
-   function(Control, template, Classes) {
+   function(Control, template, MenuUtils) {
 
       /**
        * MenuButton
@@ -16,10 +16,12 @@ define('Controls/Button/Menu',
        * @mixes Controls/Button/interface/IIcon
        * @mixes Controls/interface/ITooltip
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IGroupedView
        * @control
        * @public
+       * @author Михайловский Д.С.
        * @category Button
        * @demo Controls-demo/Dropdown/MenuVdom
        */
@@ -28,14 +30,6 @@ define('Controls/Button/Menu',
 
       /**
        * @event Controls/Button/Menu#onMenuItemActivate Occurs when an item is selected from the list.
-       */
-
-      /**
-       * @name Controls/Button/Menu#headConfig
-       * @cfg {Object} Menu style menuStyle
-       * @variant defaultHead The head with icon and caption
-       * @variant duplicateHead The icon set under first item
-       * @variant cross Menu have cross in left top corner
        */
 
       /**
@@ -64,51 +58,26 @@ define('Controls/Button/Menu',
        * @variant buttonAdd Button display as button with icon add style.
        */
 
-      var _private = {
-         cssStyleGeneration: function(self, options) {
-            var sizes = ['small', 'medium', 'large'],
-               menuStyle = options.headConfig && options.headConfig.menuStyle,
-               currentButtonClass, iconSize;
-
-            currentButtonClass = Classes.getCurrentButtonClass(options.style);
-
-            // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
-            self._offsetClassName = 'controls-MenuButton controls-MenuButton_' + currentButtonClass.type + '_' + options.size;
-
-            if (currentButtonClass.type === 'link' && options.icon) {
-               sizes.forEach(function(size) {
-                  if (options.icon.indexOf('icon-' + size) !== -1) {
-                     iconSize = size;
-                  }
-               });
-
-               // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
-               // поэтому необходимо это учесть при сдвиге
-               self._offsetClassName += '_' + iconSize;
-            }
-            self._offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '');
-         }
-      };
-
       var Menu = Control.extend({
          _template: template,
+         _filter: null,
 
          _beforeMount: function(options) {
-            _private.cssStyleGeneration(this, options);
-            this._filter = this._options.filter;
+            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            this._filter = options.filter;
          },
 
          _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }
-         
+
       });
 
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
             style: 'buttonDefault',
-            size: 'default',
+            size: 'm',
             filter: {}
          };
       };

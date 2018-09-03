@@ -18,5 +18,5 @@
    <ws:if data="{{_options.rightTemplate}}">
       <ws:partial attr:class="controls-operationsPanelV__rightTemplate" template="{{_options.rightTemplate}}"/>
    </ws:if>
-   <Controls.Event.Emitter event="resize" on:resize="_onResize()"/>
+   <Controls.Event.Emitter event="controlResize" on:controlResize="_onResize()"/>
 </div>

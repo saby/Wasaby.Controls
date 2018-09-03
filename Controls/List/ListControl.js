@@ -14,6 +14,7 @@ define('Controls/List/ListControl', [
     * @class Controls/List
     * @extends Controls/List/BaseControl
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -22,6 +23,7 @@ define('Controls/List/ListControl', [
     * @mixes Controls/List/interface/IListControl
     * @control
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 
