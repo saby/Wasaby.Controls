@@ -403,6 +403,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._decorateAsSVG(this._options.text);
                }
             },
+            _initHtmlJson: function() {
+               var self = this;
+               self.subscribe('onTextChange', function(e, text) {
+                  if (text[0] !== '<') {
+                     text = '<p>' + text + '</p>';
+                  }
+                  var div = document.createElement('div');
+                  div.innerHTML = text;
+                  self._options.json = typeof self._options.json === 'string'
+                     ? JSON.stringify(domToJson(div).slice(1))
+                     : domToJson(div).slice(1);
+                  self._notify('onJsonChange', [self._options.json]);
+               });
+            },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview.get(0));
@@ -411,22 +425,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._readyControlDeffered.callback();
                   }
                }
-               var self = this;
-               if (self._options.hasOwnProperty('json')) {
-                  self.setJson(self._options.json);
-
-                  self.subscribe('onTextChange', function(e, text) {
-                     if (text[0] !== '<') {
-                        text = '<p>' + text + '</p>';
-                     }
-                     var div = document.createElement('div');
-                     div.innerHTML = text;
-                     self._options.json = typeof self._options.json === 'string'
-                        ? JSON.stringify(domToJson(div).slice(1))
-                        : domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self._options.json]);
-                  });
+               if (this._options.hasOwnProperty('json')) {
+                  this.setJson(this._options.json);
                }
+
                this._updateDataReview(this.getText());
             },
 
@@ -693,6 +695,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             setJson: function(json) {
                if (!this._htmlJson) {
                   this._htmlJson = new HtmlJson();
+                  this._initHtmlJson();
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
