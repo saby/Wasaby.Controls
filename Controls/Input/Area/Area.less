@@ -50,6 +50,14 @@
    box-sizing: border-box;
 }
 
+/*На тач устройствах fakeArea периодически перехватывает на себя фокус
+   Временная правка, необходимо уточнить почему так происходит
+   TODO Задача: https://online.sbis.ru/opendoc.html?guid=fa61e193-b2b2-45f3-a8e6-e4a649557f14
+*/
+.ws-is-touch .controls-fakeTextArea__firstWrapper {
+   z-index: -1;
+}
+
 .controls-fakeTextArea__firstWrapper {
    vertical-align: bottom;
    display: inline-block;
