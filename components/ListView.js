@@ -3986,6 +3986,13 @@ define('SBIS3.CONTROLS/ListView',
                this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
             this.getContainer().removeClass('controls-ListView-scrollIndicator__down');
+   
+            //Т.к. индикатор загрузки отображается снизу списка, тем самым увеличивая его высоту (добавляется паддинг на высоту индикатора),
+            //то после скрытия, высота списка уменьшается, и если в этот момент был отображён тулбар, он сместится
+            //и будет отображаться некорректно, надо обновить положение тулбара
+            if (this._itemsToolbar && this._itemsToolbar.isVisible() && this._hasHoveredItem()) {
+               this._onChangeHoveredItem(this._hoveredItem);
+            }
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
