@@ -32,7 +32,7 @@ define('Controls/Decorator/Number',
        */
 
       /**
-       * @name Controls/Decorator/Number#fractionFormatMode
+       * @name Controls/Decorator/Number#roundMode
        * @cfg {String} The mode of formatting the fractional part of the number.
        * @variant round The number is rounded if necessary, and the fractional part is padded with zeros if necessary
        * so that it has the specified length.
@@ -46,12 +46,12 @@ define('Controls/Decorator/Number',
          /**
           * Casting a number to a format with division on triads.
           * @param number {@link number}
-          * @param fractionFormatMode {@link fractionFormatMode}
+          * @param roundMode {@link roundMode}
           * @param [fractionSize] {@link fractionSize}
           */
-         formatNumber: function(number, fractionFormatMode, fractionSize) {
+         formatNumber: function(number, roundMode, fractionSize) {
             if (typeof fractionSize === 'number') {
-               number = _private[fractionFormatMode](number, fractionSize);
+               number = _private[roundMode](number, fractionSize);
             } else {
                number = number.toString();
             }
@@ -67,7 +67,7 @@ define('Controls/Decorator/Number',
          },
 
          /**
-          * {@link fractionFormatMode} round
+          * {@link roundMode} round
           * @param number {@link number}
           * @param fractionSize {@link fractionSize}
           * @returns {String}
@@ -77,7 +77,7 @@ define('Controls/Decorator/Number',
          },
 
          /**
-          * {@link fractionFormatMode} trunc
+          * {@link roundMode} trunc
           * @param number {@link number}
           * @param fractionSize {@link fractionSize}
           * @returns {String}
@@ -101,23 +101,23 @@ define('Controls/Decorator/Number',
          _formattedNumber: null,
 
          _beforeMount: function(options) {
-            this._formattedNumber = _private.formatNumber(options.number, options.fractionFormatMode, options.fractionSize);
+            this._formattedNumber = _private.formatNumber(options.number, options.roundMode, options.fractionSize);
          },
 
          _beforeUpdate: function(newOptions) {
             if (
                newOptions.number !== this._options.number ||
                newOptions.fractionSize !== this._options.fractionSize ||
-               newOptions.fractionFormatMode !== this._options.fractionFormatMode
+               newOptions.roundMode !== this._options.roundMode
             ) {
-               this._formattedNumber = _private.formatNumber(newOptions.number, newOptions.fractionFormatMode, newOptions.fractionSize);
+               this._formattedNumber = _private.formatNumber(newOptions.number, newOptions.roundMode, newOptions.fractionSize);
             }
          }
       });
 
       NumberDecorator.getDefaultOptions = function() {
          return {
-            fractionFormatMode: 'trunc'
+            roundMode: 'trunc'
          };
       };
 
@@ -125,7 +125,7 @@ define('Controls/Decorator/Number',
          return {
             number: descriptor(Number).required(),
             fractionSize: descriptor(Number),
-            fractionFormatMode: descriptor(String).oneOf([
+            roundMode: descriptor(String).oneOf([
                'trunc',
                'round'
             ])
