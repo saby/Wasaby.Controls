@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "3.18.510"
+def version = "3.18.500"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
