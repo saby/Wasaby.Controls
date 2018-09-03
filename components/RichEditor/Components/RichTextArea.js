@@ -338,6 +338,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
+               if (options.json) {
+                  if (!options.__savedHtmlJson) {
+                     options.__savedHtmlJson = new HtmlJson();
+                  }
+                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
+                  options.text = options.__savedHtmlJson.render();
+               }
+
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -405,6 +413,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             _initHtmlJson: function() {
                var self = this;
+               self._htmlJson = self._options.__savedHtmlJson || new HtmlJson();
                self.subscribe('onTextChange', function(e, text) {
                   if (text[0] !== '<') {
                      text = '<p>' + text + '</p>';
@@ -694,7 +703,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             setJson: function(json) {
                if (!this._htmlJson) {
-                  this._htmlJson = new HtmlJson();
                   this._initHtmlJson();
                }
                this._options.json = json;
