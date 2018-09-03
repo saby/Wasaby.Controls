@@ -16,6 +16,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -34,7 +35,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       ManagerController,
       InstantiableMixin,
       callNext,
-      cInstance
+      cInstance,
+      SyntheticEvent
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -291,6 +293,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._prependCustomHeader(customHeaderContainer);
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+            if (this._options.draggable) {
+
+               //Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
+               //mousedown на ней и проксируем его на dialogTemplate.
+               customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
+               customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
+            }
+         },
+
+         _headerMouseDown: function(event) {
+            var dialogTemplate = this._children.DialogTemplate;
+            if (dialogTemplate) {
+               dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },
 

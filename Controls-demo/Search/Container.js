@@ -14,32 +14,31 @@ define('Controls-demo/Search/Container', [
    
    var SearchContainer = Control.extend({
       _template: template,
-      _navigation: {
-         source: 'page',
-         view: 'page',
-         sourceConfig: {
-            pageSize: 20,
-            page: 0,
-            mode: 'totalCount'
-         }
-      },
-      _filter: {},
+      _navigation: null,
+      _filter: null,
       _searchValue: '',
       _searchDelay: 500,
-      
       _beforeMount: function() {
+         this._filter = {};
+         this._navigation = {
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 20,
+               page: 0,
+               mode: 'totalCount'
+            }
+         };
          this._source = new MemorySource({
             data: memorySourceData,
             filter: this._filterFunc,
             idProperty: 'id'
          });
       },
-      
       _filterFunc: function(item, query) {
          var filter = memorySourceFilter('department');
          return filter(item, query);
       }
    });
-   
    return SearchContainer;
 });

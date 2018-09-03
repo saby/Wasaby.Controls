@@ -13,7 +13,7 @@
                                itemTemplateProperty="myTemplate"
                                source="{{_createMemory(_subItems)}}">
          <ws:contentTemplate>
-            <ws:partial template="tmpl!Controls-demo/Input/Dropdown/contentTemplateDropdownSub" />
+            <ws:partial template="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownSub" />
          </ws:contentTemplate>
       </Controls.Input.Dropdown>
 
@@ -44,8 +44,8 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysMyTemplate"
                                keyProperty="id"
                                className="ControlsDemo-InputDropdownn-width"
-                               contentTemplate="tmpl!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
-                               itemTemplate="tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdown"
+                               contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
+                               itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
                                source="{{_createMemory(_myTemplateItems)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -62,7 +62,7 @@
                                source="{{_createMemory(_titleItems)}}"
                                showHeader="{{true}}"
                                caption="Sort"
-                               contentTemplate="tmpl!Controls-Demo/Input/Dropdown/contentTemplateDropdown">
+                               contentTemplate="wml!Controls-Demo/Input/Dropdown/contentTemplateDropdown">
          <ws:headConfig iconSize="icon-small"/>
       </Controls.Input.Dropdown>
    </div>
@@ -82,7 +82,7 @@
                                keyProperty="id"
                                source="{{_createMemory(_footerItems)}}"
                                on:footerClick="footerClickHandler()"
-                               footerTemplate="tmpl!Controls-demo/Input/Dropdown/footerTemplateDropdown">
+                               footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
       </Controls.Input.Dropdown>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -114,7 +114,7 @@
    </div>
 
    <Controls.Popup.Opener.Stack name="stack">
-      <ws:popupOptions template="tmpl!Controls-demo/Input/Dropdown/StackTemplateDdl" closeByExternalClick="{{true}}">
+      <ws:popupOptions template="wml!Controls-demo/Input/Dropdown/StackTemplateDdl" closeByExternalClick="{{true}}">
          <ws:templateOptions type="stack"/>
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>

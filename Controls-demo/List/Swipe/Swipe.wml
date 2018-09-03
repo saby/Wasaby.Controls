@@ -3,6 +3,7 @@
     <Controls.List
             source = "{{_viewSource}}"
             markedKey="{{1}}"
+            bind:selectedKeys="_selectedKeys"
             allowEmptySelection="{{false}}"
             keyProperty="id"
             itemActions="{{_itemActions}}"

@@ -2,11 +2,11 @@ define('Controls/Button/Menu',
    [
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
-      'Controls/Button/Classes',
+      'Controls/Button/Menu/MenuUtils',
       'css!Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
-   function(Control, template, Classes) {
+   function(Control, template, MenuUtils) {
 
       /**
        * MenuButton
@@ -58,38 +58,12 @@ define('Controls/Button/Menu',
        * @variant buttonAdd Button display as button with icon add style.
        */
 
-      var _private = {
-         cssStyleGeneration: function(self, options) {
-            var sizes = ['small', 'medium', 'large'],
-               menuStyle = options.headConfig && options.headConfig.menuStyle,
-               currentButtonClass, iconSize;
-
-            currentButtonClass = Classes.getCurrentButtonClass(options.style);
-
-            // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
-            self._offsetClassName = 'controls-MenuButton controls-MenuButton_' + currentButtonClass.type + '_' + options.size;
-
-            if (currentButtonClass.type === 'link' && options.icon) {
-               sizes.forEach(function(size) {
-                  if (options.icon.indexOf('icon-' + size) !== -1) {
-                     iconSize = size;
-                  }
-               });
-
-               // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
-               // поэтому необходимо это учесть при сдвиге
-               self._offsetClassName += '_' + iconSize;
-            }
-            self._offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '');
-         }
-      };
-
       var Menu = Control.extend({
          _template: template,
          _filter: null,
 
          _beforeMount: function(options) {
-            _private.cssStyleGeneration(this, options);
+            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
             this._filter = options.filter;
          },
 
