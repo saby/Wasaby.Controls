@@ -890,7 +890,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * Сохранить данные компонента (вызывается перед закрытием после применения)
           *
           * @public
-          * return {Core/Deferred}
+          * @return {Core/Deferred}
           */
          save: function () {
             return Deferred.success(null);
@@ -1024,7 +1024,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
        * @return {string}
        */
       var _makeId = function () {
-         return _uniqueHex(32);
+         return [8, 4, 4, 4, 12].map(_uniqueHex).join('-');
       };
 
       /**
