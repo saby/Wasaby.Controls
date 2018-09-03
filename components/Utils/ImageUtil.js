@@ -1,7 +1,7 @@
 /**
  * Created by ps.borisov on 08.10.2015.
  */
-define('SBIS3.CONTROLS/Utils/ImageUtil', ['Core/Deferred', 'Core/constants'], function(Deferred, constants) {
+define('SBIS3.CONTROLS/Utils/ImageUtil', ['Core/Deferred'], function(Deferred) {
    'use strict';
 
    /**
