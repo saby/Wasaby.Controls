@@ -6,7 +6,8 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Controls/Utils/isNewEnvironment'
    ],
    function(
       Control,
@@ -15,7 +16,8 @@ define('Controls/Popup/Opener/BaseOpener',
       DefaultOpenerFinder,
       CoreClone,
       CoreMerge,
-      Deferred
+      Deferred,
+      isNewEnvironment
    ) {
 
       var _private = {
@@ -287,7 +289,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
       // TODO Compatible
       Base.isNewEnvironment = function() {
-         return document && !!document.getElementsByTagName('html')[0].controlNodes;
+         return isNewEnvironment();
       };
 
       Base._private = _private;

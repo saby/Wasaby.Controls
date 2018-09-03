@@ -12,7 +12,7 @@ define(
          var deferred = new Deferred();
          it('check deps loaded', function(done) {
             Layer.isNewEnvironment = function() {
-               return true
+               return true;
             };
             Layer.load(null, true).addCallback(function() {
                assert.isTrue(require.defined('Core/Control'));
