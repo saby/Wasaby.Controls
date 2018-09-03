@@ -135,7 +135,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @param {object} options.columnBindingMapping Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок (опционально)
+          * @param {object|Array<object>} options.columnBindingMapping Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок. Может быть представлен как один объект для всех листов, так и массив объектов по одному на каждый лист (опционально)
           * @param {ImportMapping} options.mapping Информацию о настройке соответствий значений
           * @param {Array<ImportValidator>} options.validators Список валидаторов результатов редактирования
           * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)

@@ -239,7 +239,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
          sheetIndex: _typeIfDefined.bind(null, 'number'),
          sameSheetConfigs: _typeIfDefined.bind(null, 'boolean'),
-         columnBindingMapping: _typeIfDefined.bind(null, 'object'),
+         columnBindingMapping: function (value) {
+            // Если есть опция "columnBindingMapping"
+            if (value) {
+               // То она должна быть объектом или массивом объектов
+               if (!(Array.isArray(value) ? value.every(function (v) { return typeof v === 'object'; }) : typeof value === 'object')) {
+                  return new Error('Option "columnBindingMapping" must be an object or array of objects')
+               }
+            }
+            return value;
+         },
          mapping: function (mapping) {
             // Для типа данных CML(CommerceML) должна быть опция "mapping"
             if (!mapping) {
@@ -421,7 +430,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                sameSheetConfigs: null,
                /**
-                * @cfg {object} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок
+                * @cfg {object|Array<object>} Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок. Может быть представлен как один объект для всех листов, так и массив объектов по одному на каждый лист (опционально)
                 */
                columnBindingMapping: null,
                /**
@@ -553,17 +562,34 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                var sampleRows = hasSheets ? sheet.sampleRows : [];
                var columnBindingMapping = options.columnBindingMapping;
                if (columnBindingMapping) {
-                  // Очистить заначение опции columnBindingMapping от избыточных данных (всех полей с несуществующими индексами):
-                  var count = hasSheets ? sampleRows[0].length : 0;
-                  options.columnBindingMapping = hasSheets ? Object.keys(columnBindingMapping).reduce(function (result, property) {
-                     var index = columnBindingMapping[property];
-                     if (0 <= index && index < count) {
-                        result[property] = index;
+                  options.columnBindingMapping = [];
+                  if (hasSheets) {
+                     // Очистить заначение опции columnBindingMapping от избыточных данных (всех полей с несуществующими индексами):
+                     var count = hasSheets ? sampleRows[0].length : 0;
+                     var _cleaner = function (map) {
+                        return hasSheets ? Object.keys(map).reduce(function (result, property) {
+                           var index = map[property];
+                           if (0 <= index && index < count) {
+                              result[property] = index;
+                           }
+                           return result;
+                        }, {}) : [];
+                     };
+                     if (Array.isArray(columnBindingMapping)) {
+                        for (var i = 0, len = Math.min(columnBindingMapping.length, sheets.length); i < len; i++) {
+                           options.columnBindingMapping[i] = _cleaner(columnBindingMapping[i]);
+                        }
                      }
-                     return result;
-                  }, {}) : [];
+                     else {
+                        columnBindingMapping = _cleaner(columnBindingMapping);
+                        for (var i = 0, len = sheets.length; i < len; i++) {
+                           options.columnBindingMapping[i] = columnBindingMapping;
+                        }
+                     }
+                  }
+                  columnBindingMapping = options.columnBindingMapping;
                }
-               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows}, objectSelectByNames(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle', mapping:'columnBindingMapping'}]));
+               scopes.columnBinding = cMerge({rows:sampleRows, skippedRows:skippedRows, mapping:columnBindingMapping ? columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] : null}, objectSelectByNames(options, ['dataType', 'fields', {menuTitle:'columnBindingMenuTitle', headTitle:'columnBindingHeadTitle'}]));
             }
             // Опции под-компонента "mapping"
             if (isUsedSubview.mapper) {
@@ -686,7 +712,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                           columnBinding: {mapping:options.columnBindingMapping || {}, skippedRows:skippedRows}
+                           columnBinding: {mapping:options.columnBindingMapping[i] || {}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -909,7 +935,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options.fields = fields;
             var views = this._views;
             //this._setSubviewValues('baseParams', {fields:fields});
-            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping || {}});
+            var sheetIndex = options.sheetIndex;
+            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] || {}});
             this._setSubviewValues('mapper', {fields:fields});
          },
 
@@ -1123,7 +1150,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
             var providerArgs = result.providerArgs;
-            var columnBindingMapping = result.columnBinding.mapping;
+            var columnBindingMapping = result.columnBinding.mapping[index];
             var item = {
                parser: provider.parser || null,
                skippedRows: provider.skippedRows,
