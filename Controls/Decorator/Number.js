@@ -16,6 +16,7 @@ define('Controls/Decorator/Number',
        * @control
        * @public
        * @category Decorator
+       * @demo Controls-demo/Decorators/Number/Number
        *
        * @author Журавлев Максим Сергеевич
        */
@@ -31,13 +32,13 @@ define('Controls/Decorator/Number',
        */
 
       /**
-       * @name Controls/Decorator/Number#mode
-       * @cfg {String} Mode of operation with numbers.
+       * @name Controls/Decorator/Number#fractionFormatMode
+       * @cfg {String} The mode of formatting the fractional part of the number.
        * @variant round The number is rounded if necessary, and the fractional part is padded with zeros if necessary
        * so that it has the specified length.
        * @variant trunc Truncates (cuts off) the digits to the right of dot so that fractional part has the specified length,
        * no matter whether the argument is a positive or negative number.
-       * @default round
+       * @default trunc
        */
 
       var _private = {
@@ -45,12 +46,12 @@ define('Controls/Decorator/Number',
          /**
           * Casting a number to a format with division on triads.
           * @param number {@link number}
-          * @param mode {@link mode}
+          * @param fractionFormatMode {@link fractionFormatMode}
           * @param [fractionSize] {@link fractionSize}
           */
-         formatNumber: function(number, mode, fractionSize) {
+         formatNumber: function(number, fractionFormatMode, fractionSize) {
             if (typeof fractionSize === 'number') {
-               number = _private[mode](number, fractionSize);
+               number = _private[fractionFormatMode](number, fractionSize);
             } else {
                number = number.toString();
             }
@@ -66,7 +67,7 @@ define('Controls/Decorator/Number',
          },
 
          /**
-          * {@link mode} round
+          * {@link fractionFormatMode} round
           * @param number {@link number}
           * @param fractionSize {@link fractionSize}
           * @returns {String}
@@ -76,7 +77,7 @@ define('Controls/Decorator/Number',
          },
 
          /**
-          * {@link mode} trunc
+          * {@link fractionFormatMode} trunc
           * @param number {@link number}
           * @param fractionSize {@link fractionSize}
           * @returns {String}
@@ -100,23 +101,23 @@ define('Controls/Decorator/Number',
          _formattedNumber: null,
 
          _beforeMount: function(options) {
-            this._formattedNumber = _private.formatNumber(options.number, options.mode, options.fractionSize);
+            this._formattedNumber = _private.formatNumber(options.number, options.fractionFormatMode, options.fractionSize);
          },
 
          _beforeUpdate: function(newOptions) {
             if (
                newOptions.number !== this._options.number ||
                newOptions.fractionSize !== this._options.fractionSize ||
-               newOptions.mode !== this._options.mode
+               newOptions.fractionFormatMode !== this._options.fractionFormatMode
             ) {
-               this._formattedNumber = _private.formatNumber(newOptions.number, newOptions.mode, newOptions.fractionSize);
+               this._formattedNumber = _private.formatNumber(newOptions.number, newOptions.fractionFormatMode, newOptions.fractionSize);
             }
          }
       });
 
       NumberDecorator.getDefaultOptions = function() {
          return {
-            mode: 'round'
+            fractionFormatMode: 'trunc'
          };
       };
 
@@ -124,7 +125,7 @@ define('Controls/Decorator/Number',
          return {
             number: descriptor(Number).required(),
             fractionSize: descriptor(Number),
-            mode: descriptor(String).oneOf([
+            fractionFormatMode: descriptor(String).oneOf([
                'trunc',
                'round'
             ])
