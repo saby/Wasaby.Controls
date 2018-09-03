@@ -28,7 +28,6 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
-               console.log(opts.content);
                require([opts.content], function() {
                   def.callback();
                });
