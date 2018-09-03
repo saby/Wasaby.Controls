@@ -1150,7 +1150,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
             var providerArgs = result.providerArgs;
-            var columnBindingMapping = result.columnBinding.mapping[index];
+            var columnBindingMapping = result.columnBinding.mapping;
             var item = {
                parser: provider.parser || null,
                skippedRows: provider.skippedRows,
