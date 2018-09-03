@@ -50,12 +50,19 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
          }
 
 
+         var hasNextpage;
+         if (view._isCursorNavigation()) {
+            hasNextpage = view._listNavigation.hasNextPage('down');
+         }
+         else {
+            hasNextpage = view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after');
+         }
          /* Для пэйджинга считаем, что кол-во страниц это:
           текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
           Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
          if (pagingVisibility) {
-            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after') ? 1 : 0));
-            
+
+            this._options.paging.setPagesCount(pagesCount + (hasNextpage ? 1 : 0));
             if (needSetLastPageInPaging) {
                this._options.paging.setSelectedKey(pagesCount);
             }
@@ -67,7 +74,7 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
          //Если есть страницы - покажем paging
          /*Новое требование, если страниц всего две (посчитали две и ЕстьЕще false) то пэйджинг не показываем*/
          if (pagingVisibility) {
-            if (!this._moreThan2 && pagesCount <= 2 && !(view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after'))) {
+            if (!this._moreThan2 && pagesCount <= 2 && !hasNextpage) {
                pagingVisibility = false;
             }
             else {
