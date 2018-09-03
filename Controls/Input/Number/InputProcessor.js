@@ -25,7 +25,7 @@ define('Controls/Input/Number/InputProcessor',
                var
                   clearValSplited = this.getClearValue(splitValue).split('.');
 
-               //Разбиваем на триады только часть до точки
+               // Разбиваем на триады только часть до точки
                clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
 
                return clearValSplited.join('.');
@@ -65,7 +65,7 @@ define('Controls/Input/Number/InputProcessor',
             },
 
             processDeletionOfAllIntegers: function(splitValue) {
-               //If all integers were removed, then we need to set first character in integers part to 0
+               // If all integers were removed, then we need to set first character in integers part to 0
                if (splitValue.before === '' || splitValue.before === '-') {
                   if (splitValue.after === '') {
                      splitValue.before = '';
@@ -80,32 +80,32 @@ define('Controls/Input/Number/InputProcessor',
                }
             },
 
-            //Набор валидаторов для числа
+            // Набор валидаторов для числа
             validators: {
 
-               //Checks if insert is valid (number, dot or minus)
+               // Checks if insert is valid (number, dot or minus)
                isValidInsert: function(insertValue) {
                   return insertValue.match(/[\d.-]/);
                },
 
-               //Проверяет что строка является числом и не содержит недопустимых символов
+               // Проверяет что строка является числом и не содержит недопустимых символов
                isNumber: function(valueToValidate) {
                   return valueToValidate.match(/^\-?\d*(\.\d*)?$/);
                },
 
-               //Ограничение максимальной длины целой части
+               // Ограничение максимальной длины целой части
                maxIntegersLength: function(valueToValidate, maxLength) {
                   var
                      integers = valueToValidate.split('.')[0].replace('-', '');
                   return !maxLength || integers.length <= maxLength;
                },
 
-               //Ограничение максимальной длины дробной части
+               // Ограничение максимальной длины дробной части
                maxDecimalsLength: function(valueToValidate, maxLength) {
                   var
                      decimals = valueToValidate.split('.')[1] || '';
 
-                  //Если дробная часть запрещена, то нельзя давать ввести точку
+                  // Если дробная часть запрещена, то нельзя давать ввести точку
                   if (maxLength === 0) {
                      return !~valueToValidate.indexOf('.');
                   }
@@ -250,12 +250,12 @@ define('Controls/Input/Number/InputProcessor',
                      splitValue.insert = '';
                   }
 
-                  //This block must be executed when we know for sure that in the next step the number can not become non-valid
+                  // This block must be executed when we know for sure that in the next step the number can not become non-valid
                   if (!_private.validators.isNumber(_private.getClearValue(splitValue))) {
                      splitValue.insert = '';
                   }
 
-                  //If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
+                  // If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
                   if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
                      // If the insert is at the end of the string, then we replace the symbol
                      // Else - forbid input
@@ -307,12 +307,12 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
-               //If a space was removed, then we need to delete the number to the right of it
+               // If a space was removed, then we need to delete the number to the right of it
                if (splitValue.delete === ' ') {
                   splitValue.after = splitValue.after.substr(1, splitValue.after.length);
                }
 
-               //If deleting a dot then we should move cursor right and delete first symbol in decimal part
+               // If deleting a dot then we should move cursor right and delete first symbol in decimal part
                if (splitValue.delete === '.') {
                   if (splitValue.after === '0') {
                      splitValue.after = '.' + splitValue.after;
@@ -341,25 +341,25 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
-               //If whole decimal part was deleted then we should place '.0'
+               // If whole decimal part was deleted then we should place '.0'
                if (splitValue.before[splitValue.before.length - 1] === '.' && splitValueHelper.isAtLineEnd()) {
                   shift -= 1;
                }
 
-               //If you erase a point, you need to undo this and move the cursor to the left
+               // If you erase a point, you need to undo this and move the cursor to the left
                if (splitValue.delete === '.') {
                   splitValue.after = '.' + splitValue.after;
                }
 
                _private.processDeletionOfAllIntegers(splitValue);
 
-               //If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
+               // If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
                if (splitValue.delete === ' ') {
                   splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
                   shift = -1;
                }
 
-               //If we delete symbol in decimal part and showEmptyDecimals is true, then we should replace this symbol by '0'
+               // If we delete symbol in decimal part and showEmptyDecimals is true, then we should replace this symbol by '0'
                if (splitValueHelper.isInDecimalsPart() && options.showEmptyDecimals) {
                   splitValue.after = splitValue.after + '0'.repeat(splitValue.delete.length);
                }
