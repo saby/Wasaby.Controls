@@ -163,6 +163,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
+            self._logicParent.waitForPopupCreated = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
                self._fixIos();
@@ -171,6 +172,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
+                  runDelayed(function() {
+                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                     self._logicParent.waitForPopupCreated = false;
+                  });
                });
             });
 
