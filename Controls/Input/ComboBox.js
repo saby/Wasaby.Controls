@@ -18,6 +18,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
@@ -26,11 +27,6 @@ define('Controls/Input/ComboBox',
        * @author Зайцев А.С.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
-       */
-
-      /**
-       * @name Controls/Input/ComboBox#displayProperty
-       * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
       /**

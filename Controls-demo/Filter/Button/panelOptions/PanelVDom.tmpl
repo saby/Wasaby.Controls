@@ -17,6 +17,7 @@
          <ws:lineSpaceTemplate>
             <ws:if data="{{_spaceTemplate}}">
                <Controls.Input.Dropdown source="{{_spaceTemplateSource}}"
+                                        displayProperty="title"
                                         keyProperty="key"
                                         bind:selectedKeys="_spaceTemplateKeys"/>
             </ws:if>
