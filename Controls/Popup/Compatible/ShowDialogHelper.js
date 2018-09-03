@@ -1,12 +1,5 @@
-define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred', 'Core/moduleStubs'],
-   function(require, Deferred, moduleStubs) {
-      function isNewEnvironment() {
-         var cn = document.getElementsByTagName('html')[0].controlNodes,
-            compat = cn && cn[0] && cn[0].options && cn[0].options.compat || false;
-
-         // Существуют Application.Compatible - там все старое
-         return !!cn && (!compat);
-      }
+define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred', 'Core/moduleStubs', 'Controls/Utils/isNewEnvironment'],
+   function(require, Deferred, moduleStubs, isNewEnvironment) {
       var _private = {
          prepareDeps: function(config) {
             var dependencies = ['Controls/Popup/Opener/BaseOpener'];
