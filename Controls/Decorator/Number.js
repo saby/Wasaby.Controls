@@ -35,7 +35,7 @@ define('Controls/Decorator/Number',
        * @cfg {String} Mode of operation with numbers.
        * @variant round The number is rounded if necessary, and the fractional part is padded with zeros if necessary
        * so that it has the specified length.
-       * @variant trunc Truncates (cuts off) the digits to the right of dot so that number has the specified length,
+       * @variant trunc Truncates (cuts off) the digits to the right of dot so that fractional part has the specified length,
        * no matter whether the argument is a positive or negative number.
        * @default round
        */
@@ -43,7 +43,7 @@ define('Controls/Decorator/Number',
       var _private = {
 
          /**
-          * Casting a number to a format with divide on triads.
+          * Casting a number to a format with division on triads.
           * @param number {@link number}
           * @param mode {@link mode}
           * @param [fractionSize] {@link fractionSize}
