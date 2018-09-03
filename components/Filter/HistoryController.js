@@ -83,6 +83,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
+             this._updateHistoryHandler = this._updateHistoryHandler.bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();
@@ -95,6 +96,8 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
              HISTORY_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
+             this.subscribe('onHistoryUpdate', this._updateHistoryHandler);
+             
              this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
              if (this._options.filtersForHistory.length > 0) {
                 HashManager.subscribe('onChange',this._hashChangeHandlerFnc);
@@ -127,6 +130,21 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                 callback(res);
                 return res;
              });
+          },
+          
+          _updateHistoryHandler: function(e, newHistory) {
+             var activeFilter;
+             var filterButton = this._options.filterButton;
+             
+             if (newHistory[0] && newHistory[0].isActiveFilter) {
+                activeFilter = newHistory[0];
+             }
+             
+             if(activeFilter) {
+                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
+             } else {
+                filterButton.sendCommand('reset-filter');
+             }
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
@@ -506,7 +524,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
            destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
              HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
+             this.unsubscribe('onHistoryUpdate', this._updateHistoryHandler);
              this._changeHistoryFnc = undefined;
+             this._updateHistoryHandler = undefined;
              this._applyHandlerDebounced = undefined;
              FilterHistoryController.superclass.destroy.apply(this, arguments);
            }
