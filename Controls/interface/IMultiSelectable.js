@@ -2,9 +2,7 @@ define('Controls/interface/IMultiSelectable', [
 ], function() {
 
    /**
-    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected
-    * items is known. This interface is suitable for small lists where all items are always loaded.
-    *
+    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is known. This interface is suitable for small lists where all items are always loaded.
     * @interface Controls/interface/IMultiSelectable
     * @public
     * @see Controls/interface/ISingleSelectable
@@ -28,9 +26,6 @@ define('Controls/interface/IMultiSelectable', [
     * @param {Array.<Number|String>} keys Array of selected items' keys.
     * @param {Array.<Number|String>} added Array of keys added to selection.
     * @param {Array.<Number|String>} deleted Array of keys deleted from selection.
-    * @remark
-    * It's important to remember that we don't mutate selectedKeys array from options (or any other option). So keys in
-    * the event arguments and selectedKeys in the component's options are NOT the same array.
     * @example
     * Change message shown to the user based on selection:
     * TMPL:

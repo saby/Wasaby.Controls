@@ -31,8 +31,8 @@ define('Controls/Container/TreeMultiSelector', [
    return MultiSelector.extend({
       _createMultiselection: function(options, context) {
          this._multiselection = new HierarchySelection({
-            selectedKeys: options.selectedKeys || [],
-            excludedKeys: options.excludedKeys || [],
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
             items: context.dataOptions.items,
             idProperty: context.dataOptions.keyProperty,
             parentProperty: options.parentProperty,
