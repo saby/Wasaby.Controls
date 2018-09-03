@@ -147,6 +147,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} options.columnBindingHeadTitle Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
           * @param {string} options.mapperFieldColumnTitle Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
           * @param {string} options.mapperVariantColumnTitle Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
+          * @param {string} options.resultNotation Нотация, в которой будут представлены имена свойств результата. Допустимые значения: "lowDash" и "camelCase" (по умолчанию). При указании "lowDash" результат с помощью хелпера {@link SBIS3.CONTROLS/Utils/ImportExport/PropertyNames} будет приведён в нотацию с символом нижнего подчёркивания в качестве разделителя. При указании "camelCase" (или без указания совсем) результат будет возвращён "как есть", согласно {@link https://wi.sbis.ru/doc/platform/developmentapl/standards/styleguide-js/ стандарту разработки JavaScript} (опционально)
           * @return {Deferred<ImportResults>}
           */
          execute: function (options) {

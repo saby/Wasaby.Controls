@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/Deferred',
       //'Core/IoC',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'SBIS3.CONTROLS/ImportCustomizer/Utils/ObjectSelectByNames',
@@ -25,7 +26,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, RemoteCall, InformationPopupManager, objectSelectByNames, RecordSet, DataType, tmpl) {
+   function (CommandDispatcher, cMerge, Deferred, /*IoC,*/ CompoundControl, PropertyNames, RemoteCall, InformationPopupManager, objectSelectByNames, RecordSet, DataType, tmpl) {
       'use strict';
 
       /**
@@ -430,7 +431,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
                 */
-               validators: null
+               validators: null,
+               /**
+                * @cfg {string} Нотация, в которой будут представлены имена свойств результата. Допустимые значения: "lowDash" и "camelCase" (по умолчанию). При указании "lowDash" результат с помощью хелпера {@link SBIS3.CONTROLS/Utils/ImportExport/PropertyNames} будет приведён в нотацию с символом нижнего подчёркивания в качестве разделителя. При указании "camelCase" (или без указания совсем) результат будет возвращён "как есть", согласно {@link https://wi.sbis.ru/doc/platform/developmentapl/standards/styleguide-js/ стандарту разработки JavaScript} (опционально)
+                */
+               resultNotation: null
             },
             // Список имён вложенных под-компонентов
             _SUBVIEW_NAMES: {
@@ -1091,6 +1096,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var baseParams = this._getSubviewValues('baseParams');
             for (var name in baseParams) {
                data[name] = baseParams[name];
+            }
+            if (options.resultNotation && options.resultNotation.toLowerCase() === 'lowdash') {
+               data = PropertyNames.camelCaseToLowDash(data);
             }
             return withValidation
                ?
