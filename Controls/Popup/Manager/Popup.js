@@ -36,8 +36,8 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-            /* Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
-             * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза */
+            /* TODO: COMPATIBLE. Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
+             * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза. Смотрим по флагу waitForPopupCreated */
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {
