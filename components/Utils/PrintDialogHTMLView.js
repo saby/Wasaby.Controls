@@ -1,8 +1,16 @@
 define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
    'Core/core-merge',
    'Core/Deferred',
-   'Core/moduleStubs'
-], function (cMerge, Deferred, moduleStubs) {
+   'Core/moduleStubs',
+   'Core/SessionStorage',
+   'Core/detection'
+], function(cMerge, Deferred, moduleStubs, SessionStorage, detection) {
+
+   var autoTestsConfig = SessionStorage.get('autoTestConfig');
+
+   //retailOffline неожиданно превратился в chrome, в котором нет нативного диалога предпросмотра. Будем показывать свой.
+   var needShowReportDialog = !detection.chrome || detection.retailOffline || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
+
    /**
     * Показывает стандартный платформенный диалог печати.
     * @remark
@@ -20,6 +28,11 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          options = cfg || {},
          minWidth = cfg.minWidth || 398;
 
+      //minWidth передаем только в componentOptions, в опциях диалога он не нужен, т.к. ширина будет расчитана по контенту.
+      //В popup на vdom есть ошибка, что если задать minWidth, то ширина окна ограничивается этим minWidth, выписана задача
+      //на исправление https://online.sbis.ru/opendoc.html?guid=22280db9-fa89-45e0-8b33-2ea0a4251fc5
+      delete cfg.minWidth;
+
       return moduleStubs.require(['SBIS3.CONTROLS/Action/OpenDialog']).addCallback(function(result) {
          var
             def = new Deferred(),
@@ -30,14 +43,15 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
             resizable: false,
 
             //на vdom не работает опция visible у диалогов. Поэтому сами будем скрывать окно печати стилями.
-            className: 'controls-PrintDialog__invisible',
+            className: !needShowReportDialog ? 'controls-PrintDialog__invisible' : '',
             isStack: true,
             task_1174068748: true,
+            caption: needShowReportDialog ? rk('Предварительный просмотр') : '',
             template: 'SBIS3.CONTROLS/PrintDialogTemplate',
-            minWidth: minWidth,
             componentOptions: {
                minWidth: minWidth,
                htmlText: options.htmlText,
+               needShowReportDialog: needShowReportDialog,
                handlers: {
                   onAfterShow: function() {
                      def.callback();

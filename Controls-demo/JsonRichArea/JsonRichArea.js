@@ -6,10 +6,11 @@ define('Controls-demo/JsonRichArea/JsonRichArea', [
 
    return Control.extend({
       _template: template,
-      json: [['p']],
+      json: null,
       jsonStringify: undefined,
 
       _beforeMount: function() {
+         this.json = [['p']];
          this.jsonStringify = JSON.stringify(this.json);
       },
 

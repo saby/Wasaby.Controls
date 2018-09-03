@@ -47,6 +47,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       var EXPORT_FORMATTER_NAME = 'ExportFormatter.Excel';
 
       /**
+       * Задержка блокировки интерфейса при начале редактирования пользователем стилевого эксель-файла
+       * @private
+       * @type {number}
+       */
+      var LOCK_DELAY = 750;
+
+      /**
        * Минимальный интервал между обновлениями изображения предпросмотра
        * @private
        * @type {number}
@@ -59,6 +66,20 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        * @type {number}
        */
       var PREVIEW_SCALE = 0.4;
+
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_WIDTH = 1920;
+
+      /**
+       * Размер запрашиваемого изображения предпросмотра
+       * @private
+       * @type {number}
+       */
+      var PREVIEW_HEIGHT = 0;
 
 
 
@@ -117,8 +138,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _formatterMenu: null,
             // Контрол предпросмотра
             _preview: null,
-            // Размер области предпросмотра
-            _previewSize: null,
+            // Происходит ли в данный момент процесс редактирования стилевого эксель-файла пользователем
+            _isEditing: null,
+            // Стилевой эксель-файла изменён пользователем
+            _isDifferent: null,
             // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
             _isAppAllowed: null
@@ -177,7 +200,23 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._startFormatEditing(selectedId === 'app');
             }.bind(this));
 
-            this._preview.on('click', this._startFormatEditing.bind(this, false));
+            this.subscribeTo(this._exportFormatter, 'editStart', function () {
+               this._onFormatEditStarted();
+            }.bind(this));
+
+            this.subscribeTo(this._exportFormatter, 'edit', function () {
+               this._onFormatEdited();
+            }.bind(this));
+
+            this.subscribeTo(this._exportFormatter, 'editEnd', function (evtName, isChanged) {
+               this._onFormatEditEnded(isChanged);
+            }.bind(this));
+
+            this._preview.on('click', function () {
+               if (this.isEnabled()) {
+                  this._startFormatEditing(false);
+               }
+            }.bind(this));
          },
 
          /**
@@ -196,6 +235,48 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                else {
                   this._callFormatterOpen(useApp);
                }
+            }
+         },
+
+         /**
+          * Обработчик начала редактирования пользователем стилевого эксель-файла
+          *
+          * @protected
+          */
+         _onFormatEditStarted: function () {
+            this._isEditing = true;
+            // Заблокировать интерфейс с небольшой задержкой, так как при первом открытии экселя (при редактировании в приложении) файл откроется
+            // заблокированным и сессия редактирования сразу завершиться. При снятии блокировки в экселе будет начата новая сессия редактирования
+            setTimeout(function () {
+               if (this._isEditing) {
+                  this.setEnabled(false);
+               }
+            }.bind(this), LOCK_DELAY);
+         },
+
+         /**
+          * Обработчик единичного изменения при редактировании пользователем стилевого эксель-файла
+          *
+          * @protected
+          */
+         _onFormatEdited: function () {
+            this._isDifferent = true;
+            this._updatePreview();
+         },
+
+         /**
+          * Обработчик завершения редактирования пользователем стилевого эксель-файла
+          *
+          * @protected
+          * @param {boolean} isChanged При редактировании были
+          */
+         _onFormatEditEnded: function (isChanged) {
+            this._isEditing = null;
+            this.setEnabled(true);
+            if (isChanged) {
+               this._isDifferent = true;
+               this.sendCommand('subviewChanged', 'afterOpen');
+               this._updatePreview();
             }
          },
 
@@ -241,6 +322,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             ).addCallbacks(
                function (result) {
                   options.fileUuid = result;
+                  this._isDifferent = !isClone;
                   if (!isSilent) {
                      this.sendCommand('subviewChanged');
                   }
@@ -269,7 +351,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var options = this._options;
             var fieldIds = options.fieldIds;
             var promise = this._exportFormatter.update(fileUuid || options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
-               this._updatePreview.bind(this, false),
+               function () {
+                  this._isDifferent = true;
+                  this._updatePreview(false);
+               }.bind(this),
                function (err) { return err; }
             );
             // Запустить индикатор сразу
@@ -285,32 +370,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<boolean>}
           */
          _callFormatterIsExists: function (fileUuid) {
-            return this._exportFormatter.isExists(fileUuid);
-         },
-
-         /**
-          * Вызвать метод форматера "open" или "openApp"
-          *
-          * @protected
-          * @param {boolean} useApp Открыть в отдельном приложении
-          * @param {boolean} deleteNotChanged Удалить файл если он не будет изменён
-          * return {Core/Deferred}
-          */
-         _callFormatterOpen: function (useApp, deleteNotChanged) {
-            var options = this._options;
-            var fieldIds = options.fieldIds;
-            return this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
-               function (result) {
-                  if (result) {
-                     this.sendCommand('subviewChanged', 'afterOpen');
-                     this._updatePreview();
-                  }
-                  else
-                  if (deleteNotChanged) {
-                     this._callFormatterDelete(options.fileUuid);
-                     options.fileUuid = null;
-                  }
-               }.bind(this),
+            return this._exportFormatter.isExists(fileUuid).addErrback(
                function (err) { return err; }
             );
          },
@@ -320,13 +380,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           *
           * @protected
           * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
           * return {Core/Deferred}
           */
-         _callFormatterDelete: function (fileUuid) {
-            return this._exportFormatter.remove(fileUuid).addCallbacks(
-               function (result) {},
+         _callFormatterDelete: function (fileUuid, historyInfo) {
+            return this._exportFormatter.remove(fileUuid, this._options.serviceParams, historyInfo).addErrback(
                function (err) { return err; }
             );
+         },
+
+         /**
+          * Вызвать метод форматера "open" или "openApp"
+          *
+          * @protected
+          * @param {boolean} useApp Открыть в отдельном приложении
+          */
+         _callFormatterOpen: function (useApp) {
+            var options = this._options;
+            var fieldIds = options.fieldIds;
+            this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams);
          },
 
          /**
@@ -419,13 +491,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             this._waitIndicatorEnd();
          },
          _updatePreviewStart: coreDebounce(function () {
-            var size = this._previewSize;
-            if (!size) {
-               this._previewSize = size = {width:1920, height:0};
-            }
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, size.width, size.height).addCallbacks(
+            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT).addCallbacks(
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
@@ -444,32 +512,74 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          }, PREVIEW_DELAY),
 
          /**
+          * Удалить стилевой эксель файл
+          *
+          * @public
+          * @param {string} fileUuid Uuid стилевого эксель-файла
+          * @param {object} historyInfo Информация для сохранения истроии
+          * @return {Core/Deferred}
+          */
+         remove: function (fileUuid, historyInfo) {
+            return this._callFormatterDelete(fileUuid, historyInfo);
+         },
+
+         /**
           * Завершить транзакцию
           *
-          * @protected
+          * @public
           * @param {boolean} isCommit Сохранить или откатить изменения
-          * @param {object} saving Дополнительные опции сохранения
+          * @param {object} historyInfo Информация для сохранения истроии
+          * @param {object} [saving] Дополнительные опции сохранения (опционально)
           * @param {boolean} saving.isClone В транзакции производилось клонирование - нельзя удалять исходный файл (только при сохранении)
           * @return {Core/Deferred<string>}
           */
-         _endTransaction: function (isCommit, saving) {
+         endTransaction: function (isCommit, historyInfo, saving) {
             var options = this._options;
             var fileUuid = options.fileUuid;
             if (!isCommit) {
                options.consumerId = null;
             }
             if (isCommit && saving && saving.isClone && !fileUuid) {
-               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this._endTransaction.bind(this, true, saving));
+               return this._callFormatterCreate(options.primaryUuid, false).addCallback(this.endTransaction.bind(this, true, historyInfo, saving));
             }
-            var deleteUuid = isCommit ? (saving && saving.isClone ? null : options.primaryUuid) : fileUuid;
-            if (deleteUuid) {
-               this._callFormatterDelete(deleteUuid);
-            }
+            var result;
+            //var isDifferent = fileUuid && this._isDifferent;
             if (isCommit) {
-               options.primaryUuid = fileUuid;
+               if ('commit' in this._exportFormatter/*TODO Убрать это после того как метод будет добален*/) {
+                  var args = {
+                     id: historyInfo.id,
+                     action: historyInfo.action,
+                     newUuid: fileUuid,
+                     newTitle: historyInfo.title
+                  };
+                  if (historyInfo.action === 'update') {
+                     args.fileUuid = options.primaryUuid;;
+                     args.title = historyInfo.title;
+                  }
+                  this._exportFormatter.commit(args, options.serviceParams);
+                  result = options.primaryUuid || fileUuid;
+               }
+               else {
+                  //TODO Убрать это после того как метод будет добален
+                  if (fileUuid && !(saving && saving.isClone)) {
+                     var deleteUuid = options.primaryUuid;
+                     if (deleteUuid) {
+                        this._callFormatterDelete(deleteUuid);
+                     }
+                  }
+                  result = fileUuid;
+                  options.primaryUuid = fileUuid;
+               }
+            }
+            else {
+               if (fileUuid) {
+                  this._callFormatterDelete(fileUuid);
+               }
+               result = options.primaryUuid;
             }
             options.fileUuid = null;
-            return Deferred.success(fileUuid);
+            this._isDifferent = null;
+            return Deferred.success(result);
          },
 
          /**
@@ -482,16 +592,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
-            }
-            if (meta) {
-               var args = meta.args;
-               switch (meta.reason) {
-                  case 'delete':
-                     this._callFormatterDelete(args[0]);
-                     return;
-                  case 'transaction':
-                     return this._endTransaction(args[0], args[1]);
-               }
             }
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
@@ -575,10 +675,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          destroy: function () {
             this._updatePreviewClearStop();
-            var formatter = this._exportFormatter;
-            if (typeof formatter.clear === 'function') {
-               formatter.clear();
-            }
+            this._exportFormatter.clear();
             View.superclass.destroy.apply(this, arguments);
          }
       });

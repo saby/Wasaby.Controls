@@ -4,12 +4,13 @@ define([
    'use strict';
 
    describe('Validation-tests', function () {
-      var testControl;
+      var testControl, testElement;
       beforeEach(function () {
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
-         $('#mocha').append('<div id="component123"></div>');//Для добавления верстки на страницу
+         testElement = $('<div id="component123"></div>');
+         $('#mocha').append(testElement);//Для добавления верстки на страницу
       });
 
       function check(done, control, expected, callback) {
@@ -125,14 +126,8 @@ define([
       });
 
       afterEach(function () {
-         testControl.__$destroyFromDirtyChecking = true;
-         if (testControl._children.Form) {
-            testControl._children.Form.__$destroyFromDirtyChecking = true;
-         }
-         if (testControl._children.validate) {
-            testControl._children.validate.__$destroyFromDirtyChecking = true;
-         }
          testControl && testControl.destroy();
+         testElement && testElement.remove();
       });
    });
 

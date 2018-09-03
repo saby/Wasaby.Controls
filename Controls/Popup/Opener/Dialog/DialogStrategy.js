@@ -11,8 +11,29 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
        * @param wHeight высота окна браузера
        * @param sizes размеры диалогового окна
        */
-      getPosition: function(wWidth, wHeight, containerSizes, popupOptions) {
-         var width, height, left, top;
+      getPosition: function(wWidth, wHeight, containerSizes, item) {
+         var width, height, left, top, dif;
+
+         if (item.dragged) {
+            left = Math.max(0, item.position.left);
+            top = Math.max(0, item.position.top);
+
+            //check overflowX
+            dif = (item.position.left + containerSizes.width) - wWidth;
+            left -= Math.max(0, dif);
+
+            //check overflowY
+            dif = (item.position.top + containerSizes.height) - wHeight;
+            top -= Math.max(0, dif);
+            return {
+               left: left,
+               top: top,
+               width: item.position.width,
+               height: item.position.height
+            };
+         }
+
+         var popupOptions = item.popupOptions;
 
          if (popupOptions.maximize) {
             width = wWidth;

@@ -5,8 +5,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'Core/core-instance',
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
-   'Core/IoC'
-], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC) {
+   'Core/IoC',
+   'Controls/Utils/isNewEnvironment'
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment) {
    'use strict';
 
    /**
@@ -498,14 +499,6 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
       }
    };
-
-
-   //TODO start compatible block for VDOM
-   function isNewEnvironment() {
-      return document && document.getElementsByTagName('html')[0].controlNodes;
-   }
-
-   //TODO end compatible block for VDOM
 
    return DialogMixin;
 });

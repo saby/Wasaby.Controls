@@ -937,6 +937,24 @@ define(
                      position: 1
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert minus in decimals start, when max decimals length is reached',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '129.',
+                     insert: '-',
+                     after: '45',
+                     delete: ''
+                  },
+                  result: {
+                     value: '129.45',
+                     position: 4
+                  },
+                  inputType: 'insert'
                }
             ];
 

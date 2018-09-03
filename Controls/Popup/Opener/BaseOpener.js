@@ -6,7 +6,8 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Controls/Utils/isNewEnvironment'
    ],
    function(
       Control,
@@ -15,7 +16,8 @@ define('Controls/Popup/Opener/BaseOpener',
       DefaultOpenerFinder,
       CoreClone,
       CoreMerge,
-      Deferred
+      Deferred,
+      isNewEnvironment
    ) {
 
       var _private = {
@@ -37,7 +39,6 @@ define('Controls/Popup/Opener/BaseOpener',
        */
       var Base = Control.extend({
          _template: Template,
-         _popupIds: undefined,
 
          _beforeMount: function() {
             this._popupIds = [];
@@ -66,11 +67,6 @@ define('Controls/Popup/Opener/BaseOpener',
             var self = this;
             var cfg = this._getConfig(popupOptions);
 
-            if (this._isExecuting) { // Если мы еще не обработали первый вызов, то дожидаемся его
-               return;
-            }
-            this._isExecuting = true;
-
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
@@ -84,27 +80,37 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
+         _isPopupCreating: function() {
+            return ManagerController.isPopupCreating(this._getCurrentPopupId());
+         },
+
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
-               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                  self._isExecuting = false;
-                  if (Base.isNewEnvironment()) {
-                     self._popupIds.push(result);
 
-                     //Call redraw to create emitter on scroll after popup opening
-                     self._forceUpdate();
-                  } else {
-                     self._action = result;
-                  }
-               });
+               if (!self._isPopupCreating()) {
+                  Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
+                     if (Base.isNewEnvironment()) {
+                        self._popupIds.push(result);
+
+                        //Call redraw to create emitter on scroll after popup opening
+                        self._forceUpdate();
+                     } else {
+                        self._action = result;
+                     }
+                  });
+               }
             });
          },
 
          // Ленивая загрузка шаблона
          _requireModules: function(config, controller) {
+            if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
+               return (new Deferred()).errback('Protection against multiple invocation of the open method');
+            }
+
             var deps = [];
             if (this._needRequireModule(config.template)) {
                deps.push(config.template);
@@ -239,16 +245,24 @@ define('Controls/Popup/Opener/BaseOpener',
                var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
                var action;
                if (!opener || !opener._action) {
-                  action = new Action();
+                  action = new Action({
+                     closeByFocusOut: true,
+                  });
                } else {
                   action = opener._action;
                }
 
-               if (action.getDialog() && !isFormController) {
+               var dialog = action.getDialog();
+
+               if (dialog && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
-                  var compoundArea = action.getDialog()._getTemplateComponent();
+                  var compoundArea = dialog._getTemplateComponent();
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  if (compoundArea) {
+                     compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                     dialog.setTarget && dialog.setTarget($(newCfg.target));
+                     dialog._recalcPosition && dialog._recalcPosition();
+                  }
                } else {
                   action.closeDialog();
                   action.execute(newCfg);
@@ -275,7 +289,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
       // TODO Compatible
       Base.isNewEnvironment = function() {
-         return document && !!document.getElementsByTagName('html')[0].controlNodes;
+         return isNewEnvironment();
       };
 
       Base._private = _private;

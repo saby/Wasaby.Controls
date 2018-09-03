@@ -19,7 +19,10 @@ function(cMerge,
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var
+            templateOptions = this._getTemplateOptions(templateClass),
+            parentContext;
+
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -48,6 +51,7 @@ function(cMerge,
          }
          if (cfg.parent) {
             cfg.templateOptions.__parentFromCfg = cfg.parent;
+            parentContext = cfg.parent.getLinkedContext && cfg.parent.getLinkedContext(); // получаем контекст родителя
          }
          if (cfg.opener) {
             cfg.templateOptions.__openerFromCfg = cfg.opener;
@@ -56,8 +60,8 @@ function(cMerge,
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
 
-         if (cfg.context) {
-            this._prepareContext(cfg);
+         if (cfg.context || parentContext) {
+            this._prepareContext(cfg, parentContext);
          }
 
          if (cfg.linkedContext) {
@@ -112,18 +116,27 @@ function(cMerge,
          }
       },
 
-      _prepareContext: function(cfg) {
+      _prepareContext: function(cfg, parentContext) {
          var destroyDef = new Deferred(),
             destrFunc = function() {
                destroyDef.callback();
                destroyDef = null;
             };
 
-         if (cfg.context instanceof Context) {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-         } else {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-            cfg.templateOptions.context.setContextData(cfg.context);
+         if (cfg.context) {
+            if (cfg.context instanceof Context) {
+               // Если явно передан контекст, создаем дочерний от него, и передаем в опции открываемого компонента
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            } else {
+               // Если передан простой объект, создаем пустой контекст и заполняем его полями и значениями
+               // из переданного объекта
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+               cfg.templateOptions.context.setContextData(cfg.context);
+            }
+         } else if (parentContext) {
+            // Если контекст не передан, но задан родитель, то берем контекст родителя, создаем дочерний от него
+            // и передаем в опции открываемого компонента
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, parentContext);
          }
 
          if (!cfg.templateOptions.handlers) {
@@ -221,6 +234,10 @@ function(cMerge,
             cfg.isModal = cfg.modal;
          }
 
+         if (cfg.hasOwnProperty('draggable')) {
+            cfg.templateOptions.draggable = cfg.draggable;
+         }
+
          cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
@@ -308,6 +325,10 @@ function(cMerge,
 
          if (cfg.closeOnTargetScroll) {
             newCfg.dialogOptions.closeOnTargetScroll = true;
+         }
+
+         if (cfg.className) {
+            newCfg.dialogOptions.className = cfg.className;
          }
 
          if (newCfg.target) {

@@ -1,14 +1,9 @@
-/**
- * TODO Компонент пока тестировался только в Chrome
- */
 define(
    'SBIS3.CONTROLS/Date/Picker',
    [
       'Core/EventBus',
       'SBIS3.CONTROLS/Date/Box',
       'SBIS3.CONTROLS/Mixins/PickerMixin',
-      'SBIS3.CONTROLS/Date/RangeBigChoose',
-      'SBIS3.CONTROLS/Date/TimePicker',
       'tmpl!SBIS3.CONTROLS/Date/Picker/DatePicker',
       'tmpl!SBIS3.CONTROLS/Date/Box/DateBox',
       'tmpl!SBIS3.CONTROLS/Date/Picker/elementPickerContent',
@@ -20,7 +15,7 @@ define(
       'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'css!SBIS3.CONTROLS/Date/Box/DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
+   function (EventBus, DateBox, PickerMixin, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -128,6 +123,8 @@ define(
          _onFocusInHandler: undefined
       },
 
+      _chooserClass: null,
+
       $constructor: function () {
          this._publish('onDateChange', 'onDateSelect', 'onFocusOut');
       },
@@ -173,7 +170,7 @@ define(
        */
       _pickerInit: function() {
          if (this.isPickerIconShow()) {
-            this.getChildControlByName('PickerButton').subscribe('onActivated', this._getPickerMethod('Init'));
+            this.getChildControlByName('PickerButton').subscribe('onActivated', this._getPickerMethod('Toggle'));
          }
       },
 
@@ -181,15 +178,11 @@ define(
        * Инициализация пикера выбора даты
        * @private
        */
-      _calendarInit: function() {
+      _calendarToggle: function() {
          if (this.isEnabled()) {
             this.togglePicker();
 
             this._initFocusInHandler();
-            // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-            if (this._picker.isVisible() && this.getDate()) {
-               this._pickerContent.setStartValue(this.getDate());
-            }
          }
       },
 
@@ -197,7 +190,7 @@ define(
        * Инициализация пикера выбора даты
        * @private
        */
-      _timeInit: function() {
+      _timeToggle: function() {
          if (this.isEnabled()) {
             this._options.pickerConfig.closeButton = true;
 
@@ -207,13 +200,6 @@ define(
             this.togglePicker();
 
             this._initFocusInHandler();
-            // Если часы открыты данным кликом - обновляем часы в соответствии с хранимым значением даты.
-            if (this._picker.isVisible() && this.getDate()) {
-               this._pickerContent.setTime(this.getDate());
-            }
-
-            this._pickerContent.subscribe('onTimeSelect', this._timeSelectHandler.bind(this));
-            this._picker.subscribe('onClose', this._notify.bind(this, 'onDateSelect'));
          }
       },
 
@@ -239,8 +225,19 @@ define(
          return this.getContainer().children('.controls-DateBox');
       },
       showPicker: function () {
-         DatePicker.superclass.showPicker.call(this);
-         this._getPickerMethod('Show')();
+         var chooser;
+         if (this._pickerContent) {
+            DatePicker.superclass.showPicker.call(this);
+            this._getPickerMethod('Show')();
+         } else {
+            chooser = this._getPickerName() === 'time' ? 'SBIS3.CONTROLS/Date/TimePicker' : 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            requirejs([chooser], function(chooserClass) {
+               this._chooserClass = chooserClass;
+               DatePicker.superclass.showPicker.call(this);
+               this._getPickerMethod('Show')();
+            }.bind(this));
+         }
+
       },
 
       _calendarShow: function() {
@@ -274,14 +271,14 @@ define(
             date = this.getDate(),
             type = this.getType();
 
-         this._pickerContent = new DateRangeBigChoose({
+         this._pickerContent = new this._chooserClass({
             parent: this._picker,
             element: element,
             rangeselect: false,
             startValue: date,
             endValue: date,
             serializationMode: type,
-            headerType: DateRangeBigChoose.headerTypes.inputField
+            headerType: this._chooserClass.headerTypes.inputField
          });
          // Добавляем в пикер
          this._picker.getContainer().append(element);
@@ -297,12 +294,13 @@ define(
       },
 
       _timeCreate: function(element) {
-         this._pickerContent = new TimePicker({
+         this._pickerContent = new this._chooserClass({
             parent: this._picker,
             element: element,
             time: this.getDate()
          });
          this._pickerContent.subscribe('onChangeTime', this._onChangeTimeHandler.bind(this));
+         this._pickerContent.subscribe('onTimeSelect', this._timeSelectHandler.bind(this));
          return element;
       },
 

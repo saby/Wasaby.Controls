@@ -20,10 +20,13 @@ define('Controls-demo/Input/Number/Number', [
       _readOnly: false,
       _eventResult: '',
       _selectOnClick: false,
-      _items: [
-         { title: 'left' },
-         { title: 'right' }
-      ],
+      _items: null,
+      _beforeMount: function() {
+         this._items = [
+            { title: 'left' },
+            { title: 'right' }
+         ];
+      },
       _tagStyleHandler: function() {
          this._children.infoBoxNumber.open({
             target: this._children.textNumber._container,
@@ -52,6 +55,11 @@ define('Controls-demo/Input/Number/Number', [
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
+
+      paste_text: function(e) {
+         this._children.textNumber.paste('567');
+      }
+
    });
    return VdomDemoNumber;
 });

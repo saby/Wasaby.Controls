@@ -1,22 +1,25 @@
 <div class="controls-PopupContainer" id="popup" on:popupDestroyed="_popupDestroyed()">
-    <ws:for data="index, item in _popupItems">
-        <ws:if data="{{index === _overlayId}}">
-            <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()" style="z-index: {{( index + 1 ) * 10 - 1}};"></div>
-        </ws:if>
-        <Controls.Container.PendingRegistrator name="{{item.id}}_registrator">
-            <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
-                on:deactivated="_popupDeactivated(item.id)"
-                attr:class="controls-Container__popup {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
-                attr:style="z-index: {{( index + 1 ) * 10}};
-                    position: {{item.position.position !== undefined ? item.position.position}};
-                    left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
-                    right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
-                    top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};
-                    bottom: {{item.position.bottom === undefined ? 'auto': item.position.bottom + 'px'}};
-                    width: {{item.position.width === undefined ? 'auto': item.position.width + 'px'}};
-                    height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
-                scope="{{item.popupOptions}}"
-            />
-        </Controls.Container.PendingRegistrator>
-    </ws:for>
+   <ws:for data="index, item in _popupItems">
+      <ws:if data="{{index === _overlayId}}">
+         <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
+              style="z-index: {{( index + 1 ) * 10 - 1}};"></div>
+      </ws:if>
+      <Controls.Container.PendingRegistrator name="{{item.id}}_registrator">
+         <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
+                                       on:deactivated="_popupDeactivated(item.id)"
+                                       attr:class="controls-Container__popup
+                {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
+                {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
+                                       attr:style="z-index: {{( index + 1 ) * _zIndexStep}};
+                position: {{item.position.position !== undefined ? item.position.position}};
+                left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
+                right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
+                top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};
+                bottom: {{item.position.bottom === undefined ? 'auto': item.position.bottom + 'px'}};
+                width: {{item.position.width === undefined ? 'auto': item.position.width + 'px'}};
+                height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
+                                       scope="{{item.popupOptions}}"
+         />
+      </Controls.Container.PendingRegistrator>
+   </ws:for>
 </div>
