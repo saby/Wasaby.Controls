@@ -24,9 +24,11 @@ def getTestForSkip(version, type) {
         if ( tests_for_skip != '' ) {
             echo "Будут скипнуты тесты: ${tests_for_skip}"
             return "--SKIP ${tests_for_skip}"
+        } esle {
+            return ""
         }
     }
-    return ""
+
 }
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
