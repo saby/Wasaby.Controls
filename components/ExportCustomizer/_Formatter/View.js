@@ -453,11 +453,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _keepInMindPromise: function (promise) {
             var promises = this._promises;
             promises.push(promise);
-            promise.addBoth(function () {
+            promise.addBoth(function (args) {
                var i = promises.indexOf(promise);
                if (i !== -1) {
                   promises.splice(i, 1);
                }
+               return args;
             });
             return promise;
          },
