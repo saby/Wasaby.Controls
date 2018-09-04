@@ -51,6 +51,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
+                     self._afterUpdateHandler();
                   } else {
                      // Если нам передали шаблон строкой, то компонент уже построен. Обратимся к нему через DOM.
                      self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
@@ -92,6 +93,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             //Отлавливаем события с дочернего vdom компонента
             for (var event in additionalEventProperties) {
                if (additionalEventProperties.hasOwnProperty(event)) {
+                  rootContainer.eventProperties = rootContainer.eventProperties || {};
                   rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
                   rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
                }
@@ -142,6 +144,24 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   self.sendCommand('close');
                } else {
                   self._replaceVDOMContainer();
+               }
+            };
+         },
+
+         // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент обновился - нет.
+         _afterUpdateHandler: function() {
+            var self = this;
+            self._baseAfterUpdate = self._vDomTemplate._afterUpdate;
+            self._vDomTemplate._afterUpdate = function() {
+               self._baseAfterUpdate.apply(this, arguments);
+               if (self._isNewOptions) {
+
+                  //костыль от дубровина не позволяет перерисовать окно, если prevHeight > текущей высоты.
+                  //Логику в панели не меняю, решаю на стороне совместимости
+                  self._panel._prevHeight = 0;
+                  self._panel._recalcPosition && self._panel._recalcPosition();
+                  self._panel.getContainer().closest('.ws-float-area').removeClass('ws-invisible');
+                  self._isNewOptions = false;
                }
             };
          },
@@ -196,8 +216,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          setInnerComponentOptions: function(newOptions) {
-            //https://online.sbis.ru/opendoc.html?guid=037ab701-0148-478c-9ef0-07365d1fa3c1
             if (this._vDomTemplate) { //могут позвать перерисоку до того, как компонент создался
+               this._isNewOptions = true;
+
+               //Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
+               this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
                this._vDomTemplate._options = newOptions;
                this._vDomTemplate._forceUpdate();
             }
