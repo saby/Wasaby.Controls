@@ -1,6 +1,6 @@
 define('Controls/Application/TouchDetector', [
    'Core/Control',
-   'tmpl!Controls/Application/TouchDetector/TouchDetector',
+   'wml!Controls/Application/TouchDetector/TouchDetector',
    'Core/compatibility',
    'Controls/Application/TouchDetector/TouchContextField'
 ], function(
