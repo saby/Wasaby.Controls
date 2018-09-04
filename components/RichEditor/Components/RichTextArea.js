@@ -403,6 +403,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._decorateAsSVG(this._options.text);
                }
             },
+            _initHtmlJson: function() {
+               var self = this;
+               self.subscribe('onTextChange', function(e, text) {
+                  if (text[0] !== '<') {
+                     text = '<p>' + text + '</p>';
+                  }
+                  var div = document.createElement('div');
+                  div.innerHTML = text;
+                  self._options.json = typeof self._options.json === 'string'
+                     ? JSON.stringify(domToJson(div).slice(1))
+                     : domToJson(div).slice(1);
+                  self._notify('onJsonChange', [self._options.json]);
+               });
+            },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview.get(0));
@@ -411,22 +425,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._readyControlDeffered.callback();
                   }
                }
-               var self = this;
-               if (self._options.hasOwnProperty('json')) {
-                  self.setJson(self._options.json);
-
-                  self.subscribe('onTextChange', function(e, text) {
-                     if (text[0] !== '<') {
-                        text = '<p>' + text + '</p>';
-                     }
-                     var div = document.createElement('div');
-                     div.innerHTML = text;
-                     self._options.json = typeof self._options.json === 'string'
-                        ? JSON.stringify(domToJson(div).slice(1))
-                        : domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self._options.json]);
-                  });
+               if (this._options.hasOwnProperty('json')) {
+                  this.setJson(this._options.json);
                }
+
                this._updateDataReview(this.getText());
             },
 
@@ -693,6 +695,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             setJson: function(json) {
                if (!this._htmlJson) {
                   this._htmlJson = new HtmlJson();
+                  this._initHtmlJson();
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
@@ -726,6 +729,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }
+               this._lastActive = undefined;
             },
             setActive: function(active) {
                this._lastActive = active;
@@ -1732,7 +1736,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var editor = this._tinyEditor;
                // Устанавливать курсор только если редактор активен (чтобы не забирать фокус)
                // 1174789546 https://online.sbis.ru/opendoc.html?guid=9675e20f-5a90-4a34-b6be-e24805813bb9
-               if (editor && this.isActive() && !this._sourceContainerIsActive()) {
+               if (editor && (this.isActive() || this._lastActive) && !this._sourceContainerIsActive()) {
                   var nodeForSelect = editor.getBody();
                   // But firefox places the selection outside of that tag, so we need to go one level deeper:
                   if (editor.isGecko) {
@@ -1946,11 +1950,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   $scrollParent = this._inputControl.parent(),
                   scrollTop = $scrollParent.scrollTop(),
                   self = this;
-               require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
-                  new Dialog({
-                     name: 'imagePropertiesDialog',
+               require(['SBIS3.CONTROLS/Action/OpenDialog'], function (ActionOpenDialog) {
+                  (new ActionOpenDialog({
+                     handlers: {
+                        onBeforeShow: function() {
+                        },
+                        onAfterShow: function() {
+                           self._notify('onImagePropertiesDialogOpen');
+                        }
+                     }
+                  })).execute({
+                     mode: 'dialog',
+                     dialogOptions: {
+                        opener: self,
+                        autoHide: false,
+                        autoCloseOnHide: true
+                     },
                      template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                     parent: self,
                      componentOptions: {
                         naturalSize: {
                            width: image.naturalWidth,
@@ -1964,46 +1980,37 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            width: image.style.width || image.width + 'px' || '',
                            height: image.style.height || image.height + 'px' || ''
                         },
-                        editorWidth: self._inputControl.width()
-                     },
-                     handlers: {
-                        onBeforeShow: function() {
-                           CommandDispatcher.declareCommand(this, 'saveImage', function() {
-                              var promise = self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !==
-                                 'per');
-                              promise.addCallback(function() {
-                                 setTimeout(function() {
-                                    // После изменения размера слетает выделение - установить курсор ввода сразу после изображения
+                        editorWidth: self._inputControl.width(),
+                        result: (new Deferred()).addCallback(function (data) {
+                           self._changeImgSize($image, data.width, data.height, data.valueType !== 'per').addCallback(function() {
+                              setTimeout(function() {
+                                 // После изменения размера слетает выделение - установить курсор ввода сразу после изображения
+                                 // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                 var node = $image[0];
+                                 if (node.parentNode.classList.contains('image-template-center')) {
+                                    node = node.parentNode;
+                                 }
+                                 var next = node.nextSibling;
+                                 if (next) {
+                                    self._selectNewRng(next, next.nodeType === 3 && next.nodeValue.length &&
+                                    next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
+                                 }
+                                 else {
+                                    self._selectAfterNode(node);
+                                 }
+                                 if (scrollTop) {
+                                    $scrollParent.scrollTop(scrollTop);
+                                 }
+                                 else {
+                                    // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
+                                    // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
                                     // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
-                                    var node = $image[0];
-                                    if (node.parentNode.classList.contains('image-template-center')) {
-                                       node = node.parentNode;
-                                    }
-                                    var next = node.nextSibling;
-                                    if (next) {
-                                       self._selectNewRng(next, next.nodeType === 3 && next.nodeValue.length &&
-                                       next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
-                                    }
-                                    else {
-                                       self._selectAfterNode(node);
-                                    }
-                                    if (scrollTop) {
-                                       $scrollParent.scrollTop(scrollTop);
-                                    }
-                                    else {
-                                       // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
-                                       // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
-                                       // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
-                                       node.scrollIntoView(true);
-                                    }
-                                 }, 1);
-                              });
-                              editor.undoManager.add();
-                           }.bind(this));
-                        },
-                        onAfterShow: function() {
-                           self._notify('onImagePropertiesDialogOpen');
-                        }
+                                    node.scrollIntoView(true);
+                                 }
+                              }, 1);
+                           });
+                           editor.undoManager.add();
+                        })
                      }
                   });
                });

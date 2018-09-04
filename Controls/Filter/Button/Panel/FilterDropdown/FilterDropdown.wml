@@ -1,6 +1,7 @@
 <div class="controls-FilterDropdown">
    <Controls.Input.Dropdown
            scope="{{_options}}"
+           displayProperty="title"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()"/>
    <span class="controls-FilterDropdown__reset icon-Close icon-disabled" on:click="_resetHandler()"></span>

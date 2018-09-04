@@ -153,10 +153,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this.sendCommand('close', this._result);
             this._result = null;
          },
-         _onResultHandler: function(event, result) {
-            this._result = result;
+         _onResultHandler: function() {
+            this._result = Array.prototype.slice.call(arguments, 1); //first arg - event;
             if (this._options.onResultHandler) {
-               this._options.onResultHandler(this._result);
+               this._options.onResultHandler.apply(this, this._result);
             }
          },
          _onRegisterHandler: function(event, eventName, emitter, handler) {

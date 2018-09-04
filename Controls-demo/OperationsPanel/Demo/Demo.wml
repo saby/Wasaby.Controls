@@ -1,6 +1,10 @@
 <div class="demo-Grid__container">
     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-        <Controls.Container.TreeMultiSelector on:selectionChange="_selectionChangeHandler()" parentProperty="Раздел" nodeProperty="Раздел@">
+        <Controls.Container.TreeMultiSelector on:selectedKeysChanged="_selectionChangeHandler()"
+                                              bind:selectedKeys="_selectedKeys"
+                                              bind:excludedKeys="_excludedKeys"
+                                              parentProperty="Раздел"
+                                              nodeProperty="Раздел@">
             <div style="width: 100%;">
                 <Controls.Operations.Button bind:expanded="_panelExpanded"/>
                 <Controls.Operations.Panel

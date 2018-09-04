@@ -19,6 +19,8 @@ define('Controls-demo/OperationsPanel/Demo', [
       _moveDialogColumns: null,
       _gridColumns: null,
       _moveDialogFilter: null,
+      _selectedKeys: null,
+      _excludedKeys: null,
 
       _beforeMount: function() {
          this._panelSource = this._getPanelSource([]);
@@ -37,6 +39,8 @@ define('Controls-demo/OperationsPanel/Demo', [
             idProperty: 'id',
             data: Data.employees
          });
+         this._selectedKeys = [];
+         this._excludedKeys = [];
       },
 
       _panelItemClick: function(event, item) {
@@ -78,18 +82,17 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _selectionChangeHandler: function(event, selection) {
-         this._selection = selection;
-         this._panelSource = this._getPanelSource(selection.selected);
+      _selectionChangeHandler: function(event, selectedKeys) {
+         this._panelSource = this._getPanelSource(selectedKeys);
          this._forceUpdate();
       },
 
       _moveItems: function() {
-         this._children.dialogMover.moveItemsWithDialog(this._selection.selected);
+         this._children.dialogMover.moveItemsWithDialog(this._selectedKeys);
       },
 
       _removeItems: function() {
-         this._children.remover.removeItems(this._selection.selected);
+         this._children.remover.removeItems(this._selectedKeys);
       },
 
       _afterItemsMove: function() {

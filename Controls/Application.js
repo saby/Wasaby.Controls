@@ -10,6 +10,7 @@ define('Controls/Application',
       'Core/BodyClasses',
       'Core/compatibility',
       'Controls/Application/AppData',
+      'Controls/Container/Scroll/Context',
       'Controls/Application/HeadDataContext',
       'Core/ConsoleLogger',
       'css!Controls/Application/Application'
@@ -32,6 +33,7 @@ define('Controls/Application',
       BodyClasses,
       compatibility,
       AppData,
+      ScrollContext,
       HeadDataContext) {
       'use strict';
 
@@ -71,6 +73,12 @@ define('Controls/Application',
           * @private
           */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
+
+         _getChildContext: function() {
+            return {
+               ScrollData: this._scrollData
+            };
+         },
 
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
@@ -117,6 +125,8 @@ define('Controls/Application',
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
+
+            self._scrollData = new ScrollContext({pagingVisible: false});
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
