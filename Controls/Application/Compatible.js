@@ -35,18 +35,9 @@ define('Controls/Application/Compatible', [
          if (typeof window !== 'undefined') {
             Constants.rights = true;
             Layer.load().addCallback(function() {
-               Constants.$body = $('body');
-
-               var rights = RightsManager.getRights();
-               if (rights instanceof Deferred) {
-                  rights.addCallback(function(rights) {
-                     window.rights = rights;
-                     rightsInitialized.callback();
-                  });
-                  return rightsInitialized;
-               }
+               rightsInitialized.callback();
             });
-
+            return rightsInitialized;
          }
       },
       _afterMount: function() {
