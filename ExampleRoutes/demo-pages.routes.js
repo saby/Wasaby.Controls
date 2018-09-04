@@ -185,15 +185,6 @@ module.exports = function(Component) {
          }, []);
       },
    
-      // Демо-пример: с engineBrowser
-      '/demo-ws4-engine-browser': function(req, res) {
-         requirejs('Controls-demo/EngineBrowser/BrowserApplication');
-         res.render('tmpl!Controls/Application/Route', {
-            application: 'Controls-demo/EngineBrowser/BrowserApplication',
-            initDependencies: false
-         }, []);
-      },
-   
       // Демо-пример: с кнопкой фильтров
       '/demo-ws4-filter-button': function(req, res) {
          requirejs('Controls-demo/Filter/Button/PanelVDomApplication');
