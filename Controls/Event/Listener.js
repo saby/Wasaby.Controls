@@ -9,7 +9,7 @@ define('Controls/Event/Listener',
       'tmpl!Controls/Event/Listener',
       'Controls/Event/Registrar',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Application/CompatibleScripts'
+      'wml!Controls/Application/CompatibleScripts'
    ],
    function(Control, template, Registrar, types) {
 
