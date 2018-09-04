@@ -158,8 +158,8 @@ define('Controls/FormController', [
             self._propertyChangeNotified = true;
             self._notify('registerPending', [def, {
                showLoadingIndicator: false,
-               onPendingFail: function() {
-                  self._showConfirmDialog(def);
+               onPendingFail: function(forceFinishValue) {
+                  self._showConfirmDialog(def, forceFinishValue);
                   def.addCallbacks(function(res) {
                      self._propertyChangeNotified = false;
                      return res;
@@ -172,7 +172,7 @@ define('Controls/FormController', [
             }], { bubbling: true });
          }
       },
-      _showConfirmDialog: function(def) {
+      _showConfirmDialog: function(def, forceFinishValue) {
          function updating(answer) {
             if (answer === true) {
                this._updateByPopup = true;
@@ -198,9 +198,8 @@ define('Controls/FormController', [
             }
          }
 
-         // todo реализовать иначе, чтобы в тесте можно было просто подменить фукнкцию
-         if (this.hasOwnProperty('__$resultForTests')) {
-            updating.call(this, this.__$resultForTests);
+         if (forceFinishValue !== undefined) {
+            updating.call(this, !!forceFinishValue);
          } else {
             var self = this;
 
@@ -246,8 +245,8 @@ define('Controls/FormController', [
          var self = this;
          this._notify('registerPending', [def, {
             showLoadingIndicator: false,
-            onPendingFail: function() {
-               self._showConfirmDialog(def);
+            onPendingFail: function(forceFinishValue) {
+               self._showConfirmDialog(def, forceFinishValue);
                return def;
             }
          }], { bubbling: true });
