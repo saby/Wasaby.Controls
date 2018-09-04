@@ -1,4 +1,4 @@
-define('Controls-demo/Switch/SwitchDemoPG',
+define('Controls-demo/Input/Number/NumberPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/Input/Text/TextPG',
@@ -12,10 +12,10 @@ define('Controls-demo/Switch/SwitchDemoPG',
 
    function(Control, template, myTmpl, config) {
       'use strict';
-      var TextPG = Control.extend({
+      var NumberPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/Switch',
+         _content: 'Controls/Input/Number',
          _my: myTmpl,
          _dataObject: null,
          _textOptions: null,
@@ -24,22 +24,35 @@ define('Controls-demo/Switch/SwitchDemoPG',
                value: {
                   readOnly: true
                },
-               captionPosition: {
+               tagStyle: {
+                  emptyText: 'none',
                   keyProperty: 'id',
                   displayProperty: 'title',
+                  placeholder: 'select',
+                  selectedKey: 0
+               },
+               textAlign: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  placeholder: 'select',
                   selectedKey: 0
                }
             };
             this._textOptions = {
-               name: 'Switch',
+               name: 'Number',
+               placeholder: 'Input text',
+               tagStyle: 'primary',
+               presition: 2,
+               onlyPositive: true,
+               integersLength: 5,
+               showEmptyDecimals: true,
+               textAlign: 'left',
                readOnly: false,
                tooltip: 'myTooltip',
-               caption: 'State1',
-               captionPosition: 'left'
-
+               validationErrors: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return TextPG;
+      return NumberPG;
    });

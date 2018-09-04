@@ -1,4 +1,4 @@
-define('Controls-demo/Switch/SwitchDemoPG',
+define('Controls-demo/Input/Password/PasswordPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/Input/Text/TextPG',
@@ -12,34 +12,37 @@ define('Controls-demo/Switch/SwitchDemoPG',
 
    function(Control, template, myTmpl, config) {
       'use strict';
-      var TextPG = Control.extend({
+      var PasswordPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/Switch',
+         _content: 'Controls/Input/Password',
          _my: myTmpl,
          _dataObject: null,
          _textOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: true
+                  readOnly: false
                },
-               captionPosition: {
+               tagStyle: {
+                  emptyText: 'none',
+                  placeholder: 'select',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
                }
             };
             this._textOptions = {
-               name: 'Switch',
+               name: 'Password',
+               mask: '',
+               placeholder: 'Input text',
+               tagStyle: 'primary',
                readOnly: false,
                tooltip: 'myTooltip',
-               caption: 'State1',
-               captionPosition: 'left'
-
+               validationErrors: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return TextPG;
+      return PasswordPG;
    });
