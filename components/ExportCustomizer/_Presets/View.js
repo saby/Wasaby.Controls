@@ -223,7 +223,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this.subscribeTo(editor, 'onApply', function (evtName) {
                   var preset = this._findPresetById(options.selectedId);
                   var isClone = !!preset.patternUuid;
-                  var isUpdate = preset.isStorable;
+                  var isUpdate = preset.isStorable;// Клонирование - это не update. При клонировании пресет будет isUnreal а не isStorable
                   preset.title = editor.getText();
                   delete preset.isUnreal;
                   delete preset.patternUuid;
