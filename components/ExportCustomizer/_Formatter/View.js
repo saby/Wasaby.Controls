@@ -519,8 +519,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
-                     this._updatePreviewClearStop();
                      var img = this._preview[0];
+                     img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                      img.src = url;
                      img.width = PREVIEW_SCALE*cache.width;
                      img.title = options.previewTitle;
