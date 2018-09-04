@@ -7,15 +7,15 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
-      'wml!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
+      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
 
       'wml!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty',
       'wml!Controls-demo/Filter/Button/resources/itemTemplate/period',
       'wml!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
       'wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional',
-      'wml!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
-      'wml!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
+      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],

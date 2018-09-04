@@ -6,11 +6,11 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
       'wml!Controls-demo/Filter/Button/panelOptions/PanelVDom',
 
       'wml!Controls-demo/Filter/Button/panelOptions/filterPanelTemplateOptions',
-      'wml!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
+      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
 
       'wml!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
-      'wml!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
+      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       'css!Controls-demo/Filter/Button/PanelVDom'
@@ -50,7 +50,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
          _sourceState: null,
          _sourceOwner: null,
          _beforeMount: function() {
-            this._itemTemplate = { templateName: 'wml!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel' };
+            this._itemTemplate = { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel' };
             this.sourceOwner = {
                module: 'WS.Data/Source/Memory',
                options: {
@@ -183,7 +183,7 @@ define('Controls-demo/Filter/Button/panelOptions/PanelVDom',
                   {id: 'our organisation', value: '', resetValue: '', visibility: false},
                   {id: 'document', value: '', resetValue: '', visibility: false}
                ];
-               this._addTemplate = {templateName: 'wml!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
+               this._addTemplate = {templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel'};
             } else {
                this._itemsSimple = [
                   {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: this.sourcePeriod},

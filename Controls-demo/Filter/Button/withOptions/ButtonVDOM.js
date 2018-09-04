@@ -5,7 +5,7 @@ define('Controls-demo/Filter/Button/withOptions/ButtonVDOM',
       'WS.Data/Chain',
       'wml!Controls-demo/Filter/Button/withOptions/ButtonVDOM',
       'wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
-      'wml!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
+      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
 
       'css!Controls-demo/Filter/Button/withOptions/ButtonVDOM'
    ],
