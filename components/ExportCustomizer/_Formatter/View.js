@@ -587,7 +587,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   args.title = historyInfo.title;
                }
                this._exportFormatter.commit(args, options.serviceParams);
-               result = options.primaryUuid || fileUuid;
+               result = saving && saving.isClone ? fileUuid : options.primaryUuid || fileUuid;
                /*if (fileUuid && !(saving && saving.isClone)) {
                   var deleteUuid = options.primaryUuid;
                   if (deleteUuid) {
