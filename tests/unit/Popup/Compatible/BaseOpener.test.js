@@ -96,8 +96,10 @@ define(
          });
 
          it('_preparePopupCfgFromOldToNew', function() {
+            config.autoHide = true;
             BaseOpener._preparePopupCfgFromOldToNew(config);
-            assert.equal(config.templateOptions.target,config.target);
+            assert.equal(config.templateOptions.target, config.target);
+            assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
             assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
@@ -108,7 +110,9 @@ define(
                offset: undefined
             };
             config.offset = 0;
+            config.closeByExternalClick = false;
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.isFalse(config.closeByExternalClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);
             assert.isTrue(config.isModal);

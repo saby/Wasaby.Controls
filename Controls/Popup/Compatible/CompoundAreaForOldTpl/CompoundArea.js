@@ -163,6 +163,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
+            self._logicParent.waitForPopupCreated = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
@@ -170,6 +171,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
+                  runDelayed(function() {
+                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                     self._logicParent.waitForPopupCreated = false;
+                  });
                });
             });
 
@@ -266,14 +271,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
-            if (hasHeader) {
+            if (hasHeader || this._options.type === 'dialog') {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
                   }
                   this._prependCustomHeader(customHeaderContainer);
                } else {
-                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
             } else if (customHeaderContainer.length && this._options.type === 'dialog') {

@@ -729,6 +729,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }
+               this._lastActive = undefined;
             },
             setActive: function(active) {
                this._lastActive = active;
@@ -1735,7 +1736,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var editor = this._tinyEditor;
                // Устанавливать курсор только если редактор активен (чтобы не забирать фокус)
                // 1174789546 https://online.sbis.ru/opendoc.html?guid=9675e20f-5a90-4a34-b6be-e24805813bb9
-               if (editor && this.isActive() && !this._sourceContainerIsActive()) {
+               if (editor && (this.isActive() || this._lastActive) && !this._sourceContainerIsActive()) {
                   var nodeForSelect = editor.getBody();
                   // But firefox places the selection outside of that tag, so we need to go one level deeper:
                   if (editor.isGecko) {
