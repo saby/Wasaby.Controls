@@ -5,10 +5,7 @@ define('Controls/Container/MasterList', [
    return Control.extend({
       _template: template,
       _itemClickHandler: function(event, key) {
-         if (key) {
-            this._notify('selectedMasterValueChanged', [key], {bubbling: true});
-         }
-
+         this._notify('selectedMasterValueChanged', [key], {bubbling: true});
       }
    });
 });
