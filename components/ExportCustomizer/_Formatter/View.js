@@ -453,11 +453,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _keepInMindPromise: function (promise) {
             var promises = this._promises;
             promises.push(promise);
-            promise.addBoth(function () {
+            promise.addBoth(function (args) {
                var i = promises.indexOf(promise);
                if (i !== -1) {
                   promises.splice(i, 1);
                }
+               return args;
             });
             return promise;
          },
@@ -519,8 +520,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
-                     this._updatePreviewClearStop();
                      var img = this._preview[0];
+                     img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
                      img.src = url;
                      img.width = PREVIEW_SCALE*cache.width;
                      img.title = options.previewTitle;
@@ -587,7 +588,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   args.title = historyInfo.title;
                }
                this._exportFormatter.commit(args, options.serviceParams);
-               result = options.primaryUuid || fileUuid;
+               result = saving && saving.isClone ? fileUuid : options.primaryUuid || fileUuid;
                /*if (fileUuid && !(saving && saving.isClone)) {
                   var deleteUuid = options.primaryUuid;
                   if (deleteUuid) {
