@@ -9,6 +9,6 @@
       </script>
    </ws:if>
    <ws:if data="{{ _options.compat }}">
-      <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
+      <ws:partial template="wml!Controls/Application/CompatibleScripts" />
    </ws:if>
 </div>

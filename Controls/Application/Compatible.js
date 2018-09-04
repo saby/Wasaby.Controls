@@ -8,8 +8,8 @@ define('Controls/Application/Compatible', [
    'Core/Deferred',
    'Core/constants',
    'Controls/Popup/Compatible/Layer',
-   'tmpl!Controls/Application/Compatible',
-   'tmpl!Controls/Application/CompatibleScripts'
+   'wml!Controls/Application/Compatible',
+   'wml!Controls/Application/CompatibleScripts'
 ], function(Base,
    EventBus,
    RightsManager,
