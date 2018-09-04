@@ -164,6 +164,76 @@ define(
             assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
 
          });
+         it('managerPopupMaximized notified', function() {
+
+            let Manager = getManager();
+            var isMaximizeNotified;
+            Manager._private._notify = function(event) {
+               isMaximizeNotified = event === 'managerPopupMaximized';
+            };
+            let id0 = Manager.show({
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            }, new BaseController());
+            let id1 = 'emptyElement';
+            let popupResult = Manager._private.popupMaximized(id0);
+            assert.isTrue(popupResult);
+            assert.isTrue(isMaximizeNotified);
+            popupResult = Manager._private.popupMaximized(id1);
+            assert.isFalse(popupResult);
+
+         });
+         it('managerPopupUpdated notified', function() {
+
+            let Manager = getManager();
+            var isUpdateNotified;
+            Manager._private._notify = function(event) {
+               isUpdateNotified = event === 'managerPopupUpdated';
+            };
+            let id0 = Manager.show({
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            }, new BaseController());
+            Manager._private.popupUpdated(id0);
+            assert.isTrue(isUpdateNotified);
+
+         });
+         it('managerPopupDestroyed notified', function() {
+
+            let Manager = getManager();
+            var isDestroyNotified;
+            Manager._notify = function(event) {
+               isDestroyNotified = event === 'managerPopupDestroyed';
+            };
+            id = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            Manager.remove(id);
+            assert.isTrue(isDestroyNotified);
+
+         });
+         it('managerPopupCreated notified', function() {
+
+            let Manager = getManager();
+            var isCreateNotified;
+            Manager._private._notify = function(event) {
+               isCreateNotified = event === 'managerPopupCreated';
+            };
+            let id0 = Manager.show({
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            }, new BaseController());
+            let id1 = 'emptyElement';
+            let popupResult = Manager._private.popupCreated(id0);
+            assert.isTrue(popupResult);
+            assert.isTrue(isCreateNotified);
+            popupResult = Manager._private.popupCreated(id1);
+            assert.isFalse(popupResult);
+
+         });
       });
    }
 );
