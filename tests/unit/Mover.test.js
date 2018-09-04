@@ -239,9 +239,8 @@ define(['SBIS3.CONTROLS/ListView/resources/Mover',
                assert.equal(items.at(0).getId(), id);
             });
 
-            it('should filter wrong items', function(done){
-               treeMover.move([treeItems.at(0), treeItems.at(4)], treeItems.at(6), 'on').addCallback(function(result){
-                  assert.equal(treeItems.at(4).get('parent'), treeItems.at(6).getId());
+            it('should not move item if it move in his child', function(done){
+               treeMover.move([treeItems.at(0)], treeItems.at(6), 'on').addCallback(function(result){
                   assert.equal(treeItems.at(0).get('parent'), null);
                   done();
                });
@@ -337,6 +336,9 @@ define(['SBIS3.CONTROLS/ListView/resources/Mover',
          });
          it('should return true if record has not existed from recordset', function(){
             assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1).clone(), 'before'));
+         });
+         it('should return false if it moved record and recordParent', function(){
+            assert.isFalse(treeMover._checkRecordForMove(treeItems.at(3), items.at(1), 'before', [treeItems.at(0), treeItems.at(3)]));
          });
       });
       describe('onEndMove', function () {
@@ -501,10 +503,11 @@ define(['SBIS3.CONTROLS/ListView/resources/Mover',
             listAction.setOperation('add');
             listAction.setAction(function () {
                return true;
-            })
+            });
             mover.moveFromOutside(listAction, targetRow, undefined, true);
             assert.equal(list.getCount(), 2);
          });
+
          it('should not move the source row if default move off', function(){
             targetRow.setPosition('after');
             var count = treeItems.getCount();
