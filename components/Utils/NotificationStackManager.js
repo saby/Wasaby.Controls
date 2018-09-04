@@ -2,7 +2,9 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
    [
    "Core/WindowManager",
    "Core/EventBus",
-   "Lib/Control/Control"
+   "Lib/Control/Control",
+   "Controls/Utils/isNewEnvironment",
+   "Controls/Popup/Opener/Notification/NotificationController"
 ],
 
    /**
@@ -10,7 +12,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
     * @class SBIS3.CONTROLS/Utils/NotificationStackManager
     * @author Красильников А.С.
     */
-   function( cWindowManager, EventBus, Control){
+   function( cWindowManager, EventBus, Control, isNewEnvironment, NotificationController){
       'use strict';
       //Время через которое блоки скрываются
       var LIFE_TIME = 5000;
@@ -174,6 +176,31 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                /*Самозакрывающиеся окна показываем выше всех модальных*/
                if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId()) !== -1){
                   zIndex = 1000000;
+               }
+
+               if (isNewEnvironment()) {
+                  var indexFakeItem = -1;
+                  var iterator = 0;
+                  var item;
+
+                  /**
+                   * Ищем в vdom контроллере нотификационных окон, элемент соотствующий элементу который хотим обновить.
+                   */
+                  while (indexFakeItem !== i) {
+                     item = NotificationController._stack.at(iterator);
+
+                     if (!item) {
+                        break;
+                     }
+                     if (item._isFake) {
+                        indexFakeItem++;
+                     }
+
+                     iterator++;
+                  }
+                  if (item) {
+                     bottom = item.position.bottom + containerOffset.bottom;
+                  }
                }
 
                container.css({
