@@ -26,6 +26,12 @@ define('Controls/Application',
     * @author Зуев Д.В.
     */
 
+   /**
+    * @name Controls/Application#staticDomains
+    * @cfg {Number} The list of domains for distributing static resources. Its value is setting
+    * by the cloud parameter PresentationService.StaticDomains.
+    */
+
    function(Base,
       detection,
       template,
