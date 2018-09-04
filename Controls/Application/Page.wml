@@ -74,11 +74,11 @@
 
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
-                                 <ws:partial template="tmpl!Controls/Application/builderRunnerCompatible"
+                                 <ws:partial template="wml!Controls/Application/builderRunnerCompatible"
                                              _options="{{_options}}"/>
                               </ws:if>
                               <ws:if data="{{_options.builder && !_options.builderCompatible}}">
-                                 <ws:partial template="tmpl!Controls/Application/builderRunner"
+                                 <ws:partial template="wml!Controls/Application/builderRunner"
                                              _options="{{_options}}"/>
                               </ws:if>
                               <ws:else data="{{!_options.builderCompatible}}">

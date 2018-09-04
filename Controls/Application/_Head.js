@@ -2,7 +2,7 @@ define('Controls/Application/_Head',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Application/_Head',
+      'wml!Controls/Application/_Head',
       'Controls/Application/HeadDataContext'
    ],
    function(Base, Deferred, template, HeadDataContext) {
