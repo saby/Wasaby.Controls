@@ -2,10 +2,7 @@ define('Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**
-    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected
-    * items is unknown. This interface is suitable for trees or lists with infinite scrolling where user can select
-    * items which are not loaded yet (e.g. through operations panel).
-    *
+    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is unknown. This interface is suitable for trees or lists with infinite scrolling where user can select items which are not loaded yet (e.g. through operations panel).
     * @interface Controls/interface/IPromisedSelectable
     * @public
     * @see Controls/interface/ISingleSelectable
@@ -24,11 +21,8 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @name Controls/interface/IPromisedSelectable#selectedKeys
     * @cfg {Array.<Number|String>} Array of selected items' keys.
-    * @variant [null] Everything is selected.
-    * @variant [] Nothing is selected.
     * @remark
-    * Selected keys and excluded keys from options are only used during first render and after this it's impossible to
-    * change selection through these two options.
+    * You can pass node's {@link Controls/interface/ISource#keyProperty key property} to select every item inside that node. To select every item in the list you should pass [null].
     * @example
     * Select everything except two items:
     * <pre>
@@ -36,14 +30,14 @@ define('Controls/interface/IPromisedSelectable', [
     * </pre>
     * @see Controls/interface/ISource#keyProperty
     * @see excludedKeys
+    * @see selectedKeysChanged
     */
 
    /**
     * @name Controls/interface/IPromisedSelectable#excludedKeys
     * @cfg {Array.<Number|String>} Array of keys of items that should be excluded from the selection.
     * @remark
-    * Selected keys and excluded keys from options are only used during first render and after this it's impossible to
-    * change selection through these two options.
+    * A node will be marked as partially selected if key of any of its children is in excludedKeys. Partially selected nodes are usually rendered with checkbox in indeterminate state near them.
     * @example
     * Select everything except two items:
     * <pre>
@@ -51,6 +45,7 @@ define('Controls/interface/IPromisedSelectable', [
     * </pre>
     * @see Controls/interface/ISource#keyProperty
     * @see selectedKeys
+    * @see excludedKeysChanged
     */
 
    /**
@@ -62,24 +57,35 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#selectionChange Occurs when selection was changed.
+    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Selection} Selection object.
+    * @param {Array.<Number|String>} keys Array of selected items' keys.
+    * @param {Array.<Number|String>} added Array of keys added to selectedKeys.
+    * @param {Array.<Number|String>} deleted Array of keys deleted from selectedKeys.
     * @example
     * Change items shown in the operations panel based on selection:
     * TMPL:
     * <pre>
-    *    <Controls.Container.MultiSelector on:selectionChange="onSelectionChange()">
+    *    <Controls.Container.MultiSelector on:selectedKeysChanged="onSelectionChange()">
     *       <Controls.Operations.Panel source="{{ _panelSource }} />
     *    </Controls.Container.MultiSelector>
     * </pre>
     * JS:
     * <pre>
-    *    onSelectionChange: function(e, selection) {
-    *       this._panelSource = this._getPanelSource(selection.selected);
+    *    onSelectionChange: function(e, selectedKeys, added, deleted) {
+    *       this._panelSource = this._getPanelSource(selectedKeys);
     *    }
     * </pre>
-    * @see getSelection
+    * @see selectedKeys
+    */
+
+   /**
+    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when selection was changed.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Array.<Number|String>} keys Array of keys of items that should be excluded from the selection.
+    * @param {Array.<Number|String>} added Array of keys added to excludedKeys.
+    * @param {Array.<Number|String>} deleted Array of keys deleted from excludedKeys.
+    * @see excludedKeys
     */
 
 });

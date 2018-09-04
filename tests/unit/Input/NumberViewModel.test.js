@@ -955,6 +955,76 @@ define(
                      position: 4
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to integers',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '1 2',
+                     insert: '7.8',
+                     after: '34.56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 734.856',
+                     position: 3
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '1 234.',
+                     insert: '7.8',
+                     after: '56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.7856',
+                     position: 8
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals with precision (start)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '1 234.',
+                     insert: '7.8',
+                     after: '56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.78',
+                     position: 8
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals with precision (end)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '1 234.56',
+                     insert: '7.8',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.56',
+                     position: 8
+                  },
+                  inputType: 'insert'
                }
             ];
 

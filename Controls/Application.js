@@ -5,7 +5,7 @@ define('Controls/Application',
    [
       'Core/Control',
       'Core/detection',
-      'tmpl!Controls/Application/Page',
+      'wml!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
       'Core/compatibility',
