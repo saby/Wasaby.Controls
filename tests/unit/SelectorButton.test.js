@@ -34,6 +34,9 @@ define(['SBIS3.CONTROLS/SelectorButton', 'WS.Data/Source/Memory'], function (Sel
             this.skip();
          }
       });
+      after(function() {
+         SB.destroy();
+      });
 
       describe('Selector Button', function (){
          it('set key', function (){

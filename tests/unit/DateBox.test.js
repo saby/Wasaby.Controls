@@ -22,6 +22,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       afterEach(function () {
          this.testControl.destroy();
          this.testControl = undefined;
+         this.container && this.container.remove();
          this.container = undefined;
       });
    };
