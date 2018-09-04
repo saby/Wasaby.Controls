@@ -11,18 +11,22 @@ define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
       ModuleClass = Control.extend({
          _template: template,
 
-         _viewSource: new Memory({
-            idProperty: 'id',
-            data: Data.catalog
-         }),
-
-         gridData: Data,
-         gridColumns: [
-            {
-               displayProperty: 'Наименование',
-               width: '1fr'
-            }
-         ]
+         _viewSource: null,
+         gridData: null,
+         gridColumns: null,
+         _beforeMount: function() {
+            this.gridColumns = [
+               {
+                  displayProperty: 'Наименование',
+                  width: '1fr'
+               }
+            ];
+            this.gridData = Data;
+            this._viewSource = new Memory({
+               idProperty: 'id',
+               data: Data.catalog
+            });
+         }
       });
 
    return ModuleClass;

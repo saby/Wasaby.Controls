@@ -14,20 +14,23 @@ define('Controls-demo/FormController/FormController', [
 
    var module = Control.extend({
       _template: tmpl,
-      _dataSource: new MemorySource({
-         idProperty: 'id',
-         data: [{ id: 0 }]
-      }),
+      _dataSource: null,
       idCount: 1,
       _key: 0,
       _record: null,
       _recordAsText: '',
+      _beforeMount: function() {
+         this._dataSource = new MemorySource({
+            idProperty: 'id',
+            data: [{ id: 0 }]
+         });
+      },
 
       _create: function(config) {
          var self = this;
          var resultDef = new Deferred();
          var initValues = config.initValues;
-         var finishDef = this._children.registrator.finishPendingOperations();
+         var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          initValues.id = this.idCount;
 
@@ -56,7 +59,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
 
-         var finishDef = this._children.registrator.finishPendingOperations();
+         var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          finishDef.addCallback(function(finishResult) {
             self._key = config.key;
@@ -170,6 +173,9 @@ define('Controls-demo/FormController/FormController', [
             return e;
          });
          this._forceUpdate();
+      },
+      _requestCustomUpdate: function() {
+         return false;
       }
    });
 

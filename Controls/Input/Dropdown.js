@@ -20,6 +20,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
@@ -77,7 +78,7 @@ define('Controls/Input/Dropdown',
             if (this._isEmptyItem) {
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
-               this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+               this._text = getPropValue(items[0], this._options.displayProperty);
                this._icon = items[0].get('icon');
             }
             if (items.length > 1) {

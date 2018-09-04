@@ -4,9 +4,10 @@ define('Controls/History/Menu',
       'wml!Controls/History/resources/itemTemplate',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
+      'Controls/Button/Menu/MenuUtils',
       'css!Controls/History/Menu'
    ],
-   function(Menu, itemTemplate, merge, isEqual) {
+   function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
       /**
        * Button
        *
@@ -54,6 +55,7 @@ define('Controls/History/Menu',
          _filter: null,
 
          _beforeMount: function(options) {
+            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
             this._filter = _private.prepareFilter(options.filter);
          },
          

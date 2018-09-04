@@ -12,18 +12,20 @@ define('Controls-demo/DragNDrop/List', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _itemActions: [{
-         title: 'Action',
-         showType: 2,
-         id: 0
-      }],
-      _viewSource: new Memory({
-         idProperty: 'id',
-         data: cClone(DemoData)
-      }),
+      _itemActions: null,
+      _viewSource: null,
 
       _beforeMount: function() {
          this._itemsReadyCallback = this._itemsReady.bind(this);
+         this._itemActions = [{
+            title: 'Action',
+            showType: 2,
+            id: 0
+         }];
+         this._viewSource = new Memory({
+            idProperty: 'id',
+            data: cClone(DemoData)
+         });
       },
 
       _itemsReady: function(items) {

@@ -164,7 +164,9 @@ function(cMerge,
 
          cfg.className = cfg.className || '';
 
-         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         if (!cfg.hasOwnProperty('closeByExternalClick')) {
+            cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
@@ -232,6 +234,10 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
+         }
+
+         if (cfg.hasOwnProperty('draggable')) {
+            cfg.templateOptions.draggable = cfg.draggable;
          }
 
          cfg.isCompoundTemplate = true;

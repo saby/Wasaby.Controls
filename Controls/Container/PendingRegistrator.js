@@ -68,7 +68,7 @@ define('Controls/Container/PendingRegistrator', [
          });
          return res;
       },
-      finishPendingOperations: function() {
+      finishPendingOperations: function(forceFinishValue) {
          var resultDeferred = new Deferred(),
             parallelDef = new ParallelDeferred(),
             pendingResults = [];
@@ -77,7 +77,7 @@ define('Controls/Container/PendingRegistrator', [
          Object.keys(this._pendings).forEach(function(key) {
             var pending = self._pendings[key];
             if (pending.onPendingFail) {
-               var res = pending.onPendingFail();
+               var res = pending.onPendingFail(forceFinishValue);
                if (res instanceof Deferred) {
                   parallelDef.push(res);
                } else {

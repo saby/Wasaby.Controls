@@ -5,6 +5,7 @@
       <Controls.Input.Dropdown
          on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
          bind:selectedKeys="_selectedKeys0"
+			displayProperty="title"
          name="myDropdownList0"
          keyProperty="id"
          source="{{_getDefaultMemory()}}"
@@ -16,7 +17,8 @@
               name="myDropdownList1"
               bind:selectedKeys="_selectedKeysEmpty"
               emptyText="{{true}}"
-              keyProperty="id"
+				  displayProperty="title"
+				  keyProperty="id"
               itemTemplateProperty="myTemplate"
               source="{{_getItemTemplateData()}}"
       />
@@ -27,7 +29,8 @@
       <Controls.Input.Dropdown
          name="myDropdownList1"
          bind:selectedKeys="_selectedKeys1"
-         keyProperty="id"
+			displayProperty="title"
+			keyProperty="id"
          itemTemplateProperty="myTemplate"
          source="{{_getItemTemplateData()}}"
       />
@@ -37,7 +40,8 @@
       <Controls.Input.Dropdown
          name="myDropdownList2"
          bind:selectedKeys="_selectedKeys2"
-         keyProperty="id"
+			displayProperty="title"
+			keyProperty="id"
          itemTemplate="wml!Controls-demo/Dropdown/resources/ItemsTemplate2"
          source="{{_getItemTemplateData()}}"
       />
@@ -47,7 +51,8 @@
       <Controls.Input.Dropdown
          name="myDropdownList3"
          bind:selectedKeys="_selectedKeys3"
-         keyProperty="id"
+			displayProperty="title"
+			keyProperty="id"
          source="{{_getIconItems()}}"
       />
    </div>
@@ -56,7 +61,8 @@
       <Controls.Input.Dropdown
          name="myDropdownList4"
          bind:selectedKeys="_selectedKeys4"
-         keyProperty="id"
+			displayProperty="title"
+			keyProperty="id"
          parentProperty="parent"
          nodeProperty="@parent"
          source="{{_getHierarchyItems()}}"
@@ -69,7 +75,8 @@
          attr:test_name="hier_dropdown"
          on:footerClick="footerClickHandler()"
          bind:selectedKeys="_selectedKeys5"
-         keyProperty="id"
+			displayProperty="title"
+			keyProperty="id"
          showHeader="{{true}}"
          headTemplate="wml!Controls-demo/Dropdown/resources/headerTemplate"
          footerTemplate="wml!Controls-demo/Dropdown/resources/footerTemplate"
@@ -83,6 +90,7 @@
 				bind:selectedKeys="_selectedKeys0"
 				name="myDropdownList0"
 				keyProperty="id"
+				displayProperty="title"
 				readOnly="{{true}}"
 				source="{{_getDefaultMemory()}}"
 		/>
@@ -228,10 +236,8 @@
               keyProperty="id"
               style="linkMain"
               icon="icon-medium icon-Author"
-              menuStyle="cross"
               source="{{_getDefaultMemory()}}"
               itemsGroup="{{_itemsGroup}}">
-         <ws:headConfig menuStyle="cross"/>
       </Controls.Button.MenuButton>
    </div>
 </div>

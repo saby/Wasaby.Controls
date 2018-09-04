@@ -16,6 +16,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -34,7 +35,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       ManagerController,
       InstantiableMixin,
       callNext,
-      cInstance
+      cInstance,
+      SyntheticEvent
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -161,14 +163,18 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
+            self._logicParent.waitForPopupCreated = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
-               self._fixIos();
                if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
                   self._childControl.setActive(true);
                }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
+                  runDelayed(function() {
+                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
+                     self._logicParent.waitForPopupCreated = false;
+                  });
                });
             });
 
@@ -258,18 +264,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
          },
 
-         _fixIos: function() {
-
-            //todo https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
-            var container = this._childControl && this._childControl.getContainer();
-
-            //На ios появилась бага, у панели контактов после открытия не вызывается браузерная перерисовка. вызываю вручную
-            if (container && CoreConstants.browser.isMobileIOS) {
-               container = container.get ? container.get(0) : container;
-               container.style.webkitTransform = 'scale(1)';
-            }
-         },
-
          isOpened: function() {
             return true;
          },
@@ -277,20 +271,34 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
-            if (hasHeader) {
+            if (hasHeader || this._options.type === 'dialog') {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
                   }
                   this._prependCustomHeader(customHeaderContainer);
                } else {
-                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + this._options.caption + '</div></div>'));
+                  this.getContainer().prepend($('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>'));
                   this.getContainer().addClass('controls-CompoundArea-headerPadding');
                }
             } else if (customHeaderContainer.length && this._options.type === 'dialog') {
                this._prependCustomHeader(customHeaderContainer);
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+            }
+            if (this._options.draggable) {
+
+               //Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
+               //mousedown на ней и проксируем его на dialogTemplate.
+               customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
+               customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
+            }
+         },
+
+         _headerMouseDown: function(event) {
+            var dialogTemplate = this._children.DialogTemplate;
+            if (dialogTemplate) {
+               dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },
 

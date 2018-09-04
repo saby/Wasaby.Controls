@@ -18,101 +18,79 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls/Grid',
    'Controls/Render/Money/Money'
 ], function(BaseControl, GridData, template, MemorySource) {
-
    'use strict';
+   var ModuleClass = BaseControl.extend({
+      _template: template,
+      _itemActions: null,
+      _viewSource: null,
+      gridData: null,
+      gridColumns: null,
+      gridHeader: null,
+      tasksColumns: null,
+      showType: null,
 
-   var showType = {
+      _beforeMount: function() {
+         this.showType = {
 
-      //show only in Menu
-      MENU: 0,
+            // show only in Menu
+            MENU: 0,
 
-      //show in Menu and Toolbar
-      MENU_TOOLBAR: 1,
+            // show in Menu and Toolbar
+            MENU_TOOLBAR: 1,
 
-      //show only in Toolbar
-      TOOLBAR: 2
-   };
-
-   var _firstItemActionsArray = [
-      {
-         id: 5,
-         title: 'прочитано',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action read Click');
-         }
-      },
-      {
-         id: 1,
-         icon: 'icon-primary icon-PhoneNull',
-         title: 'phone',
-         handler: function(item) {
-            console.log('action phone Click ', item);
-         }
-      },
-      {
-         id: 2,
-         icon: 'icon-primary icon-EmptyMessage',
-         title: 'message',
-         handler: function() {
-            alert('Message Click');
-         }
-      },
-      {
-         id: 3,
-         icon: 'icon-primary icon-Profile',
-         title: 'profile',
-         showType: showType.MENU_TOOLBAR,
-         handler: function() {
-            console.log('action profile Click');
-         }
-      },
-      {
-         id: 4,
-         icon: 'icon-Erase icon-error',
-         title: 'delete pls',
-         showType: showType.TOOLBAR,
-         handler: function() {
-            console.log('action delete Click');
-         }
-      }
-   ];
-
-   var
-
-      ModuleClass = BaseControl.extend({
-         _template: template,
-
-         _showAction: function(action, item) {
-            if (item.get('id') === '471329') {
-               if (action.id === 2 || action.id === 3) {
-                  return false;
-               } else {
-                  return true;
+            // show only in Toolbar
+            TOOLBAR: 2
+         };
+         this._itemActions = [
+            {
+               id: 5,
+               title: 'прочитано',
+               showType: this.showType.TOOLBAR,
+               handler: function() {
+                  console.log('action read Click');
                }
-
+            },
+            {
+               id: 1,
+               icon: 'icon-primary icon-PhoneNull',
+               title: 'phone',
+               handler: function(item) {
+                  console.log('action phone Click ', item);
+               }
+            },
+            {
+               id: 2,
+               icon: 'icon-primary icon-EmptyMessage',
+               title: 'message',
+               handler: function() {
+                  alert('Message Click');
+               }
+            },
+            {
+               id: 3,
+               icon: 'icon-primary icon-Profile',
+               title: 'profile',
+               showType: this.showType.MENU_TOOLBAR,
+               handler: function() {
+                  console.log('action profile Click');
+               }
+            },
+            {
+               id: 4,
+               icon: 'icon-Erase icon-error',
+               title: 'delete pls',
+               showType: this.showType.TOOLBAR,
+               handler: function() {
+                  console.log('action delete Click');
+               }
             }
-            if (action.id === 5) {
-               return false;
-            }
-            if (item.get('id') === '448390') {
-               return false;
-            }
-
-            return true;
-         },
-         _onActionClick: function(event, action, item) {
-            console.log(arguments);
-         },
-         _itemActions: _firstItemActionsArray,
-
-         _viewSource: new MemorySource({
+         ];
+         this._viewSource = new MemorySource({
             idProperty: 'id',
             data: GridData.catalog
-         }),
-
-         gridData: GridData,
-         gridColumns: [
+         });
+         this.gridData = GridData;
+         this.gridColumns = [
             {
                displayProperty: 'name',
                width: '1fr',
@@ -148,8 +126,8 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                align: 'right',
                template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             }
-         ],
-         gridHeader: [
+         ];
+         this.gridHeader = [
             {
                title: ''
             },
@@ -174,9 +152,8 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'Сумма остатка',
                align: 'right'
             }
-         ],
-
-         tasksColumns: [
+         ];
+         this.tasksColumns = [
             {
                template: 'wml!Controls-demo/List/Grid/DemoTasksPhoto',
                width: 'auto'
@@ -189,8 +166,28 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                template: 'wml!Controls-demo/List/Grid/DemoTasksReceived',
                width: 'auto'
             }
-         ]
-      });
+         ];
+      },
+      _showAction: function(action, item) {
+         if (item.get('id') === '471329') {
+            if (action.id === 2 || action.id === 3) {
+               return false;
+            }
+            return true;
+         }
+         if (action.id === 5) {
+            return false;
+         }
+         if (item.get('id') === '448390') {
+            return false;
+         }
+
+         return true;
+      },
+      _onActionClick: function(event, action, item) {
+         console.log(arguments);
+      }
+   });
 
    return ModuleClass;
 });

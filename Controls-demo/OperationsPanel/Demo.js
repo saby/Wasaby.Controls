@@ -15,25 +15,32 @@ define('Controls-demo/OperationsPanel/Demo', [
       _panelSource: undefined,
       _nodeProperty: 'Раздел@',
       _parentProperty: 'Раздел',
-      _viewSource: new TreeMemory({
-         idProperty: 'id',
-         data: Data.employees
-      }),
-      _moveDialogColumns: [{
-         displayProperty: 'department'
-      }],
-      _gridColumns: [{
-         template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
-      }],
-
-      _moveDialogFilter: {
-         onlyFolders: true
-      },
+      _viewSource: null,
+      _moveDialogColumns: null,
+      _gridColumns: null,
+      _moveDialogFilter: null,
+      _selectedKeys: null,
+      _excludedKeys: null,
 
       _beforeMount: function() {
          this._panelSource = this._getPanelSource([]);
          this._selectionChangeHandler = this._selectionChangeHandler.bind(this);
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+         this._moveDialogFilter = {
+            onlyFolders: true
+         };
+         this._gridColumns = [{
+            template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
+         }];
+         this._moveDialogColumns = [{
+            displayProperty: 'department'
+         }];
+         this._viewSource = new TreeMemory({
+            idProperty: 'id',
+            data: Data.employees
+         });
+         this._selectedKeys = [];
+         this._excludedKeys = [];
       },
 
       _panelItemClick: function(event, item) {
@@ -75,18 +82,17 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _selectionChangeHandler: function(event, selection) {
-         this._selection = selection;
-         this._panelSource = this._getPanelSource(selection.selected);
+      _selectionChangeHandler: function(event, selectedKeys) {
+         this._panelSource = this._getPanelSource(selectedKeys);
          this._forceUpdate();
       },
 
       _moveItems: function() {
-         this._children.dialogMover.moveItemsWithDialog(this._selection.selected);
+         this._children.dialogMover.moveItemsWithDialog(this._selectedKeys);
       },
 
       _removeItems: function() {
-         this._children.remover.removeItems(this._selection.selected);
+         this._children.remover.removeItems(this._selectedKeys);
       },
 
       _afterItemsMove: function() {

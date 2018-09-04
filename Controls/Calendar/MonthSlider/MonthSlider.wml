@@ -2,7 +2,7 @@
    <div attr:class="controls-MonthSlider__header">
       <span attr:class="controls-MonthSlider__header-button controls-MonthSlider__home-button icon-size icon-Home3 {{ !_isHomeVisible ? 'ws-invisible' }}" on:click="_setCurrentMonth()"></span>
       <span attr:class="controls-MonthSlider__header-button icon-size icon-MarkCLeftLight" on:click="_slideMonth(-1)"></span>
-      <span attr:class="controls-MonthSlider__header-title">{{ _month.strftime('%B, %Y') }}</span>
+      <span attr:class="controls-MonthSlider__header-title">{{ _formatDate(_month, 'MMMM, YYYY') }}</span>
       <span attr:class="controls-MonthSlider__header-button icon-size icon-MarkCRightLight" on:click="_slideMonth(1)"></span>
    </div>
 

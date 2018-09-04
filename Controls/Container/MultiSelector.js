@@ -3,15 +3,36 @@ define('Controls/Container/MultiSelector', [
    'wml!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
-   'Controls/Container/Data/ContextOptions'
+   'Controls/Container/Data/ContextOptions',
+   'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    Control,
    template,
    SelectionContextField,
    Selection,
-   DataContext
+   DataContext,
+   ArraySimpleValuesUtil
 ) {
    'use strict';
+
+   var _private = {
+      notifyAndUpdateContext: function(self, oldSelection) {
+         var
+            newSelection = self._multiselection.getSelection(),
+            selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelection.selected, newSelection.selected),
+            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelection.excluded, newSelection.excluded);
+
+         if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
+            self._notify('selectedKeysChanged', [newSelection.selected, selectedKeysDiff.added, selectedKeysDiff.removed]);
+         }
+
+         if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
+            self._notify('excludedKeysChanged', [newSelection.excluded, excludedKeysDiff.added, excludedKeysDiff.removed]);
+         }
+
+         self._updateSelectionContext();
+      }
+   };
 
    /**
     * Container for content that can work with multiselection.
@@ -41,7 +62,6 @@ define('Controls/Container/MultiSelector', [
 
          this._items.subscribe('onCollectionChange', function() {
             self._updateSelectionContext();
-            self._notify('selectionChange', [self._multiselection.getSelection()]);
          });
       },
 
@@ -53,8 +73,14 @@ define('Controls/Container/MultiSelector', [
             this._updateSelectionContext();
             this._items.subscribe('onCollectionChange', function() {
                self._updateSelectionContext();
-               self._notify('selectionChange', [self._multiselection.getSelection()]);
             });
+         }
+
+         if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys) {
+            this._multiselection.unselectAll();
+            this._multiselection.select(newOptions.selectedKeys);
+            this._multiselection.unselect(newOptions.excludedKeys);
+            this._updateSelectionContext();
          }
       },
 
@@ -63,18 +89,20 @@ define('Controls/Container/MultiSelector', [
       },
 
       _onListSelectionChange: function(event, keys, added, removed) {
+         var oldSelection = this._multiselection.getSelection();
+
          this._multiselection.unselect(removed);
          this._multiselection.select(added);
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
 
-         this._updateSelectionContext();
+         _private.notifyAndUpdateContext(this, oldSelection);
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
-         this._multiselection[typeName]();
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
+         var oldSelection = this._multiselection.getSelection();
 
-         this._updateSelectionContext();
+         this._multiselection[typeName]();
+
+         _private.notifyAndUpdateContext(this, oldSelection);
       },
 
       _updateSelectionContext: function() {
@@ -92,8 +120,8 @@ define('Controls/Container/MultiSelector', [
 
       _createMultiselection: function(options, context) {
          this._multiselection = new Selection({
-            selectedKeys: options.selectedKeys || [],
-            excludedKeys: options.excludedKeys || [],
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
             items: context.dataOptions.items
          });
       },
@@ -108,6 +136,13 @@ define('Controls/Container/MultiSelector', [
    MultiSelector.contextTypes = function() {
       return {
          dataOptions: DataContext
+      };
+   };
+
+   MultiSelector.getDefaultOptions = function() {
+      return {
+         selectedKeys: [],
+         excludedKeys: []
       };
    };
 

@@ -1,19 +1,11 @@
 define('Controls-demo/Input/Area/Area', [
    'Core/Control',
    'wml!Controls-demo/Input/Area/Area',
-   'WS.Data/Source/Memory',   
+   'WS.Data/Source/Memory',
    'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template, MemorySource) {
 
    'use strict';
-   
-   var newLineKeySource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         { title: 'enter' },
-         { title: 'ctrlEnter' }
-      ]
-   });
 
    var VdomDemoArea = Control.extend({
       _template: template,
@@ -28,20 +20,29 @@ define('Controls-demo/Input/Area/Area', [
       _example: '',
       _selectOnClick: false,
       _tagStyle: 'error',
-
+      _items: null,
+      _tooltip: 'Area',
+      _newLineKeySource: null,
       _newLineKey: 'enter',
-      _newLineKeySource: newLineKeySource,
+      _beforeMount: function() {
+         this._items = [
+            {title: '[0-9]', example: 'You can use only digits'},
+            {title: '[a-zA-Z]', example: 'You can use only letters'},
+            {title: '[a-z]', example: 'You can use only lowercase letters'},
+            {title: '[A-Z]', example: 'You can use only uppercase letters'}
+         ];
+         this._newLineKeySource = new MemorySource({
+            idProperty: 'title',
+            data: [
+               { title: 'enter' },
+               { title: 'ctrlEnter' }
+            ]
+         });
+      },
       changeNewLineKey: function(e, key) {
          this._newLineKey = key;
       },
 
-      _items: [
-         {title: '[0-9]', example: 'You can use only digits'},
-         {title: '[a-zA-Z]', example: 'You can use only letters'},
-         {title: '[a-z]', example: 'You can use only lowercase letters'},
-         {title: '[A-Z]', example: 'You can use only uppercase letters'}
-      ],
-      _tooltip: 'Area',
       _tagStyleHandler: function() {
          this._children.infoBoxArea.open({
             target: this._children.textArea._container,
