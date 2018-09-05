@@ -87,7 +87,7 @@ define('Controls/Dropdown/Controller',
                   break;
                case 'itemClick':
                   _private.selectItem.call(this, result.data);
-                  
+
                   //FIXME тут необходимо перевести на кэширующий источник,
                   //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
                   //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
@@ -148,6 +148,8 @@ define('Controls/Dropdown/Controller',
          },
 
          _open: function(event) {
+
+            //Проверям что нажата левая кнопка мыши
             if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
             }
