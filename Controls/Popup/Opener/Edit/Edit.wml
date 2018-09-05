@@ -1,0 +1,11 @@
+<div>
+   <ws:if data="{{_options.mode === 'stack'}}">
+      <Controls.Popup.Opener.Stack name="Opener" bind:popupOptions="_options.popupOptions" />
+   </ws:if>
+   <ws:else data="{{_options.mode === 'dialog'}}">
+      <Controls.Popup.Opener.Dialog name="Opener" bind:popupOptions="_options.popupOptions" />
+   </ws:else>
+   <ws:else>
+      <Controls.Popup.Opener.Sticky name="Opener" bind:popupOptions="_options.popupOptions" />
+   </ws:else>
+</div>
