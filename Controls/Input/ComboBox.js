@@ -68,6 +68,10 @@ define('Controls/Input/ComboBox',
             this._forceUpdate();
          },
 
+         _beforeUpdate: function() {
+            this._width = this._container.offsetWidth;
+         },
+
          _mouseDownHandler: function() {
             this._isOpen = !this._isOpen;
          },
