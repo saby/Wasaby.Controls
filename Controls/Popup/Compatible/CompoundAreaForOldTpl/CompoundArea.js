@@ -271,7 +271,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
-            if (hasHeader || this._options.type === 'dialog') {
+            if (hasHeader || (this._options.type === 'dialog' && !customHeaderContainer.length)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
