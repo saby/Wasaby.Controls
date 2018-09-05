@@ -26,13 +26,13 @@ define('Controls/Application',
     */
 
    function(Base,
-            template,
-            Deferred,
-            BodyClasses,
-            compatibility,
-            AppData,
-            HeadDataContext,
-            ThemesController) {
+      template,
+      Deferred,
+      BodyClasses,
+      compatibility,
+      AppData,
+      HeadDataContext,
+      ThemesController) {
       'use strict';
 
       var _private,
@@ -52,8 +52,8 @@ define('Controls/Application',
             self.compat = cfg.compat || false;
          },
          calculateBodyClasses: function() {
-            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
          }
       };
@@ -83,8 +83,8 @@ define('Controls/Application',
             this._children.touchendDetect.start(ev);
          },
          _touchclass: function() {
-            //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
-            //поэтому сами детектим touch с помощью compatibility
+            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+            // поэтому сами детектим touch с помощью compatibility
             return this._children.touchDetector
                ? this._children.touchDetector.getClass()
                : compatibility.touch
@@ -114,11 +114,11 @@ define('Controls/Application',
 
             context.headData.pushDepComponent(self.application, false);
 
-            if(receivedState.csses) {
-               ThemesController.getInstance().initCss({
-                  themedCss: receivedState.csses.themedCss,
-                  simpleCss: receivedState.csses.simpleCss
-               });
+            if (receivedState.csses) {
+               // ThemesController.getInstance().initCss({
+               //    themedCss: receivedState.csses.themedCss,
+               //    simpleCss: receivedState.csses.simpleCss
+               // });
             }
 
             if (receivedState && context.AppData) {
@@ -184,5 +184,4 @@ define('Controls/Application',
       };
 
       return Page;
-   }
-);
+   });
