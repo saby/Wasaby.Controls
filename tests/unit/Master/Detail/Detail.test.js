@@ -1,12 +1,10 @@
-define(['Controls/Container/MasterDetail', 'Core/vdom/Synchronizer/resources/SyntheticEvent'], function(MasterDetail, SyntheticEvent) {
+define(['Controls/Container/MasterDetail'], function(MasterDetail) {
    'use strict';
    describe('Controls.Container.MasterDetail', function() {
       let
          Control = new MasterDetail(),
          event = {
-            stopPropagation() {
-
-            }
+            stopPropagation() {}
          };
       describe('selectedMasterValueChanged', function() {
          it('selected master value changed', () => {
