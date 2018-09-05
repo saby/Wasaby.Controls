@@ -67,14 +67,12 @@ define('Controls/Input/Number/InputProcessor',
             processDeletionOfAllIntegers: function(splitValue) {
                // If all integers were removed, then we need to set first character in integers part to 0
                if (splitValue.before === '' || splitValue.before === '-') {
-                  if (splitValue.after === '') {
-                     splitValue.before = '';
-                  }
+                  // If we have decimals part right after cursor position, then we should add '0' at line start
                   if (splitValue.after[0] === '.') {
-                     if (splitValue.after[1]) {
-                        splitValue.before = '0';
+                     if (splitValue.before === '-') {
+                        splitValue.before = '-0';
                      } else {
-                        splitValue.after = '';
+                        splitValue.before = '0';
                      }
                   }
                }
@@ -205,13 +203,13 @@ define('Controls/Input/Number/InputProcessor',
 
                   if (splitValue.insert === '-') {
                      // Inserting '-' after '0' should result in '-0'
-                     if (splitValue.before === '0' && (splitValue.after === '' || splitValue.after === '.0')) {
+                     if (splitValue.before === '0' && splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
 
                      // Inserting '-' in empty field should result in '-0.0'
-                     if (splitValue.before === '' && splitValue.after === '' || splitValue.after === '.0') {
+                     if (splitValue.before === '' && splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
@@ -284,13 +282,16 @@ define('Controls/Input/Number/InputProcessor',
             /**
              * Delete value handler (fires only when we delete selected range)
              * @param splitValue
+             * @param options
              * @return {{value: (*|String), position: (*|Integer)}}
              */
-            processDelete: function(splitValue/*, options, splitValueHelper*/) {
+            processDelete: function(splitValue, options) {
                var
                   shift = 0;
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -301,9 +302,10 @@ define('Controls/Input/Number/InputProcessor',
             /**
              * Delete value forward handler ('delete' button)
              * @param splitValue
+             * @param options
              * @return {{value: (*|String), position: (*|Integer)}}
              */
-            processDeleteForward: function(splitValue/*, options, splitValueHelper*/) {
+            processDeleteForward: function(splitValue, options) {
                var
                   shift = 0;
 
@@ -322,7 +324,9 @@ define('Controls/Input/Number/InputProcessor',
                   }
                }
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -351,7 +355,15 @@ define('Controls/Input/Number/InputProcessor',
                   splitValue.after = '.' + splitValue.after;
                }
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               // If we delete a single zero in integers part, and there is a minus before it,
+               // then we need to undo this and move the cursor to the left
+               if (splitValue.delete === '0' && splitValue.before === '-') {
+                  splitValue.after = '0' + splitValue.after;
+               }
+
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                // If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
                if (splitValue.delete === ' ') {

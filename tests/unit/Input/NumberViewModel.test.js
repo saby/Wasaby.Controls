@@ -580,24 +580,7 @@ define(
                },
 
                {
-                  testName: 'Delete last symbol (negative number)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '-',
-                     insert: '',
-                     after: '',
-                     delete: '1'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
-               },
-
-               {
-                  testName: 'Delete last symbol (negative number, with .0)',
+                  testName: 'Delete last symbol (negative number, precision != 0)',
                   controlConfig: {
                   },
                   splitValue: {
@@ -607,7 +590,25 @@ define(
                      delete: '1'
                   },
                   result: {
-                     value: '0.0',
+                     value: '-0.0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol (negative number, precision == 0)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '-',
                      position: 1
                   },
                   inputType: 'deleteBackward'
@@ -700,23 +701,6 @@ define(
                },
 
                {
-                  testName: '0. delete 0 (delete)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteForward'
-               },
-
-               {
                   testName: '0',
                   controlConfig: {
                   },
@@ -744,8 +728,8 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '0.0',
-                     position: 0
+                     value: '-0.0',
+                     position: 2
                   },
                   inputType: 'deleteForward'
                },
@@ -768,23 +752,6 @@ define(
                },
 
                {
-                  testName: '0. delete 0 (delete with selection)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'delete'
-               },
-
-               {
                   testName: '-0.0 delete first 0 (delete with selection)',
                   controlConfig: {
                   },
@@ -795,44 +762,10 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '0.0',
-                     position: 0
+                     value: '-0.0',
+                     position: 2
                   },
                   inputType: 'delete'
-               },
-
-               {
-                  testName: '0. delete 0',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
-               },
-
-               {
-                  testName: '1. delete 1',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '1'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
                },
 
                {
@@ -870,7 +803,7 @@ define(
                },
 
                {
-                  testName: 'Inserting minus in empty field',
+                  testName: 'Inserting minus in empty field (precision != 0)',
                   controlConfig: {
                   },
                   splitValue: {
@@ -882,6 +815,24 @@ define(
                   result: {
                      value: '-0.0',
                      position: 2
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert minus in empty field (precision == 0)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '-',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-',
+                     position: 1
                   },
                   inputType: 'insert'
                },
