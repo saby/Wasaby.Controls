@@ -21,7 +21,7 @@ define('Controls/Application/_Head',
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
-            def.addCallback(function() {
+            def.addCallback(function(res) {
                var csses = ThemesController.getInstance().getCss();
                self.themedCss = csses.themedCss;
                self.simpleCss = csses.simpleCss;
