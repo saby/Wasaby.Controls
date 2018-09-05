@@ -90,3 +90,16 @@
 .controls-InputArea.controls-Text-InputRender_state_disabled_singleLine {
    border-color: transparent;
 }
+
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   // On the iPad, in safari and chrome, textarea has indispensable 3px padding, at left and right sides.
+   // https://stackoverflow.com/questions/6890149/remove-3-pixels-in-ios-webkit-textarea
+   // To compensate them, we should move textarea to the left by 3px and increase it's width to 6px
+   .controls-InputArea__realField {
+      margin-left: -3px;
+      width: ~"calc(100% + 6px)";
+
+      //TODO https://online.sbis.ru/opendoc.html?guid=39b7ad4a-8d36-422d-b5b2-79c71722a1d6
+      text-indent: 0 !important;
+   }
+}
