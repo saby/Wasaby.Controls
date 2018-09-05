@@ -104,6 +104,7 @@ function(cMerge,
          }
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
+         cfg.templateOptions.ignoreTabCycles = false;
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
