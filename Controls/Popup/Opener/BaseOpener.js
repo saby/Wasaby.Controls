@@ -261,7 +261,6 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (compoundArea) {
                      compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
                      dialog.setTarget && dialog.setTarget($(newCfg.target));
-                     dialog._recalcPosition && dialog._recalcPosition();
                   }
                } else {
                   action.closeDialog();
