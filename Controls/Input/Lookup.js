@@ -199,6 +199,32 @@ define('Controls/Input/Lookup', [
          this._suggestState = false;
       },
    
+      _showSelector: function() {
+         var self = this;
+         
+         if (this._options.compatible) {
+            requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
+               Layer.load().addCallback(function(result) {
+                  requirejs(['SBIS3.CONTROLS/Action/SelectorAction'], function(Action) {
+                     var action = new Action();
+                     var actionCfg = {
+                        selectedItems: self._items,
+                        multiselect: self._options.multiSelect,
+                        template: self._options.template
+                     };
+                     action.execute(actionCfg);
+                     action.once('onExecuted', function(event, meta, result) {
+                        if (result && result.at(0)) {
+                           _private.addItem(self, result.at(0));
+                        }
+                     });
+                  });
+                  return result;
+               });
+            });
+         }
+      },
+   
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
       }

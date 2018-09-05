@@ -39,7 +39,10 @@
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <div class="controls-Lookup__showSelector icon-ListView"></div>
+                <div class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
+                <ws:if data="{{!_options.compatible}}">
+                    <Controls.Selector.Opener></Controls.Selector.Opener>
+                </ws:if>
             </ws:if>
         </ws:afterFieldWrapper>
 

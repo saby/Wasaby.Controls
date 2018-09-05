@@ -1,0 +1,26 @@
+<div>
+    <Controls.Selector.Browser multiSelectVisibility="{{true}}" searchParam="title" source="{{_source}}" keyProperty="id" selectionFilter="{{_selectionFilter}}" bind:filter="_filter">
+
+        <ws:search>
+            <Controls.Input.Search bind:value="_searchValue"/>
+        </ws:search>
+
+        <ws:content>
+            <Controls.List emptyTemplate="Не найдено" multiSelectVisibility="{{'onhover'}}">
+                <ws:itemTemplate>
+                    <ws:partial template="tmpl!Controls/List/ItemTemplate">
+                        <ws:contentTemplate>
+                            <div class="demo-selector__listItem">
+                                <span class="demo-selector__listItem-title {{ !itemTemplate.itemData.item.get('city') ? 'demo-selector__listItem-title-bold' }}">{{itemTemplate.itemData.item.get('title')}}</span>
+                                <ws:if data="{{itemTemplate.itemData.item.get('city')}}">
+                                    <span class="demo-selector__listItem-city"> ({{itemTemplate.itemData.item.get('city')}})</span>
+                                </ws:if>
+                            </div>
+                        </ws:contentTemplate>
+                    </ws:partial>
+                </ws:itemTemplate>
+            </Controls.List>
+        </ws:content>
+
+    </Controls.Selector.Browser>
+</div>

@@ -9,31 +9,48 @@ define('Controls/Selector/List/Container',
       'use strict';
       
       var _private = {
-         itemClick: function(self, item) {
+         getItemClickResult: function(itemKey, selectedKeys) {
             var added = [];
             var removed = [];
-            var itemId = item.get(self._options.keyProperty);
-            var itemIndex = self._selectedKeys.indexOf(itemId);
+            var itemIndex = selectedKeys.indexOf(itemKey);
    
-            self._selectedKeys = self._selectedKeys.slice();
-            
             if (itemIndex === -1) {
-               self._selectedKeys.push(itemId);
-               added.push(itemId);
+               selectedKeys.push(itemKey);
+               added.push(itemKey);
             } else {
-               self._selectedKeys.splice(itemIndex, 1);
-               removed.push(itemId);
+               selectedKeys.splice(itemIndex, 1);
+               removed.push(itemKey);
             }
-   
-            self._notify('listSelectionChange', [self._selectedKeys, added, removed], {bubbling: true});
+            
+            return [selectedKeys, added, removed];
          },
          
-         itemClickEmptySelection: function(self, item) {
+         itemClickEmptySelection: function(self, itemKey) {
             self._notify('selectionChange', [{
-               selected: [item.get(self._options.keyProperty)],
+               selected: [itemKey],
                excluded: []
             }], {bubbling: true});
             self._notify('selectComplete', [], {bubbling: true});
+         },
+         
+         resolveOptions: function(self, options) {
+            self._selectedKeys = options.selectedKeys;
+   
+            if (self._selectedKeys.length === 1) {
+               self._markedKey = self._selectedKeys[0];
+            }
+         },
+   
+         itemClick: function(self, itemKey, multiSelect, selectedKeys) {
+            if (multiSelect) {
+               if (selectedKeys.length) {
+                  self._notify('listSelectionChange', _private.getItemClickResult(itemKey, selectedKeys), {bubbling: true});
+               } else {
+                  _private.itemClickEmptySelection(self, itemKey);
+               }
+            } else {
+               _private.itemClickEmptySelection(self, itemKey);
+            }
          }
       };
       
@@ -42,9 +59,10 @@ define('Controls/Selector/List/Container',
          _template: template,
          _ignoreItemClickEvent: false,
          _selectedKeys: null,
+         _markedKey: null,
          
          _beforeMount: function(options) {
-            this._selectedKeys = options.selectedKeys;
+            _private.resolveOptions(this, options);
          },
          
          _beforeUpdate: function(newOptions) {
@@ -54,18 +72,12 @@ define('Controls/Selector/List/Container',
          },
          
          _itemClick: function(event, item) {
-            if (!this._ignoreItemClickEvent) {
-               if (this._options.multiSelect) {
-                  if (this._selectedKeys.length) {
-                     _private.itemClick(this, item);
-                  } else {
-                     _private.itemClickEmptySelection(this, item);
-                  }
-               } else {
-                  _private.itemClickEmptySelection(this, item);
-               }
-            }
+            var itemKey;
             
+            if (!this._ignoreItemClickEvent) {
+               itemKey = item.get(this._options.keyProperty);
+               _private.itemClick(this, itemKey, this._options.multiSelect, this._selectedKeys);
+            }
             this._ignoreItemClickEvent = false;
          },
          

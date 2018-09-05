@@ -6,7 +6,7 @@
             </Controls.Search.Input.Container>
         </ws:if>
         <ws:if data="{{_options.multiSelectVisibility}}">
-            <Controls.Operations.MultiSelector attr:class="controls-SelectorBrowser__multiSelector" type="simple"/>
+            <Controls.Operations.__MultiSelector attr:class="controls-SelectorBrowser__multiSelector" type="simple"/>
         </ws:if>
         <ws:if data="{{_options.topTemplate}}">
             <ws:partial template="{{_options.topTemplate}}" class="controls-Browser__topTemplate"/>

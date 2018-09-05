@@ -1,12 +1,12 @@
-define('Controls-demo/Selector/FlatListSelector/FlatListSelector',
+define('Controls-demo/Selector/FlatListSelectorWithTabs/DepartmentsSelector',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Selector/FlatListSelector/FlatListSelector',
+      'tmpl!Controls-demo/Selector/FlatListSelectorWithTabs/DepartmentsSelector',
       'Controls/Selector/Browser',
       'Controls-demo/Selector/SelectorData',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
-      'css!Controls-demo/Selector/FlatListSelector/FlatListSelector'
+      'css!Controls-demo/Selector/FlatListSelectorWithTabs/DepartmentsSelector'
    ],
    
    function(Control, template, Browser, SelectorData, Memory, memorySourceFilter) {
@@ -21,11 +21,11 @@ define('Controls-demo/Selector/FlatListSelector/FlatListSelector',
          
          _beforeMount: function() {
             this._source = new Memory({
-               data: SelectorData.companies,
+               data: SelectorData.departments,
                filter: function(item, queryFilter) {
                   var selectionFilterFn = function(item, filter) {
                      var isSelected = false;
-                     var itemId = item.get('id');
+                     var itemId = item.get('department');
                      
                      filter.selection.get('marked').forEach(function(selectedId) {
                         if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
@@ -36,11 +36,16 @@ define('Controls-demo/Selector/FlatListSelector/FlatListSelector',
                      return isSelected;
                   };
                   var normalFilterFn = memorySourceFilter();
-   
+                  
                   return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
                },
-               idProperty: 'id'
+               idProperty: 'department'
             });
+         },
+         
+         _selectionFilter: function(item) {
+            return item.has('department');
          }
+         
       });
    });

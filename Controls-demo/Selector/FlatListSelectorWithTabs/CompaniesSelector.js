@@ -1,12 +1,12 @@
-define('Controls-demo/Selector/FlatListSelector/FlatListSelector',
+define('Controls-demo/Selector/FlatListSelectorWithTabs/CompaniesSelector',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Selector/FlatListSelector/FlatListSelector',
+      'tmpl!Controls-demo/Selector/FlatListSelectorWithTabs/CompaniesSelector',
       'Controls/Selector/Browser',
       'Controls-demo/Selector/SelectorData',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
-      'css!Controls-demo/Selector/FlatListSelector/FlatListSelector'
+      'css!Controls-demo/Selector/FlatListSelectorWithTabs/CompaniesSelector'
    ],
    
    function(Control, template, Browser, SelectorData, Memory, memorySourceFilter) {
@@ -36,11 +36,15 @@ define('Controls-demo/Selector/FlatListSelector/FlatListSelector',
                      return isSelected;
                   };
                   var normalFilterFn = memorySourceFilter();
-   
+                  
                   return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
                },
                idProperty: 'id'
             });
+         },
+         
+         _selectionFilter: function(item) {
+            return item.has('city');
          }
       });
    });
