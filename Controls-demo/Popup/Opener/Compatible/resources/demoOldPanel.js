@@ -1,9 +1,9 @@
-define('Controls-demo/Popup/Opener/resources/demoOldPanel',
+define('Controls-demo/Popup/Opener/Compatible/resources/demoOldPanel',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls-demo/Popup/Opener/resources/demoOldPanel',
-      'tmpl!Controls-demo/Popup/Opener/resources/oldChildPnlTitle',
-      'tmpl!Controls-demo/Popup/Opener/resources/oldChildPnlCaption',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/demoOldPanel',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlTitle',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlCaption',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/TextBox'
    ],
@@ -51,7 +51,7 @@ define('Controls-demo/Popup/Opener/resources/demoOldPanel',
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function (OpenDialog) {
                         var dialog = new OpenDialog({
                            mode: 'floatArea',
-                           template: "Controls-demo/Popup/Opener/resources/oldChildPnlTitle"
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlTitle"
                         });
                         var dialogOptions = {
                            width: 300,
@@ -76,7 +76,7 @@ define('Controls-demo/Popup/Opener/resources/demoOldPanel',
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function (OpenDialog) {
                         var dialog = new OpenDialog({
                            mode: 'floatArea',
-                           template: "Controls-demo/Popup/Opener/resources/oldChildPnlCaption"
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlCaption"
                         });
                         var dialogOptions = {
                            width: 300,

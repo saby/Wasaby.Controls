@@ -1,7 +1,7 @@
-define('Controls-demo/Popup/Opener/resources/oldChildPnlTitle',
+define('Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlCaption',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls-demo/Popup/Opener/resources/oldChildPnlTitle',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/oldChildPnlCaption',
       'SBIS3.CONTROLS/TextBox'
    ],
    function (CompoundControl, template) {

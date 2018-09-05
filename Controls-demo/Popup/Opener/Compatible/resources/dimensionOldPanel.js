@@ -1,7 +1,7 @@
-define('Controls-demo/Popup/Opener/resources/dimensionOldPanel',
+define('Controls-demo/Popup/Opener/Compatible/resources/dimensionOldPanel',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls-demo/Popup/Opener/resources/dimensionOldPanel',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/dimensionOldPanel',
       'SBIS3.CONTROLS/Button'
    ],
    function (CompoundControl, template) {

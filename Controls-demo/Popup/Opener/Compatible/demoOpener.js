@@ -1,12 +1,12 @@
-define('Controls-demo/Popup/Opener/demoOpener',
+define('Controls-demo/Popup/Opener/Compatible/demoOpener',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/Opener/demoOpener',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/demoOpener',
       'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'WS.Data/Entity/Record',
       'require',
       'WS.Data/Source/Memory',
-      'css!Controls-demo/Popup/Opener/demoOpener'
+      'css!Controls-demo/Popup/Opener/Compatible/demoOpener'
    ],
    function (Control, template, OpenEditDialog, Record, require, Memory) {
       'use strict';
@@ -156,7 +156,7 @@ define('Controls-demo/Popup/Opener/demoOpener',
                   CompatiblePopup.load().addCallback(function () {
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
                         self._action = new OpenDialog({
-                           template: "Controls-demo/Popup/Opener/resources/demoOldPanel",
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/demoOldPanel",
                            mode: 'floatArea'
                         });
                         self._action.execute({
@@ -193,7 +193,7 @@ define('Controls-demo/Popup/Opener/demoOpener',
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
                         self._action = new OpenDialog({
                            mode: 'dialog',
-                           template: "Controls-demo/Popup/Opener/resources/demoOldPanel",
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/demoOldPanel",
                         });
                         self._action.execute({
                            dialogOptions: {
@@ -231,7 +231,7 @@ define('Controls-demo/Popup/Opener/demoOpener',
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
                         self._action = new OpenDialog({
                            mode: 'floatArea',
-                           template: "Controls-demo/Popup/Opener/resources/demoOldPanel"
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/demoOldPanel"
                         });
                         var dialogOptions = {
                            handlers: self.setHandlers(self),
@@ -297,7 +297,7 @@ define('Controls-demo/Popup/Opener/demoOpener',
                      requirejs(['SBIS3.CONTROLS/Action/List/OpenEditDialog'], function(OpenDialog) {
                         self._action = new OpenDialog({
                            mode: 'floatArea',
-                           template: "Controls-demo/Popup/Opener/resources/dimensionOldPanel"
+                           template: "Controls-demo/Popup/Opener/Compatible/resources/dimensionOldPanel"
                         });
                         var dialogOptions = {
                            handlers: self.setHandlers(self),

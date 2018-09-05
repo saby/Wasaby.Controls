@@ -1,7 +1,7 @@
-define('Controls-demo/Popup/Opener/resources/dimensionNewPanel',
+define('Controls-demo/Popup/Opener/Compatible/resources/dimensionNewPanel',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/Opener/resources/dimensionNewPanel',
+      'tmpl!Controls-demo/Popup/Opener/Compatible/resources/dimensionNewPanel',
    ], function(
       CoreControl,
       template
