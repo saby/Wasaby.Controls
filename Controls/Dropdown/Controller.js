@@ -148,7 +148,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _open: function(event) {
-            if (this._options.readOnly || event.nativeEvent.button !== 0) {
+            if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
             }
             var self = this;
