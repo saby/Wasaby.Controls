@@ -1,13 +1,13 @@
 define('Controls-demo/Decorators/Number/Number',
    [
       'Core/Control',
-      'Controls/Decorator/Number',
       'tmpl!Controls-demo/Decorators/Number/Number',
 
       'Controls/Input/Number',
+      'Controls/Decorator/Number',
       'css!Controls-demo/Decorators/Number/Number'
    ],
-   function(Control, Number, template) {
+   function(Control, template) {
 
       'use strict';
 
@@ -16,11 +16,7 @@ define('Controls-demo/Decorators/Number/Number',
 
          _number: 0,
 
-         _fractionSize: 0,
-
-         _min: Math.min,
-
-         _numberDecorator: Number
-      })
+         _fractionSize: 0
+      });
    }
 );
