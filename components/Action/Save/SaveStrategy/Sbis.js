@@ -261,7 +261,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
                methodName = METHODS_NAME[meta.endpoint][methodName][useLongOperations ? 0 : 1];
             }
 
-           if (meta.endpoint === 'PDF' && methodName !== 'SaveRecordSet') {
+           if (meta.endpoint === 'PDF') {
               _private.convertConfig(cfg, !useLongOperations);
               methodName = 'Save';
            }
