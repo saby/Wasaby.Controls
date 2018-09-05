@@ -1,0 +1,183 @@
+<div>
+   <Controls.Popup.Opener.Stack name="stackPanel">
+      <ws:popupOptions template="Controls-demo/Popup/Opener/resources/demoOldPanel"
+                       closeByExternalClick="{{true}}"
+                       isCompoundTemplate="{{ true }}">
+         <ws:templateOptions type="stack"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Stack>
+   <div style="padding:5px;">
+      <Controls.Button name="stackButton" caption="stack" on:click="openStack()"/>
+   </div>
+   <div style="padding:5px;">
+      <Controls.Button name="floatAreaButton" caption="openFloat" on:click="openFloat()"/>
+      <Controls.Button name="dialogButton" caption="openDialog" on:click="openDialog()"/>
+   </div>
+   <div style="padding:5px">
+      <Controls.Button name="stickyButton" caption="openSticky" on:click="openSticky()"/>
+      <Controls.Button name="dimensionButton" caption="openDimension" on:click="openDimension()"/>
+   </div>
+   <div style="padding:5px;">
+      <div>
+         <Controls.Toggle.Checkbox attr:id="border"
+                                   bind:value="_border"
+                                   caption="border (only non-stack)"/>
+         <Controls.Toggle.Checkbox attr:id="maximize"
+                                   bind:value="_maximize"
+                                   caption="maximize (only dialog)"/>
+      </div>
+
+      <div>
+         <Controls.Toggle.Checkbox attr:id="title"
+                                   bind:value="_showTitle"
+                                   caption="showTitle"/>
+         <Controls.Toggle.Checkbox attr:id="enabled"
+                                   bind:value="_enabled"
+                                   caption="enabled"/>
+      </div>
+      <div>
+         <Controls.Toggle.Checkbox attr:id="catchFocus"
+                                   bind:value="_catchFocus"
+                                   caption="catchFocus"/>
+         <Controls.Toggle.Checkbox attr:id="canMaximize"
+                                   readOnly="{{!!_width}}"
+                                   bind:value="_canMaximize"
+                                   caption="canMaximize"/>
+      </div>
+      <div>
+         <Controls.Toggle.Checkbox attr:id="maximized"
+                                   readOnly="{{!!_width}}"
+                                   bind:value="_maximized"
+                                   caption="maximized"/>
+         <Controls.Toggle.Checkbox attr:id="modal"
+                                   bind:value="_modal"
+                                   caption="modal"/>
+      </div>
+      <div>
+         <Controls.Toggle.Checkbox attr:id="autoHide"
+                                   bind:value="_autoHide"
+                                   caption="autoHide"/>
+         <Controls.Toggle.Checkbox attr:id="draggable"
+                                   bind:value="_draggable"
+                                   caption="draggable (only dialog)"/>
+
+      </div>
+   </div>
+   <div>
+      <Controls.Input.Text
+              attr:id="main_field"
+              name="handlerBox"
+              bind:value="_handlerText"
+              placeholder="отображение отработки событий со старой панели"
+      />
+      <Controls.Button name="clearButton" caption="clearText" on:click="clearHandlers()"/>
+   </div>
+   <div class='controls-demo__combobox-container'>
+      Set Width
+      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+                               keyProperty="title"
+                               emptyText="Set width"
+                               readOnly="{{!!_minWidth || !!_maxWidth}}"
+                               displayProperty="title"
+                               bind:selectedKey="_width"
+                               placeholder="Set width"
+      />
+   </div>
+   <div class='controls-demo__combobox-container'>
+      Set min/max Width
+      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+                               keyProperty="title"
+                               emptyText="Set minWidth"
+                               readOnly="{{!!_width}}"
+                               displayProperty="title"
+                               bind:selectedKey="_minWidth"
+                               placeholder="Set minWidth"
+      />
+      <Controls.Input.ComboBox source="{{_createMemory(_widthItems)}}"
+                               keyProperty="title"
+                               emptyText="Set maxWidth"
+                               readOnly="{{!!_width}}"
+                               displayProperty="title"
+                               bind:selectedKey="_maxWidth"
+                               placeholder="Set maxWidth"
+      />
+      <div style="position: absolute; margin-left: 45%">
+         <Controls.Button name="testTarget" caption="testTarget"/>
+      </div>
+   </div>
+   <div class='controls-demo__combobox-container'>
+      Set min/max Height
+      <Controls.Input.ComboBox source="{{_createMemory(_heightItems)}}"
+                               keyProperty="title"
+                               emptyText="Set minHeight"
+                               displayProperty="title"
+                               bind:selectedKey="_minHeight"
+                               placeholder="Set minHeight"
+      />
+      <Controls.Input.ComboBox source="{{_createMemory(_heightItems)}}"
+                               keyProperty="title"
+                               emptyText="Set maxHeight"
+                               displayProperty="title"
+                               bind:selectedKey="_maxHeight"
+                               placeholder="Set maxHeight"
+      />
+   </div>
+   <div class='controls-demo__combobox-container'>
+      Set side options
+      <Controls.Input.ComboBox source="{{_createMemory(_sideItems)}}"
+                               keyProperty="title"
+                               emptyText="Set side"
+                               displayProperty="title"
+                               bind:selectedKey="_side"
+                               placeholder="Set side"
+      />
+      Set direction options
+      <Controls.Input.ComboBox source="{{_createMemory(_directionItems)}}"
+                               keyProperty="title"
+                               emptyText="Set direction"
+                               displayProperty="title"
+                               bind:selectedKey="_direction"
+                               placeholder="Set direction"
+      />
+      Set corner options
+      <Controls.Input.ComboBox source="{{_createMemory(_sideItems)}}"
+                               keyProperty="title"
+                               emptyText="Set horizotal"
+                               displayProperty="title"
+                               bind:selectedKey="_horizontal"
+                               placeholder="Set horizontal"
+      />
+      <Controls.Input.ComboBox source="{{_createMemory(_verticalItems)}}"
+                               keyProperty="title"
+                               readOnly="{{!!_verticalAlign}}"
+                               emptyText="Set vertical"
+                               displayProperty="title"
+                               bind:selectedKey="_vertical"
+                               placeholder="Set vertical"
+      />
+      Set verticalAlign
+      <Controls.Input.ComboBox source="{{_createMemory(_verticalItems)}}"
+                               keyProperty="title"
+                               readOnly="{{!!_vertical}}"
+                               emptyText="Set verticalAlign"
+                               displayProperty="title"
+                               bind:selectedKey="_verticalAlign"
+                               placeholder="Set verticalAlign"
+      />
+      Set offset
+      <Controls.Input.ComboBox source="{{_createMemory(_offsetItems)}}"
+                               keyProperty="title"
+                               emptyText="Set X offset"
+                               displayProperty="title"
+                               bind:selectedKey="_offsetX"
+                               placeholder="Set X offset"
+      />
+      <Controls.Input.ComboBox source="{{_createMemory(_offsetItems)}}"
+                               keyProperty="title"
+                               emptyText="Set Y offset"
+                               displayProperty="title"
+                               bind:selectedKey="_offsetY"
+                               placeholder="Set Y offset"
+      />
+   </div>
+</div>
