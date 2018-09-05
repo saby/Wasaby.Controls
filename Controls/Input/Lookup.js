@@ -132,6 +132,7 @@ define('Controls/Input/Lookup', [
             value: options.value
          });
          this._selectedKeys = options.selectedKeys.slice();
+         this._selectCallback = this._selectCallback.bind(this);
          
          if (this._selectedKeys.length) {
             _private.keysChanged(this);
@@ -210,7 +211,7 @@ define('Controls/Input/Lookup', [
                      var actionCfg = {
                         selectedItems: self._items,
                         multiselect: self._options.multiSelect,
-                        template: self._options.template
+                        template: self._options.lookupTemplate
                      };
                      action.execute(actionCfg);
                      action.once('onExecuted', function(event, meta, result) {
@@ -222,11 +223,20 @@ define('Controls/Input/Lookup', [
                   return result;
                });
             });
+         } else {
+            this._children.selectorOpener.open({templateOptions: {
+               selectedItems:  _private.getItems(this)
+            }});
          }
       },
    
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
+      },
+      
+      _selectCallback: function(result) {
+         _private.getItems(this).assign(result);
+         this._forceUpdate();
       }
    
    });
