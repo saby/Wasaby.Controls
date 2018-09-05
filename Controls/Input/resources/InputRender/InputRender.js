@@ -149,7 +149,8 @@ define('Controls/Input/resources/InputRender/InputRender',
          _clickHandler: function(e) {
             var self = this;
 
-            // We need to defer selection saving, because deselect can occur right after this handler
+            // When you click on selected text, input's selection updates after this handler,
+            // thus we need to delay saving selection until it is updated.
             setTimeout(function() {
                _private.saveSelection(self, e.target);
             });
