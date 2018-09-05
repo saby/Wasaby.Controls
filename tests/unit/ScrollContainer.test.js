@@ -19,6 +19,7 @@ define(['SBIS3.CONTROLS/ScrollContainer'], function (ScrollContainer) {
         afterEach(function () {
            testScrollContainer.destroy();
            testScrollContainer = undefined;
+           container && container.remove();
            container = undefined;
         });
 
