@@ -70,6 +70,11 @@ define('SBIS3.CONTROLS/SearchForm', [
          this.getContainer().on('click', '.js-controls-SearchForm__reset', function() {
             self.resetSearch();
             self._applyTooltip();
+   
+            //Если на контрол остался активным, то надо нативный фокус перевести на поле ввода
+            if (self.isActive()) {
+               self._getElementToFocus().focus();
+            }
          });
 
          this.getContainer().on('click', '.js-controls-SearchForm__search', function() {
@@ -88,6 +93,11 @@ define('SBIS3.CONTROLS/SearchForm', [
                   }
                }
                self.applySearch(true);
+   
+               //Если на контрол остался активным, то надо нативный фокус перевести на поле ввода
+               if (self.isActive()) {
+                  self._getElementToFocus().focus();
+               }
             }
          });
       },
