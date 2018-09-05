@@ -3,12 +3,11 @@ define(['Controls/Container/MasterDetail', 'Core/vdom/Synchronizer/resources/Syn
    describe('Controls.Container.MasterDetail', function() {
       let
          Control = new MasterDetail(),
-         event = new SyntheticEvent({
-            name: 'selectedMasterValueChanged'
-         });
+         event = {
+            stopPropagation() {
 
-      event.stopPropagation = () => {};
-
+            }
+         };
       describe('selectedMasterValueChanged', function() {
          it('selected master value changed', () => {
             Control._selectedMasterValueChangedHandler(event, 'newValue');
