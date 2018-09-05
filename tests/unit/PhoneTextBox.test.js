@@ -6,9 +6,10 @@ define(['SBIS3.CONTROLS/PhoneTextBox'], function (PhoneTextBox) {
    'use strict';
    describe('SBIS3.CONTROLS/PhoneTextBox', function () {
       var phone;
+      var componentElement = $('<div id="component"></div>');
       before(function() {
          if (typeof $ !== 'undefined') {
-            $('#mocha').append('<div id="component"></div>');
+            $('#mocha').append(componentElement);
             phone = new PhoneTextBox({
                element: 'component'
             });
@@ -19,6 +20,7 @@ define(['SBIS3.CONTROLS/PhoneTextBox'], function (PhoneTextBox) {
             phone.destroy();
          }
          phone = undefined;
+         componentElement && componentElement.remove();
       });
 
       beforeEach(function() {
