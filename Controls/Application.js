@@ -10,6 +10,7 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
+      'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
       'css!Controls/Application/Application'
    ],
@@ -25,12 +26,13 @@ define('Controls/Application',
     */
 
    function(Base,
-      template,
-      Deferred,
-      BodyClasses,
-      compatibility,
-      AppData,
-      HeadDataContext) {
+            template,
+            Deferred,
+            BodyClasses,
+            compatibility,
+            AppData,
+            HeadDataContext,
+            ThemesController) {
       'use strict';
 
       var _private,
@@ -83,7 +85,7 @@ define('Controls/Application',
          _touchclass: function() {
             //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
             //поэтому сами детектим touch с помощью compatibility
-            return  this._children.touchDetector
+            return this._children.touchDetector
                ? this._children.touchDetector.getClass()
                : compatibility.touch
                   ? 'ws-is-touch'
@@ -112,6 +114,12 @@ define('Controls/Application',
 
             context.headData.pushDepComponent(self.application, false);
 
+            if(receivedState.csses) {
+               ThemesController.getInstance().initCss({
+                  themedCss: receivedState.csses.themedCss,
+                  simpleCss: receivedState.csses.simpleCss
+               });
+            }
 
             if (receivedState && context.AppData) {
                context.AppData.buildnumber = self.buildnumber;
@@ -132,6 +140,7 @@ define('Controls/Application',
                application: self.application,
                buildnumber: self.buildnumber,
                lite: self.lite,
+               csses: ThemesController.getInstance().getCss(),
                title: self.title,
                appRoot: self.appRoot,
                wsRoot: self.wsRoot,

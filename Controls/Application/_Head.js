@@ -3,9 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'tmpl!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext'
+      'Controls/Application/HeadDataContext',
+      'Core/Themes/ThemesController'
    ],
-   function(Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
 
       //Component for <head> html-node
@@ -20,8 +21,10 @@ define('Controls/Application/_Head',
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
-            def.addCallback(function(res) {
-               self.cssLinks = res.cssLinks;
+            def.addCallback(function() {
+               var csses = ThemesController.getInstance().getCss();
+               self.themedCss = csses.themedCss;
+               self.simpleCss = csses.simpleCss;
                self.errorState = res.errorState;
                innerDef.callback(true);
                return res;

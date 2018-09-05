@@ -56,6 +56,7 @@ function createConfig(baseUrl, wsPath, resourcesPath) {
             'normalize': path.join(wsPath, 'ext/requirejs/plugins/normalize'),
             'html': path.join(wsPath, 'ext/requirejs/plugins/html'),
             'tmpl': path.join(wsPath, 'ext/requirejs/plugins/tmpl'),
+            'wml': path.join(wsPath, 'ext/requirejs/plugins/wml'),
             'text': path.join(wsPath, 'ext/requirejs/plugins/text'),
             'is': path.join(wsPath, 'ext/requirejs/plugins/is'),
             'is-api': path.join(wsPath, 'ext/requirejs/plugins/is-api'),
