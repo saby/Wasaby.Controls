@@ -312,12 +312,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _callFormatterGetPreviewUrl: function () {
             var options = this._options;
-            var isDifferent = this._isDifferent;
+            var usePrimary = !this._isDifferent && !!options.primaryUuid;
             return this._exportFormatter.getPreviewUrl(
-               isDifferent ? options.fileUuid || options.primaryUuid : options.primaryUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT
+               usePrimary ? options.primaryUuid : options.fileUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT
             ).addCallbacks(
                function (url) {
-                  return isDifferent ? url : '/previewer' + url;
+                  return usePrimary ? '/previewer' + url : url;
                }.bind(this),
                function (err) { return err; }
             );
