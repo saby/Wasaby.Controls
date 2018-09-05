@@ -31,13 +31,6 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       var _CUSTOM_CONDITION_EXTENSION = 4;
 
       /**
-       * Интервалы времени между попытками перезапроса данных при ошибке, мсек
-       * @private
-       * @type {Array<number>}
-       */
-      var _RETRY_DELAYS = [100, 500, 2500, 12500, 62500];
-
-      /**
        * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
        * @type {WS.Data/Source/ISource}
@@ -49,7 +42,9 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             _options: {
                customConditions: [],
                navigationType: 'Page'
-            }
+            },
+            // Очередь незавершённых запросов
+            _queue: []
          },
 
          $constructor: function $LongOperationsListDataSource () {
@@ -78,6 +73,33 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
           * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Source/DataSet}.
           */
          query: function (query) {
+            var queue = this._queue;
+            var queueItem = {
+               query: query,
+               //callPromise: undefined,
+               resultPromise: new Deferred()
+            };
+            queue.push(queueItem);
+            if (queue.length === 1) {
+               this._nextQuery();
+            }
+            return queueItem.resultPromise;
+         },
+
+         _nextQuery: function () {
+            var queue = this._queue;
+            if (queue.length) {
+               var lastItem = queue[queue.length - 1];
+               var promise = lastItem.callPromise = this._query(lastItem.query);
+               delete lastItem.query;
+               promise.addCallbacks(
+                  this._onQueryDone.bind(this, promise, true),
+                  this._onQueryDone.bind(this, promise, false)
+               );
+            }
+         },
+
+         _query: function (query) {
             var options = {};
             var filter = query.getWhere();
             if (filter) {
@@ -172,17 +194,29 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                }));
             }.bind(this),
             function (err) {
-               if (!promise.isReady()) {
+               promise.errback(err);
+            }.bind(this));
+         },
+
+         _onQueryDone: function (callPromise, isSuccess, result) {
+            var queue = this._queue;
+            var index; queue.some(function (v, i) { if (v.callPromise === callPromise) { index = i; return true; } });
+            var list = queue.splice(0, index + 1);
+            for (var i = 0; i < list.length; i++) {
+               var resultPromise = list[i].resultPromise;
+               if (!resultPromise.isReady()) {
                   // Только если обещание ещё не разрешено. Обещание может быть разрешено снаружи отказом ожидать дальше
-                  if (retryCounter < _RETRY_DELAYS.length) {
-                     setTimeout(this._queryCall.bind(this, promise, options, customConditions, origLimit), _RETRY_DELAYS[retryCounter], retryCounter + 1);
+                  if (isSuccess) {
+                     resultPromise.callback(result);
                   }
                   else {
                      //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
-                     //promise.errback(err);
+                     //resultPromise.errback(result);
                   }
                }
-            }.bind(this));
+            }
+            this._nextQuery();
+            return result;
          }
       });
 
