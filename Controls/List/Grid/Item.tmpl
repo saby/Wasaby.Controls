@@ -22,7 +22,7 @@
 <ws:if data="{{itemData.isNotFullGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style}}" attr:key="{{itemData.item.getId()}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
-         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}"
+         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}} js-controls-SwipeControl__actionsContainer"
               attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
             <ws:partial template="columnContent"/>
          </td>
@@ -32,7 +32,7 @@
 <ws:else>
    <div attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style}}" attr:key="{{itemData.item.getId()}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
-         <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}"
+         <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}} js-controls-SwipeControl__actionsContainer"
               attr:style="{{itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder}}">
             <ws:partial template="columnContent"/>
          </div>

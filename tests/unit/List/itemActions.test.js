@@ -291,8 +291,14 @@ define([
                   nativeEvent: {
                      direction: 'left'
                   },
-                  currentTarget: {
-                     clientHeight: 37
+                  target: {
+                     closest: function(selector) {
+                        if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                           return {
+                              clientHeight: 37
+                           };
+                        }
+                     }
                   }
                },
                itemData =  {
@@ -320,8 +326,14 @@ define([
                   nativeEvent: {
                      direction: 'left'
                   },
-                  currentTarget: {
-                     clientHeight: 73
+                  target: {
+                     closest: function(selector) {
+                        if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                           return {
+                              clientHeight: 73
+                           };
+                        }
+                     }
                   }
                },
                itemData =  {
@@ -348,8 +360,14 @@ define([
                   nativeEvent: {
                      direction: 'left'
                   },
-                  currentTarget: {
-                     clientHeight: 110
+                  target: {
+                     closest: function(selector) {
+                        if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                           return {
+                              clientHeight: 110
+                           };
+                        }
+                     }
                   }
                },
                itemData =  {
@@ -375,8 +393,14 @@ define([
                   nativeEvent: {
                      direction: 'left'
                   },
-                  currentTarget: {
-                     clientHeight: 250
+                  target: {
+                     closest: function(selector) {
+                        if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                           return {
+                              clientHeight: 250
+                           };
+                        }
+                     }
                   }
                },
                itemData =  {
