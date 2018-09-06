@@ -4,7 +4,7 @@
          <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
               style="z-index: {{( index + 1 ) * 10 - 1}};"></div>
       </ws:if>
-      <Controls.Container.PendingRegistrator name="{{item.id}}_registrator">
+      <Controls.Container.PendingRegistrator name="{{item.id}}_registrator" attr:key="{{item.id}}">
          <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                        on:deactivated="_popupDeactivated(item.id)"
                                        attr:class="controls-Container__popup
