@@ -2,7 +2,7 @@ define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
    'Core/core-clone',
-   'tmpl!Controls/List/BaseControl/BaseControl',
+   'wml!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
    'Controls/List/Controllers/VirtualScroll',

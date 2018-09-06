@@ -1,7 +1,7 @@
 define('Controls-demo/Confirmation/Confirmation',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Confirmation/Confirmation',
+      'wml!Controls-demo/Confirmation/Confirmation',
       'Controls-demo/Confirmation/resources/detailsComponent'
    ],
    function(Control, template) {

@@ -2,7 +2,7 @@ define('Controls/Popup/Previewer/OpenerTemplate',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Popup/Previewer/OpenerTemplate',
+      'wml!Controls/Popup/Previewer/OpenerTemplate',
 
       'Controls/Container/Async'
    ],

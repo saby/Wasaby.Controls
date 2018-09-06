@@ -4,9 +4,9 @@ define([
    'Controls/Date/PeriodLiteDialog',
    'Controls/Utils/Date',
    'tests/unit/Calendar/Utils',
-   'tmpl!Controls/Date/PeriodLiteDialog/ItemFull',
-   'tmpl!Controls/Date/PeriodLiteDialog/ItemMonths',
-   'tmpl!Controls/Date/PeriodLiteDialog/ItemQuarters'
+   'wml!Controls/Date/PeriodLiteDialog/ItemFull',
+   'wml!Controls/Date/PeriodLiteDialog/ItemMonths',
+   'wml!Controls/Date/PeriodLiteDialog/ItemQuarters'
 ], function(
    coreMerge,
    PeriodLiteDialog,

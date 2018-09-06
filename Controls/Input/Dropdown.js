@@ -1,8 +1,8 @@
 define('Controls/Input/Dropdown',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Dropdown/Dropdown',
-      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
+      'wml!Controls/Input/Dropdown/Dropdown',
+      'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',

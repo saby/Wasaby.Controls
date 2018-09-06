@@ -1,0 +1,13 @@
+<ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate"
+            itemData="{{itemData}}"
+            marker="{{false}}"
+            multiLine="{{true}}">
+   <ws:contentTemplate >
+      <div class="ControlsDemo-ComboboxVDOM__myTempalte">
+         {{itemData.getPropValue(itemData.item, 'title')}}
+         <div class="ControlsDemo-ComboboxVDOM__comment">
+            {{itemData.getPropValue(itemData.item, 'comment')}}
+         </div>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

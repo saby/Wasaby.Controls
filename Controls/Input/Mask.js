@@ -5,10 +5,10 @@ define('Controls/Input/Mask',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
-      'tmpl!Controls/Input/Mask/Mask',
+      'wml!Controls/Input/Mask/Mask',
 
       'Controls/Input/resources/InputRender/InputRender',
-      'tmpl!Controls/Input/resources/input'
+      'wml!Controls/Input/resources/input'
    ],
    function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 

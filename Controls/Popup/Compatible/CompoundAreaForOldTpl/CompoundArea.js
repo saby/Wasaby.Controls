@@ -1,7 +1,7 @@
 define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
    [
       'Core/CompoundContainer',
-      'tmpl!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
+      'wml!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
       'Core/helpers/Array/findIndex',
       'Core/core-debug',

@@ -1,7 +1,7 @@
 define('Controls-demo/Async/AsyncDemo', [
    'Core/Control',
    'Core/Deferred',
-   'tmpl!Controls-demo/Async/AsyncDemo'
+   'wml!Controls-demo/Async/AsyncDemo'
 ], function(Control, Deferred, template) {
 
    var AsyncDemo = Control.extend({

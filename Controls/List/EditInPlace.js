@@ -1,6 +1,6 @@
 define('Controls/List/EditInPlace', [
    'Core/Control',
-   'tmpl!Controls/List/EditInPlace/EditInPlace',
+   'wml!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'Controls/List/resources/utils/ItemsUtil',

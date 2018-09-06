@@ -1,7 +1,7 @@
 define('Controls-demo/PropertyGrid/PropertyGrid',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGrid'
+      'wml!Controls-demo/PropertyGrid/PropertyGrid'
    ],
    function (
       Base, template

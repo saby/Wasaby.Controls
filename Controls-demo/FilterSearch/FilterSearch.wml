@@ -1,0 +1,161 @@
+<div class="demo-filterSearch-wrapper">
+    <div class="demo-filterSearch">
+        <div class="demo-filterSearch__firstCol">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__1">
+                <h3>Custom layout with Input/Search and List</h3>
+                <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_search">
+                    <Controls.Search.Controller searchParam="department">
+                        <div>
+                            <div class="controls-demo__filterSearch-topWrapper">
+                                <Controls.Search.Input.Container>
+                                    <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
+                                </Controls.Search.Input.Container>
+                            </div>
+                            <Controls.List.Container>
+                                <Controls.List emptyTemplate="Не найдено">
+                                    <ws:itemTemplate>
+                                        <ws:partial template="wml!Controls/List/ItemTemplate">
+                                            <ws:contentTemplate>
+                                                <div class="demo-FilterSearch__listItem-wrapper">
+                                                    <span class="demo-FilterSearch__department">{{itemTemplate.itemData.item.get('department')}}</span>
+                                                    <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
+                                                </div>
+                                            </ws:contentTemplate>
+                                        </ws:partial>
+                                    </ws:itemTemplate>
+                                </Controls.List>
+                            </Controls.List.Container>
+                        </div>
+                    </Controls.Search.Controller>
+                </Controls.Container.Data>
+            </div>
+
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__2">
+                <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List</h3>
+                <Controls.Filter.Controller bind:filter="_filterSearch" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                    <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
+                        <Controls.Search.Controller searchParam="department">
+                            <div>
+                                <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
+                                    <div class="controls-demo__filterSearch-topWrapper">
+                                        <Controls.Search.Input.Container>
+                                            <Controls.Input.Search bind:value="_searchValueWithFilters" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
+                                        </Controls.Search.Input.Container>
+                                        <div class="controls-demo__filterSearch-filters">
+                                            <Controls.Filter.Fast.Container>
+                                                <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                            </Controls.Filter.Fast.Container>
+
+                                            <Controls.Filter.Button.Container>
+                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
+                                            </Controls.Filter.Button.Container>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Controls.List.Container>
+                                    <Controls.List emptyTemplate="Не найдено">
+                                        <ws:itemTemplate>
+                                            <ws:partial template="wml!Controls/List/ItemTemplate">
+                                                <ws:contentTemplate>
+                                                    <div class="demo-FilterSearch__listItem-wrapper">
+                                                        <span class="demo-FilterSearch__department">{{itemTemplate.itemData.item.get('department')}}</span>
+                                                        <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
+                                                    </div>
+                                                </ws:contentTemplate>
+                                            </ws:partial>
+                                        </ws:itemTemplate>
+                                    </Controls.List>
+                                </Controls.List.Container>
+                            </div>
+                        </Controls.Search.Controller>
+                    </Controls.Container.Data>
+                </Controls.Filter.Controller>
+            </div>
+        </div>
+        <div class="demo-filterSearch__secondCol">
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__3">
+                <h3>Custom layout with Filter/Button, Filter/Fast and List</h3>
+                <Controls.Filter.Controller bind:filter="_filter" fastFilterSource="{{_fullFastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                    <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
+                        <div>
+                            <div class="controls-demo__filterSearch-topWrapper demo__filterSearch-searchInTabs">
+                                <div class="controls-demo__filterSearch-filters">
+                                    <Controls.Filter.Fast.Container>
+                                        <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                    </Controls.Filter.Fast.Container>
+
+                                    <Controls.Filter.Button.Container>
+                                        <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
+                                    </Controls.Filter.Button.Container>
+                                </div>
+                            </div>
+                            <Controls.List.Container>
+                                <Controls.List emptyTemplate="Не найдено">
+                                    <ws:itemTemplate>
+                                        <ws:partial template="wml!Controls/List/ItemTemplate">
+                                            <ws:contentTemplate>
+                                                <div class="demo-FilterSearch__listItem-wrapper">
+                                                    <span class="demo-FilterSearch__department">{{itemTemplate.itemData.item.get('department')}}</span>
+                                                    <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
+                                                </div>
+                                            </ws:contentTemplate>
+                                        </ws:partial>
+                                    </ws:itemTemplate>
+                                </Controls.List>
+                            </Controls.List.Container>
+                        </div>
+                    </Controls.Container.Data>
+                </Controls.Filter.Controller>
+            </div>
+
+            <div class="controls-demo__filterSearch-container ControlsDemo-FilterSearch__4">
+                <h3>Custom layout with Input/Search, Filter/Button, Filter/Fast and List.</h3>
+                <h3>Filters are located in the tabs.</h3>
+                <Controls.Filter.Controller bind:filter="_filterSearchTabs" fastFilterSource="{{_fastFilterData}}" filterButtonSource="{{_filterButtonData}}">
+                    <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
+                        <Controls.Search.Controller searchParam="department">
+                            <div>
+                                <Controls.Tabs.Buttons
+                                        bind:selectedKey='_tabSelectedKey'
+                                        keyProperty="id"
+                                        source="{{_tabSource}}"
+                                        attr:class="demo__filterSearch-tabs">
+                                    <ws:tabSpaceTemplate>
+                                        <div class="controls-demo__filterSearch-filters">
+                                            <Controls.Filter.Button.Container>
+                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" orientation="right"/>
+                                            </Controls.Filter.Button.Container>
+
+                                            <Controls.Filter.Fast.Container>
+                                                <Controls.Filter.Fast attr:class="controls-demo__filterSearch-fastFilter"/>
+                                            </Controls.Filter.Fast.Container>
+                                        </div>
+                                    </ws:tabSpaceTemplate>
+                                </Controls.Tabs.Buttons>
+                                <div class="controls-demo__filterSearch-topWrapper">
+                                    <Controls.Search.Input.Container>
+                                        <Controls.Input.Search bind:value="_searchValueWithFiltersTabs" attr:class="controls-demo__filterSearch-search" placeholder="Укажите ФИО, подразделение..."/>
+                                    </Controls.Search.Input.Container>
+                                </div>
+                                <Controls.List.Container>
+                                    <Controls.List emptyTemplate="Не найдено">
+                                        <ws:itemTemplate>
+                                            <ws:partial template="wml!Controls/List/ItemTemplate">
+                                                <ws:contentTemplate>
+                                                    <div class="demo-FilterSearch__listItem-wrapper">
+                                                        <span class="demo-FilterSearch__department">{{itemTemplate.itemData.item.get('department')}}</span>
+                                                        <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
+                                                    </div>
+                                                </ws:contentTemplate>
+                                            </ws:partial>
+                                        </ws:itemTemplate>
+                                    </Controls.List>
+                                </Controls.List.Container>
+                            </div>
+                        </Controls.Search.Controller>
+                    </Controls.Container.Data>
+                </Controls.Filter.Controller>
+            </div>
+        </div>
+    </div>
+</div>

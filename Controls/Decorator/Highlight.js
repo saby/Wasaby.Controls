@@ -3,7 +3,7 @@ define('Controls/Decorator/Highlight',
       'Core/Control',
       'Controls/Utils/RegExp',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorator/Highlight/Highlight',
+      'wml!Controls/Decorator/Highlight/Highlight',
 
       'css!Controls/Decorator/Highlight/Highlight'
    ],

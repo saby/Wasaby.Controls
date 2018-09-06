@@ -53,7 +53,7 @@
                               </ws:else>
 
                               <ws:if data="{{ content.draggingTemplate }}">
-                                 <ws:partial template="tmpl!Controls/DragNDrop/DraggingTemplateWrapper"
+                                 <ws:partial template="wml!Controls/DragNDrop/DraggingTemplateWrapper"
                                              draggingTemplateOptions="{{content.draggingTemplateOptions}}"
                                              draggingTemplate="{{content.draggingTemplate}}"/>
                               </ws:if>

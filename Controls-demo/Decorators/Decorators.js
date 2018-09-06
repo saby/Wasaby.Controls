@@ -1,7 +1,7 @@
 define('Controls-demo/Decorators/Decorators',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Decorators/Decorators',
+      'wml!Controls-demo/Decorators/Decorators',
 
       'Controls-demo/Decorators/Money/Money',
       'Controls-demo/Decorators/Number/Number',
