@@ -98,7 +98,11 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _afterMount: function() {
             /**
-             * Поправить по ошибке https://online.sbis.ru/opendoc.html?guid=bea650c3-cf13-477d-a71e-ab06a811ac56
+             * TODO: Код нужно вынести в поля ввода, там есть доступ к input. Делать в 510 опасно.
+             * https://online.sbis.ru/opendoc.html?guid=bea650c3-cf13-477d-a71e-ab06a811ac56
+             *
+             * Обращение через querySelector по ошибке
+             * https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
              */
             var length = this._options.viewModel.getDisplayValue().length;
 
