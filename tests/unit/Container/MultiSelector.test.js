@@ -1,9 +1,11 @@
 define([
    'Controls/Container/MultiSelector',
-   'WS.Data/Collection/RecordSet'
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/IBind'
 ], function(
    MultiSelector,
-   RecordSet
+   RecordSet,
+   IBind
 ) {
    'use strict';
    describe('Controls.Container.MultiSelector', function() {
@@ -49,6 +51,13 @@ define([
          assert.equal(selection.excluded.length, 0);
       });
 
+      it('_afterMount', function() {
+         var instance = new MultiSelector();
+         instance._beforeMount(cfg, context);
+         instance._afterMount();
+         assert.isTrue(instance._items.hasEventHandlers('onCollectionChange'));
+      });
+
       describe('_beforeUpdate', function() {
          it('change items', function() {
             var instance = new MultiSelector();
@@ -80,6 +89,7 @@ define([
                   excludedKeys: [3, 4]
                },
                selection;
+            instance.saveOptions(cfg1);
             instance._beforeMount(cfg1, context);
             instance._beforeUpdate(newCfg, context);
             selection = instance._multiselection.getSelection();
@@ -173,6 +183,18 @@ define([
                assert.deepEqual([1, 2], added);
             };
             instance._onListSelectionChange({}, [], [1, 2], [3, 4]);
+         });
+      });
+
+      describe('_onCollectionChange', function() {
+         it('remove', function() {
+            var instance = new MultiSelector();
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg, context);
+            instance._multiselection.unselect = function(removed) {
+               assert.deepEqual([2, 3], removed);
+            };
+            instance._onCollectionChange({}, IBind.ACTION_REMOVE, [], [], [instance._items.getRecordById(2), instance._items.getRecordById(3)]);
          });
       });
    });

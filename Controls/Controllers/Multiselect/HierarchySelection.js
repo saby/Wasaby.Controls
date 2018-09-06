@@ -33,6 +33,14 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          PARTIALLY_SELECTED: null
       },
       _private = {
+         getParentId: function(key, items, parentProperty) {
+            var item = items.getRecordById(key);
+
+            if (item) {
+               return item.get(parentProperty);
+            }
+         },
+
          getAllChildren: function(hierarchyRelation, rootId, items) {
             var children = [];
 
@@ -58,12 +66,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }
 
             var
-               parent = hierarchyRelation.getParent(key, items),
-               parentSelected = false,
-               parentId;
+               parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty()),
+               parentSelected = false;
 
-            while (parent) {
-               parentId = parent.getId();
+            while (parentId) {
                if (selectedKeys.indexOf(parentId) !== -1) {
                   parentSelected = true;
                   break;
@@ -71,10 +77,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                if (excludedKeys.indexOf(parentId) !== -1) {
                   break;
                }
-               parent = hierarchyRelation.getParent(parentId, items);
+               parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
             }
 
-            if (parent === null && selectedKeys[0] === null) {
+            if (parentId === null && selectedKeys[0] === null) {
                parentSelected = true;
             }
 
@@ -83,12 +89,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
          isParentExcluded: function(hierarchyRelation, key, selectedKeys, excludedKeys, items) {
             var
-               parent = hierarchyRelation.getParent(key, items),
-               parentExcluded,
-               parentId;
+               parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty()),
+               parentExcluded;
 
-            while (parent) {
-               parentId = parent.getId();
+            while (parentId) {
                if (selectedKeys.indexOf(parentId) !== -1) {
                   parentExcluded = false;
                   break;
@@ -97,10 +101,10 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                   parentExcluded = true;
                   break;
                }
-               parent = hierarchyRelation.getParent(parentId, items);
+               parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
             }
 
-            if (parent === null && selectedKeys[0] === null) {
+            if (parentId === null && selectedKeys[0] === null) {
                parentExcluded = false;
             }
 
@@ -170,7 +174,6 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          // 3) Для каждого ключа бежим по всем родителям, как только нашли полностью выделенного родителя, то добавляем в excludedKeys и заканчиваем бежать
          var
             childrenIds,
-            parent,
             parentId;
          this._selectedKeys = this._selectedKeys.slice();
          this._excludedKeys = this._excludedKeys.slice();
@@ -182,15 +185,19 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, childrenIds);
             ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, childrenIds);
 
-            parent = key === null ? null : this._hierarchyRelation.getParent(key, this._items);
-            while (parent) {
-               parentId = parent.getId();
+            if (!this._items.getRecordById(key)) {
+               //There's no point to add this key to excludedKeys because it is either root or this item was removed from the collection
+               return;
+            }
+
+            parentId = _private.getParentId(key, this._items, this._hierarchyRelation.getParentProperty());
+            while (parentId) {
                if (this._isAllSelection(this._getParams(parentId))) {
                   ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
                }
-               parent = this._hierarchyRelation.getParent(parentId, this._items);
+               parentId = _private.getParentId(parentId, this._items, this._hierarchyRelation.getParentProperty());
             }
-            if (parent === null && this._isAllSelection(this._getParams(null))) {
+            if (parentId === null && this._isAllSelection(this._getParams(null))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
             }
          }.bind(this));
