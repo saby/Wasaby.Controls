@@ -104,6 +104,7 @@ function(cMerge,
          }
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
+
          // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
          cfg.templateOptions.ignoreTabCycles = false;
 
