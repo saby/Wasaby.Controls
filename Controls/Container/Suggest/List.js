@@ -44,6 +44,16 @@ define('Controls/Container/Suggest/List',
                   self._navigation = self._suggestListOptions.navigation;
                }
             }
+         },
+   
+         isTabChanged: function(options, tabKey) {
+            var currentTabSelectedKey = options.tabsSelectedKey;
+            return currentTabSelectedKey !== tabKey;
+         },
+   
+         getTabKeyFromContext: function(context) {
+            var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
+            return tabKey !== undefined ? tabKey : null;
          }
       };
       
@@ -56,12 +66,11 @@ define('Controls/Container/Suggest/List',
          },
          
          _beforeUpdate: function(newOptions, context) {
-            var currentTabSelectedKey = this._suggestListOptions.tabsSelectedKey;
-            var newTabSelectedKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
+            var tabKey = _private.getTabKeyFromContext(context);
             
             /* Need notify after getting tab from query */
-            if (currentTabSelectedKey === null && newTabSelectedKey !== null) {
-               this._tabsSelectedKeyChanged(null, newTabSelectedKey);
+            if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
+               this._tabsSelectedKeyChanged(null, tabKey);
             }
             
             _private.checkContext(this, context);
@@ -77,6 +86,8 @@ define('Controls/Container/Suggest/List',
             suggestOptionsField: _SuggestOptionsField
          };
       };
+   
+      List._private = _private;
       
       return List;
    });

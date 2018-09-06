@@ -27,7 +27,6 @@
                 <Controls.List.Remover name="remover"
                                        nodeProperty="Раздел@"
                                        parentProperty="Раздел"
-                                       on:afterItemsRemove="_afterItemsRemove()"
                                        on:beforeItemsRemove="_beforeItemsRemove()"/>
                 <Controls.List.DialogMover name="dialogMover"
                                            columns="{{_moveDialogColumns}}"

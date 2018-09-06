@@ -21,11 +21,13 @@
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
-           placeholder="{{ _options.placeholder }}"
            tooltip="{{_options.tooltip}}"
            attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()">
+      <ws:placeholder>
+         <div class="controls-InputArea__fieldPadding">{{_options.placeholder}}</div>
+      </ws:placeholder>
       <ws:content>
             <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
             <div class="controls-InputRender__wrapper">

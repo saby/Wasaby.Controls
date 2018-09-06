@@ -50,6 +50,7 @@ define(
             onClose: 'onclose'
          },
          enabled: true,
+         draggable: true,
          closeChildWindows: true,
          closeOnTargetScroll: true
       };
@@ -101,6 +102,7 @@ define(
             assert.equal(config.templateOptions.target, config.target);
             assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
+            assert.equal(config.templateOptions.draggable, config.draggable);
             assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
             assert.isTrue(cInstance.instanceOfModule(config.context,'Core/Abstract'));

@@ -197,6 +197,10 @@ define('Controls/Input/Lookup', [
    
       _deactivated: function() {
          this._suggestState = false;
+      },
+   
+      _itemClick: function(event, item) {
+         this._notify('itemClick', [item]);
       }
    
    });

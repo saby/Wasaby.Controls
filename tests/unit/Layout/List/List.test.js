@@ -92,6 +92,17 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
          assert.deepEqual(listSourceData, listLayout._source._$data);
       });
    
+      it('.searchErrback', function() {
+         var errbackCalled = false;
+         listLayout._options.searchErrback = function() {
+            errbackCalled = true;
+         };
+         List._private.searchErrback(listLayout, {});
+         
+         assert.deepEqual(null, listLayout._source._$data);
+         assert.isTrue(errbackCalled);
+      });
+   
       it('.searchCallback', function() {
          var recordSet = new RecordSet({
             rawData:[

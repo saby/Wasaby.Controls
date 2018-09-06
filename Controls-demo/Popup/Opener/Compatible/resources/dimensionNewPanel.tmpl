@@ -1,0 +1,17 @@
+<Controls.Popup.Templates.Stack.StackTemplate>
+   <ws:caption>
+      Title
+   </ws:caption>
+   <ws:contentArea>
+      <div>
+         <Controls.Popup.Opener.Stack name="stack">
+            <ws:popupOptions template="Controls-demo/Popup/Opener/Compatible/resources/dimensionNewPanel"/>
+         </Controls.Popup.Opener.Stack>
+
+         <Controls.Button name="stackButton" caption="Стековая панель" on:click="openStack()"/>
+      </div>
+      <div>
+         <Controls.Button name="resultButton" caption="обработчик onResult" on:click="_onResult()"/>
+      </div>
+   </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>
