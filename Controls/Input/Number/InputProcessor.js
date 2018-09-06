@@ -78,6 +78,34 @@ define('Controls/Input/Number/InputProcessor',
                }
             },
 
+            /**
+             * Returns the number of characters remaining until the maximum integers length is reached
+             * Can return negative values
+             * @param splitValue
+             * @param integersLength
+             * @return {number}
+             */
+            integersLeftToMaxLength: function(splitValue, integersLength) {
+               var
+                  integers = _private.getClearValue(splitValue).split('.')[0];
+
+               return integersLength - integers.length;
+            },
+
+            /**
+             * Returns the number of characters remaining until the maximum decimals length is reached
+             * Can return negative values
+             * @param splitValue
+             * @param precision
+             * @return {number}
+             */
+            decimalsLeftToMaxLength: function(splitValue, precision) {
+               var
+                  decimals = _private.getClearValue(splitValue).split('.')[1];
+
+               return precision - decimals.length;
+            },
+
             // Набор валидаторов для числа
             validators: {
 
@@ -171,6 +199,9 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
+               // Remove delimiters from insert
+               splitValue.insert = splitValue.insert.replace(/ /g, '');
+
                if (
                   !_private.validators.isValidInsert(splitValue.insert) ||
                   (options.onlyPositive && splitValue.insert === '-') ||
@@ -232,20 +263,27 @@ define('Controls/Input/Number/InputProcessor',
 
                   // If we have exceeded the maximum number in integers part, then we should move cursor after dot
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
-                     if (options.precision !== 0) {
-                        if (splitValue.after[0] === '.') {
-                           shift += 2;
-                           splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
-                        } else {
-                           if (splitValue.after[1] === ' ') {
+                     // If we insert more than one character, then we just need to slice insert value, if necessary
+                     if (splitValue.insert.length > 1) {
+                        splitValue.insert = splitValue.insert.slice(0, _private.integersLeftToMaxLength(splitValue, options.integersLength));
+                     } else {
+                        // If we insert single character and precision is not zero,
+                        // then we need to jump over a dot and insert character in decimals part
+                        if (options.precision !== 0) {
+                           if (splitValue.after[0] === '.') {
                               shift += 2;
+                              splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
                            } else {
-                              shift += 1;
+                              if (splitValue.after[1] === ' ') {
+                                 shift += 2;
+                              } else {
+                                 shift += 1;
+                              }
+                              splitValue.after = splitValue.insert + splitValue.after.slice(1);
                            }
-                           splitValue.after = splitValue.insert + splitValue.after.slice(1);
                         }
+                        splitValue.insert = '';
                      }
-                     splitValue.insert = '';
                   }
 
                   // This block must be executed when we know for sure that in the next step the number can not become non-valid
@@ -259,6 +297,9 @@ define('Controls/Input/Number/InputProcessor',
                      // Else - forbid input
                      if (splitValue.after !== '') {
                         splitValue.after = splitValue.after.slice(splitValue.insert.length);
+                     } else if (splitValue.before[splitValue.before.length - 1] === '.') {
+                        // If we insert decimals part entirely, then we just need to slice insert value, if necessary
+                        splitValue.insert = splitValue.insert.slice(0, _private.decimalsLeftToMaxLength(splitValue, options.precision));
                      } else {
                         splitValue.insert = '';
                      }
