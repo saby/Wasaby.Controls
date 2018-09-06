@@ -43,6 +43,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
+            this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
@@ -169,9 +170,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._notifyOnSizeChanged();
          },
          _onCloseHandler: function() {
-            this._options.onCloseHandler && this._options.onCloseHandler(this._result);
+            this._callCloseHandler();
             this.sendCommand('close', this._result);
             this._result = null;
+         },
+         _callCloseHandler: function() {
+            this._options.onCloseHandler && this._options.onCloseHandler(this._result);
          },
          _onResultHandler: function() {
             this._result = Array.prototype.slice.call(arguments, 1); //first arg - event;
