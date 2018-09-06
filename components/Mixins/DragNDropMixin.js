@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
              * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
              */
             /**
-             * @event onDragMove В процессе перемещения элемента, принадлежащего контролу, на каждое изменение его положения. Если из события вернуть false, то стандартное действие будет отменено.
+             * @event onDragMove В процессе перемещения элемента, принадлежащего контролу, на каждое изменение его положения.
              * @remark Не важно над каким контролом находится элемент, событие происходит у контрола элемент которого перемещают.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject} dragObject Синглтон Drag'n'drop объект.
