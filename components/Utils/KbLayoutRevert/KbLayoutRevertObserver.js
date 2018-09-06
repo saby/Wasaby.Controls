@@ -35,8 +35,12 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
       }
       
       function analyzeQueryResult (queryResult, items) {
-         if(queryResult.getCount() < this._options.view.getPageSize()) {
-            items.prepend(queryResult);
+         if (queryResult.getCount() < this._options.view.getPageSize()) {
+            //Такое может произойти (данные в item и в queryResult одинаковы), когда вёдется поиск в нескольких вкладках,
+            //потому что запрос отправляется отдельно от списка (не через reload, а через source.query())
+            if (!items.isEqual(queryResult)) {
+               items.prepend(queryResult);
+            }
          } else {
             items.assign(queryResult);
          }
