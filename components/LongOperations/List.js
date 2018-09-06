@@ -88,6 +88,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
 
                listName: 'browserView',
                userId: null,
+               useDataSourceQueue: null,
 
                noLoad: false,
 
@@ -131,14 +132,15 @@ define('SBIS3.CONTROLS/LongOperations/List',
          init: function () {
             LongOperationsList.superclass.init.call(this);
 
-            this._view = this.getChildControlByName(this._options.listName);
+            var options = this._options;
+            this._view = this.getChildControlByName(options.listName);
             this._actionOpenHistory = this.getChildControlByName('controls-LongOperationsList__actionOpenHistory');
 
             //this._view.setItemsActions(this._makeItemsActions(null));
 
             this._bindEvents();
 
-            this._view.setDataSource(new LongOperationsListDataSource(), true);
+            this._view.setDataSource(new LongOperationsListDataSource({useQueue:options.useDataSourceQueue}), true);
          },
 
          _bindEvents: function () {

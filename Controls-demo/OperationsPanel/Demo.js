@@ -101,28 +101,18 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._children.list.reload();
       },
 
-      _afterItemsRemove: function() {
-         //TODO: иначе выделению совсем плохо
-         //https://online.sbis.ru/opendoc.html?guid=b8c5c496-4c9e-425e-b90e-0ecfbf9b1f91
-         this._children.remover._notify('selectedTypeChanged', ['unselectAll'], {
-            bubbling: true
-         });
-         if (this._removeFolders) {
-            this._children.list.reload();
-            this._removeFolders = false;
-         }
-      },
-
       _beforeItemsRemove: function(event, items) {
-         var self = this;
+         var
+            self = this,
+            removeFolders;
 
          items.forEach(function(key) {
             if (self._items.getRecordById(key).get(self._nodeProperty) === true) {
-               self._removeFolders = true;
+               removeFolders = true;
             }
          });
 
-         return self._removeFolders ? this._children.popupOpener.open({
+         return removeFolders ? this._children.popupOpener.open({
             message: 'Are you sure you want to delete the department?',
             type: 'yesno'
          }) : true;

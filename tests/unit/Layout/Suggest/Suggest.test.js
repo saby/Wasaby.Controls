@@ -206,6 +206,18 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(500)), '-down');
       });
    
+      it('Suggest::_private.searchErrback', function(done) {
+         var self = getComponentObject();
+         self._loading = true;
+         self._forceUpdate = function() {
+            assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
+            done();
+         };
+         Suggest._private.searchErrback(self);
+         
+         assert.isFalse(self._loading);
+      });
+   
       it('Suggest::_private.calcHeight', function() {
          var self = getComponentObject();
          var suggestHeight = 200;

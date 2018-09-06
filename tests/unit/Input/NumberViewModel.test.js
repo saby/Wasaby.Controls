@@ -976,6 +976,78 @@ define(
                      position: 8
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long integer number in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123456',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.0',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long integer number (with delimiters) in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123 456 789',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.0',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long float number in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123456.789',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.789',
+                     position: 10
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number with long decimals part in field with precision option',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '1.58897987987',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1.58',
+                     position: 4
+                  },
+                  inputType: 'insert'
                }
             ];
 
