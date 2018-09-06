@@ -96,6 +96,16 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._inputState = _private.getInputState(this, options);
          },
 
+         _afterMount: function() {
+            /**
+             * Поправить по ошибке https://online.sbis.ru/opendoc.html?guid=bea650c3-cf13-477d-a71e-ab06a811ac56
+             */
+            var length = this._options.viewModel.getDisplayValue().length;
+
+            this._children.input.querySelector('.controls-InputRender__field').selectionStart = length;
+            this._children.input.querySelector('.controls-InputRender__field').selectionEnd = length;
+         },
+
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
          },
