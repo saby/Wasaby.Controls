@@ -3,7 +3,7 @@ define('Controls/Input/Password',
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
-      'tmpl!Controls/Input/Password/Password',
+      'wml!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
 
       'css!Controls/Input/Password/Password'

@@ -3,7 +3,7 @@
  */
 define('Controls-demo/Index', [
    'Core/Control',
-   'tmpl!Controls-demo/Index'
+   'wml!Controls-demo/Index'
 ], function (BaseControl,
              template
 ) {

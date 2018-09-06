@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input/Phone',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Phone/Phone',
+      'wml!Controls-demo/Example/Input/Phone/Phone',
 
       'Controls/Input/Phone',
       'css!Controls-demo/Example/resource/Base',

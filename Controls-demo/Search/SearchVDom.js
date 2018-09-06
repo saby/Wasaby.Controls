@@ -1,6 +1,6 @@
 define('Controls-demo/Search/SearchVDom', [
    'Core/Control',
-   'tmpl!Controls-demo/Search/SearchVDom',
+   'wml!Controls-demo/Search/SearchVDom',
    'css!Controls-demo/Search/SearchVDOM',
    'Controls/Input/Search'
 ], function (Control, template) {

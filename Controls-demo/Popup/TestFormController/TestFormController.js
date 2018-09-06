@@ -3,7 +3,7 @@
  */
 define('Controls-demo/Popup/TestFormController/TestFormController', [
    'Lib/Control/CompoundControl/CompoundControl',
-   'tmpl!Controls-demo/Popup/TestFormController/TestFormController',
+   'wml!Controls-demo/Popup/TestFormController/TestFormController',
    'WS.Data/Source/Memory',
    'Controls-demo/Popup/TestFormController/FormController'
 ], function(CompoundControl, dotTplFn, Memory) {

@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Date/RangeLinkLite', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Date/RangeLinkLite',
+   'wml!Controls-demo/Input/Date/RangeLinkLite',
    'css!Controls-demo/Input/Date/RangeLinkLite'
 ], function(
    BaseControl,

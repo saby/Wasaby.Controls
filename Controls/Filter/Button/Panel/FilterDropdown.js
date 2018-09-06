@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel/FilterDropdown', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
+   'wml!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
    'css!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
 ], function(Control, template) {
    /**

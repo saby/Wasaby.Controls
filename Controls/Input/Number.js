@@ -1,7 +1,7 @@
 define('Controls/Input/Number', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
-   'tmpl!Controls/Input/Number/Number',
+   'wml!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',

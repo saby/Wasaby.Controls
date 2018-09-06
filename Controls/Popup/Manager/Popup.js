@@ -1,7 +1,7 @@
 define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Popup',
+      'wml!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Controls/Popup/PopupContext',

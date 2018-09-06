@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/List/TreeGridView/Item" expanderSize="s" itemData="{{itemData}}"/>

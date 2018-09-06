@@ -3,7 +3,7 @@ define('Controls-demo/Popup/resources/SimpleListEditDialog',
 
       // Подключаем базовый класс для наследования диалога редактирования
       'SBIS3.CONTROLS/FormController',
-      'tmpl!Controls-demo/Popup/resources/SimpleListEditDialog',
+      'wml!Controls-demo/Popup/resources/SimpleListEditDialog',
       'WS.Data/Source/SbisService',
       'SBIS3.CONTROLS/TextBox',
       'SBIS3.CONTROLS/Button', 

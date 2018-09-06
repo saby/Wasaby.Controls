@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Button/Container',
+      'wml!Controls/Filter/Button/Container',
       'Controls/Container/Filter/FilterContextField',
       'Core/helpers/Object/isEqual'
    ],

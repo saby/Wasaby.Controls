@@ -1,6 +1,6 @@
 define('Controls-demo/Date/MonthList', [
    'Core/Control',
-   'tmpl!Controls-demo/Date/MonthList'
+   'wml!Controls-demo/Date/MonthList'
 ], function(
    BaseControl,
    template

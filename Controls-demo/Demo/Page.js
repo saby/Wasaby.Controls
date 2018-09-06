@@ -5,7 +5,7 @@ define('Controls-demo/Demo/Page',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/Demo/Page',
+      'wml!Controls-demo/Demo/Page',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'css',

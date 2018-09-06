@@ -3,7 +3,7 @@
  */
 define('Controls-demo/List/Multiselect', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Multiselect/Multiselect',
+   'wml!Controls-demo/List/Multiselect/Multiselect',
    'WS.Data/Source/Memory'
 ], function(BaseControl, template, MemorySource) {
    'use strict';

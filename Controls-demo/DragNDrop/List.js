@@ -4,7 +4,7 @@ define('Controls-demo/DragNDrop/List', [
    'WS.Data/Source/Memory',
    'Controls-demo/DragNDrop/ListEntity',
    'Controls-demo/DragNDrop/DemoData',
-   'tmpl!Controls-demo/DragNDrop/List/List',
+   'wml!Controls-demo/DragNDrop/List/List',
    'css!Controls-demo/DragNDrop/List/List',
    'Controls/DragNDrop/DraggingTemplate'
 ], function(BaseControl, cClone, Memory, ListEntity, DemoData, template) {
