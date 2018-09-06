@@ -43,6 +43,14 @@ define('Controls/Container/Suggest/Layout',
             });
          },
          
+         searchErrback: function(self) {
+            self._loading = false;
+            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+               self._emptyTemplate = result;
+               self._forceUpdate();
+            });
+         },
+         
          getSizes: function(self, dropDownContainer) {
             var boundingClientToJSON = function(bc) {
                var resultObj = {};
@@ -255,8 +263,10 @@ define('Controls/Container/Suggest/Layout',
          _beforeMount: function(options) {
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
+            this._searchErrback = this._searchErrback.bind(this);
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
+            this._emptyTemplate = options.emptyTemplate;
          },
          
          _afterMount: function() {
@@ -268,6 +278,7 @@ define('Controls/Container/Suggest/Layout',
             this._tabsSource = null;
             this._searchStart = null;
             this._searchEnd = null;
+            this._searchErrback = null;
             this._select = null;
          },
          
@@ -278,6 +289,10 @@ define('Controls/Container/Suggest/Layout',
             
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
+            }
+            
+            if (this._emptyTemplate !== newOptions.emptyTemplate) {
+               this._emptyTemplate = newOptions.emptyTemplate;
             }
          },
    
@@ -385,6 +400,10 @@ define('Controls/Container/Suggest/Layout',
                this._options.searchEndCallback();
             }
             this._forceUpdate();
+         },
+   
+         _searchErrback: function() {
+            _private.searchErrback(this);
          },
          
          _showAllClick: function() {
