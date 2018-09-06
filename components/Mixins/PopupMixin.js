@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             eventsChannel.notify('onDocumentClick', e);
          },
          dragCallback = function(e) {
-            if (e.dataTransfer.types[0] === 'Files') {
+            if (e.dataTransfer.types.includes('Files')) {
                eventsChannel.notify('onDocumentDrag', e);
             }
 
