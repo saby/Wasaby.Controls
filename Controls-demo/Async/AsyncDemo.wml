@@ -1,6 +1,6 @@
 <div>
    <ws:for data="key, value in data">
-      <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}">
+      <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}" class="ControlsDemo-AsyncDemo__container">
          <div>
             <ws:partial template="{{ value }}" value="{{is_OK}}"></ws:partial>
          </div>

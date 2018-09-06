@@ -74,11 +74,6 @@ define('Controls/List/Paging/DigitButtons', [
       _template: template,
       _digits: null,
 
-      constructor: function(cfg) {
-         ModuleClass.superclass.constructor.apply(this, arguments);
-         this._digits = [];
-      },
-
       _beforeMount: function(newOptions) {
          this._digits = _private.getDrawnDigits(newOptions.count, newOptions.selectedKey);
       },

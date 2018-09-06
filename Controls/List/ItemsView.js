@@ -29,7 +29,7 @@ define('Controls/List/ItemsView', [
       {
          _template: ItemsRenderTpl,
 
-         constructor: function(cfg) {
+         constructor: function() {
             ItemsRender.superclass.constructor.apply(this, arguments);
             this._onListChangeFnc = _private.onListChange.bind(this);
          },

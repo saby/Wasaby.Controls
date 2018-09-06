@@ -87,8 +87,7 @@ define('Controls/Button', [
    var Button = Control.extend({
       _template: template,
 
-      constructor: function(options) {
-         Button.superclass.constructor.apply(this, arguments);
+      _beforeMount: function(options) {
          _private.cssStyleGeneration(this, options);
       },
 

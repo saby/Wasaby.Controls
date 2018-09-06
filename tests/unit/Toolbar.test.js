@@ -113,6 +113,7 @@ define(
             it('click item with menu', function() {
                let isNotify = false;
                let eventString = '';
+               toolbar._beforeMount(config, null, records);
                toolbar._notify = (e) => {
                   eventString += e;
                   isNotify = true;

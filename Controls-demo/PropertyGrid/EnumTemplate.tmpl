@@ -1,0 +1,10 @@
+<div>
+    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+    <Controls.Input.ComboBox
+            source="{{_comboBoxSource()}}"
+            keyProperty="id"
+            scope="{{_options}}"
+            on:valueChanged="_valueChangedHandler()"
+            displayProperty="title"
+            attr:class="demo-TextBox"/>
+</div>

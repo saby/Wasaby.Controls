@@ -60,8 +60,7 @@ define('Controls/Toggle/DoubleSwitch', [
       _textTemplate: textTemplate,
       _toggleHoverState: false,
 
-      constructor: function(options) {
-         Switch.superclass.constructor.apply(this, arguments);
+      _beforeMount: function(options) {
          _private.checkCaptions(options.captions);
       },
 

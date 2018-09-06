@@ -43,7 +43,7 @@ define('Controls/List/ListView', [
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
-         constructor: function(cfg) {
+         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];
