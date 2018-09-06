@@ -41,7 +41,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
          $protected: {
             _options: {
                customConditions: [],
-               navigationType: 'Page'
+               navigationType: 'Page',
+               useQueue: null
             },
             // Очередь незавершённых запросов
             _queue: []
@@ -74,16 +75,21 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
           */
          query: function (query) {
             var queue = this._queue;
-            var queueItem = {
-               query: query,
-               //callPromise: undefined,
-               resultPromise: new Deferred()
-            };
-            queue.push(queueItem);
-            if (queue.length === 1) {
-               this._nextQuery();
+            if (this._options.useQueue) {
+               var queueItem = {
+                  query: query,
+                  //callPromise: undefined,
+                  resultPromise: new Deferred()
+               };
+               queue.push(queueItem);
+               if (queue.length === 1) {
+                  this._nextQuery();
+               }
+               return queueItem.resultPromise;
             }
-            return queueItem.resultPromise;
+            else {
+               return this._query(query);
+            }
          },
 
          _nextQuery: function () {
