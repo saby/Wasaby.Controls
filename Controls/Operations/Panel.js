@@ -27,17 +27,47 @@ define('Controls/Operations/Panel', [
 
    /**
     * @name Controls/Operations/Panel#multiSelectorVisibility
-    * @cfg {Boolean} multiSelector Show multiSelector block.
+    * @cfg {Boolean} Show the block with the operations of the mark.
+    * @remark
+    * Mark operations allow you to select, deselect, or invert the selection in the entire list.
+    * @example
+    * Hide the block with the operations of the mark:
+    * <pre>
+    *    <Controls.Operations.Panel multiSelectorVisibility="{{false}}" />
+    * </pre>
     */
 
    /**
     * @name Controls/Operations/Panel#rightTemplate
     * @cfg {Function} Template displayed on the right side of the panel.
+    * @example
+    * <pre>
+    *    <Controls.Operations.Panel rightTemplate="tmpl!MyModule/OperationsPanelRightTemplate" />
+    * </pre>
     */
 
    /**
     * @event Controls/Operations/Panel#itemClick Occurs when item was clicked.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} item Clicked item.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Operations.Panel on:itemClick="onPanelItemClick()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    onPanelItemClick: function(e, selection) {
+    *       var itemId = item.get('id');
+    *       switch (itemId) {
+    *          case 'remove':
+    *             this._removeItems();
+    *             break;
+    *          case 'move':
+    *             this._moveItems();
+    *             break;
+    *    }
+    * </pre>
     */
 
    return Control.extend({

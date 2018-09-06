@@ -8,7 +8,6 @@
 define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
    [
       'Core/Deferred',
-      'Core/helpers/Function/debounce',
       'Core/ParallelDeferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
@@ -19,7 +18,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
-   function (Deferred, coreDebounce, ParallelDeferred, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {
+   function (Deferred, ParallelDeferred, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -55,11 +54,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       var LOCK_DELAY = 750;
 
       /**
-       * Минимальный интервал между обновлениями изображения предпросмотра
+       * Задержка показа индикатора ожидания
        * @private
        * @type {number}
        */
-      var PREVIEW_DELAY = 750;
+      var WAIT_INDICATOR_DELAY = 600;
 
       /**
        * Масштаб  изображения предпросмотра
@@ -143,7 +142,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             _preview: null,
             // Происходит ли в данный момент процесс редактирования стилевого эксель-файла пользователем
             _isEditing: null,
-            // Стилевой эксель-файла изменён пользователем
+            // Изменён ли пользователем стилевой эксель-файл
             _isDifferent: null,
             // Поддерживается ли редактирование стилевого эксель-файла в отдельном приложении
             // TODO: Это временное решение пока метод canEditInApp форматтера не полностью фунционален. Позже заменить на прямые вызовы этого метода при каждом использовании меню выбора способв форматирования
@@ -306,6 +305,25 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          /**
+          * Вызвать метод форматера "getPreviewUrl"
+          *
+          * @protected
+          * @return {Core/Deferred<string>}
+          */
+         _callFormatterGetPreviewUrl: function () {
+            var options = this._options;
+            var usePrimary = !this._isDifferent && !!options.primaryUuid;
+            return this._exportFormatter.getPreviewUrl(
+               usePrimary ? options.primaryUuid : options.fileUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT
+            ).addCallbacks(
+               function (url) {
+                  return usePrimary ? '/previewer' + url : url;
+               }.bind(this),
+               function (err) { return err; }
+            );
+         },
+
+         /**
           * Вызвать метод форматера "create" или "clone"
           *
           * @protected
@@ -325,7 +343,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             ).addCallbacks(
                function (result) {
                   options.fileUuid = result;
-                  this._isDifferent = !isClone;
                   if (!isSilent) {
                      this.sendCommand('subviewChanged');
                   }
@@ -356,7 +373,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var promise = this._exportFormatter.update(fileUuid || options.fileUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams).addCallbacks(
                function () {
                   this._isDifferent = true;
-                  this._updatePreview(false);
+                  this._updatePreview();
                }.bind(this),
                function (err) { return err; }
             );
@@ -467,14 +484,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Запустить индикатор ожидания
           *
           * @protected
-          * @param {boolean} isForced Запустить заново, если индикатор уже запущен
           */
-         _waitIndicatorStart: function (isForced) {
-            if (isForced) {
-               this._updatePreviewClearStop();
-            }
+         _waitIndicatorStart: function () {
             if (!this._waitIndicatorStopper) {
-               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'dark', delay:300}, this._waitIndicatorStopper = new Deferred());
+               WaitIndicator.make({target:this._preview[0].parentNode, overlay:'white', delay:WAIT_INDICATOR_DELAY}, this._waitIndicatorStopper = new Deferred());
             }
          },
 
@@ -513,10 +526,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _updatePreviewClearStop: function () {
             this._waitIndicatorEnd();
          },
-         _updatePreviewStart: coreDebounce(function () {
+         _updatePreviewStart: function () {
             this._waitIndicatorStart();
             var options = this._options;
-            this._exportFormatter.getPreviewUrl(options.fileUuid || options.primaryUuid, PREVIEW_WIDTH, PREVIEW_HEIGHT).addCallbacks(
+            this._callFormatterGetPreviewUrl().addCallbacks(
                function (url) {
                   var cache = new Image();
                   cache.onload = cache.onerror = function () {
@@ -532,7 +545,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                }.bind(this),
                this._updatePreviewClearStop.bind(this)
             );
-         }, PREVIEW_DELAY),
+         },
 
          /**
           * Удалить стилевой эксель файл
@@ -625,6 +638,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (changes) {
                var isConsumerChanged = 'consumerId' in changes;
                var isFieldsChanged = 'fieldIds' in changes;
+               if (isConsumerChanged) {
+                  this._isDifferent = null;
+               }
                if (isConsumerChanged && options.primaryUuid) {
                   this._checkExistence().addCallback(this._restate.bind(this, isConsumerChanged, isFieldsChanged, meta));
                }

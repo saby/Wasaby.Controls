@@ -33,6 +33,7 @@ define('Controls/Container/List',
                   navigation: options.navigation,
                   searchDelay: options.searchDelay,
                   searchCallback: _private.searchCallback.bind(self, self),
+                  searchErrback: _private.searchErrback.bind(self, self),
                   abortCallback: _private.abortCallback.bind(self, self)
                });
             }
@@ -85,6 +86,16 @@ define('Controls/Container/List',
             self._source = self._options.source;
             self._navigation = self._options.navigation;
             self._forceUpdate();
+         },
+   
+         searchErrback: function(self, error) {
+            if (self._options.searchErrback) {
+               self._options.searchErrback(error);
+            }
+            self._source = new Memory({
+               model: self._options.source.getModel(),
+               idProperty: self._options.source.getIdProperty()
+            });
          },
          
          searchCallback: function(self, result, filter) {

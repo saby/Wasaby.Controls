@@ -245,7 +245,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
           TODO:Костыль из-за того что у объектов Excel и PDF методы называются по разному и разные сигнатуры
           Убрать после этой задачи: https://online.sbis.ru/opendoc.html?guid=22570030-999d-47cc-892f-115080fae08c
           */
-         if (object === 'PDF') {
+         if (object === 'PDF' && methodName !== 'SaveRecordSet') {
             _private.convertConfig(cfg, !this._isLongOperationsEnabled());
             methodName = 'Save';
          }

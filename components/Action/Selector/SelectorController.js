@@ -241,6 +241,10 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
              } else {
                 this._notify('onSelectComplete', this._options.selectedItems.clone());
              }
+   
+              if (!this._options.allowSelectionCommandBubbling) {
+                 return true;
+              }
           },
 
           _setContextItems: function(items){

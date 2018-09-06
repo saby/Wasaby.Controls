@@ -352,6 +352,26 @@ define([
                assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
+
+            it('unselect removed item', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [],
+                  items: allData
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.equal(5, selectionInstance.getCount());
+               selectionInstance._items.remove(selectionInstance._items.getRecordById(2));
+               selectionInstance.unselect([2]);
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.deepEqual([1, 5], selectionInstance.getSelectedKeysForRender());
+               assert.equal(2, selectionInstance.getCount());
+            });
          });
       });
    });

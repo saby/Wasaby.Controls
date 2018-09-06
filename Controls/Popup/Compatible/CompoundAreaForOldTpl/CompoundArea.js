@@ -49,17 +49,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          return !(result instanceof Error || result === false);
       }
 
-      function popupAfterUpdated(item, container) {
-         if (item.isHiddenForRecalc) {
-            // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
-            item.isHiddenForRecalc = false;
-            runDelayed(function() {
-               item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
-               container.className = container.className.replace('ws-invisible', '');
-            });
-         }
-      }
-
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
 
@@ -207,9 +196,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.VDOMReady = true;
             this.deprecatedContr(this._options);
 
-            var
-               self = this,
-               isLoadCompleted;
+            var self = this;
 
             // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
             // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
@@ -241,24 +228,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._notifyVDOM('resize', null, { bubbling: true });
             });
 
-            self.once('onInitComplete', function() {
-               if (self._options.catchFocus) {
-                  // Запоминаем, была ли область полностью загружена, когда мы в первый раз вызвали для нее autofocus
-                  isLoadCompleted = self._childControl.isAllReady && self._childControl.isAllReady();
-                  doAutofocus(self._childControl._container);
-               }
-            });
             self.rebuildChildControl().addCallback(function() {
                runDelayed(function() {
                   runDelayed(function() {
                      self._notifyCompound('onResize');
-
-                     // Если при первом вызове autofocus, область была загружена не до конца, ее содержимое за это время
-                     // могло измениться, и мог измениться контрол, на который должен попасть фокус, поэтому вызываем
-                     // autofocus еще раз, чтобы фокус попал туда куда нужно
-                     if (self._options.catchFocus && !isLoadCompleted) {
-                        doAutofocus(self._childControl._container);
-                     }
                   });
                });
             });
@@ -271,7 +244,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
-            if (hasHeader || this._options.type === 'dialog') {
+            if (hasHeader || (this._options.type === 'dialog' && !customHeaderContainer.length)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
@@ -677,7 +650,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                prevVisible = this._isVisible,
                popupContainer = this.getContainer().closest('.controls-Popup')[0],
                id = this._getPopupId(),
-               popupConfig = this._getManagerConfig();
+               popupConfig = this._getManagerConfig(),
+               self = this;
 
             if (popupConfig) {
                // Удалим или поставим ws-hidden в зависимости от переданного аргумента
@@ -707,6 +681,22 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
                   popupConfig.isHiddenForRecalc = true;
 
+                  function popupAfterUpdated(item, container) {
+                     if (item.isHiddenForRecalc) {
+                        // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
+                        item.isHiddenForRecalc = false;
+                        runDelayed(function() {
+                           item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
+                           container.className = container.className.replace('ws-invisible', '');
+                           if (self._options.catchFocus) {
+                              // автофокусировка теперь здесь, после того как все выехало, оживилось и отобразилось
+                              // если звать автофокусировку в момент когда контейнер visibility: hidden, не сфокусируется!
+                              doAutofocus(self._container);
+                           }
+                        });
+                     }
+                  }
+
                   // Нужно убрать класс `ws-invisible` после того как будет пересчитана позиция. Чтобы понять, когда
                   // это произошло, нужно пропатчить elementAfterUpdated в контроллере попапа, чтобы он поддерживал
                   // CompoundArea
@@ -717,6 +707,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                         popupAfterUpdated
                      );
                   }
+
+                  // если не попадаем в elementAfterUpdated потому что он случился раньше, то попадаем хотя бы по таймауту
+                  setTimeout(popupAfterUpdated.bind(self, popupConfig, popupContainer), 2000);
                }
 
                this._isVisible = visible;

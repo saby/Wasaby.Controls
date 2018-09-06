@@ -13,7 +13,7 @@ define('Controls/List/Remover', [
          self._items.setEventRaising(false, true);
          for (var i = 0; i < items.length; i++) {
             item = self._items.getRecordById(items[i]);
-            if (item && (!self._options.nodeProperty || !item.get(self._options.nodeProperty))) {
+            if (item) {
                self._items.remove(item);
             }
          }
