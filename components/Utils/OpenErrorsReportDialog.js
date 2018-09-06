@@ -75,14 +75,15 @@ define('SBIS3.CONTROLS/Utils/OpenErrorsReportDialog', [
                caption: cfg.title || '',
                opener: windowManager && windowManager.getActiveWindow(),
                handlers: {
-                  'onAfterLoad': function() {
+                  onAfterLoad: function() {
                      $('.ws-errorsReportDialog-errorsDescription', this.getContainer()).html('<div style="overflow: auto;">' + errorsText.join('<br>') + '</div>');
                      if (numErrors === 0) {
                         this.getContainer().find('.ws-errorsReportDialog-process-panel').css('display', 'none');
                      }
                   },
-                  'onDestroy': function() {
+                  onDestroy: function() {
                      finishContextDfr.callback();
+                     action.destroy();
                   }
                }
             }
