@@ -2,7 +2,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    [
       'Core/CommandDispatcher',
       'Lib/Control/CompoundControl/CompoundControl',
-      'wml!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
+      'tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
       'SBIS3.CONTROLS/Mixins/FilterMixin',
       'SBIS3.CONTROLS/Mixins/PickerMixin',
       'SBIS3.CONTROLS/Utils/TemplateUtil',
