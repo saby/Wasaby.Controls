@@ -1,5 +1,5 @@
 define('Controls/Operations/Panel/Utils', [
-   'tmpl!Controls/Operations/Panel/ItemTemplate',
+   'wml!Controls/Operations/Panel/ItemTemplate',
    'Controls/Utils/Toolbar',
    'Controls/Utils/getWidth'
 ], function(

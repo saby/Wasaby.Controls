@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input/Text',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Text/Text',
+      'wml!Controls-demo/Example/Input/Text/Text',
 
       'Controls/Input/Text',
       'Controls-demo/Example/resource/BaseDemoInput'

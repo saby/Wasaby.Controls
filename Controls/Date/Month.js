@@ -1,7 +1,7 @@
 define('Controls/Date/Month', [
    'Core/Control',
    'Core/core-merge',
-   'tmpl!Controls/Date/Month/Month',
+   'wml!Controls/Date/Month/Month',
    'Controls/Date/interface/IMonth',
    'Controls/Date/Month/Model',
    'css!SBIS3.CONTROLS/Date/MonthView/MonthView'

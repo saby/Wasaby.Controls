@@ -1,7 +1,7 @@
 define('Controls/Operations/Panel/View', [
    'Core/Control',
-   'tmpl!Controls/Operations/Panel/View/View',
-   'tmpl!Controls/Operations/Panel/ItemTemplate',
+   'wml!Controls/Operations/Panel/View/View',
+   'wml!Controls/Operations/Panel/ItemTemplate',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
    'Controls/Toolbar',

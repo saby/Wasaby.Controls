@@ -1,11 +1,11 @@
 define('Controls-demo/EditAtPlace/EditAtPlace', [
    'Core/Control',
-   'tmpl!Controls-demo/EditAtPlace/EditAtPlace',
+   'wml!Controls-demo/EditAtPlace/EditAtPlace',
    'Core/core-clone',
    'WS.Data/Entity/Record',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/EditAtPlace/resources/tabTemplate',
-   'tmpl!Controls-demo/EditAtPlace/resources/tabTemplate2',
+   'wml!Controls-demo/EditAtPlace/resources/tabTemplate',
+   'wml!Controls-demo/EditAtPlace/resources/tabTemplate2',
 
    'css!Controls-demo/EditAtPlace/EditAtPlace'
 ], function(

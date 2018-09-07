@@ -1,6 +1,6 @@
 define('Controls/Header/Separator', [
    'Core/Control',
-   'tmpl!Controls/Header/Separator/Separator',
+   'wml!Controls/Header/Separator/Separator',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/Separator/Separator'
 ], function(Control, template, types) {

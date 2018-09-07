@@ -1,7 +1,7 @@
 define('Controls-demo/Themes/Test',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Themes/Test'
+      'wml!Controls-demo/Themes/Test'
    ],
    function(Control, template) {
 

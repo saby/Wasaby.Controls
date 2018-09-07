@@ -1,7 +1,7 @@
 define('Controls/DragNDrop/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/DragNDrop/Controller/Controller'
+      'wml!Controls/DragNDrop/Controller/Controller'
    ],
 
    function(Control, template) {

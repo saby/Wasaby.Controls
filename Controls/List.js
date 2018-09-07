@@ -3,7 +3,7 @@
  */
 define('Controls/List', [
    'Core/Control',
-   'tmpl!Controls/List/List',
+   'wml!Controls/List/List',
    'Controls/List/ListViewModel',
    'Controls/List/ListView',
    'Controls/List/ListControl'

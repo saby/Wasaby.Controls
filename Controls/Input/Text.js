@@ -2,13 +2,13 @@ define('Controls/Input/Text',
    [
       'Core/Control',
       'Controls/Utils/tmplNotify',
-      'tmpl!Controls/Input/Text/Text',
+      'wml!Controls/Input/Text/Text',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
-      'tmpl!Controls/Input/resources/input'
+      'wml!Controls/Input/resources/input'
    ],
    function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
       'use strict';

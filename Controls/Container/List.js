@@ -1,7 +1,7 @@
 define('Controls/Container/List',
    [
       'Core/Control',
-      'tmpl!Controls/Container/List/List',
+      'wml!Controls/Container/List/List',
       'WS.Data/Source/Memory',
       'Controls/Controllers/_SearchController',
       'Core/core-merge',

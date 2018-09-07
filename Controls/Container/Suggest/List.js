@@ -4,7 +4,7 @@
 define('Controls/Container/Suggest/List',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Suggest/List/List',
+      'wml!Controls/Container/Suggest/List/List',
       'Core/core-clone',
       'Controls/Container/Suggest/Layout/_SuggestOptionsField'
    ],

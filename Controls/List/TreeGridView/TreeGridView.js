@@ -1,6 +1,6 @@
 define('Controls/List/TreeGridView/TreeGridView', [
    'Controls/List/Grid/GridView',
-   'tmpl!Controls/List/TreeGridView/Item',
+   'wml!Controls/List/TreeGridView/Item',
    'css!Controls/List/TreeGridView/TreeGridView'
 ], function(GridView, DefaultItemTpl) {
 

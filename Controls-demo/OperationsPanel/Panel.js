@@ -1,7 +1,7 @@
 define('Controls-demo/OperationsPanel/Panel', [
    'Core/Control',
-   'tmpl!Controls-demo/OperationsPanel/Panel/Panel',
-   'tmpl!Controls-demo/OperationsPanel/Panel/RightTemplate',
+   'wml!Controls-demo/OperationsPanel/Panel/Panel',
+   'wml!Controls-demo/OperationsPanel/Panel/RightTemplate',
    'WS.Data/Source/Memory',
    'css!Controls-demo/OperationsPanel/Panel/Panel'
 ], function(Control, template, RightTemplate, MemorySource) {

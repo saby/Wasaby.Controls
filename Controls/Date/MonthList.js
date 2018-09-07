@@ -1,9 +1,9 @@
 define('Controls/Date/MonthList', [
    'Core/Control',
    'Core/core-merge',
-   'tmpl!Controls/Date/MonthList/MonthList',
+   'wml!Controls/Date/MonthList/MonthList',
    'Controls/Date/MonthList/CalendarSource',
-   'tmpl!Controls/Date/MonthList/MonthListItem'
+   'wml!Controls/Date/MonthList/MonthListItem'
 ], function(
    BaseControl,
    coreMerge,
@@ -83,7 +83,7 @@ define('Controls/Date/MonthList', [
 
    ModuleComponent.getDefaultOptions = function() {
       return coreMerge({
-         itemTemplate: 'tmpl!Controls/Date/MonthList/MonthListItem'
+         itemTemplate: 'wml!Controls/Date/MonthList/MonthListItem'
       }, {});
    };
 

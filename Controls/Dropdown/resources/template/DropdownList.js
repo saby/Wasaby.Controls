@@ -1,13 +1,13 @@
 define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/resources/template/DropdownList',
+      'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
       'Controls/Popup/PopupContext',
-      'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
-      'tmpl!Controls/Dropdown/resources/template/itemTemplate',
-      'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
+      'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
+      'wml!Controls/Dropdown/resources/template/itemTemplate',
+      'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
+      'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],

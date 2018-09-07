@@ -1,7 +1,7 @@
 define('Controls-demo/StickyHeader/StickyHeader',
    [
       'Core/Control',
-      'tmpl!Controls-demo/StickyHeader/StickyHeader',
+      'wml!Controls-demo/StickyHeader/StickyHeader',
 
       'css!Controls-demo/StickyHeader/StickyHeader',
       'Controls/Container/Scroll'

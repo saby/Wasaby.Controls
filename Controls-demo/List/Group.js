@@ -3,10 +3,10 @@
  */
 define('Controls-demo/List/Group', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Group',
+   'wml!Controls-demo/List/Group',
    'Controls/Constants',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/List/DemoGroupTemplate'
+   'wml!Controls-demo/List/DemoGroupTemplate'
 ], function (BaseControl,
              template,
              ControlsConstants,

@@ -6,7 +6,7 @@
  */
 define('Controls-demo/Layouts/SearchLayout', [
    'Core/Control',
-   'tmpl!Controls-demo/Layouts/SearchLayout/SearchLayout',
+   'wml!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'WS.Data/Source/Memory',
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
@@ -15,9 +15,9 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Filter/Button',
    'Controls/Button',
    'Controls/Input/Dropdown',
-   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
-   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
-   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate'
+   'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
+   'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
+   'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate'
 
 ], function(BaseControl,
    template,
