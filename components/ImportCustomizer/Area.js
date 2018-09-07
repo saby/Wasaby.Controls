@@ -910,11 +910,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var notWaiting = !options.waitingMode;
             var dataType = options.dataType;
             var isExcel = dataType === Area.DATA_TYPE_EXCEL;
+            var parsers = options.parsers;
             return {
                 sheet: notWaiting && isExcel,
                 baseParams: notWaiting,
                 provider: notWaiting && isExcel,
-                providerArgs: notWaiting && isExcel && !!(options.parsers && Object.keys(options.parsers).length),
+                providerArgs: notWaiting && isExcel && parsers !== null && !(parsers && !Object.keys(parsers).length),
                 columnBinding: notWaiting && (isExcel || dataType === Area.DATA_TYPE_DBF),
                 mapper: notWaiting && dataType === Area.DATA_TYPE_CML
             };
