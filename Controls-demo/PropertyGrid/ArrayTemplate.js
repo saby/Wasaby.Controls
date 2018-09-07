@@ -1,7 +1,8 @@
 define('Controls-demo/PropertyGrid/ArrayTemplate',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/ArrayTemplate',
+      'wml!Controls-demo/PropertyGrid/ArrayTemplate',
+      'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],

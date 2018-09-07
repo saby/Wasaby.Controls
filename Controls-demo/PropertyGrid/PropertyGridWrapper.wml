@@ -1,4 +1,3 @@
-
 <div class="controls-demo_Wrapper">
     <div class="controls-demo_options-wrapper">
 
@@ -7,7 +6,6 @@
                                scopeObject="{{_options.componentOpt}}"
                                attr:class="controls-FilterPanel__PropertyGrid"
                                on:itemsChanged="_valueChangedHandler()">
-            <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
         </Controls.PropertyGrid>
     </div>
     <div class="controls-demo_event-example__wrapper " >
