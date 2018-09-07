@@ -252,7 +252,12 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                }));
             }.bind(this),
             function (err) {
-               promise.errback(err);
+               if (this._options.useQueue) {
+                  promise.errback(err);
+               }
+               else {
+                  //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+               }
             }.bind(this));
          }
       });
