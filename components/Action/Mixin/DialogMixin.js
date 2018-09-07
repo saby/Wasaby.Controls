@@ -67,7 +67,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             componentOptions: null,
 
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
+             * @typedef {Object} DialogOptions
+             * @property {Function} onResultHandler Обработчик на событие onResult.
+             * @property {Function} onCloseHandler Обработчик на событие onClose.
+             * @property {Object} Опции контрола (Lib/Control/Dialog/Dialog или Lib/Control/FloatArea/FloatArea - см. {@link mode}), на основе которого создаётся диалог.
+             */
+
+            /**
+             * @cfg {DialogOptions[]} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
             dialogOptions: null
          },
