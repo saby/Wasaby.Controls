@@ -190,13 +190,16 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (meta.mode !== 'dialog' && cfg.isStack === true) {
             dependencies.push('Controls/Popup/Opener/Stack/StackController');
             cfg._type = 'stack';
+            cfg._popupComponent = 'floatArea';
             cfg.className = (cfg.className || '') + ' controls-Stack';
          } else if (meta.mode !== 'dialog' && cfg.isStack === false && cfg.target) {
             dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
             cfg._type = 'sticky';
+            cfg._popupComponent = 'floatArea';
          } else {
             dependencies.push('Controls/Popup/Opener/Dialog/DialogController');
             cfg._type = 'dialog';
+            cfg._popupComponent = cfg._mode;
          }
          dependencies.push(cfg.template);
          return dependencies
