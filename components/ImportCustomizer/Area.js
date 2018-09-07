@@ -303,6 +303,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             //Место назначения для импортирования (таблица в базе данных и т.п.)
             destination: null
          },
+         parsers: {
+            // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
+            // TODO: Обдумать удаление поля order
+            'InColumnsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
+            'InRowsHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
+            'OutlineHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
+         },
          validators: [
             {
                validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
@@ -402,13 +409,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {object<ImportParser>} Список всех доступных провайдеров парсинга импортируемых данных
                 */
-               parsers: {
-                  // TODO: Обдумать добавление поля applicable:Array<string> для указания типов данных (Excel или DBF)
-                  // TODO: Обдумать удаление поля order
-                  'InColumnsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), order:10},
-                  'InRowsHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:20},
-                  'OutlineHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:30}
-               },
+               parsers: null,
                /**
                 * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера} (опционально)
                 */
@@ -606,7 +607,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          _resolveOptions: function (options) {
             var defaultOptions = Area.getDefaultOptions();
             for (var name in defaultOptions) {
-               if (options[name] ==/*Не ===*/ null) {
+               if (options[name] === undefined) {
                   options[name] = defaultOptions[name];
                }
             }
@@ -1206,22 +1207,25 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var parsers = options.parsers;
             if (parsers) {
                var parser = options.parsers[parserName];
-               if (parser && parser.component) {
-                  var sheets = options.sheets;
-                  var sheetIndex = options.sheetIndex;
-                  var values = {
-                     dataType: options.dataType,
-                     columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
-                  };
-                  var parserArgs = parser.args;
-                  if (parserArgs) {
-                     values = cMerge(values, parserArgs);
+               if (parser) {
+                  var values;
+                  if (parser.component) {
+                     var sheets = options.sheets;
+                     var sheetIndex = options.sheetIndex;
+                     values = {
+                        dataType: options.dataType,
+                        columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0
+                     };
+                     var parserArgs = parser.args;
+                     if (parserArgs) {
+                        values = cMerge(values, parserArgs);
+                     }
                   }
                   var providerArgs = options.providerArgs;
                   if (providerArgs) {
                      var args = providerArgs[parserName];
                      if (args) {
-                        values = cMerge(values, args);
+                        values = cMerge(values || {}, args);
                      }
                   }
                   return values;
