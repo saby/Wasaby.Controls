@@ -49,6 +49,10 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             delete cfg.html;
             cfg.Sync = true;
          } else {
+            if (cfg.Limit) {
+               delete cfg.Limit;
+               cfg.Pagination = null;
+            }
             cfg.HierarchyField = cfg.HierarchyField || null;
             cfg.Sync = sync;
          }
