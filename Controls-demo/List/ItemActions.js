@@ -3,7 +3,7 @@
  */
 define('Controls-demo/List/ItemActions', [
    'Core/Control',
-   'tmpl!Controls-demo/List/ItemActions/ItemActions',
+   'wml!Controls-demo/List/ItemActions/ItemActions',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/List/ItemActions/ItemActions'

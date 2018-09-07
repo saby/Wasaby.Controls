@@ -1,6 +1,6 @@
 define('Controls-demo/Menu/MenuVdom', [
    'Core/Control',
-   'tmpl!Controls-demo/Menu/MenuVdom',
+   'wml!Controls-demo/Menu/MenuVdom',
    'Core/core-clone',
    'WS.Data/Source/DataSet',
    'WS.Data/Collection/RecordSet',
@@ -11,8 +11,8 @@ define('Controls-demo/Menu/MenuVdom', [
    'WS.Data/Query/Query',
    'Core/Deferred',
    'WS.Data/Adapter/Sbis',
-   'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
-   'tmpl!Controls-demo/Menu/DemoGroupTemplate',
+   'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
+   'wml!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom'
 ], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants, Query, Deferred, SbisAdapter) {
    'use strict';
@@ -144,7 +144,7 @@ define('Controls-demo/Menu/MenuVdom', [
                   }
                   return item.get('group');
                },
-               template: 'tmpl!Controls-demo/Menu/DemoGroupTemplate',
+               template: 'wml!Controls-demo/Menu/DemoGroupTemplate',
             };
             this._itemsGroup = {
                method: function(item) {

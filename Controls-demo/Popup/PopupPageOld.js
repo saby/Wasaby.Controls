@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/PopupPageOld',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/PopupPageOld',
+      'wml!Controls-demo/Popup/PopupPageOld',
       'SBIS3.CONTROLS/Action/List/OpenEditDialog',
       'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPageOld'

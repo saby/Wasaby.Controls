@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/TestDialog',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/TestDialog'
+      'wml!Controls-demo/Popup/TestDialog'
    ],
    function (Control, template) {
       'use strict';

@@ -1,7 +1,7 @@
 define('Controls/Input/Search/Suggest',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Search/Suggest',
+      'wml!Controls/Input/Search/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Search'
    ],

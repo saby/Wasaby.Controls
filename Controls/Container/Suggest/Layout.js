@@ -1,8 +1,8 @@
 define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Suggest/Layout/Suggest',
-      'tmpl!Controls/Container/Suggest/Layout/empty',
+      'wml!Controls/Container/Suggest/Layout/Suggest',
+      'wml!Controls/Container/Suggest/Layout/empty',
       'WS.Data/Type/descriptor',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
@@ -443,7 +443,7 @@ define('Controls/Container/Suggest/Layout',
          return {
             emptyTemplate: emptyTemplate,
             footerTemplate: {
-               templateName: 'tmpl!Controls/Container/Suggest/Layout/footer'
+               templateName: 'wml!Controls/Container/Suggest/Layout/footer'
             },
             suggestStyle: 'default',
             suggestState: false,

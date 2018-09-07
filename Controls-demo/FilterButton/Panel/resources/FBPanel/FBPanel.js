@@ -4,7 +4,7 @@
 define('Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel', // Устанавливаем имя, по которому демо-компонент будет доступен в других компонентах
    [ // Массив зависимостей компонента
       'Lib/Control/CompoundControl/CompoundControl', // Подключаем базовый компонент, от которого далее будем наследовать свой демо-компонент
-      'tmpl!Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel', // Подключаем вёрстку диалога с фильтрами
+      'wml!Controls-demo/FilterButton/Panel/resources/FBPanel/FBPanel', // Подключаем вёрстку диалога с фильтрами
       'SBIS3.CONTROLS/ComboBox', // Подключаем контрол "Выпадающий список"
       'SBIS3.CONTROLS/TextBox', 
       'SBIS3.CONTROLS/Filter/Button/Text',

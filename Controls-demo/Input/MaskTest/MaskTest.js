@@ -1,6 +1,6 @@
 define('Controls-demo/Input/MaskTest/MaskTest', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/MaskTest/MaskTest',
+   'wml!Controls-demo/Input/MaskTest/MaskTest',
    'WS.Data/Source/Memory'
 ], function(Control, template) {
 

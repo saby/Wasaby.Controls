@@ -1,6 +1,6 @@
 define('Controls/List/TreeControl', [
    'Core/Control',
-   'tmpl!Controls/List/TreeControl/TreeControl',
+   'wml!Controls/List/TreeControl/TreeControl',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',

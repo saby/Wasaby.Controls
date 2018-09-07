@@ -1,0 +1,2 @@
+<ws:partial template="wml!Controls/List/Grid/Item" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}" swipeTemplate="{{swipeTemplate}}" multiSelectTpl="{{multiSelectTpl}}" actionsType="{{actionsType}}" groupTemplate="{{groupTemplate}}">
+</ws:partial>

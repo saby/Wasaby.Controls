@@ -1,7 +1,7 @@
 define('Controls-demo/InfoBox/InfoBox',
    [
       'Core/Control',
-      'tmpl!Controls-demo/InfoBox/InfoBox',
+      'wml!Controls-demo/InfoBox/InfoBox',
 
       'Controls/Popup/InfoBox'
    ],
