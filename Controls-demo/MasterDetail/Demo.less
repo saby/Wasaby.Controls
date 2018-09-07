@@ -29,17 +29,17 @@
 }
 
 .controls-demo_MasterDetail_master {
-  min-width: 200px;
-  flex-shrink: 0;
-  height: 100%;
   &_search {
      padding: 12px;
      border-bottom: 1px solid #eaeaea;
   }
 }
 
+.controls-demo_MasterDetail_master, .controls-demo_MasterDetail_detail {
+   height: 200px;
+}
+
 .controls-demo_MasterDetail_detail {
-  flex-grow: 1;
    &_search {
       padding: 12px;
       border-bottom: 1px solid #eaeaea;
@@ -50,8 +50,8 @@
 }
 
 .controls-demo_MasterDetail {
-  height: 300px;
   border-bottom: 1px solid #EAEAEA;
   border-top: 1px solid #EAEAEA;
   display: flex;
+  margin-bottom: 50px;
 }
