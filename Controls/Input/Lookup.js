@@ -225,7 +225,7 @@ define('Controls/Input/Lookup', [
             });
          } else {
             this._children.selectorOpener.open({templateOptions: {
-               selectedItems:  _private.getItems(this)
+               selectedItems: _private.getItems(this)
             }});
          }
       },
