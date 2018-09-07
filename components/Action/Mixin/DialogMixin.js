@@ -67,14 +67,15 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             componentOptions: null,
 
             /**
-             * @typedef {Object} DialogOptions
-             * @property {Function} onResultHandler Обработчик на событие onResult.
-             * @property {Function} onCloseHandler Обработчик на событие onClose.
-             * @property {Object} Опции контрола (Lib/Control/Dialog/Dialog или Lib/Control/FloatArea/FloatArea - см. {@link mode}), на основе которого создаётся диалог.
-             */
-
-            /**
-             * @cfg {DialogOptions[]} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}).
+             * @remark
+             * Опции контрола (Lib/Control/Dialog/Dialog или Lib/Control/FloatArea/FloatArea - см. {@link mode}),
+             * на основе которого создаётся диалог.
+             * Для компонентов Wasaby, которые планируется открывать с помощью SBIS3.CONTROLS/Action/OpenDialog, добавляются:
+             * <ul>
+             *    <li>onResultHandler - функция-обработчик на событие onResult</li>
+             *    <li>onCloseHandler - функция-обработчик на событие onClose</li>
+             * </ul>
              */
             dialogOptions: null
          },
