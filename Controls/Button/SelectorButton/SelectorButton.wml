@@ -1,0 +1,38 @@
+<div class="controls-SelectorButton">
+   <ws:if data="{{_selectedItems && _selectedItems.getCount() !== 0}}">
+      <ws:if data="{{_selectedItems.getCount() > _options.maxVisibilityItems}}">
+         <div class="controls-SelectorButton__counterItems">
+            <span name="hiddenItems" on:click="_showHiddenItems()"
+                  attr:class="controls-SelectorButton__counterItems">({{_selectedItems.getCount()}})</span>
+            <span>...</span>
+         </div>
+      </ws:if>
+      <Controls.Input.Lookup._Collection
+              items="{{_selectedItemsVisible}}"
+              displayProperty="{{_options.displayProperty}}"
+              multiline="{{true}}"
+              on:itemClick="_itemClickHandler()"
+              on:crossClick="_crossClick()"/>
+      <ws:if data="{{_options.multiSelect}}">
+         <Controls.Button style="linkMain2" size="s" caption="{[+еще]}" on:click="_open()"
+                          attr:class="controls-SelectorButton_button-more"/>
+      </ws:if>
+      <ws:if data="{{_selectedItems.getCount() > 1}}">
+         <Controls.Button style="linkMain2" size="s" caption="{[Очистить]}" on:click="_reset()"
+                          attr:class="controls-SelectorButton_button-more"/>
+      </ws:if>
+   </ws:if>
+   <ws:else>
+      <Controls.Button name="link" on:click="_open()" style="{{_options.style}}" caption="{{_options.caption}}"/>
+   </ws:else>
+   <Controls.Selector.Opener name="selectorOpener">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResult}}"/>
+      </ws:popupOptions>
+   </Controls.Selector.Opener>
+   <Controls.Popup.Opener.Sticky name="stickyOpener">
+      <ws:popupOptions className="controls-SelectorButton__popup-margins">
+         <ws:eventHandlers onResult="{{_resultHiddenItem}}"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Sticky>
+</div>
