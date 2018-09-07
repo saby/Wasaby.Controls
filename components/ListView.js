@@ -3839,7 +3839,6 @@ define('SBIS3.CONTROLS/ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
-            this._redrawTheadAndTfoot();
          },
 
          _setLoadMoreCaption: function(dataSet){

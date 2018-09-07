@@ -1157,6 +1157,11 @@ define('SBIS3.CONTROLS/DataGridView',
          }
       },
 
+      _drawPage: function() {
+         DataGridView.superclass._drawPage.apply(this, arguments);
+         this._redrawTheadAndTfoot();
+      },
+
       _redrawItems: function() {
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          this._redrawTheadAndTfoot();
