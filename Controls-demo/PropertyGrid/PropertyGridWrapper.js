@@ -39,16 +39,26 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                notOrigin = this._children[opts.componentOpt.name]._notify;
             this._children[opts.componentOpt.name]._notify = function(event, arg) {
                self.myEvent += event + '\n';
+               if (event === opts.eventType) {
+                  opts.componentOpt[opts.nameOption] = arg[0];
+               }
                notOrigin.apply(this, arguments);
                self._forceUpdate();
             };
          },
          _valueChangedHandler: function() {
-            this._forceUpdate();
+            this._notify('optionsChanged', [this._options]);
          },
          reset: function() {
             this.myEvent = '';
          }
       });
+
+      PGWrapper.getDefaultOptions = function() {
+         return {
+            nameOption: 'value',
+            eventType: 'valueChanged'
+         };
+      };
       return PGWrapper;
    });

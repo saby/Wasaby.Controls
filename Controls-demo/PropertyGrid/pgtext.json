@@ -491,5 +491,49 @@
         }
       }
     }
+  },
+  "Controls/Filter/Button": {
+    "name": "Controls/Filter/Button",
+    "title": "Control \"ComboBox\"",
+    "className": "Controls/Filter/Button",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Button",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "items": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "Properties for editing or showing"
+          },
+          "templateName": {
+            "type": "String"
+          },
+          "lineSpaceTemplate": {
+            "type": "function",
+            "title": "Template for the space between the filter button and the string."
+          },
+          "orientation": {
+            "type": "enum",
+            "title": "Sets the direction in which the popup panel will open.",
+            "enum": {
+              "right" : "The panel opens to the left",
+              "left" : "The panel opens to the right"
+            }
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          }
+        }
+      }
+    }
   }
 }

@@ -1,0 +1,45 @@
+<ws:template name="interval">
+   <Controls.Input.Dropdown
+           keyProperty="key"
+           displayProperty="title"
+           bind:textValue="item.textValue"
+           bind:selectedKeys="item.value">
+      <ws:source module='WS.Data/Source/Memory'>
+         <ws:options idProperty="key">
+            <ws:data>
+               <ws:Array>
+                  <ws:Object key="{{'0'}}" title='All time' ></ws:Object>
+                  <ws:Object key="{{'1'}}" title='Today' ></ws:Object>
+                  <ws:Object key="{{'2'}}" title='Past month' ></ws:Object>
+                  <ws:Object key="{{'3'}}" title='Past 6 months' ></ws:Object>
+                  <ws:Object key="{{'4'}}" title='Past year' ></ws:Object>
+               </ws:Array>
+            </ws:data>
+         </ws:options>
+      </ws:source>
+   </Controls.Input.Dropdown>
+</ws:template>
+
+<ws:template name="type">
+<Controls.Input.Dropdown
+        keyProperty="key"
+        displayProperty="title"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value">
+   <ws:source module='WS.Data/Source/Memory'>
+      <ws:options idProperty="key">
+         <ws:data>
+            <ws:Array>
+               <ws:Object key="{{'0'}}" title='All' ></ws:Object>
+               <ws:Object key="{{'1'}}" title='Black' ></ws:Object>
+               <ws:Object key="{{'2'}}" title='Green' ></ws:Object>
+               <ws:Object key="{{'3'}}" title='Yellow' ></ws:Object>
+            </ws:Array>
+         </ws:data>
+      </ws:options>
+   </ws:source>
+</Controls.Input.Dropdown>
+</ws:template>
+
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

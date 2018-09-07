@@ -160,6 +160,9 @@ define('Controls/Filter/Button',
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
             }
+            if (this._options.orientation !== options.orientation) {
+               _private.setPopupOptions(this, options);
+            }
          },
 
          _getFilterState: function() {

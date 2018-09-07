@@ -3,6 +3,7 @@
         dataObject="{{_dataObject}}"
         componentOpt="{{_componentOptions}}"
         content="{{_content}}"
+        on:optionsChanged="_optionsChanged()"
         eventType="{{_eventType}}"
         nameOption="{{_nameOption}}">
 </Controls-demo.PropertyGrid.PropertyGridWrapper>
