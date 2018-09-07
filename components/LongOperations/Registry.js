@@ -94,6 +94,8 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
 
             this._bindEvents();
             var promise = this._longOpList.reload();
+            // Показать индикатор ожидания (однократно). Используем отдельный индикатор, так как встроенный в ListView индикатор отключен ввиду неприличного мельтешения при частом обновлении листа
+            // 1175877396 https://online.sbis.ru/opendoc.html?guid=8d94ea45-e039-448f-87f6-433ca71737d3
             WaitIndicator.make({target:this, overlay:'white', delay:300, message:rk('Загрузка...')}, promise);
          },
 
