@@ -6,6 +6,18 @@
                               items="{{_breadCrumbsItems}}"
                               on:arrowActivated="_onBreadCrumbsArrowActivated()"
                               on:itemClick="_onBreadCrumbsClick()" />
-   <Controls.TreeGrid root="{{_root}}" scope="{{_options}}" on:itemClick="_onItemClick()" dataLoadCallback="{{_dataLoadCallback}}">
-   </Controls.TreeGrid>
+   <Controls.TreeGrid root="{{_root}}"
+                      scope="{{_options}}"
+                      on:itemClick="_onItemClick()"
+                      on:checkboxClick="_notifyHandler('checkboxClick')"
+                      on:beforeItemAdd="_notifyHandler('beforeItemAdd')"
+                      on:beforeItemEdit="_notifyHandler('beforeItemEdit')"
+                      on:afterItemEdit="_notifyHandler('afterItemEdit')"
+                      on:beforeItemEndEdit="_notifyHandler('beforeItemEndEdit')"
+                      on:afterItemEndEdit="_notifyHandler('afterItemEndEdit')"
+                      on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                      on:dragStart="_notifyHandler('dragStart')"
+                      on:dragEnd="_notifyHandler('dragEnd')"
+                      on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                      dataLoadCallback="{{_dataLoadCallback}}"/>
 </div>

@@ -67,6 +67,9 @@ define('Controls/Explorer', [
       },
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
          _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
+      },
+      _notifyHandler: function(e, eventName) {
+         return this._notify(eventName, Array.prototype.slice.call(arguments, 2));
       }
    });
 
