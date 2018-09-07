@@ -255,6 +255,12 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showMessageDialog
           */
          showCustomNotification: function(inst, notHide) {
+            /**
+             * На VDOM старые окна должны открываться через VDOM открываторы. Например как в методе showNotification.
+             * Из-за того что метод принимает инстанс комопнента мы не можем его открыть через VDOM открыватор.
+             * Будем работать через VDOM контроллер. Когда будут открываться старые окна, то будем добавлять в контроллер фейковые
+             * элементы. При любых изменениях старых или новых окон, будем пересчитывать их позиции.
+             */
             if (NotificationVDOM.isNewEnvironment()) {
                var fakeItem = {
                   _isFake: true

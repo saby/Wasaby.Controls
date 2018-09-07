@@ -178,6 +178,11 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                   zIndex = 1000000;
                }
 
+               /**
+                * На VDOM позиционируемся через VDOM контроллер нотификационных окон.
+                * Требуется для поддержки метода SBIS3.CONTROLS/Utils/InformationPopupManager::showCustomNotification
+                * В нем подробно написано по какой причине так нужно делать.
+                */
                if (isNewEnvironment()) {
                   var indexFakeItem = -1;
                   var iterator = 0;
