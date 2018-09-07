@@ -350,7 +350,9 @@ define(
        */
       setDate: function (date, silent) {
          this._setDate(date, silent);
-         if (!silent) {
+         if (silent) {
+            this._lastNotifiedDate = date;
+         } else {
             this._onTextChanged();
             this._notifyOnDateChanged();
          }
