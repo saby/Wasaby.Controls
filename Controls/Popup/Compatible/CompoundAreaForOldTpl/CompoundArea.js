@@ -682,7 +682,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
                   popupConfig.isHiddenForRecalc = true;
 
-                  function popupAfterUpdated(item, container) {
+                  var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
                         // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                         item.isHiddenForRecalc = false;
@@ -696,7 +696,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                            }
                         });
                      }
-                  }
+                  };
 
                   // Нужно убрать класс `ws-invisible` после того как будет пересчитана позиция. Чтобы понять, когда
                   // это произошло, нужно пропатчить elementAfterUpdated в контроллере попапа, чтобы он поддерживал
