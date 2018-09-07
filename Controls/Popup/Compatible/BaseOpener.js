@@ -227,11 +227,11 @@ function(cMerge,
          if (cfg.hasOwnProperty('offset')) {
             if (cfg.offset.x) {
                cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
+               cfg.horizontalAlign.offset = parseInt(cfg.offset.x, 10);
             }
             if (cfg.offset.y) {
                cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
+               cfg.verticalAlign.offset = parseInt(cfg.offset.y, 10);
             }
          }
 
