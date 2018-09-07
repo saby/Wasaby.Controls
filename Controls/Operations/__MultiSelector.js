@@ -1,6 +1,6 @@
 define('Controls/Operations/__MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Operations/__MultiSelector',
+   'wml!Controls/Operations/__MultiSelector',
    'WS.Data/Source/Memory',
    'Controls/Container/MultiSelector/SelectionContextField'
 ], function(Control, template, Memory, SelectionContextField) {
