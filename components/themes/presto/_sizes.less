@@ -338,7 +338,7 @@
 //VDOM Switcher
 //If border in height text block base line between text and toggle circle deviates to switch border height.
 //In vertical state width = height, height = width.
-@height_Switch__textBlock_vertical:                 @width_Switch - 2 * @border-width_Switch;
+@height_Switch__textBlock_vertical:                 @width_Switch / 2 - @border-width_Switch;
 @width_Switch:                                      round(100px * @multiplier);
 @height_Switch:                                     round(50px * @multiplier);
 @border-radius_Switch:                              round(28px * @multiplier);
