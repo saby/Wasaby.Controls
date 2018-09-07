@@ -1,4 +1,4 @@
-define('Controls-demo/Input/Text/TextPG',
+define('Controls-demo/Input/Area/AreaPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/Input/Text/TextPG',
@@ -12,10 +12,10 @@ define('Controls-demo/Input/Text/TextPG',
 
    function(Control, template, myTmpl, config) {
       'use strict';
-      var TextPG = Control.extend({
+      var AreaPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Input/Text',
+         _content: 'Controls/Input/Area',
          _my: myTmpl,
          _dataObject: null,
          _textOptions: null,
@@ -47,19 +47,23 @@ define('Controls-demo/Input/Text/TextPG',
                }
             };
             this._textOptions = {
-               name: 'TextBox',
+               name: 'Area',
                placeholder: 'Input text',
                tagStyle: 'primary',
                constraint: '',
+               value: '',
                trim: false,
                maxLength: 100,
                selectOnClick: true,
                readOnly: false,
                tooltip: 'myTooltip',
-               validationErrors: ''
+               validationErrors: '',
+               minLines: 3,
+               maxLines: 6,
+               newLineKey: 'enter'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return TextPG;
+      return AreaPG;
    });
