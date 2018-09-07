@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'Core/RightsManager',
+      'SBIS3.CONTROLS/WaitIndicator',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/groupTpl',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/emptyHTMLTpl',
       'tmpl!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
@@ -16,7 +17,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
       'SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter'
    ],
 
-   function (CompoundControl, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
+   function (CompoundControl, RightsManager, WaitIndicator, groupTpl, emptyHTMLTpl, dotTplFn) {
       'use strict';
 
       var FILTER_STATUSES = {
@@ -92,7 +93,8 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
             });
 
             this._bindEvents();
-            this._longOpList.reload();
+            var promise = this._longOpList.reload();
+            WaitIndicator.make({target:this, overlay:'white', delay:300, message:rk('Загрузка...')}, promise);
          },
 
          _modifyOptions: function () {
