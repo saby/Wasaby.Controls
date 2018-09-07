@@ -712,7 +712,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         var skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
-                           providerArgs: this._getProviderArgsOptions(options, parserName, false),
+                           providerArgs: this._getProviderArgsOptions(options, parserName),
                            columnBinding: {mapping:options.columnBindingMapping[i] || {}, skippedRows:skippedRows}
                         };
                      }
@@ -1150,7 +1150,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           */
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;
-            var providerArgs = result.providerArgs;
+            var providerArgs = cMerge(provider.parser ? this._insertDefaultProviderArgsOptions({}, this._options, provider.parser) : {}, result.providerArgs || {});
             var columnBindingMapping = result.columnBinding.mapping;
             var item = {
                parser: provider.parser || null,
@@ -1160,7 +1160,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (provider.separator) {
                item.separator = provider.separator;
             }
-            item.parserConfig = providerArgs ? ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v]; return r; }, {}) : {};
+            item.parserConfig = ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v] || null; return r; }, {});
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;
@@ -1177,7 +1177,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * Обновить компонент провайдера парсинга
           *
           * @protected
-          * @param {string} parser Имя выбранного парсера
+          * @param {string} parserName Имя выбранного парсера
           */
          _updateProviderArgsView: function (parserName) {
             var view = this._views.providerArgs;
@@ -1195,15 +1195,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * Получить получить набор опций для компонента провайдера парсинга
+          * Получить полный набор опций для компонента провайдера парсинга
           *
           * @protected
           * @param {object} options Опции
-          * @param {string} parser Имя выбранного парсера
-          * @param {boolean} withHandler Вместе с обработчиками событий
+          * @param {string} parserName Имя выбранного парсера
           * @return {object}
           */
-         _getProviderArgsOptions: function (options, parserName, withHandler) {
+         _getProviderArgsOptions: function (options, parserName) {
             var parsers = options.parsers;
             if (parsers) {
                var parser = options.parsers[parserName];
@@ -1221,16 +1220,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         values = cMerge(values, parserArgs);
                      }
                   }
-                  var providerArgs = options.providerArgs;
-                  if (providerArgs) {
-                     var args = providerArgs[parserName];
-                     if (args) {
-                        values = cMerge(values || {}, args);
-                     }
-                  }
-                  return values;
+                  return this._insertDefaultProviderArgsOptions(values || {}, options, parserName);
                }
             }
+         },
+
+         /*
+          * Добавить в данные опции по умолчанию для компонента провайдера парсинга
+          *
+          * @protected
+          * @param {object} data Данные
+          * @param {object} options Опции
+          * @param {string} parserName Имя выбранного парсера
+          * @return {object}
+          */
+         _insertDefaultProviderArgsOptions: function (data, options, parserName) {
+            var providerArgs = options.providerArgs;
+            if (providerArgs) {
+               var args = providerArgs[parserName];
+               if (args) {
+                  return cMerge(data, args);
+               }
+            }
+            return data;
          },
 
          destroy: function () {
