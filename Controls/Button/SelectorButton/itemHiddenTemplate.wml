@@ -1,0 +1,12 @@
+<div attr:class="controls-SelectorButton__popup"
+     attr:style="width: {{_options.width}}px;"
+     on:mouseleave="_mouseOutHandler()">
+   <span attr:class="controls-SelectorButton__counterItems">({{_options.items.getCount()}})</span>
+   <Controls.Input.Lookup._Collection
+           items="{{_options.items}}"
+           displayProperty="{{_options.displayProperty}}"
+           multiline="{{true}}"
+           on:crossClick="_crossClick()"
+           on:itemClick="_itemClick()">
+   </Controls.Input.Lookup._Collection>
+</div>
