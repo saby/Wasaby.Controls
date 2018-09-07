@@ -1,0 +1,46 @@
+<Controls.Container.Suggest.Layout
+        on:choose="_choose()"
+        on:deactivated="_deactivated()"
+        suggestTemplate="{{_options.suggestTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        source="{{_options.source}}"
+        searchParam="{{_options.searchParam}}"
+        trim="{{_options.trim}}"
+        navigation="{{_options.navigation}}"
+        tooltip="{{_options.tooltip}}"
+        bind:suggestState="_suggestState"
+        filter="{{_options.filter}}">
+    <Controls.Input.resources.InputRender.InputRender
+            size="{{ _options.size }}"
+            viewModel="{{ _simpleViewModel }}"
+            trim="{{ _options.trim }}"
+            selectOnClick="{{ _options.selectOnClick }}"
+            inputCharRegExp="{{ _options.inputCharRegExp }}"
+            constraint="{{ _options.constraint }}"
+            value="{{ _options.value }}"
+            tagStyle="{{ _options.tagStyle }}"
+            placeholder="{{ _isEmpty ? _options.placeholder }}"
+            validationErrors="{{ _options.validationErrors }}"
+            content="{{ _isEmpty ? 'wml!Controls/Input/resources/input' }}"
+            on:valueChanged="_changeValueHandler()"
+            attr:class="controls-Lookup__inputRender">
+
+        <ws:beforeFieldWrapper>
+            <ws:if data="{{!_isEmpty}}">
+                <Controls.Input.Lookup._Collection
+                        items="{{_items}}"
+                        displayProperty="{{_options.displayProperty}}"
+                        itemTemplate="{{_options.itemTemplate}}"
+                        on:itemClick="_itemClick()"
+                        on:crossClick="_crossClick()"/>
+            </ws:if>
+        </ws:beforeFieldWrapper>
+
+        <ws:afterFieldWrapper>
+            <ws:if data="{{!_options.readOnly}}">
+                <div class="controls-Lookup__showSelector icon-ListView"></div>
+            </ws:if>
+        </ws:afterFieldWrapper>
+
+    </Controls.Input.resources.InputRender.InputRender>
+</Controls.Container.Suggest.Layout>

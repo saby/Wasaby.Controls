@@ -1,6 +1,6 @@
 define('Controls-demo/Switch/standartDemoSwitch', [
    'Core/Control',
-   'tmpl!Controls-demo/Switch/standartDemoSwitch',
+   'wml!Controls-demo/Switch/standartDemoSwitch',
    'WS.Data/Source/Memory',
    'css!Controls-demo/Switch/standartDemoSwitch'
 ], function(Control, template, MemorySource) {

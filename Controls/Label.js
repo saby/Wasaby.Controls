@@ -1,7 +1,7 @@
 define('Controls/Label',
    [
       'Core/Control',
-      'tmpl!Controls/Label/Label',
+      'wml!Controls/Label/Label',
 
       'css!Controls/Label/Label'
    ],

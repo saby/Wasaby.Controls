@@ -1,6 +1,6 @@
 define('Controls/Heading', [
    'Core/Control',
-   'tmpl!Controls/Header/Heading',
+   'wml!Controls/Header/Heading',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/Heading'
 ], function(Control, template, types) {

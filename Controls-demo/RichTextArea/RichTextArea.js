@@ -1,6 +1,6 @@
 define('Controls-demo/RichTextArea/RichTextArea', [
    'Core/Control',
-   'tmpl!Controls-demo/RichTextArea/RichTextArea',
+   'wml!Controls-demo/RichTextArea/RichTextArea',
    'css!Controls-demo/RichTextArea/RichTextArea'
 ], function (Control, template) {
    'use strict';

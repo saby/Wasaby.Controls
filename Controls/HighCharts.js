@@ -1,6 +1,6 @@
 define('Controls/HighCharts', [
    'Core/Control',
-   'tmpl!Controls/HighCharts/HighCharts',
+   'wml!Controls/HighCharts/HighCharts',
    'Controls/HighCharts/resources/ParseDataUtil',
    'Core/core-merge'
 ], function(Control, template, ParseDataUtil, cMerge) {

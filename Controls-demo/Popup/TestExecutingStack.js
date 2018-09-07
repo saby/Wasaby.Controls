@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/TestExecutingStack',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/TestExecutingStack',
+      'wml!Controls-demo/Popup/TestExecutingStack',
       'Core/Deferred'
    ],
    function (Control, template, Deferred) {

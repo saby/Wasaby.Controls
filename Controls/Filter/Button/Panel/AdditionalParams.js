@@ -3,7 +3,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'WS.Data/Utils',
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
-   'tmpl!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
+   'wml!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
    'WS.Data/Chain',
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
 ], function(Control, Utils, isEqual, Clone, template, Chain) {

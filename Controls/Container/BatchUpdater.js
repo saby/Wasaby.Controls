@@ -7,7 +7,7 @@ define('Controls/Container/BatchUpdater',
       'Core/Deferred',
       'Core/ParallelDeferred',
       'Core/IoC',
-      'tmpl!Controls/Container/BatchUpdater/BatchUpdater'
+      'wml!Controls/Container/BatchUpdater/BatchUpdater'
    ],
 
    function(Base, Deferred, ParallelDeferred, IoC, template) {

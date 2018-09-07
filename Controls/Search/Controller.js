@@ -2,7 +2,7 @@
 define('Controls/Search/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Search/Controller',
+      'wml!Controls/Search/Controller',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
       'Controls/Controllers/_SearchController',

@@ -1,7 +1,7 @@
 define('Controls/Container/Data',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Data/Data',
+      'wml!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
       'Controls/Container/Data/ContextOptions'
    ],

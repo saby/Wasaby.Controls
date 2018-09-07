@@ -1,6 +1,6 @@
 define('Controls-demo/Input/VDomInputs/VDomInputs', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/VDomInputs/VDomInputs'
+   'wml!Controls-demo/Input/VDomInputs/VDomInputs'
 ], function(Control, template) {
 
    'use strict';

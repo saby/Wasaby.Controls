@@ -1,6 +1,6 @@
 define('Controls-demo/Calendar/MonthSlider', [
    'Core/Control',
-   'tmpl!Controls-demo/Calendar/MonthSlider'
+   'wml!Controls-demo/Calendar/MonthSlider'
 ], function(
    BaseControl,
    template

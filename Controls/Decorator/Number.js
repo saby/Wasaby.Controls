@@ -2,7 +2,7 @@ define('Controls/Decorator/Number',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorator/Number/Number'
+      'wml!Controls/Decorator/Number/Number'
    ],
    function(Control, descriptor, template) {
 

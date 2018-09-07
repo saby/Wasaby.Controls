@@ -1,0 +1,7 @@
+<ws:partial template="wml!Controls/Input/Dropdown/resources/defaultContentTemplate">
+   <ws:contentTemplate>
+      <div class="ControlsDemo-InputDropdown-contentTemplate">
+         <div class="controls-Dropdown__text">{{text}}</div>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

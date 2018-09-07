@@ -1,6 +1,6 @@
 define('Controls-demo/Date/MonthView', [
    'Core/Control',
-   'tmpl!Controls-demo/Date/MonthView',
+   'wml!Controls-demo/Date/MonthView',
    'Controls/Date/MonthView'
 ], function(
    BaseControl,

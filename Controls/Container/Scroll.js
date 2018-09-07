@@ -7,7 +7,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
-      'tmpl!Controls/Container/Scroll/Scroll',
+      'wml!Controls/Container/Scroll/Scroll',
       'Controls/Container/Scroll/Watcher',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
@@ -28,8 +28,6 @@ define('Controls/Container/Scroll',
        * @category Container
        * @demo Controls-demo/Container/Scroll
        *
-       * @cssModifier controls-Scroll_webkitOverflowScrollingAuto Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
-       * @cssModifier controls-Scroll_webkitOverflowScrollingTouch Use momentum-based scrolling, where the content continues to scroll for a while after finishing the scroll gesture and removing your finger from the touchscreen.
        */
 
       /**

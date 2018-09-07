@@ -1,0 +1,3 @@
+<div class="ws-ItemsView">
+   <ws:partial template="wml!Controls/List/ItemsView/resources/For" listModel="{{_listModel}}" itemTemplate="{{_options.itemTemplate}}"></ws:partial>
+</div>

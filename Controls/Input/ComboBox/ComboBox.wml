@@ -1,0 +1,43 @@
+<Controls.Dropdown.Controller
+        source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        itemTemplateProperty="{{_options.itemTemplateProperty}}"
+        itemTemplate="{{_options.itemTemplate}}"
+        selectedKeys="{{[_options.selectedKey]}}"
+        emptyText="{{_options.emptyText}}"
+        corner="{{_corner}}"
+        width="{{_width}}"
+        marker="{{false}}"
+        className="{{_options.className ? _options.className + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
+        typeShadow="suggestionsContainer"
+        close="{{_onClose}}"
+        dataLoadCallback="{{_setText}}"
+        tooltip="{{_options.tooltip}}"
+        on:selectedItemsChanged="_selectedItemsChangedHandler()"
+        on:mousedown="_mouseDownHandler()"
+        class="controls-ComboBox">
+
+      <Controls.Input.resources.InputRender.InputRender
+              size="{{_options.size}}"
+              tooltip="{{_options.tooltip}}"
+              tagStyle="{{_options.tagStyle}}"
+              viewModel="{{_simpleViewModel}}"
+              on:tagClick="_notifyHandler('tagClick')"
+              on:tagHover="_notifyHandler('tagHover')"
+              placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
+              validationErrors="{{_options.validationErrors}}"
+              class="controls-ComboBox-InputRender">
+
+         <ws:content>
+            <ws:partial
+                    template="wml!Controls/Input/resources/input"
+                    readOnly="{{!_options.editable}}"
+                    value="{{_value}}"/>
+         </ws:content>
+
+         <ws:afterFieldWrapper>
+            <Controls.Button.Separator if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
+         </ws:afterFieldWrapper>
+
+      </Controls.Input.resources.InputRender.InputRender>
+</Controls.Dropdown.Controller>

@@ -1,7 +1,7 @@
 define('Controls-demo/DragNDrop/Basket', [
    'Core/Control',
    'Core/core-instance',
-   'tmpl!Controls-demo/DragNDrop/Basket/Basket',
+   'wml!Controls-demo/DragNDrop/Basket/Basket',
    'css!Controls-demo/DragNDrop/Basket/Basket'
 ], function(BaseControl, cInstance, template) {
    'use strict';

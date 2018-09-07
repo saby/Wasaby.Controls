@@ -35,6 +35,10 @@ define('Controls/List/interface/ITreeControl', [
     * @cfg {Function} Sets footer template that will be shown for every node.
     */
 
+   /**
+    * @name Controls/List/interface/ITreeControl#hasChildrenProperty
+    * @cfg {String} Name of the field that contains information whether the node has children.
+    */
 
    /**
     * @event Controls/List/interface/ITreeControl#itemExpand Occurs before node expansion.
