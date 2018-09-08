@@ -9,6 +9,7 @@ define('Controls/Application/_Head',
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
+
       // Component for <head> html-node
 
       var Page = Base.extend({

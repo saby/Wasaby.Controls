@@ -27,14 +27,14 @@ define('Controls/Application',
     */
 
    function(Base,
-      template,
-      Deferred,
-      BodyClasses,
-      compatibility,
-      AppData,
-      HeadDataContext,
-      LinkResolver,
-      ThemesController) {
+            template,
+            Deferred,
+            BodyClasses,
+            compatibility,
+            AppData,
+            HeadDataContext,
+            LinkResolver,
+            ThemesController) {
       'use strict';
 
       var _private,
@@ -115,7 +115,7 @@ define('Controls/Application',
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
-            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot)
+            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
             context.headData.pushDepComponent(self.application, false);
 

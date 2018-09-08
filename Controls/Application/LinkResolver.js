@@ -12,10 +12,10 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          this.isDebug = isDebug;
          this.buildNumber = buildNumber || '';
          var fullResourcePath = '';
-         if(appRoot) {
+         if (appRoot) {
             fullResourcePath += '/' + appRoot + '/';
          }
-         if(resourceRoot) {
+         if (resourceRoot) {
             fullResourcePath += '/' + resourceRoot + '/';
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
@@ -37,17 +37,17 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          return res;
       },
       getLinkWithTheme: function(cssName, theme) {
-         if(!theme) {
+         if (!theme) {
             return cssName;
          }
          return cssName + '_' + theme;
       },
       getLinkWithExt: function(link, ext) {
          var res = link;
-         if(this.isDebug) {
+         if (this.isDebug) {
             res = link + '.' + ext;
          } else {
-            if(!this.buildNumber) {
+            if (!this.buildNumber) {
                res = link + '.min.' + ext;
             } else {
                res = link + '.min.v' + this.buildNumber + '.' + ext;

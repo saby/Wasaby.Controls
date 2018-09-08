@@ -132,22 +132,22 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          this.appRoot = appRoot;
       },
       collectDependencies: function(deps) {
-         var files = { js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [] };
-         var allDeps = { js: {}, css: {}, tmpl: {}};
+         var files = {js: [], css: {themedCss: [], simpleCss: []}, tmpl: []};
+         var allDeps = {js: {}, css: {}, tmpl: {}};
          recursiveWalker(allDeps, deps, this.modDeps);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
          for (var key in packages.js) {
-            if(packages.js.hasOwnProperty(key)) {
+            if (packages.js.hasOwnProperty(key)) {
                files.js.push(key);
             }
          }
          for (var key in packages.tmpl) {
-            if(packages.tmpl.hasOwnProperty(key)) {
+            if (packages.tmpl.hasOwnProperty(key)) {
                files.tmpl.push(key);
             }
          }
          for (var key in packages.css.themedCss) {
-            if(packages.css.themedCss.hasOwnProperty(key)) {
+            if (packages.css.themedCss.hasOwnProperty(key)) {
                if (!packages.js[key] && packages.css.themedCss[key] === DEPTYPES.BUNDLE) {
                   files.js.push(key);
                }
@@ -155,7 +155,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             }
          }
          for (var key in packages.css.simpleCss) {
-            if(packages.css.simpleCss.hasOwnProperty(key)) {
+            if (packages.css.simpleCss.hasOwnProperty(key)) {
                if (!packages.js[key] && packages.css.simpleCss[key] === DEPTYPES.BUNDLE) {
                   files.js.push(key);
                }

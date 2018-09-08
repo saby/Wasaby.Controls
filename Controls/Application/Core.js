@@ -12,13 +12,12 @@ define('Controls/Application/Core',
       'Core/css-resolve'
    ],
    function(Control,
-            template,
-            AppData,
-            HeadDataContext,
-            ThemesController,
-            nativeCss,
-            cssResolve) {
-
+      template,
+      AppData,
+      HeadDataContext,
+      ThemesController,
+      nativeCss,
+      cssResolve) {
       'use strict';
 
       function parseTheme(path) {
@@ -43,7 +42,6 @@ define('Controls/Application/Core',
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-
             if (cfg.lite) {
                var myLoadCssFn = function(path, require, load, conf) {
                   var parseInfo = parseTheme(path);
@@ -63,7 +61,7 @@ define('Controls/Application/Core',
             }
 
             try {
-               /*TODO: set to presentation service*/
+               /* TODO: set to presentation service */
                process.domain.req.compatible = false;
             } catch (e) {
             }
@@ -85,5 +83,4 @@ define('Controls/Application/Core',
       });
 
       return AppCore;
-   }
-);
+   });
