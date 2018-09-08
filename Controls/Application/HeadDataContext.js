@@ -7,7 +7,6 @@ define('Controls/Application/HeadDataContext', [
    'Core/Serializer'
 
 ], function(DataContext, DepsCollector, Deferred, cookie, common, Serializer) {
-
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -42,7 +41,7 @@ define('Controls/Application/HeadDataContext', [
    }
 
    bundles = bundles || {};
-   modDeps = modDeps || {links: {}, nodes: {}};
+   modDeps = modDeps || { links: {}, nodes: {} };
    contents = contents || {};
 
    return DataContext.extend({
@@ -94,7 +93,7 @@ define('Controls/Application/HeadDataContext', [
                }
             }
             var components = Object.keys(self.depComponentsMap);
-            if(self.isDebug) {
+            if (self.isDebug) {
                var files = {};
             } else {
                var files = depsCollector.collectDependencies(components);
