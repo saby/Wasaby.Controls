@@ -221,6 +221,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      //Демо пример с двухколночным браузером со списком, гридом и деревом
+      '/demo-ws4-master-detail': function(req, res) {
+         requirejs('Controls-demo/MasterDetail/Demo');
+         res.render('tmpl!Controls/Application/Route', {
+            application: 'Controls-demo/MasterDetail/Demo',
+            initDependencies: false
+         }, []);
+      },
+
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
         ### Для построения страницы используется шаблон VIEW. ###
