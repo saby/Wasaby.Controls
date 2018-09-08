@@ -94,7 +94,11 @@ define('Controls/Application/HeadDataContext', [
                }
             }
             var components = Object.keys(self.depComponentsMap);
-            var files = depsCollector.collectDependencies(components);
+            if(this.isDebug) {
+               var files = depsCollector.collectDependencies(components);
+            } else {
+               var files = {};
+            }
             self._version++;
             self.defRender.callback({
                js: files.js || [],
