@@ -39,7 +39,7 @@
          </ws:if>
          <ws:else>
             <link rel="stylesheet" class="css-bundles"
-                  href="{{ cssLinkResolver.linkResolver.resolveCssWithTheme(value, 'css', _options.theme) }}"
+                  href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css', _options.theme) }}"
                   type="text/css"
                   key="{{ 'themedCss_' + index }}"/>
          </ws:else>

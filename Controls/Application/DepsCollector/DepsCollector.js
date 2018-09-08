@@ -23,7 +23,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function getPackageName(packageLink) {
 
-      return packageLink.replace(/^(\/resources\/|resources\/)/, '').replace(/\.min\.(css|js|tmpl)$/, '');
+      return packageLink.replace(/^(\/resources\/|resources\/)+/g, '').replace(/\.min\.(css|js|tmpl)$/, '');
    }
 
    function isThemedCss(key) {
