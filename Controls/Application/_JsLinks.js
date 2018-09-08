@@ -13,33 +13,37 @@ define('Controls/Application/_JsLinks',
 
       var Page = Base.extend({
          _template: template,
-         _beforeMount: function(options, context, receivedState) {
+         _beforeMount: function(options, context) {
             if (typeof window !== 'undefined') {
                return;
             }
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
-            self.jsLinks = [];
             def.addCallback(function onLoad(res) {
-               self.jsLinks = res.jsLinks;
-               self.cssLinks = res.cssLinks;
+               self.js = res.js;
+               self.tmpl = res.tmpl;
+               self.themedCss = res.themedCss;
+               self.simpleCss = res.simpleCss;
                self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
             });
             return innerDef;
          },
-         getCssNameForDefine: function(cssLink) {
-            return cssLink.replace('/resources/', '').replace(/\.min\..*$/, '');
+         getCssNameForDefineWithTheme: function(cssLink) {
+            return 'theme?' + cssLink;
          },
          getDefines: function() {
             if (!this.cssLinks) {
                return;
             }
             var result = '';
-            for (var i = 0; i < this.cssLinks.length; i++) {
-               result += 'define("css!' + this.getCssNameForDefine(this.cssLinks[i]) + '", "");';
+            for (var i = 0; i < this.simpleCss.length; i++) {
+               result += 'define("css!' + this.simpleCss[i] + '", "");';
+            }
+            for (var i = 0; i < this.themedCss.length; i++) {
+               result += 'define("css!' + this.getCssNameForDefineWithTheme(this.themedCss[i]) + '", "");';
             }
             return result;
          }

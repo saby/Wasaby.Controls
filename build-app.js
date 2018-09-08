@@ -121,8 +121,8 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
          if (!fs.existsSync(path.join(root, 'application', one.name))) {
             let oldName = one.path.split('/');
             oldName = oldName[oldName.length - 1];
-            fs.symlinkSync(path.join(one.path), path.join(root, 'application', one.name), 'dir');
-            //fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', one.name));
+            //fs.symlinkSync(path.join(one.path), path.join(root, 'application', one.name), 'dir');
+            fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', one.name));
          }
       });
 

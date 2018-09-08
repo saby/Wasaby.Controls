@@ -36,7 +36,7 @@ define('Controls/Application/HeadDataContext', [
 
    }
    try {
-      bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
+      bundles = require('json!resources/bundlesRoute');
    } catch (e) {
 
    }
@@ -84,7 +84,7 @@ define('Controls/Application/HeadDataContext', [
       },
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber, self.appRoot);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             var rcsData = self.serializeReceivedStates();
@@ -94,26 +94,19 @@ define('Controls/Application/HeadDataContext', [
                }
             }
             var components = Object.keys(self.depComponentsMap);
-            if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
-               var files = depsCollector.collectDependencies(components);
-               self.jsLinks = files.js;
-               self.cssLinks = self.cssLinks ? self.cssLinks.concat(files.css) : files.css;
-            } else {
-               self.jsLinks = [];
-               self.cssLinks = self.cssLinks || [];
-            }
+            var files = depsCollector.collectDependencies(components);
             self._version++;
             self.defRender.callback({
-               jsLinks: self.jsLinks || [],
-               cssLinks: self.cssLinks || [],
+               js: files.js || [],
+               tmpl: files.tmpl || [],
+               css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serializedMap,
                additionalDeps: Object.keys(rcsData.additionalDepsMap).concat(Object.keys(self.additionalDeps))
-
             });
          });
       },
-      constructor: function(theme, buildNumber, cssLinks) {
+      constructor: function(theme, buildNumber, cssLinks, appRoot) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
@@ -121,7 +114,9 @@ define('Controls/Application/HeadDataContext', [
          this.receivedStateArr = {};
          this.additionalDeps = {};
          this.buildNumber = buildNumber;
+         this.appRoot = appRoot;
          this.cssLinks = cssLinks;
+         this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
       },
       pushCssLink: function(url) {
          this.cssLinks.push(url);

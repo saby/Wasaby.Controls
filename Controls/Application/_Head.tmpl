@@ -29,28 +29,27 @@
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
-         {{debug()}}
          <ws:if data="{{isMultiThemes()}}">
             <ws:for data="thInd, oneTheme in _options.theme">
                <link rel="stylesheet" class="css-bundles"
-                     href="{{ getCssWithTheme(value, oneTheme) }}"
+                     href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css', oneTheme) }}"
                      type="text/css"
                      key="{{ 'css_' + index + '_' + thInd}}"/>
             </ws:for>
          </ws:if>
          <ws:else>
             <link rel="stylesheet" class="css-bundles"
-                  href="{{ getCssWithTheme(value, _options.theme) }}"
+                  href="{{ cssLinkResolver.linkResolver.resolveCssWithTheme(value, 'css', _options.theme) }}"
                   type="text/css"
                   key="{{ 'themedCss_' + index }}"/>
          </ws:else>
       </ws:if>
       <ws:else>
-         <link rel="stylesheet" class="css-bundles" href="{{ value }}" type="text/css" key="{{ 'simpleCss_' + index }}"/>
+         <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'simpleCss_' + index }}"/>
       </ws:else>
    </ws:for>
    <ws:for data="index, value in simpleCss">
-      <link rel="stylesheet" class="css-bundles" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
+      <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'css_' + index }}"/>
    </ws:for>
    <title key="title">{{ _options.title }}</title>
    {{ errorState }}

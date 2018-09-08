@@ -7,17 +7,37 @@ define('Controls/Application/Core',
       'tmpl!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
+      'Core/Themes/ThemesController',
       'native-css',
       'Core/css-resolve'
    ],
    function(Control,
-      template,
-      AppData,
-      HeadDataContext,
-      nativeCss,
-      cssResolve) {
+            template,
+            AppData,
+            HeadDataContext,
+            ThemesController,
+            nativeCss,
+            cssResolve) {
 
       'use strict';
+
+      function parseTheme(path) {
+         var splitted = path.split('theme?');
+         var res;
+         if (splitted.length > 1) {
+            res = {
+               name: splitted[1],
+               hasTheme: true
+            };
+         } else {
+            res = {
+               name: path,
+               hasTheme: false
+            };
+         }
+         return res;
+      }
+
 
       var AppCore = Control.extend({
          _template: template,
@@ -25,15 +45,15 @@ define('Controls/Application/Core',
          constructor: function(cfg) {
 
             if (cfg.lite) {
-               var self = this,
-                  myLoadCssFn = function(path, require, load, conf) {
-                     load(null);
-                     self.headDataCtx.pushCssLink(cssResolve(path));
-                     self.headDataCtx.updateConsumers();
-                     if (typeof window === 'undefined') {
-                        requirejs.undef('css!' + path);
-                     }
-                  };
+               var myLoadCssFn = function(path, require, load, conf) {
+                  var parseInfo = parseTheme(path);
+                  if (parseInfo.hasTheme) {
+                     ThemesController.getInstance().pushThemedCss(cssResolve(parseInfo.name));
+                  } else {
+                     ThemesController.getInstance().pushSimpleCss(cssResolve(path));
+                  }
+                  load(null);
+               };
 
                if (typeof process !== 'undefined' && process.domain && process.domain.req && process.domain.req.loadCss) {
                   process.domain.req.loadCss = myLoadCssFn;
@@ -50,7 +70,7 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot, cfg.resourceRoot);
          },
          _getChildContext: function() {
             return {

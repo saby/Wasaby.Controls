@@ -10,9 +10,10 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
+      'Controls/Application/LinkResolver',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
-      'css!Controls/Application/Application'
+      'css!theme?Controls/Application/Application'
    ],
 
    /**
@@ -32,6 +33,7 @@ define('Controls/Application',
       compatibility,
       AppData,
       HeadDataContext,
+      LinkResolver,
       ThemesController) {
       'use strict';
 
@@ -102,6 +104,7 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
+
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
@@ -111,6 +114,8 @@ define('Controls/Application',
             self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
+
+            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot)
 
             context.headData.pushDepComponent(self.application, false);
 

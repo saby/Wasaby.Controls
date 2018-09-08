@@ -4,27 +4,30 @@ define('Controls/Application/_Head',
       'Core/Deferred',
       'tmpl!Controls/Application/_Head',
       'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController'
+      'Core/Themes/ThemesController',
+      'Controls/Application/LinkResolver'
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
-
-      //Component for <head> html-node
+      // Component for <head> html-node
 
       var Page = Base.extend({
          _template: template,
-         _beforeMount: function(options, context, receivedState) {
-            if (typeof window !== 'undefined' && !window.themesActive) {
+         _beforeMount: function(options, context) {
+            if (typeof window !== 'undefined') {
+               var csses = ThemesController.getInstance().getCss();
+               this.themedCss = csses.themedCss;
+               this.simpleCss = csses.simpleCss;
                return;
             }
+
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
             def.addCallback(function(res) {
-               var csses = ThemesController.getInstance().getCss();
-               self.themedCss = csses.themedCss;
-               self.simpleCss = csses.simpleCss;
+               self.themedCss = res.css.themedCss;
+               self.simpleCss = res.css.simpleCss;
                self.errorState = res.errorState;
                innerDef.callback(true);
                return res;
@@ -36,9 +39,6 @@ define('Controls/Application/_Head',
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);
-         },
-         getCssWithTheme: function(value, theme) {
-            return  value.replace(/(.min.css$|.css$)/g, '') + '_' + theme + '.css';
          }
       });
       Page.contextTypes = function() {

@@ -2,39 +2,10 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
    'Core/core-extend'
 ], function(Logger, coreExtend) {
-
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
    };
-
-   function getLinkWithAppRoot(value, appRoot) {
-      if (appRoot) {
-         value = appRoot + value;
-         value = value.replace('//', '/');
-      }
-      return value;
-   }
-
-   function getLinkWithBuildNumber(link, buildnumber) {
-      if (buildnumber) {
-         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildnumber + '$&');
-      } else {
-         return link;
-      }
-   }
-
-   function checkResourcesPrefix(link) {
-      var path = link.split('/');
-      if (path[0] === '') {
-         path.shift();
-      }
-      if (path[0] !== 'resources') {
-         path.unshift('resources');
-      }
-      var res = path.join('/');
-      return '/' + res;
-   }
 
    function isJs(key) {
       return key.split('!')[0] === key;
@@ -50,21 +21,16 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return keySplitted[0] === 'tmpl' && keySplitted.length > 1;
    }
 
-   function fixLinkSlash(link) {
-      if (link.indexOf('/') !== 0) {
-         return '/' + link;
-      } else {
-         return link;
-      }
+   function getPackageName(packageLink) {
+
+      return packageLink.replace(/^(\/resources\/|resources\/)/, '').replace(/\.min\.(css|js|tmpl)$/, '');
    }
 
+   function isThemedCss(key) {
+      return !!~key.indexOf('theme?');
+   }
 
-   /**
-    * Checks if dependency is a part of any bundle and removes from allDeps
-    * @param allDeps
-    * @returns {{}} Object, that contains all bundles for pre-load
-    */
-   function getPackages(allDeps, modInfo, bundlesRoute) {
+   function getPackagesNames(allDeps, bundlesRoute) {
       var packages = {};
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
@@ -72,20 +38,58 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
-               packages[fixLinkSlash(bundleName)] = DEPTYPES.BUNDLE;
+               packages[getPackageName(bundleName)] = DEPTYPES.BUNDLE;
             }
          }
       }
-
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            if (modInfo[key]) {
-               if (isJs(key) || isCss(key) || isTmpl(key)) {
-                  packages[fixLinkSlash(modInfo[key].path)] = DEPTYPES.SINGLE;
+            packages[key] = DEPTYPES.SINGLE;
+         }
+      }
+      return packages;
+   }
+
+   function getCssPackages(allDeps, bundlesRoute) {
+      var packages = {
+         themedCss: {},
+         simpleCss: {}
+      };
+      for (var key in allDeps) {
+         if (allDeps.hasOwnProperty(key)) {
+            var bundleName = bundlesRoute[key];
+            if (bundleName) {
+               Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
+               delete allDeps[key];
+               if (isThemedCss(key)) {
+                  packages.themedCss[bundleName.split('theme?')[1]] = DEPTYPES.BUNDLE;
+               } else {
+                  packages.simpleCss[getPackageName(bundleName)] = DEPTYPES.BUNDLE;
                }
             }
          }
       }
+      for (var key in allDeps) {
+         if (allDeps.hasOwnProperty(key)) {
+            if (isThemedCss(key)) {
+               packages.themedCss[key.split('theme?')[1]] = DEPTYPES.SINGLE;
+            } else {
+               packages.simpleCss[getPackageName(key)] = DEPTYPES.SINGLE;
+            }
+         }
+      }
+      return packages;
+   }
+
+   function getAllPackagesNames(allDeps, bundlesRoute) {
+      var packages = {
+         js: {},
+         css: {},
+         tmpl: {}
+      };
+      packages.js = getPackagesNames(allDeps.js, bundlesRoute);
+      packages.tmpl = getPackagesNames(allDeps.tmpl, bundlesRoute);
+      packages.css = getCssPackages(allDeps.css, bundlesRoute);
       return packages;
    }
 
@@ -98,10 +102,15 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                splitted.shift();
                node = splitted.join('!');
             }
-            if (!allDeps[node]) { // If module can be pre-loaded BRANCH
-               var nodeDeps = modDeps[node];
-               allDeps[node] = true;
+            var nodeDeps = modDeps[node];
+            if (isTmpl(node) && !allDeps.tmpl[node]) {
+               allDeps.tmpl[node.split('tmpl!')[1]] = true;
                recursiveWalker(allDeps, nodeDeps, modDeps);
+            } else if (isJs(node) && !allDeps.js[node]) {
+               allDeps.js[node] = true;
+               recursiveWalker(allDeps, nodeDeps, modDeps);
+            } else if (isCss(node) && !allDeps.css[node]) {
+               allDeps.css[node.split('css!')[1]] = true;
             }
          }
       }
@@ -123,33 +132,37 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          this.appRoot = appRoot;
       },
       collectDependencies: function(deps) {
-         var files = {js: [], css: []};
-         var allDeps = {};
+         var files = { js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [] };
+         var allDeps = { js: {}, css: {}, tmpl: {}};
          recursiveWalker(allDeps, deps, this.modDeps);
-         var packages = getPackages(allDeps, this.modInfo, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
-         for (var key in packages) {
-            if (packages.hasOwnProperty(key)) {
-               if (key.slice(key.length - 3, key.length) === 'css') {
-                  files.css.push(this.fixLink(key));
-                  var corrJs = key.replace(/.css$/, '.js');
-                  if (!packages[corrJs] && packages[key] === DEPTYPES.BUNDLE) {
-                     files.js.push(this.fixLink(corrJs));
-                  }
-               } else if (key.slice(key.length - 2, key.length) === 'js') {
-                  files.js.push(this.fixLink(key));
-               } else if (key.slice(key.length - 4, key.length) === 'tmpl') {
-                  files.js.push(this.fixLink(key));
+         var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
+         for (var key in packages.js) {
+            if(packages.js.hasOwnProperty(key)) {
+               files.js.push(key);
+            }
+         }
+         for (var key in packages.tmpl) {
+            if(packages.tmpl.hasOwnProperty(key)) {
+               files.tmpl.push(key);
+            }
+         }
+         for (var key in packages.css.themedCss) {
+            if(packages.css.themedCss.hasOwnProperty(key)) {
+               if (!packages.js[key] && packages.css.themedCss[key] === DEPTYPES.BUNDLE) {
+                  files.js.push(key);
                }
+               files.css.themedCss.push(key);
+            }
+         }
+         for (var key in packages.css.simpleCss) {
+            if(packages.css.simpleCss.hasOwnProperty(key)) {
+               if (!packages.js[key] && packages.css.simpleCss[key] === DEPTYPES.BUNDLE) {
+                  files.js.push(key);
+               }
+               files.css.simpleCss.push(key);
             }
          }
          return files;
-      },
-      fixLink: function fixLinkName(link) {
-         var res = link;
-         res = checkResourcesPrefix(res);
-         res = getLinkWithBuildNumber(res, this.buildNumber);
-         res = getLinkWithAppRoot(res, this.appRoot);
-         return res;
       }
    });
 

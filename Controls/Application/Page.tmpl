@@ -3,6 +3,7 @@
       attr:class="{{ onServer && !isCompatible ? 'pre-load' : '' }}">
 <Controls.Application._Head
    wsRoot="{{ wsRoot }}"
+   linkResolver="{{ linkResolver }}"
    resourceRoot="{{ resourceRoot }}"
    appRoot="{{ appRoot }}"
    compat="{{ compat }}"
@@ -90,7 +91,8 @@
                               <ws:else data="{{!_options.builderCompatible}}">
                                  <div>
                                     <Controls.Application._JsLinks attr:tabindex="-1"
-                                                                   appRoot="{{ appRoot }}"/>
+                                                                   appRoot="{{ appRoot }}"
+                                                                   linkResolver="{{ linkResolver }}"/>
 
                                     <!--
                                        beforeScripts - опция для переноса скриптов перед вставкой серверных скриптов
