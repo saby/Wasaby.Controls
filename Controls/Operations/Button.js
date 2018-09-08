@@ -1,6 +1,6 @@
 define('Controls/Operations/Button', [
    'Core/Control',
-   'tmpl!Controls/Operations/Button/Button',
+   'wml!Controls/Operations/Button/Button',
    'css!Controls/Operations/Button/Button'
 ], function(Control, template) {
    'use strict';

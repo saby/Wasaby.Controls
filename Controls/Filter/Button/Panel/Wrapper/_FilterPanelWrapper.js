@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+      'wml!Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
       'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions'
    ],
 

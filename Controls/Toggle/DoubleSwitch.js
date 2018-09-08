@@ -1,8 +1,8 @@
 define('Controls/Toggle/DoubleSwitch', [
    'Core/Control',
-   'tmpl!Controls/Toggle/DoubleSwitch/DoubleSwitch',
-   'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
-   'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
+   'wml!Controls/Toggle/DoubleSwitch/DoubleSwitch',
+   'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
+   'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'

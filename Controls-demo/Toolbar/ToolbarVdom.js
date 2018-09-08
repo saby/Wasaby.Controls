@@ -1,10 +1,10 @@
 define('Controls-demo/Toolbar/ToolbarVdom', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Toolbar/ToolbarVdom',
+   'wml!Controls-demo/Toolbar/ToolbarVdom',
    'css!Controls-demo/Toolbar/ToolbarVdom',
-   'tmpl!Controls-demo/Toolbar/resources/itemTemplate',
-   'tmpl!Controls-demo/Toolbar/resources/itemTemplateContent'
+   'wml!Controls-demo/Toolbar/resources/itemTemplate',
+   'wml!Controls-demo/Toolbar/resources/itemTemplateContent'
 ], function(Control, Memory, template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -107,7 +107,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   showType: 2,
                   icon: 'icon-Linked',
                   title: 'Связанные документы',
-                  myTemplate: 'tmpl!Controls-demo/Toolbar/resources/itemTemplate'
+                  myTemplate: 'wml!Controls-demo/Toolbar/resources/itemTemplate'
                },
                {
                   id: '3',

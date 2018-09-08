@@ -4,7 +4,7 @@
 define('Controls-demo/Popup/Env/template/oldTemplate',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls-demo/Popup/Env/template/oldTemplate'
+      'wml!Controls-demo/Popup/Env/template/oldTemplate'
    ],
    function(CompoundControl, template) {
       var

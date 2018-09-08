@@ -1,7 +1,7 @@
 define('Controls/Input/ComboBox',
    [
       'Core/Control',
-      'tmpl!Controls/Input/ComboBox/ComboBox',
+      'wml!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
@@ -66,6 +66,10 @@ define('Controls/Input/ComboBox',
             };
             this._width = this._container.offsetWidth;
             this._forceUpdate();
+         },
+
+         _beforeUpdate: function() {
+            this._width = this._container.offsetWidth;
          },
 
          _mouseDownHandler: function() {

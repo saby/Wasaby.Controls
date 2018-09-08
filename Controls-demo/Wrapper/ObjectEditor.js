@@ -1,7 +1,7 @@
 define('Controls-demo/Wrapper/ObjectEditor',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Wrapper/ObjectEditor'
+      'wml!Controls-demo/Wrapper/ObjectEditor'
 
    ],
    function(Control, template) {

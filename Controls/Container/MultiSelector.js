@@ -1,17 +1,19 @@
 define('Controls/Container/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Container/MultiSelector/MultiSelector',
+   'wml!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
    'Controls/Container/Data/ContextOptions',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil',
+   'WS.Data/Collection/IBind'
 ], function(
    Control,
    template,
    SelectionContextField,
    Selection,
    DataContext,
-   ArraySimpleValuesUtil
+   ArraySimpleValuesUtil,
+   IBind
 ) {
    'use strict';
 
@@ -31,6 +33,14 @@ define('Controls/Container/MultiSelector', [
          }
 
          self._updateSelectionContext();
+      },
+
+      getItemsKeys: function(items) {
+         var keys = [];
+         items.forEach(function(item) {
+            keys.push(item.getId());
+         });
+         return keys;
       }
    };
 
@@ -58,22 +68,15 @@ define('Controls/Container/MultiSelector', [
       },
 
       _afterMount: function() {
-         var self = this;
-
-         this._items.subscribe('onCollectionChange', function() {
-            self._updateSelectionContext();
-         });
+         this._items.subscribe('onCollectionChange', this._onCollectionChange.bind(this));
       },
 
       _beforeUpdate: function(newOptions, context) {
-         var self = this;
          if (this._items !== context.dataOptions.items) {
             this._items = context.dataOptions.items;
             this._multiselection.setItems(context.dataOptions.items);
             this._updateSelectionContext();
-            this._items.subscribe('onCollectionChange', function() {
-               self._updateSelectionContext();
-            });
+            this._items.subscribe('onCollectionChange', this._onCollectionChange.bind(this));
          }
 
          if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys) {
@@ -130,6 +133,16 @@ define('Controls/Container/MultiSelector', [
          return {
             selection: this._selectionContext
          };
+      },
+
+      _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems) {
+         var oldSelection = this._multiselection.getSelection();
+
+         if (action === IBind.ACTION_REMOVE) {
+            this._multiselection.unselect(_private.getItemsKeys(removedItems));
+         }
+
+         _private.notifyAndUpdateContext(this, oldSelection);
       }
    });
 

@@ -6,7 +6,7 @@
  */
 define('Controls-demo/Suggest/Suggest', [
    'Core/Control',
-   'tmpl!Controls-demo/Suggest/Suggest',
+   'wml!Controls-demo/Suggest/Suggest',
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Entity/Model',

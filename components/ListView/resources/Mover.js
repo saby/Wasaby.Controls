@@ -177,7 +177,7 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
             var
                moveStrategy = this.getMoveStrategy();
             movedItems = movedItems.filter(function (item) {
-               return this._checkRecordForMove(item, target, position);
+               return this._checkRecordForMove(item, target, position, movedItems);
             }.bind(this));
             if (movedItems.length > 0) {
                if (moveStrategy) {
@@ -339,7 +339,7 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
        * @returns {Boolean}
        * @private
        */
-      _checkRecordForMove: function(movedItem, target, position) {
+      _checkRecordForMove: function(movedItem, target, position, movedItems) {
          var
             key,
             toMap = [],
@@ -347,6 +347,18 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
             parentProperty = this._options.parentProperty;
          if (target === undefined || !isChangeOrder && !this._options.nodeProperty) {
             return false;
+         }
+         if (movedItems && movedItems.length > 1) {
+            //если передали элемент вместе с его родителем то не надо его перемещать явно он переместится вместе с папкой
+            var hasParent = false;
+            movedItems.forEach(function (item) {
+               if (movedItem.get(parentProperty) === item.getId()) {
+                  hasParent = true;
+               }
+            });
+            if (hasParent) {
+               return false;
+            }
          }
          //проверять изменяется ли индекс у эелемента нужно только если не меняется родитель
          if (isChangeOrder && (

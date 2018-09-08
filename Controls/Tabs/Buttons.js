@@ -4,8 +4,8 @@
 define('Controls/Tabs/Buttons', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Tabs/Buttons/Buttons',
-   'tmpl!Controls/Tabs/Buttons/ItemTemplate',
+   'wml!Controls/Tabs/Buttons/Buttons',
+   'wml!Controls/Tabs/Buttons/ItemTemplate',
    'css!Controls/Tabs/Buttons/Buttons'
 
 ], function(Control,

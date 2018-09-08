@@ -3,7 +3,7 @@
  */
 define('Controls-demo/List/Swipe', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Swipe/Swipe',
+   'wml!Controls-demo/List/Swipe/Swipe',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/List/Swipe/Swipe'

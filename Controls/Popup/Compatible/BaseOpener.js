@@ -28,6 +28,7 @@ function(cMerge,
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
+            popupComponent: cfg._popupComponent,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
             _mode: cfg._mode,
@@ -104,6 +105,9 @@ function(cMerge,
          }
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
+
+         // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
+         cfg.templateOptions.ignoreTabCycles = false;
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);

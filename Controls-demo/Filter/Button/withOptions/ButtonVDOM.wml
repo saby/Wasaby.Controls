@@ -1,0 +1,66 @@
+<div class="ControlsDemo-FilterButton__ButtonVDOM">
+      <Controls.Filter.Button attr:class="ControlsDemo-FilterButton__ButtonVDOM-component"
+                              orientation="{{_selectedKeyOrientation}}"
+                              bind:items="_itemsSimple"
+                              readOnly="{{_readOnly}}"
+                              on:filterChanged="filterChangeHandler()"
+                              on:itemsChanged="itemsChangeHandler()"
+                              templateName="wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple">
+         <ws:lineSpaceTemplate>
+               <ws:if data="{{_spaceTemplate === 'custom template'}}">
+                  <Controls.Filter.Fast items="{{_spaceTemplateSource}}"
+                                        readOnly="{{_readOnly}}"
+                                        bind:selectedKeys="_selectedKeys3"/>
+               </ws:if>
+         </ws:lineSpaceTemplate>
+
+      </Controls.Filter.Button>
+
+   <div class="ControlsDemo-FilterButton__ButtonVDOM-optionsBlock">
+      <h3>Задайте опции:</h3>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
+         <Controls.Label caption="templateName"/>
+         <Controls-demo.Input.resources.SuggestTwoLines bind:suggestValue="_templateName"
+                                                        autoDropDown="{{true}}"
+                                                        source="{{_templateNameItems}}"
+                                                        attr:class="ControlsDemo-FilterButton__ButtonVDOM-suggest"/>
+      </div>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
+         <Controls.Label caption="items"/>
+         <Controls-demo.Input.resources.SuggestTwoLines bind:suggestValue="_suggestValue"
+                                                        autoDropDown="{{true}}"
+                                                        source="{{_items}}"
+                                                        on:suggestValueChanged="_suggestHandler()"
+                                                        attr:class="ControlsDemo-FilterButton__ButtonVDOM-suggest"/>
+      </div>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
+         <Controls.Label caption="orientation"/>
+         <Controls.Toggle.RadioGroup
+                 keyProperty="title"
+                 bind:selectedKey="_selectedKeyOrientation"
+                 source="{{_alignFilterSource}}"
+                 direction="horizontal"/>
+      </div>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
+         <Controls.Label caption="lineSpaceTemplate"/>
+            <Controls-demo.Input.resources.SuggestTwoLines bind:suggestValue="_spaceTemplate"
+                                                           autoDropDown="{{true}}"
+                                                           source="{{_itemsSpaceTemplate}}"
+                                                           attr:class="ControlsDemo-FilterButton__ButtonVDOM-suggest"/>
+         </div>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-parameter">
+         <Controls.Toggle.Checkbox attr:id="readonly" bind:value="_readOnly" caption="readOnly"/>
+      </div>
+   </div>
+
+   <div class="ControlsDemo-FilterButton__ButtonVDOM-eventBlock">
+      <span>Event that surfaced:</span>
+      <br/>
+      <div class="ControlsDemo-FilterButton__ButtonVDOM-eventName">
+         <span>{{_eventNameFilter}}</span>
+         <span>{{_eventNameItems}}</span>
+      </div>
+      <Controls.Button on:click="reset()" style="linkMain3" caption="reset"/>
+   </div>
+
+</div>

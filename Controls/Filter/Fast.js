@@ -1,7 +1,7 @@
 define('Controls/Filter/Fast',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Fast/Fast',
+      'wml!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/List',
@@ -50,12 +50,12 @@ define('Controls/Filter/Fast',
             }
          },
 
-         loadItemsFromSource: function(instance, source, keyProperty) {
+         loadItemsFromSource: function(instance, source, keyProperty, filter) {
             var sourceController = new SourceController({
                source: source,
                idProperty: keyProperty
             });
-            return sourceController.load().addCallback(function(items) {
+            return sourceController.load(filter).addCallback(function(items) {
                instance._items = items;
             });
          },
@@ -71,7 +71,7 @@ define('Controls/Filter/Fast',
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
-               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty);
+               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter);
             }
          },
 

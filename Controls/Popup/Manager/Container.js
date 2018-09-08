@@ -1,7 +1,7 @@
 define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Container',
+      'wml!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
       'css!Controls/Popup/Manager/Container'
    ],
@@ -65,8 +65,10 @@ define('Controls/Popup/Manager/Container',
                   finishDef.addCallback(function() {
                      //Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
                      //Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
-                     if (popup && popup._options.isCompoundTemplate && popup._options.closeByExternalClick) {
-                        this._getCompoundArea(popup._container).close();
+                     if (popup && popup._options.isCompoundTemplate) {
+                        if (popup._options.closeByExternalClick) {
+                           this._getCompoundArea(popup._container).close();
+                        }
                      } else {
                         this._notify('popupDeactivated', [popupId], { bubbling: true });
                      }

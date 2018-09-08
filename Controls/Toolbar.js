@@ -1,8 +1,8 @@
 define('Controls/Toolbar', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Toolbar/Toolbar',
-   'tmpl!Controls/Toolbar/ToolbarItemTemplate',
+   'wml!Controls/Toolbar/Toolbar',
+   'wml!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/Button',

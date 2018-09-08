@@ -1,17 +1,17 @@
 define('Controls-demo/List/Grid/GridWithEditing', [
    'Core/Control',
    'Controls-demo/List/Grid/GridWithEditingData',
-   'tmpl!Controls-demo/List/Grid/GridWithEditing',
+   'wml!Controls-demo/List/Grid/GridWithEditing',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/List/Tree/treeEditingTemplate',
-   'tmpl!Controls-demo/List/Grid/DemoItem',
-   'tmpl!Controls-demo/List/Grid/DemoBalancePrice',
-   'tmpl!Controls-demo/List/Grid/DemoCostPrice',
-   'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice',
+   'wml!Controls-demo/List/Tree/treeEditingTemplate',
+   'wml!Controls-demo/List/Grid/DemoItem',
+   'wml!Controls-demo/List/Grid/DemoBalancePrice',
+   'wml!Controls-demo/List/Grid/DemoCostPrice',
+   'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
 
-   'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
-   'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
-   'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
+   'wml!Controls-demo/List/Grid/DemoTasksPhoto',
+   'wml!Controls-demo/List/Grid/DemoTasksDescr',
+   'wml!Controls-demo/List/Grid/DemoTasksReceived',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
@@ -94,37 +94,37 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             {
                displayProperty: 'name',
                width: '1fr',
-               template: 'tmpl!Controls-demo/List/Tree/treeEditingTemplate'
+               template: 'wml!Controls-demo/List/Tree/treeEditingTemplate'
             },
             {
                displayProperty: 'price',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balance',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoBalancePrice'
+               template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
             },
             {
                displayProperty: 'description',
                width: '1fr',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Tree/treeEditingTemplate'
+               template: 'wml!Controls-demo/List/Tree/treeEditingTemplate'
             },
             {
                displayProperty: 'costPrice',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balanceCostSumm',
                width: 'auto',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             }
          ];
          this.gridHeader = [
@@ -146,7 +146,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             {
                title: 'Себест.',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoHeaderCostPrice'
+               template: 'wml!Controls-demo/List/Grid/DemoHeaderCostPrice'
             },
             {
                title: 'Сумма остатка',
@@ -155,15 +155,15 @@ define('Controls-demo/List/Grid/GridWithEditing', [
          ];
          this.tasksColumns = [
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksPhoto',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksPhoto',
                width: 'auto'
             },
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksDescr',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksDescr',
                width: '1fr'
             },
             {
-               template: 'tmpl!Controls-demo/List/Grid/DemoTasksReceived',
+               template: 'wml!Controls-demo/List/Grid/DemoTasksReceived',
                width: 'auto'
             }
          ];

@@ -29,7 +29,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
          },
          _comboBoxSource: function() {
             return new Memory({
-               idProperty: 'title',
+               idProperty: 'id',
                data: this._source
             });
          }

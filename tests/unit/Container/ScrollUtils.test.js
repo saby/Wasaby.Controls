@@ -143,13 +143,6 @@ define(
 
             result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, {}, {});
             assert.equal(result, 'margin-right: -17px;');
-
-            result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, {
-               isIE: true
-            }, {
-               touch: true
-            });
-            assert.equal(result, 'margin-right: -17px;padding-right: 17px;');
          });
       });
    }

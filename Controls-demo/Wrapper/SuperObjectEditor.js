@@ -1,7 +1,7 @@
 define('Controls-demo/Wrapper/SuperObjectEditor',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Wrapper/SuperObjectEditor'
+      'wml!Controls-demo/Wrapper/SuperObjectEditor'
 
    ],
    function(Control, template) {

@@ -1,6 +1,6 @@
 define('Controls/List/Swipe/SwipeControl', [
    'Core/Control',
-   'tmpl!Controls/List/Swipe/SwipeControl',
+   'wml!Controls/List/Swipe/SwipeControl',
    'Controls/Application/TouchDetector/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar',
@@ -133,7 +133,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       initSwipe: function(self, itemData, childEvent) {
-         var actionsHeight = childEvent.currentTarget.clientHeight || (childEvent.currentTarget.children[0] && childEvent.currentTarget.children[0].clientHeight);
+         var actionsHeight = childEvent.target.closest('.js-controls-SwipeControl__actionsContainer').clientHeight;
          self._swipeConfig = {};
          self._options.listModel.setSwipeItem(itemData);
          self._options.listModel.setActiveItem(itemData);

@@ -1,6 +1,6 @@
 define('Controls/Input/RichArea', [
    'Core/Control',
-   'tmpl!Controls/Input/RichArea/RichArea',
+   'wml!Controls/Input/RichArea/RichArea',
    'Controls/Input/RichArea/RichAreaModel',
    'Core/helpers/domToJsonML',
    'Core/HtmlJson',

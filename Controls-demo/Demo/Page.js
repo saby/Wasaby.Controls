@@ -5,7 +5,7 @@ define('Controls-demo/Demo/Page',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/Demo/Page',
+      'wml!Controls-demo/Demo/Page',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'css',
@@ -88,7 +88,7 @@ define('Controls-demo/Demo/Page',
          _beforeMount: function() {
             var deferred = new Deferred();
             if (UrlParams.cname) {
-               this.componentName = 'Controls-demo/' + UrlParams.cname;
+               this.componentName = UrlParams.cname;
             }
             this._theme = themeLinks[UrlParams['theme']] || themeLinks['base'];
             requirejs([this.componentName], deferred.callback.bind(deferred));

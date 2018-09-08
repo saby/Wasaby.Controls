@@ -6,7 +6,7 @@
  */
 define('Controls-demo/Suggest/resources/SuggestTemplate', [
    'Core/Control',
-   'tmpl!Controls-demo/Suggest/resources/SuggestTemplate',
+   'wml!Controls-demo/Suggest/resources/SuggestTemplate',
    'Controls/List'
 ], function(Control, template) {
    

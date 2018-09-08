@@ -1,7 +1,7 @@
 define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
    'Core/Control',
    'Controls-demo/List/Tree/MultiSelection/MultiSelectionData',
-   'tmpl!Controls-demo/List/Tree/MultiSelection/MultiSelection',
+   'wml!Controls-demo/List/Tree/MultiSelection/MultiSelection',
    'WS.Data/Source/Memory',
    'css!Controls-demo/List/Tree/MultiSelection/MultiSelection'
 ], function(Control, Data, template, Memory) {

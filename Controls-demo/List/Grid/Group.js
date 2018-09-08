@@ -1,12 +1,12 @@
 define('Controls-demo/List/Grid/Group', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Grid/Group',
+   'wml!Controls-demo/List/Grid/Group',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/List/Grid/DemoGroupTemplate',
-   'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate',
+   'wml!Controls-demo/List/Grid/DemoGroupTemplate',
+   'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate',
    'Controls/Decorator/Money',
-   'tmpl!Controls/List/GroupContentResultsTemplate',
-   'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
+   'wml!Controls/List/GroupContentResultsTemplate',
+   'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
 ], function (BaseControl, template, MemorySource) {
    'use strict';
    var
@@ -92,42 +92,42 @@ define('Controls-demo/List/Grid/Group', [
             {
                displayProperty: 'name',
                width: '1fr',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'count',
                width: '50px',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'costPrice',
                width: '75px',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'price',
                width: '75px',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'NDS',
                width: '75px',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'NDSP',
                width: '25px',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             },
             {
                displayProperty: 'amount',
                width: '75px',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupColumnTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate'
             }
          ],
          _gridHeader: [
@@ -141,17 +141,17 @@ define('Controls-demo/List/Grid/Group', [
             {
                title: 'Себест.',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
             },
             {
                title: 'Цена',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
             },
             {
                title: 'НДС',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
             },
             {
                title: '%',
@@ -160,7 +160,7 @@ define('Controls-demo/List/Grid/Group', [
             {
                title: 'Сумма',
                align: 'right',
-               template: 'tmpl!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
+               template: 'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
             }
          ]
       });

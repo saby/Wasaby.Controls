@@ -3,17 +3,17 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'Core/Control',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
-      'tmpl!Controls-demo/Filter/Button/PanelVDom',
+      'wml!Controls-demo/Filter/Button/PanelVDom',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
-      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
+      'wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
       'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
 
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty',
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period',
-      'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author',
+      'wml!Controls-demo/Filter/Button/resources/itemTemplate/filterPanelTemplateItemProperty',
+      'wml!Controls-demo/Filter/Button/resources/itemTemplate/period',
+      'wml!Controls-demo/Filter/Button/resources/itemTemplate/author',
 
-      'tmpl!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional',
+      'wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
 
@@ -74,10 +74,10 @@ define('Controls-demo/Filter/Button/PanelVDom',
             ];
             this._itemsTemplate = [
                {id: 'author', value: '', resetValue: '',
-                  templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/author'},
+                  templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/author'},
                { id: 'period', value: [1], textValue: 'Period', resetValue: [1],
                   source: this.sourcePeriod,
-                  templateItem: 'tmpl!Controls-demo/Filter/Button/resources/itemTemplate/period'}
+                  templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/period'}
             ];
             this._items = [
                {id: 'period', value: [1], resetValue: [1]},

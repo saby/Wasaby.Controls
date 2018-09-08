@@ -26,7 +26,10 @@ define('Controls-demo/Input/Text/TextPG',
                },
                tagStyle: {
                   emptyText: 'none',
-                  placeholder: 'select'
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                },
 
                constraint: {

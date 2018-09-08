@@ -178,9 +178,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
             show: function(model, itemProj) {
                this.setModel(model);
                this.getContainer().attr('data-id', model.getId());
-               if (itemProj) {
-                  this.getContainer().attr('data-hash', itemProj.getHash());
-               }
+               this.getContainer().attr('data-hash', itemProj ? itemProj.getHash() : '');
                this.setOffset(model);
                EditInPlace.superclass.show.apply(this, arguments);
                this._updateVerticalPosition();

@@ -1,6 +1,6 @@
 define('Controls-demo/List/EditAndRemoveOperations', [
    'Core/Control',
-   'tmpl!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
+   'wml!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
    'Core/Deferred',

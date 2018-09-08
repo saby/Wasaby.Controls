@@ -1,16 +1,16 @@
 define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Input/Dropdown/Dropdown',
-   'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/Dropdown',
+   'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',
-   'tmpl!Controls-Demo/Input/Dropdown/contentTemplateDropdown',
-   'tmpl!Controls-demo/Input/Dropdown/contentTemplateDropdownSub',
-   'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
-   'tmpl!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
-   'tmpl!Controls-Demo/Input/Dropdown/headTemplateDropdown',
-   'tmpl!Controls-demo/Input/Dropdown/footerTemplateDropdown',
-   'tmpl!Controls-demo/Input/Dropdown/StackTemplateDdl'
+   'wml!Controls-Demo/Input/Dropdown/contentTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownSub',
+   'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
+   'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
+   'wml!Controls-Demo/Input/Dropdown/headTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
 ], function(Control, Memory, template) {
 
    'use strict';
@@ -53,8 +53,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             {id: 1, title: 'In any state', text: 'In any state'},
             {id: 2, title: 'In progress', text: 'In progress'},
             {id: 3, title: 'Completed', text: 'Completed'},
-            {id: 4, title: 'positive', text: 'Completed positive', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
-            {id: 5, title: 'negative', text: 'Completed negative', myTemplate: 'tmpl!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
+            {id: 4, title: 'positive', text: 'Completed positive', myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
+            {id: 5, title: 'negative', text: 'Completed negative', myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub'},
             {id: 6, title: 'Deleted', text: 'Deleted'},
             {id: 7, title: 'Drafts', text: 'Drafts'}
          ];

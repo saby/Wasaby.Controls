@@ -1,16 +1,16 @@
 define('Controls-demo/List/Tree/TreeWithPhoto', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto',
    'Controls-demo/List/Tree/TreeMemory',
    'css!Controls-demo/List/Tree/TreeWithPhoto',
    'css!Controls-demo/List/data/images',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-content',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item16',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item24',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item32',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-item40',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-itemTwoLevels',
-   'tmpl!Controls-demo/List/Tree/TreeWithPhoto-contentTwoLevels',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-content',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-item16',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-item24',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-item32',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-item40',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-itemTwoLevels',
+   'wml!Controls-demo/List/Tree/TreeWithPhoto-contentTwoLevels',
    'Controls/TreeGrid'
 ], function(BaseControl, template, MemorySource) {
    'use strict';
@@ -99,14 +99,14 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
                {
                   displayProperty: 'title',
                   width: '1fr',
-                  template: 'tmpl!Controls-demo/List/Tree/TreeWithPhoto-content'
+                  template: 'wml!Controls-demo/List/Tree/TreeWithPhoto-content'
                }
             ];
             this._viewColumnsTwoLevels = [
                {
                   displayProperty: 'title',
                   width: '1fr',
-                  template: 'tmpl!Controls-demo/List/Tree/TreeWithPhoto-contentTwoLevels'
+                  template: 'wml!Controls-demo/List/Tree/TreeWithPhoto-contentTwoLevels'
                }
             ];
          },

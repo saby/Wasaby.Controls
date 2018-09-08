@@ -4,7 +4,7 @@
 define('Controls/List/BaseControl/Scroll/Emitter',
    [
       'Core/Control',
-      'tmpl!Controls/List/BaseControl/Scroll/Emitter/Emitter'
+      'wml!Controls/List/BaseControl/Scroll/Emitter/Emitter'
    ],
    function(Control, template) {
 

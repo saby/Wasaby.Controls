@@ -1,7 +1,7 @@
 define('Controls/Search/Input/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Search/Input/Container'
+      'wml!Controls/Search/Input/Container'
    ],
    
    function(Control, template) {

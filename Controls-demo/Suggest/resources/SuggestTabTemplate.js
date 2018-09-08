@@ -1,6 +1,6 @@
 define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
    'Core/Control',
-   'tmpl!Controls-demo/Suggest/resources/SuggestTabTemplate',
+   'wml!Controls-demo/Suggest/resources/SuggestTabTemplate',
    'WS.Data/Source/Memory',
    'Controls/List'
 ], function(Control, template, MemorySource) {
