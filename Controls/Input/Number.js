@@ -202,7 +202,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
       }
    });
 
