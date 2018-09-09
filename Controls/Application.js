@@ -119,11 +119,11 @@ define('Controls/Application',
 
             context.headData.pushDepComponent(self.application, false);
 
-            if (receivedState.csses) {
-               // ThemesController.getInstance().initCss({
-               //    themedCss: receivedState.csses.themedCss,
-               //    simpleCss: receivedState.csses.simpleCss
-               // });
+            if (receivedState.csses && !context.headData.isDebug) {
+               ThemesController.getInstance().initCss({
+                  themedCss: receivedState.csses.themedCss,
+                  simpleCss: receivedState.csses.simpleCss
+               });
             }
 
             if (receivedState && context.AppData) {

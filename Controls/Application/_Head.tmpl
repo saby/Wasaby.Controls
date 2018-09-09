@@ -34,22 +34,22 @@
                <link rel="stylesheet" class="css-bundles"
                      href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css', oneTheme) }}"
                      type="text/css"
-                     key="{{ 'css_' + index + '_' + thInd}}"/>
+                     key="{{ 'themed-css-' + index + '-' + thInd}}"/>
             </ws:for>
          </ws:if>
          <ws:else>
             <link rel="stylesheet" class="css-bundles"
                   href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css', _options.theme) }}"
                   type="text/css"
-                  key="{{ 'themedCss_' + index }}"/>
+                  key="{{ 'themed-css-' + index }}"/>
          </ws:else>
       </ws:if>
       <ws:else>
-         <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'simpleCss_' + index }}"/>
+         <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'themed-css-' + index }}"/>
       </ws:else>
    </ws:for>
    <ws:for data="index, value in simpleCss">
-      <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'css_' + index }}"/>
+      <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveCssWithTheme(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>
    </ws:for>
    <title key="title">{{ _options.title }}</title>
    {{ errorState }}

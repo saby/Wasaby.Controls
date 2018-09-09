@@ -150,7 +150,7 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
       }
 
       fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
-         JSON.stringify(alljson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//ig, ''));
+         JSON.stringify(alljson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
 
 
       //spawn('node',[ root+'/app2.js' ]);

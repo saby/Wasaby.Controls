@@ -4,9 +4,10 @@ define('Controls/Application/HeadDataContext', [
    'Core/Deferred',
    'Core/cookie',
    'View/Runner/common',
+   'Core/Themes/ThemesController',
    'Core/Serializer'
 
-], function(DataContext, DepsCollector, Deferred, cookie, common, Serializer) {
+], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -86,17 +87,24 @@ define('Controls/Application/HeadDataContext', [
          var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber, self.appRoot);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
-            var rcsData = self.serializeReceivedStates();
-            for (var key in rcsData.additionalDepsMap) {
-               if (rcsData.additionalDepsMap.hasOwnProperty(key)) {
-                  self.depComponentsMap[key] = true;
-               }
-            }
             var components = Object.keys(self.depComponentsMap);
             if (self.isDebug) {
                var files = {};
             } else {
                var files = depsCollector.collectDependencies(components);
+               ThemesController.getInstance().initCss({
+                  themedCss: files.css.themedCss,
+                  simpleCss: files.css.simpleCss
+               });
+            }
+            // Сейчас не будет работать сбор зависимостей из received state, потому что чтобы собрать зависимости
+            // нам нужно сериализовать объекты, а перед тем как сериализовать объекты, нам нужно собрать зависимости
+            // TODO
+            var rcsData = self.serializeReceivedStates();
+            for (var key in rcsData.additionalDepsMap) {
+               if (rcsData.additionalDepsMap.hasOwnProperty(key)) {
+                  self.depComponentsMap[key] = true;
+               }
             }
             self._version++;
             self.defRender.callback({
