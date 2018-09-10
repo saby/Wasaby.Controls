@@ -70,6 +70,20 @@ define('Controls/interface/IPromisedSelectable', [
     * Returns selection.
     * @function Controls/interface/IPromisedSelectable#getSelection
     * @returns {Selection} Selection.
+    * @example
+    * Use selection in the filter:
+    * TMPL:
+    * <pre>
+    *    <Controls.Container.MultiSelector name="multiselector" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    setFilter: function() {
+    *       this._filter = {
+    *          selection: this._children.multiselector.getSelection()
+    *       };
+    *    }
+    * </pre>
     * @see selectedKeys
     * @see excludedKeys
     */
