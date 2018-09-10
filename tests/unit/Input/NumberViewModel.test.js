@@ -1048,6 +1048,42 @@ define(
                      position: 4
                   },
                   inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert value in decimals part with precision (decimals part is full)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '123.4',
+                     insert: '678',
+                     after: '5',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.46',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert value in decimals part with precision (decimals part is not full)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '123.4',
+                     insert: '678',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.46',
+                     position: 6
+                  },
+                  inputType: 'insert'
                }
             ];
 
