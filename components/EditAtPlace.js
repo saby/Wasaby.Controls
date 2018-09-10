@@ -406,7 +406,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
          _getToggleState: function() {
             var
                active = this.isActive(),
-               enabled = this.isEnabled(),
+               enabled = this.isEnabled() && this._options.displayAsEditor,
                marked = this.isMarked();
             return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled controls-TextBox_state_disabled_singleLine' : active ? 'active' : 'default') +
                ' controls-' + this._options.inputType + '-InputRender_state_' + (marked ? 'error' : !enabled ? 'disabled controls-' + this._options.inputType + '-InputRender_state_disabled_singleLine' : active ? 'active' : 'default');
