@@ -22,7 +22,7 @@
                                keyProperty="id"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey2"
-                               className="ControlsDemo-ComboboxVDOM__popupScroll"
+                               popupClassName="ControlsDemo-ComboboxVDOM__popupScroll"
                                attr:class="ControlsDemo-ComboboxVDOM__item"/>
    </div>
 
@@ -51,7 +51,7 @@
       <h4>With multi-line items</h4>
       <Controls.Input.ComboBox source="{{_createMemory(_itemsWorkers)}}"
                                keyProperty="id"
-                               className="ControlsDemo-ComboboxVDOM__popup"
+                               popupClassName="ControlsDemo-ComboboxVDOM__popup"
                                displayProperty="title"
                                itemTemplate="wml!Controls-demo/Combobox/itemTemplateMultiline"
                                bind:selectedKey="_selectedKey6"
