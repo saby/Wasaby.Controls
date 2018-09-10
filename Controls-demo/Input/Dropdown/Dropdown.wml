@@ -69,7 +69,7 @@
                                source="{{_createMemory(_titleItems)}}"
                                showHeader="{{true}}"
                                caption="Sort"
-                               contentTemplate="wml!Controls-Demo/Input/Dropdown/contentTemplateDropdown">
+                               contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdown">
          <ws:headConfig iconSize="icon-small"/>
       </Controls.Input.Dropdown>
    </div>
