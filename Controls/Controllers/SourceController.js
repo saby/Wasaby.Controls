@@ -13,16 +13,10 @@ define('Controls/Controllers/SourceController',
    function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred) {
       var _private = {
          prepareSource: function(sourceOpt) {
-            var result = sourceOpt;
-            if (typeof result === 'object' && 'module' in sourceOpt) {
-               var sourceConstructor = requirejs(sourceOpt.module);
-               result = new sourceConstructor(sourceOpt.options || {});
-            }
-            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ICrud')) {
+            if (!cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')) {
                IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
-            return result;
-
+            return sourceOpt;
          },
 
          getQueryInstance: function(filter, sorting, offset, limit) {
