@@ -1,8 +1,8 @@
 define('Controls-demo/PageLayout/PageLayoutDemo', [
    'Core/Control',
-   'tmpl!Controls-demo/PageLayout/PageLayoutDemo',
-   'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate',
-   'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2',
+   'wml!Controls-demo/PageLayout/PageLayoutDemo',
+   'wml!Controls-demo/PageLayout/resources/controlAreaTemplate',
+   'wml!Controls-demo/PageLayout/resources/controlAreaTemplate2',
    'WS.Data/Source/Memory',
    'Controls/Application/HeadDataContext',
    'css!Controls-demo/PageLayout/PageLayoutDemo'
@@ -28,27 +28,27 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
                {
                   id: '1',
                   title: 'very',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate'
                },
                {
                   id: '2',
                   title: 'hard',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate2'
                },
                {
                   id: '3',
                   title: 'invent',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate'
                },
                {
                   id: '4',
                   title: 'tabs',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate2'
                },
                {
                   id: '5',
                   title: 'titles',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate'
                }
             ]
          });
@@ -58,7 +58,7 @@ define('Controls-demo/PageLayout/PageLayoutDemo', [
                {
                   id: '1',
                   title: 'very',
-                  itemTemplate: 'tmpl!Controls-demo/PageLayout/resources/controlAreaTemplate2'
+                  itemTemplate: 'wml!Controls-demo/PageLayout/resources/controlAreaTemplate2'
                }
             ]
          });

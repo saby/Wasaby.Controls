@@ -8,7 +8,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       "Core/core-merge",
       "Core/Context",
       "Core/Indicator",
-      "Core/CommandDispatcher",
       "Core/constants",
       "Core/Deferred",
       "Core/helpers/Function/runDelayed",
@@ -39,7 +38,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cMerge,
                cContext,
                cIndicator,
-               CommandDispatcher,
                cConstants,
                Deferred,
                runDelayed,
@@ -338,6 +336,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _modifyOptions: function(options) {
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
+               if (options.json) {
+                  if (!options.__savedHtmlJson) {
+                     options.__savedHtmlJson = new HtmlJson();
+                  }
+                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
+                  options.text = options.__savedHtmlJson.render();
+               }
+
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
                   if (options.autoHeight) {
@@ -403,6 +409,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._decorateAsSVG(this._options.text);
                }
             },
+            _initHtmlJson: function() {
+               var self = this;
+               self._htmlJson = self._options.__savedHtmlJson || new HtmlJson();
+               self.subscribe('onTextChange', function(e, text) {
+                  if (text[0] !== '<') {
+                     text = '<p>' + text + '</p>';
+                  }
+                  var div = document.createElement('div');
+                  div.innerHTML = text;
+                  self._options.json = typeof self._options.json === 'string'
+                     ? JSON.stringify(domToJson(div).slice(1))
+                     : domToJson(div).slice(1);
+                  self._notify('onJsonChange', [self._options.json]);
+               });
+            },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview.get(0));
@@ -411,22 +432,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._readyControlDeffered.callback();
                   }
                }
-               var self = this;
-               if (self._options.hasOwnProperty('json')) {
-                  self.setJson(self._options.json);
-
-                  self.subscribe('onTextChange', function(e, text) {
-                     if (text[0] !== '<') {
-                        text = '<p>' + text + '</p>';
-                     }
-                     var div = document.createElement('div');
-                     div.innerHTML = text;
-                     self._options.json = typeof self._options.json === 'string'
-                        ? JSON.stringify(domToJson(div).slice(1))
-                        : domToJson(div).slice(1);
-                     self._notify('onJsonChange', [self._options.json]);
-                  });
+               if (this._options.hasOwnProperty('json')) {
+                  this.setJson(this._options.json);
                }
+
                this._updateDataReview(this.getText());
             },
 
@@ -692,7 +701,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             setJson: function(json) {
                if (!this._htmlJson) {
-                  this._htmlJson = new HtmlJson();
+                  this._initHtmlJson();
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
@@ -726,6 +735,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }
+               this._lastActive = undefined;
             },
             setActive: function(active) {
                this._lastActive = active;
@@ -1732,7 +1742,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var editor = this._tinyEditor;
                // Устанавливать курсор только если редактор активен (чтобы не забирать фокус)
                // 1174789546 https://online.sbis.ru/opendoc.html?guid=9675e20f-5a90-4a34-b6be-e24805813bb9
-               if (editor && this.isActive() && !this._sourceContainerIsActive()) {
+               if (editor && (this.isActive() || this._lastActive) && !this._sourceContainerIsActive()) {
                   var nodeForSelect = editor.getBody();
                   // But firefox places the selection outside of that tag, so we need to go one level deeper:
                   if (editor.isGecko) {

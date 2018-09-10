@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/Env/NewEnv',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/Env/NewEnv',
+      'wml!Controls-demo/Popup/Env/NewEnv',
       'SBIS3.CONTROLS/Action/OpenDialog',
       'Controls-demo/Popup/Env/template/oldTemplate',
       'Controls-demo/Popup/TestStack',

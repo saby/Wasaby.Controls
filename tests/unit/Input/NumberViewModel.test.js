@@ -580,24 +580,7 @@ define(
                },
 
                {
-                  testName: 'Delete last symbol (negative number)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '-',
-                     insert: '',
-                     after: '',
-                     delete: '1'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
-               },
-
-               {
-                  testName: 'Delete last symbol (negative number, with .0)',
+                  testName: 'Delete last symbol (negative number, precision != 0)',
                   controlConfig: {
                   },
                   splitValue: {
@@ -607,7 +590,25 @@ define(
                      delete: '1'
                   },
                   result: {
-                     value: '0.0',
+                     value: '-0.0',
+                     position: 1
+                  },
+                  inputType: 'deleteBackward'
+               },
+
+               {
+                  testName: 'Delete last symbol (negative number, precision == 0)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '-',
+                     insert: '',
+                     after: '',
+                     delete: '1'
+                  },
+                  result: {
+                     value: '-',
                      position: 1
                   },
                   inputType: 'deleteBackward'
@@ -700,23 +701,6 @@ define(
                },
 
                {
-                  testName: '0. delete 0 (delete)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteForward'
-               },
-
-               {
                   testName: '0',
                   controlConfig: {
                   },
@@ -744,8 +728,8 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '0.0',
-                     position: 0
+                     value: '-0.0',
+                     position: 2
                   },
                   inputType: 'deleteForward'
                },
@@ -768,23 +752,6 @@ define(
                },
 
                {
-                  testName: '0. delete 0 (delete with selection)',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'delete'
-               },
-
-               {
                   testName: '-0.0 delete first 0 (delete with selection)',
                   controlConfig: {
                   },
@@ -795,44 +762,10 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '0.0',
-                     position: 0
+                     value: '-0.0',
+                     position: 2
                   },
                   inputType: 'delete'
-               },
-
-               {
-                  testName: '0. delete 0',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '0'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
-               },
-
-               {
-                  testName: '1. delete 1',
-                  controlConfig: {
-                  },
-                  splitValue: {
-                     before: '',
-                     insert: '',
-                     after: '.',
-                     delete: '1'
-                  },
-                  result: {
-                     value: '',
-                     position: 0
-                  },
-                  inputType: 'deleteBackward'
                },
 
                {
@@ -870,7 +803,7 @@ define(
                },
 
                {
-                  testName: 'Inserting minus in empty field',
+                  testName: 'Inserting minus in empty field (precision != 0)',
                   controlConfig: {
                   },
                   splitValue: {
@@ -882,6 +815,24 @@ define(
                   result: {
                      value: '-0.0',
                      position: 2
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert minus in empty field (precision == 0)',
+                  controlConfig: {
+                     precision: 0
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '-',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '-',
+                     position: 1
                   },
                   inputType: 'insert'
                },
@@ -952,6 +903,148 @@ define(
                   },
                   result: {
                      value: '129.45',
+                     position: 4
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to integers',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '1 2',
+                     insert: '7.8',
+                     after: '34.56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 734.856',
+                     position: 3
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '1 234.',
+                     insert: '7.8',
+                     after: '56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.7856',
+                     position: 8
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals with precision (start)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '1 234.',
+                     insert: '7.8',
+                     after: '56',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.78',
+                     position: 8
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert float to decimals with precision (end)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '1 234.56',
+                     insert: '7.8',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 234.56',
+                     position: 8
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long integer number in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123456',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.0',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long integer number (with delimiters) in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123 456 789',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.0',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert long float number in field with integersLength option',
+                  controlConfig: {
+                     integersLength: 5
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '123456.789',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '12 345.789',
+                     position: 10
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert number with long decimals part in field with precision option',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '',
+                     insert: '1.58897987987',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1.58',
                      position: 4
                   },
                   inputType: 'insert'

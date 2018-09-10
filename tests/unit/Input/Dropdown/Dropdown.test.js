@@ -49,6 +49,7 @@ define(
 
          let config = {
             selectedKeys: '2',
+            displayProperty: 'title',
             keyProperty: 'id',
             source: new Memory({
                idProperty: 'id',

@@ -1,7 +1,7 @@
 define('Controls/Input/Number', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
-   'tmpl!Controls/Input/Number/Number',
+   'wml!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
@@ -88,12 +88,17 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
+      // We should store previous value, so we could notify it when only '-' left in a field
+      _previousValue: undefined,
+
       _notifyHandler: tmplNotify,
 
       _beforeMount: function(options) {
          if (options.integersLength <= 0) {
             IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
          }
+
+         this._previousValue = String(options.value);
 
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
@@ -146,7 +151,13 @@ define('Controls/Input/Number', [
       },
 
       _valueChangedHandler: function(e, value) {
-         this._notify('valueChanged', [this._getNumericValue(value)]);
+         if (value === '-') {
+            this._notify('valueChanged', [this._getNumericValue(this._previousValue)]);
+         } else {
+            this._notify('valueChanged', [this._getNumericValue(value)]);
+         }
+
+         this._previousValue = value;
       },
 
       /**
@@ -191,7 +202,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
       }
    });
 

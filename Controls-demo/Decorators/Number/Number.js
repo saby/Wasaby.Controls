@@ -2,7 +2,7 @@ define('Controls-demo/Decorators/Number/Number',
    [
       'Core/Control',
       'Controls/Decorator/Number',
-      'tmpl!Controls-demo/Decorators/Number/Number',
+      'wml!Controls-demo/Decorators/Number/Number',
 
       'Controls/Input/Number',
       'css!Controls-demo/Decorators/Number/Number'

@@ -3,9 +3,9 @@
  */
 define('Controls-demo/FilterSearch/Panel', [
    'Core/Control',
-   'tmpl!Controls-demo/FilterSearch/Panel',
+   'wml!Controls-demo/FilterSearch/Panel',
    'Controls/Input/Dropdown',
-   'tmpl!Controls-demo/FilterSearch/itemTemplate'
+   'wml!Controls-demo/FilterSearch/itemTemplate'
 ], function(Control, tempalte) {
    
    'use strict';

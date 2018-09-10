@@ -84,11 +84,11 @@ define([
                      nameText: 'no name',
                      emailText: 'no@email.com'
                   };
-                  control._children.formControllerInst.__$resultForTests = answer;
+                  control.__$resultForTests = answer;
                   control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
                   break;
                case 'read':
-                  control._children.formControllerInst.__$resultForTests = answer;
+                  control.__$resultForTests = answer;
                   waiting(function() {
                      control._read({ key: updateId, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
                   });

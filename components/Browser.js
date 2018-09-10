@@ -771,7 +771,7 @@ define('SBIS3.CONTROLS/Browser', [
       },
 
       _onApplyFilter:function() {
-         this.getView().setActive(true);
+         (this._searchForm || this.getView()).setActive(true);
       },
 
       _onInitBindings: function() {

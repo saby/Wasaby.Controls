@@ -1,11 +1,11 @@
 define('Controls-demo/Input/ComboBox/ComboBox',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/ComboBox/ComboBox',
+      'wml!Controls-demo/Input/ComboBox/ComboBox',
       'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Input/ComboBox/resources/ItemTemplate',
+      'wml!Controls-demo/Input/ComboBox/resources/ItemTemplate',
       'Controls/Input/ComboBox',
-      'css!Controls-demo/Input/resources/VDomInputs'
+      'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template, Memory, myTmpl) {
       'use strict';

@@ -1,0 +1,31 @@
+<Controls.Input.resources.InputRender.InputRender
+        autocomplete="{{_options.autocomplete}}"
+        tooltip="{{_options.tooltip}}"
+        tagStyle="{{_options.tagStyle}}"
+        viewModel="{{_baseViewModel}}"
+        placeholder="{{_options.placeholder}}"
+        inputType="Search"
+        style="{{_options.style}}"
+        on:valueChanged="_valueChangedHandler()"
+        on:keyUp="_keyUpHandler()">
+
+   <ws:content>
+      <ws:partial
+              template="wml!Controls/Input/resources/input"
+              value="{{_options.value}}"
+              readOnly="{{_options.readOnly}}"/>
+   </ws:content>
+
+   <ws:afterFieldWrapper>
+
+      <div class="controls-Search__afterFieldWrapper">
+         <div if="{{_options.value}}"
+              class="controls-Search__reset icon-Close"
+              title="{{rk('Очистить результаты поиска')}}"
+              on:click="_resetClick()"></div>
+         <div class="controls-Search__search controls-Search__search_state{{_options.readOnly ? '_disabled' : '_default'}} icon-Search2"
+              on:click="_searchClick()"></div>
+      </div>
+   </ws:afterFieldWrapper>
+
+</Controls.Input.resources.InputRender.InputRender>

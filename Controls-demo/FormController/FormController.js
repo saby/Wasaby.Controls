@@ -1,6 +1,6 @@
 define('Controls-demo/FormController/FormController', [
    'Core/Control',
-   'tmpl!Controls-demo/FormController/FormController',
+   'wml!Controls-demo/FormController/FormController',
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Entity/Record',
@@ -30,7 +30,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
          var initValues = config.initValues;
-         var finishDef = this._children.registrator.finishPendingOperations();
+         var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          initValues.id = this.idCount;
 
@@ -59,7 +59,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
 
-         var finishDef = this._children.registrator.finishPendingOperations();
+         var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          finishDef.addCallback(function(finishResult) {
             self._key = config.key;

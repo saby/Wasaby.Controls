@@ -1,7 +1,7 @@
 define('Controls/List/Container',
    [
       'Core/Control',
-      'tmpl!Controls/List/Container',
+      'wml!Controls/List/Container',
       'Controls/Container/Data/ContextOptions'
    ],
    

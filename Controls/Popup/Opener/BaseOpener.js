@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Opener/BaseOpener',
+      'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',
@@ -261,7 +261,6 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (compoundArea) {
                      compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
                      dialog.setTarget && dialog.setTarget($(newCfg.target));
-                     dialog._recalcPosition && dialog._recalcPosition();
                   }
                } else {
                   action.closeDialog();

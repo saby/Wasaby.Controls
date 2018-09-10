@@ -1,6 +1,6 @@
 define('Controls-demo/TestXslt/TestXslt', [
    'Core/Control',
-   'tmpl!Controls-demo/TestXslt/TestXslt',
+   'wml!Controls-demo/TestXslt/TestXslt',
    'Core/xslt-async',
    'css!Controls-demo/TestXslt/TestXslt'
 ], function(Control, template, Xslt) {

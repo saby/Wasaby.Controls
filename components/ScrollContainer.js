@@ -270,11 +270,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                   marginRight: -width
                };
 
-            // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
-            if (compatibility.touch && cDetection.isIE) {
-               style.paddingRight = width;
-            }
-
             this._content.css(style);
          },
 

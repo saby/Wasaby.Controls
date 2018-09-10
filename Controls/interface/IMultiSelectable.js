@@ -2,9 +2,7 @@ define('Controls/interface/IMultiSelectable', [
 ], function() {
 
    /**
-    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected
-    * items is known. This interface is suitable for small lists where all items are always loaded.
-    *
+    * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is known. This interface is suitable for small lists where all items are always loaded.
     * @interface Controls/interface/IMultiSelectable
     * @public
     * @see Controls/interface/ISingleSelectable
@@ -14,12 +12,21 @@ define('Controls/interface/IMultiSelectable', [
    /**
     * @name Controls/interface/IMultiSelectable#selectedKeys
     * @cfg {Array.<Number|String>} Array of selected items' keys.
+    * @default []
     * @example
-    * Select three items:
+    * The following example creates List and sets the selectedKeys to [1, 2, 3]. Subsequent changes made to selectedKeys will be synchronized through binding mechanism.
+    * TMPL:
     * <pre>
-    *    <Controls.List selectedKeys="{{ [1, 2, 5] }}" />
+    *    <Controls.List bind:selectedKeys="_selectedKeys" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [1, 2, 3];
+    *    }
     * </pre>
     * @see Controls/interface/ISource#keyProperty
+    * @see selectedKeysChanged
     */
 
    /**
@@ -29,10 +36,9 @@ define('Controls/interface/IMultiSelectable', [
     * @param {Array.<Number|String>} added Array of keys added to selection.
     * @param {Array.<Number|String>} deleted Array of keys deleted from selection.
     * @remark
-    * It's important to remember that we don't mutate selectedKeys array from options (or any other option). So keys in
-    * the event arguments and selectedKeys in the component's options are NOT the same array.
+    * It's important to remember that we don't mutate selectedKeys array from options (or any other option). So keys in the event arguments and selectedKeys in the component's options are not the same array.
     * @example
-    * Change message shown to the user based on selection:
+    * The following example creates List, sets the selectedKeys to [1, 2, 3] and shows how to change message shown to the user based on selection.
     * TMPL:
     * <pre>
     *    <Controls.List on:selectedKeysChanged="onSelectedKeysChanged()" selectedKeys="{{ _selectedKeys }}" />
@@ -40,6 +46,9 @@ define('Controls/interface/IMultiSelectable', [
     * </pre>
     * JS:
     * <pre>
+    *     _beforeMount: function() {
+    *       this._selectedKeys = [1, 2, 3];
+    *    },
     *    onSelectedKeysChanged: function(e, keys, added, deleted) {
     *       this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
     *       if (keys.length > 0) {
@@ -50,5 +59,6 @@ define('Controls/interface/IMultiSelectable', [
     *    }
     * </pre>
     * @see Controls/interface/ISource#keyProperty
+    * @see selectedKeys
     */
 });
