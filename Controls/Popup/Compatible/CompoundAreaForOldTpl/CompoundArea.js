@@ -83,6 +83,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this._options.type !== 'base') {
                this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             }
+
+            //Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
+            if (this._options.type === 'dialog' || this._options.type === 'stack') {
+               this._className += ' controls-CompoundArea-close_button';
+            }
+
             this._childControlName = this._options.template;
 
             /**
@@ -243,7 +249,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
-            var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
+            var customHeaderContainer = this._getCustomHeaderContainer();
             if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
@@ -267,6 +273,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
+         },
+
+         _getCustomHeaderContainer: function() {
+            var child = this._childControl.getContainer().children();
+            var header = [];
+
+            //Ищем кастомную шапку только на первом уровне вложенности шаблона.
+            //Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
+            //На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
+            child.each(function(index, elem) {
+               if (elem.className.indexOf('ws-window-titlebar-custom') > -1) {
+                  header = $(elem);
+               }
+            });
+            return header;
          },
 
          _headerMouseDown: function(event) {

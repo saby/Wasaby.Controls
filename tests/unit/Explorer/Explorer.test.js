@@ -2,9 +2,9 @@ define(['Controls/Explorer'], function(Explorer) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
          var
-            dataLoadCallbackCalled = false,
-            dataLoadCallback = function() {
-               dataLoadCallbackCalled = true;
+            dataLoadCallbackArgument = null,
+            dataLoadCallback = function(data) {
+               dataLoadCallbackArgument = data;
             },
             forceUpdate = function() {},
             self = {
@@ -49,7 +49,7 @@ define(['Controls/Explorer'], function(Explorer) {
                dataLoadCallback: dataLoadCallback
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
-         assert.isTrue(dataLoadCallbackCalled, 'Incorrect value "dataLoadCallbackCalled" after call "dataLoadCallback(...)".');
+         assert.deepEqual(dataLoadCallbackArgument, testData1, 'Incorrect "dataLoadCallback" arguments.');
          Explorer._private.dataLoadCallback(self, testData2);
          assert.deepEqual({
             _root: 'testRoot',

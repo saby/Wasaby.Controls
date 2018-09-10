@@ -1,54 +1,38 @@
 /**
  * Created by dv.zuev on 17.01.2018.
- * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
- * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
+ *
+ * Вставляем в tmpl:
+ * <Controls.Event.Listener event="scroll" callback="myScrollCallback()" />
  */
 define('Controls/Event/Listener',
    [
       'Core/Control',
       'wml!Controls/Event/Listener',
-      'Controls/Event/Registrar',
-      'WS.Data/Type/descriptor',
-      'wml!Controls/Application/CompatibleScripts'
+      'WS.Data/Type/descriptor'
    ],
-   function(Control, template, Registrar, types) {
+   function(Control, template, types) {
 
       'use strict';
 
-      var EventCatcher = Control.extend({
+      var EventCatcherController = Control.extend({
          _template: template,
-         _listner: null,
-         constructor: function() {
-            EventCatcher.superclass.constructor.apply(this, arguments);
-            this._forceUpdate = function() {
-               // Do nothing
-               // This method will be called because of handling event.
-            };
+         _afterMount: function() {
+            this._notify('register', [this._options.event, this, this.callback], {bubbling: true});
          },
-         _beforeMount: function(newOptions) {
-            this._registrar = new Registrar({register: newOptions.register});
+         _beforeUnmount: function() {
+            this._notify('unregister', [this._options.event, this], {bubbling: true});
          },
-         _registerIt: function(event, registerType, component, callback) {
-            if (registerType === this._options.register) {
-               this._registrar.register(event, component, callback);
-            }
-         },
-         _unRegisterIt: function(event, registerType, component) {
-            if (registerType === this._options.register) {
-               this._registrar.unregister(event, component);
-            }
-         },
-         start: function() {
-            this._registrar.start.apply(this._registrar, arguments);
+         callback: function() {
+            this._notify(this._options.event, Array.prototype.slice.call(arguments));
          }
       });
 
-      EventCatcher.getOptionTypes = function() {
+      EventCatcherController.getOptionTypes = function() {
          return {
-            register: types(String).required()
+            event: types(String).required()
          };
       };
 
-      return EventCatcher;
+      return EventCatcherController;
    }
 );

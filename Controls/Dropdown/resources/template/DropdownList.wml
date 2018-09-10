@@ -37,7 +37,7 @@
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
-   <Controls.Event.Emitter event="mousemove" on:mousemove="_mousemoveHandler()"/>
+   <Controls.Event.Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"

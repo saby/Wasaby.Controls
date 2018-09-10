@@ -8,12 +8,27 @@ define('Controls/DragNDrop/Controller',
       var SHIFT_LIMIT = 4;
 
       var _private = {
-         isDragStarted: function(startEvent, moveEvent) {
-            var
-               moveX = moveEvent.pageX - startEvent.pageX,
-               moveY = moveEvent.pageY - startEvent.pageY;
+         getPageXY: function(event) {
+            var pageX, pageY;
+            if (event.type === 'touchstart' || event.type === 'touchmove') {
+               pageX = event.touches[0].pageX;
+               pageY = event.touches[0].pageY;
+            } else if (event.type === 'touchend') {
+               pageX = event.originalEvent.changedTouches[0].pageX;
+               pageY = event.originalEvent.changedTouches[0].pageY;
+            } else {
+               pageX = event.pageX;
+               pageY = event.pageY;
+            }
 
-            return Math.abs(moveX) > SHIFT_LIMIT || Math.abs(moveY) > SHIFT_LIMIT;
+            return {
+               x: pageX,
+               y: pageY
+            };
+         },
+         isDragStarted: function(startEvent, moveEvent) {
+            var offset = _private.getDragOffset(moveEvent, startEvent);
+            return Math.abs(offset.x) > SHIFT_LIMIT || Math.abs(offset.y) > SHIFT_LIMIT;
          },
          preventClickEvent: function(event) {
             if (event.type === 'mousedown') {
@@ -28,16 +43,14 @@ define('Controls/DragNDrop/Controller',
                }
             }
          },
-         getDragPosition: function(moseEvent) {
+         getDragOffset: function(moveEvent, startEvent) {
+            var
+               moveEventXY = _private.getPageXY(moveEvent),
+               startEventXY = _private.getPageXY(startEvent);
+
             return {
-               y: moseEvent.pageY,
-               x: moseEvent.pageX
-            };
-         },
-         getDragOffset: function(moseEvent, startEvent) {
-            return {
-               y: moseEvent.pageY - startEvent.pageY,
-               x: moseEvent.pageX - startEvent.pageX
+               y: moveEventXY.y - startEventXY.y,
+               x: moveEventXY.x - startEventXY.x
             };
          },
          onMove: function(self, nativeEvent) {
@@ -131,7 +144,7 @@ define('Controls/DragNDrop/Controller',
             };
             if (mouseEvent && startEvent) {
                result.domEvent = mouseEvent;
-               result.position = _private.getDragPosition(mouseEvent);
+               result.position = _private.getPageXY(mouseEvent);
                result.offset = _private.getDragOffset(mouseEvent, startEvent);
                result.draggingTemplateOffset = this._options.draggingTemplateOffset;
             }

@@ -1,3 +1,1 @@
-<ws:partial template="{{_options.content}}"
-            on:register="_registerIt()"
-            on:unregister="_unRegisterIt()" />
+<div></div>
