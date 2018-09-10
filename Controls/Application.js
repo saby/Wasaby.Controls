@@ -30,6 +30,7 @@ define('Controls/Application',
     * @name Controls/Application#staticDomains
     * @cfg {Number} The list of domains for distributing static resources. Its value is setting
     * by the cloud parameter PresentationService.StaticDomains.
+    * Should move it to context or singleton after https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
     */
 
    function(Base,
