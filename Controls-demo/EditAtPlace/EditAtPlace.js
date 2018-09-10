@@ -137,55 +137,10 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
                text1: 'Smirnov'
             }
          });
-         this._updateTabSource();
-         this._updateTabSource2();
-      },
-
-      _cancelHandler: function() {
-         this._record = this._record.clone();
-      },
-
-      _cancelHandler2: function() {
-         this._record2 = this._record2.clone();
-      },
-
-      _cancelHandler3: function() {
-         this._updateTabSource();
-      },
-      _beforeEndEdit: function(event, item) {
-         this.updateItem(item);
-         this._updateTabSource();
-      },
-      //save BL emulate
-      updateItem: function(item) {
-         for (var i = 0; i < tabsData.length; i++) {
-            if (tabsData[i].id === item.get('id')) {
-               tabsData[i] = item.getRawData();
-            }
-         }
-      },
-      _updateTabSource: function() {
          this._tabSource = new MemorySource({
             idProperty: 'id',
             data: tabsData
          });
-      },
-      _cancelHandler4: function() {
-         this._updateTabSource2();
-      },
-      _beforeEndEdit2: function(event, item) {
-         this.updateItem2(item);
-         this._updateTabSource2();
-      },
-
-      updateItem2: function(item) {
-         for (var i = 0; i < tabsData2.length; i++) {
-            if (tabsData2[i].id === item.get('id')) {
-               tabsData2[i] = item.getRawData();
-            }
-         }
-      },
-      _updateTabSource2: function() {
          this._tabSource2 = new MemorySource({
             idProperty: 'id',
             data: tabsData2
