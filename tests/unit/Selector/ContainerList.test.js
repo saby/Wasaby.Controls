@@ -31,27 +31,12 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys), [[1, 2, 3, 4], [4], []]);
    
          itemKey = 1;
-         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys), [[2, 3, 4], [], [1]]);
-      });
-   
-      it('itemClickEmptySelection', function() {
-         var self = {};
-         var eventResult;
-      
-         self._notify = function(eventName, result) {
-            if (eventName === 'selectionChange') {
-               eventResult = result;
-            }
-         };
-      
-         Container._private.itemClickEmptySelection(self, 1);
-         
-         assert.deepEqual(eventResult, [{selected: [1], excluded: []}]);
+         assert.deepEqual(Container._private.getItemClickResult(itemKey, selectedKeys), [[2, 3], [], [1]]);
       });
    
       it('itemClick', function() {
          var self = {};
-         var clickEmptySelection = false;
+         var selectCompleted = false;
          var clickSelection = false;
          
          self._notify = function(eventName) {
@@ -59,21 +44,25 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
                clickSelection = true;
             }
             if (eventName === 'selectComplete') {
-               clickEmptySelection = true;
+               selectCompleted = true;
             }
          };
    
          Container._private.itemClick(self, 'test', false, []);
-         assert.isTrue(clickEmptySelection);
-         assert.isFalse(clickSelection);
-         
-         clickEmptySelection = false;
-         Container._private.itemClick(self, 'test', true, []);
-         assert.isTrue(clickEmptySelection);
-         assert.isFalse(clickSelection);
+         assert.isTrue(selectCompleted);
+         assert.isTrue(clickSelection);
    
+         selectCompleted = false;
+         clickSelection = false;
+         Container._private.itemClick(self, 'test', true, []);
+         assert.isTrue(selectCompleted);
+         assert.isTrue(clickSelection);
+   
+         selectCompleted = false;
+         clickSelection = false;
          Container._private.itemClick(self, 'test', true, [1]);
          assert.isTrue(clickSelection);
+         assert.isFalse(selectCompleted);
       });
    
    });

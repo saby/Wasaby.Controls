@@ -2,7 +2,7 @@ define('Controls/Selector/Container',
    [
       'Core/Control',
       'tmpl!Controls/Selector/Container',
-      'Controls/Selector/__Context',
+      'Controls/Selector/__ControllerContext',
       'Controls/Container/Data/ContextOptions',
       'WS.Data/Chain',
       'WS.Data/Utils',
@@ -10,7 +10,7 @@ define('Controls/Selector/Container',
       'Controls/Container/MultiSelector/selectionToRecord'
    ],
    
-   function(Control, template, SelectorContext, ContextOptions, Chain, Utils, SourceController, selectionToRecord) {
+   function(Control, template, ControllerContext, ContextOptions, Chain, Utils, SourceController, selectionToRecord) {
       
       'use strict';
       
@@ -33,7 +33,7 @@ define('Controls/Selector/Container',
          },
          
          getSelectedKeys: function(options, context) {
-            var items = _private.getFilteredItems(context.controllerContext.selectedItems, _private.getFilterFunction(options.selectionFilter));
+            var items = _private.getFilteredItems(context.selectorControllerContext.selectedItems, _private.getFilterFunction(options.selectionFilter));
             return _private.getKeysByItems(items, context.dataOptions.keyProperty);
          },
          
@@ -65,45 +65,53 @@ define('Controls/Selector/Container',
          _template: template,
          _selectedKeys: null,
          _selection: null,
+         _excludedKeys: null,
          
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
+            this._excludedKeys = [];
             this._items = context.dataOptions.items;
+   
+            this._initialSelectedKeys = this._selectedKeys.slice();
          },
          
          _beforeUpdate: function(newOptions, context) {
-            var currentSelectedItems =  context.controllerContext.selectedItems;
+            var currentSelectedItems = this.context.get('selectorControllerContext').selectedItems;
+            var newSelectedItems = context.selectorControllerContext.selectedItems;
             
-            if (currentSelectedItems !== this._options.selectedItems) {
+            if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);
             }
          },
    
-         _selectionChange: function(event, selection) {
-            this._selection = selection;
-            this._notify('selectionChange', [selection], {bubbling: true});
-         },
-   
          _selectComplete: function() {
-            if (this._selection) {
+            if (this._selectedKeys.length || this._excludedKeys.length) {
                var self = this;
                var dataOptions = this.context.get('dataOptions');
                var source = dataOptions.source;
                var sourceController = _private.getSourceController(source, dataOptions.navigation);
-               var loadDef = sourceController.load(_private.prepareFilter(Utils.clone(dataOptions.filter), this._selection, source));
+               var selection = {
+                  selected: this._selectedKeys,
+                  excluded: this._excludedKeys
+               };
+               var loadDef = sourceController.load(_private.prepareFilter(Utils.clone(dataOptions.filter), selection, source));
                
                loadDef.addCallback(function(result) {
-                  return _private.prepareResult(result, self._selectedKeys, dataOptions.keyProperty);
+                  return _private.prepareResult(result, self._initialSelectedKeys, dataOptions.keyProperty);
                });
                this._notify('selectionLoad', [loadDef], {bubbling: true});
             }
+         },
+   
+         _selectedKeysChanged: function(event, selectedKeys, added, removed) {
+            this._notify('selectedKeysChanged', [selectedKeys, added, removed], {bubbling: true});
          }
          
       });
       
       Container.contextTypes = function() {
          return {
-            controllerContext: SelectorContext,
+            selectorControllerContext: ControllerContext,
             dataOptions: ContextOptions
          };
       };

@@ -3,7 +3,7 @@ define('Controls/Selector/Controller',
       'Core/Control',
       'tmpl!Controls/Selector/Controller',
       'WS.Data/Utils',
-      'Controls/Selector/__Context',
+      'Controls/Selector/__ControllerContext',
       'WS.Data/Collection/List',
       'Core/ParallelDeferred',
       'WS.Data/Chain'
@@ -110,6 +110,7 @@ define('Controls/Selector/Controller',
                this._selectionLoadDef.done().getResult().addCallback(function(result) {
                   _private.processSelectionResult(result, self._selectedItems);
                   selectCallback();
+                  self._selectionLoadDef = null;
                   return result;
                });
             } else {
@@ -126,7 +127,7 @@ define('Controls/Selector/Controller',
          
          _getChildContext: function() {
             return {
-               controllerContext: new SelectorContext(this._selectedItems)
+               selectorControllerContext: new SelectorContext(this._selectedItems)
             };
          }
          

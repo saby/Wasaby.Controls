@@ -48,7 +48,7 @@ define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/M
    
       it('getSelectedKeys', function() {
          var context = {
-            controllerContext: {
+            selectorControllerContext: {
                selectedItems: getItems()
             },
             dataOptions: {

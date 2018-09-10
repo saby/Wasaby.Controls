@@ -13,6 +13,7 @@ define('Controls/Selector/List/Container',
             var added = [];
             var removed = [];
             var itemIndex = selectedKeys.indexOf(itemKey);
+            selectedKeys = selectedKeys.slice();
    
             if (itemIndex === -1) {
                selectedKeys.push(itemKey);
@@ -25,12 +26,13 @@ define('Controls/Selector/List/Container',
             return [selectedKeys, added, removed];
          },
          
-         itemClickEmptySelection: function(self, itemKey) {
-            self._notify('selectionChange', [{
-               selected: [itemKey],
-               excluded: []
-            }], {bubbling: true});
+         itemClickEmptySelection: function(self, itemClickResult) {
+            self._notify('listSelectionChange', itemClickResult, {bubbling: true});
             self._notify('selectComplete', [], {bubbling: true});
+         },
+         
+         itemClickWithSelection: function(self, itemClickResult) {
+            self._notify('listSelectionChange', itemClickResult, {bubbling: true});
          },
          
          resolveOptions: function(self, options) {
@@ -42,19 +44,17 @@ define('Controls/Selector/List/Container',
          },
    
          itemClick: function(self, itemKey, multiSelect, selectedKeys) {
-            if (multiSelect) {
-               if (selectedKeys.length) {
-                  self._notify('listSelectionChange', _private.getItemClickResult(itemKey, selectedKeys), {bubbling: true});
-               } else {
-                  _private.itemClickEmptySelection(self, itemKey);
-               }
+            var itemClickResult = _private.getItemClickResult(itemKey, selectedKeys);
+            
+            if (!multiSelect || !selectedKeys.length) {
+               _private.itemClickEmptySelection(self, itemClickResult);
             } else {
-               _private.itemClickEmptySelection(self, itemKey);
+               _private.itemClickWithSelection(self, itemClickResult);
             }
          }
       };
       
-      var Controller = Control.extend({
+      var Container = Control.extend({
          
          _template: template,
          _ignoreItemClickEvent: false,
@@ -86,9 +86,9 @@ define('Controls/Selector/List/Container',
          }
          
       });
+   
+      Container._private = _private;
       
-      Controller._private = _private;
-      
-      return Controller;
+      return Container;
       
    });

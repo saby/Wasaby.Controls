@@ -1,4 +1,4 @@
-define('Controls/Selector/__Context', [
+define('Controls/Selector/__ControllerContext', [
    'Core/DataContext'
 ], function(DataContext) {
    'use strict';
