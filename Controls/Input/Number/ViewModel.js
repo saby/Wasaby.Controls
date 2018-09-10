@@ -14,7 +14,7 @@ define('Controls/Input/Number/ViewModel',
       /**
        * @class Controls/Input/Number/ViewModel
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var NumberViewModel = BaseViewModel.extend({

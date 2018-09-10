@@ -57,7 +57,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
        * @class Controls/Container/TinyMCE
        * @extends Core/Control
        * @control
-       * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
+       * @author Журавлев М.С.
        */
       var
          BROWSER = cConstants.browser,
