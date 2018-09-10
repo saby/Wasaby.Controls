@@ -5,6 +5,6 @@
                           displayProperty="{{_options.displayProperty}}"
                           on:itemClick="_onItemClick()"/>
 
-    <Controls.Event.Emitter event="controlResize"
+    <Controls.Event.Listener event="controlResize"
                             on:controlResize="_onResize()"/>
 </div>
