@@ -8,11 +8,10 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
    'WS.Data/Source/DataSet',
    'WS.Data/Adapter/Sbis',
    'Core/core-clone',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
    'Core/helpers/Array/uniq',
    'Core/detection'
-], function(cAbstract, SbisService, Chain, Model, RecordSet, recordSetFactory, DataSet, SbisAdapter, coreClone, InformationPopupManager, historyUtil, uniqArray, detection) {
+], function(cAbstract, SbisService, Chain, Model, RecordSet, recordSetFactory, DataSet, SbisAdapter, coreClone, historyUtil, uniqArray, detection) {
 
    'use strict';
 
@@ -369,9 +368,11 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                pinItem.set('visible', false);
                pinned = true;
             } else {
-               InformationPopupManager.showNotification({
-                  caption: 'Невозможно закрепить более 10 пунктов',
-                  status: 'error'
+               requirejs(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                  InformationPopupManager.showNotification({
+                     caption: 'Невозможно закрепить более 10 пунктов',
+                     status: 'error'
+                  });
                });
             }
          } else {
