@@ -67,7 +67,15 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             componentOptions: null,
 
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
+             * @cfg {Object} Объект со опциями контрола Lib/Control/Dialog/Dialog или Lib/Control/FloatArea/FloatArea, на основе которого создаётся диалог.
+             * @remark
+             * Выбор контрола определяется по значению опции {@link mode}.
+             * Для компонентов <a href="/doc/platform/developmentapl/interface-development/wasaby/">Wasaby</a>,
+             * которые планируется открывать с помощью SBIS3.CONTROLS/Action/OpenDialog, список опций расширен:
+             * <ul>
+             *    <li>onResultHandler - функция-обработчик на событие onResult</li>
+             *    <li>onCloseHandler - функция-обработчик на событие onClose</li>
+             * </ul>
              */
             dialogOptions: null
          },
