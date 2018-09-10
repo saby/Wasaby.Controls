@@ -243,7 +243,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
-            var customHeaderContainer = this._childControl.getContainer().find('.ws-window-titlebar-custom');
+            var customHeaderContainer = this._getCustomHeaderContainer();
             if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
@@ -266,6 +266,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
+         },
+
+         _getCustomHeaderContainer: function() {
+            var child = this._childControl.getContainer().children();
+            var header = [];
+
+            //Ищем кастомную шапку только на первом уровне вложенности шаблона.
+            //Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
+            //На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
+            child.each(function(index, elem) {
+               if (elem.className.indexOf('ws-window-titlebar-custom') > -1) {
+                  header = $(elem);
+               }
+            });
+            return header;
          },
 
          _headerMouseDown: function(event) {
