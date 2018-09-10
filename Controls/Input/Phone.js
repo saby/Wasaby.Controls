@@ -2,7 +2,7 @@ define('Controls/Input/Phone',
    [
       'Core/Control',
       'Controls/Input/Phone/ViewModel',
-      'tmpl!Controls/Input/Mask/Mask'
+      'wml!Controls/Input/Mask/Mask'
    ],
    function(Control, ViewModel, template) {
 

@@ -1,11 +1,11 @@
 define('Controls-demo/Combobox/ComboboxVDom',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Combobox/ComboboxVDom',
+      'wml!Controls-demo/Combobox/ComboboxVDom',
       'WS.Data/Source/Memory',
       'Controls/Input/ComboBox',
-      'tmpl!Controls-demo/Combobox/itemTemplateCombobox',
-      'tmpl!Controls-demo/Combobox/itemTemplateMultiline',
+      'wml!Controls-demo/Combobox/itemTemplateCombobox',
+      'wml!Controls-demo/Combobox/itemTemplateMultiline',
       'css!Controls-demo/Combobox/ComboboxVDom'
    ],
    function(Control, template, Memory) {

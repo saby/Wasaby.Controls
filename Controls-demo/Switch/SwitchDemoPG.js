@@ -25,6 +25,8 @@ define('Controls-demo/Switch/SwitchDemoPG',
                   readOnly: true
                },
                captionPosition: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
                   selectedKey: 0
                }
             };

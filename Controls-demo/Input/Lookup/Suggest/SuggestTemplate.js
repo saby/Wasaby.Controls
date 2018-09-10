@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Lookup/Suggest/SuggestTemplate', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
+   'wml!Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
    'Controls/List'
 ], function(Control, template) {
    

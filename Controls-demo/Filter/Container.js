@@ -3,7 +3,7 @@
  */
 define('Controls-demo/Filter/Container', [
    'Core/Control',
-   'tmpl!Controls-demo/Filter/Container',
+   'wml!Controls-demo/Filter/Container',
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceData',
    'css!Controls-demo/Filter/Container',

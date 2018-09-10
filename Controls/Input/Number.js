@@ -1,7 +1,7 @@
 define('Controls/Input/Number', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
-   'tmpl!Controls/Input/Number/Number',
+   'wml!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
@@ -202,7 +202,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
       }
    });
 

@@ -1,7 +1,7 @@
 define('Controls/Container/Suggest/Layout/Dialog',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Suggest/Layout/Dialog',
+      'wml!Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Controls/Container/Scroll/Context',

@@ -3,7 +3,7 @@ define('Controls/StickyHeader',
       'Core/Control',
       'Core/detection',
       'Controls/Utils/IntersectionObserver',
-      'tmpl!Controls/StickyHeader/StickyHeader',
+      'wml!Controls/StickyHeader/StickyHeader',
 
       'css!Controls/StickyHeader/StickyHeader'
    ],
