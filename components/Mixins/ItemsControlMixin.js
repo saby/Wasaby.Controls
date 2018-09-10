@@ -1769,7 +1769,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback(forAliveOnly(function (list) {
-                   // https://online.sbis.ru/opendoc.html?guid=a29bb7c4-6d36-4302-8a7e-38a066dbd90d
+                   // https://online.sbis.ru/opendoc.html?guid=fc18c7f9-60f3-492f-a3ad-57b54bd5a63c
                    for (var group in this._options._groupCollapsing) {
                       if (this._options._groupCollapsing.hasOwnProperty(group)) {
                          delete this._options._groupCollapsing[group];
