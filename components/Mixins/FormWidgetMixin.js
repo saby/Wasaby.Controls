@@ -202,9 +202,10 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
             if (vResult.result && this._childControls) {
                for (var i = 0, l = this._childControls.length; i < l; i++) {
                   var childControl = this._childControls[i];
+
+                  //Валидируем все дочерние контролы, если хотя бы 1 не прошел валидацию - помечаем родительский контрол провалившим валидацию
                   if (childControl && childControl.validate && !childControl.validate()) {
                      vResult.result = false;
-                     break;
                   }
                }
             }
