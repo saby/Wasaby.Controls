@@ -83,6 +83,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this._options.type !== 'base') {
                this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             }
+
+            //Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
+            if (this._options.type === 'dialog' || this._options.type === 'stack') {
+               this._className += ' controls-CompoundArea-close_button';
+            }
+
             this._childControlName = this._options.template;
 
             /**
