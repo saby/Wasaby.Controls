@@ -10,7 +10,7 @@ define('Controls/Input/Number/InputProcessor',
       /**
        * @class Controls/Input/Number/InputProcessor
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var

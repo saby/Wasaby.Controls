@@ -10,7 +10,7 @@ define('Controls/Input/Number/SplitValueHelper',
       /**
        * @class Controls/Input/Number/SplitValueHelper
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var
