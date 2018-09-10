@@ -67,28 +67,6 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * Returns selection.
-    * @function Controls/interface/IPromisedSelectable#getSelection
-    * @returns {Selection} Selection.
-    * @example
-    * Use selection in the filter:
-    * TMPL:
-    * <pre>
-    *    <Controls.Container.MultiSelector name="multiselector" />
-    * </pre>
-    * JS:
-    * <pre>
-    *    setFilter: function() {
-    *       this._filter = {
-    *          selection: this._children.multiselector.getSelection()
-    *       };
-    *    }
-    * </pre>
-    * @see selectedKeys
-    * @see excludedKeys
-    */
-
-   /**
     * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of selected items' keys.
