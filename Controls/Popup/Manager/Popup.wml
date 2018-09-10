@@ -12,6 +12,6 @@
             on:transitionend="_animated()"
             on:controlResize="_update()">
     </ws:partial>
-    <Controls.Event.Emitter event="controlResize" on:controlResize="_delayedUpdate()"/>
-    <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
+    <Controls.Event.Listener event="controlResize" on:controlResize="_delayedUpdate()"/>
+    <Controls.Event.Listener event="scroll" on:scroll="_update()"/>
 </div>

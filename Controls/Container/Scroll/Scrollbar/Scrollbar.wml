@@ -6,5 +6,5 @@
            style="height: {{_thumbHeight}}px; transform: translateY({{_position * _scrollRatio}}px);"
       ></div>
    </Controls.DragNDrop.Controller>
-   <Controls.Event.Emitter event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.Event.Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
