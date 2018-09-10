@@ -6,8 +6,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC',
-   'Controls/Utils/isNewEnvironment'
-], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment) {
+   'Controls/Utils/isNewEnvironment',
+   'Controls/Utils/isVDOMTemplate'
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment, isVDOMTemplate) {
    'use strict';
 
    /**
@@ -171,17 +172,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                            config._initCompoundArea = function(compoundArea) {
                               self._dialog = compoundArea;
                            };
-                           if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+                           if (isVDOMTemplate(cfgTemplate)) {
                               CompatibleOpener._preparePopupCfgFromOldToNew(config, cfgTemplate);
                            }
                            BaseOpener.showDialog(cfgTemplate, config, Strategy);
                         });
                      });
                   } else {
-                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', config.template];
-                     requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
-                        self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
-                        self._dialog = new Component(config);
+                     requirejs([config.template], function (cfgTemplate) {
+                        //Если vdom - идем в слой совместимости
+                        if (isVDOMTemplate(cfgTemplate)) {
+                           requirejs(['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'], function (BaseOpener, CompatibleOpener) {
+                              self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
+                              self._dialog = new Component(config);
+                           });
+                        } else {
+                           self._dialog = new Component(config);
+                        }
                      });
                   }
                } catch (error) {
@@ -214,7 +221,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _prepareCfgForOldEnvironment: function(self, BaseOpener, CompatibleOpener, cfgTemplate, config) {
-         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+         if (isVDOMTemplate(cfgTemplate)) {
             CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
             config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
             config.componentOptions._initCompoundArea = function() {
