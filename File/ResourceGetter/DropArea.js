@@ -59,6 +59,7 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
      * @extends File/IResourceGetter
      * @public
      * @author Заляев А.В.
+     * @demo File-demo/ResourceGetter/DropArea
      */
     var DropArea = /** @class */ (function (_super) {
         tslib_1.__extends(DropArea, _super);
