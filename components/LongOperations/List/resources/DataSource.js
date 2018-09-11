@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Core/IoC',
       'Core/helpers/Object/isEqual',
       'WS.Data/Source/ISource',
       'WS.Data/Entity/ObservableMixin',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'Core/TimeInterval'
    ],
 
-   function (CoreExtend, Deferred, cObjectIsEqual, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
+   function (CoreExtend, Deferred, IoC, cObjectIsEqual, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
 
