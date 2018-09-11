@@ -24,8 +24,9 @@ def getTestForSkip(version, type) {
         tests_for_skip = tests_for_skip.split('\n')
         echo "DEBUG: ${tests_for_skip}"
         if ( tests_for_skip ) {
-            for ( test in tests_for_skip ):
+            for ( test in tests_for_skip ){
                 cmd += "--SKIP ${test} "
+            }
             echo "Будут пропущены тесты: ${tests_for_skip}"
         } else {
             echo "В RC нет упавших тестов."
