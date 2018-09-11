@@ -3,8 +3,9 @@ define(
       'Controls/Dropdown/resources/DropdownViewModel',
       'WS.Data/Collection/RecordSet',
       'Controls/Constants',
+      'WS.Data/Entity/Model'
    ],
-   (DropdownViewModel, RecordSet, ControlsConstants) => {
+   (DropdownViewModel, RecordSet, ControlsConstants, Model) => {
       describe('DropdownViewModel', () => {
          let rs = new RecordSet({
             idProperty: 'id',
@@ -166,6 +167,49 @@ define(
             });
          });
 
+         it('_private.isHistoryItem', () => {
+            var historyItem = new Model({rawData: {
+               pinned: true
+            }});
+            var simpleItem = new Model({rawData: {
+               any: 'any'
+            }});
+            
+            assert.isTrue(!!DropdownViewModel._private.isHistoryItem(historyItem));
+            assert.isFalse(!!DropdownViewModel._private.isHistoryItem(simpleItem));
+         });
+   
+         it('_private.filterAdditional', () => {
+            var selfWithAdditionalProperty = {
+               _options: {
+                  additionalProperty: 'additionalProperty'
+               }
+            };
+            var simpleSelf = {
+               _options: {}
+            };
+            
+            var itemWithAdditionalProperty = new Model({rawData: {
+               additionalProperty: true
+            }});
+            var historyItem = new Model({rawData: {
+               pinned: true,
+               additionalProperty: false
+            }});
+            var simpleItem = new Model({rawData: {
+               any: 'any'
+            }});
+   
+            assert.isFalse(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, itemWithAdditionalProperty));
+            assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, historyItem));
+            assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(selfWithAdditionalProperty, simpleItem));
+   
+            assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, itemWithAdditionalProperty));
+            assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, historyItem));
+            assert.isTrue(!!DropdownViewModel._private.filterAdditional.call(simpleSelf, simpleItem));
+            
+         });
+   
          it('destroy', () => {
             viewModel.destroy();
             assert.equal(null, viewModel._itemsModel._options);
