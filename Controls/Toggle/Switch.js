@@ -1,6 +1,6 @@
 define('Controls/Toggle/Switch', [
    'Core/Control',
-   'tmpl!Controls/Toggle/Switch/Switch',
+   'wml!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/Switch/Switch',
    'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
@@ -39,7 +39,6 @@ define('Controls/Toggle/Switch', [
 
    var Switch = Control.extend({
       _template: template,
-
       _clickHandler: function(e) {
          if (!this._options.readOnly) {
             this._notify('valueChanged', [!this._options.value]);

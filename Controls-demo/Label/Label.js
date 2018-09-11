@@ -1,7 +1,7 @@
 define('Controls-demo/Label/Label',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Label/Label'
+      'wml!Controls-demo/Label/Label'
    ],
    function(Control, template) {
 

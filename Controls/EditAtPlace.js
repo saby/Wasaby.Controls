@@ -1,6 +1,6 @@
 define('Controls/EditAtPlace', [
    'Core/Control',
-   'tmpl!Controls/EditAtPlace/EditAtPlace',
+   'wml!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/List/EditInPlace/Text'
 ], function(Control, template) {

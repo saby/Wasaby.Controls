@@ -1,7 +1,7 @@
 define('Controls/Container/Input/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Input/Search/Search',
+      'wml!Controls/Container/Input/Search/Search',
       'Core/IoC'
    ],
    

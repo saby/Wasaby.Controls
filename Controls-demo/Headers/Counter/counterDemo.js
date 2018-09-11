@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/Counter/counterDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/Counter/counterDemo',
+   'wml!Controls-demo/Headers/Counter/counterDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -9,46 +9,45 @@ define('Controls-demo/Headers/Counter/counterDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var counterSizeSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 's'
-         },
-         {
-            title: 'm'
-         },
-         {
-            title: 'l'
-         }
-      ]
-   });
-
-   var counterStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'primary'
-         },
-         {
-            title: 'disabled'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
          _counterSelectedSize: 'l',
          _counterSelectedStyle: 'primary',
-         _counterSizeSource: counterSizeSource,
-         _counterStyleSource: counterStyleSource,
+         _counterSizeSource: null,
+         _counterStyleSource: null,
          _counterCaption: '12',
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._counterSizeSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 's'
+                  },
+                  {
+                     title: 'm'
+                  },
+                  {
+                     title: 'l'
+                  }
+               ]
+            });
+            this._counterStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'primary'
+                  },
+                  {
+                     title: 'disabled'
+                  }
+               ]
+            });
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

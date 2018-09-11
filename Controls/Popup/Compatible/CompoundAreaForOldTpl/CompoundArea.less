@@ -64,17 +64,28 @@
 
    .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
       z-index: 50;
-      top: @top_dialogTemplate_compatible_close-button;
    }
 
    //перебиваю стили, затащившиеся с areaAbstract
    &.ws-window {
       border: none;
    }
+
+   &.ws-float-area-has-maximized-button .controls-StackTemplate__maximized_button{
+      display: block;
+   }
+
+   .controls-StackTemplate__maximized_button {
+      display: none;
+   }
 }
 
 .controls-CompoundArea__container {
    height: 100%;
+}
+
+.controls-CompoundArea-close_button .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
+   top: @top_dialogTemplate_compatible_close-button;
 }
 
 .controls-Stack__waiting, .controls-Stack__open, .controls-Stack__close {
@@ -102,12 +113,7 @@
    }
 }
 
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   //На ios всплыла бага, вызванная тем, что на странице много блоков с классом overflow-scrolling-touch
-   //Из-за этого скролл контейнер в попапе открывается с прозрачным фоном. хак это лечит
-   //todo в 500 версию избаовляемся от множественных классов overflow-scrolling-touch. Как сделаем, нужно выпилить это
-   .controls-CompoundArea .controls-StackTemplate__content-area {
-      overflow: auto;
-   }
+.controls-CompoundArea__move-cursor {
+   cursor: move;
 }
 

@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input/Font',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Font/Font',
+      'wml!Controls-demo/Example/Input/Font/Font',
 
       'Controls/Input/Text',
       'css!Controls-demo/Example/resource/Base',

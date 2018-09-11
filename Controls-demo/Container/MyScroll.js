@@ -4,15 +4,15 @@ define('Controls-demo/Container/MyScroll',
       'WS.Data/Query/Query',
       'WS.Data/Source/Memory',
       'WS.Data/Source/LocalSession',
-      'tmpl!Controls-demo/Container/MyScroll',
+      'wml!Controls-demo/Container/MyScroll',
       'Controls/List',
       'Controls/Toggle/Checkbox',
       'Controls/Container/Scroll',
       'Controls/Toggle/DoubleSwitch',
       'Controls/Popup/Opener/Dialog',
-      'tmpl!Controls-demo/Container/resources/User',
-      'tmpl!Controls-demo/Container/resources/UsersList',
-      'tmpl!Controls-demo/Container/resources/MessagesList',
+      'wml!Controls-demo/Container/resources/User',
+      'wml!Controls-demo/Container/resources/UsersList',
+      'wml!Controls-demo/Container/resources/MessagesList',
       'css!Controls-demo/Container/MyScroll'
    ],
    function(Control, Query, MemorySource, LocalSession, template) {
@@ -102,7 +102,7 @@ define('Controls-demo/Container/MyScroll',
             });
 
             this._messagesSource = new LocalSession({
-               keyProperty: 'id',
+               idProperty: 'id',
                prefix: 'DSMS'
             });
          },

@@ -3,9 +3,12 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
+ * 
+ * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/Area
+ * @author Спирин В.А.
  * @extends SBIS3.CONTROLS/CompoundControl
  */
 define('SBIS3.CONTROLS/ExportCustomizer/Area',
@@ -175,6 +178,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 * @cfg {ExportRemoteCall} Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
                 */
                outputCall: null,
+               /**
+                * @cfg {string} Имя объекта истории (опционально)
+                */
+               historyTarget: null,
 
                isTemporaryFile: null// {boolean} Текущее значение fileUuid в опциях указывает на временный файл
             },
@@ -236,13 +243,18 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   options.fieldIds = currentPreset.fieldIds.slice();
                   options.fileUuid = currentPreset.fileUuid;
                }
+               if (!options.historyTarget) {
+                  //TODO: Убрать после того, как опция начнёт приходить снаружи (как добавят в торгах)
+                  options.historyTarget = 'ExcelExport_' + options.serviceParams.FileName;
+               }
                presetsOptions = {
                   addNewTitle: options.presetAddNewTitle,
                   newPresetTitle: options.presetNewPresetTitle,
                   allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
-                  selectedId: options.selectedPresetId
+                  selectedId: options.selectedPresetId,
+                  historyTarget: options.historyTarget
                };
             }
             var fieldIds = options.fieldIds;
@@ -357,14 +369,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                case 'create':
                case 'clone':
                case 'select':
-                  options.fieldIds = fieldIds.slice();
-                  views.columnBinder.restate({fieldIds:fieldIds.slice()}, {source:'presets', reason:reason, args:args});
+                  options.fieldIds = fieldIds ? fieldIds.slice() : null;
+                  views.columnBinder.restate({fieldIds:fieldIds ? fieldIds.slice() : null}, {source:'presets', reason:reason, args:args});
                   // Здесь нет break, идём дальше
                case 'edit':
                   var consumer = args[0];
-                  var consumerUuid = consumer.patternUuid || consumer.fileUuid;
+                  var consumerUuid = consumer ? consumer.patternUuid || consumer.fileUuid : null;
                   options.fileUuid = fileUuid || consumerUuid;
-                  formatterValues = {fieldIds:fieldIds.slice(), fileUuid:fileUuid, consumerId:consumer.id, primaryUuid:consumerUuid};
+                  formatterValues = {fieldIds:fieldIds ? fieldIds.slice() : null, fileUuid:fileUuid, consumerId:consumer ? consumer.id : null, primaryUuid:consumerUuid};
                   formatterMeta = {reason:reason, args:args.slice(1)};
                   if (reason === 'edit') {
                      this._isEditMode = true;

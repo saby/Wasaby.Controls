@@ -5,7 +5,7 @@ define('Controls/StickyHeader',
       'Controls/StickyHeader/Model',
       'Controls/StickyHeader/Context',
       'Controls/Utils/IntersectionObserver',
-      'tmpl!Controls/StickyHeader/StickyHeader',
+      'wml!Controls/StickyHeader/StickyHeader',
 
       'css!Controls/StickyHeader/StickyHeader'
    ],

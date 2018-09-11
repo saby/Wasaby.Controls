@@ -78,11 +78,13 @@ define([
          var iv = new ListViewModel(cfg);
          var marItem = iv._markedItem;
          assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
+         assert.equal(iv._markedKey, 2, 'Incorrect _markedKey value');
 
 
          iv.setMarkedKey(3);
          marItem = iv._markedItem;
-         assert.equal(2, iv._options.markedKey, 'Incorrect selectedKey option value');
+         assert.equal(2, iv._options.markedKey, 'Incorrect markedKey option value');
+         assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });

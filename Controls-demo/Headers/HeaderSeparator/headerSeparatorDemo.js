@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo',
+   'wml!Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -9,25 +9,25 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var iconStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
          _iconSelectedStyle: 'primary',
-         _iconStyleSource: iconStyleSource,
+         _iconStyleSource: null,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._iconStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'primary'
+                  }
+               ]
+            });
+         },
 
          activatedHandler: function(e) {
             this._eventName = 'activated';

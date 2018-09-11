@@ -1,6 +1,6 @@
 define('Controls/Operations/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Operations/MultiSelector/MultiSelector',
+   'wml!Controls/Operations/MultiSelector/MultiSelector',
    'WS.Data/Source/Memory',
    'Controls/Container/MultiSelector/SelectionContextField',
    'css!Controls/Operations/MultiSelector/MultiSelector'

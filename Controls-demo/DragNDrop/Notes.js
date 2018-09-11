@@ -3,7 +3,7 @@ define('Controls-demo/DragNDrop/Notes', [
    'Core/core-clone',
    'Core/core-instance',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/DragNDrop/Notes/Notes',
+   'wml!Controls-demo/DragNDrop/Notes/Notes',
    'Controls-demo/DragNDrop/Notes/EntityTriangle',
    'Controls-demo/DragNDrop/Notes/EntityNote',
    'css!Controls-demo/DragNDrop/Notes/Notes'
@@ -13,31 +13,7 @@ define('Controls-demo/DragNDrop/Notes', [
    var Notes = BaseControl.extend({
       _template: template,
       _itemActions: undefined,
-      _items: [{
-         id: 0,
-         title: 'Заметка 1',
-         dragging: false,
-         position: {
-            top: 700,
-            left: 5
-         },
-         size: {
-            width: 150,
-            height: 50
-         }
-      }, {
-         id: 1,
-         title: 'Заметка 2',
-         dragging: false,
-         position: {
-            top: 755,
-            left: 5
-         },
-         size: {
-            width: 150,
-            height: 50
-         }
-      }],
+      _items: null,
       _startPosition: undefined,
       _startSize: undefined,
       _draggingItemId: undefined,
@@ -60,6 +36,31 @@ define('Controls-demo/DragNDrop/Notes', [
       },
 
       _beforeMount: function() {
+         this._items = [{
+            id: 0,
+            title: 'Заметка 1',
+            dragging: false,
+            position: {
+               top: 700,
+               left: 5
+            },
+            size: {
+               width: 150,
+               height: 50
+            }
+         }, {
+            id: 1,
+            title: 'Заметка 2',
+            dragging: false,
+            position: {
+               top: 755,
+               left: 5
+            },
+            size: {
+               width: 150,
+               height: 50
+            }
+         }];
          this._viewSource = new Memory({
             idProperty: 'id',
             data: this._items

@@ -1,6 +1,6 @@
 define('Controls-demo/Input/resources/TagStyle', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/resources/TagStyle',
+   'wml!Controls-demo/Input/resources/TagStyle',
    'WS.Data/Source/Memory'
 ],
 function(
@@ -11,13 +11,16 @@ function(
       _template: template,
       _empty: 'none',
       _placeholder: 'select',
-      _items: [
-         { id: '1', title: 'attention' },
-         { id: '2', title: 'done' },
-         { id: '3', title: 'error' },
-         { id: '4', title: 'primary' },
-         { id: '5', title: 'info' }
-      ],
+      _items: null,
+      _beforeMount: function() {
+         this._items = [
+            { id: '1', title: 'attention' },
+            { id: '2', title: 'done' },
+            { id: '3', title: 'error' },
+            { id: '4', title: 'primary' },
+            { id: '5', title: 'info' }
+         ];
+      },
       _createMemory: function() {
          return new Memory({
             idProperty: 'id',

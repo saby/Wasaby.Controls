@@ -1,0 +1,14 @@
+<div key="scripts">
+   <ws:if data="{{!_options.compat && _options.onServer}}">
+      <script key="init_script">
+         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
+            window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
+            var deps = {{ __setHTMLUnsafe(getDeps()) }};
+            require(['Core/app'], function(app) { app(deps); });
+         });
+      </script>
+   </ws:if>
+   <ws:if data="{{ _options.compat }}">
+      <ws:partial template="wml!Controls/Application/CompatibleScripts" />
+   </ws:if>
+</div>

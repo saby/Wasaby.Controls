@@ -1,6 +1,6 @@
 define('Controls-demo/Input/DeprecatedNumber/NumberVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/DeprecatedNumber/NumberVdom',
+	'wml!Controls-demo/Input/DeprecatedNumber/NumberVdom',
 	'Controls/Input/Number',
 	'css!Controls-demo/Input/DeprecatedNumber/NumberVdom'
 ], function ( Control, dotTplFn) {

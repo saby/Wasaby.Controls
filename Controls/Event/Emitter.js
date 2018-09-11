@@ -7,7 +7,7 @@
 define('Controls/Event/Emitter',
    [
       'Core/Control',
-      'tmpl!Controls/Event/Emitter',
+      'wml!Controls/Event/Emitter',
       'WS.Data/Type/descriptor'
    ],
    function(Control, template, types) {

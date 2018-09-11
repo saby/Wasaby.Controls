@@ -4,59 +4,65 @@ define('Controls-demo/List/Mover', [
    'WS.Data/Source/Memory',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/List/Tree/GridData',
-   'tmpl!Controls-demo/List/Mover/Mover',
+   'wml!Controls-demo/List/Mover/Mover',
    'css!Controls-demo/List/Mover/Mover'
 ], function(BaseControl, cClone, Memory, TreeMemory, GridData, template) {
    'use strict';
-
-   var demoItems = [{
-      id: 0,
-      title: 'Перемещение записей 1'
-   }, {
-      id: 1,
-      title: 'Перемещение записей 2'
-   }, {
-      id: 2,
-      title: 'Перемещение записей 3'
-   }, {
-      id: 3,
-      title: 'Перемещение записей 4'
-   }];
-
-   var _private = {
-      createSource: function(items) {
-         return new Memory({
-            idProperty: 'id',
-            data: cClone(items)
-         });
-      }
-   };
-
    return BaseControl.extend({
       _template: template,
       _countClicked: 0,
       _reloadCaption: 'Reload',
-      _columns: [{
-         displayProperty: 'Наименование'
-      }],
-      _treeSource: new TreeMemory({
-         idProperty: 'id',
-         data: GridData.catalog
-      }),
-      _itemActionsTree: [{
-         id: 0,
-         icon: 'icon-Move icon-primary',
-         showType: 2
-      }],
-      _selectedKeys: [],
-      _filter: {
-         'ВидДерева': 'Только узлы'
-      },
-      _viewSource: _private.createSource(demoItems),
-      _viewSourceSecond: _private.createSource(demoItems),
+      _columns: null,
+      _treeSource: null,
+      _itemActionsTree: null,
+      _selectedKeys: null,
+      _filter: null,
+      demoItems: null,
+      _viewSource: null,
+      _viewSourceSecond: null,
+      _private: null,
 
       _beforeMount: function() {
          var self = this;
+         this._private = {
+            createSource: function(items) {
+               return new Memory({
+                  idProperty: 'id',
+                  data: cClone(items)
+               });
+            }
+         };
+         this.demoItems = [{
+            id: 0,
+            title: 'Перемещение записей 1'
+         }, {
+            id: 1,
+            title: 'Перемещение записей 2'
+         }, {
+            id: 2,
+            title: 'Перемещение записей 3'
+         }, {
+            id: 3,
+            title: 'Перемещение записей 4'
+         }];
+         this._viewSource = this._private.createSource(this.demoItems);
+         this._viewSourceSecond = this._private.createSource(this.demoItems);
+         this._columns = [{
+            displayProperty: 'Наименование'
+         }];
+         this._filter = {
+            'ВидДерева': 'Только узлы'
+         };
+         this._treeSource = new TreeMemory({
+            idProperty: 'id',
+            data: GridData.catalog
+         });
+         this._itemActionsTree = [{
+            id: 0,
+            icon: 'icon-Move icon-primary',
+            showType: 2
+         }];
+         this._selectedKeys = [];
          this._itemActions = this._createItemsActions('listMover');
          this._itemActionsSecond = this._createItemsActions('listSecondMover');
          this._itemActionsThird = this._createItemsActions('dialogMover');

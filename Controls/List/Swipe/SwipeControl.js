@@ -1,6 +1,6 @@
 define('Controls/List/Swipe/SwipeControl', [
    'Core/Control',
-   'tmpl!Controls/List/Swipe/SwipeControl',
+   'wml!Controls/List/Swipe/SwipeControl',
    'Controls/Application/TouchDetector/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar',

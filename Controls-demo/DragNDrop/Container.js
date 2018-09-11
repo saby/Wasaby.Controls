@@ -1,6 +1,6 @@
 define('Controls-demo/DragNDrop/Container', [
    'Core/Control',
-   'tmpl!Controls-demo/DragNDrop/Container/Container',
+   'wml!Controls-demo/DragNDrop/Container/Container',
    'css!Controls-demo/DragNDrop/Container/Container'
 ], function(BaseControl, template) {
    'use strict';

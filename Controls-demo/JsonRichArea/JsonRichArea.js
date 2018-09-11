@@ -1,15 +1,16 @@
 define('Controls-demo/JsonRichArea/JsonRichArea', [
    'Core/Control',
-   'tmpl!Controls-demo/JsonRichArea/JsonRichArea'
+   'wml!Controls-demo/JsonRichArea/JsonRichArea'
 ], function(Control, template) {
    'use strict';
 
    return Control.extend({
       _template: template,
-      json: [['p']],
+      json: null,
       jsonStringify: undefined,
 
       _beforeMount: function() {
+         this.json = [['p']];
          this.jsonStringify = JSON.stringify(this.json);
       },
 

@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Password/Password',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Password/Password',
+      'wml!Controls-demo/Input/Password/Password',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {

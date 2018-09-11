@@ -1,9 +1,9 @@
 define('Controls-demo/List/Tree/TreeWithEditing', [
    'Core/Control',
    'Controls-demo/List/Tree/TreeWithEditingData',
-   'tmpl!Controls-demo/List/Tree/TreeWithEditing',
+   'wml!Controls-demo/List/Tree/TreeWithEditing',
    'Controls-demo/List/Tree/TreeMemory',
-   'tmpl!Controls-demo/List/Tree/treeEditingTemplate',
+   'wml!Controls-demo/List/Tree/treeEditingTemplate',
    'css!Controls-demo/List/Tree/Tree'
 ], function(
    BaseControl,
@@ -18,25 +18,28 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
    var
       TreeWithEditing = BaseControl.extend({
          _template: template,
-
-         _viewSource: new MemorySource({
-            idProperty: 'id',
-            data: TreeWithEditingData.catalog
-         }),
-
-         gridData: TreeWithEditingData,
-         gridColumns: [
-            {
-               displayProperty: 'Наименование',
-               width: '1fr',
-               template: treeEditingTemplate
-            },
-            {
-               displayProperty: 'Описание',
-               width: '1fr',
-               template: treeEditingTemplate
-            }
-         ],
+         _viewSource: null,
+         gridData: null,
+         gridColumns: null,
+         _beforeMount: function() {
+            this.gridColumns = [
+               {
+                  displayProperty: 'Наименование',
+                  width: '1fr',
+                  template: treeEditingTemplate
+               },
+               {
+                  displayProperty: 'Описание',
+                  width: '1fr',
+                  template: treeEditingTemplate
+               }
+            ];
+            this._viewSource = new MemorySource({
+               idProperty: 'id',
+               data: TreeWithEditingData.catalog
+            });
+            this.gridData = TreeWithEditingData;
+         },
 
          _onBeforeItemAdd: function() {
             return this._viewSource.create().addCallback(function(model) {

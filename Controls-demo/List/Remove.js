@@ -3,34 +3,33 @@ define('Controls-demo/List/Remove', [
    'Core/core-clone',
    'WS.Data/Source/Memory',
    'Controls-demo/List/Remove/RemoveDemoSource',
-   'tmpl!Controls-demo/List/Remove/Remove',
+   'wml!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
 ], function(BaseControl, cClone, Memory, DemoSource, template) {
    'use strict';
-
    var ModuleClass = BaseControl.extend({
       _template: template,
       _itemActions: undefined,
-      _items: [
-         {
-            id: 0,
-            title: 'Стандартное удаление записи'
-         },
-         {
-            id: 1,
-            title: 'Удаление записи с вопросом'
-         },
-         {
-            id: 2,
-            title: 'Удаление записи с ошибкой'
-         },
-         {
-            id: 3,
-            title: 'Долгое удаление записи'
-         }
-      ],
-
+      _items: null,
       _beforeMount: function() {
+         this._items = [
+            {
+               id: 0,
+               title: 'Стандартное удаление записи'
+            },
+            {
+               id: 1,
+               title: 'Удаление записи с вопросом'
+            },
+            {
+               id: 2,
+               title: 'Удаление записи с ошибкой'
+            },
+            {
+               id: 3,
+               title: 'Долгое удаление записи'
+            }
+         ];
          this._viewSource = this._createSource(DemoSource, this._items);
          this._viewSourceSecond = this._createSource(DemoSource, this._items);
 

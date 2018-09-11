@@ -53,7 +53,7 @@ define('Controls/Dropdown/Opener',
                parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
                items = configOptions && configOptions.items,
                optIconSize = configOptions && configOptions.iconSize,
-               headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.icon),
+               headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.showHeader && compOptions.icon),
                menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
                parents = {},
                iconSize, pid, icon;

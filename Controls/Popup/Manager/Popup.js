@@ -1,12 +1,13 @@
 define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Popup',
+      'wml!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
+      'Controls/Popup/PopupContext',
       'css!Controls/Popup/Manager/Popup'
    ],
-   function(Control, template, runDelayed, CoreConstants) {
+   function(Control, template, runDelayed, CoreConstants, PopupContext) {
       'use strict';
 
       var Popup = Control.extend({
@@ -36,13 +37,22 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function() {
-            // todo doautofocus
-            this._notify('popupCreated', [this._options.id], {bubbling: true});
+            /* TODO: COMPATIBLE. Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
+             * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза. Смотрим по флагу waitForPopupCreated */
 
-            // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
-            // сама управляет фокусом внутри себя
-            if (this._options.autofocus && !this._options.isCompoundTemplate) {
-               this.activate();
+            if (this.waitForPopupCreated) {
+               this.callbackCreated = (function() {
+                  this.callbackCreated = null;
+                  this._notify('popupCreated', [this._options.id], { bubbling: true });
+               }).bind(this);
+            } else {
+               this._notify('popupCreated', [this._options.id], {bubbling: true});
+
+               // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
+               // сама управляет фокусом внутри себя
+               if (this._options.autofocus && !this._options.isCompoundTemplate) {
+                  this.activate();
+               }
             }
          },
 
@@ -108,6 +118,12 @@ define('Controls/Popup/Manager/Popup',
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
+         },
+
+         _getChildContext: function() {
+            return {
+               stickyCfg: new PopupContext(this._options.position)
+            };
          }
       });
 

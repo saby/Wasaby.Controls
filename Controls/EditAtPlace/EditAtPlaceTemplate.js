@@ -1,6 +1,6 @@
 define('Controls/EditAtPlace/EditAtPlaceTemplate', [
    'Core/Control',
-   'tmpl!Controls/EditAtPlace/EditAtPlaceTemplate'
+   'wml!Controls/EditAtPlace/EditAtPlaceTemplate'
 ], function(Control, template) {
    'use strict';
 

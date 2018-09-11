@@ -5,10 +5,11 @@ define(['SBIS3.CONTROLS/FormattedTextBox'], function (FormattedTextBox) {
 
    'use strict';
    describe('SBIS3.CONTROLS/FormattedTextBox', function () {
-      var FTB, inputField;
+      var FTB, inputField, componentElement;
       before(function() {
          if (typeof $ !== 'undefined') {
-            $('#mocha').append('<div id="component"></div>');
+            componentElement = $('<div id="component"></div>');
+            $('#mocha').append(componentElement);
             FTB = new FormattedTextBox({
                element: 'component',
                mask: 'xx:xx:xx'
@@ -23,6 +24,7 @@ define(['SBIS3.CONTROLS/FormattedTextBox'], function (FormattedTextBox) {
          }
          FTB = undefined;
          inputField = undefined;
+         componentElement && componentElement.remove();
       });
 
       beforeEach(function() {

@@ -1,0 +1,4 @@
+<Controls.Input.Dropdown bind:selectedKeys="item.value"
+                         displayProperty="title"
+                         keyProperty="key"
+                         source="{{item.source}}"/>
