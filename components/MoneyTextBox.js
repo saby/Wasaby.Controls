@@ -199,7 +199,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       _setInputValue: function(value) {
          var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
          if(!this.isEnabled()) {
-            this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - this._options.decimals, newText.length) + '</span>';
+            this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - this._options.decimals - 1, newText.length) + '</span>';
          }else{
             this._inputField[0].innerHTML = newText;
          }
