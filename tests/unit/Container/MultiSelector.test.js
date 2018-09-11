@@ -41,16 +41,6 @@ define([
             excludedKeys: []
          };
 
-      it('getSelection', function() {
-         var instance = new MultiSelector();
-         instance._beforeMount(cfg, context);
-         var selection = instance.getSelection();
-         assert.equal(selection.selected.length, 2);
-         assert.equal(selection.selected[0], 1);
-         assert.equal(selection.selected[1], 2);
-         assert.equal(selection.excluded.length, 0);
-      });
-
       it('_afterMount', function() {
          var instance = new MultiSelector();
          instance._beforeMount(cfg, context);

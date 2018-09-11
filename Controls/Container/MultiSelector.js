@@ -87,10 +87,6 @@ define('Controls/Container/MultiSelector', [
          }
       },
 
-      getSelection: function() {
-         return this._multiselection.getSelection();
-      },
-
       _onListSelectionChange: function(event, keys, added, removed) {
          var oldSelection = this._multiselection.getSelection();
 
