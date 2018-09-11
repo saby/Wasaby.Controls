@@ -75,7 +75,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       editItem: function(options) {
-         this._children.listControl.editItem(options);
+         return this._children.listControl.editItem(options);
       },
 
       /**
@@ -84,7 +84,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       addItem: function(options) {
-         this._children.listControl.addItem(options);
+         return this._children.listControl.addItem(options);
       },
 
       /**
@@ -93,7 +93,7 @@ define('Controls/List', [
        */
       cancelEdit: function() {
          if (!this._options.readOnly) {
-            this._children.listControl.cancelEdit();
+            return this._children.listControl.cancelEdit();
          }
       },
 
@@ -103,7 +103,7 @@ define('Controls/List', [
        */
       commitEdit: function() {
          if (!this._options.readOnly) {
-            this._children.listControl.commitEdit();
+            return this._children.listControl.commitEdit();
          }
       },
 
