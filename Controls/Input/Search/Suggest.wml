@@ -18,6 +18,8 @@
             tagStyle="{{_options.tagStyle}}"
             trim="{{_options.trim}}"
             placeholder="{{_options.placeholder}}"
+            maxLength="{{_options.maxLength}}"
+            constraint="{{_options.constraint}}"
             style="{{_options.style}}"
             on:searchClick="_searchClick()"
             on:resetClick="_resetClick()"
