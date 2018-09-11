@@ -2,7 +2,7 @@
 <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
 <ws:if data="{{!_options.source}}">
     <Controls.Input.Text bind:value="_options.value"
-                          attr:class="demo-TextBox Controls-demo_{{_options.demoName}}_{{_options.caption}}"
+                          attr:class="demo-TextBox js-Controls_{{_options.demoName}}_{{_options.caption}}"
                          on:valueChanged="_valueChangedHandler()"/>
 </ws:if>
 <ws:else>
@@ -14,7 +14,7 @@
             source="{{_suggestSource()}}"
             minSearchLength="1"
             on:valueChanged="_valueChangedHandler()"
-            attr:class="demo-TextBox Controls-demo_{{_options.demoName}}_{{_options.caption}}">
+            attr:class="demo-TextBox js-Controls_{{_options.demoName}}_{{_options.caption}}">
         <ws:navigation source="page" view="page">
             <ws:sourceConfig pageSize="{{_options.source.length}}" page="{{0}}" mode="totalCount"/>
         </ws:navigation>
