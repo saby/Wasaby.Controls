@@ -1,11 +1,11 @@
 
 define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'Core/Control',
-   'tmpl!Controls-demo/RadioGroup/RadioGroupDemo',
+   'wml!Controls-demo/RadioGroup/RadioGroupDemo',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/RadioGroup/resources/RadioItemTemplate',
-   'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
-   'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate',
+   'wml!Controls-demo/RadioGroup/resources/RadioItemTemplate',
+   'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+   'wml!Controls-demo/RadioGroup/resources/ContentTemplate',
    'css!Controls-demo/RadioGroup/RadioGroupDemo',
    'css!Controls-demo/Headers/resetButton',
    'WS.Data/Collection/RecordSet'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
@@ -73,7 +73,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                {
                   id: '3',
                   title: 'Title3',
-                  templateTwo: 'tmpl!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+                  templateTwo: 'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
                   caption: 'Additional caption3'
                },
                {
@@ -126,7 +126,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                },
                {
                   title: 'custom',
-                  template: 'tmpl!Controls-demo/RadioGroup/resources/ContentTemplate'
+                  template: 'wml!Controls-demo/RadioGroup/resources/ContentTemplate'
                }
             ]
          });

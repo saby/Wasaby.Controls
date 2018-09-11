@@ -19,19 +19,31 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             }
             return item.get(this._options.parentProperty) === this._options.rootKey;
          },
+         
+         isHistoryItem: function(item) {
+            return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
+         },
+         
          filterAdditional: function(item) {
+            var isAdditional, isHistory;
+            
             if (!this._options.additionalProperty || this._expanded === true || !item.get) {
                return true;
             }
-            return item.get(this._options.additionalProperty) !== true;
+            
+            isAdditional = item.get(this._options.additionalProperty);
+            isHistory = _private.isHistoryItem(item);
+            
+            //additional item in history must be showed
+            return isAdditional !== true || isHistory;
          },
 
          needToDrawSeparator: function(item, nextItem) {
             if (!nextItem.get) {
                return false;
             }
-            var itemInHistory = (item.get('pinned') || item.get('recent') || item.get('frequent')) && !item.get('parent');
-            var nextItemInHistory = nextItem.get('pinned') || nextItem.get('recent') || nextItem.get('frequent');
+            var itemInHistory = _private.isHistoryItem(item) && !item.get('parent');
+            var nextItemInHistory = _private.isHistoryItem(nextItem);
             return itemInHistory && !nextItemInHistory;
          },
          

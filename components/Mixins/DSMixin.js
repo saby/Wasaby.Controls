@@ -623,6 +623,11 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
          destroy : function() {
             this._unsetItemsEventHandlers();
             this._clearItems();
+
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
+               this._itemsProjection = null;
+            }
          }
       },
 

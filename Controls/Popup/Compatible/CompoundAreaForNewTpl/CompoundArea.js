@@ -4,7 +4,7 @@
 define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
+      'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Core/vdom/Synchronizer/Synchronizer',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
@@ -27,7 +27,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          $protected: {
             _options: {
                isTMPL: function(template) {
-                  return template.indexOf('tmpl!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
+                  return template.indexOf('wml!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
                }
             },
             _isVDomTemplateMounted: false
@@ -43,6 +43,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
+            this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
@@ -51,6 +52,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
+                     self._afterUpdateHandler();
                   } else {
                      // Если нам передали шаблон строкой, то компонент уже построен. Обратимся к нему через DOM.
                      self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
@@ -92,6 +94,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             //Отлавливаем события с дочернего vdom компонента
             for (var event in additionalEventProperties) {
                if (additionalEventProperties.hasOwnProperty(event)) {
+                  rootContainer.eventProperties = rootContainer.eventProperties || {};
                   rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
                   rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
                }
@@ -145,18 +148,39 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                }
             };
          },
+
+         // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент обновился - нет.
+         _afterUpdateHandler: function() {
+            var self = this;
+            self._baseAfterUpdate = self._vDomTemplate._afterUpdate;
+            self._vDomTemplate._afterUpdate = function() {
+               self._baseAfterUpdate.apply(this, arguments);
+               if (self._isNewOptions) {
+
+                  //костыль от дубровина не позволяет перерисовать окно, если prevHeight > текущей высоты.
+                  //Логику в панели не меняю, решаю на стороне совместимости
+                  self._panel._prevHeight = 0;
+                  self._panel._recalcPosition && self._panel._recalcPosition();
+                  self._panel.getContainer().closest('.ws-float-area').removeClass('ws-invisible');
+                  self._isNewOptions = false;
+               }
+            };
+         },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
          },
          _onCloseHandler: function() {
-            this._options.onCloseHandler && this._options.onCloseHandler(this._result);
+            this._callCloseHandler();
             this.sendCommand('close', this._result);
             this._result = null;
          },
-         _onResultHandler: function(event, result) {
-            this._result = result;
+         _callCloseHandler: function() {
+            this._options.onCloseHandler && this._options.onCloseHandler(this._result);
+         },
+         _onResultHandler: function() {
+            this._result = Array.prototype.slice.call(arguments, 1); //first arg - event;
             if (this._options.onResultHandler) {
-               this._options.onResultHandler(this._result);
+               this._options.onResultHandler.apply(this, this._result);
             }
          },
          _onRegisterHandler: function(event, eventName, emitter, handler) {
@@ -196,8 +220,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          setInnerComponentOptions: function(newOptions) {
-            //https://online.sbis.ru/opendoc.html?guid=037ab701-0148-478c-9ef0-07365d1fa3c1
             if (this._vDomTemplate) { //могут позвать перерисоку до того, как компонент создался
+               this._isNewOptions = true;
+
+               //Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
+               this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
                this._vDomTemplate._options = newOptions;
                this._vDomTemplate._forceUpdate();
             }

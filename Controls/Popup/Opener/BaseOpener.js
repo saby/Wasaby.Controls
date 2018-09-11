@@ -1,12 +1,13 @@
 define('Controls/Popup/Opener/BaseOpener',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Opener/BaseOpener',
+      'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Core/vdom/Utils/DefaultOpenerFinder',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Controls/Utils/isNewEnvironment'
    ],
    function(
       Control,
@@ -15,7 +16,8 @@ define('Controls/Popup/Opener/BaseOpener',
       DefaultOpenerFinder,
       CoreClone,
       CoreMerge,
-      Deferred
+      Deferred,
+      isNewEnvironment
    ) {
 
       var _private = {
@@ -259,7 +261,6 @@ define('Controls/Popup/Opener/BaseOpener',
                   if (compoundArea) {
                      compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
                      dialog.setTarget && dialog.setTarget($(newCfg.target));
-                     dialog._recalcPosition && dialog._recalcPosition();
                   }
                } else {
                   action.closeDialog();
@@ -287,7 +288,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
       // TODO Compatible
       Base.isNewEnvironment = function() {
-         return document && !!document.getElementsByTagName('html')[0].controlNodes;
+         return isNewEnvironment();
       };
 
       Base._private = _private;

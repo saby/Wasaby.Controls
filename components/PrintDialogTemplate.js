@@ -2,28 +2,31 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'tmpl!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate',
-      'Core/SessionStorage',
-      'Core/detection',
+      'Core/Deferred',
       'Lib/Control/LoadingIndicator/LoadingIndicator',
       'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate'
-   ], function(CompoundControl, template, SessionStorage, detection, LoadingIndicator, CommandDispatcher) {
+   ], function(CompoundControl, template, Deferred, LoadingIndicator, CommandDispatcher) {
       "use strict";
-
-      var autoTestsConfig = SessionStorage.get('autoTestConfig');
-
-      //retailOffline неожиданно превратился в chrome, в котором нет нативного диалога предпросмотра. Будем показывать свой.
-      var needShowReportDialog = !detection.chrome || detection.retailOffline || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
 
       var PrintDialogTemplate = CompoundControl.extend({
          _dotTplFn: template,
          $protected: {
             _options: {
                autoWidth: true,
-               caption: needShowReportDialog ? rk('Предварительный просмотр') : '',
-               minHeight : 384,
-               maxHTMLLength: 3*1000*1000
-            }
+               needShowReportDialog: true,
+               minHeight: 384,
+               maxHTMLLength: 10*1000*1000
+            },
+            _readyDeferred: undefined
+         },
+
+         $constructor: function() {
+            this._readyDeferred = new Deferred();
+         },
+
+         getReadyDeferred: function() {
+            return this._readyDeferred;
          },
 
          init: function() {
@@ -37,26 +40,16 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
                htmlView.print();
             });
 
-            htmlView.once('onContentReady', function(){
+            htmlView.once('onContentReady', function() {
                LoadingIndicator.toggleIndicator(false);
-               if (needShowReportDialog) {
+               self._readyDeferred.callback();
+               if (self._options.needShowReportDialog) {
                   //Блокируем навигацию по клику на ссылки
                   $(htmlView.getIframeDocument()).delegate('a', 'click', function(event) {
                      event.preventDefault();
                   });
-                  self.getContainer().closest('.controls-PrintDialog__invisible').removeClass('controls-PrintDialog__invisible');
                } else {
-                  //Если не нужно показывать наш диалог перед печатью, то скроем окно диалога и сразу отправим данные на печать
-                  //Вешать класс ws-hidden нельзя, иначе в 59 хроме начинаются баги, подробности в ошибке
-                  //https://online.sbis.ru/opendoc.html?guid=ebadd542-85a6-4b65-bfca-c7487c6a6299
-                  self.getParent().getContainer().css('visibility', 'hidden');
-                  //Из-за того, что нельзя навесить ws-hidden, нужно сдвинуть окно в левый верхний угол, чтобы оно не растягивало
-                  //боди и на нем не появлялся скролл
-                  var window = self.getParent()._window;
-                  if (window) {
-                     window.css({'top': 0, 'left': 0});
-                  }
-                  htmlView.print().addCallback(function () {
+                  htmlView.print().addCallback(function() {
                      self.sendCommand('close');
                   });
                }

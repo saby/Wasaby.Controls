@@ -1,12 +1,11 @@
 define('Controls-demo/Input/resources/SuggestTwoLines',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/resources/SuggestTwoLines',
+      'wml!Controls-demo/Input/resources/SuggestTwoLines',
       'WS.Data/Source/Memory',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Base, template, Memory) {
-
       'use strict';
 
       var SuggestTwoLines = Base.extend({
@@ -31,5 +30,4 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
          }
       });
       return SuggestTwoLines;
-   }
-);
+   });

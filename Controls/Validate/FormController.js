@@ -1,7 +1,7 @@
 define('Controls/Validate/FormController',
    [
       'Core/Control',
-      'tmpl!Controls/Validate/FormController',
+      'wml!Controls/Validate/FormController',
       'Core/IoC',
       'Core/ParallelDeferred'
    ],

@@ -1,12 +1,13 @@
 define('Controls/History/Menu',
    [
       'Controls/Button/Menu',
-      'tmpl!Controls/History/resources/itemTemplate',
+      'wml!Controls/History/resources/itemTemplate',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
+      'Controls/Button/Menu/MenuUtils',
       'css!Controls/History/Menu'
    ],
-   function(Menu, itemTemplate, merge, isEqual) {
+   function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
       /**
        * Button
        *
@@ -54,6 +55,7 @@ define('Controls/History/Menu',
          _filter: null,
 
          _beforeMount: function(options) {
+            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
             this._filter = _private.prepareFilter(options.filter);
          },
          
@@ -74,7 +76,7 @@ define('Controls/History/Menu',
             this._options.source.update(items[0], _private.getMetaPinned(items[0])).addCallback(function(result) {
                if (!result) {
                   self._children.notificationOpener.open({
-                     template: 'tmpl!Controls/Popup/Templates/Notification/Simple',
+                     template: 'wml!Controls/Popup/Templates/Notification/Simple',
                      templateOptions: {
                         style: 'error',
                         text: 'Невозможно закрепить более 10 пунктов',

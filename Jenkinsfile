@@ -424,9 +424,18 @@ node('controls') {
                     if ( unit ){
                         echo "Запускаем юнит тесты"
                         dir(workspace){
-                            sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                            sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                            sh "cp -rf ./ws_data/WS.Data ./controls/"
+                            sh """
+                            cd ws_data
+                            npm i
+                            cd ../WIS-git-temp
+                            npm i
+                            node compileEsAndTs.js
+                            cd ..
+                            ln -s ../WIS-git-temp controls/sbis3-ws
+                            ln -s ../ws_data/WS.Data controls/WS.Data
+                            ln -s ../ws_data/Data controls/Data
+                            ln -s ../../ws_data/WS.Data controls/components/WS.Data
+                            """
                         }
                         dir("./controls"){
                             sh "npm config set registry http://npmregistry.sbis.ru:81/"

@@ -5,13 +5,15 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
         MTB,
         inputField,
         formattedValue;
+    var componentElement;
 
     describe('SBIS3.CONTROLS/MoneyTextBox', function () {
         beforeEach(function() {
            if (typeof $ === 'undefined') {
               this.skip();
            }
-           $('#mocha').append('<div id="component"></div>');
+           componentElement = $('<div id="component"></div>');
+           $('#mocha').append(componentElement);
            MTB = new NumberTextBox({
               element: 'component',
               text: '1234.56',
@@ -67,6 +69,7 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
            MTB.destroy();
            MTB = undefined;
            inputField = undefined;
+           componentElement && componentElement.remove();
         });
     });
 });

@@ -2,9 +2,9 @@ define(['Controls/Explorer'], function(Explorer) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
          var
-            dataLoadCallbackCalled = false,
-            dataLoadCallback = function() {
-               dataLoadCallbackCalled = true;
+            dataLoadCallbackArgument = null,
+            dataLoadCallback = function(data) {
+               dataLoadCallbackArgument = data;
             },
             forceUpdate = function() {},
             self = {
@@ -49,7 +49,7 @@ define(['Controls/Explorer'], function(Explorer) {
                dataLoadCallback: dataLoadCallback
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
-         assert.isTrue(dataLoadCallbackCalled, 'Incorrect value "dataLoadCallbackCalled" after call "dataLoadCallback(...)".');
+         assert.deepEqual(dataLoadCallbackArgument, testData1, 'Incorrect "dataLoadCallback" arguments.');
          Explorer._private.dataLoadCallback(self, testData2);
          assert.deepEqual({
             _root: 'testRoot',
@@ -71,6 +71,28 @@ define(['Controls/Explorer'], function(Explorer) {
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
       });
-      
+
+      it('_notifyHandler', function() {
+         var
+            instance = new Explorer(),
+            events = [],
+            result;
+
+         instance._notify = function() {
+            events.push({
+               eventName: arguments[0],
+               eventArgs: arguments[1]
+            });
+            return 123;
+         };
+
+         result = instance._notifyHandler({}, 'itemActionsClick', 1, 2);
+         instance._notifyHandler({}, 'beforeItemAdd');
+         assert.equal(result, 123);
+         assert.equal(events[0].eventName, 'itemActionsClick');
+         assert.deepEqual(events[0].eventArgs, [1, 2]);
+         assert.equal(events[1].eventName, 'beforeItemAdd');
+         assert.deepEqual(events[1].eventArgs, []);
+      });
    });
 });

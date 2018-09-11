@@ -1,11 +1,11 @@
 define('Controls-demo/OperationsPanel/Demo', [
    'Core/Control',
-   'tmpl!Controls-demo/OperationsPanel/Demo/Demo',
+   'wml!Controls-demo/OperationsPanel/Demo/Demo',
    'WS.Data/Source/Memory',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
-   'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
+   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
 ], function(Control, template, Memory, TreeMemory, Data) {
    'use strict';
 
@@ -19,6 +19,8 @@ define('Controls-demo/OperationsPanel/Demo', [
       _moveDialogColumns: null,
       _gridColumns: null,
       _moveDialogFilter: null,
+      _selectedKeys: null,
+      _excludedKeys: null,
 
       _beforeMount: function() {
          this._panelSource = this._getPanelSource([]);
@@ -28,7 +30,7 @@ define('Controls-demo/OperationsPanel/Demo', [
             onlyFolders: true
          };
          this._gridColumns = [{
-            template: 'tmpl!Controls-demo/OperationsPanel/Demo/PersonInfo'
+            template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
          }];
          this._moveDialogColumns = [{
             displayProperty: 'department'
@@ -37,6 +39,8 @@ define('Controls-demo/OperationsPanel/Demo', [
             idProperty: 'id',
             data: Data.employees
          });
+         this._selectedKeys = [];
+         this._excludedKeys = [];
       },
 
       _panelItemClick: function(event, item) {
@@ -78,18 +82,17 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _selectionChangeHandler: function(event, selection) {
-         this._selection = selection;
-         this._panelSource = this._getPanelSource(selection.selected);
+      _selectionChangeHandler: function(event, selectedKeys) {
+         this._panelSource = this._getPanelSource(selectedKeys);
          this._forceUpdate();
       },
 
       _moveItems: function() {
-         this._children.dialogMover.moveItemsWithDialog(this._selection.selected);
+         this._children.dialogMover.moveItemsWithDialog(this._selectedKeys);
       },
 
       _removeItems: function() {
-         this._children.remover.removeItems(this._selection.selected);
+         this._children.remover.removeItems(this._selectedKeys);
       },
 
       _afterItemsMove: function() {
@@ -98,28 +101,18 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._children.list.reload();
       },
 
-      _afterItemsRemove: function() {
-         //TODO: иначе выделению совсем плохо
-         //https://online.sbis.ru/opendoc.html?guid=b8c5c496-4c9e-425e-b90e-0ecfbf9b1f91
-         this._children.remover._notify('selectedTypeChanged', ['unselectAll'], {
-            bubbling: true
-         });
-         if (this._removeFolders) {
-            this._children.list.reload();
-            this._removeFolders = false;
-         }
-      },
-
       _beforeItemsRemove: function(event, items) {
-         var self = this;
+         var
+            self = this,
+            removeFolders;
 
          items.forEach(function(key) {
             if (self._items.getRecordById(key).get(self._nodeProperty) === true) {
-               self._removeFolders = true;
+               removeFolders = true;
             }
          });
 
-         return self._removeFolders ? this._children.popupOpener.open({
+         return removeFolders ? this._children.popupOpener.open({
             message: 'Are you sure you want to delete the department?',
             type: 'yesno'
          }) : true;

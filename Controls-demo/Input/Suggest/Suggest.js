@@ -1,12 +1,12 @@
 define('Controls-demo/Input/Suggest/Suggest', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Suggest/Suggest',
+   'wml!Controls-demo/Input/Suggest/Suggest',
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Entity/Model',
-   'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
+   'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
    'css!Controls-demo/Input/Suggest/Suggest',
-   'css!Controls-demo/Input/resources/VDomInputs'
+   'css!Controls-demo/Input/resources/VdomInputs'
 ], function(Control, template, MemorySource, Deferred, Model, myTmpl) {
 
    'use strict';
@@ -173,14 +173,14 @@ define('Controls-demo/Input/Suggest/Suggest', [
          });
       },
       _tagStyleHandler: function() {
-         this._events += 'tagHover' + '\r\n';
+         this._events += 'tagHover\r\n';
          this._children.infoBoxSuggest.open({
             target: this._children.suggest._container,
             message: 'Hover'
          });
       },
       _tagStyleClickHandler: function() {
-         this._events += 'tagClick' + '\r\n';
+         this._events += 'tagClick\r\n';
          this._children.infoBoxSuggest.open({
             target: this._children.suggest._container,
             message: 'Click'
@@ -193,7 +193,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          this._events += 'valueChanged : ' + tmp  + '\n';
       },
       _inputCompletedHandler: function() {
-         this._events += 'inputCompleted' + '\r\n';
+         this._events += 'inputCompleted\r\n';
       },
       _selectedKeyChangedHandler: function(event, tmp) {
          this._events += 'selectedKeyChanged :  ' + tmp + '\n';

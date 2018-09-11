@@ -22,6 +22,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       afterEach(function () {
          this.testControl.destroy();
          this.testControl = undefined;
+         this.container && this.container.remove();
          this.container = undefined;
       });
    };
@@ -166,6 +167,18 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
             // onPropertiesChanged вызывается 2 раза. Если будет актуально, то в будущем можно оптимизировать избавившись от лишних вызовов.
             assert(onPropertiesChanged.calledTwice, `onPropertiesChanged called ${onPropertiesChanged.callCount}`);
             assert(onPropertyChanged.calledTwice, `onPropertyChanged called ${onPropertyChanged.callCount}`);
+         });
+      });
+
+      describe('.setDate', function () {
+         controlTestCase();
+         it('should generate "onDateChange" in case dateBox.setDate(date, true); dateBox.setDate(null);', function () {
+            let onDateChange = sinon.spy();
+            this.testControl.setDate(new Date(), true);
+            this.testControl.subscribe('onDateChange', onDateChange);
+            this.testControl.setDate(null);
+            assert.isNull(this.testControl.getDate());
+            assert(onDateChange.calledOnce, `onDateChange called ${onDateChange.callCount}`);
          });
       });
 

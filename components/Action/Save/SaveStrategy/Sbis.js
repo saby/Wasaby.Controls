@@ -9,8 +9,9 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
     'WS.Data/Entity/Record',
     'WS.Data/Collection/RecordSet',
     'Core/moduleStubs',
+    'Core/IoC',
     'WS.Data/Adapter/Sbis'
-], function(SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, RecordSet, moduleStubs) {
+], function(SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, RecordSet, moduleStubs, IoC) {
 
     'use strict';
 
@@ -33,6 +34,28 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          SaveList: ['SaveListLRS', 'SaveList'],
          SaveRecordSet: ['SaveRecordSetLRS', 'SaveRecordSet'],
          SaveMarked: ['SaveMarked', '']
+      }
+   };
+
+   var _private = {
+      convertConfig: function(cfg, sync) {
+         cfg.PageLandscape = cfg.PageOrientation === 2;
+         delete cfg.PageOrientation;
+
+         if (cfg.html) {
+            cfg.Name = cfg.FileName;
+            delete cfg.FileName;
+            cfg.Html = cfg.html;
+            delete cfg.html;
+            cfg.Sync = true;
+         } else {
+            if (cfg.Limit) {
+               delete cfg.Limit;
+               cfg.Pagination = null;
+            }
+            cfg.HierarchyField = cfg.HierarchyField || null;
+            cfg.Sync = sync;
+         }
       }
    };
 
@@ -152,7 +175,8 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
         * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
         */
         exportRecordSet: function(meta) {
-            var
+          IoC.resolve("ILogger").error("Методы PDF.SaveRecordSet и Excel.SaveRecordSet будут удалены в 3.18.610.");
+          var
                cfg = {
                   Data: meta.recordSet,
                   FileName: meta.fileName,
@@ -240,6 +264,12 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             if (METHODS_NAME[meta.endpoint]) {
                methodName = METHODS_NAME[meta.endpoint][methodName][useLongOperations ? 0 : 1];
             }
+
+           if (meta.endpoint === 'PDF') {
+              _private.convertConfig(cfg, !useLongOperations);
+              methodName = 'Save';
+           }
+
             cfg = this._normalizeMethodData(cfg, methodName, meta.endpoint);
             def = source.call(methodName, cfg).addCallback(function(result) {
                //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому

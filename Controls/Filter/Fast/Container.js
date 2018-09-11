@@ -4,7 +4,7 @@
 define('Controls/Filter/Fast/Container',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Fast/Container',
+      'wml!Controls/Filter/Fast/Container',
       'Controls/Container/Filter/FilterContextField',
       'Core/helpers/Object/isEqual'
    ],

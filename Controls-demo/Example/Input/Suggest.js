@@ -2,7 +2,7 @@ define('Controls-demo/Example/Input/Suggest',
    [
       'Core/Control',
       'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Example/Input/Suggest/Suggest',
+      'wml!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/Input/Suggest',
       'Controls-demo/Example/resource/BaseDemoInput'

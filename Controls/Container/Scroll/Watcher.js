@@ -6,7 +6,7 @@
 define('Controls/Container/Scroll/Watcher',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Scroll/Watcher/Watcher',
+      'wml!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
       'Core/detection'
    ],

@@ -1,0 +1,10 @@
+<div>
+    <Controls.BreadCrumbs.View items="{{_options.items}}"
+                          visibleItems="{{_visibleItems}}"
+                          keyProperty="{{_options.keyProperty}}"
+                          displayProperty="{{_options.displayProperty}}"
+                          on:itemClick="_onItemClick()"/>
+
+    <Controls.Event.Listener event="controlResize"
+                            on:controlResize="_onResize()"/>
+</div>

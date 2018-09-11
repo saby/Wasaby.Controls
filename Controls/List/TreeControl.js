@@ -1,6 +1,6 @@
 define('Controls/List/TreeControl', [
    'Core/Control',
-   'tmpl!Controls/List/TreeControl/TreeControl',
+   'wml!Controls/List/TreeControl/TreeControl',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
@@ -89,14 +89,16 @@ define('Controls/List/TreeControl', [
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
       _loadedNodes: null,
-      constructor: function(cfg) {
+      constructor: function() {
          this._loadedNodes = {};
+         return TreeControl.superclass.constructor.apply(this, arguments);
+      },
+      _beforeMount: function(cfg) {
          this._hierarchyRelation = new HierarchyRelation({
             idProperty: cfg.keyProperty,
             parentProperty: cfg.parentProperty,
             nodeProperty: cfg.nodeProperty
          });
-         return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _afterMount: function() {
          TreeControl.superclass._afterMount.apply(this, arguments);

@@ -148,10 +148,10 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          showPicker: function(parentFnc) {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               this._chooserControl.updateViewAfterShow();
                parentFnc.call(this);
+
                // см комментарий в updateViewAfterShow
-               // this._chooserControl.updateViewAfterShow();
+               this._chooserControl.updateViewAfterShow();
             } else {
                requirejs(['SBIS3.CONTROLS/Date/RangeBigChoose'], function(RangeChoose) {
                   this._chooserClass = RangeChoose;

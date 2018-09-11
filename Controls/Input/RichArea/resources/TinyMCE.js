@@ -9,7 +9,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'Core/helpers/Function/runDelayed',
       'Core/Control',
       'Core/UserConfig',
-      'tmpl!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
+      'wml!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
       'SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles',
       'WS.Data/Di',
@@ -57,7 +57,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
        * @class Controls/Container/TinyMCE
        * @extends Core/Control
        * @control
-       * @authors Volotskoy V.D., Sukhoruchkin A.S., Avramenko A.S.
+       * @author Журавлев М.С.
        */
       var
          BROWSER = cConstants.browser,
@@ -180,7 +180,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             _afterMount: function(opts) {
                var self = this;
 
-               moduleStabs.require([cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce.min']).addCallback(function() {
+               moduleStabs.require([cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce/tinymce']).addCallback(function() {
                   self._value = opts.value ? opts.value : '';
                   _private.tinyInit(self);
                });

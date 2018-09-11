@@ -2,12 +2,14 @@
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
                             bind:textValue="item.textValue"
                             keyProperty="key"
+                            displayProperty="title"
                             source="{{item.source}}" />
 </ws:template>
 
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
+                         displayProperty="title"
                          keyProperty="key"
                          source="{{item.source}}"/>
 </ws:template>

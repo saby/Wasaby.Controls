@@ -1,6 +1,6 @@
 define('Controls/Button/Close', [
    'Core/Control',
-   'tmpl!Controls/Button/Close',
+   'wml!Controls/Button/Close',
    'css!Controls/Button/Close'
 ], function(Control, template) {
 

@@ -1,0 +1,45 @@
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
+                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}">
+   <ws:topArea>
+      <div class="controls-FilterPanel__header">
+
+         <ws:if data="{{_options.topTemplate}}">
+            <div class="controls-FilterPanel__header-topTemplate">
+               <ws:partial template="{{_options.topTemplate}}"/>
+            </div>
+         </ws:if>
+         <Controls.Button style="linkMain" readOnly="{{!_isChanged}}" caption="{[По умолчанию]}"
+                          on:click="_resetFilter()"
+                          name="resetButton"
+                          attr:class="controls-FilterPanel__resetButton"/>
+
+         <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
+                          attr:class="controls-FilterPanel__filterButton"/>
+      </div>
+   </ws:topArea>
+   <ws:contentArea>
+      <div class="{{_options.panelStyle ? 'controls-FilterPanel__column'}}">
+         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
+            <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
+                                   itemTemplate="{{_options.itemTemplate}}"
+                                   itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                   on:valueChanged="_valueChangedHandler()"
+                                   on:visibilityChanged="_visibilityChangedHandler()"
+                                   attr:class="controls-FilterPanel__PropertyGrid"/>
+            <ws:if data="{{_hasAdditionalParams}}">
+               <Controls.Filter.Button.Panel.AdditionalParams
+                       items="{{_items}}"
+                       itemTemplate="{{_options.additionalTemplate}}"
+                       itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+                       on:valueChanged="_valueChangedHandler()"
+                       attr:class="controls-FilterPanel__AdditionalParams"/>
+            </ws:if>
+         </div>
+         <ws:if data="{{_historyId}}">
+            <Controls.Filter.Button.History.List
+                    historyId="{{_historyId}}"
+                    on:applyHistoryFilter="_applyHistoryFilter()"/>
+         </ws:if>
+      </div>
+   </ws:contentArea>
+</Controls.Popup.Templates.Dialog.DialogTemplate>

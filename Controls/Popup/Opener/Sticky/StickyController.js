@@ -43,6 +43,8 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
+            cfg.popupOptions.position = this.prepareCfgContext(popupCfg);
+
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             _private.removeOrientationClasses(cfg);
             cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
@@ -89,6 +91,14 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                };
             }
             return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
+         },
+
+         prepareCfgContext: function(cfg) {
+            return {
+               horizontalAlign: cfg.align.horizontal,
+               verticalAlign: cfg.align.vertical,
+               corner: cfg.corner
+            };
          }
       };
 
@@ -100,6 +110,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * @category Popup
        */
       var StickyController = BaseController.extend({
+
          elementCreated: function(item, container) {
             item.position.position = undefined;
             this.prepareConfig(item, container);

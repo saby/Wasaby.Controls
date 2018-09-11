@@ -6,13 +6,15 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function (NumberTextBox) {
         inputField,
         event,
         eventBlur;
+    var componentElement;
 
     describe('SBIS3.CONTROLS/NumberTextBox', function () {
         beforeEach(function () {
             if (typeof $ === 'undefined') {
                 this.skip();
             }
-            $('#mocha').append('<div id="component"></div>');
+            componentElement = $('<div id="component"></div>');
+            $('#mocha').append(componentElement);
             NTB = new NumberTextBox({
                 element: 'component',
                 text: '1.234',
@@ -107,6 +109,7 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function (NumberTextBox) {
             NTB = undefined;
             inputField = undefined;
             event = undefined;
+            componentElement && componentElement.remove();
         });
     });
 });

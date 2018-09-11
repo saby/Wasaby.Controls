@@ -25,6 +25,7 @@ define('Controls/List/ListViewModel',
          _dragTargetPosition: null,
          _actions: null,
          _selectedKeys: null,
+         _markedKey: null,
 
          constructor: function(cfg) {
             var self = this;
@@ -32,6 +33,7 @@ define('Controls/List/ListViewModel',
             ListViewModel.superclass.constructor.apply(this, arguments);
 
             if (cfg.markedKey !== undefined) {
+               this._markedKey = cfg.markedKey;
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
 
@@ -85,10 +87,10 @@ define('Controls/List/ListViewModel',
          },
 
          setMarkedKey: function(key) {
-            if (key === this._options.markedKey) {
+            if (key === this._markedKey) {
                return;
             }
-
+            this._markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
             this._nextVersion();
             this._notify('onListChange');
@@ -173,8 +175,8 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
-            if (this._options.markedKey !== undefined) {
-               this._markedItem = this.getItemById(this._options.markedKey, this._options.keyProperty);
+            if (this._markedKey !== undefined) {
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
             _private.updateIndexes(this);

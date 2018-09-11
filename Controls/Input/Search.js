@@ -2,7 +2,7 @@ define('Controls/Input/Search',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Input/Search/Search',
+      'wml!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Core/constants',
       'css!Controls/Input/Search/Search'
@@ -23,7 +23,7 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
 
       /**

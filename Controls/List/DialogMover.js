@@ -1,7 +1,7 @@
 define('Controls/List/DialogMover', [
    'Core/Control',
    'WS.Data/Source/ISource',
-   'tmpl!Controls/List/DialogMover/DialogMover',
+   'wml!Controls/List/DialogMover/DialogMover',
    'Controls/Container/Data/ContextOptions'
 ], function(Control, ISource, template, dataOptions) {
 

@@ -1,11 +1,11 @@
 define('Controls-demo/Input/ComboBox/ComboBox',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/ComboBox/ComboBox',
+      'wml!Controls-demo/Input/ComboBox/ComboBox',
       'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Input/ComboBox/resources/ItemTemplate',
+      'wml!Controls-demo/Input/ComboBox/resources/ItemTemplate',
       'Controls/Input/ComboBox',
-      'css!Controls-demo/Input/resources/VDomInputs'
+      'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template, Memory, myTmpl) {
       'use strict';
@@ -42,7 +42,6 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          _sourceData: null,
          _parameters: null,
          _beforeMount: function() {
-            _cmbSource.createMemory(this);
             this._defaultItems = [
                { id: '1', title: 'Shakerato', text: 'It is an iced coffee made by shaking espresso and ice cubes.' },
                { id: '2', title: 'Espresso Romano', text: 'It is a shot of espresso with a slice of lemon served on the side.' },
@@ -74,6 +73,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
                { title: 'title' },
                { title: 'text' }
             ];
+            _cmbSource.createMemory(this);
          },
          _beforeUpdate: function() {
             _cmbSource.createMemory(this);
@@ -87,7 +87,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             }
          },
          _tagStyleHandler: function() {
-            this._events += 'tagHover' + '\r\n';
+            this._events += 'tagHover\r\n';
             this._children.infoBoxComboBox.open({
                target: this._children.comboBox._container,
                message: 'Hover',
@@ -95,7 +95,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             });
          },
          _tagStyleClickHandler: function() {
-            this._events += 'tagClick' + '\r\n';
+            this._events += 'tagClick\r\n';
             this._children.infoBoxComboBox.open({
                target: this._children.comboBox._container,
                message: 'Click'
@@ -105,7 +105,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             this._events += 'valueChanged : ' + tmp + '\n';
          },
          _inputCompletedHandler: function() {
-            this._events += 'inputCompleted' + '\r\n';
+            this._events += 'inputCompleted\r\n';
          },
          _validationChangedHandler: function() {
             if (this._validationErrorsValue) {

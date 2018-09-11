@@ -900,10 +900,6 @@ define('SBIS3.CONTROLS/DataGridView',
          // Смещаем индикатор загрузки вниз на высоту заголовков.
          tHeadHeight = this._thead.outerHeight();
          styles = {top: tHeadHeight || ''};
-         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
-         if (cDetection.webkit) {
-            styles.height =  tHeadHeight ? 'calc(100% - ' + tHeadHeight + 'px)' : '';
-         }
          this._getAjaxLoaderContainer().css(styles);
 
          this._setMinHeight(tHeadHeight + this._getAjaxLoaderMinHeight() + 'px');
@@ -1155,6 +1151,11 @@ define('SBIS3.CONTROLS/DataGridView',
          if(this.hasPartScroll()) {
             this.updateScrollAndColumns();
          }
+      },
+
+      _drawPage: function() {
+         DataGridView.superclass._drawPage.apply(this, arguments);
+         this._redrawTheadAndTfoot();
       },
 
       _redrawItems: function() {

@@ -1,7 +1,7 @@
 define('Controls/Filter/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Controller',
+      'wml!Controls/Filter/Controller',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',

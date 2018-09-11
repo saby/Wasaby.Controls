@@ -3,7 +3,7 @@ define('Controls/Input/Date/LinkView', [
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
-   'tmpl!Controls/Input/Date/LinkView/LinkView',
+   'wml!Controls/Input/Date/LinkView/LinkView',
    'css!Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
@@ -23,7 +23,7 @@ define('Controls/Input/Date/LinkView', [
     * @control
     * @public
     * @category Input
-    * @author Миронов А.Ю.
+    * @author Журавлев М.С.
     * @demo Controls-demo/Input/Date/LinkView
     *
     */

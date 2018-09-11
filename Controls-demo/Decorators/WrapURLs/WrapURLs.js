@@ -1,7 +1,7 @@
 define('Controls-demo/Decorators/WrapURLs/WrapURLs',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Decorators/WrapURLs/WrapURLs',
+      'wml!Controls-demo/Decorators/WrapURLs/WrapURLs',
 
       'Controls/Input/Area',
       'Controls/Decorator/WrapURLs',

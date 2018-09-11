@@ -1,0 +1,20 @@
+<div>
+   <ws:if data="{{_options.trigger === 'click'}}">
+      <ws:partial template="{{_options.content}}"
+                  on:mousedown="_contentMousedownHandler()"/>
+      <ws:if data="{{_opened}}">
+         <Controls.Event.Listener event="mousedown" on:mousedown="_mousedownHandler()"/>
+      </ws:if>
+   </ws:if>
+   <ws:else data="{{_options.trigger === 'hover'}}">
+      <ws:partial template="{{_options.content}}"
+                  on:mouseenter="_contentMouseenterHandler()"
+                  on:mouseleave="_contentMouseleaveHandler()"/>
+   </ws:else>
+   <ws:if data="{{!_isNewEnvironment()}}">
+      <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+   </ws:if>
+   <ws:if data="{{_opened}}">
+      <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>
+   </ws:if>
+</div>

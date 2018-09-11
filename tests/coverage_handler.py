@@ -50,7 +50,7 @@ class Coverage:
 
         # записываем результаты в файл
         with open(os.path.join(path, RESULT_JSON), mode='a+', encoding='utf-8') as f:
-            f.write(json.dumps(OrderedDict(self.build_result), indent=2))
+            f.write(json.dumps(OrderedDict(sorted(self.build_result.items(), key=lambda t: t[0])), indent=2))
 
     def get_tests(self, change_files):
         """Возвращает список файлов, которые нужно запустить"""
