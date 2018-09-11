@@ -19,18 +19,26 @@ class JC:
         :param type_test: Тип тестов
         """
         job = '({}-chrome) {} controls'.format(type_test, version)
-        payload = {'job_name': job}
+        payload = {'job': job}
+        req = requests.post(self.JC_URL + '/api/acceptance/get_id_job_by_name', json=payload)
+        req.raise_for_status()
+        id_job = req.json()['result']
+        payload = {'id_job': id_job}
         req = requests.post(self.JC_URL + '/api/test_result/errors_from_last_build', json=payload)
         req.raise_for_status()
         result = req.json()['result']
-        if result['success']:
+        if not result['success']:
             data = result['data']
-            test_for_skip = ''
             default_description = 'Сборка не подписана, причина падения не определена'
+            test_for_skip = {}
             for item in data:
-                test_for_skip += '{}.{} "{}" '.format(item['suite'], item['test'],
-                                                      item['description'] or default_description)
-            print(test_for_skip)
+                skip_list = []
+                for i in data[item]:
+                    skip_list.append('{}.{}'.format(i['suite'], i['test']))
+                    skip_list.append('"{}"'.format(i['description'] or default_description))
+                test_for_skip[item] = skip_list
+            for item in test_for_skip:
+                print('{} {}'.format(item, ' '.join(test_for_skip[item])))
 
 
 if __name__ == '__main__':
