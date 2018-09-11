@@ -19,14 +19,18 @@ def exception(err, reason) {
 
 def getTestForSkip(version, type) {
     dir("./controls/tests") {
+        cmd = ""
         def tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
-        tests_for_skip = tests_for_skip.replace('\n', '')
-        if ( tests_for_skip != '' ) {
-            echo "Будут скипнуты тесты: ${tests_for_skip}"
-            return "--SKIP ${tests_for_skip}"
+        tests_for_skip = tests_for_skip.split('\n')
+        echo "DEBUG: ${tests_for_skip}"
+        if ( tests_for_skip ) {
+            for test in tests_for_skip:
+                cmd += "--SKIP ${test} "
+            echo "Будут пропущены тесты: ${tests_for_skip}"
         } else {
-            return ""
+            echo "В RC нет упавших тестов."
         }
+        return cmd
     }
 
 }
