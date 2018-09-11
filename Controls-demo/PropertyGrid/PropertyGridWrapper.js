@@ -1,8 +1,6 @@
 define('Controls-demo/PropertyGrid/PropertyGridWrapper',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
-      'WS.Data/Chain',
       'Core/Deferred',
       'Core/core-merge',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridWrapper',
@@ -14,7 +12,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, MemorySource, Chain, Deferred, cMerge, template, myTmpl) {
+   function(Control, Deferred, cMerge, template, myTmpl) {
       'use strict';
 
       var PGWrapper = Control.extend({
@@ -28,7 +26,6 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
-               console.log(opts.content);
                require([opts.content], function() {
                   def.callback();
                });

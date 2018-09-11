@@ -76,7 +76,7 @@ define('Controls/Application/HeadDataContext', [
       },
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber, self.appRoot);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             var rcsData = self.serializeReceivedStates();
@@ -105,7 +105,7 @@ define('Controls/Application/HeadDataContext', [
             });
          });
       },
-      constructor: function(theme, buildNumber, cssLinks) {
+      constructor: function(theme, buildNumber, cssLinks, appRoot) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
@@ -113,6 +113,7 @@ define('Controls/Application/HeadDataContext', [
          this.receivedStateArr = {};
          this.additionalDeps = {};
          this.buildNumber = buildNumber;
+         this.appRoot = appRoot;
          this.cssLinks = cssLinks;
       },
       pushCssLink: function(url) {

@@ -3,7 +3,7 @@
  */
 define('Controls/Filter/Button/History/List', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/History/List',
+   'wml!Controls/Filter/Button/History/List',
    'WS.Data/Adapter/Sbis',
    'Controls/Controllers/SourceController',
    'WS.Data/Collection/RecordSet',

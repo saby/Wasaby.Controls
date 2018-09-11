@@ -1,7 +1,7 @@
 define('Controls-demo/Decorators/Highlight/Highlight',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Decorators/Highlight/Highlight',
+      'wml!Controls-demo/Decorators/Highlight/Highlight',
 
       'Controls/Input/Area',
       'Controls/Decorator/Highlight',

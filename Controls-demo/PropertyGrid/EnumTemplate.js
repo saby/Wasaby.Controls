@@ -16,7 +16,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
          _beforeMount: function(opt) {
             this._source = [];
             for (var i in opt.enum) {
-               this._source.push({ id: k, title: opt.enum[i] });
+               this._source.push({ id: k, title: i, comment: opt.enum[i] });
                k++;
             }
          },
@@ -29,7 +29,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
          },
          _comboBoxSource: function() {
             return new Memory({
-               idProperty: 'title',
+               idProperty: 'id',
                data: this._source
             });
          }

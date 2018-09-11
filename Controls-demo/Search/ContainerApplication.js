@@ -1,6 +1,6 @@
 define('Controls-demo/Search/ContainerApplication', [
    'Core/Control',
-   'tmpl!Controls-demo/Search/ContainerApplication'
+   'wml!Controls-demo/Search/ContainerApplication'
 ], function(Control, template) {
    'use strict';
    

@@ -1,7 +1,7 @@
 define('Controls/Input/Suggest',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Suggest/Suggest',
+      'wml!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputRender/BaseViewModel',
@@ -28,7 +28,7 @@ define('Controls/Input/Suggest',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Suggest/Suggest
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
       
       'use strict';

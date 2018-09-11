@@ -1,6 +1,6 @@
 define('Controls/List/EditInPlace/EditingRow', [
    'Core/Control',
-   'tmpl!Controls/List/EditInPlace/EditingRow'
+   'wml!Controls/List/EditInPlace/EditingRow'
 ], function(Control, template) {
    var EditingRow = Control.extend({
       _template: template,

@@ -4,7 +4,7 @@
 define('Controls-demo/Container/Enum',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Container/Enum',
+      'wml!Controls-demo/Container/Enum',
       'WS.Data/Type/Enum'
    ],
 

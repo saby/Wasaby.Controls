@@ -1,13 +1,13 @@
 define('Controls/Input/Lookup', [
    'Core/Control',
-   'tmpl!Controls/Input/Lookup/Lookup',
+   'wml!Controls/Input/Lookup/Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
    'Controls/Controllers/SourceController',
    'WS.Data/Collection/List',
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'Core/Deferred',
-   'tmpl!Controls/Input/resources/input',
+   'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
    
@@ -30,7 +30,7 @@ define('Controls/Input/Lookup', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     * @category Input
     */
 
@@ -197,6 +197,10 @@ define('Controls/Input/Lookup', [
    
       _deactivated: function() {
          this._suggestState = false;
+      },
+   
+      _itemClick: function(event, item) {
+         this._notify('itemClick', [item]);
       }
    
    });

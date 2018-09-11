@@ -1,8 +1,8 @@
 define('Controls/Input/Dropdown',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Dropdown/Dropdown',
-      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
+      'wml!Controls/Input/Dropdown/Dropdown',
+      'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
@@ -20,11 +20,12 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        * @category Input
        * @demo Controls-demo/Input/Dropdown/Dropdown
        */
@@ -77,7 +78,7 @@ define('Controls/Input/Dropdown',
             if (this._isEmptyItem) {
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
-               this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+               this._text = getPropValue(items[0], this._options.displayProperty);
                this._icon = items[0].get('icon');
             }
             if (items.length > 1) {

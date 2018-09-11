@@ -11,12 +11,14 @@ define([
 
    describe('CreateVdomTest', function () {
       var testControl;
+      var componentElement;
       beforeEach(function () {
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
          else {
-            $(document.body).append('<div id="component"></div>');//Для добавления верстки на страницу
+            componentElement = $('<div id="component"></div>');
+            $(document.body).append(componentElement);//Для добавления верстки на страницу
          }
       });
       describe('vdomToCompound', function () {
@@ -41,6 +43,9 @@ define([
          });
       });
 
+      afterEach(function () {
+         componentElement && componentElement.remove();
+      });
    });
 
 });

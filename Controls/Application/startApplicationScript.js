@@ -2,7 +2,7 @@ define('Controls/Application/startApplicationScript',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Application/startApplicationScript',
+      'wml!Controls/Application/startApplicationScript',
       'Controls/Application/HeadDataContext'
    ],
 

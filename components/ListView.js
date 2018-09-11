@@ -539,6 +539,7 @@ define('SBIS3.CONTROLS/ListView',
                 * <ul>
                 *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Button/IconButton}.</li>
                 *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Link}</li>
+                *   <li><b>true</b> - будет отображаться как иконка + текст. Для отображения кнопки одновременно задайте опции icon и caption. 
                 * </ul>
                 *
                 * @property {String} [caption] Подпись на кнопке.
@@ -3986,6 +3987,13 @@ define('SBIS3.CONTROLS/ListView',
                this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
             this.getContainer().removeClass('controls-ListView-scrollIndicator__down');
+   
+            //Т.к. индикатор загрузки отображается снизу списка, тем самым увеличивая его высоту (добавляется паддинг на высоту индикатора),
+            //то после скрытия, высота списка уменьшается, и если в этот момент был отображён тулбар, он сместится
+            //и будет отображаться некорректно, надо обновить положение тулбара
+            if (this._itemsToolbar && this._itemsToolbar.isVisible() && this._hasHoveredItem()) {
+               this._onChangeHoveredItem(this._hoveredItem);
+            }
          },
          _createLoadingIndicator : function () {
             this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
@@ -4534,7 +4542,7 @@ define('SBIS3.CONTROLS/ListView',
           * При создании элемента коллекции происходит событие {@link onBeginAdd}.
           * @param {Object} [options] Параметры вызова команды.
           * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
-          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
+          * @param {WS.Data/Entity/Model} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
           * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
           * <ul>
           *     <li>top - отображается в начале списка;</li>

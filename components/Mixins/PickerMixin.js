@@ -143,6 +143,17 @@ define('SBIS3.CONTROLS/Mixins/PickerMixin', [
 
       /**
        * Метод показывает выпадающий блок.
+       * @remark
+       * У контролов выбора периода:
+       * <ul>
+       *   <li>SBIS3.CONTROLS/Date/Picker</li>
+       *   <li>SBIS3.CONTROLS/Date/Range</li>
+       *   <li>SBIS3.CONTROLS/Date/RangeSlider</li>
+       *   <li>SBIS3.CONTROLS/Date/RangeSliderBig</li>
+       * </ul>
+       * вызов showPicker() не приводит к мгновенному созданию выпадающего окна и его открытию.
+       * Модуль выпадающего окна загружается асинхронно, и только после этого открывается.
+       * В связи с этим, если вы пытаетесь получить доступ к выпадающему окну до или сразу же после вызова showPicker(), то получите ошибку.
        * @example
        * <pre>
        *     MenuButton.subscribe('onActivated', function(){

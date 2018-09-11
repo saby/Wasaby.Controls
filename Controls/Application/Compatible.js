@@ -7,13 +7,15 @@ define('Controls/Application/Compatible', [
    'Core/RightsManager',
    'Core/Deferred',
    'Core/constants',
-   'tmpl!Controls/Application/Compatible',
-   'tmpl!Controls/Application/CompatibleScripts'
+   'Controls/Popup/Compatible/Layer',
+   'wml!Controls/Application/Compatible',
+   'wml!Controls/Application/CompatibleScripts'
 ], function(Base,
    EventBus,
    RightsManager,
    Deferred,
    Constants,
+   Layer,
    template) {
    'use strict';
 
@@ -32,14 +34,10 @@ define('Controls/Application/Compatible', [
          };
          if (typeof window !== 'undefined') {
             Constants.rights = true;
-            var rights = RightsManager.getRights();
-            if (rights instanceof Deferred) {
-               rights.addCallback(function(rights) {
-                  window.rights = rights;
-                  rightsInitialized.callback();
-               });
-               return rightsInitialized;
-            }
+            Layer.load().addCallback(function() {
+               rightsInitialized.callback();
+            });
+            return rightsInitialized;
          }
       },
       _afterMount: function() {

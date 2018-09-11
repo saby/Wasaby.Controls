@@ -1,6 +1,6 @@
 define('Controls-demo/FilterSearch/FilterSearchApplication', [
    'Core/Control',
-   'tmpl!Controls-demo/FilterSearch/FilterSearchApplication'
+   'wml!Controls-demo/FilterSearch/FilterSearchApplication'
 ], function(Control, template) {
    'use strict';
    

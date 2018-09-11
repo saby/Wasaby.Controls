@@ -126,27 +126,28 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {String|Number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз.
           * @param {Array.<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере.
           * @param {Array.<String>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
-          * @param {Object} options.fieldGroupTitles Объект, в котором задаётся соответствие заголовка и идентификатора группы колонок. 
-          * 
+          * @param {Object} options.fieldGroupTitles Объект, в котором задаётся соответствие заголовка и идентификатора группы колонок.
+          *
           * Формат объекта: "{<идентификатор>: <заголовок>}".
-          * 
+          *
           * В Редакторе колонок автоматически срабатывает группировка колонок по идентификаторам.
           * @param {String} options.fileUuid Uuid идентификатор шаблона, определяющего стилевое отображение экспортируемого Excel-файла.
-          * 
-          * При открытии диалога "Настройщика экспорта" со Стандартным шаблоном конфигурации для экспортируемого файла задаются предустановленны настройки отображения колонок и ячеек. 
-          * 
-          * Когда в Редакторе экспорта по умолчанию не заданы выбранные колонки, то при их выборе автоматически выполняется запрос к сервису приложения для получение Формата отображения. 
-          * 
+          *
+          * При открытии диалога "Настройщика экспорта" со Стандартным шаблоном конфигурации для экспортируемого файла задаются предустановленны настройки отображения колонок и ячеек.
+          *
+          * Когда в Редакторе экспорта по умолчанию не заданы выбранные колонки, то при их выборе автоматически выполняется запрос к сервису приложения для получение Формата отображения.
+          *
           * Предполагается, что значение данной опции передаётся автоматически, а "ручная" конфигурация опции выполняется прикладным разработчиком крайне редко.
           * Однако для работы с такими шаблонами предусмотрено API, расположенное в сервисном модуле "ExcelExport" (принадлежит репозиторию <a href="https://git.sbis.ru/sbis/engine">SBIS.ENGINE</a>):
-          * 
+          *
           * - Excel.CreateTemplate(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName)
           * - Excel.UpdateTemplate(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName, TemplateId)
           * - Excel.DeleteTemplate(TemplateId)
           * - Excel.TemplateTitles(TemplateId)
           * - Excel.SaveCustom(MethodName, Filter, Pagination, Fields, Titles, HierarchyField, FileName, TemplateId, Sync)
-          * 
+          *
           * @param {Array.<ExportValidator>} options.validators Список валидаторов результатов редактирования.
+          * @param {string} options.historyTarget Имя объекта истории (опционально)
           * @param {String} [options.dialogTitle] Заголовок.
           * @param {String} [options.dialogButtonTitle] Подпись кнопки диалога применения результата редактирования.
           * @param {String} [options.presetAddNewTitle] Надпись на кнопке добавления нового пресета в под-компоненте "presets".
@@ -171,7 +172,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * <pre>
           * // Подключаем на веб-страницу модули для экспорта реестра в Excel файл.
           * require(['SBIS3.CONTROLS/ExportCustomizer/Action', 'WS.Data/Entity/Record', 'WS.Data/Collection/RecordSet'], function(ExportAction, Record, RecordSet) {
-          * 
+          *
           * // Создаём экземпляр записи с конфигурацией параметров фильтрации.
           * // Один параметр с именем 'city' и значением 'Ярославль'.
           *  var filter = new Record({
@@ -181,7 +182,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * // Экземпляр записи с конфигурацией параметров навигации
           * var pagination = new Record({
           *    rawData: {
-          *      
+          *
           *       // Запросить записи 10-ой страницы.
           *       page: 10,
           *
@@ -216,7 +217,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *     ],
           *     idProperty: 'id'
           * });
-          *  
+          *
           * // Конфигурация Редактора экспорта и метода Excel.SaveCustom.
           * var options = {
           *
@@ -227,10 +228,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *       Filter: filter,
           *       Pagination: pagination
           *    },
-          *      
+          *
           *    // Набор колонок для Редактора колонок.
           *    allFields: allFieldsRecordSet,
-          * 
+          *
           *    // Выбранные по умолчанию колонки.
           *    fieldIds: [1, 2],
           *
@@ -255,14 +256,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * (new ExportAction()).execute(options);
           * });
           * </pre>
-          * 
+          *
           * Пример 2. Конфигурация задана декларативно в TMPL-файле.
-          * 
+          *
           * Конфигурации Редактора экспорта и метода Excel.SaveCustom могут быть описаны декларативно в разметке родительского компонента.
           * Тогда для экспорта файла достаточно вызвать метод execute() без аргументов.
-          * 
+          *
           * Опциям, переданным непосредственно в метод execute(), отдан больший приоритет над опциями в разметке. Их значения будут определять результирующую конфигурацию.
-          * 
+          *
           * TMPL-файл:
           * <pre>
           * <SBIS3.CONTROLS.ExportCustomizer.Action fieldIds="{{ [1, 2] }}">
@@ -292,12 +293,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           *     <ws:fieldGroupTitles Base1="Основные данные абонента" Base2="Дата" />
           * </SBIS3.CONTROLS.ExportCustomizer.Action>
           * </pre>
-          * 
+          *
           * JavaScript-файл:
           * <pre>
           * // Подключаем на страницу модуль, в котором описано действие экспорта файла.
           * require(['SBIS3.CONTROLS/ExportCustomizer/Action'], function(ExportAction) {
-          *     
+          *
           * // Начинаем выгрузку файла в Excel.
           * (new ExportAction()).execute({});
           * });

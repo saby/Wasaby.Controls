@@ -1,6 +1,6 @@
 define('Controls-demo/Input/DeprecatedArea/AreaVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/DeprecatedArea/AreaVdom',
+	'wml!Controls-demo/Input/DeprecatedArea/AreaVdom',
 	'Controls/Input/Area',
 	'css!Controls-demo/Input/DeprecatedArea/AreaVdom'
 ], function ( Control, dotTplFn) {

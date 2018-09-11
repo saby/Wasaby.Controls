@@ -4,7 +4,7 @@
 define('Controls-demo/Confirmation/resources/detailsComponent',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Confirmation/resources/detailsComponent'
+      'wml!Controls-demo/Confirmation/resources/detailsComponent'
    ],
    function(Control, template) {
       'use strict';

@@ -3,7 +3,7 @@
  */
 define('Controls-demo/List/Paging', [
    'Core/Control',
-   'tmpl!Controls-demo/List/Paging/Paging',
+   'wml!Controls-demo/List/Paging/Paging',
    'WS.Data/Source/Memory'
 ], function (BaseControl,
              template,

@@ -2,7 +2,7 @@ define('Controls-demo/BatchUpdater/resources/c1',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/BatchUpdater/resources/c1'
+      'wml!Controls-demo/BatchUpdater/resources/c1'
    ],
    function(Base, Deferred, template) {
       'use strict';

@@ -1,8 +1,7 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
-   'tmpl!Controls/PropertyGrid/PropertyGrid',
-   'WS.Data/Utils'
-], function(Control, template, Utils) {
+   'wml!Controls/PropertyGrid/PropertyGrid'
+], function(Control, template) {
    /**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
@@ -33,9 +32,6 @@ define('Controls/PropertyGrid', [
       },
       _selectedKeyChanged: function(event, value) {
          this._notify('selectedKeyChanged', [value]);
-      },
-      _visibilityChangedHandler: function(event, index, visibility) {
-         this._notify('visibilityChanged', [visibility]);
       }
    });
    return PropertyGrid;

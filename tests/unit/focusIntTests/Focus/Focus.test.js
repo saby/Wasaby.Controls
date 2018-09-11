@@ -22,6 +22,7 @@ define([
    
    describe('Focus-tests', function () {
       var testControl;
+      var componentElement;
       beforeEach(function () {
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
@@ -32,7 +33,8 @@ define([
          }
          else {
             testNum++;
-            $('#mocha').append('<div id="component"></div>');//Для добавления верстки на страницу
+            componentElement = $('<div id="component"></div>');
+            $('#mocha').append(componentElement);//Для добавления верстки на страницу
          }
       });
       for (var i = 1; i < 34; i++) {
@@ -59,6 +61,7 @@ define([
       }
       afterEach(function () {
          testControl && testControl.destroy();
+         componentElement && componentElement.remove();
       });
    });
 });

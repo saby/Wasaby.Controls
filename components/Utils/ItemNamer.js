@@ -39,6 +39,7 @@ define('SBIS3.CONTROLS/Utils/ItemNamer',
                collections = [{list:list, property:property}];
             }
             var reEnd = /\s+\(([0-9]+)\)\s*$/;
+            var reNum = /^\s+\(([0-9]+)\)\s*$/;
             var pattern = value.replace(reEnd, '');
             var previous = [];
             for (var i = 0; i < collections.length; i++) {
@@ -50,7 +51,7 @@ define('SBIS3.CONTROLS/Utils/ItemNamer',
                         previous.push(1);
                      }
                      else {
-                        var ms = v.substring(pattern.length).match(reEnd);
+                        var ms = v.substring(pattern.length).match(reNum);
                         if (ms) {
                            previous.push(parseInt(ms[1]));
                         }

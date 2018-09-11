@@ -10,7 +10,7 @@ define('Controls/Input/Text/ViewModel',
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var

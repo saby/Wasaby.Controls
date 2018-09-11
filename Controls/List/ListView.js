@@ -3,9 +3,9 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/ListView/ListView',
-   'tmpl!Controls/List/ItemTemplate',
-   'tmpl!Controls/List/GroupTemplate',
+   'wml!Controls/List/ListView/ListView',
+   'wml!Controls/List/ItemTemplate',
+   'wml!Controls/List/GroupTemplate',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
@@ -43,7 +43,7 @@ define('Controls/List/ListView', [
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
 
-         constructor: function(cfg) {
+         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];

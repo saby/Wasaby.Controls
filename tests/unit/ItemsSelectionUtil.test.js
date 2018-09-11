@@ -99,6 +99,7 @@ define([
             after(function() {
                if(typeof window !== 'undefined') {
                   removeContainer();
+                  selectorButton.destroy();
                }
             });
             

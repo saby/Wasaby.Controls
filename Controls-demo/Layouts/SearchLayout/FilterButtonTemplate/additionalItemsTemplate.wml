@@ -1,0 +1,59 @@
+<ws:template name="FIO">
+   <Controls.Button style="linkMain" caption="FIO"/>
+</ws:template>
+
+<ws:template name="firstName">
+   <Controls.Button style="linkMain" caption="firstName"/>
+</ws:template>
+
+<ws:template name="Test1">
+   <Controls.Filter.Button.Panel.FilterSelect
+           keyProperty="key">
+      <ws:items>
+         <ws:Array>
+            <ws:Object key="{{2}}" value="Россия"/>
+            <ws:Object key="{{3}}" value="США"/>
+            <ws:Object key="{{4}}" value="UK"/>
+         </ws:Array>
+      </ws:items>
+   </Controls.Filter.Button.Panel.FilterSelect>
+</ws:template>
+
+<ws:template name="checked">
+   <Controls.Button style="linkMain" caption="checked"/>
+</ws:template>
+
+<ws:template name="id">
+   <Controls.Input.Dropdown
+           source="{{item.source}}"
+           displayProperty="title"
+           keyProperty="key"
+           selectedKeys="{{item.value}}"/>
+</ws:template>
+
+<ws:template name="Test2">
+   <Controls.Button style="linkMain" caption="Test2"/>
+</ws:template>
+
+<ws:template name="Test3">
+   <Controls.Button style="linkMain" caption="Test3"/>
+</ws:template>
+
+<ws:template name="Test4">
+   <Controls.Button style="linkMain" caption="Test4"/>
+</ws:template>
+
+<ws:template name="Test5">
+   <Controls.Button style="linkMain" caption="FilterText"/>
+</ws:template>
+
+<ws:template name="Test6">
+   <Controls.Button style="linkMain" caption="Test6"/>
+</ws:template>
+
+<ws:template name="Test7">
+   <Controls.Button style="linkMain" caption="Test7"/>
+</ws:template>
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>
+

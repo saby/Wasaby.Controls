@@ -1,6 +1,6 @@
 define('Controls/List/ListControl', [
    'Core/Control',
-   'tmpl!Controls/List/ListControl/ListControl',
+   'wml!Controls/List/ListControl/ListControl',
    'Controls/List/BaseControl'
 ], function(Control,
 

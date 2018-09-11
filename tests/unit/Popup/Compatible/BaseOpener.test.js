@@ -34,7 +34,7 @@ define(
          autoShow: false,
          autoCloseOnHide: false,
          offset: {
-            x:25,
+            x: '25',
             y:25
          },
          target: ['testTarget'],
@@ -50,6 +50,7 @@ define(
             onClose: 'onclose'
          },
          enabled: true,
+         draggable: true,
          closeChildWindows: true,
          closeOnTargetScroll: true
       };
@@ -96,9 +97,12 @@ define(
          });
 
          it('_preparePopupCfgFromOldToNew', function() {
+            config.autoHide = true;
             BaseOpener._preparePopupCfgFromOldToNew(config);
-            assert.equal(config.templateOptions.target,config.target);
+            assert.equal(config.templateOptions.target, config.target);
+            assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
+            assert.equal(config.templateOptions.draggable, config.draggable);
             assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
             assert.isTrue(cInstance.instanceOfModule(config.context,'Core/Abstract'));
@@ -108,7 +112,9 @@ define(
                offset: undefined
             };
             config.offset = 0;
+            config.closeByExternalClick = false;
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.isFalse(config.closeByExternalClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);
             assert.isTrue(config.isModal);

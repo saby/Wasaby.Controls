@@ -1,9 +1,6 @@
 define('Controls-demo/Input/Text/TextPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
-      'WS.Data/Chain',
-      'Core/core-merge',
       'tmpl!Controls-demo/Input/Text/TextPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
@@ -13,7 +10,7 @@ define('Controls-demo/Input/Text/TextPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, MemorySource, Chain, cMerge, template, myTmpl, config) {
+   function(Control, template, myTmpl, config) {
       'use strict';
       var TextPG = Control.extend({
          _template: template,
@@ -29,7 +26,10 @@ define('Controls-demo/Input/Text/TextPG',
                },
                tagStyle: {
                   emptyText: 'none',
-                  placeholder: 'select'
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                },
 
                constraint: {

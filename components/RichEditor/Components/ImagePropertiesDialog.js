@@ -66,7 +66,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
             if (this._imageWidth.validate() && this._imageHeight.validate()) {
-               this.sendCommand('saveImage');
+               this._options.result.callback({
+                  width: this._imageWidth.getValue(),
+                  height: this._imageHeight.getValue(),
+                  valueType: this._valueType.getValue()
+               });
                this._dialog.close();
             }
          }.bind(this));

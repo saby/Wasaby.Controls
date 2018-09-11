@@ -2,13 +2,13 @@ define('Controls/Input/Text',
    [
       'Core/Control',
       'Controls/Utils/tmplNotify',
-      'tmpl!Controls/Input/Text/Text',
+      'wml!Controls/Input/Text/Text',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
-      'tmpl!Controls/Input/resources/input'
+      'wml!Controls/Input/resources/input'
    ],
    function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
       'use strict';
@@ -31,7 +31,7 @@ define('Controls/Input/Text',
        * @category Input
        * @demo Controls-demo/Input/Text/Text
        *
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
 
 
@@ -72,9 +72,7 @@ define('Controls/Input/Text',
          _template: template,
          _caretPosition: null,
 
-         constructor: function(options) {
-            TextBox.superclass.constructor.call(this, options);
-
+         _beforeMount: function(options) {
             this._textViewModel = new TextViewModel({
                constraint: options.constraint,
                maxLength: options.maxLength,

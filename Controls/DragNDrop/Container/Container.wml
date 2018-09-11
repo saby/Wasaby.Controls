@@ -1,0 +1,14 @@
+<Controls.Event.Registrator name="dragEndDetect" register="documentDragEnd" attr:fixCompatible="1">
+   <Controls.Event.Registrator name="dragStartDetect" register="documentDragStart" attr:fixCompatible="1">
+      <ws:partial
+              template="{{_options.content}}"
+              scope="{{_options}}"
+              attr:class="controls-DragNDrop"
+              draggingTemplateOptions="{{_draggingTemplateOptions}}"
+              draggingTemplate="{{_draggingTemplate}}"
+              on:_updateDraggingTemplate="_updateDraggingTemplate()"
+              on:_documentDragStart="_documentDragStart()"
+              on:_documentDragEnd="_documentDragEnd()">
+      </ws:partial>
+   </Controls.Event.Registrator>
+</Controls.Event.Registrator>

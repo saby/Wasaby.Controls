@@ -1,0 +1,9 @@
+<div class="controls-Dropdown__wrapper" name="popupTarget">
+   <ws:if data="{{contentTemplate}}">
+      <ws:partial template="{{contentTemplate}}" text="{{text}}" icon="{{icon}}"/>
+   </ws:if>
+   <ws:else>
+      <div if="{{icon}}" class="controls-Dropdown__icon" title="{{text}}"><div class="{{icon}}"></div></div>
+      <div if="{{!icon}}" class="controls-Dropdown__text" title="{{text}}">{{text}}</div>
+   </ws:else>
+</div>
