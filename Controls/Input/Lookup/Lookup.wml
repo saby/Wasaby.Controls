@@ -23,18 +23,28 @@
             tagStyle="{{ _options.tagStyle }}"
             placeholder="{{ _isEmpty ? _options.placeholder }}"
             validationErrors="{{ _options.validationErrors }}"
-            content="{{ _isEmpty ? 'wml!Controls/Input/resources/input' }}"
+            content="{{ _isEmpty || _options.multiSelect ? 'wml!Controls/Input/resources/input' }}"
             on:valueChanged="_changeValueHandler()"
             attr:class="controls-Lookup__inputRender">
 
         <ws:beforeFieldWrapper>
             <ws:if data="{{!_isEmpty}}">
+                <div name="" class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__hidden_item' : ''}}">&#133;</div>
                 <Controls.Input.Lookup._Collection
-                        items="{{_items}}"
+                        attr:style="max-width:{{_availableWidthCollection}}px;"
+                        items="{{_visibleCollection}}"
                         displayProperty="{{_options.displayProperty}}"
                         itemTemplate="{{_options.itemTemplate}}"
                         on:itemClick="_itemClick()"
                         on:crossClick="_crossClick()"/>
+
+                <ws:if data="{{!_collectionIsReady}}">
+                    <Controls.Input.Lookup._Collection
+                            attr:class="controls-Lookup__hidden_collection"
+                            items="{{_items}}"
+                            displayProperty="{{_options.displayProperty}}"
+                            itemTemplate="{{_options.itemTemplate}}"/>
+                </ws:if>
             </ws:if>
         </ws:beforeFieldWrapper>
 
