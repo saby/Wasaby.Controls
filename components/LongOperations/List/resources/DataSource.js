@@ -137,7 +137,9 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                      }
                      else {
                         //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
-                        //resultPromise.errback(result);
+                        if (result.name !== 'OutdatedError') {
+                           IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + result);
+                        }
                      }
                   }
                   queue.splice(i, 1);
@@ -257,6 +259,9 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                }
                else {
                   //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                  if (err.name !== 'OutdatedError') {
+                     IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + err);
+                  }
                }
             }.bind(this));
          }
