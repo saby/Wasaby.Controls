@@ -26,9 +26,6 @@ define('Controls/List/ListView', [
 
             //command to scroll watcher
             self._notify('controlResize', [], {bubbling: true});
-
-            //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-            self._notify('checkScroll', [], {bubbling: true});
          }
       }
    };

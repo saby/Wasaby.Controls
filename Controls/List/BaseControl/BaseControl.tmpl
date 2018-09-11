@@ -50,12 +50,12 @@
       <ws:if data="{{_options.itemsDragNDrop}}">
          <ws:partial template="withDragNDrop">
             <ws:viewContent>
-               <ws:partial template="viewTpl"  name="{{name}}"/>
+               <ws:partial template="viewTpl"  name="{{name}}" on:controlResize="_viewResize()"/>
             </ws:viewContent>
          </ws:partial>
       </ws:if>
       <ws:else>
-         <ws:partial template="viewTpl" name="{{name}}"/>
+         <ws:partial template="viewTpl" name="{{name}}" on:controlResize="_viewResize()"/>
       </ws:else>
    </ws:template>
 

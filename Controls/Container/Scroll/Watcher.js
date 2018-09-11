@@ -25,12 +25,12 @@ define('Controls/Container/Scroll/Watcher',
             if (clientHeight < scrollHeight) {
                if (self._canScrollCache !== true) {
                   self._canScrollCache = true;
-                  _private.start(self, 'canScroll');
+                  _private.sendByRegistrar(self, 'canScroll');
                }
             } else {
                if (self._canScrollCache !== false) {
                   self._canScrollCache = false;
-                  _private.start(self, 'cantScroll');
+                  _private.sendByRegistrar(self, 'cantScroll');
                }
             }
          },
@@ -38,18 +38,24 @@ define('Controls/Container/Scroll/Watcher',
          sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
-               _private.start(self, 'listTop', scrollTop);
+               _private.sendByRegistrar(self, 'listTop', scrollTop);
             }
             if (scrollTop + clientHeight >= scrollHeight) {
-               _private.start(self, 'listBottom', scrollTop);
+               _private.sendByRegistrar(self, 'listBottom', scrollTop);
             }
 
             //Проверка на триггеры загрузки
             if (scrollTop <= SCROLL_LOAD_OFFSET) {
-               _private.start(self, 'loadTop', scrollTop);
+               _private.sendByRegistrar(self, 'loadTopStart', scrollTop);
+            }
+            else {
+               _private.sendByRegistrar(self, 'loadTopStop', scrollTop);
             }
             if (scrollTop + clientHeight >= scrollHeight - SCROLL_LOAD_OFFSET) {
-               _private.start(self, 'loadBottom', scrollTop);
+               _private.sendByRegistrar(self, 'loadBottomStart', scrollTop);
+            }
+            else {
+               _private.sendByRegistrar(self, 'loadBottomStop', scrollTop);
             }
          },
 
@@ -90,7 +96,7 @@ define('Controls/Container/Scroll/Watcher',
             }
 
             if (self._scrollPositionCache !== curPosition) {
-               _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
                if (!withObserver) {
                   _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                }
@@ -100,7 +106,7 @@ define('Controls/Container/Scroll/Watcher',
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
-                        _private.start(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+                        _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
                         if (!withObserver) {
                            _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                         }
@@ -115,21 +121,33 @@ define('Controls/Container/Scroll/Watcher',
          initIntersectionObserver: function(self, elements) {
             self._observer = new IntersectionObserver(function(changes) {
                for (var i = 0; i < changes.length; i++) {
-                  if (changes[i].isIntersecting) {
-                     switch (changes[i].target) {
-                        case elements.topLoadTrigger:
-                           _private.start(self, 'loadTop');
-                           break;
-                        case elements.bottomLoadTrigger:
-                           _private.start(self, 'loadBottom');
-                           break;
-                        case elements.topListTrigger:
-                           _private.start(self, 'listTop');
-                           break;
-                        case elements.bottomListTrigger:
-                           _private.start(self, 'listBottom');
-                           break;
-                     }
+                  switch (changes[i].target) {
+                     case elements.topLoadTrigger:
+                        if (changes[i].isIntersecting) {
+                           _private.sendByRegistrar(self, 'loadTopStart');
+                        }
+                        else {
+                           _private.sendByRegistrar(self, 'loadTopStop');
+                        }
+                        break;
+                     case elements.bottomLoadTrigger:
+                        if (changes[i].isIntersecting) {
+                           _private.sendByRegistrar(self, 'loadBottomStart');
+                        }
+                        else {
+                           _private.sendByRegistrar(self, 'loadBottomStop');
+                        }
+                        break;
+                     case elements.topListTrigger:
+                        if (changes[i].isIntersecting) {
+                           _private.sendByRegistrar(self, 'listTop');
+                        }
+                        break;
+                     case elements.bottomListTrigger:
+                        if (changes[i].isIntersecting) {
+                           _private.sendByRegistrar(self, 'listBottom');
+                        }
+                        break;
                   }
                }
             }, {});
@@ -175,7 +193,7 @@ define('Controls/Container/Scroll/Watcher',
          },
 
 
-         start: function(self, eventType, params) {
+         sendByRegistrar: function(self, eventType, params) {
             self._registrar.start(eventType, params);
             self._notify(eventType, [params]);
          }
@@ -212,7 +230,7 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
-         _resizeHandler: function(force) {
+         _resizeHandler: function(e, force) {
             _private.onResizeContainer(this, this._container, force !== undefined ? false : !!this._observer);
          },
 
