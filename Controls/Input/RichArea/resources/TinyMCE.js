@@ -126,7 +126,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             tinyInit: function(self) {
                self.editorConfig.target = self._children.mceContainer;
                self.editorConfig.setup = function(editor) {
-                  if(!this.isDestroyed()) {
+                  if (!this.isDestroyed()) {
                      this._tinyEditor = editor;
                      this._bindEvents();
                   } else {
@@ -231,8 +231,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                }
 
 
-
-               if(this.editorConfig) {
+               if (this.editorConfig) {
                   this.editorConfig.target = null;
                   this.editorConfig.setup = null;
                }
@@ -1700,7 +1699,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                   if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
                      callback(e, target);
                   }
-               }.bind(this));
+               });
             },
 
             _ondblClickCallback: function(event, target) {
@@ -1936,9 +1935,10 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
                setTimeout(this._on_onSelectionChange2, 1);
 
-               if(this._delayOffSelectionChange) {
+               if (this._delayOffSelectionChange) {
                   clearTimeout(this._delayOffSelectionChange);
                }
+
                // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
                this._delayOffSelectionChange = setTimeout(this._off_onSelectionChange2, 120000);
             },
@@ -1965,7 +1965,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                         // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
                         setTimeout(this._on_onSelectionChange1, 1);
                      } else {
-                        this._on_onSelectionChange1()
+                        this._on_onSelectionChange1();
                      }
                   }
                }
@@ -2347,7 +2347,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             },
 
             _offTinyEvents: function() {
-               if(this._delayOffSelectionChange) {
+               if (this._delayOffSelectionChange) {
                   clearTimeout(this._delayOffSelectionChange);
                }
                this._tinyEditor.off('click');
