@@ -75,9 +75,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             }
          }.bind(this));
 
-         this.subscribeTo(this._imageWidth, 'onChange', this._onSizeChanged.bind(this, true));
+         this.subscribeTo(this._dialog, 'onShow', function () {
+            this.subscribeTo(this._imageWidth, 'onTextChange', this._onSizeChanged.bind(this, true));
+            this.subscribeTo(this._imageHeight, 'onTextChange', this._onSizeChanged.bind(this, false));
+         }.bind(this));
 
-         this.subscribeTo(this._imageHeight, 'onChange', this._onSizeChanged.bind(this, false));
 
          this.subscribeTo(this._valueType, 'onChange', function () {
             var options = this._options;
@@ -140,7 +142,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
    });
 
    moduleClass.title = rk('Свойства');
-   moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":260,"height":84};
+   moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":218,"height":84};
 
    return moduleClass;
 });
