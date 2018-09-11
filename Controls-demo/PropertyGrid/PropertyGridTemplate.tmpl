@@ -2,7 +2,8 @@
     <Controls-demo.PropertyGrid.StringTemplate
            bind:value="itemValue[name]"
             caption="{{name}}"
-           scope="{{item}}"  >
+           scope="{{item}}"
+    demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.StringTemplate>
 </ws:template>
 
@@ -10,7 +11,8 @@
     <Controls-demo.PropertyGrid.NumberTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{name}}"
+            demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.NumberTemplate>
 </ws:template>
 
@@ -18,7 +20,8 @@
     <Controls-demo.PropertyGrid.BooleanTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{name}}"
+            demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.BooleanTemplate>
 </ws:template>
 
@@ -26,7 +29,8 @@
     <Controls-demo.PropertyGrid.EnumTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{name}}"
+            demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.EnumTemplate>
 </ws:template>
 
@@ -34,16 +38,18 @@
     <Controls-demo.PropertyGrid.StringOrFunctionTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{name}}"
+            demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
 </ws:template>
 <ws:template name="Array">
     <Controls-demo.PropertyGrid.ArrayTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{name}}"
+            demoName="{{demoName}}">
     </Controls-demo.PropertyGrid.ArrayTemplate>
 </ws:template>
 
 
-<ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}"  />
+<ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" demoName="{{demoName}}" />
