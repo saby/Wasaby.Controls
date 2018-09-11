@@ -3,7 +3,7 @@
                on:mousedown="_open()"/>
 
    <Controls.Dropdown.Opener name="DropdownOpener"
-                             className="{{_options.className}}">
+                             className="{{_options.popupClassName}}">
       <ws:popupOptions>
          <ws:eventHandlers onResult="{{_onResult}}"
                            onClose="{{_options.close}}"/>

@@ -8,7 +8,7 @@
         corner="{{_corner}}"
         width="{{_width}}"
         marker="{{false}}"
-        className="{{_options.className ? _options.className + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
+        popupClassName="{{_options.popupClassName ? _options.popupClassName + 'controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
         dataLoadCallback="{{_setText}}"
