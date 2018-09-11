@@ -753,10 +753,60 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                RichTextArea.superclass.setActive.apply(this, arguments);
             },
+            _offTinyEvents: function() {
+               if(this._delayOffSelectionChange) {
+                  clearTimeout(this._delayOffSelectionChange);
+               }
+               this._tinyEditor.off('click');
+               this._tinyEditor.off('touchstart');
+               this._tinyEditor.off('dblclick');
+               this._tinyEditor.off('postRender');
+               this._tinyEditor.off('initContentBody');
+               this._tinyEditor.off('onBeforePaste');
+               this._tinyEditor.off('Paste');
+               this._tinyEditor.off('PastePreProcess');
+               this._tinyEditor.off('PastePostProcess');
+               this._tinyEditor.off('mousedown');
+               this._tinyEditor.off('mouseup');
+               this._tinyEditor.off('drop');
+               this._tinyEditor.off('dragstart');
+               this._tinyEditor.off('dragend');
+               this._tinyEditor.off('keyup');
+               this._tinyEditor.off('keydown');
+               this._tinyEditor.off('keypress');
+               this._tinyEditor.off('cut');
+               this._tinyEditor.off('change');
+               this._tinyEditor.off('blur');
+               this._tinyEditor.off('focusout');
+               this._tinyEditor.off('focus');
+               this._tinyEditor.off('focusin');
+               this._tinyEditor.off('NodeChange');
+               this._tinyEditor.off('TypingUndo');
+               this._tinyEditor.off('AddUndo');
+               this._tinyEditor.off('ClearUndos');
+               this._tinyEditor.off('redo');
+               this._tinyEditor.off('undo');
+               this._tinyEditor.off('beforeunload');
+
+               this._tinyEditor.off('scroll');
+               this._tinyEditor.off('mousewheel');
+               this._tinyEditor.off('input');
+               this._tinyEditor.off('resizeEditor');
+               this._tinyEditor.off('scrollIntoView');
+               this._tinyEditor.off('BeforeSetContent');
+               this._tinyEditor.off('PreInit');
+               this._tinyEditor.off('ready');
+               this._tinyEditor.off('resize');
+               this._tinyEditor.off('init');
+
+            },
 
             destroy: function() {
                cConstants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
                this.saveToHistory(this.getText());
+
+               this._off_onSelectionChange2();
+               this._off_onSelectionChange1();
                RichUtil.unmarkRichContentOnCopy(this._dataReview.get(0));
                RichUtil.unmarkRichContentOnCopy(this._inputControl.get(0));
                //Проблема утечки памяти через tinyMCE
@@ -764,45 +814,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._tinyEditor && this._tinyReady.isReady()) {
 
                   this._unSubscribeOnScroll();
-                  this._tinyEditor.off('keydown');
-                  this._tinyEditor.off('scroll');
-                  this._tinyEditor.off('mousewheel');
-                  this._tinyEditor.off('click');
-                  this._tinyEditor.off('mousedown');
-                  this._tinyEditor.off('touchstart');
-                  this._tinyEditor.off('mouseup');
-                  this._tinyEditor.off('keyup');
-                  this._tinyEditor.off('dblclick');
-                  this._tinyEditor.off('initContentBody');
-                  this._tinyEditor.off('onBeforePaste');
-                  this._tinyEditor.off('Paste');
-                  this._tinyEditor.off('PastePreProcess');
-                  this._tinyEditor.off('PastePostProcess');
-                  this._tinyEditor.off('drop');
-                  this._tinyEditor.off('dragstart');
-                  this._tinyEditor.off('input');
-                  this._tinyEditor.off('keypress');
-                  this._tinyEditor.off('change');
-                  this._tinyEditor.off('cut');
-                  this._tinyEditor.off('resizeEditor');
-                  this._tinyEditor.off('undo');
-                  this._tinyEditor.off('redo');
-                  this._tinyEditor.off('focusout');
-                  this._tinyEditor.off('beforeunload');
-                  this._tinyEditor.off('TypingUndo');
-                  this._tinyEditor.off('AddUndo');
-                  this._tinyEditor.off('ClearUndos');
-                  this._tinyEditor.off('NodeChange');
-                  this._tinyEditor.off('focus');
-                  this._tinyEditor.off('focusin');
-                  this._tinyEditor.off('blur');
-                  this._tinyEditor.off('focusout');
-                  this._tinyEditor.off('scrollIntoView');
-                  this._tinyEditor.off('BeforeSetContent');
-                  this._tinyEditor.off('PreInit');
-                  this._tinyEditor.off('ready');
-                  this._tinyEditor.off('resize');
-                  this._tinyEditor.off('init');
+                  this._offTinyEvents();
 
                   // destroy вызывается автоматически с отпиской не от всех событий
                   // destroy также вызывает remove - что есть основное удаление.
@@ -816,6 +828,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._tinyEditor.theme.panel = null;
                   }
 
+
+                  this._tinyEditor.settings.target = null;
+                  this._tinyEditor.settings.formats = null;
+                  this._tinyEditor.settings.setup = null;
+                  this._tinyEditor.contentWindow = null;
+                  this._tinyEditor.iframeElement = null;
+
                   for (var key in this._tinyEditor) {
                      if (this._tinyEditor.hasOwnProperty(key) && key !== 'removed') {
                         this._tinyEditor[key] = null;
@@ -823,6 +842,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
 
                   this._tinyEditor.destroyed = true;
+                  this._tinyEditor.settings = null;
                }
 
                this._container.unbind('keydown keyup');
@@ -2444,7 +2464,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
                setTimeout(this._on_onSelectionChange2, 1);
                // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-               setTimeout(this._off_onSelectionChange2, 120000);
+               this._delayOffSelectionChange = setTimeout(this._off_onSelectionChange2, 120000);
             },
             _on_onSelectionChange1: function() {
                cConstants.$doc.one('selectionchange', this._onSelectionChange1);
@@ -2454,6 +2474,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             _off_onSelectionChange2: function() {
                cConstants.$doc.off('selectionchange', this._onSelectionChange2);
+            },
+            _off_onSelectionChange1: function() {
+               cConstants.$doc.off('selectionchange', this._onSelectionChange1);
             },
             _onSelectionChange2: function() {
                this._updateTextByTiny();
@@ -3444,17 +3467,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _initTiny: function() {
-               var
-                  self = this;
                if (!this._tinyEditor && !this._tinyIsInit) {
                   this._tinyIsInit = true;
                   this._requireTinyMCE().addCallback(function() {
-                     var cfg = cClone(self._options.editorConfig);
+                     var cfg = cClone(this._options.editorConfig);
                      cfg.paste_as_text = false;
 
-                     for (var key in self._options.customFormats) {
-                        if ({}.hasOwnProperty.call(self._options.customFormats, key)) {
-                           cfg.formats[key] = self._options.customFormats[key];
+                     for (var key in this._options.customFormats) {
+                        if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
+                           cfg.formats[key] = this._options.customFormats[key];
                         }
                      }
                      tinyMCE.baseURL = '/resources/' + TINYMCE_URL_BASE;

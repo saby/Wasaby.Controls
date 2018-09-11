@@ -293,13 +293,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
 
             if (this.getItems().getRecordById('undo') && this.getItems().getRecordById('redo')) {
-               editor.subscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
+               this.subscribeTo(editor, 'onUndoRedoChange', this._handlersInstances.undoRedo);
             }
             if (this.getItems().getRecordById('unlink')) {
-               editor.subscribe('onNodeChange', this._handlersInstances.node);
+               this.subscribeTo(editor, 'onNodeChange', this._handlersInstances.node);
             }
             if (this.getItems().getRecordById('source')) {
-               editor.subscribe('onToggleContentSource', this._handlersInstances.source);
+               this.subscribeTo(editor, 'onToggleContentSource', this._handlersInstances.source);
             }
          },
 
@@ -396,6 +396,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
 
          destroy: function() {
             this._toggleToolbarButton.unbind('click');
+            this._toggleToolbarButton.off('mousedown focus', this._blockFocusEvents);
             this._toggleToolbarButton = null;
             if (this.getItems().getRecordById('style') && this._pickerOpenHandler) {
                this._styleBox.unsubscribe('onPickerOpen', this._pickerOpenHandler);
@@ -404,6 +405,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
             this._imagePanel = null;
+            this._styleBox = null;
+            this._textAlignState = null;
+            this._textFormats = null;
+            this._handlersInstances = null;
          }
 
       });
