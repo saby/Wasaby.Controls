@@ -123,7 +123,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
                  options._decimalsPart = '';
              } else {
                 options._integersPart = options.text.substring(0, dotPos);
-                options._decimalsPart = options.text.substring(dotPos);
+                options._decimalsPart = options.text.substring(dotPos + 1);
              }
          }
          return options;
