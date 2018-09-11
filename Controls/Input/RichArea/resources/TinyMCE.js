@@ -299,6 +299,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                this._onMouseDownCallback = this._onMouseDownCallback.bind(this);
                this._onClickCallback = this._onClickCallback.bind(this);
                this._hideImageOptionsPanel = this._hideImageOptionsPanel.bind(this);
+               this._onKeyPressCallbackTimeout = this._onKeyPressCallbackTimeout.bind(this);
                this._postRenderCallback = this._postRenderCallback.bind(this);
             },
 
