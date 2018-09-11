@@ -8,7 +8,6 @@
       </ws:caption>
    </Controls.Button>
    <script>
-      debugger;
       function checkDebug(scripts) {
          for (var i = 0; i < scripts.length; i++) {
             if (/scripts_[0-9]+/g.test(scripts[i].attributes.key)) {
@@ -19,6 +18,7 @@
       }
       if (!window.once) {
          window.once = true;
+         var arr = document.getElementsByTagName('script');
          if (checkDebug(arr)) {
             window.$is_OK$ = true;
          } else {

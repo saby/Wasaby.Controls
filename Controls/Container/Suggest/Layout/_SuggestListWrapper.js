@@ -1,7 +1,7 @@
 define('Controls/Container/Suggest/Layout/_SuggestListWrapper',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Suggest/Layout/_SuggestListWrapper',
+      'wml!Controls/Container/Suggest/Layout/_SuggestListWrapper',
       'Controls/Container/Suggest/Layout/_SuggestOptionsField',
       'Controls/Container/Async'
    ],

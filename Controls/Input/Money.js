@@ -10,6 +10,7 @@ define('Controls/Input/Money', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
+    * @author Журавлев М.С.
     * @category Input
     */
 });

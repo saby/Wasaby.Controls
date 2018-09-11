@@ -118,6 +118,29 @@ define([
    
          assert.isTrue(eventNotifyed);
       });
-      
+      it('ListView updating queue', function () {
+         var
+            cfg = {
+               listModel: new ListViewModel({
+                  items: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id'
+            },
+            listView = new ListView(cfg);
+         listView.saveOptions(cfg);
+         listView._beforeMount(cfg);
+         assert.isFalse(listView._lockForUpdate, 'Incorrect initial "_lockForUpdate" value.');
+         assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value.');
+         listView._beforeUpdate(cfg);
+         assert.isTrue(listView._lockForUpdate, 'Incorrect value "_lockForUpdate" after call "beforeUpdate".');
+         listView._listModel._notify('onListChange');
+         listView._listModel._notify('onListChange');
+         assert.equal(listView._queue.length, 2, 'Incorrect length "_queue" after two "onListChange".');
+         assert.isTrue(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after two "onListChange".');
+         listView._afterUpdate();
+         assert.isFalse(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after call "afterUpdate".');
+         assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value after call "afterUpdate".');
+      });
    });
 });

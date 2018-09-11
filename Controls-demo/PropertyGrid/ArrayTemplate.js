@@ -2,12 +2,10 @@ define('Controls-demo/PropertyGrid/ArrayTemplate',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/ArrayTemplate',
-      'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],
-   function(Control, template, Memory) {
+   function(Control, template) {
       'use strict';
       var arrayTmpl = Control.extend({
          _template: template,

@@ -1,7 +1,7 @@
 define('Controls/Popup/Previewer',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Previewer/Previewer',
+      'wml!Controls/Popup/Previewer/Previewer',
       'Controls/Popup/Opener/Previewer'
    ],
    function(Control, template, PreviewerOpener) {

@@ -1,0 +1,28 @@
+<Controls.Container.Suggest.Layout
+        on:choose="_choose()"
+        on:deactivated="_deactivated()"
+        on:suggestStateChanged="_suggestStateChanged()"
+        suggestTemplate="{{_options.suggestTemplate}}"
+        footerTemplate="{{_options.footerTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        source="{{_options.source}}"
+        navigation="{{_options.navigation}}"
+        searchParam="{{_options.searchParam}}"
+        trim="{{_options.trim}}"
+        suggestStyle="overInput"
+        suggestState="{{_options.suggestState}}"
+        autoDropDown="{{_options.autoDropDown}}"
+        filter="{{_options.filter}}">
+    <Controls.Input.Search
+            value="{{_options.value}}"
+            tagStyle="{{_options.tagStyle}}"
+            trim="{{_options.trim}}"
+            placeholder="{{_options.placeholder}}"
+            maxLength="{{_options.maxLength}}"
+            constraint="{{_options.constraint}}"
+            style="{{_options.style}}"
+            on:searchClick="_searchClick()"
+            on:resetClick="_resetClick()"
+            on:valueChanged="_changeValueHandler()">
+    </Controls.Input.Search>
+</Controls.Container.Suggest.Layout>

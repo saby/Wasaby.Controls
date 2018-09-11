@@ -1,6 +1,6 @@
 define('Controls/Container/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Container/MultiSelector/MultiSelector',
+   'wml!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
    'Controls/Container/Data/ContextOptions',
@@ -85,10 +85,6 @@ define('Controls/Container/MultiSelector', [
             this._multiselection.unselect(newOptions.excludedKeys);
             this._updateSelectionContext();
          }
-      },
-
-      getSelection: function() {
-         return this._multiselection.getSelection();
       },
 
       _onListSelectionChange: function(event, keys, added, removed) {

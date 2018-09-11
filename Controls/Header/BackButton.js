@@ -1,6 +1,6 @@
 define('Controls/Header/BackButton', [
    'Core/Control',
-   'tmpl!Controls/Header/BackButton/Back',
+   'wml!Controls/Header/BackButton/Back',
    'WS.Data/Type/descriptor',
    'css!Controls/Header/BackButton/Back'
 ], function(Control, template, types) {

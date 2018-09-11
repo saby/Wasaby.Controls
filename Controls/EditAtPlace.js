@@ -1,32 +1,45 @@
 define('Controls/EditAtPlace', [
    'Core/Control',
-   'tmpl!Controls/EditAtPlace/EditAtPlace',
+   'wml!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/List/EditInPlace/Text'
 ], function(Control, template) {
    'use strict';
-   var EditResult = {
+   var
+      EditResult = {
          CANCEL: 'Cancel' // Undo start editing
       },
       EndEditResult = {
          CANCEL: 'Cancel' // Undo completion of editing
+      },
+      _private = {
+         validate: function(self) {
+            return self._children.formController.submit();
+         }
       };
 
-   var EditAtPlace = Control.extend({
+   /**
+    * Controller for editing of input fields.
+    *
+    * @class Controls/List/EditAtPlace
+    * @extends Core/Control
+    * @mixes Controls/interface/IEditAtPlace
+    * @author Зайцев А.С.
+    * @public
+    */
+
+   var EditAtPlace = Control.extend(/** @lends Controls/List/EditAtPlace.prototype */{
       _template: template,
       _isEditing: false,
       _editObject: null,
       _startEditTarget: null,
 
       _beforeMount: function(newOptions) {
-         this._isEditing = newOptions.isEditing;
+         this._isEditing = newOptions.editWhenFirstRendered;
          this._editObject = newOptions.editObject.clone();
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.isEditing !== newOptions.isEditing) {
-            this._isEditing = newOptions.isEditing;
-         }
          if (this._options.editObject !== newOptions.editObject) {
             this._editObject = newOptions.editObject.clone();
          }
@@ -59,7 +72,6 @@ define('Controls/EditAtPlace', [
             switch (event.nativeEvent.keyCode) {
                case 13: //Enter
                   this.commitEdit();
-
                   break;
                case 27: //Esc
                   this.cancelEdit();
@@ -81,12 +93,19 @@ define('Controls/EditAtPlace', [
       },
 
       cancelEdit: function() {
-         this._notify('cancelEdit', [], { bubbling: true });
-         this._isEditing = false;
+         var eventResult = this._notify(
+            'beforeEndEdit',
+            [this._editObject, false],
+            { bubbling: true }
+         );
+         if (eventResult !== EndEditResult.CANCEL) {
+            this._editObject.rejectChanges();
+            this._isEditing = false;
+         }
       },
 
       commitEdit: function() {
-         this.validate().addCallback(
+         _private.validate(this).addCallback(
             function(result) {
                for (var key in result) {
                   if (result.hasOwnProperty(key) && result[key]) {
@@ -99,16 +118,11 @@ define('Controls/EditAtPlace', [
                   { bubbling: true }
                );
                if (eventResult !== EndEditResult.CANCEL) {
-                  this._notify('editObjectChanged', [this._editObject]); //for bind
+                  this._editObject.acceptChanges();
                   this._isEditing = false;
-                  this._forceUpdate();
                }
             }.bind(this)
          );
-      },
-
-      validate: function() {
-         return this._children.formController.submit();
       }
    });
 

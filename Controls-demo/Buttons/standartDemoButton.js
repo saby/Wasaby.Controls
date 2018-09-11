@@ -1,6 +1,6 @@
 define('Controls-demo/Buttons/standartDemoButton', [
    'Core/Control',
-   'tmpl!Controls-demo/Buttons/standartDemoButton',
+   'wml!Controls-demo/Buttons/standartDemoButton',
    'css!Controls-demo/Buttons/standartDemoButton',
    'Controls/Button'
 ], function(Control, template) {

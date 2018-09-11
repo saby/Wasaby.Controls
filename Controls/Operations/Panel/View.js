@@ -1,7 +1,7 @@
 define('Controls/Operations/Panel/View', [
    'Core/Control',
-   'tmpl!Controls/Operations/Panel/View/View',
-   'tmpl!Controls/Operations/Panel/ItemTemplate',
+   'wml!Controls/Operations/Panel/View/View',
+   'wml!Controls/Operations/Panel/ItemTemplate',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
    'Controls/Toolbar',
@@ -24,6 +24,13 @@ define('Controls/Operations/Panel/View', [
             self._forceUpdate();
          }
       },
+      checkToolbarWidth: function(self) {
+         var newWidth = self._children.toolbarBlock.clientWidth;
+         if (self._oldToolbarWidth !== newWidth) {
+            self._oldToolbarWidth = newWidth;
+            _private.recalculateToolbarItems(self, self._items);
+         }
+      },
       loadData: function(self, source) {
          var result;
          if (source) {
@@ -43,12 +50,14 @@ define('Controls/Operations/Panel/View', [
       _loadItemsDeferred: undefined,
       _lastWidth: undefined,
       _items: undefined,
+      _oldToolbarWidth: 0,
 
       _beforeMount: function(options) {
          return _private.loadData(this, options.source);
       },
 
       _afterMount: function() {
+         this._oldToolbarWidth = this._children.toolbarBlock.clientWidth;
          _private.recalculateToolbarItems(this, this._items);
       },
 
@@ -61,11 +70,8 @@ define('Controls/Operations/Panel/View', [
          }
       },
 
-      _afterUpdate: function(oldOptions) {
-         if (oldOptions.multiSelectorVisibility !== this._options.multiSelectorVisibility ||
-            oldOptions.rightTemplate !== this._options.rightTemplate) {
-            _private.recalculateToolbarItems(this, this._items);
-         }
+      _afterUpdate: function() {
+         _private.checkToolbarWidth(this);
       },
 
       _onResize: function() {

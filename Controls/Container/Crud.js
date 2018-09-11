@@ -1,6 +1,6 @@
 define('Controls/Container/Crud', [
    'Core/Control',
-   'tmpl!Controls/Container/Crud/Crud',
+   'wml!Controls/Container/Crud/Crud',
    'Core/IoC'
 ], function(Control, tmpl, IoC) {
    'use strict';

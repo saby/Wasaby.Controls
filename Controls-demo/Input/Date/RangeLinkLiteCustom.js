@@ -1,8 +1,8 @@
 define('Controls-demo/Input/Date/RangeLinkLiteCustom', [
    'Core/Control',
    'Controls/Calendar/Utils',
-   'tmpl!Controls-demo/Input/Date/RangeLinkLiteCustom',
-   'tmpl!Controls-demo/Input/Date/RangeLinkLiteCustomMonth'
+   'wml!Controls-demo/Input/Date/RangeLinkLiteCustom',
+   'wml!Controls-demo/Input/Date/RangeLinkLiteCustomMonth'
 ], function(
    BaseControl,
    dateControlsUtils,

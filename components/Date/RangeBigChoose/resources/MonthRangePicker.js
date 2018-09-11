@@ -16,7 +16,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 ], function( constants, detection, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, cInstance, dateUtils) {
    'use strict';
 
-   var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
+   var cConst = constants, //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
+      isOldIE = detection.isIE && detection.IEVersion < 11;
 
    var yearSource = new CalendarSource(),
       buildTplArgsMRP = function(cfg) {
@@ -215,18 +216,33 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       _onHalfyearQuarterMouseEnter: function(event) {
          var element = $(event.target),
             item = element.closest('.controls-DateRangeBigChoose-MonthRangePickerItem'),
+            date = Date.fromSQL(item.data('date')),
             periodId = element.data('id'),
-            selectedClass, addClass;
+            selectedClass, addClass, buttonAddClass;
          if (element.hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button')) {
             selectedClass = '.controls-DateRangeBigChoose-MonthRangePickerItem__quarter';
-            addClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected'
+            addClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__quarter-hovered';
+            if (isOldIE) {
+               buttonAddClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__quarter-button-hovered';
+            } else {
+               addClass += ' controls-DateRangeBigChoose-MonthRangePickerItem__quarter-button-hovered';
+            }
          } else {
             selectedClass = '.controls-DateRangeBigChoose-MonthRangePickerItem__halfYear';
-            addClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected';
+            addClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-hovered';
+            if (isOldIE) {
+               buttonAddClass = 'controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-button-hovered';
+            } else {
+               addClass += ' controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-button-hovered';
+            }
          }
-         item.find(selectedClass + '[data-id="' + periodId + '"]')
-            .addClass(addClass);
-         this._notify('onPeriodMouseEnter', Date.fromSQL(item.data('date')));
+         item = item.find(selectedClass + '[data-id="' + periodId + '"]');
+         item.addClass(addClass);
+         if (isOldIE) {
+            item.children('.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button')
+               .addClass(buttonAddClass);
+         }
+         this._notify('onPeriodMouseEnter', date);
       },
       _onHalfyearQuarterMouseLeave: function(event) {
          var element = $(event.target),
@@ -239,8 +255,17 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          } else {
             selectedClass = '.controls-DateRangeBigChoose-MonthRangePickerItem__halfYear';
          }
-         item.find(selectedClass + '[data-id="' + periodId + '"]')
-            .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected');
+         item = item.find(selectedClass + '[data-id="' + periodId + '"]');
+         item.removeClass([
+            'controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-hovered',
+            'controls-DateRangeBigChoose-MonthRangePickerItem__quarter-hovered',
+            'controls-DateRangeBigChoose-MonthRangePickerItem__quarter-button-hovered',
+            'controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-button-hovered'
+         ].join(' '));
+         if (isOldIE) {
+            item.children('.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button')
+               .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__quarter-button-hovered controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-button-hovered');
+         }
          this._notify('onPeriodMouseLeave');
       },
 

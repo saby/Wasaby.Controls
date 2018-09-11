@@ -1,9 +1,9 @@
 define('Controls-demo/Checkbox/standartDemoCheckbox', [
    'Core/Control',
-   'tmpl!Controls-demo/Checkbox/standartDemoCheckbox',
-   'tmpl!Controls-demo/Checkbox/resources/content1',
-   'tmpl!Controls-demo/Checkbox/resources/content2',
-   'tmpl!Controls-demo/Checkbox/resources/content3',
+   'wml!Controls-demo/Checkbox/standartDemoCheckbox',
+   'wml!Controls-demo/Checkbox/resources/content1',
+   'wml!Controls-demo/Checkbox/resources/content2',
+   'wml!Controls-demo/Checkbox/resources/content3',
    'css!Controls-demo/Checkbox/standartDemoCheckbox'
 ], function (Control, template, content1, content2, content3) {
    'use strict';

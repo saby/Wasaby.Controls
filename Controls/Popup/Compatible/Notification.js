@@ -2,7 +2,7 @@ define('Controls/Popup/Compatible/Notification',
    [
       'Core/CommandDispatcher',
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls/Popup/Compatible/Notification/Notification',
+      'wml!Controls/Popup/Compatible/Notification/Notification',
       'css!Controls/Popup/Compatible/Notification/Notification'
    ],
    function(CommandDispatcher, Control, template) {

@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input/Mask',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Example/Input/Mask/Mask',
+      'wml!Controls-demo/Example/Input/Mask/Mask',
 
       'Controls/Input/Mask',
       'css!Controls-demo/Example/resource/Base',

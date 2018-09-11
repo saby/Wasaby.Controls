@@ -4,6 +4,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
       'Core/core-merge',
       'Core/CompoundContainer',
       'Controls/Popup/Opener/Notification',
+      'Controls/Popup/Manager/ManagerController',
+      'Controls/Popup/Opener/Notification/NotificationController',
       'SBIS3.CONTROLS/SubmitPopup',
       'SBIS3.CONTROLS/NotificationPopup',
       'browser!SBIS3.CONTROLS/Utils/NotificationStackManager',
@@ -36,6 +38,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
       cMerge,
       CompoundContainer,
       NotificationVDOM,
+      ManagerController,
+      NotificationController,
       SubmitPopup,
       NotificationPopup,
       NotificationManager,
@@ -249,8 +253,93 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showMessageDialog
           */
          showCustomNotification: function(inst, notHide) {
-            NotificationManager.showNotification(inst, notHide);
-            return inst;
+            /**
+             * На VDOM старые окна должны открываться через VDOM открываторы. Например как в методе showNotification.
+             * Из-за того что метод принимает инстанс комопнента мы не можем его открыть через VDOM открыватор.
+             * Будем работать через VDOM контроллер. Когда будут открываться старые окна, то будем добавлять в контроллер фейковые
+             * элементы. При любых изменениях старых или новых окон, будем пересчитывать их позиции.
+             */
+            if (NotificationVDOM.isNewEnvironment()) {
+               var fakeItem = {
+                  _isFake: true
+               };
+
+               if (!this._elementCreatedV) {
+                  this._elementCreatedV = NotificationController.elementCreated.bind(NotificationController);
+                  this._elementUpdatedV = NotificationController.elementUpdated.bind(NotificationController);
+                  this._elementDestroyedV = NotificationController.elementDestroyed.bind(NotificationController);
+
+                  /**
+                   * Обновляем позицию окон при добавлении/обновлении/уничтожении окна через новый контроллер.
+                   */
+                  NotificationController.elementCreated = function(item, container) {
+                     var result = this._elementCreatedV.call(NotificationController, item, container);
+                     NotificationManager._updatePositions();
+
+                     return result;
+                  }.bind(this);
+                  NotificationController.elementUpdated = function(item, container) {
+                     var result = this._elementUpdatedV.call(NotificationController, item, container);
+                     NotificationManager._updatePositions();
+
+                     return result;
+                  }.bind(this);
+                  NotificationController.elementDestroyed = function(item) {
+                     var result = this._elementDestroyedV.call(NotificationController, item);
+                     NotificationManager._updatePositions();
+
+                     return result;
+                  }.bind(this);
+               }
+
+               /**
+                * Обновляем позицию окон при обновлении/уничтожении окна через старый контроллер.
+                */
+               inst.subscribe('onSizeChange', function(wsEvent) {
+                  var container = wsEvent.getTarget().getContainer()[0];
+
+                  this._elementUpdatedV(fakeItem, {
+                     offsetHeight: this._offset + container.offsetHeight
+                  });
+                  NotificationManager._updatePositions();
+                  ManagerController.getContainer()._forceUpdate();
+               }.bind(this));
+               inst.subscribe('onDestroy', function() {
+                  this._elementDestroyedV(fakeItem);
+                  NotificationManager._updatePositions();
+                  ManagerController.getContainer()._forceUpdate();
+               }.bind(this));
+
+               NotificationManager.showNotification(inst, notHide);
+
+               if (!this._offset) {
+                  /**
+                   * Между окнами есть растояние, задается через margin-bottom на компоненте.
+                   * В старом контроллере идем вычитка значения и его обнуление.
+                   * В новом котроллере берётся высота предыдущего окна, слудеющее позиционируется над ним,
+                   * в высоту входит margin-bottom.
+                   * До показа окно не видно и взять его размеры с margin-bottom нельзя. После показа, как было сказано
+                   * выше, значение обнуляется и в высоту не входит margin-bottom. Поэтому мы вычитываем margin-bottom
+                   * так же как в старом контроллере components/Utils/NotificationStackManager.js:164
+                   */
+                  inst.getContainer().css('margin', '');
+                  this._offset = parseFloat(inst.getContainer().css('margin-bottom'));
+               }
+
+               /**
+                * Обновляем позицию окон при добавлении фейкового окна через новый контроллер.
+                */
+               this._elementCreatedV(fakeItem, {
+                  offsetHeight: this._offset + inst._container[0].offsetHeight
+               });
+               NotificationManager._updatePositions();
+               ManagerController.getContainer()._forceUpdate();
+
+               return inst;
+            } else {
+               NotificationManager.showNotification(inst, notHide);
+               return inst;
+            }
          }
       };
    }

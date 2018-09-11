@@ -3,7 +3,7 @@ define('Controls-demo/PropertyGrid/StringTemplate',
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/StringTemplate',
       'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
+      'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],

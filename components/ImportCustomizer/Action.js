@@ -135,7 +135,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @param {object} options.columnBindingMapping Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок (опционально)
+          * @param {object|Array<object>} options.columnBindingMapping Перечень соответствий идентификатор поля - индекс колонки в под-компоненте привязки колонок. Может быть представлен как один объект для всех листов, так и массив объектов по одному на каждый лист (опционально)
           * @param {ImportMapping} options.mapping Информацию о настройке соответствий значений
           * @param {Array<ImportValidator>} options.validators Список валидаторов результатов редактирования
           * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
@@ -147,6 +147,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} options.columnBindingHeadTitle Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
           * @param {string} options.mapperFieldColumnTitle Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
           * @param {string} options.mapperVariantColumnTitle Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
+          * @param {string} options.resultNotation Нотация, в которой будут представлены имена свойств результата. Допустимые значения: "lowDash" и "camelCase" (по умолчанию). При указании "lowDash" результат с помощью хелпера {@link SBIS3.CONTROLS/Utils/ImportExport/PropertyNames} будет приведён в нотацию с символом нижнего подчёркивания в качестве разделителя. При указании "camelCase" (или без указания совсем) результат будет возвращён "как есть", согласно {@link https://wi.sbis.ru/doc/platform/developmentapl/standards/styleguide-js/ стандарту разработки JavaScript} (опционально)
           * @return {Deferred<ImportResults>}
           */
          execute: function (options) {
@@ -208,9 +209,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                }
             };
             var defaults = this._options;
-            Area.getOwnOptionNames().forEach(function (name) {
+            Object.keys(options).concat(Area.getOwnOptionNames()).forEach(function (name) {
                var value = options[name];
-               componentOptions[name] = value !=/*Не !==*/ null ? value : defaults[name];
+               componentOptions[name] = value !== undefined ? value : defaults[name];
             });
             // Если указан не поддерживаемый тип данных - завершить с ошибкой
             if (Area.DATA_TYPES.indexOf(componentOptions.dataType) === -1) {

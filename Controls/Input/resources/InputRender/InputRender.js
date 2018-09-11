@@ -3,7 +3,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
-      'tmpl!Controls/Input/resources/InputRender/InputRender',
+      'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
       'Controls/Utils/hasHorizontalScroll',
@@ -20,7 +20,7 @@ define('Controls/Input/resources/InputRender/InputRender',
        * @control
        * @private
        * @category Input
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var _private = {
@@ -147,7 +147,13 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _clickHandler: function(e) {
-            _private.saveSelection(this, e.target);
+            var self = this;
+
+            // When you click on selected text, input's selection updates after this handler,
+            // thus we need to delay saving selection until it is updated.
+            setTimeout(function() {
+               _private.saveSelection(self, e.target);
+            });
          },
 
          _selectionHandler: function(e) {

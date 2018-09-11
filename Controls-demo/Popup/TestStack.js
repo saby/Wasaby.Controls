@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/TestStack',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/TestStack',
+      'wml!Controls-demo/Popup/TestStack',
       'WS.Data/Entity/Record',
       'require'
    ],

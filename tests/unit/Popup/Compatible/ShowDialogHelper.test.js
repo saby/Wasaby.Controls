@@ -24,6 +24,7 @@ define(
             delete config.target;
             deps = DialogHelper._private.prepareDeps(config);
             assert.isTrue(deps.indexOf('Controls/Popup/Opener/Dialog/DialogController') !== -1);
+            assert.equal(config._popupComponent , 'floatArea');
             assert.isTrue(config._type === 'dialog');
          });
       })
