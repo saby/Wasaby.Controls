@@ -118,9 +118,12 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
                 options.decimals
             );
              dotPos = options.text.indexOf('.');
-             if(dotPos){
-                 options._integersPart = options.text.substring(0, options.text.length - 3);
-                 options._decimalsPart = options.text.substring(options.text.length - 2);
+             if(dotPos === -1) {
+                 options._integersPart = options.text;
+                 options._decimalsPart = '';
+             } else {
+                options._integersPart = options.text.subscribe(0, dotPos);
+                options._decimalsPart = options.text.subscribe(dotPos);
              }
          }
          return options;
@@ -196,7 +199,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       _setInputValue: function(value) {
          var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
          if(!this.isEnabled()) {
-            this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - 3, newText.length) + '</span>';
+            this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - this._options.decimals, newText.length) + '</span>';
          }else{
             this._inputField[0].innerHTML = newText;
          }
