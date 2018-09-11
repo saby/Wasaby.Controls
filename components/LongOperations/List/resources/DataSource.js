@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Core/IoC',
       'Core/helpers/Object/isEqual',
       'WS.Data/Source/ISource',
       'WS.Data/Entity/ObservableMixin',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'Core/TimeInterval'
    ],
 
-   function (CoreExtend, Deferred, cObjectIsEqual, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
+   function (CoreExtend, Deferred, IoC, cObjectIsEqual, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
 
@@ -137,7 +138,9 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                      }
                      else {
                         //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
-                        //resultPromise.errback(result);
+                        if (result.name !== 'OutdatedError') {
+                           IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + result);
+                        }
                      }
                   }
                   queue.splice(i, 1);
@@ -252,7 +255,15 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                }));
             }.bind(this),
             function (err) {
-               promise.errback(err);
+               if (this._options.useQueue) {
+                  promise.errback(err);
+               }
+               else {
+                  //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                  if (err.name !== 'OutdatedError') {
+                     IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + err);
+                  }
+               }
             }.bind(this));
          }
       });
