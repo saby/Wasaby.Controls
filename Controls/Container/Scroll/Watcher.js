@@ -47,14 +47,12 @@ define('Controls/Container/Scroll/Watcher',
             //Проверка на триггеры загрузки
             if (scrollTop <= SCROLL_LOAD_OFFSET) {
                _private.sendByRegistrar(self, 'loadTopStart', scrollTop);
-            }
-            else {
+            } else {
                _private.sendByRegistrar(self, 'loadTopStop', scrollTop);
             }
             if (scrollTop + clientHeight >= scrollHeight - SCROLL_LOAD_OFFSET) {
                _private.sendByRegistrar(self, 'loadBottomStart', scrollTop);
-            }
-            else {
+            } else {
                _private.sendByRegistrar(self, 'loadBottomStop', scrollTop);
             }
          },
@@ -125,16 +123,14 @@ define('Controls/Container/Scroll/Watcher',
                      case elements.topLoadTrigger:
                         if (changes[i].isIntersecting) {
                            _private.sendByRegistrar(self, 'loadTopStart');
-                        }
-                        else {
+                        } else {
                            _private.sendByRegistrar(self, 'loadTopStop');
                         }
                         break;
                      case elements.bottomLoadTrigger:
                         if (changes[i].isIntersecting) {
                            _private.sendByRegistrar(self, 'loadBottomStart');
-                        }
-                        else {
+                        } else {
                            _private.sendByRegistrar(self, 'loadBottomStop');
                         }
                         break;
