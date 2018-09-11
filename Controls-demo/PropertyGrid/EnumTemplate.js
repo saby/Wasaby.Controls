@@ -3,7 +3,6 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/EnumTemplate',
       'WS.Data/Source/Memory',
-      'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],
