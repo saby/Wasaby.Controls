@@ -29,16 +29,8 @@ class JC:
         result = req.json()['result']
         if not result['success']:
             data = result['data']
-            default_description = 'Сборка не подписана, причина падения не определена'
-            test_for_skip = {}
             for item in data:
-                skip_list = []
-                for i in data[item]:
-                    skip_list.append('{}.{}'.format(i['suite'], i['test']))
-                    skip_list.append('"{}"'.format(i['description'] or default_description))
-                test_for_skip[item] = skip_list
-            for item in test_for_skip:
-                print('{} {}'.format(item, ' '.join(test_for_skip[item])))
+                print('{} {}'.format(item, ' '.join(data[item])))
 
 
 if __name__ == '__main__':
