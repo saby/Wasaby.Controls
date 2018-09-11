@@ -28,6 +28,7 @@ function(cMerge,
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
+            popupComponent: cfg._popupComponent,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
             _mode: cfg._mode,
@@ -227,11 +228,11 @@ function(cMerge,
          if (cfg.hasOwnProperty('offset')) {
             if (cfg.offset.x) {
                cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
+               cfg.horizontalAlign.offset = parseInt(cfg.offset.x, 10);
             }
             if (cfg.offset.y) {
                cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
+               cfg.verticalAlign.offset = parseInt(cfg.offset.y, 10);
             }
          }
 
