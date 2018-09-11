@@ -223,7 +223,7 @@ define('Controls/Input/Lookup', [
 
          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
          additionalWidth += parseInt(this._options.readOnly ? showAllLinkWidth
-           : this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0));
+            : this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0));
 
          /* Высчитываем ширину, доступную для элементов */
          availableWidth = this._container.getBoundingClientRect().width - additionalWidth;
