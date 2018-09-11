@@ -20,7 +20,7 @@ define('Controls/Input/resources/InputRender/InputRender',
        * @control
        * @private
        * @category Input
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var _private = {

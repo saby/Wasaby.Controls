@@ -31,7 +31,7 @@ define('Controls/Input/Area', [
     * @category Input
     * @demo Controls-demo/Input/Area/Area
     *
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     */
 
    /**

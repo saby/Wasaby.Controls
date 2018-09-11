@@ -9,7 +9,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
       'Controls/Container/Scroll/Watcher',
-      'Controls/Event/Emitter',
+      'Controls/Event/Listener',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],

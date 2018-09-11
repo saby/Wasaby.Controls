@@ -25,7 +25,7 @@ define('Controls/Input/Phone',
        * @category Input
        * @demo Controls-demo/Input/Phone/Phone
        *
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
 
       var Phone = Control.extend({
@@ -47,7 +47,16 @@ define('Controls/Input/Phone',
             }
          },
 
-         _focusinHandler: function() {}
+         _focusinHandler: function() {
+            var input = this._children.input;
+
+            if (!this._viewModel.isFilled()) {
+               var position = this._viewModel.getDisplayValue().length;
+
+               input.selectionStart = position;
+               input.selectionEnd = position;
+            }
+         }
       });
 
       Phone.getDefaultOptions = function() {

@@ -51,6 +51,6 @@
         </ws:popupOptions>
     </Controls.Popup.Opener.Stack>
 
-    <Controls.Event.Emitter event="controlResize" on:controlResize="_resize()"/>
+    <Controls.Event.Listener event="controlResize" on:controlResize="_resize()"/>
 
 </div>

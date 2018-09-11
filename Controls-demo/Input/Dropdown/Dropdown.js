@@ -4,11 +4,11 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',
-   'wml!Controls-Demo/Input/Dropdown/contentTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/contentTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownSub',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
-   'wml!Controls-Demo/Input/Dropdown/headTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/headTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
 ], function(Control, Memory, template) {
