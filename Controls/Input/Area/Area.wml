@@ -51,7 +51,8 @@
                         name="fakeArea"
                         class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field controls-InputArea__field_size_{{_options.size || 'default'}}"
                         style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                        <span name="fakeAreaValue">{{ _options.value }}</span><br/>
+                        <span name="fakeAreaValue"><!--Вернуть {{_options.value}} по https://online.sbis.ru/opendoc.html?guid=8ea92dc1-38ed-4fd6-8ac2-01266f668caa--></span>
+                        <br/>
                      </div>
                   </div>
                   <div class="controls-InputArea__clear"></div>
