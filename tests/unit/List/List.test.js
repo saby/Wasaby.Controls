@@ -1,7 +1,15 @@
-define(['Controls/List'], function(List) {
+define([
+   'Controls/List',
+   'Core/Deferred',
+   'Core/core-instance'
+], function(
+   List,
+   Deferred,
+   cInstance
+) {
    describe('Controls.List', function() {
       describe('EditInPlace', function() {
-         it('editItem', function(done) {
+         it('editItem', function() {
             var opt = {
                test: '123'
             };
@@ -11,14 +19,15 @@ define(['Controls/List'], function(List) {
                listControl: {
                   editItem: function(options) {
                      assert.equal(opt, options);
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            list.editItem(opt);
+            var result = list.editItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('addItem', function(done) {
+         it('addItem', function() {
             var opt = {
                test: '123'
             };
@@ -28,37 +37,40 @@ define(['Controls/List'], function(List) {
                listControl: {
                   addItem: function(options) {
                      assert.equal(opt, options);
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            list.addItem(opt);
+            var result = list.addItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('cancelEdit', function(done) {
+         it('cancelEdit', function() {
             var
                list = new List({});
             list._children = {
                listControl: {
                   cancelEdit: function() {
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            list.cancelEdit();
+            var result = list.cancelEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('commitEdit', function(done) {
+         it('commitEdit', function() {
             var
                list = new List({});
             list._children = {
                listControl: {
                   commitEdit: function() {
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            list.commitEdit();
+            var result = list.commitEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
       });
    });
