@@ -21,7 +21,7 @@ def getTestForSkip(version, type) {
     dir("./controls/tests") {
         cmd = ""
         def tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
-        tests_for_skip = tests_for_skip.split('\n')
+        tests_for_skip = tests_for_skip.tokenize('\n')
         echo "DEBUG: ${tests_for_skip}"
         if ( tests_for_skip ) {
             for ( test in tests_for_skip ){
