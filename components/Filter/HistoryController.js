@@ -96,7 +96,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
              HISTORY_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
-             this.subscribe('onHistoryUpdate', this._updateHistoryHandler);
+             this.subscribe('onWakeUpUpdate', this._updateHistoryHandler);
              
              this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
              if (this._options.filtersForHistory.length > 0) {
@@ -524,7 +524,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
            destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
              HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
-             this.unsubscribe('onHistoryUpdate', this._updateHistoryHandler);
+             this.unsubscribe('onWakeUpUpdate', this._updateHistoryHandler);
              this._changeHistoryFnc = undefined;
              this._updateHistoryHandler = undefined;
              this._applyHandlerDebounced = undefined;

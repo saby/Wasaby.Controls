@@ -110,7 +110,8 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
       _updateOnWakeUp: function() {
          var self = this;
          this._getStorageValue(true, true).addCallback(function(newHistory) {
-            self._updateHistory(null, newHistory, null);
+            self._history = newHistory;
+            self._notify('onWakeUpUpdate', self._history);
          });
       },
       
