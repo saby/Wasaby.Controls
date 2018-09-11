@@ -225,7 +225,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                options.extra = {needUserInfo:true};
             }
             this._notify('onBeforeProviderCall');
-            var promise = new Deferred();
+            var promise = new Deferred({cancelCallback:function () { promise.isCanceled = true; }});
             this._queryCall(promise, options, hasCustomConditions ? customConditions : null, limit, 0);
             return promise;
          },
@@ -243,16 +243,18 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                      items = items.slice(0, origLimit);
                   }
                }
-               promise.callback(new DataSet({
-                  rawData: {
-                     items: items,
-                     more: meta && meta.more
-                  },
-                  idProperty: recordSet.getIdProperty(),
-                  itemsProperty: 'items',
-                  totalProperty: 'more',
-                  model: recordSet.getModel()
-               }));
+               if (!(promise.isReady() && promise.isCanceled)) {
+                  promise.callback(new DataSet({
+                     rawData: {
+                        items: items,
+                        more: meta && meta.more
+                     },
+                     idProperty: recordSet.getIdProperty(),
+                     itemsProperty: 'items',
+                     totalProperty: 'more',
+                     model: recordSet.getModel()
+                  }));
+               }
             }.bind(this),
             function (err) {
                if (this._options.useQueue) {
