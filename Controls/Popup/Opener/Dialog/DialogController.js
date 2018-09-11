@@ -48,6 +48,16 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
          },
 
+         getDefaultConfig: function(item) {
+            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+            item.position = {
+               top: -10000,
+               left: -10000,
+               height: item.popupOptions.maxHeight,
+               width: item.popupOptions.maxWidth
+            };
+         },
+
          popupDragStart: function(item, container, offset) {
             if (!item.startPosition) {
                item.startPosition = {
