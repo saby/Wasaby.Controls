@@ -416,7 +416,7 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                    если он есть, то просто увеличиваем selectedIndex на единицу, чтобы маркер перескочил на следующий элемент.
                    При этом проверяем, чтобы индекс не установился на группуировку, т.к. на неё маркер не ставится. */
                   itemsProjection.each(function(item, index) {
-                     if (!selectedIndex && (index === 0 || index > currentSelectedIndex) && !cInstance.instanceOfModule(item, "WS.Data/Display/GroupItem")) {
+                     if (selectedIndex === null && index > currentSelectedIndex && !cInstance.instanceOfModule(item, "WS.Data/Display/GroupItem")) {
                         selectedIndex = index;
                      }
                   });
