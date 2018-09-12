@@ -153,28 +153,26 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
                result.removed = diff.removed;
             }
             
+            self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
+   
             if (self.getSelectionType() === 'leaf') {
                array.forEach(function(key) {
                   item = items.getRecordById(key);
-                  
+         
                   if (self._isBranch(item)) {
                      toRemove.push(key);
                   }
                });
-               
+      
                if (toRemove.length) {
                   selectedKeys = array.slice();
-                  
+         
                   toRemove.forEach(function(key) {
                      selectedKeys.splice(selectedKeys.indexOf(key), 1);
                   });
-   
-                  linkedObject.setSelectedKeys(selectedKeys);
-               } else {
-                  self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
+         
+                  linkedObject.removeItemsSelection(toRemove);
                }
-            } else {
-               self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
             }
          }
 
