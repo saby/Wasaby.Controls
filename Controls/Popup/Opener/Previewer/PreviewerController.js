@@ -4,7 +4,7 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
       'Controls/Popup/Manager/ManagerController',
       'Controls/Popup/Opener/Sticky/StickyController',
 
-      'css!Controls/Popup/Opener/Previewer/PreviewerController'
+      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
    ],
    function(Deferred, ManagerController, StickyController) {
 

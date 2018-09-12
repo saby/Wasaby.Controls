@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Templates/Dialog/DialogTemplate',
-      'css!Controls/Popup/Templates/Dialog/DialogTemplate'
+      'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
    function(Control, template) {
       'use strict';

@@ -9,7 +9,7 @@ define('Controls/Date/PeriodDialog/DateRange', [
    'Controls/Utils/Date',
    'tmpl!Controls/Date/PeriodDialog/DateRange',
    'tmpl!Controls/Date/PeriodDialog/DateRangeItem',
-   'css!Controls/Date/Utils/RangeSelection'
+   'css!theme?Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    formatDate,

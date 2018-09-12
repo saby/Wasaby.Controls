@@ -6,7 +6,7 @@ define('Controls/Tabs/Buttons', [
    'Controls/Controllers/SourceController',
    'tmpl!Controls/Tabs/Buttons/Buttons',
    'tmpl!Controls/Tabs/Buttons/ItemTemplate',
-   'css!Controls/Tabs/Buttons/Buttons'
+   'css!theme?Controls/Tabs/Buttons/Buttons'
 
 ], function(Control,
    SourceController,

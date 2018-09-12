@@ -21,6 +21,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return keySplitted[0] === 'tmpl' && keySplitted.length > 1;
    }
 
+   function isWml(key) {
+      var keySplitted = key.split('!');
+      return keySplitted[0] === 'wml' && keySplitted.length > 1;
+   }
+
    function getPackageName(packageLink) {
 
       return packageLink.replace(/^(\/resources\/|resources\/)+/g, '').replace(/\.min\.(css|js|tmpl)$/, '');
@@ -103,11 +108,14 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                node = splitted.join('!');
             }
             var nodeDeps = modDeps[node];
-            if (isTmpl(node) && !allDeps.tmpl[node]) {
+            if (isTmpl(node) && !allDeps.tmpl[node]) {// TODO Надо вынести в отдельную функцию. Здесь работать независимо от плагина
                allDeps.tmpl[node.split('tmpl!')[1]] = true;
                recursiveWalker(allDeps, nodeDeps, modDeps);
             } else if (isJs(node) && !allDeps.js[node]) {
                allDeps.js[node] = true;
+               recursiveWalker(allDeps, nodeDeps, modDeps);
+            } else if (isWml(node) && !allDeps.wml[node]) {
+               allDeps.wml[node.split('wml!')[1]] = true;
                recursiveWalker(allDeps, nodeDeps, modDeps);
             } else if (isCss(node) && !allDeps.css[node]) {
                allDeps.css[node.split('css!')[1]] = true;
@@ -133,7 +141,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       collectDependencies: function(deps) {
          var files = {js: [], css: {themedCss: [], simpleCss: []}, tmpl: []};
-         var allDeps = {js: {}, css: {}, tmpl: {}};
+         var allDeps = {js: {}, css: {}, tmpl: {}, wml: {}};
          recursiveWalker(allDeps, deps, this.modDeps);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
          for (var key in packages.js) {

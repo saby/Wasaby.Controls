@@ -3,7 +3,7 @@ define('Controls/Label',
       'Core/Control',
       'tmpl!Controls/Label/Label',
 
-      'css!Controls/Label/Label'
+      'css!theme?Controls/Label/Label'
    ],
    function(Control, template) {
 

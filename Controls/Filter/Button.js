@@ -9,7 +9,7 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
-      'css!Controls/Filter/Button/Button'
+      'css!theme?Controls/Filter/Button/Button'
    ],
 
    function(Control, template, Chain, Utils, Deferred, isEqual) {

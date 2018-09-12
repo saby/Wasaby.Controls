@@ -4,7 +4,7 @@ define('Controls/Input/Date/LinkView', [
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
    'tmpl!Controls/Input/Date/LinkView/LinkView',
-   'css!Controls/Input/Date/LinkView/LinkView'
+   'css!theme?Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
    CalendarControlsUtils,

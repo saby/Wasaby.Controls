@@ -10,7 +10,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'Core/Control',
       'Core/Deferred',
-      'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
+      'css!theme?Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
       template,

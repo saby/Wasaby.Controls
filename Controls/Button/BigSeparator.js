@@ -3,7 +3,7 @@ define('Controls/Button/BigSeparator', [
    'tmpl!Controls/Button/BigSeparator/BigSeparator',
    'WS.Data/Type/descriptor',
 
-   'css!Controls/Button/BigSeparator/BigSeparator'
+   'css!theme?Controls/Button/BigSeparator/BigSeparator'
 ], function(Control, template, types) {
    'use strict';
 

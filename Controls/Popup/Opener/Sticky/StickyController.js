@@ -5,7 +5,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-merge',
       'Core/core-clone',
       'Controls/Popup/TargetCoords',
-      'css!Controls/Popup/Opener/Sticky/Sticky'
+      'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
    function(BaseController, StickyStrategy, cMerge, cClone, TargetCoords) {
       var DEFAULT_OPTIONS = {

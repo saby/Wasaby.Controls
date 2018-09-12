@@ -2,7 +2,7 @@ define('Controls/Heading', [
    'Core/Control',
    'tmpl!Controls/Header/Heading',
    'WS.Data/Type/descriptor',
-   'css!Controls/Header/Heading'
+   'css!theme?Controls/Header/Heading'
 ], function(Control, template, types) {
    'use strict';
 

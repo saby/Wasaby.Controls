@@ -6,7 +6,7 @@ define('Controls/Input/Suggest',
       'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Utils/tmplNotify',
-      'css!Controls/Input/Suggest/Suggest'
+      'css!theme?Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, BaseViewModel, tmplNotify) {
       

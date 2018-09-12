@@ -16,7 +16,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
-      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
+      'css!theme?Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
       CompoundContainer,

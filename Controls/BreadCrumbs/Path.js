@@ -7,7 +7,7 @@ define('Controls/BreadCrumbs/Path', [
    'tmpl!Controls/BreadCrumbs/Path/Path',
    'tmpl!Controls/Header/BackButton/Back',
    'Controls/Header/BackButton',
-   'css!Controls/BreadCrumbs/Path/Path'
+   'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,

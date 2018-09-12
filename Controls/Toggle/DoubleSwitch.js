@@ -4,8 +4,8 @@ define('Controls/Toggle/DoubleSwitch', [
    'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
    'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/DoubleSwitch/DoubleSwitch',
-   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'css!theme?Controls/Toggle/DoubleSwitch/DoubleSwitch',
+   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, template, toggleTemplate, textTemplate, types) {
 
    /**

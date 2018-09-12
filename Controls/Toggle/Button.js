@@ -2,8 +2,8 @@ define('Controls/Toggle/Button', [
    'Core/Control',
    'Controls/Toggle/Button/Classes',
    'tmpl!Controls/Button/Button',
-   'css!Controls/Button/Button',
-   'css!Controls/Toggle/Button/Button'
+   'css!theme?Controls/Button/Button',
+   'css!theme?Controls/Toggle/Button/Button'
 ], function(Control, Classes, template) {
    /**
     * Button that switches between different states. It support different display styles, icon display styles and sizes

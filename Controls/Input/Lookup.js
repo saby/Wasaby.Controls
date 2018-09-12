@@ -8,7 +8,7 @@ define('Controls/Input/Lookup', [
    'Core/core-clone',
    'Core/Deferred',
    'tmpl!Controls/Input/resources/input',
-   'css!Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
    
    'use strict';

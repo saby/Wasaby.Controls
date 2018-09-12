@@ -1,7 +1,7 @@
 define('Controls/EngineBrowser', [
    'Core/Control',
    'tmpl!Controls/EngineBrowser/EngineBrowser',
-   'css!Controls/EngineBrowser/EngineBrowser'
+   'css!theme?Controls/EngineBrowser/EngineBrowser'
 ], function(BaseControl, template) {
    
    

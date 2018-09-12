@@ -23,8 +23,8 @@ define('Controls/Application/_JsLinks',
             def.addCallback(function onLoad(res) {
                self.js = res.js;
                self.tmpl = res.tmpl;
-               self.themedCss = res.themedCss;
-               self.simpleCss = res.simpleCss;
+               self.themedCss = res.css.themedCss;
+               self.simpleCss = res.css.simpleCss;
                self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
@@ -35,16 +35,18 @@ define('Controls/Application/_JsLinks',
             return 'theme?' + cssLink;
          },
          getDefines: function() {
-            if (!this.cssLinks) {
-               return;
+            if (this.themedCss && this.simpleCss) {
+               var result = '';
+               for (var i = 0; i < this.simpleCss.length; i++) {
+                  result += 'define("css!' + this.simpleCss[i] + '", "");';
+               }
+               for (var i = 0; i < this.themedCss.length; i++) {
+                  result += 'define("css!' + this.getCssNameForDefineWithTheme(this.themedCss[i]) + '", "");';
+               }
+            } else {
+               var result = '';
             }
-            var result = '';
-            for (var i = 0; i < this.simpleCss.length; i++) {
-               result += 'define("css!' + this.simpleCss[i] + '", "");';
-            }
-            for (var i = 0; i < this.themedCss.length; i++) {
-               result += 'define("css!' + this.getCssNameForDefineWithTheme(this.themedCss[i]) + '", "");';
-            }
+
             return result;
          }
 

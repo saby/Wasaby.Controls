@@ -3,7 +3,7 @@ define('Controls/Operations/MultiSelector', [
    'tmpl!Controls/Operations/MultiSelector/MultiSelector',
    'WS.Data/Source/Memory',
    'Controls/Container/MultiSelector/SelectionContextField',
-   'css!Controls/Operations/MultiSelector/MultiSelector'
+   'css!theme?Controls/Operations/MultiSelector/MultiSelector'
 ], function(Control, template, Memory, SelectionContextField) {
    'use strict';
    var _defaultItems = [{

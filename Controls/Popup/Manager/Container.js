@@ -3,7 +3,7 @@ define('Controls/Popup/Manager/Container',
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
-      'css!Controls/Popup/Manager/Container'
+      'css!theme?Controls/Popup/Manager/Container'
    ],
    function(Control, template, ManagerController) {
       'use strict';

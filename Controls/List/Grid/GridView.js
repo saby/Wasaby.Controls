@@ -10,8 +10,8 @@ define('Controls/List/Grid/GridView', [
    'tmpl!Controls/List/Grid/Header',
    'tmpl!Controls/List/Grid/Results',
    'tmpl!Controls/List/Grid/ColGroup',
-   'css!Controls/List/Grid/Grid',
-   'css!Controls/List/Grid/OldGrid',
+   'css!theme?Controls/List/Grid/Grid',
+   'css!theme?Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(ListView, GridViewTpl, OldGridViewTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
 

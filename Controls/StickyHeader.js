@@ -5,7 +5,7 @@ define('Controls/StickyHeader',
       'Controls/Utils/IntersectionObserver',
       'tmpl!Controls/StickyHeader/StickyHeader',
 
-      'css!Controls/StickyHeader/StickyHeader'
+      'css!theme?Controls/StickyHeader/StickyHeader'
    ],
    function(Control, detection, IntersectionObserver, template) {
 

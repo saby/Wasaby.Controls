@@ -1,7 +1,7 @@
 define('Controls/Explorer', [
    'Core/Control',
    'tmpl!Controls/Explorer/Explorer',
-   'css!Controls/Explorer/Explorer',
+   'css!theme?Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'

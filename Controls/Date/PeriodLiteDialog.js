@@ -12,7 +12,7 @@ define('Controls/Date/PeriodLiteDialog', [
    'tmpl!Controls/Date/PeriodLiteDialog/ItemQuarters',
    'tmpl!Controls/Date/PeriodLiteDialog/ItemWrapper',
    'tmpl!Controls/Date/PeriodLiteDialog/MonthCaption',
-   'css!Controls/Date/PeriodLiteDialog/PeriodLiteDialog'
+   'css!theme?Controls/Date/PeriodLiteDialog/PeriodLiteDialog'
 ], function(
    BaseControl,
    coreMerge,

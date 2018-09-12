@@ -5,7 +5,7 @@ define('Controls/Decorator/Highlight',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Decorator/Highlight/Highlight',
 
-      'css!Controls/Decorator/Highlight/Highlight'
+      'css!theme?Controls/Decorator/Highlight/Highlight'
    ],
    function(Control, RegExpUtil, descriptor, template) {
 

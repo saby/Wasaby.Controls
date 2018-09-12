@@ -2,7 +2,7 @@ define('Controls/Popup/Compatible/Notification/Base',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Compatible/Notification/Base',
-      'css!Controls/Popup/Templates/Notification/Base'
+      'css!theme?Controls/Popup/Templates/Notification/Base'
    ],
    function(Control, template) {
 

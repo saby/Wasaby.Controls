@@ -11,7 +11,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Watcher',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
-      'css!Controls/Container/Scroll/Scroll'
+      'css!theme?Controls/Container/Scroll/Scroll'
    ],
    function(Control, Deferred, detection, isEqual, ScrollData, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 

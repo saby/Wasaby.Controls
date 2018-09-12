@@ -9,8 +9,8 @@ define('Controls/Date/PeriodDialog', [
    'Controls/Utils/Date',
    'tmpl!Controls/Date/PeriodDialog/PeriodDialog',
    'tmpl!Controls/Date/PeriodDialog/header',
-   'css!Controls/Date/PeriodDialog/PeriodDialog',
-   'css!Controls/Date/Utils/RangeSelection'
+   'css!theme?Controls/Date/PeriodDialog/PeriodDialog',
+   'css!theme?Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    coreMerge,

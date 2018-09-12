@@ -4,7 +4,7 @@ define('Controls/History/Menu',
       'tmpl!Controls/History/resources/itemTemplate',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
-      'css!Controls/History/Menu'
+      'css!theme?Controls/History/Menu'
    ],
    function(Menu, itemTemplate, merge, isEqual) {
       /**

@@ -23,9 +23,9 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'SBIS3.CONTROLS/WaitIndicator',
       'Core/moduleStubs',
 
-      'css!WS/css/styles/RichContentStyles',
+      'css!theme?WS/css/styles/RichContentStyles',
       'i18n!SBIS3.CONTROLS/RichEditor',
-      'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+      'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
    ], function(
       cContext,
       cIndicator,
@@ -82,8 +82,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
          DI_IMAGE_UPLOADER = 'ImageUploader',
          TINYMCE_URL_BASE = cConstants.browser.isIE && _getTrueIEVersion() < 11 ? 'SBIS3.CONTROLS/RichEditor/third-party/tinymce46-ie10' : 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
          EDITOR_MODULES = [
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin',
-            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline',
+            'css!theme?' + TINYMCE_URL_BASE + '/skins/lightgray/skin',
+            'css!theme?' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline',
             TINYMCE_URL_BASE + '/tinymce'
          ],
          constants = {
