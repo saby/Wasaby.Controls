@@ -40,7 +40,7 @@ define('Controls-demo/Input/Number/NumberPG',
             };
             this._componentOptions = {
                name: 'Number',
-               placeholder: 'Input text',
+               placeholder: 'Input number',
                tagStyle: 'primary',
                presition: 2,
                onlyPositive: true,

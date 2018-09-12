@@ -3,7 +3,6 @@
             <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                         item="{{item}}"
                         index="{{index}}"
-                        demoName="{{_options.demoName}}"
                         itemsProperty="{{_options.scopeObject}}"
                         on:valueChanged="_valueChangedHandler(index)"
                         on:visibilityChanged="_visibilityChangedHandler(index)"
