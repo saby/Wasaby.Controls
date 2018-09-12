@@ -1,9 +1,14 @@
 define('Controls/EditAtPlace', [
    'Core/Control',
+   'Core/Deferred',
    'wml!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template) {
+], function(
+   Control,
+   Deferred,
+   template
+) {
    'use strict';
    var
       EditResult = {
@@ -15,6 +20,31 @@ define('Controls/EditAtPlace', [
       _private = {
          validate: function(self) {
             return self._children.formController.submit();
+         },
+         afterEndEdit: function(self, commit) {
+            if (commit) {
+               self._editObject.acceptChanges();
+            } else {
+               self._editObject.rejectChanges();
+            }
+            self._isEditing = false;
+            self._notify('afterEndEdit', [self._editObject], { bubbling: true });
+            return Deferred.success();
+         },
+         endEdit: function(self, commit) {
+            var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
+
+            if (result === EndEditResult.CANCEL) {
+               return Deferred.success();
+            }
+
+            if (result instanceof Deferred) {
+               return result.addCallback(function() {
+                  return _private.afterEndEdit(self, commit);
+               });
+            }
+
+            return _private.afterEndEdit(self, commit);
          }
       };
 
@@ -31,8 +61,6 @@ define('Controls/EditAtPlace', [
    var EditAtPlace = Control.extend(/** @lends Controls/List/EditAtPlace.prototype */{
       _template: template,
       _isEditing: false,
-      _editObject: null,
-      _startEditTarget: null,
 
       _beforeMount: function(newOptions) {
          this._isEditing = newOptions.editWhenFirstRendered;
@@ -47,7 +75,7 @@ define('Controls/EditAtPlace', [
 
       _afterUpdate: function() {
          if (this._startEditTarget) {
-            //search closest input and focus
+            // search closest input and focus
             this._startEditTarget.getElementsByTagName('input')[0].focus();
             this._startEditTarget = null;
          }
@@ -70,10 +98,10 @@ define('Controls/EditAtPlace', [
       _onKeyDown: function(event) {
          if (this._isEditing) {
             switch (event.nativeEvent.keyCode) {
-               case 13: //Enter
+               case 13: // Enter
                   this.commitEdit();
                   break;
-               case 27: //Esc
+               case 27: // Esc
                   this.cancelEdit();
                   break;
             }
@@ -86,43 +114,24 @@ define('Controls/EditAtPlace', [
          });
          if (result !== EditResult.CANCEL) {
             this._isEditing = true;
-            this._startEditTarget = event.target.closest(
-               '.controls-EditAtPlaceV__editorWrapper'
-            );
+            this._startEditTarget = event.target.closest('.controls-EditAtPlaceV__editorWrapper');
          }
       },
 
       cancelEdit: function() {
-         var eventResult = this._notify(
-            'beforeEndEdit',
-            [this._editObject, false],
-            { bubbling: true }
-         );
-         if (eventResult !== EndEditResult.CANCEL) {
-            this._editObject.rejectChanges();
-            this._isEditing = false;
-         }
+         return _private.endEdit(this, false);
       },
 
       commitEdit: function() {
-         _private.validate(this).addCallback(
-            function(result) {
-               for (var key in result) {
-                  if (result.hasOwnProperty(key) && result[key]) {
-                     return;
-                  }
+         var self = this;
+         return _private.validate(this).addCallback(function(result) {
+            for (var key in result) {
+               if (result.hasOwnProperty(key) && result[key]) {
+                  return Deferred.success();
                }
-               var eventResult = this._notify(
-                  'beforeEndEdit',
-                  [this._editObject],
-                  { bubbling: true }
-               );
-               if (eventResult !== EndEditResult.CANCEL) {
-                  this._editObject.acceptChanges();
-                  this._isEditing = false;
-               }
-            }.bind(this)
-         );
+            }
+            return _private.endEdit(self, true);
+         });
       }
    });
 
