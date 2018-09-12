@@ -284,7 +284,7 @@ define([
 
       });
 
-      it('loadToDirection down', function(done) {
+      it('loadToDirection up', function(done) {
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -366,6 +366,63 @@ define([
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
                done();
+            }, 100);
+         }, 100);
+
+
+      });
+
+      it('scrollLoadStarted MODE', function(done) {
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: data
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            }
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
+         setTimeout(function() {
+            BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
+            BaseControl._private.viewResize(ctrl);
+            setTimeout(function() {
+               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+
+               BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+               BaseControl._private.viewResize(ctrl);
+
+               setTimeout(function() {
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+
+                  done();
+               }, 100);
             }, 100);
          }, 100);
 

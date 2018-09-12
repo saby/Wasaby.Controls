@@ -424,6 +424,13 @@ define('Controls/List/BaseControl', [
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
+         if (this._needScrollCalculation) {
+            this._scrollLoadStarted = {
+               up: false,
+               down: false
+            };
+         }
+
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
@@ -459,10 +466,6 @@ define('Controls/List/BaseControl', [
 
       _afterMount: function() {
          if (this._needScrollCalculation) {
-            this._scrollLoadStarted = {
-               up: false,
-               down: false
-            };
             _private.startScrollEmitter(this);
          }
          if (_private.getItemsCount(this)) {
