@@ -156,8 +156,10 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         this._alignSelectedCollection();
-         this._forceUpdate();
+         if (this._selectedKeys.length) {
+            this._alignSelectedCollection();
+            this._forceUpdate();
+         }
       },
 
       _beforeUpdate: function(newOptions) {
@@ -198,50 +200,57 @@ define('Controls/Input/Lookup', [
       _getInputMinWidth: function() {
          var
             minWidthFieldWrapper,
-            fieldWrapper = $(this._container).find('.controls-Lookup__inputRender'),
+            fieldWrapper = this._children.inputRender._container,
             afterFieldWrapper = this._children.showSelector;
 
          /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
-         minWidthFieldWrapper = (fieldWrapper[0].offsetWidth - afterFieldWrapper.offsetWidth) / 100 * 33;
+         minWidthFieldWrapper = (fieldWrapper.offsetWidth - afterFieldWrapper.offsetWidth) / 100 * 33;
          return Math.min(minWidthFieldWrapper, 100);
       },
 
       _alignSelectedCollection: function() {
          var
             itemsWidth = 0,
-            displayItems = 0,
+            containerHiddenCollection,
             container = $(this._container),
-            items = container.find('.controls-Lookup__hidden_collection .controls-Lookup__item'),
-            itemsCount = items.length,
-            availableWidth, additionalWidth, itemWidth, item, showAllLinkWidth;
+            displayItems = 0, itemsCount = 0,
+            items, availableWidth, additionalWidth, itemWidth, item;
 
-
-         additionalWidth = (this._options.readOnly ? 0 : $(this._children.showSelector).outerWidth()) +
-            parseInt(container.css('border-left-width')) * 2;
-
-         showAllLinkWidth = container.find('.controls-Lookup__showAllLinks').outerWidth();
-
-         /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
-         additionalWidth += parseInt(this._options.readOnly ? showAllLinkWidth
-            : this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0));
-
-         /* Высчитываем ширину, доступную для элементов */
-         availableWidth = this._container.getBoundingClientRect().width - additionalWidth;
-
-         /* Считаем, сколько элементов может отобразиться */
-         for (var i = itemsCount - 1; i >= 0; i--) {
-            item = items[i];
-            itemWidth = Math.ceil(item.getBoundingClientRect().width);
-
-            if ((itemsWidth + itemWidth) > availableWidth) {
-               /* Если ни один элемент не влезает, то отобразим только последний выбранный */
-               if (!itemsWidth) {
-                  displayItems++;
-               }
-               break;
+         if (this._selectedKeys.length) {
+            if (!this._options.readOnly) {
+               additionalWidth = this._getInputMinWidth() + $(this._children.showSelector).outerWidth();
             }
-            displayItems++;
-            itemsWidth += itemWidth;
+
+            containerHiddenCollection = $(this._children.hiddenCollection._container);
+            items = containerHiddenCollection.find('.controls-Lookup__item');
+            itemsCount = items.length;
+            additionalWidth += parseInt(container.css('border-left-width')) * 2;
+
+            /* Высчитываем ширину, доступную для элементов */
+            availableWidth = $(this._children.inputRender._container).width() - additionalWidth;
+
+            if (itemsCount === 1 || containerHiddenCollection.outerWidth() <= availableWidth) {
+               displayItems = itemsCount;
+            } else {
+               /* Учтем ширину кнопки, показывающей все записи */
+               availableWidth -= $(this._children.showAllLinks).outerWidth();
+
+               /* Считаем, сколько элементов может отобразиться */
+               for (var i = itemsCount - 1; i >= 0; i--) {
+                  item = items[i];
+                  itemWidth = Math.ceil(item.getBoundingClientRect().width);
+
+                  if ((itemsWidth + itemWidth) > availableWidth) {
+                     /* Если ни один элемент не влезает, то отобразим только последний выбранный */
+                     if (!itemsWidth) {
+                        displayItems++;
+                     }
+                     break;
+                  }
+                  displayItems++;
+                  itemsWidth += itemWidth;
+               }
+            }
          }
 
          this._collectionIsReady = true;

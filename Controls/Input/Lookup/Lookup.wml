@@ -13,6 +13,7 @@
         autoDropDown="{{_options.autoDropDown}}"
         layerName="Controls/Container/Suggest/__PopupLayer">
     <Controls.Input.resources.InputRender.InputRender
+            name="inputRender"
             size="{{ _options.size }}"
             viewModel="{{ _simpleViewModel }}"
             trim="{{ _options.trim }}"
@@ -29,7 +30,7 @@
 
         <ws:beforeFieldWrapper>
             <ws:if data="{{!_isEmpty}}">
-                <div name="showSelector" class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__hidden_item' : ''}}">&#133;</div>
+                <div name="showAllLinks" class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__hidden_item' : ''}}">&#133;</div>
                 <Controls.Input.Lookup._Collection
                         attr:style="max-width:{{_availableWidthCollection}}px;"
                         items="{{_visibleCollection}}"
@@ -40,6 +41,7 @@
 
                 <ws:if data="{{!_collectionIsReady}}">
                     <Controls.Input.Lookup._Collection
+                            name="hiddenCollection"
                             attr:class="controls-Lookup__hidden_collection"
                             items="{{_items}}"
                             displayProperty="{{_options.displayProperty}}"
@@ -50,7 +52,7 @@
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <div class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
+                <div name="showSelector" class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
                 <Controls.Selector.Opener name="selectorOpener">
                     <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                         <ws:eventHandlers onResult="{{_selectCallback}}"/>
