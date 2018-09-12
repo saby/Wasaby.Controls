@@ -62,6 +62,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             this._imageHeight.setText(size.height);
             this._imageHeight.setTooltip(pixelSize.height);
             this._valueType.setSelectedKeys([isPercents ? 'per' : 'pix']);
+
+            this.subscribeTo(this._imageWidth, 'onTextChange', this._onSizeChanged.bind(this, true));
+            this.subscribeTo(this._imageHeight, 'onTextChange', this._onSizeChanged.bind(this, false));
          }.bind(this));
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
@@ -74,12 +77,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
                this._dialog.close();
             }
          }.bind(this));
-
-         this.subscribeTo(this._dialog, 'onShow', function () {
-            this.subscribeTo(this._imageWidth, 'onTextChange', this._onSizeChanged.bind(this, true));
-            this.subscribeTo(this._imageHeight, 'onTextChange', this._onSizeChanged.bind(this, false));
-         }.bind(this));
-
 
          this.subscribeTo(this._valueType, 'onSelectedItemsChange', function () {
             var options = this._options;
