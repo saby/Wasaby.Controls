@@ -1,16 +1,21 @@
 define(
    [
+      'Core/_Util/Constants',
       'Controls/Utils/hasHorizontalScroll',
       'Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(hasHorizontalScroll, Render, BaseViewModel) {
+   function(Constants, hasHorizontalScroll, Render, BaseViewModel) {
 
       'use strict';
 
       describe('Controls.Input.Render', function() {
          var render, viewModel, result;
          var saveFn = getComputedStyle;
+
+         if (!Constants.isBrowserPlatform) {
+            this.skip();
+         }
 
          beforeEach(function() {
             result = undefined;
