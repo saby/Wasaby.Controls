@@ -508,8 +508,6 @@ node('controls') {
                             [regression]
                             IMAGE_DIR = capture
                             RUN_REGRESSION=True
-							[filestostart]
-							test_vdom_engine_browser_old.py
                             """
                     }
 
