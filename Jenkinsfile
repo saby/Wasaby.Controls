@@ -589,13 +589,16 @@ node('controls') {
     currentBuild.result = 'FAILURE'
     gitlabStatusUpdate()
 
-}finally {
+} finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-
-
+    dir(workspace){
+        sh """
+        7za a log_jinnee -t7z ${workspace}/jinnee/log
+        """
+    }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
@@ -608,6 +611,7 @@ node('controls') {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
         }
     gitlabStatusUpdate()
         }
