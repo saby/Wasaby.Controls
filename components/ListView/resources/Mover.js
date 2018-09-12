@@ -1,15 +1,25 @@
 /*global define, $*/
 define('SBIS3.CONTROLS/ListView/resources/Mover', [
+   'require',
    'WS.Data/Di',
    "Core/core-instance",
    "Core/Deferred",
    "Core/Abstract",
+   'Core/IoC',
    'WS.Data/Utils',
-   'WS.Data/Source/ISource',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager'
-
-], function (Di, cInstance, Deferred, Abstract, Utils, ISource, InformationPopupManager) {
+   'WS.Data/Source/ISource'
+], function (
+   require,
+   Di,
+   cInstance,
+   Deferred,
+   Abstract,
+   IoC,
+   Utils,
+   ISource
+) {
    'use strict';
+
    /**
     * Перемещает элементы
     * @class SBIS3.CONTROLS/ListView/resources/Mover
@@ -199,12 +209,16 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
                   result.addBoth(function (result) {
                      this._notify('onEndMove', result, movedItems, target, position);
                      if (result instanceof Error && !result.processed && !result._isOfflineMode) {
-                        InformationPopupManager.showMessageDialog(
-                           {
-                              message: result.message,
-                              status: 'error'
-                           }
-                        );
+                        require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
+                           InformationPopupManager.showMessageDialog(
+                              {
+                                 message: result.message,
+                                 status: 'error'
+                              }
+                           );
+                        }, function(err) {
+                           IoC.resolve('ILogger').error('Can\'t load resource', err.message);
+                        });
                         result.processed = true;
                      }
                      return result;
