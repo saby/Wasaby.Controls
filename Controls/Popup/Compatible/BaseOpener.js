@@ -306,6 +306,10 @@ function(cMerge,
             newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
+         if (cfg.hasOwnProperty('nativeEvent')) {
+            newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
+         }
+
          if (cfg.verticalAlign && cfg.verticalAlign.side) {
             newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
