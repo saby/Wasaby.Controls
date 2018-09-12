@@ -477,6 +477,22 @@ define(
                },
 
                {
+                  testName: 'Insert number in field from buffer',
+                  controlConfig: {},
+                  splitValue: {
+                     before: '1 2',
+                     insert: '567',
+                     after: '34.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 256 734.0',
+                     position: 4
+                  },
+                  inputType: 'insert'
+               },
+
+               {
                   testName: 'Insert number in field with maxed integers (before space, with .0)',
                   controlConfig: {
                      integersLength: 4
