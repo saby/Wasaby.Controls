@@ -1,4 +1,4 @@
-define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/Memory'], function(Container, Model, Memory) {
+define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/Memory', 'WS.Data/Collection/List'], function(Container, Model, Memory, List) {
    
    var getItems = function() {
       var items = [];
@@ -37,6 +37,13 @@ define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/M
          assert.deepEqual(Container._private.getKeysByItems(getItems(), 'id'), [0, 1, 2, 3, 4]);
       });
    
+      it('getEmptyItems', function() {
+         var listWithItems = new List({items: getItems()});
+         
+         assert.equal(Container._private.getEmptyItems(listWithItems).getCount(), 0);
+         assert.equal(Container._private.getEmptyItems(listWithItems)._moduleName, 'WS.Data/Collection/List');
+      });
+      
       it('getFilterFunction', function() {
          var retFalse = function() {
             return false;

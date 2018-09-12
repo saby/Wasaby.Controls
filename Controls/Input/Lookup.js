@@ -7,9 +7,10 @@ define('Controls/Input/Lookup', [
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'Core/Deferred',
+   'Core/core-merge',
    'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge) {
    
    'use strict';
    
@@ -201,33 +202,14 @@ define('Controls/Input/Lookup', [
       },
    
       _showSelector: function() {
-         var self = this;
+         var templateOptions = {
+            selectedItems: _private.getItems(this),
+            isCompoundTemplate: this._options.isCompoundTemplate
+         };
          
-         if (this._options.compatible) {
-            requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
-               Layer.load().addCallback(function(result) {
-                  requirejs(['SBIS3.CONTROLS/Action/SelectorAction'], function(Action) {
-                     var action = new Action();
-                     var actionCfg = {
-                        selectedItems: self._items,
-                        multiselect: self._options.multiSelect,
-                        template: self._options.lookupTemplate
-                     };
-                     action.execute(actionCfg);
-                     action.once('onExecuted', function(event, meta, result) {
-                        if (result && result.at(0)) {
-                           _private.addItem(self, result.at(0));
-                        }
-                     });
-                  });
-                  return result;
-               });
-            });
-         } else {
-            this._children.selectorOpener.open({templateOptions: {
-               selectedItems: _private.getItems(this)
-            }});
-         }
+         this._children.selectorOpener.open({
+            templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions)
+         });
       },
    
       _itemClick: function(event, item) {

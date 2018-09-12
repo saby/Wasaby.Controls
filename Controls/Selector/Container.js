@@ -7,10 +7,11 @@ define('Controls/Selector/Container',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Controls/Controllers/SourceController',
-      'Controls/Container/MultiSelector/selectionToRecord'
+      'Controls/Container/MultiSelector/selectionToRecord',
+      'Core/Deferred'
    ],
    
-   function(Control, template, ControllerContext, ContextOptions, Chain, Utils, SourceController, selectionToRecord) {
+   function(Control, template, ControllerContext, ContextOptions, Chain, Utils, SourceController, selectionToRecord, Deferred) {
       
       'use strict';
       
@@ -42,6 +43,13 @@ define('Controls/Selector/Container',
                source: source,
                navigation: navigation
             });
+         },
+         
+         getEmptyItems: function(currentItems) {
+            /* make clone and clear to save items format */
+            var emptyItems = currentItems.clone();
+            emptyItems.clear();
+            return emptyItems;
          },
          
          prepareFilter: function(filter, selection, source) {
@@ -85,22 +93,32 @@ define('Controls/Selector/Container',
          },
    
          _selectComplete: function() {
+            var self = this;
+            var loadDef;
+            var dataOptions = this.context.get('dataOptions');
+            var keyProperty = dataOptions.keyProperty;
+            
+            function prepareResult(result) {
+               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
+            }
+            
             if (this._selectedKeys.length || this._excludedKeys.length) {
-               var self = this;
-               var dataOptions = this.context.get('dataOptions');
                var source = dataOptions.source;
                var sourceController = _private.getSourceController(source, dataOptions.navigation);
                var selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               var loadDef = sourceController.load(_private.prepareFilter(Utils.clone(dataOptions.filter), selection, source));
+               loadDef = sourceController.load(_private.prepareFilter(Utils.clone(dataOptions.filter), selection, source));
                
                loadDef.addCallback(function(result) {
-                  return _private.prepareResult(result, self._initialSelectedKeys, dataOptions.keyProperty);
+                  return prepareResult(result);
                });
-               this._notify('selectionLoad', [loadDef], {bubbling: true});
+            } else {
+               loadDef = Deferred.success(prepareResult(_private.getEmptyItems(self._items)));
             }
+   
+            this._notify('selectionLoad', [loadDef], {bubbling: true});
          },
    
          _selectedKeysChanged: function(event, selectedKeys, added, removed) {

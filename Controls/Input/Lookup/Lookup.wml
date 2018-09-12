@@ -42,7 +42,7 @@
                 <div class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
                 <ws:if data="{{!_options.compatible}}">
                     <Controls.Selector.Opener name="selectorOpener">
-                        <ws:popupOptions template="{{_options.lookupTemplate}}">
+                        <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                             <ws:eventHandlers onResult="{{_selectCallback}}"/>
                         </ws:popupOptions>
                     </Controls.Selector.Opener>
