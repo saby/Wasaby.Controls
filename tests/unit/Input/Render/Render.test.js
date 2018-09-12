@@ -9,13 +9,13 @@ define(
 
       'use strict';
 
+      if (!Constants.isBrowserPlatform) {
+         return;
+      }
+
       describe('Controls.Input.Render', function() {
          var render, viewModel, result;
          var saveFn = getComputedStyle;
-
-         if (!Constants.isBrowserPlatform) {
-            this.skip();
-         }
 
          beforeEach(function() {
             result = undefined;
