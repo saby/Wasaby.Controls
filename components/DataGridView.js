@@ -1160,6 +1160,10 @@ define('SBIS3.CONTROLS/DataGridView',
       _drawPage: function() {
          DataGridView.superclass._drawPage.apply(this, arguments);
          this._redrawTheadAndTfoot();
+         this.reviveComponents(this._thead);
+         this._notify('onDrawHead');
+         this._headIsChanged = false;
+         this.reviveComponents(this._tfoot);
       },
 
       _redrawItems: function() {
