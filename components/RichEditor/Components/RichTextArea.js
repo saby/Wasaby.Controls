@@ -1964,6 +1964,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
                if (isDifferent || forced) {
                   this._updateHeight();
+               }
+               if (isDifferent || forced || !text) {
                   this._togglePlaceholder(text);
                }
             },
