@@ -77,7 +77,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                var t = Math.floor(secs/period);
                secs = secs%period;
                if (t) {
-                  spent.push(t + ' ' + rk(names[i], 'ДлительныеОперации'));
+                  spent.push((spent.length && t < 10 ? '0' + t : t) + ' ' + rk(names[i], 'ДлительныеОперации'));
                   if (details <= spent.length) {
                      break;
                   }
