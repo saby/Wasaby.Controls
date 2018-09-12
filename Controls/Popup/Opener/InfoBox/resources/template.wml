@@ -1,4 +1,4 @@
-<Controls.Container.Scroll attr:class="controls-InfoBox__scrollContainer">
+<Controls.Container.Scroll attr:class="controls-InfoBox__scrollContainer" attr:ws-no-focus="true">
    <ws:content>
       <div class="controls-InfoBox controls-Container__popup-scrolling-content">
          <div
