@@ -1,7 +1,16 @@
 <div class="ControlsDemo-Previewer">
    <h2 id="info">Previewer</h2>
+	<Controls.Input.ComboBox
+		source="{{_triggerSource}}"
+		keyProperty="title"
+		placeholder="select"
+		displayProperty="title"
+		selectedKey="{{_selectedTrigger}}"
+		on:selectedKeyChanged="changeTrigger()"
+		attr:class="ControlsDemo-Previewer__trigger"
+	/>
    <ws:for data="image in ['Andrey', 'Valera', 'Maksim']">
-      <Controls.Popup.Previewer trigger="{{_options.previewerTrigger}}">
+      <Controls.Popup.Previewer trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
          <ws:content>
                <img id="target_{{image}}" src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
