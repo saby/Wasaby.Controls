@@ -5,7 +5,9 @@ define('Controls/Container/Scroll',
       'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
+      'Controls/StickyHeader/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
+      'Controls/Container/Scroll/Model/StickyHeader',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
       'Controls/Container/Scroll/Watcher',
@@ -13,12 +15,13 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, StickyHeaderModel, ScrollHeightFixUtil, template) {
 
       'use strict';
 
       /**
        * Container with thin scrollbar.
+       * For the component, a {@link Controls/Container/Scroll/Context context} is required.
        *
        * @class Controls/Container/Scroll
        * @extends Core/Control
@@ -175,12 +178,29 @@ define('Controls/Container/Scroll',
 
             _pagingState: null,
 
+            /**
+             * @type {Controls/Container/Scroll/Model/StickyHeader|null}
+             * @private
+             */
+            _stickyHeaderModel: null,
+
+            /**
+             * @type {Controls/StickyHeader/Context|null}
+             * @private
+             */
+            _stickyHeaderContext: null,
+
             _beforeMount: function(options, context, receivedState) {
                var
                   self = this,
                   def;
 
                this._displayState = {};
+               this._stickyHeaderModel = new StickyHeaderModel();
+               this._stickyHeaderContext = new StickyHeaderContext({
+                  shadowVisible: options.shadowVisible
+               });
+
                if (context.ScrollData && context.ScrollData.pagingVisible) {
                   this._pagingState = {
                      visible: true,
@@ -244,12 +264,16 @@ define('Controls/Container/Scroll',
                this._displayState.hasScroll = _private.calcHasScroll(this);
                this._displayState.contentHeight = _private.getContentHeight(this);
                this._displayState.shadowPosition = _private.getShadowPosition(this);
+               this._updateStickyHeaderContext();
+
+               this._adjustContentMarginsForBlockRender();
 
                this._forceUpdate();
             },
 
             _beforeUpdate: function(options, context) {
                this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
+               this._updateStickyHeaderContext(options.shadowVisible);
             },
 
             _afterUpdate: function() {
@@ -257,9 +281,24 @@ define('Controls/Container/Scroll',
 
                if (!isEqual(this._displayState, displayState)) {
                   this._displayState = displayState;
+                  this._updateStickyHeaderContext();
 
                   this._forceUpdate();
                }
+            },
+
+            /**
+             * Если используем верстку блоков, то на content появится margin-right.
+             * Его нужно добавить к margin-right для скрытия нативного скролла.
+             * TODO: метод нужно порефакторить. Делаем для сдачи в план, в 600 будет переработано.
+             * https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
+             */
+            _adjustContentMarginsForBlockRender: function() {
+               var marginRight = getComputedStyle(this._children.content).marginRight;
+
+               this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
+                  return parseFloat(found) + parseFloat(marginRight);
+               });
             },
 
             _resizeHandler: function() {
@@ -353,13 +392,35 @@ define('Controls/Container/Scroll',
                this._dragging = dragging;
             },
 
-            _fixedHandler: function(event, shouldBeFixed) {
-               this._stickyHeader = shouldBeFixed;
+            _fixedHandler: function(event, args) {
+               this._stickyHeaderModel.update(args);
+
                event.stopPropagation();
             },
 
+            /**
+             * Update the context value of sticky header.
+             * TODO: Плохой метод. Дублирование tmpl и вызов должен только в методе изменения видимости тени. Будет поправлено по https://online.sbis.ru/opendoc.html?guid=01c0fb63-9121-4ee4-a652-fe9c329eec8f
+             * @param shadowVisible
+             * @private
+             */
+            _updateStickyHeaderContext: function(shadowVisible) {
+               shadowVisible = (shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
+
+               if (this._stickyHeaderContext.shadowVisible !== shadowVisible) {
+                  this._stickyHeaderContext.shadowVisible = shadowVisible;
+                  this._stickyHeaderContext.updateConsumers();
+               }
+            },
+
+            _getChildContext: function() {
+               return {
+                  stickyHeader: this._stickyHeaderContext
+               };
+            },
+
             getDataId: function() {
-               return 'ControlsContainerScroll';
+               return 'Controls/Container/Scroll';
             },
 
             /**
