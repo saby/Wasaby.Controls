@@ -28,28 +28,6 @@ var copyRecursiveSync = function(src, dest) {
    }
 };
 
-var rmRecursiveSync = function(src) {
-   var exists = fs.existsSync(src);
-   var stats = exists && fs.statSync(src);
-   var isDirectory = exists && stats.isDirectory();
-   if (isDirectory) {
-      fs.readdirSync(src).forEach(function(childItemName) {
-         rmRecursiveSync(path.join(src, childItemName));
-      });
-      fs.rmdirSync(src);
-   } else {
-      try {
-         fs.unlinkSync(src);
-      }catch(e){}
-
-   }
-};
-
-rmRecursiveSync(path.join(root, 'SBIS3.CONTROLS'));
-fs.mkdirSync(path.join(root, 'SBIS3.CONTROLS'));
-
-copyRecursiveSync(path.join(root, 'components'), path.join(root, 'SBIS3.CONTROLS'));
-
 var gultConfig = JSON.stringify(require('./buildTemplate.json'));
 gultConfig = gultConfig.replace(/%cd%/ig, root).replace(/\\/ig, '/');
 
