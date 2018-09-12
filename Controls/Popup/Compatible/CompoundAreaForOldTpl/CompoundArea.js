@@ -250,7 +250,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._getCustomHeaderContainer();
-            if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length)) {
+            if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
