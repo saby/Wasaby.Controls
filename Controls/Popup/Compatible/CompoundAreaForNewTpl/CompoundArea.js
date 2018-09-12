@@ -4,7 +4,7 @@
 define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
+      'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Core/vdom/Synchronizer/Synchronizer',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
@@ -27,7 +27,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          $protected: {
             _options: {
                isTMPL: function(template) {
-                  return template.indexOf('tmpl!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
+                  return template.indexOf('wml!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
                }
             },
             _isVDomTemplateMounted: false
@@ -84,21 +84,23 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   'on:unregister': this._onRegisterHandler
                };
 
-            //todo Инферно на domNodeRemoved перестал удалять обработчики, которые навешивает compoundArea.
-            //Не понятно бага то или фича, пока решаем вопрос через флаг
-            if (rootContainer._compoundAreaEvents) {
-               return;
-            }
-
             //Отлавливаем события с дочернего vdom компонента
             for (var event in additionalEventProperties) {
                if (additionalEventProperties.hasOwnProperty(event)) {
                   rootContainer.eventProperties = rootContainer.eventProperties || {};
                   rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
-                  rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
+                  var events = rootContainer.eventProperties[event];
+                  var hasEvent = false;
+                  for (var i = 0; i < events.length; i++) {
+                     if (events[i].fn === additionalEventProperties[event]) {
+                        hasEvent = true;
+                     }
+                  }
+                  if (!hasEvent) {
+                     rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
+                  }
                }
             }
-            rootContainer._compoundAreaEvents = true;
          },
 
          _createEventProperty: function(handler) {

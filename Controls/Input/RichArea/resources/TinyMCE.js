@@ -9,7 +9,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
       'Core/helpers/Function/runDelayed',
       'Core/Control',
       'Core/UserConfig',
-      'tmpl!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
+      'wml!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
       'SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles',
       'WS.Data/Di',
@@ -126,17 +126,13 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             tinyInit: function(self) {
                self.editorConfig.target = self._children.mceContainer;
                self.editorConfig.setup = function(editor) {
-                  self._tinyEditor = editor;
-                  self._bindEvents();
-                  self._tinyEditor.on('postRender', function() {
-                     self._tinyEditor.setContent(self._value);
-                     self._togglePlaceholder(self._value);
-                     self._fillImages(false);
-
-                     //Необходимо позвать для обновления плейсхолдера
-                     self._forceUpdate();
-                  });
-               };
+                  if (!this.isDestroyed()) {
+                     this._tinyEditor = editor;
+                     this._bindEvents();
+                  } else {
+                     editor.remove();
+                  }
+               }.bind(self);
                tinyMCE.init(self.editorConfig);
                self._tinyInited = true;
             }
@@ -206,13 +202,16 @@ define('Controls/Input/RichArea/resources/TinyMCE',
 
             _beforeUnmount: function() {
                window.removeEventListener('beforeunload', this._saveBeforeWindowClose);
+               this._off_onSelectionChange2();
+               this._off_onSelectionChange1();
                this.saveToHistory(this._value);
                RichUtil.unmarkRichContentOnCopy(this._children.mceContainer);
 
                //Проблема утечки памяти через tinyMCE
                //Проверка на то созадвался ли tinyEditor
                if (this._tinyEditor) {
-                  this._tinyEditor.destroy();
+                  this._offTinyEvents();
+                  this._tinyEditor.remove();
                   if (this._tinyEditor.theme) {
                      if (this._tinyEditor.theme.panel) {
                         this._tinyEditor.theme.panel._elmCache = null;
@@ -230,6 +229,78 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                if (this._imageOptionsPanel) {
                   this._imageOptionsPanel.destroy();
                }
+
+
+               if (this.editorConfig) {
+                  this.editorConfig.target = null;
+                  this.editorConfig.setup = null;
+               }
+
+               this._tinyEditor.settings.target = null;
+               this._tinyEditor.settings.formats = null;
+               this._tinyEditor.settings.setup = null;
+               this._tinyEditor.settings = null;
+               this._tinyEditor.contentWindow = null;
+               this._tinyEditor.iframeElement = null;
+
+               this.editorConfig = null;
+               this._tinyEditor = null;
+               this._tinyLastRng = null;
+               this._imageOptionsPanel = null;
+               this._images = null;
+               this._richTextAreaContainer = null;
+               this._imageUploader = null;
+               this._codeSampleDialog = null;
+               this._beforeFocusOutRng = null;
+               this._defaultFormats = null;
+            },
+
+            saveCallbacks: function() {
+               this._sanitizeClasses = this._sanitizeClasses.bind(this);
+               this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
+               this._prepareReviewContent = this._prepareReviewContent.bind(this);
+               this._prepareContent = this._prepareContent.bind(this);
+               this._onCutTimeout = this._onCutTimeout.bind(this);
+               this._onInitContentBody = this._onInitContentBody.bind(this);
+               this._onBeforePasteCallback = this._onBeforePasteCallback.bind(this);
+               this._onPasteCallback = this._onPasteCallback.bind(this);
+               this._onPastePreProcessCallback = this._onPastePreProcessCallback.bind(this);
+               this._onPastePostProcessCallback = this._onPastePostProcessCallback.bind(this);
+               this._onSelectionChange2 = this._onSelectionChange2.bind(this);
+               this._onSelectionChange1 = this._onSelectionChange1.bind(this);
+               this._on_onSelectionChange2 = this._on_onSelectionChange2.bind(this);
+               this._off_onSelectionChange2 = this._off_onSelectionChange2.bind(this);
+               this._on_onSelectionChange1 = this._on_onSelectionChange1.bind(this);
+               this._onMousedownCallback1 = this._onMousedownCallback1.bind(this);
+               this._onDragStartCallback1FF = this._onDragStartCallback1FF.bind(this);
+               this._onDragEndCallbackFF = this._onDragEndCallbackFF.bind(this);
+               this._onKeyUpCallback2 = this._onKeyUpCallback2.bind(this);
+               this._onKeyDownCallback4 = this._onKeyDownCallback4.bind(this);
+               this._linkEditStart = this._linkEditStart.bind(this);
+               this._linkEditEnd = this._linkEditEnd.bind(this);
+               this._onKeyDownCallback5 = this._onKeyDownCallback5.bind(this);
+               this._onKeyUpCallback3 = this._onKeyUpCallback3.bind(this);
+               this._onKeyDownCallback6 = this._onKeyDownCallback6.bind(this);
+               this._onKeyPressCallback = this._onKeyPressCallback.bind(this);
+               this._onChangeEditorCallback = this._onChangeEditorCallback.bind(this);
+               this._onCut = this._onCut.bind(this);
+               this._undoCallback = this._undoCallback.bind(this);
+               this._redoCallback = this._redoCallback.bind(this);
+               this._onMouseDownCallback2 = this._onMouseDownCallback2.bind(this);
+               this._onMouseUpCallback2 = this._onMouseUpCallback2.bind(this);
+               this._onFocusOutCallback = this._onFocusOutCallback.bind(this);
+               this._saveBeforeWindowClose = this._saveBeforeWindowClose.bind(this);
+               this._onUNDOMANAGERChange = this._onUNDOMANAGERChange.bind(this);
+               this._onNodeChangeCallback = this._onNodeChangeCallback.bind(this);
+               this._onFocusChangedCallback = this._onFocusChangedCallback.bind(this);
+               this._onFocusOutCallback1 = this._onFocusOutCallback1.bind(this);
+               this._ondblClickCallback = this._ondblClickCallback.bind(this);
+               this._onMouseupTouchstartCallback = this._onMouseupTouchstartCallback.bind(this);
+               this._onMouseDownCallback = this._onMouseDownCallback.bind(this);
+               this._onClickCallback = this._onClickCallback.bind(this);
+               this._hideImageOptionsPanel = this._hideImageOptionsPanel.bind(this);
+               this._onKeyPressCallbackTimeout = this._onKeyPressCallbackTimeout.bind(this);
+               this._postRenderCallback = this._postRenderCallback.bind(this);
             },
 
             /**
@@ -1456,16 +1527,14 @@ define('Controls/Input/RichArea/resources/TinyMCE',
             },
 
             getCodeSampleDialog: function() {
-               var
-                  self = this;
                if (!this._codeSampleDialog) {
                   this._codeSampleDialog = new CodeSampleDialog({
                      parent: this,
                      element: $('<div></div>')
                   });
-                  this._codeSampleDialog.subscribe('onApply', function(event, text, language) {
-                     self.codeSample(text, language);
-                  });
+                  this.subscribeTo(this._codeSampleDialog, 'onApply', function(event, text, language) {
+                     this.codeSample(text, language);
+                  }.bind(this));
                }
                return this._codeSampleDialog;
             },
@@ -1626,417 +1695,592 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                return text === null || text === '' || typeof text === 'undefined';
             },
 
-            _bindEvents: function() {
+            _bindImageEvent: function(event, callback) {
+               this._tinyEditor.on(event, function(e) {
+                  var target = e.target;
+                  if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
+                     callback(e, target);
+                  }
+               });
+            },
+
+            _ondblClickCallback: function(event, target) {
+               this._showImagePropertiesDialog(target);
+            },
+
+            _onMouseupTouchstartCallback: function(event, target) {
+               this._showImageOptionsPanel($(target));
+            },
+
+            _onMouseDownCallback: function(event) {
+               event.preventDefault();
+            },
+
+            _onClickCallback: function() {
+               // Откладываем снятие выделения т.к. tinymce подписан на такое же событие и может установить
+               // выделение после этого обработчика.
+               // Возможно тут и для всех событий устанавливаемых через bindImageEvent правильнее
+               // было бы подписываться на соответсвующие события editor и обойтись без runDelayed
+               runDelayed(this._onClickCallbackDelayed);
+            },
+
+            _onClickCallbackDelayed: function() {
                var
-                  self = this,
-                  editor = this._tinyEditor;
+                  selection = window.getSelection ? window.getSelection() : null;
+               if (selection) {
+                  selection.removeAllRanges();
+               }
+            },
+
+            _onInitContentBody: function() {
+
+               //По двойному клику на изображение показывать диалог редактирования размеров
+               this._bindImageEvent('dblclick', this._ondblClickCallback);
+
+               //По нажатию на изображения показывать панель редактирования самого изображения
+               this._bindImageEvent('mouseup touchstart', this._onMouseupTouchstartCallback);
+
+               //Проблема:
+               //    При клике на изображение в ie появляются квадраты ресайза
+               //Решение:
+               //    отменять дефолтное действие
+               if (cConstants.browser.isIE) {
+                  this._bindImageEvent('mousedown', this._onMouseDownCallback);
+               }
+
+               //При клике на изображение снять с него выделение
+               this._bindImageEvent('click', this._onClickCallback);
+
+               this._children.mceContainer.setAttribute('tabindex', 1);
+
+               // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
+               // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
+               // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
+               for (var i = 1; i <= 9; i++) {
+                  this._tinyEditor.shortcuts.remove('access+' + i);
+               }
+
+               RichUtil.markRichContentOnCopy(this._children.mceContainer);
+
+               /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
+               //formatter есть только после инита поэтому подписка осуществляется здесь
+               var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
+               for (var key in this._options.customFormats) {
+                  if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
+                     formats += ',' + key;
+                  }
+               }
+               this._tinyEditor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
+               this._notify('onInitEditor');
+            },
+
+            _formatChangedCallback: function(state, obj) {
+               this._notify('formatChanged', [obj, state]);
+            },
+
+            _onBeforePasteCallback: function(e) {
+               if (this.addYouTubeVideo(e.content)) {
+                  return false;
+               }
+            },
+
+            _onPasteCallback: function(e) {
+               this._clipboardText = e.clipboardData
+                  ? e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text')
+                  : window.clipboardData.getData('text');
+
+               // editor.plugins.paste.clipboard.pasteFormat = 'html';
+            },
+
+            _onPastePreProcessCallback: function(e) {
+               // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
+               // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
+               // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
+               var
+                  isRichContent = cConstants.browser.isIE12 &&
+                  cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+               e.content = e.content.replace('data-ws-is-rich-text="true"', '');
+
+               //Необходимо заменять декорированные ссылки обратно на url
+               //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+               e.content = this._prepareContent(e.content);
+
+               //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
+               e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
+
+               //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
+               //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
+               //upd: в костроме форматная вставка, не нужно вырезать лишние теги
+               if (!this._mouseIsPressed && this.editorConfig.paste_as_text) {
+                  e.content = this._sanitizeClasses(e.content, false);
+               }
+               this._mouseIsPressed = false;
+
+               // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
+               // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
+               // нашим обработчиком, а просто прокинуть его в дальше
+               if (e.withStyles) {
+                  return e;
+               }
+               if (!isRichContent) {
+                  if (this.editorConfig.paste_as_text) {
+                     //если данные не из БТР и не из word`a, то вставляем как текст
+                     //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
+                     if (this._clipboardText !== false) {
+                        e.content = this._getTextBeforePaste(this._tinyEditor);
+                     }
+                  }
+               }
+            },
+
+            _onPastePostProcessCallback: function(event) {
+               var
+                  content = event.node,
+                  reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi,
+                  reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i,
+                  isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1,
+                  html = content.innerHTML,
+                  rng = this._tinyEditor.selection.getRng(),
+                  unselectables = [];
+               unselectables = content.querySelectorAll('[unselectable ="on"]');
+               for (var i = 0, len = unselectables.length; i < len; i++) {
+                  unselectables[i].setAttribute('data-mce-resize', 'false');
+               }
+               if (!isPlainUrl) {
+                  var images = content.querySelectorAll('img:not(.ws-fre__smile)');
+                  if (images.length) {
+                     if (/data:image/gi.test(content.innerHTML)) {
+                        return false;
+                     }
+                     var
+                        maximalWidth,
+                        width,
+                        currentWidth,
+                        naturalSizes;
+                     maximalWidth = this._children.mceContainer.width() - constants.imageOffset;
+                     for (var i = 0, len = images.length; i < len; i++) {
+                        var item = images[0];
+                        naturalSizes = ImageUtil.getNaturalSizes(item);
+                        currentWidth = item.width;
+                        width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width >
+                        maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
+                        if (!item.style || ((!item.style.width || item.style.width.indexOf('%') < 0)) &&
+                           (naturalSizes.width > naturalSizes.height)) {
+                           item.style.width = width + 'px';
+                           item.style.height = 'auto';
+                        }
+                     }
+                  }
+               }
+               if (isPlainUrl) {
+                  if (rng.collapsed) {
+                     var
+                        endNode = rng.endContainer,
+                        text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue,
+                        offset = rng.endOffset;
+                     if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
+                        // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
+                        // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
+                        // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
+                        html += ' ';
+                     }
+                  }
+               } else {
+                  var
+                     startNode = rng.startContainer,
+                     value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue,
+                     offset = rng.startOffset;
+                  if (startNode.nodeType == 3) {
+                     // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
+                     offset -= value.length;
+                     value = this._getAdjacentTextNodesValue(startNode, false) + value;
+                     offset += value.length;
+                     value += this._getAdjacentTextNodesValue(startNode, true);
+                  }
+                  if (value.length && offset) {
+                     var m = value.match(reUrl);
+                     if (m && m.index + m[0].length === offset) {
+                        // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
+                        // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
+                        // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
+                        html = ' ' + html;
+                     }
+                  }
+               }
+
+               //Замена переносов строк на <br>
+               html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
+
+               // Замена отступов после переноса строки и в первой строке
+               // пробелы заменяются с чередованием '&nbsp;' + ' '
+               html = this._replaceWhitespaces(html);
+
+               // И теперь (только один раз) вставим в DOM
+               content.innerHTML = html;
+            },
+
+            _on_onSelectionChange1: function() {
+               document.addEventListener('selectionchange', this._onSelectionChange1, {once: true});
+            },
+
+            _off_onSelectionChange2: function() {
+               document.removeEventListener('selectionchange', this._onSelectionChange2);
+            },
+
+            _off_onSelectionChange1: function() {
+               document.removeEventListener('selectionchange', this._onSelectionChange1);
+            },
+
+            _onSelectionChange1: function() {
+               //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
+               //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
+               //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
+               setTimeout(this._on_onSelectionChange2, 1);
+
+               if (this._delayOffSelectionChange) {
+                  clearTimeout(this._delayOffSelectionChange);
+               }
+
+               // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+               this._delayOffSelectionChange = setTimeout(this._off_onSelectionChange2, 120000);
+            },
+
+            _on_onSelectionChange2: function() {
+               document.addEventListener('selectionchange', this._onSelectionChange2, {once: true});
+            },
+
+            _onSelectionChange2: function() {
+               if (!this.isDestroyed()) {
+                  this._updateTextByTiny();
+               }
+            },
+
+            _onMousedownCallback1: function(evt) {
+               if (evt.button === 2) {
+                  if (evt.currentTarget === this._children.mceContainer[0] &&
+                     (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
+
+                     this._off_onSelectionChange2();
+
+                     if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
+                        // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
+                        // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
+                        setTimeout(this._on_onSelectionChange1, 1);
+                     } else {
+                        this._on_onSelectionChange1();
+                     }
+                  }
+               }
+            },
+
+            _onDropCallback: function(event) {
+               //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
+               this._clipboardText = false;
+               if (!this._mouseIsPressed && !cConstants.browser.isIE &&
+                  (!event.targetClone || !event.targetClone.classList.contains('controls-RichEditor__noneditable'))) {
+                  event.preventDefault();
+               }
+            },
+
+            _onDragStartCallback: function(event) {
+               //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
+               //запрещаем D&D iframe элементов
+               if (event.target && event.target.classList.contains('mce-object-iframe')) {
+                  event.preventDefault();
+               }
+            },
+
+            _onDragStartCallback1FF: function(evt) {
+               var target = evt.target;
+               if (target.nodeName === 'IMG') {
+                  this._firefoxDragndropTarget = target;
+               }
+            },
+
+            _onDragEndCallbackFF: function(evt) {
+               var target = evt.target;
+               if (target === this._firefoxDragndropTarget) {
+                  var parent = target.parentNode;
+                  if (parent) {
+                     parent.removeChild(target);
+                  }
+                  this._firefoxDragndropTarget = null;
+               }
+            },
+
+            _onKeyUpCallback2: function(e) {
+               this._typeInProcess = false;
+               if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+                  this._updateTextByTiny();
+               }
+            },
+
+            _onKeyDownCallback4: function(e) {
+               this._typeInProcess = true;
+               if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp ||
+                  (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
+                  e.stopPropagation();
+                  e.preventDefault();
+               }
+               if (e.keyCode === cConstants.key.tab) {
+                  this._children.fakeArea.focus();
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+
+                  // //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
+                  this._typeInProcess = false;
+                  return false;
+               } else if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12)) {
+                  //сбрасываем флаг при любом горячем сочетании
+                  if (e.which === cConstants.key.enter) {
+                     e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
+                     //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
+                     //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
+                  }
+                  this._typeInProcess = false;
+               }
+
+               //TODO Решить что делать с updateHeight, нужен ли он
+               this._updateHeight();
+            },
+
+            _onKeyDownCallback5: function(e) {
+               if (e.key === 'Backspace') {
+                  var selection = this._tinyEditor.selection;
+                  if (selection.isCollapsed()) {
+                     var rng = selection.getRng(),
+                        node = rng.startContainer,
+                        index = rng.startOffset;
+                     if (node.nodeType === 3 && 0 < index) {
+                        var text = node.nodeValue;
+                        if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
+                           node.nodeValue = 1 < text.length ? text.substring(0, index - 1) +
+                              text.substring(index) : '';
+                           this._selectNewRng(node, index - 1);
+                        } else if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                           // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
+                           while (!node.previousSibling && !node.nextSibling) {
+                              node = node.parentNode;
+                           }
+                           if (node.nodeType === 1) {
+                              selection.select(node);
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+
+            _onKeyUpCallback3: function() {
+               var
+                  selection = this._tinyEditor.selection,
+                  node = selection.getNode().parentNode;
+               if (node.innerHTML === '<p><br></p>') {
+                  node.innerHTML = '<p><br data-mce-bogus="1"></p>';
+               }
+            },
+
+            _linkEditStart: function() {
+               // Если редактируется ссылка, у которой текст точно соответсвовал урлу, то при редактировании текста должен изменяться и её урл.
+               // Особенно актуально, когда на тулбаре кнопки редактирования ссылки нет
+               var a = this._tinyEditor.selection.getNode();
+               if (a.nodeName === 'A' && a.hasChildNodes() && !a.children.length) {
+                  var url = a.href,
+                     text = a.innerHTML,
+                     isCoupled = text === url,
+                     prefix,
+                     suffix;
+                  if (!isCoupled) {
+                     prefix = url.substring(0, url.indexOf('://') + 3);
+                     text = prefix + text;
+                     isCoupled = url === text;
+                     if (!isCoupled) {
+                        suffix = '/';
+                        isCoupled = url === text + suffix;
+                     }
+                  }
+                  if (isCoupled) {
+                     if (!a.dataset) {
+                        // В MSIE нет свойства dataset, но достаточно просто довить его
+                        a.dataset = {};
+                     }
+                     a.dataset.wsPrev = JSON.stringify({
+                        url: url,
+                        prefix: prefix || '',
+                        suffix: suffix || ''
+                     });
+                  }
+               }
+            },
+
+            _linkEditEnd: function() {
+               var a = this._tinyEditor.selection.getNode();
+               if (a.nodeName === 'A' && a.dataset && 'wsPrev' in a.dataset) {
+                  if (a.hasChildNodes() && !a.children.length) {
+                     var
+                        prev = JSON.parse(a.dataset.wsPrev),
+                        url = a.href,
+                        text = a.innerHTML;
+                     if (prev.url === url) {
+                        url = prev.prefix + text + prev.suffix;
+                        a.href = url;
+
+                        // Опять же - в MSIE нет свойства dataset, поэтому по-старинке
+                        a.setAttribute('data-mce-href', url);
+                     }
+                  }
+                  delete a.dataset.wsPrev;
+               }
+            },
+
+            _onKeyDownCallback6: function(e) {
+               if (e.key && 1 < e.key.length) {
+                  this._linkEditStart();
+                  setTimeout(this._onKeyDownCallback6Timeout, 1);
+               }
+            },
+
+            _onKeyDownCallback6Timeout: function() {
+               //Возможно, мы уже закрыты
+               if (!this.isDestroyed()) {
+                  this._linkEditEnd();
+               }
+            },
+
+            _onKeyPressCallback: function(e) {
+               this._linkEditStart();
+
+               // <проблема>
+               //    Если в редакторе написать более одного абзаца, выделить, и нажать любую символьную клавишу,
+               //    то, он оставит сверху один пустой абзац, который не удалить через визуальный режим, и будет писать в новом
+               // </проблема>
+               if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
+                  if (!this._tinyEditor.selection.isCollapsed()) {
+                     if (this._tinyEditor.selection.getContent() == this._getTinyEditorValue()) {
+                        this._tinyEditor.bodyElement.innerHTML = '';
+                     }
+                  }
+               }
+               setTimeout(this._onKeyPressCallbackTimeout, 1);
+            },
+
+            _onKeyPressCallbackTimeout: function() {
+               if (!this.isDestroyed()) {
+                  this._linkEditEnd();
+               }
+               this._togglePlaceholder(this._getTinyEditorValue());
+            },
+
+            _onChangeEditorCallback: function() {
+               this._updateTextByTiny();
+            },
+
+            _onCut: function() {
+               setTimeout(this._onCutTimeout, 1);
+            },
+
+            _onCutTimeout: function() {
+               this._updateTextByTiny();
+            },
+
+            _undoCallback: function() {
+               this._updateTextByTiny();
+            },
+
+            _redoCallback: function() {
+               this._updateTextByTiny();
+            },
+
+            _onMouseDownCallback2: function() {
+               this._mouseIsPressed = true;
+            },
+
+            _onMouseUpCallback2: function() {
+               this._mouseIsPressed = false;
+            },
+
+            _onFocusOutCallback: function() {
+               if (this._mouseIsPressed) {
+                  this._tinyEditor.editorManager.activeEditor = false;
+               }
+               this._mouseIsPressed = false;
+            },
+
+            _saveBeforeWindowClose: function() {
+               this.saveToHistory(this._value);
+            },
+
+            _onUNDOMANAGERChange: function() {
+               this._notify('undoRedoChanged', [{
+                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
+                  hasUndo: this._tinyEditor.undoManager.hasUndo()
+               }]);
+            },
+
+            _onNodeChangeCallback: function(node) {
+               this._notify('nodeChanged', [node]);
+            },
+
+            _onFocusChangedCallback: function(evt) {
+               // Сбрасывать последний актуальный рэнж не сразу, а только после того, как все синхронные обработчики события отработают
+               setTimeout(this._onFocusChangedCallbackTimeout, 1);
+            },
+
+            _onFocusChangedCallbackTimeout: function() {
+               this._tinyLastRng = null;
+            },
+
+            _onFocusOutCallback1: function(evt) {
+               var rng = this._tinyEditor.selection.getRng();
+               if (!(rng.collapsed && rng.startOffset === 0 && rng.startContainer === this._tinyEditor.getBody())) {
+                  this._tinyLastRng = rng;
+               }
+            },
+
+            _bindEvents: function() {
+
+               this.saveCallbacks();
 
                //По инициализации tinyMCE
-               editor.on('initContentBody', function() {
-                  var
-                     bindImageEvent = function(event, callback) {
-                        self._children.mceContainer.addEventListener(event, function(e) {
-                           var target = e.target;
-                           if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                              callback(e, target);
-                           }
-                        });
-                     };
-
-                  //По двойному клику на изображение показывать диалог редактирования размеров
-                  bindImageEvent('dblclick', function(event, target) {
-                     self._showImagePropertiesDialog(target);
-                  });
-
-                  //По нажатию на изображения показывать панель редактирования самого изображения
-                  bindImageEvent('mouseup touchstart', function(event, target) {
-                     self._showImageOptionsPanel($(target));
-                  });
-
-                  //Проблема:
-                  //    При клике на изображение в ie появляются квадраты ресайза
-                  //Решение:
-                  //    отменять дефолтное действие
-                  if (cConstants.browser.isIE) {
-                     bindImageEvent('mousedown', function(event) {
-                        event.preventDefault();
-                     });
-                  }
-
-                  //При клике на изображение снять с него выделение
-                  bindImageEvent('click', function() {
-                     // Откладываем снятие выделения т.к. tinymce подписан на такое же событие и может установить
-                     // выделение после этого обработчика.
-                     // Возможно тут и для всех событий устанавливаемых через bindImageEvent правильнее
-                     // было бы подписываться на соответсвующие события editor и обойтись без runDelayed
-                     runDelayed(function() {
-                        var
-                           selection = window.getSelection ? window.getSelection() : null;
-                        if (selection) {
-                           selection.removeAllRanges();
-                        }
-                     });
-                  });
-
-                  this._children.mceContainer.setAttribute('tabindex', 1);
-
-                  // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
-                  // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
-                  // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
-                  for (var i = 1; i <= 9; i++) {
-                     editor.shortcuts.remove('access+' + i);
-                  }
-
-                  RichUtil.markRichContentOnCopy(this._children.mceContainer);
-
-                  /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
-                  //formatter есть только после инита поэтому подписка осуществляется здесь
-                  var formats = 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote';
-                  for (var key in this._options.customFormats) {
-                     if ({}.hasOwnProperty.call(this._options.customFormats, key)) {
-                        formats += ',' + key;
-                     }
-                  }
-                  editor.formatter.formatChanged(formats, function(state, obj) {
-                     self._notify('formatChanged', [obj, state]);
-                  });
-                  self._notify('onInitEditor');
-               }.bind(this));
+               this._tinyEditor.on('initContentBody', this._onInitContentBody);
 
                //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
-               editor.on('onBeforePaste', function(e) {
-                  if (self.addYouTubeVideo(e.content)) {
-                     return false;
-                  }
-               });
+               this._tinyEditor.on('onBeforePaste', this._onBeforePasteCallback);
 
-               editor.on('Paste', function(e) {
-                  self._clipboardText = e.clipboardData
-                     ? e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text')
-                     : window.clipboardData.getData('text');
-
-                  // editor.plugins.paste.clipboard.pasteFormat = 'html';
-               });
+               this._tinyEditor.on('Paste', this._onPasteCallback);
 
                //Обработка вставки контента
-               editor.on('PastePreProcess', function(e) {
-                  // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
-                  // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
-                  // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
-                  var
-                     isRichContent = cConstants.browser.isIE12 && cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
-                  e.content = e.content.replace('data-ws-is-rich-text="true"', '');
+               this._tinyEditor.on('PastePreProcess', this._onPastePreProcessCallback);
 
-                  //Необходимо заменять декорированные ссылки обратно на url
-                  //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
-                  e.content = self._prepareContent(e.content);
-
-                  //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
-                  e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
-
-                  //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
-                  //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
-                  //upd: в костроме форматная вставка, не нужно вырезать лишние теги
-                  if (!self._mouseIsPressed && self.editorConfig.paste_as_text) {
-                     e.content = self._sanitizeClasses(e.content, false);
-                  }
-                  self._mouseIsPressed = false;
-
-                  // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
-                  // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
-                  // нашим обработчиком, а просто прокинуть его в дальше
-                  if (e.withStyles) {
-                     return e;
-                  }
-                  if (!isRichContent) {
-                     if (self.editorConfig.paste_as_text) {
-                        //если данные не из БТР и не из word`a, то вставляем как текст
-                        //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
-                        if (self._clipboardText !== false) {
-                           e.content = self._getTextBeforePaste(editor);
-                        }
-                     }
-                  }
-               });
-
-               editor.on('PastePostProcess', function(event) {
-                  var
-                     content = event.node,
-                     reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi,
-                     reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i,
-                     isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1,
-                     html = content.innerHTML,
-                     rng = editor.selection.getRng(),
-                     unselectables = [];
-                  unselectables = content.querySelectorAll('[unselectable ="on"]');
-                  for (var i = 0, len = unselectables.length; i < len; i++) {
-                     unselectables[i].setAttribute('data-mce-resize', 'false');
-                  }
-                  if (!isPlainUrl) {
-                     var images = content.querySelectorAll('img:not(.ws-fre__smile)');
-                     if (images.length) {
-                        if (/data:image/gi.test(content.innerHTML)) {
-                           return false;
-                        }
-                        var
-                           maximalWidth,
-                           width,
-                           currentWidth,
-                           naturalSizes;
-                        maximalWidth = this._children.mceContainer.width() - constants.imageOffset;
-                        for (var i = 0, len = images.length; i < len; i++) {
-                           var item = images[0];
-                           naturalSizes = ImageUtil.getNaturalSizes(item);
-                           currentWidth = item.width;
-                           width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
-                           if (!item.style || ((!item.style.width || item.style.width.indexOf('%') < 0)) && (naturalSizes.width > naturalSizes.height)) {
-                              item.style.width = width + 'px';
-                              item.style.height = 'auto';
-                           }
-                        }
-                     }
-                  }
-                  if (isPlainUrl) {
-                     if (rng.collapsed) {
-                        var
-                           endNode = rng.endContainer,
-                           text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue,
-                           offset = rng.endOffset;
-                        if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
-                           // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
-                           // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
-                           // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
-                           html += ' ';
-                        }
-                     }
-                  } else {
-                     var
-                        startNode = rng.startContainer,
-                        value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue,
-                        offset = rng.startOffset;
-                     if (startNode.nodeType == 3) {
-                        // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
-                        offset -= value.length;
-                        value = this._getAdjacentTextNodesValue(startNode, false) + value;
-                        offset += value.length;
-                        value += this._getAdjacentTextNodesValue(startNode, true);
-                     }
-                     if (value.length && offset) {
-                        var m = value.match(reUrl);
-                        if (m && m.index + m[0].length === offset) {
-                           // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
-                           // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
-                           // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
-                           html = ' ' + html;
-                        }
-                     }
-                  }
-
-                  //Замена переносов строк на <br>
-                  html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
-
-                  // Замена отступов после переноса строки и в первой строке
-                  // пробелы заменяются с чередованием '&nbsp;' + ' '
-                  html = this._replaceWhitespaces(html);
-
-                  // И теперь (только один раз) вставим в DOM
-                  content.innerHTML = html;
-               }.bind(this));
+               this._tinyEditor.on('PastePostProcess', this._onPastePostProcessCallback);
 
                if (this.editorConfig.browser_spellcheck) {
                   // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
-                  var _onSelectionChange1 = function() {
-                     //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
-                     //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
-                     //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
-                     setTimeout(function() {
-                        document.addEventListener('selectionchange', _onSelectionChange2, {once: true});
-                     }, 1);
-
-                     // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                     setTimeout(function() {
-                        document.removeEventListener('selectionchange', _onSelectionChange2);
-                     }, 120000);
-                  };
-
-                  var _onSelectionChange2 = function() {
-                     this._updateTextByTiny();
-                  }.bind(this);
 
                   //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
-                  editor.on('mousedown', function(evt) {
-                     if (evt.button === 2) {
-                        if (evt.currentTarget === this._children.mceContainer[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
-                           cConstants.$doc.off('selectionchange', _onSelectionChange2);
-                           if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
-                              // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
-                              // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
-                              setTimeout(function() {
-                                 document.addEventListener('selectionchange', _onSelectionChange1, {once: true});
-                              }, 1);
-                           } else {
-                              document.addEventListener('selectionchange', _onSelectionChange1, {once: true});
-                           }
-                        }
-                     }
-                  }.bind(this));
+                  this._tinyEditor.on('mousedown', this._onMousedownCallback1);
                }
 
-               editor.on('drop', function(event) {
-                  //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
-                  self._clipboardText = false;
-                  if (!self._mouseIsPressed && !cConstants.browser.isIE && (!event.targetClone || !event.targetClone.classList.contains('controls-RichEditor__noneditable'))) {
-                     event.preventDefault();
-                  }
-               });
+               this._tinyEditor.on('drop', this._onDropCallback);
 
-               editor.on('dragstart', function(event) {
-                  //Youtube iframe не отдаёт mouseup => окошко с видеороликом таскается за курсором
-                  //запрещаем D&D iframe элементов
-                  if (event.target && event.target.classList.contains('mce-object-iframe')) {
-                     event.preventDefault();
-                  }
-               });
+               this._tinyEditor.on('dragstart', this._onDragStartCallback);
 
                if (BROWSER.firefox) {
-                  editor.on('dragstart', function(evt) {
-                     var target = evt.target;
-                     if (target.nodeName === 'IMG') {
-                        this._firefoxDragndropTarget = target;
-                     }
-                  });
+                  this._tinyEditor.on('dragstart', this._onDragStartCallback1FF);
 
-                  editor.on('dragend', function(evt) {
-                     var target = evt.target;
-                     if (target === this._firefoxDragndropTarget) {
-                        var parent = target.parentNode;
-                        if (parent) {
-                           parent.removeChild(target);
-                        }
-                        this._firefoxDragndropTarget = null;
-                     }
-                  });
+                  this._tinyEditor.on('dragend', this._onDragEndCallbackFF);
                }
 
                //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
 
-               editor.on('keyup', function(e) {
-                  self._typeInProcess = false;
-                  if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
-                     self._updateTextByTiny();
-                  }
-               });
+               this._tinyEditor.on('keyup', this._onKeyUpCallback2);
 
-               editor.on('keydown', function(e) {
-                  self._typeInProcess = true;
-                  if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp || (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
-                     e.stopPropagation();
-                     e.preventDefault();
-                  }
-                  if (e.keyCode == cConstants.key.tab) {
-                     self._children.fakeArea.focus();
-                     e.stopImmediatePropagation();
-                     e.preventDefault();
-
-                     // //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
-                     self._typeInProcess = false;
-                     return false;
-                  } else if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12)) {
-                     //сбрасываем флаг при любом горячем сочетании
-                     if (e.which === cConstants.key.enter) {
-                        e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
-                        //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
-                        //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
-                     }
-                     self._typeInProcess = false;
-                  }
-
-                  //TODO Решить что делать с updateHeight, нужен ли он
-                  self._updateHeight();
-               });
-
-               // Если редактируется ссылка, у которой текст точно соответсвовал урлу, то при редактировании текста должен изменяться и её урл.
-               // Особенно актуально, когда на тулбаре кнопки редактирования ссылки нет
-               // Если редактируется ссылка, у которой текст точно соответсвовал урлу, то при редактировании текста должен изменяться и её урл.
-               // Особенно актуально, когда на тулбаре кнопки редактирования ссылки нет
-               var _linkEditStart = function() {
-                  var a = editor.selection.getNode();
-                  if (a.nodeName === 'A' && a.hasChildNodes() && !a.children.length) {
-                     var url = a.href,
-                        text = a.innerHTML,
-                        isCoupled = text === url,
-                        prefix,
-                        suffix;
-                     if (!isCoupled) {
-                        prefix = url.substring(0, url.indexOf('://') + 3);
-                        text = prefix + text;
-                        isCoupled = url === text;
-                        if (!isCoupled) {
-                           suffix = '/';
-                           isCoupled = url === text + suffix;
-                        }
-                     }
-                     if (isCoupled) {
-                        if (!a.dataset) {
-                           // В MSIE нет свойства dataset, но достаточно просто довить его
-                           a.dataset = {};
-                        }
-                        a.dataset.wsPrev = JSON.stringify({
-                           url: url,
-                           prefix: prefix || '',
-                           suffix: suffix || ''
-                        });
-                     }
-                  }
-               };
-               var _linkEditEnd = function() {
-                  var a = editor.selection.getNode();
-                  if (a.nodeName === 'A' && a.dataset && 'wsPrev' in a.dataset) {
-                     if (a.hasChildNodes() && !a.children.length) {
-                        var
-                           prev = JSON.parse(a.dataset.wsPrev),
-                           url = a.href,
-                           text = a.innerHTML;
-                        if (prev.url === url) {
-                           url = prev.prefix + text + prev.suffix;
-                           a.href = url;
-
-                           // Опять же - в MSIE нет свойства dataset, поэтому по-старинке
-                           a.setAttribute('data-mce-href', url);
-                        }
-                     }
-                     delete a.dataset.wsPrev;
-                  }
-               };
+               this._tinyEditor.on('keydown', this._onKeyDownCallback4);
 
                // Если (в chrome-е) при удалении бэкспейсом пред курсором находится символ &#xFEFF; , то удалить его тоже
                // 1174778405 https://online.sbis.ru/opendoc.html?guid=d572d435-488a-4ac0-9c28-ebed44e4e51e
                if (cConstants.browser.chrome) {
-                  editor.on('keydown', function(e) {
-                     if (e.key === 'Backspace') {
-                        var selection = this._tinyEditor.selection;
-                        if (selection.isCollapsed()) {
-                           var rng = selection.getRng(),
-                              node = rng.startContainer,
-                              index = rng.startOffset;
-                           if (node.nodeType === 3 && 0 < index) {
-                              var text = node.nodeValue;
-                              if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
-                                 node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
-                                 this._selectNewRng(node, index - 1);
-                              } else if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
-                                 // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
-                                 while (!node.previousSibling && !node.nextSibling) {
-                                    node = node.parentNode;
-                                 }
-                                 if (node.nodeType === 1) {
-                                    selection.select(node);
-                                 }
-                              }
-                           }
-                        }
-                     }
-                  }.bind(this));
+                  this._tinyEditor.on('keydown', this._onKeyDownCallback5);
                }
 
                // При посимвольном удалении текста на Ipad, полностью удалив текст, упираемся в невидимый символ. При этом
@@ -2044,71 +2288,24 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                // должное положение
                // https://online.sbis.ru/opendoc.html?guid=18888f87-e0b7-4295-903d-c7f8093c2701
                if (cConstants.browser.isMobileSafari || (cConstants.browser.chrome && cConstants.browser.isMobileIOS)) {
-                  editor.on('keyup', function() {
-                     var
-                        selection = this._tinyEditor.selection,
-                        node = selection.getNode().parentNode;
-                     if (node.innerHTML === '<p><br></p>') {
-                        node.innerHTML = '<p><br data-mce-bogus="1"></p>';
-                     }
-                  }.bind(this));
+                  this._tinyEditor.on('keyup', this._onKeyUpCallback3);
                }
 
                // Обработка изменения содержимого редактора.
-               editor.on('keydown', function(e) {
-                  if (e.key && 1 < e.key.length) {
-                     _linkEditStart();
-                     setTimeout(function() {
-                        //Возможно, мы уже закрыты
-                        if (!self.isDestroyed()) {
-                           _linkEditEnd();
-                        }
-                     }, 1);
-                  }
-               });
+               this._tinyEditor.on('keydown', this._onKeyDownCallback6);
 
                // Обработка изменения содержимого редактора.
                // Событие keypress возникает сразу после keydown, если нажата символьная клавиша, т.е. нажатие приводит к появлению символа.
                // Любые буквы, цифры генерируют keypress. Управляющие клавиши, такие как Ctrl, Shift, F1, F2.. — keypress не генерируют.
-               editor.on('keypress', function(e) {
-                  _linkEditStart();
+               this._tinyEditor.on('keypress', this._onKeyPressCallback);
 
-                  // <проблема>
-                  //    Если в редакторе написать более одного абзаца, выделить, и нажать любую символьную клавишу,
-                  //    то, он оставит сверху один пустой абзац, который не удалить через визуальный режим, и будет писать в новом
-                  // </проблема>
-                  if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
-                     if (!editor.selection.isCollapsed()) {
-                        if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                           editor.bodyElement.innerHTML = '';
-                        }
-                     }
-                  }
-                  setTimeout(function() {
-                     if (!self.isDestroyed()) {
-                        _linkEditEnd();
-                     }
-                     self._togglePlaceholder(self._getTinyEditorValue());
-                  }, 1);
-               });
-
-               editor.on('change', function() {
-                  self._updateTextByTiny();
-               });
-               editor.on('cut', function() {
-                  setTimeout(function() {
-                     self._updateTextByTiny();
-                  }, 1);
-               });
+               this._tinyEditor.on('change', this._onChangeEditorCallback);
+               this._tinyEditor.on('cut', this._onCut);
 
                //реагируем на то что редактор изменился при undo/redo
-               editor.on('undo', function() {
-                  self._updateTextByTiny();
-               });
+               this._tinyEditor.on('undo', this._undoCallback);
 
-               editor.on('redo', function() {
-                  self._updateTextByTiny();
-               });
+               this._tinyEditor.on('redo', this._redoCallback);
 
                //Уличная магия в чистом виде (на мобильных устройствах просто не повторить) :
                //Если начать выделять текст в редакторе и увести мышь за его границы и продолжить печатать падают ошибки:
@@ -2120,53 +2317,81 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                //тк activeEditor будет пустой не запомнится LastFocusBookmark и не будет восстановления выделения
                //activeEditor восстановится сразу после ввода символа а может и раньше, главное что восстновления выделения не будет
                if (!cConstants.browser.isMobileIOS && !cConstants.browser.isMobileAndroid) {
-                  editor.on('mousedown', function() {
-                     self._mouseIsPressed = true;
-                  });
-                  editor.on('mouseup', function() {
-                     self._mouseIsPressed = false;
-                  });
-                  editor.on('focusout', function() {
-                     if (self._mouseIsPressed) {
-                        editor.editorManager.activeEditor = false;
-                     }
-                     self._mouseIsPressed = false;
-                  });
+                  this._tinyEditor.on('mousedown', this._onMouseDownCallback2);
+                  this._tinyEditor.on('mouseup', this._onMouseUpCallback2);
+                  this._tinyEditor.on('focusout', this._onFocusOutCallback);
                }
 
                //сохранение истории при закрытии окна
-               this._saveBeforeWindowClose = function() {
-                  this.saveToHistory(this._value);
-               }.bind(this);
                window.addEventListener('beforeunload', this._saveBeforeWindowClose);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
-               editor.on('TypingUndo AddUndo ClearUndos redo undo', function() {
-                  self._notify('undoRedoChanged', [{
-                     hasRedo: self._tinyEditor.undoManager.hasRedo(),
-                     hasUndo: self._tinyEditor.undoManager.hasUndo()
-                  }]);
-               });
+               this._tinyEditor.on('TypingUndo AddUndo ClearUndos redo undo', this._onUNDOMANAGERChange);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ NODE ПОД КУРСОРОМ*/
-               editor.on('NodeChange', function(node) {
-                  self._notify('nodeChanged', [node]);
-               });
+               this._tinyEditor.on('NodeChange', this._onNodeChangeCallback);
 
                // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
-               editor.on('focus focusin', function(evt) {
-                  // Сбрасывать последний актуальный рэнж не сразу, а только после того, как все синхронные обработчики события отработают
-                  setTimeout(function() {
-                     self._tinyLastRng = null;
-                  }, 1);
-               });
+               this._tinyEditor.on('focus focusin', this._onFocusChangedCallback);
 
-               editor.on('blur focusout', function(evt) {
-                  var rng = editor.selection.getRng();
-                  if (!(rng.collapsed && rng.startOffset === 0 && rng.startContainer === editor.getBody())) {
-                     self._tinyLastRng = rng;
-                  }
-               });
+               this._tinyEditor.on('blur focusout', this._onFocusOutCallback1);
+
+               this._tinyEditor.on('postRender', this._postRenderCallback);
+            },
+
+            _postRenderCallback: function() {
+               this._tinyEditor.setContent(this._value);
+               this._togglePlaceholder(this._value);
+               this._fillImages(false);
+
+               //Необходимо позвать для обновления плейсхолдера
+               this._forceUpdate();
+            },
+
+            _offTinyEvents: function() {
+               if (this._delayOffSelectionChange) {
+                  clearTimeout(this._delayOffSelectionChange);
+               }
+               this._tinyEditor.off('click');
+               this._tinyEditor.off('touchstart');
+               this._tinyEditor.off('dblclick');
+               this._tinyEditor.off('postRender');
+               this._tinyEditor.off('initContentBody');
+               this._tinyEditor.off('onBeforePaste');
+               this._tinyEditor.off('Paste');
+               this._tinyEditor.off('PastePreProcess');
+               this._tinyEditor.off('PastePostProcess');
+               this._tinyEditor.off('mousedown');
+               this._tinyEditor.off('mouseup');
+               this._tinyEditor.off('drop');
+               this._tinyEditor.off('dragstart');
+               this._tinyEditor.off('dragend');
+               this._tinyEditor.off('keyup');
+               this._tinyEditor.off('keydown');
+               this._tinyEditor.off('keypress');
+               this._tinyEditor.off('cut');
+               this._tinyEditor.off('change');
+               this._tinyEditor.off('blur');
+               this._tinyEditor.off('focusout');
+               this._tinyEditor.off('focus');
+               this._tinyEditor.off('focusin');
+               this._tinyEditor.off('NodeChange');
+               this._tinyEditor.off('TypingUndo');
+               this._tinyEditor.off('AddUndo');
+               this._tinyEditor.off('ClearUndos');
+               this._tinyEditor.off('redo');
+               this._tinyEditor.off('undo');
+               this._tinyEditor.off('beforeunload');
+               this._tinyEditor.off('PreInit');
+               this._tinyEditor.off('ready');
+               this._tinyEditor.off('resize');
+               this._tinyEditor.off('init');
+               this._tinyEditor.off('scroll');
+               this._tinyEditor.off('mousewheel');
+               this._tinyEditor.off('input');
+               this._tinyEditor.off('resizeEditor');
+               this._tinyEditor.off('scrollIntoView');
+               this._tinyEditor.off('BeforeSetContent');
             },
 
             _getAdjacentTextNodesValue: function(node, toEnd) {
@@ -2243,7 +2468,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      tempImage.setAttribute('alt', img.getAttribute('alt'));
                      tempImage.setAttribute('data-img-uuid', img.getAttribute('data-img-uuid'));
                      html.appendChild(tempImage);
-                     self._tinyEditor.dom.replace(html, (needUnwrap ? parent : img), false);
+                     this._tinyEditor.dom.replace(html, (needUnwrap ? parent : img), false);
                      break;
                   case '3':
                      img.classList.add('image-template-right');
@@ -2280,7 +2505,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                         side: 'left'
                      }
                   });
-                  this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj) {
+
+                  this.subscribeTo(this._imageOptionsPanel, 'onImageChange', function(event, fileobj) {
                      self._startWaitIndicator(rk('Загрузка изображения...'), 1000);
                      var $img = this.getTarget();
 
@@ -2289,7 +2515,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      $img[0].style.height = '';
                      var width = $img[0].style.width || ($img.width() + 'px');
                      var isPixels = width.charAt(width.length - 1) !== '%';
-                     self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function(urls) {
+                     self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length -
+                        (isPixels ? 2 : 1)), null, isPixels).addCallback(function(urls) {
                         var url = urls.preview || urls.original;
                         $img.attr('src', url);
                         $img.attr('data-mce-src', url);
@@ -2310,7 +2537,8 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                         }
                      });
                   });
-                  this._imageOptionsPanel.subscribe('onImageDelete', function() {
+
+                  this.subscribeTo(this._imageOptionsPanel, 'onImageDelete', function() {
                      var nodeForDelete = this.getTarget()[0];
                      var nodeForSelect = nodeForDelete.parentNode;
 
@@ -2335,15 +2563,18 @@ define('Controls/Input/RichArea/resources/TinyMCE',
                      self._tinyEditor.undoManager.add();
                      self._updateTextByTiny();
                   });
-                  this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template) {
+
+                  this.subscribeTo(this._imageOptionsPanel, 'onTemplateChange', function(event, template) {
                      self._changeImageTemplate(this.getTarget(), template);
                   });
-                  this._imageOptionsPanel.subscribe('onImageSizeChange', function(evt) {
+
+                  this.subscribeTo(this._imageOptionsPanel, 'onImageSizeChange', function(evt) {
                      var promise = new Deferred();
                      self.subscribeOnceTo(self, 'onImagePropertiesDialogOpen', promise.callback.bind(promise));
                      self._showImagePropertiesDialog(this.getTarget());
                      evt.setResult(promise);
                   });
+
                } else {
                   this._imageOptionsPanel.setTarget(target);
                   this._imageOptionsPanel.setImageUuid(uuid);

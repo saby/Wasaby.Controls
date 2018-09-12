@@ -1,0 +1,11 @@
+<ws:partial
+        template="{{_options.content}}"
+        scope="{{_options}}">
+    <ws:itemActionsTemplate>
+        <ws:partial
+                menuIsShown="{{_options.menuIsShown}}"
+                template="wml!Controls/List/ItemActions/resources/ItemActionsTemplate"
+                itemActionsPosition="{{_options.itemActionsPosition}}"
+                scope="{{itemActionsTemplate}}"/>
+    </ws:itemActionsTemplate>
+</ws:partial>

@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo',
+   'wml!Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'

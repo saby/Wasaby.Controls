@@ -99,6 +99,29 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             assert.isTrue(dropDownList._hasHierarchy);
             
             /*************************************/
+
+            /**** CHANGE ORIENTATION POPUP *******************/
+
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+
+            var context = {
+               stickyCfg: {
+                  horizontalAlign: {
+                     offset: 0,
+                     side: 'right'
+                  }
+               }
+            };
+
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig, context);
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'right'});
+
+            context.stickyCfg.horizontalAlign.side = 'left';
+            dropDownList._beforeUpdate(dropDownConfig, context);
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'left'});
+
          });
          
       });

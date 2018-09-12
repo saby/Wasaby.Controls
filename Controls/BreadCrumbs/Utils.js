@@ -1,8 +1,8 @@
 define('Controls/BreadCrumbs/Utils', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/getWidth',
-   'tmpl!Controls/BreadCrumbs/View/resources/itemsTemplate',
-   'tmpl!Controls/BreadCrumbs/View/resources/itemTemplate'
+   'wml!Controls/BreadCrumbs/View/resources/itemsTemplate',
+   'wml!Controls/BreadCrumbs/View/resources/itemTemplate'
 ], function(
    ItemsUtil,
    getWidthUtil,

@@ -34,7 +34,7 @@ define(
          autoShow: false,
          autoCloseOnHide: false,
          offset: {
-            x:25,
+            x: '25',
             y:25
          },
          target: ['testTarget'],

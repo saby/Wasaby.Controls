@@ -1,7 +1,7 @@
 define('Controls/Container/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Search/Search',
+      'wml!Controls/Container/Search/Search',
       'Controls/Container/Search/SearchContextField',
       'Core/IoC'
    ],

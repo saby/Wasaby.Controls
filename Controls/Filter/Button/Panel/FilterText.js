@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel/FilterText', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/Panel/FilterText/FilterText',
+   'wml!Controls/Filter/Button/Panel/FilterText/FilterText',
    'css!Controls/Filter/Button/Panel/FilterText/FilterText'
 ], function(Control, template) {
 

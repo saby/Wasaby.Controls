@@ -6,7 +6,7 @@
 define('Controls/Event/Listener',
    [
       'Core/Control',
-      'tmpl!Controls/Event/Listener',
+      'wml!Controls/Event/Listener',
       'Controls/Event/Registrar',
       'WS.Data/Type/descriptor',
       'wml!Controls/Application/CompatibleScripts'

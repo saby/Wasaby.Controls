@@ -1,7 +1,7 @@
 define('Controls/Filter/Fast',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Fast/Fast',
+      'wml!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/List',

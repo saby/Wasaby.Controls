@@ -13,6 +13,7 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
                dependencies.push('Controls/Popup/Opener/Dialog/DialogController');
                config._type = 'dialog';
             }
+            config._popupComponent = 'floatArea';
             dependencies.push(config.template);
             return dependencies;
          }

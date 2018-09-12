@@ -5,7 +5,7 @@ define('Controls/Input/Date/RangeLinkLite', [
    'Controls/Date/interface/IPeriodLiteDialog',
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
-   'tmpl!Controls/Input/Date/RangeLinkLite/RangeLinkLite',
+   'wml!Controls/Input/Date/RangeLinkLite/RangeLinkLite',
    'css!Controls/Input/Date/RangeLinkLite/RangeLinkLite'
 ], function(
    BaseControl,

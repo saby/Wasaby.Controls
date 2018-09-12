@@ -1,7 +1,7 @@
 define('Controls-demo/FilterButton/FilterButton',
    [
       'Core/Control',
-      'tmpl!Controls-demo/FilterButton/FilterButton',
+      'wml!Controls-demo/FilterButton/FilterButton',
       'Controls/Filter/Button',
       'Controls/Button',
       'WS.Data/Source/Memory'

@@ -1,0 +1,50 @@
+<div class="itemActionsDemo">
+     <h2>itemActionsPosition="inline"</h2>
+    <Controls.List
+            source = "{{_viewSource}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            keyProperty="id"
+            itemActions="{{_itemActions}}"
+            on:itemActionsClick="_onActionClick()"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
+
+        <ws:itemTemplate>
+            <ws:partial template="wml!Controls/List/ItemTemplate">
+                <ws:contentTemplate>
+                    <div style="padding: 3px;" on:click="_contentClick( itemTemplate.itemData)">
+                        <div>{{itemTemplate.itemData.item.title}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.description}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.List>
+    <div on:click="changeSource()" style="margin:10px"> Сменить источник для первого списка</div>
+    <h2>itemActionsPosition="outside"</h2>
+    <Controls.List
+            source = "{{_viewSource2}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            itemActionsPosition="outside"
+            keyProperty="id"
+            on:itemActionsClick="_onActionClick()"
+            itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="test_list_2 itemActionsDemo__list itemActionsDemo__marginleft10">
+
+        <ws:itemTemplate>
+            <ws:partial template="wml!Controls/List/ItemTemplate">
+                <ws:contentTemplate>
+                    <div>
+                        <div>{{itemTemplate.itemData.item.title}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.description}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.List>
+    <div class="itemActionsDemo__marginleft10">последний нажатый экшн</div>
+    <div class="action__last_clicked itemActionsDemo__marginleft10">{{__lastClicked}}</div>
+</div>

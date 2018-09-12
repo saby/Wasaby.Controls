@@ -3,9 +3,9 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/ListView/ListView',
-   'tmpl!Controls/List/ItemTemplate',
-   'tmpl!Controls/List/GroupTemplate',
+   'wml!Controls/List/ListView/ListView',
+   'wml!Controls/List/ItemTemplate',
+   'wml!Controls/List/GroupTemplate',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,

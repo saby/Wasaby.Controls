@@ -1,0 +1,20 @@
+<ws:template name="itemTpl">
+    <ws:partial
+            itemActionsTemplate="{{itemActionsTemplate}}"
+            groupTemplate="{{groupTemplate}}"
+            swipeTemplate="{{swipeTemplate}}"
+            multiSelectTpl="{{multiSelectTpl}}"
+            template="{{itemTemplate}}"
+            contentTemplate="{{itemContentTemplate}}"
+            itemData="{{itemData}}"/>
+</ws:template>
+
+<ws:if data="{{itemData.isEditing}}">
+    <!-- TODO: убрать этот шаблон после исправления ошибки: https://online.sbis.ru/opendoc.html?guid=6a0aefdf-779c-4257-98d8-900095ac0aa3 -->
+    <Controls.List.EditInPlace.EditingRow on:deactivated="_onRowDeactivated()">
+        <ws:partial template="itemTpl"/>
+    </Controls.List.EditInPlace.EditingRow>
+</ws:if>
+<ws:else>
+    <ws:partial template="itemTpl"/>
+</ws:else>
