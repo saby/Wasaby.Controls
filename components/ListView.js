@@ -14,6 +14,7 @@ define('SBIS3.CONTROLS/ListView',
       'Core/IoC',
       'Core/helpers/String/format',
       'Lib/Control/CompoundControl/CompoundControl',
+      'View/Runner/requireHelper',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
       'SBIS3.CONTROLS/Mixins/MultiSelectable',
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ListView',
       'css!SBIS3.CONTROLS/ListView/ListView',
       'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
    ],
-   function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, requireHelper, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
       Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
       TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
       ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -2573,7 +2574,7 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             // Если модуль редактирования по месту уже загружен - то просто создаем его экземпляр
-            if (requirejs.defined(moduleName)) {
+            if (requireHelper.defined(moduleName)) {
                controller = requirejs(moduleName);
                result.callback(this._editInPlace = new controller(self._getEditInPlaceConfig()));
                return result;
