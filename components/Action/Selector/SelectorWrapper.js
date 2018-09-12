@@ -122,44 +122,69 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
       _onSelectedItemsChangeHandler: function(event, array, diff) {
          var result = _private.getDefaultSelectionResult(),
              linkedObject = this._getLinkedObject(),
-             self = this;
+             self = this,
+             toRemove = [],
+             selectedKeys;
 
          function onSelectionChanged() {
             var selectedItems = linkedObject.getSelectedItems(),
                 idProperty = linkedObject.getProperty('idProperty'),
                 hoveredItem = linkedObject.getHoveredItem(),
-                index;
+                items = linkedObject.getItems(),
+                item, index;
 
-            if(hoveredItem.container) {
+            if (hoveredItem.container) {
                self._processSelectActionVisibility(hoveredItem);
             }
 
-            if(diff.added.length) {
+            if (diff.added.length) {
                diff.added.forEach(function(addedKey) {
                   /* Записи с выделенным ключём может не быть в recordSet'e
                    (например это запись внутри папки или на другой странице) */
                   index = selectedItems.getIndexByValue(idProperty, addedKey);
 
-                  if(index !== -1 && self._checkItemForSelect(selectedItems.at(index))) {
+                  if (index !== -1 && self._checkItemForSelect(selectedItems.at(index))) {
                      result.added.push(selectedItems.at(index));
                   }
                });
             }
 
-            if(diff.removed.length) {
+            if (diff.removed.length) {
                result.removed = diff.removed;
             }
-
-            self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
+            
+            if (self.getSelectionType() === 'leaf') {
+               array.forEach(function(key) {
+                  item = items.getRecordById(key);
+                  
+                  if (self._isBranch(item)) {
+                     toRemove.push(key);
+                  }
+               });
+               
+               if (toRemove.length) {
+                  selectedKeys = array.slice();
+                  
+                  toRemove.forEach(function(key) {
+                     selectedKeys.splice(selectedKeys.indexOf(key), 1);
+                  });
+   
+                  linkedObject.setSelectedKeys(selectedKeys);
+               } else {
+                  self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
+               }
+            } else {
+               self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
+            }
          }
 
-         if(linkedObject.getItems()) {
+         if (linkedObject.getItems()) {
             onSelectionChanged();
          } else {
             linkedObject.once('onItemsReady', function() {
                this._setSelectedItems();
                onSelectionChanged.call(self);
-            })
+            });
          }
       },
 
