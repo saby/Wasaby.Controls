@@ -99,13 +99,24 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
             чтобы отслеживать изменения в localStorage */
          this._getLocalStorage();
          this._updateHistory = this._updateHistory.bind(this);
+         this._updateOnWakeUp = this._updateOnWakeUp.bind(this);
+   
+         EventBus.globalChannel().subscribe('onWakeUp', this._updateOnWakeUp);
          
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
          this._historyChannel.subscribe('onHistoryUpdate', this._updateHistory);
       },
       
+      _updateOnWakeUp: function() {
+         var self = this;
+         this._getStorageValue(true, true).addCallback(function(newHistory) {
+            self._history = newHistory;
+            self._notify('onWakeUpUpdate', self._history);
+         });
+      },
+      
       _updateHistory: function(event, history, store) {
-         if(store !== this) {
+         if (store !== this) {
             this._history = history;
             this._notify('onHistoryUpdate', history);
          }
@@ -139,7 +150,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          }
       },
 
-      _getStorageValue: function(async) {
+      _getStorageValue: function(async, ignoreCache) {
          var key = this._options.historyId;
          var valueDeferred;
          var self = this;
@@ -150,7 +161,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          
          if (constants.userConfigSupport)  {
             if (async) {
-               valueDeferred = this._SBISStorage.getItem(key);
+               valueDeferred = this._SBISStorage.getItem(key, ignoreCache);
             } else {
                IoC.resolve('ILogger').log('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', 'Need load history (SBISHistoryStorage::getHistory) before use.');
                valueDeferred = Deferred.success(cSessionStorage.getItem(key));
@@ -311,7 +322,9 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
             this._historyChannel.destroy();
             this._historyChannel = undefined;
          }
+         EventBus.globalChannel().unsubscribe('onWakeUp', this._updateOnWakeUp);
          this._updateHistory = undefined;
+         this._updateOnWakeUp = undefined;
          this._historyChannel = undefined;
          this._history = undefined;
          this._SBISStorage = undefined;
