@@ -199,10 +199,10 @@ define('Controls/Input/Lookup', [
          var
             minWidthFieldWrapper,
             fieldWrapper = $(this._container).find('.controls-Lookup__inputRender'),
-            afterFieldWrapper = $(this._children.showSelector);
+            afterFieldWrapper = this._children.showSelector;
 
          /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
-         minWidthFieldWrapper = (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth) / 100 * 33;
+         minWidthFieldWrapper = (fieldWrapper[0].offsetWidth - afterFieldWrapper.offsetWidth) / 100 * 33;
          return Math.min(minWidthFieldWrapper, 100);
       },
 

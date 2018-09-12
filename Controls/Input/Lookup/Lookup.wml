@@ -29,7 +29,7 @@
 
         <ws:beforeFieldWrapper>
             <ws:if data="{{!_isEmpty}}">
-                <div name="" class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__hidden_item' : ''}}">&#133;</div>
+                <div name="showSelector" class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__hidden_item' : ''}}">&#133;</div>
                 <Controls.Input.Lookup._Collection
                         attr:style="max-width:{{_availableWidthCollection}}px;"
                         items="{{_visibleCollection}}"
