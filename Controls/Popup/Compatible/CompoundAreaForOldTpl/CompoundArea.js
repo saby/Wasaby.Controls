@@ -51,6 +51,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
       var logger = IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
+      var invisibleRe = /ws-invisible/ig;
+      var hiddenRe = /ws-hidden/ig;
 
       /**
        * Слой совместимости для открытия старых шаблонов в новых попапах
@@ -186,6 +188,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
                   self._toggleVisible(false);
                   def.addCallback(function() {
+                     self._notifyVDOM('controlResize', [], { bubbling: true });
                      self._toggleVisible(true);
                   });
                }
@@ -231,7 +234,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
             self.subscribe('onResize', function() {
-               this._notifyVDOM('resize', null, { bubbling: true });
+               this._notifyVDOM('controlResize', [], { bubbling: true });
             });
 
             self.rebuildChildControl().addCallback(function() {
@@ -250,7 +253,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _setCustomHeader: function() {
             var hasHeader = !!this._options.caption;
             var customHeaderContainer = this._getCustomHeaderContainer();
-            if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length)) {
+            if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
                if (customHeaderContainer.length) {
                   if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                      customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
@@ -661,7 +664,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _toggleVisibleClass: function(className, visible) {
             className = className || '';
             if (visible) {
-               className = className.replace(/ws-hidden/ig, '');
+               className = className.replace(hiddenRe, '');
             } else if (className.indexOf('ws-hidden') === -1) {
                className += ' ws-hidden';
             }
@@ -708,8 +711,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                         // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                         item.isHiddenForRecalc = false;
                         runDelayed(function() {
-                           item.popupOptions.className = item.popupOptions.className.replace('ws-invisible', '');
-                           container.className = container.className.replace('ws-invisible', '');
+                           item.popupOptions.className = item.popupOptions.className.replace(invisibleRe, '');
+                           container.className = container.className.replace(invisibleRe, '');
                            if (self._options.catchFocus) {
                               // автофокусировка теперь здесь, после того как все выехало, оживилось и отобразилось
                               // если звать автофокусировку в момент когда контейнер visibility: hidden, не сфокусируется!

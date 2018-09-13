@@ -1,7 +1,7 @@
 <div>
    <Controls.EditAtPlace
            name="edit"
-           bind:editObject="item"
+           editObject="{{item}}"
            enabled="{{selected}}"
            style="withoutBorder"
    >

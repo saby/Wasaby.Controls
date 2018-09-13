@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/Filter/Button',
    "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/IoC",
    "Core/helpers/Function/once",
+   'View/Runner/requireHelper',
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
@@ -29,6 +30,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         TemplateUtil,
         IoC,
         once,
+        requireHelper,
         FilterPanelUtils
     ) {
 
@@ -297,7 +299,7 @@ define('SBIS3.CONTROLS/Filter/Button',
 
              /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
              function getCompTpl(tpl) {
-                return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
+                return prepTpl(dotTplForComp({component: (requireHelper.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
              }
 
              /* Если в качестве шаблона передали вёрстку */

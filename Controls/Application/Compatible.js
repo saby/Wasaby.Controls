@@ -34,7 +34,7 @@ define('Controls/Application/Compatible', [
          };
          if (typeof window !== 'undefined') {
             Constants.rights = true;
-            Layer.load().addCallback(function() {
+            Layer.load(undefined, true).addCallback(function() {
                rightsInitialized.callback();
             });
             return rightsInitialized;

@@ -68,7 +68,9 @@
 
 .controls-DoubleSwitch__text_vertical {
    display: block;
-   height: @width_Switch / 2;
+   //If border is in height text block base line between text and toggle circle deviates to switch border height.
+   //In vertical state width = height, height = width.
+   height: @width_Switch / 2 - @border-width_Switch;
    line-height: @width_Switch / 2;
 }
 

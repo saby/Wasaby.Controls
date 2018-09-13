@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Phone/PhonePG',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Text/TextPG',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -18,7 +18,7 @@ define('Controls-demo/Input/Phone/PhonePG',
          _content: 'Controls/Input/Phone',
          _my: myTmpl,
          _dataObject: null,
-         _textOptions: null,
+         _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
@@ -32,7 +32,7 @@ define('Controls-demo/Input/Phone/PhonePG',
                   selectedKey: 0
                }
             };
-            this._textOptions = {
+            this._componentOptions = {
                name: 'Phone',
                placeholder: 'Input text',
                tagStyle: 'primary',

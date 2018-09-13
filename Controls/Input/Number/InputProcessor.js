@@ -265,7 +265,19 @@ define('Controls/Input/Number/InputProcessor',
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
                      // If we insert more than one character, then we just need to slice insert value, if necessary
                      if (splitValue.insert.length > 1) {
-                        splitValue.insert = splitValue.insert.slice(0, _private.integersLeftToMaxLength(splitValue, options.integersLength));
+                        var integersLeftToMaxLength = Math.abs(_private.integersLeftToMaxLength(splitValue, options.integersLength));
+                        var dotPosition = splitValue.after.indexOf('.');
+                        var integerAfterLength = dotPosition === -1
+                           ? splitValue.after.length
+                           : splitValue.after.substring(0, splitValue.after.indexOf('.')).length;
+
+                        /**
+                         * Do not insert more than the allowed length.
+                         */
+                        if (integerAfterLength < integersLeftToMaxLength) {
+                           splitValue.insert = splitValue.insert.slice(0, integerAfterLength - integersLeftToMaxLength);
+                        }
+                        splitValue.after = splitValue.after.substring(0, integerAfterLength).slice(integersLeftToMaxLength) + splitValue.after.substring(integerAfterLength);
                      } else {
                         // If we insert single character and precision is not zero,
                         // then we need to jump over a dot and insert character in decimals part
