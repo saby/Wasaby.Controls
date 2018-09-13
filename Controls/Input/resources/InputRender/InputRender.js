@@ -76,6 +76,10 @@ define('Controls/Input/resources/InputRender/InputRender',
             } else {
                return 'default';
             }
+         },
+         
+         getInputValueForTooltip: function(inputType, inputValue) {
+            return inputType === 'password' ? '' : inputValue;
          }
       };
 
@@ -102,7 +106,10 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip, hasHorizontalScrollUtil(this._children.input.querySelector('.controls-InputRender__field')));
+            var input = this._children.input.querySelector('.controls-InputRender__field');
+            var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
+   
+            this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, hasHorizontalScrollUtil(input));
          },
 
          _inputHandler: function(e) {
@@ -236,7 +243,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             tooltip: types(String)
          };
       };
-
+   
+      InputRender._private = _private;
+      
       return InputRender;
    }
 );
