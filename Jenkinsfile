@@ -596,7 +596,7 @@ node('controls') {
     """
     dir(workspace){
         sh """
-        7za a log_jinnee -t7z ${workspace}/jinnee/log
+        7za a log_jinnee -t7z ${workspace}/jinnee/logs
         """
     }
     if ( unit ){
