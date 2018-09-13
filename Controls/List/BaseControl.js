@@ -124,11 +124,13 @@ define('Controls/List/BaseControl', [
       },
 
       viewResize: function(self) {
-         if (self._scrollLoadStarted['up']) {
-            _private.onScrollLoadEdge(self, 'up');
-         }
-         if (self._scrollLoadStarted['down']) {
-            _private.onScrollLoadEdge(self, 'down');
+         if (self._needScrollCalculation) {
+            if (self._scrollLoadStarted['up']) {
+               _private.onScrollLoadEdge(self, 'up');
+            }
+            if (self._scrollLoadStarted['down']) {
+               _private.onScrollLoadEdge(self, 'down');
+            }
          }
       },
 
