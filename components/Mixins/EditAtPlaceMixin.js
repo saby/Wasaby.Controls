@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          $constructor: function() {
          },
 
-         _applyEdit: function() {
+         _applyEdit: function(noFocus) {
             if (this.validate(undefined, undefined, true)) {
                var values = {};
                this._inEditMode = false;
@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
                   this.setInPlaceEditMode(false);
                   this._removeControlPanel();
                }
-               this._deactivateActiveChildControl();
+               this._deactivateActiveChildControl(noFocus);
                this._notify('onApply', values);
             }
          },
@@ -60,9 +60,11 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          //контрол не понимает куда уходит фокус и не может сделать setActive(false), т.к. при деактивации нужно обязательно
          //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
          //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
-         _deactivateActiveChildControl: function() {
+         _deactivateActiveChildControl: function(noFocus) {
             //При скрытии редактирования переводим фокус на сам компонент, чтобы он не слетал на боди
-            this.getContainer().focus();
+            if (!noFocus) {
+               this.getContainer().focus();
+            }
          },
 
          /**

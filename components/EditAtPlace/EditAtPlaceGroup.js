@@ -81,7 +81,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
             });
             if (!this._options.editInPopup){
                this.subscribe('onFocusOut', function(){
-                  self._applyEdit();
+                  self._applyEdit(true);
                });
             }
          },
