@@ -17,25 +17,6 @@ def exception(err, reason) {
     error(err)
 }
 
-def getTestForSkip(version, type) {
-    dir("./controls/tests") {
-        cmd = ""
-        def tests_for_skip = sh returnStdout: true, script: "python3 helper.py -efrc ${version} -tt ${type}"
-        tests_for_skip = tests_for_skip.tokenize('\n')
-        echo "DEBUG: ${tests_for_skip}"
-        if ( tests_for_skip ) {
-            for ( test in tests_for_skip ){
-                cmd += "--SKIP ${test} "
-            }
-            echo "Будут пропущены тесты: ${tests_for_skip}"
-        } else {
-            echo "В RC нет упавших тестов."
-        }
-        return cmd
-    }
-
-}
-
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
 node('controls') {
@@ -578,10 +559,8 @@ node('controls') {
                     }
 
                     if ( skip ) {
-                         skip_tests_int = getTestForSkip(version, 'int')
-                         skip_tests_reg = getTestForSkip(version, 'reg')
-                         echo "INT: ${skip_tests_int}"
-                         echo "REG: ${skip_tests_reg}"
+                         skip_tests_int = "--FAIL_FROM_RC '(int-ff) ${version} controls'"
+                         skip_tests_reg = "--FAIL_FROM_RC '(reg-ff) ${version} controls'"
                     }
                     parallel (
                         int_test: {
