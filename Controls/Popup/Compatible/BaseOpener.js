@@ -174,6 +174,7 @@ function(cMerge,
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
+            cfg.closeByExternalClick = false;
          }
 
          if (cfg.horizontalAlign) {
