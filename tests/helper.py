@@ -11,7 +11,7 @@ class JC:
     """
     Класс для работы с JC
     """
-    JC_URL = 'http://usd-comp91.corp.tensor.ru:5000'
+    JC_URL = 'http://jenkins-control.tensor.ru'
 
     def get_errors_from_rc(self, version, type_test):
         """Возвращает упавшие тесты и причину из последней RC сборки
