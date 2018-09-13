@@ -1,4 +1,4 @@
-testing.configureMocha = function() {
+testing.configure = function() {
    mocha.globals(['doT', 'encodeHTML', 'wrapUndefined', 'encodeEval', 'def']);
    mocha.checkLeaks();
 };

@@ -6,15 +6,16 @@
       "url": "git@git.sbis.ru:root/sbis3-controls"
    },
    "files": [
-      "Controls/*"
+      "Controls/*",
+      "File/*"
    ],
    "scripts": {
       "start": "node app",
       "build": "grunt build",
       "rebuild": "grunt rebuild",
-      "test": "node node_modules/ws-unit-testing/mocha test-isolated",
-      "test-debug": "node node_modules/ws-unit-testing/mocha %NODE_DEBUG_OPTION% test-isolated",
-      "coverage": "node node_modules/ws-unit-testing/cover test-isolated",
+      "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
+      "test-debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
+      "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish ."
    },
    "config": {
@@ -33,7 +34,26 @@
          "port": 1025,
          "path": "",
          "query": "reporter=XUnit"
-      }
+      },
+      "htmlCoverageReport": "artifacts/coverage/index.html",
+      "jsonCoverageReport": "artifacts/coverage.json"
+   },
+   "nyc": {
+      "include": [
+         "components/**/*.js",
+         "Controls/**/*.js",
+         "File/**/*.js"
+      ],
+      "reporter": [
+         "text",
+         "html"
+      ],
+      "cache": false,
+      "eager": true,
+      "report-dir": "./artifacts/coverage"
+   },
+   "dependencies": {
+      "typescript": "^2.9.1"
    },
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
@@ -62,7 +82,6 @@
       "progress": "^2.0.0",
       "requirejs": "2.1.18",
       "serve-static": "1.11.x",
-      "typescript": "2.5.3",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-2.0"
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.0.0"
    }
 }
