@@ -28,7 +28,7 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             // Стиль колонки
-            preparedClasses += ' controls-Grid__cell_' + params.style;
+            preparedClasses += ' controls-Grid__cell_' + (params.style || 'default');
 
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - 1) {
@@ -90,7 +90,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (current.isSelected) {
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + current.style;
+                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + (current.style || 'default');
                }
             }
 

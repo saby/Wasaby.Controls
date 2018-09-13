@@ -1,4 +1,8 @@
 <ws:partial template="{{_options.content}}"
-            scope="{{_dataOptions}}"
+            filter="{{_dataOptions.filter}}"
+            navigation="{{_dataOptions.navigation}}"
+            sorting="{{_dataOptions.sorting}}"
+            keyProperty="{{_dataOptions.keyProperty}}"
+            scope="{{_options}}"
             source="{{_dataOptions.prefetchSource}}"
             on:filterChanged="_filterChanged()"/>
