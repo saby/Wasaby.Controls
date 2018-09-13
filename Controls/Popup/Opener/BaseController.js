@@ -107,18 +107,16 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          _elementDestroyed: function(item, container) {
-            if (this._checkContainer(item, container, 'elementDestroyed')) {
-               if (item.popupState === BaseController.POPUP_STATE_DESTROYED || item.popupState === BaseController.POPUP_STATE_DESTROYING) {
-                  return item._destroyDeferred;
-               }
+            if (item.popupState === BaseController.POPUP_STATE_DESTROYED || item.popupState === BaseController.POPUP_STATE_DESTROYING) {
+               return item._destroyDeferred;
+            }
 
-               if (item.popupState !== BaseController.POPUP_STATE_DESTROYED) {
-                  item.popupState = BaseController.POPUP_STATE_DESTROYING;
-                  item._destroyDeferred = this.elementDestroyed.apply(this, arguments);
-                  return item._destroyDeferred.addCallback(function() {
-                     item.popupState = BaseController.POPUP_STATE_DESTROYED;
-                  });
-               }
+            if (item.popupState !== BaseController.POPUP_STATE_DESTROYED) {
+               item.popupState = BaseController.POPUP_STATE_DESTROYING;
+               item._destroyDeferred = this.elementDestroyed.apply(this, arguments);
+               return item._destroyDeferred.addCallback(function () {
+                  item.popupState = BaseController.POPUP_STATE_DESTROYED;
+               });
             }
             return (new Deferred()).callback();
          },
