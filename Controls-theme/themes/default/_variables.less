@@ -69,9 +69,13 @@
 @icon-medium-size:                        24px;
 @icon-large-size:                         32px;
 
-  // ---- //
+// ---- //
 // Link //
 // ---- //
+@color_Link-text_disabled:                @gray-ccc-color;
+@link-text-alignment:                     center;
+@link-icon-vertical-alignment:            middle;
+@link-icon-margin:                        -3px 0 0;
 
 @link-font:                               @default-text-size @default-font-name;
 @text-decoration_Link:                    none;
@@ -135,9 +139,15 @@
 @background_Button-primary_readOnly:      @background_Button;
 @background_Button-default_readOnly:      @background_Button;
 @padding_Button-Vdom-wrapper_l:           0 23px;
+
+@border-color_IconButton_bordered_standard_hovered:      rgba(0, 0, 0, 0.20);
+@border-color_IconButton_bordered:                  rgba(0, 0, 0, 0.12);
+
 // -------- //
 // Checkbox //
 // -------- //
+@height_CheckBox:                               24px;
+@check-box-caption-line-height:                 18px;
 @line-height_Checkbox:                          @height_CheckBox;
 @width_CheckBox:                                @height_CheckBox;
 @line-height_Checkbox__caption:                 @check-box-caption-line-height;
@@ -158,6 +168,11 @@
 // Edit at place //
 // ------------- //
 @edit-at-place-field-border-color:              #868686;
+// --------- //
+// --------- //
+// List view //
+// --------- //
+@list-view-scroll-spritesheet:                  url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
 // --------- //
 //  ToolBar  //
 // --------- //
@@ -302,6 +317,60 @@
 @font-size_BackButton__caption_size-m: @font-size_Heading__caption_size-l;
 @font-size_BackButton__caption_size-s: @font-size_Heading__caption_size-m;
 
+//----------//
+//  Header  //
+//----------//
+@font-weight_Header:                               bold;
+@header-padding-left:                              8px;
+@header-padding-right:                             12px;
+@header-height:                                    32px;
+@header-font-size:                                 18px;
+@header-color:                                     #D94700;
+@header-color-hover:                               @header-color;
+@bigHeader-font-size:                              20px;
+@bigHeader-color:                                  @header-color;
+@subheader-font-size:                              15px;
+@subheader-color:                                  @blue-dark-color;
+@bigSubheader-font-size:                           18px;
+@bigSubheader-color:                               @subheader-color;
+//--------------//
+//  LinkHeader  //
+//--------------//
+@link-header-padding-left:                         @header-padding-left;
+@link-header-padding-right:                        @header-padding-right;
+@link-header-height:                               @header-height;
+@link-header-font-size:                            18px;
+@link-header-color:                                #D94700;
+@link-header-text-decoration:                      none;
+@link-header-after-content:                        '\E002';
+@link-header-after-font:                           18px @default-font-name;
+@link-header-after-color:                          @blue-dark-color;
+@link-header-after-margin-left:                    4px;
+@link-header-hover-color:                          @primary-color;
+@link-subheader-hover-color:                       #0055BB;
+@link-header-hover-after-color:                    @link-header-hover-color;
+@link-header-separator-color:                      #F4F4F4;
+@link-header-separator-margin:                     0 0 0 8px;
+//----------------//
+//  ToggleHeader  //
+//----------------//
+@toggle-header-padding-right:                      8px;
+@toggle-header-height:                             24px;
+@toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-font-size:                          15px;
+@toggle-header-color:                              @blue-dark-color;
+@toggle-header-background:                         none;
+@toggle-header-before-content:                     '\E013';
+@toggle-header-before-font:                        18px 'TensorFont', sans-serif;
+@toggle-header-before-color:                       #D94700;
+@toggle-header-before-width:                       24px;
+@toggle-header-count-font:                         15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-count-color:                        #D94700;
+@toggle-header-count-margin-right:                 4px;
+@toggle-header-hover-color:                        @primary-color;
+@toggle-header-hover-before-color:                 @toggle-header-hover-color;
+@toggle-header-hover-count-color:                  @toggle-header-hover-color;
+@toggle-header-checked-before-content:             '\E000';
 //headers
 @font-size_Heading__caption_size-xl:   20px;
 @font-size_Heading__caption_size-l:    18px;
@@ -323,3 +392,5 @@
 
 //MasterList
 @box-shadow_MasterList_item-selected: -4px 0 8px rgba(0,0,0,.15);
+
+@calendar-day-border-spacing:                   1px;

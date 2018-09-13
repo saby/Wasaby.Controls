@@ -79,7 +79,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                rootContainer = this._getRootContainer(),
                additionalEventProperties = {
                   'on:close': this._onCloseHandler,
-                  'on:resize': this._onResizeHandler,
+                  'on:controlresize': this._onResizeHandler,
                   'on:sendresult': this._onResultHandler,
                   'on:register': this._onRegisterHandler,
                   'on:unregister': this._onRegisterHandler

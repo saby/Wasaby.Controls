@@ -598,19 +598,23 @@ node('controls') {
     currentBuild.result = 'FAILURE'
     gitlabStatusUpdate()
 
-}finally {
+} finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-
-
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || all_inte || inte){
+        dir(workspace){
+            sh """
+            7za a log_jinnee -t7z ${workspace}/jinnee/logs
+            """
+        }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
         }
     if ( regr ){
         dir("./controls") {
