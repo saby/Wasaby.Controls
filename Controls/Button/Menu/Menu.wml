@@ -12,7 +12,7 @@
         icon="{{_options.icon}}"
         itemsGroup="{{_options.itemsGroup}}"
         caption="{{_options.caption}}"
-        className="{{_offsetClassName}}"
+        popupClassName="{{_options.popupClassName || _offsetClassName}}"
         dropdownClassName="{{_options.dropdownClassName}}"
         verticalAlign="{{_options.verticalAlign}}"
         horizontalAlign="{{_options.horizontalAlign}}"

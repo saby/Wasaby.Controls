@@ -63,6 +63,7 @@ define(
                };
                var deps = DialogMixin._prepareCfgForNewEnvironment(meta, config);
                assert.equal(config._type, 'stack');
+               assert.equal(config._popupComponent, 'floatArea');
                assert.equal(config.className, 'myClass controls-Stack');
                assert.isTrue(deps.indexOf('Controls/Popup/Opener/Stack/StackController') !== -1);
                assert.isTrue(deps.indexOf(config.template) !== -1);

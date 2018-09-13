@@ -40,7 +40,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysScroll"
                                keyProperty="id"
                                displayProperty="title"
-                               className="ControlsDemo-InputDropdown__scroll"
+                               popupClassName="ControlsDemo-InputDropdown__scroll"
                                source="{{_getMultiData()}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -48,7 +48,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysMyTemplate"
                                keyProperty="id"
                                displayProperty="title"
-                               className="ControlsDemo-InputDropdownn-width"
+                               popupClassName="ControlsDemo-InputDropdownn-width"
                                contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
                                itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
                                source="{{_createMemory(_myTemplateItems)}}"/>
@@ -69,7 +69,7 @@
                                source="{{_createMemory(_titleItems)}}"
                                showHeader="{{true}}"
                                caption="Sort"
-                               contentTemplate="wml!Controls-Demo/Input/Dropdown/contentTemplateDropdown">
+                               contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdown">
          <ws:headConfig iconSize="icon-small"/>
       </Controls.Input.Dropdown>
    </div>

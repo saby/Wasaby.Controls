@@ -19,6 +19,6 @@
         </ws:popupOptions>
     </Controls.Dropdown.Opener>
 
-    <Controls.Event.Emitter event="controlResize"
+    <Controls.Event.Listener event="controlResize"
                             on:controlResize="_onResize()"/>
 </div>

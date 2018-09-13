@@ -16,7 +16,7 @@
                             searchParam="title"
                             keyProperty="id"
                             displayProperty="title"
-                            attr:class="control-Lookup-demo-Lookup">
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -37,7 +37,7 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
-                            attr:class="control-Lookup-demo-Lookup">
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -61,7 +61,7 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
-                            attr:class="control-Lookup-demo-Lookup">
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__accentitems">
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -85,7 +85,7 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
-                            attr:class="control-Lookup-demo-Lookup">
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__primaryitems">
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -115,7 +115,7 @@
                         searchParam="title"
                         readOnly="{{true}}"
                         keyProperty="id"
-                        attr:class="control-Lookup-demo-Lookup">
+                        attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
                     <ws:navigation source="page" view="page">
                         <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                     </ws:navigation>

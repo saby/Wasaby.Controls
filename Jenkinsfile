@@ -410,9 +410,18 @@ node('controls') {
                     if ( unit ){
                         echo "Запускаем юнит тесты"
                         dir(workspace){
-                            sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
-                            sh "cp -rf ./ws_data/WS.Data ./controls/components/"
-                            sh "cp -rf ./ws_data/WS.Data ./controls/"
+                            sh """
+                            cd ws_data
+                            npm i
+                            cd ../WIS-git-temp
+                            npm i
+                            node compileEsAndTs.js
+                            cd ..
+                            ln -s ../WIS-git-temp controls/sbis3-ws
+                            ln -s ../ws_data/WS.Data controls/WS.Data
+                            ln -s ../ws_data/Data controls/Data
+                            ln -s ../../ws_data/WS.Data controls/components/WS.Data
+                            """
                         }
                         dir("./controls"){
                             sh "npm config set registry http://npmregistry.sbis.ru:81/"
@@ -589,19 +598,23 @@ node('controls') {
     currentBuild.result = 'FAILURE'
     gitlabStatusUpdate()
 
-}finally {
+} finally {
     sh """
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-
-
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || all_inte || inte){
+        dir(workspace){
+            sh """
+            7za a log_jinnee -t7z ${workspace}/jinnee/logs
+            """
+        }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
         }
     if ( regr ){
         dir("./controls") {

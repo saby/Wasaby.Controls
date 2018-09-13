@@ -13,7 +13,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
        * Базовый класс ViewModel для InputRender
        * @class Controls/Input/resources/InputRender/BaseViewModel
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       return simpleExtend.extend([VersionableMixin], {

@@ -10,7 +10,7 @@ define('Controls/Input/Number/InputProcessor',
       /**
        * @class Controls/Input/Number/InputProcessor
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var
@@ -265,7 +265,19 @@ define('Controls/Input/Number/InputProcessor',
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
                      // If we insert more than one character, then we just need to slice insert value, if necessary
                      if (splitValue.insert.length > 1) {
-                        splitValue.insert = splitValue.insert.slice(0, _private.integersLeftToMaxLength(splitValue, options.integersLength));
+                        var integersLeftToMaxLength = Math.abs(_private.integersLeftToMaxLength(splitValue, options.integersLength));
+                        var dotPosition = splitValue.after.indexOf('.');
+                        var integerAfterLength = dotPosition === -1
+                           ? splitValue.after.length
+                           : splitValue.after.substring(0, splitValue.after.indexOf('.')).length;
+
+                        /**
+                         * Do not insert more than the allowed length.
+                         */
+                        if (integerAfterLength < integersLeftToMaxLength) {
+                           splitValue.insert = splitValue.insert.slice(0, integerAfterLength - integersLeftToMaxLength);
+                        }
+                        splitValue.after = splitValue.after.substring(0, integerAfterLength).slice(integersLeftToMaxLength) + splitValue.after.substring(integerAfterLength);
                      } else {
                         // If we insert single character and precision is not zero,
                         // then we need to jump over a dot and insert character in decimals part
@@ -293,22 +305,16 @@ define('Controls/Input/Number/InputProcessor',
 
                   // If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
                   if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
-                     // If the insert is at the end of the string, then we replace the symbol
-                     // Else - forbid input
+                     // If we insert value not at the end of the line, then we need to replace symbols on the right
                      if (splitValue.after !== '') {
                         splitValue.after = splitValue.after.slice(splitValue.insert.length);
-                     } else if (splitValue.before[splitValue.before.length - 1] === '.') {
-                        // If we insert decimals part entirely, then we just need to slice insert value, if necessary
-                        splitValue.insert = splitValue.insert.slice(0, _private.decimalsLeftToMaxLength(splitValue, options.precision));
-                     } else {
-                        splitValue.insert = '';
                      }
 
                      // Check whether we have exceeded the allowed number symbols in decimals part
                      // and slice the extra if it is necessary
-                     var symbolsOverPrecisionCount = splitValue.before.split('.')[1].length - options.precision;
-                     if (symbolsOverPrecisionCount > 0) {
-                        splitValue.before = splitValue.before.slice(0, -symbolsOverPrecisionCount);
+                     var decimalsLeftToMaxLength = _private.decimalsLeftToMaxLength(splitValue, options.precision);
+                     if (decimalsLeftToMaxLength < 0) {
+                        splitValue.insert = splitValue.insert.slice(0, decimalsLeftToMaxLength);
                      }
                   }
 

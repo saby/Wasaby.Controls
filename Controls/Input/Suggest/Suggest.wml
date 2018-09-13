@@ -26,6 +26,8 @@
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
             placeholder="{{_options.placeholder}}"
+            maxLength="{{_options.maxLength}}"
+            constraint="{{_options.constraint}}"
             validationErrors="{{_options.validationErrors}}"
             on:tagClick="_notifyHandler('tagClick')"
             on:tagHover="_notifyHandler('tagHover')"

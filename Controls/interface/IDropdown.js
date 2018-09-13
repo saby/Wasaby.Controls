@@ -38,6 +38,11 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
+    * @name Controls/interface/IDropdown#popupClassName
+    * @cfg {Boolean} Class for drop-down list.
+    */
+
+   /**
     * @name Controls/Button/Menu#headConfig
     * @cfg {Object} Menu style menuStyle
     * @variant defaultHead The head with icon and caption

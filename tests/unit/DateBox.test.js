@@ -170,6 +170,18 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
          });
       });
 
+      describe('.setDate', function () {
+         controlTestCase();
+         it('should generate "onDateChange" in case dateBox.setDate(date, true); dateBox.setDate(null);', function () {
+            let onDateChange = sinon.spy();
+            this.testControl.setDate(new Date(), true);
+            this.testControl.subscribe('onDateChange', onDateChange);
+            this.testControl.setDate(null);
+            assert.isNull(this.testControl.getDate());
+            assert(onDateChange.calledOnce, `onDateChange called ${onDateChange.callCount}`);
+         });
+      });
+
       describe('._onKeyDown', function () {
          controlTestCase();
          it('should not change control properties if control disabled', function () {

@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Number/NumberPG',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Text/TextPG',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -18,7 +18,7 @@ define('Controls-demo/Input/Number/NumberPG',
          _content: 'Controls/Input/Number',
          _my: myTmpl,
          _dataObject: null,
-         _textOptions: null,
+         _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
@@ -38,9 +38,9 @@ define('Controls-demo/Input/Number/NumberPG',
                   selectedKey: 0
                }
             };
-            this._textOptions = {
+            this._componentOptions = {
                name: 'Number',
-               placeholder: 'Input text',
+               placeholder: 'Input number',
                tagStyle: 'primary',
                presition: 2,
                onlyPositive: true,

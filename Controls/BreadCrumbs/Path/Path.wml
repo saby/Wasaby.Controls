@@ -19,7 +19,7 @@
             </ws:if>
         </ws:if>
 
-        <Controls.Event.Emitter event="controlResize"
+        <Controls.Event.Listener event="controlResize"
                                 on:controlResize="_onResize()"/>
     </div>
 </div>

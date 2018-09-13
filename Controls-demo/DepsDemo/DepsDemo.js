@@ -4,7 +4,7 @@ define('Controls-demo/DepsDemo/DepsDemo', [
    'tmpl!Controls-demo/DepsDemo/DepsDemo'
 ], function(Control, Deferred, template) {
 
-   var AsyndDemo = Control.extend({
+   var DepsDemo = Control.extend({
       _template: template,
       _beforeMount: function() {
          if(typeof window !== 'undefined') {
@@ -16,5 +16,5 @@ define('Controls-demo/DepsDemo/DepsDemo', [
 
    });
 
-   return AsyndDemo;
+   return DepsDemo;
 });

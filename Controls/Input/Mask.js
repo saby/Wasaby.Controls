@@ -32,7 +32,7 @@ define('Controls/Input/Mask',
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
        *
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
 
       /**

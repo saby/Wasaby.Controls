@@ -11,7 +11,7 @@ define('Controls/Input/Suggest/SuggestStyles',
        * @css @spacing_Suggest-loader "Loader" icon spacing
        * @css @color_Suggest-clear "Clear" icon color
        * @public
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
    }
 );

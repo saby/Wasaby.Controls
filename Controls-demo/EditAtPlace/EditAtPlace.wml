@@ -2,9 +2,9 @@
    <h2>with background</h2>
    <Controls.EditAtPlace
       name="edit"
-      bind:editObject="_record"
+      editObject="{{_record}}"
       enabled="{{true}}"
-      on:cancelEdit="_cancelHandler()"
+      style="withBackground"
    >
       <div class="my_editing_form">
          <div class="my_editing_form_element">
@@ -42,11 +42,10 @@
   <h2>showToolbar style="withBackground"</h2>
  <Controls.EditAtPlace
     name="edit"
-    bind:editObject="_record2"
+    editObject="{{_record2}}"
     enabled="{{true}}"
     showToolbar="{{true}}"
     style="withBackground"
-    on:cancelEdit="_cancelHandler2()"
  >
     <div class="inline_editing" >
           <span class="my_editing_form_element_title">Surname:</span>
@@ -63,8 +62,6 @@
       <Controls.Tabs.Buttons
               bind:selectedKey='_selectedTab'
               keyProperty="id"
-              on:cancelEdit="_cancelHandler3()"
-              on:beforeEndEdit="_beforeEndEdit()"
               itemTemplateProperty="itemTemplate"
               source="{{_tabSource}}"
       />
@@ -72,8 +69,6 @@
    <Controls.Tabs.Buttons
            bind:selectedKey='_selectedTab2'
            keyProperty="id"
-           on:cancelEdit="_cancelHandler4()"
-           on:beforeEndEdit="_beforeEndEdit2()"
            itemTemplateProperty="itemTemplate"
            source="{{_tabSource2}}"
    />

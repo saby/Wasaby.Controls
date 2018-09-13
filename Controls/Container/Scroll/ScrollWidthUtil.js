@@ -1,9 +1,8 @@
 define('Controls/Container/Scroll/ScrollWidthUtil',
    [
-      'Core/detection',
-      'Core/compatibility'
+      'Core/detection'
    ],
-   function(detection, compatibility) {
+   function(detection) {
 
       'use strict';
 

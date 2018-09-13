@@ -1,7 +1,7 @@
 define('Controls-demo/Switch/SwitchDemoPG',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Text/TextPG',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -12,13 +12,13 @@ define('Controls-demo/Switch/SwitchDemoPG',
 
    function(Control, template, myTmpl, config) {
       'use strict';
-      var TextPG = Control.extend({
+      var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Toggle/Switch',
          _my: myTmpl,
          _dataObject: null,
-         _textOptions: null,
+         _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
@@ -30,7 +30,7 @@ define('Controls-demo/Switch/SwitchDemoPG',
                   selectedKey: 0
                }
             };
-            this._textOptions = {
+            this._componentOptions = {
                name: 'Switch',
                readOnly: false,
                tooltip: 'myTooltip',
@@ -41,5 +41,5 @@ define('Controls-demo/Switch/SwitchDemoPG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return TextPG;
+      return SwitchDemoPG;
    });

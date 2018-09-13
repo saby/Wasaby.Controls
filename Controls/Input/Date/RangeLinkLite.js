@@ -29,7 +29,7 @@ define('Controls/Input/Date/RangeLinkLite', [
     * @control
     * @public
     * @category Input
-    * @author Миронов А.Ю.
+    * @author Журавлев М.С.
     * @demo Controls-demo/Input/Date/RangeLinkLite
     *
     */

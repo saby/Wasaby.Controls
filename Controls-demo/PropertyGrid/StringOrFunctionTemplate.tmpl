@@ -2,11 +2,11 @@
     <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
 
     <div style="display: flex; width: 100%;">
-        <Controls.Toggle.Checkbox bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()"/>
+        <Controls.Toggle.Checkbox bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()" attr:class="js-Controls-PropertyGridEditor__StringOrFunction"/>
             <Controls.Input.Text value="{{_value}}"
                                  readOnly="{{_options.readOnly}}"
                                  on:valueChanged="_valueChangedHandler()"
-                                 attr:class="demo-TextBox"
+                                 attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
             />
     </div>
 </div>

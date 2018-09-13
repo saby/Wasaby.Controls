@@ -185,7 +185,7 @@ define('SBIS3.CONTROLS/Browser', [
              */
             ignoreFiltersList: [],
             /**
-             * @cfg [Array} Сохранять проваливание по иерархии в историю браузера будут работать пореходы по кнопке вперед/назад.
+             * @cfg {Array} Сохранять проваливание по иерархии в историю браузера будут работать пореходы по кнопке вперед/назад.
              * @remark работает только в месте с сохранением фильтров сессию.
              * @see updateFilterHistory
              */
@@ -771,7 +771,7 @@ define('SBIS3.CONTROLS/Browser', [
       },
 
       _onApplyFilter:function() {
-         this.getView().setActive(true);
+         (this._searchForm || this.getView()).setActive(true);
       },
 
       _onInitBindings: function() {

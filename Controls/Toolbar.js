@@ -65,6 +65,7 @@ define('Controls/Toolbar', [
                onResult: self._onResult,
                onClose: self._closeHandler
             },
+            opener: self,
             templateOptions: {
                keyProperty: newOptions.keyProperty,
                parentProperty: newOptions.parentProperty,

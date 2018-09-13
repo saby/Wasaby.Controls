@@ -67,14 +67,6 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * Returns selection.
-    * @function Controls/interface/IPromisedSelectable#getSelection
-    * @returns {Selection} Selection.
-    * @see selectedKeys
-    * @see excludedKeys
-    */
-
-   /**
     * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of selected items' keys.

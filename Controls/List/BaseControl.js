@@ -603,7 +603,7 @@ define('Controls/List/BaseControl', [
       */
       editItem: function(options) {
          if (!this._options.readOnly) {
-            this._children.editInPlace.editItem(options);
+            return this._children.editInPlace.editItem(options);
          }
       },
 
@@ -614,7 +614,7 @@ define('Controls/List/BaseControl', [
       */
       addItem: function(options) {
          if (!this._options.readOnly) {
-            this._children.editInPlace.addItem(options);
+            return this._children.editInPlace.addItem(options);
          }
       },
 
@@ -624,7 +624,7 @@ define('Controls/List/BaseControl', [
        */
       cancelEdit: function() {
          if (!this._options.readOnly) {
-            this._children.editInPlace.cancelEdit();
+            return this._children.editInPlace.cancelEdit();
          }
       },
 
@@ -634,7 +634,7 @@ define('Controls/List/BaseControl', [
        */
       commitEdit: function() {
          if (!this._options.readOnly) {
-            this._children.editInPlace.commitEdit();
+            return this._children.editInPlace.commitEdit();
          }
       },
 

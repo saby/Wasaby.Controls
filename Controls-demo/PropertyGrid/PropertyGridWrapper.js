@@ -19,10 +19,13 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          _template: template,
          _metaData: null,
          myEvent: '',
-         _textOptions: null,
          _my: myTmpl,
-         someScope: null,
+         _demoName: '',
          _beforeMount: function(opts) {
+
+            var testName = opts.content.split('/');
+            testName.splice(0, 1);
+            this._demoName = testName.join('');
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
@@ -34,8 +37,8 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _afterMount: function(opts) {
             var self = this,
-               notOrigin = this._children[opts.txtOpt.name]._notify;
-            this._children[opts.txtOpt.name]._notify = function(event, arg) {
+               notOrigin = this._children[opts.componentOpt.name]._notify;
+            this._children[opts.componentOpt.name]._notify = function(event, arg) {
                self.myEvent += event + '\n';
                notOrigin.apply(this, arguments);
                self._forceUpdate();

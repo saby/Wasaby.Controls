@@ -23,7 +23,7 @@ define('Controls/Input/Date/LinkView', [
     * @control
     * @public
     * @category Input
-    * @author Миронов А.Ю.
+    * @author Журавлев М.С.
     * @demo Controls-demo/Input/Date/LinkView
     *
     */

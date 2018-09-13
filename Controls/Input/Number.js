@@ -36,7 +36,7 @@ define('Controls/Input/Number', [
     * @category Input
     * @demo Controls-demo/Input/Number/Number
     *
-    * @author Зайцев А.С.
+    * @author Журавлев М.С.
     */
 
    /**
@@ -72,13 +72,17 @@ define('Controls/Input/Number', [
    var _private = {
       trimEmptyDecimals: function(self, target) {
          if (!self._options.showEmptyDecimals) {
-            var
-               processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
+            var processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
+            var selectionStart = target.selectionStart;
+            var selectionEnd = target.selectionEnd;
+
             self._numberViewModel.updateValue(processedVal);
 
             // Не меняется value у dom-элемента, при смене аттрибута value
             // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
             target.value = self._numberViewModel.getDisplayValue();
+            target.selectionStart = selectionStart;
+            target.selectionEnd = selectionEnd;
          }
       }
    };
@@ -202,7 +206,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
       }
    });
 

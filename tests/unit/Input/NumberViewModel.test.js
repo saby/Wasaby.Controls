@@ -477,6 +477,22 @@ define(
                },
 
                {
+                  testName: 'Insert number in field from buffer',
+                  controlConfig: {},
+                  splitValue: {
+                     before: '1 2',
+                     insert: '567',
+                     after: '34.0',
+                     delete: ''
+                  },
+                  result: {
+                     value: '1 256 734.0',
+                     position: 4
+                  },
+                  inputType: 'insert'
+               },
+
+               {
                   testName: 'Insert number in field with maxed integers (before space, with .0)',
                   controlConfig: {
                      integersLength: 4
@@ -1046,6 +1062,42 @@ define(
                   result: {
                      value: '1.58',
                      position: 4
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert value in decimals part with precision (decimals part is full)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '123.4',
+                     insert: '678',
+                     after: '5',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.46',
+                     position: 6
+                  },
+                  inputType: 'insert'
+               },
+
+               {
+                  testName: 'Insert value in decimals part with precision (decimals part is not full)',
+                  controlConfig: {
+                     precision: 2
+                  },
+                  splitValue: {
+                     before: '123.4',
+                     insert: '678',
+                     after: '',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.46',
+                     position: 6
                   },
                   inputType: 'insert'
                }
