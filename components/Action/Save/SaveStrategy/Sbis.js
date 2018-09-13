@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             delete cfg.html;
             cfg.Sync = true;
          } else {
-            if (cfg.Limit) {
+            if (cfg.hasOwnProperty('Limit')) {
                delete cfg.Limit;
                cfg.Pagination = null;
             }
