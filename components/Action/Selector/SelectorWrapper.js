@@ -155,6 +155,8 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
             
             self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
    
+            /*  При выборе только листьев надо убрать выделение с папок.
+                Папки могут быть веделены через кнопку "Отобрать" -> всё. */
             if (self.getSelectionType() === 'leaf') {
                array.forEach(function(key) {
                   item = items.getRecordById(key);
