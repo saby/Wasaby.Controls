@@ -77,7 +77,12 @@ function(TemplateUtil) {
          var baseMethod = this._picker._onClickHandler;
          this._picker._onClickHandler = function(e) {
             baseMethod.apply(self._picker, arguments);
-            self._clickItemHandler(e);
+            var target = $(e.target);
+            if (target.hasClass('controls-DropdownList__close-picker')) {
+               self._closeButtonClick();
+            } else {
+               self._clickItemHandler(e);
+            }
          };
          this._picker.getContainer().bind('dblclick', this._dblClickItem.bind(this));
       },
@@ -99,6 +104,9 @@ function(TemplateUtil) {
          /*Method can be implemented*/
       },
       _getItemClass: function() {
+         /*Method must be implemented*/
+      },
+      _closeButtonClick: function() {
          /*Method must be implemented*/
       }
    };

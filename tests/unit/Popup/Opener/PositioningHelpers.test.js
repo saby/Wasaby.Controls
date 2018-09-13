@@ -294,6 +294,18 @@ define(
                assert.equal(container.style.height, 10);
             });
 
+            it('dialog default position', function() {
+               let item = {
+                  popupOptions: {
+                     maxWidth: 100,
+                     maxHeight: 100
+                  }
+               };
+               let position = DialogController.getDefaultConfig(item);
+               assert.equal(item.position.width, 100);
+               assert.equal(item.position.height, 100);
+            });
+
             it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
                let position = Dialog.getPosition(800, 600, sizes, {
