@@ -10,8 +10,10 @@
       <ws:if data="{{itemData.footerStorage.hasMoreStorage}}">
          <Controls.Button size="s" attr:class="controls-TreeGrid__nodeFooterHasMore" style="linkMain" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)"/>
       </ws:if>
-      <ws:if data="{{itemData.footerStorage.template}}">
-         <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{itemData.footerStorage.template}}" itemData="{{itemData}}"/>
-      </ws:if>
+      <ws:else>
+         <ws:if data="{{itemData.footerStorage.template}}">
+            <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{itemData.footerStorage.template}}" itemData="{{itemData}}"/>
+         </ws:if>
+      </ws:else>
    </div>
 </div>
