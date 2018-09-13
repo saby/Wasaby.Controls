@@ -262,10 +262,12 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              }
              
              structure = FilterHistoryControllerUntil.resetNoSaveStructureKeys(structure, this._options.noSaveFilters);
-             
-             self.saveToHistory({
-                linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
-                filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)
+
+             self._onHistoryReady(function() {
+                self.saveToHistory({
+                   linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
+                   filter: FilterHistoryControllerUntil.prepareStructureToSave(structure)
+                });
              });
 
              self._updateFilterButtonHistoryView();
