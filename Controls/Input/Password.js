@@ -67,7 +67,8 @@ define('Controls/Input/Password',
 
       PasswordInput.getOptionTypes = function getOptionsTypes() {
          return {
-            placeholder: types(String)
+
+            /*placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
          };
       };
 

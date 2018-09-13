@@ -61,13 +61,8 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          //указывать контрол на который ушёл фокус. У некоторых контролов(например DatePicker) есть логика на уход фокуса
          //и эта логика не выполняется. Поэтому мы сами позовём setActive(false) у активного дочернего контрола.
          _deactivateActiveChildControl: function() {
-            var activeControl = this.getActiveChildControl();
-
-            //метод getActiveControl определен у compoundControl, поэтому у контролов унаследованных от Control его нет
-            while (activeControl && activeControl.getActiveChildControl && activeControl.getActiveChildControl()) {
-               activeControl = activeControl.getActiveChildControl();
-            }
-            activeControl && activeControl.setActive(false);
+            //При скрытии редактирования переводим фокус на сам компонент, чтобы он не слетал на боди
+            this.getContainer().focus();
          },
 
          /**

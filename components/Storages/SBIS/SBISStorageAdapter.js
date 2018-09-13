@@ -19,8 +19,8 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISStorageAdapter',
             return this._storage.setParam(key, val);
          },
 
-         getItem: function(key) {
-            return this._storage.getParam(key);
+         getItem: function(key, ignoreCache) {
+            return this._storage.getParam(key, ignoreCache);
          },
 
          removeItem: function(key) {

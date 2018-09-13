@@ -2,6 +2,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    [
       'Core/CommandDispatcher',
       'Lib/Control/CompoundControl/CompoundControl',
+      'View/Runner/requireHelper',
       'tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
       'SBIS3.CONTROLS/Mixins/FilterMixin',
       'SBIS3.CONTROLS/Mixins/PickerMixin',
@@ -15,6 +16,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    function(
       CommandDispatcher,
       CompoundControl,
+      requireHelper,
       dotTplForComp,
       FilterMixin,
       PickerMixin,
@@ -214,7 +216,7 @@ define('Controls/Filter/Button/OldPanelOpener',
             
             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
             function getCompTpl(tpl) {
-               return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
+               return prepTpl(dotTplForComp({component: (requireHelper.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
             }
             
             /* Если в качестве шаблона передали вёрстку */
