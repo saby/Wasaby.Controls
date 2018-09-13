@@ -81,6 +81,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
             });
             if (!this._options.editInPopup){
                this.subscribe('onFocusOut', function(){
+                   //TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
                   self._applyEdit(true);
                });
             }
