@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/BaseController',
             };
          },
          getMargins: function(config) {
-            //create fakeDiv for calculate margins
+            // create fakeDiv for calculate margins
             var fakeDiv = document.createElement('div');
             fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);
@@ -32,7 +32,7 @@ define('Controls/Popup/Opener/BaseController',
             return margins;
          },
 
-         //Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
+         // Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
          getManagerController: function() {
             if (requirejs.defined('Controls/Popup/Manager/ManagerController')) {
                return requirejs('Controls/Popup/Manager/ManagerController');
@@ -92,8 +92,7 @@ define('Controls/Popup/Opener/BaseController',
 
          _elementAfterUpdated: function(item, container) {
             if (this._checkContainer(item, container, 'elementAfterUpdated')) {
-
-               //We react only after the update phase from the controller
+               // We react only after the update phase from the controller
                if (item.popupState === BaseController.POPUP_STATE_UPDATING) {
                   item.popupState = BaseController.POPUP_STATE_UPDATED;
                   return this.elementAfterUpdated.apply(this, arguments);
@@ -114,7 +113,7 @@ define('Controls/Popup/Opener/BaseController',
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYED) {
                item.popupState = BaseController.POPUP_STATE_DESTROYING;
                item._destroyDeferred = this.elementDestroyed.apply(this, arguments);
-               return item._destroyDeferred.addCallback(function () {
+               return item._destroyDeferred.addCallback(function() {
                   item.popupState = BaseController.POPUP_STATE_DESTROYED;
                });
             }
