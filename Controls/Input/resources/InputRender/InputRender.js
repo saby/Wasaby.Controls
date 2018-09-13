@@ -79,6 +79,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
          
          getInputValueForTooltip: function(inputType, inputValue) {
+            //FIXME будет решаться по ошибке, путём выделения подсказики в HOC https://online.sbis.ru/opendoc.html?guid=6239c863-53dc-4cda-90a1-d2ad96979c80
             return inputType === 'password' ? '' : inputValue;
          }
       };
