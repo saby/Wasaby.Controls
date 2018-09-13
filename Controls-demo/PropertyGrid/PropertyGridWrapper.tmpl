@@ -4,8 +4,7 @@
 
         <Controls.PropertyGrid items="{{_options.description}}"
                                data="{{_options.dataObject}}"
-                               scopeObject="{{_options.txtOpt}}"
-                               content="{{_options.content}}"
+                               scopeObject="{{_options.componentOpt}}"
                                attr:class="controls-FilterPanel__PropertyGrid"
                                on:itemsChanged="_valueChangedHandler()">
             <ws:itemTemplate templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"/>
@@ -14,9 +13,9 @@
     <div class="controls-demo_event-example__wrapper " >
         <div class="controls-demo_example-wrapper">
             <ws:partial template="{{_options.content}}"
-                        scope="{{_options.txtOpt}}"
-                        bind:value="_options.txtOpt.value"
-                        attr:class="demo-TextBox"
+                        scope="{{_options.componentOpt}}"
+                        bind:value="_options.componentOpt.value"
+                        attr:class="demo-TextBox js-Controls_{{_demoName}}_mainField"
                        />
         </div>
         <div class="controls-demo_event-wrapper">

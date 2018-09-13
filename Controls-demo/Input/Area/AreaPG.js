@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Area/AreaPG',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Text/TextPG',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -18,7 +18,7 @@ define('Controls-demo/Input/Area/AreaPG',
          _content: 'Controls/Input/Area',
          _my: myTmpl,
          _dataObject: null,
-         _textOptions: null,
+         _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
@@ -46,7 +46,7 @@ define('Controls-demo/Input/Area/AreaPG',
                   }
                }
             };
-            this._textOptions = {
+            this._componentOptions = {
                name: 'Area',
                placeholder: 'Input text',
                tagStyle: 'primary',
