@@ -112,6 +112,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
+               _private.setPopupOptions(this, newOptions);
             }
          },
 

@@ -23,6 +23,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'Core/helpers/String/escapeTagsFromStr',
       'Core/helpers/String/escapeHtml',
       'Core/helpers/String/linkWrap',
+      'View/Runner/requireHelper',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
       'Lib/LayoutManager/LayoutManager',
@@ -53,6 +54,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                escapeTagsFromStr,
                escapeHtml,
                LinkWrap,
+               requireHelper,
                ImageOptionsPanel,
                CodeSampleDialog,
                LayoutManager,
@@ -3479,7 +3481,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // Реквайрим модули только если они не были загружены ранее, т.к. require отрабатывает асинхронно и на ipad это
                // недопустимо (клавиатуру можно показывать синхронно), да и в целом можно считать это оптимизацией.
                EDITOR_MODULES.forEach(function(module) {
-                  if (!require.defined(module)) {
+                  if (!requireHelper.defined(module)) {
                      notDefined = true;
                   }
                });

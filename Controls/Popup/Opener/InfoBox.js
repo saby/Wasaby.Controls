@@ -98,6 +98,7 @@ define('Controls/Popup/Opener/InfoBox',
                position: cfg.position,
                autofocus: false,
                eventHandlers: cfg.eventHandlers,
+               opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
