@@ -244,6 +244,14 @@ function(cMerge,
             cfg.templateOptions.draggable = cfg.draggable;
          }
 
+         cfg.eventHandlers = cfg.eventHandlers || {};
+         if (cfg.hasOwnProperty('onResultHandler')) {
+            cfg.eventHandlers.onResult = cfg.onResultHandler;
+         }
+         if (cfg.hasOwnProperty('onCloseHandler')) {
+            cfg.eventHandlers.onClose = cfg.onCloseHandler;
+         }
+
          cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
