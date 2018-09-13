@@ -1487,6 +1487,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                      if (isAlreadyApplied) {
+                        // При снятии цитаты если в ней было видео - нужно не потреть его
+                        // 1175588680 https://online.sbis.ru/opendoc.html?guid=0bdfcbe5-ccf2-434a-9da3-e457743a2a82
                         var $node = $(node);
                         var $video = ($node.is('blockquote') ? $node : $node.parent('blockquote')).find('iframe');
                         if ($video.length) {
