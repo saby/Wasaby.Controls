@@ -4108,11 +4108,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                node.innerHTML = html;
                var texts = [];
                var dom = this._tinyEditor.dom;
+               var reNbsp = /\xA0/g;
+               var reRn = /^(?:\r?\n)+$/;
                for (var i = 0, list = node.childNodes; i < list.length; i++) {
                   var e = list[i];
                   var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
+                  if (e.nodeType === 3 && reRn.test(txt)) {
+                     continue;
+                  }
                   if (txt) {
-                     txt = txt.replace(/\xA0/g, ' ');
+                     txt = txt.replace(reNbsp, ' ');
                      if (texts.length && e.nodeType === 1 && dom.isBlock(e)) {
                         texts.push('\r\n\r\n');
                      }
