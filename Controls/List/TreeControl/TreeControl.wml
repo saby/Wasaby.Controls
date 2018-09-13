@@ -3,5 +3,5 @@
                            on:afterItemsRemove="_onAfterItemsRemoveHandler()"
                            scope="{{_options}}"
                            name="baseControl">
-   <ws:partial template="{{content.viewTemplate}}" on:nodeExpanderClick="_onNodeExpanderClick()" />
+   <ws:partial template="{{content.viewTemplate}}" on:nodeExpanderClick="_onNodeExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" />
 </Controls.List.BaseControl>

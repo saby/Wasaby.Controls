@@ -1,0 +1,10 @@
+<ws:partial
+   __noDirtyChecking="{{true}}"
+   template="{{'wml!Controls/List/resources/ItemOutput'}}"
+   listModel="{{listModel}}"
+   itemActionsTemplate="{{itemActionsTemplate}}"
+   swipeTemplate="{{swipeTemplate}}"
+   multiSelectTpl="{{multiSelectTpl}}"
+   itemTemplate="{{itemTemplate}}"
+   itemActionsPosition="{{itemActionsPosition}}" />
+{{listModel.goToNext()}}

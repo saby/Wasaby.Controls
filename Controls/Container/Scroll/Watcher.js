@@ -212,8 +212,8 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
-         _resizeHandler: function(force) {
-            _private.onResizeContainer(this, this._container, force !== undefined ? false : !!this._observer);
+         _resizeHandler: function(e, force) {
+            _private.onResizeContainer(this, this._container, false);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {

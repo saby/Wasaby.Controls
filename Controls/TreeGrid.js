@@ -1,9 +1,10 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGridView/TreeGridViewModel',
+   'WS.Data/Type/descriptor',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/TreeControl'
-], function(Grid, TreeGridViewModel) {
+], function(Grid, TreeGridViewModel, types) {
    'use strict';
 
    /**
@@ -32,6 +33,12 @@ define('Controls/TreeGrid', [
       _viewTemplate: 'Controls/List/TreeControl',
       _getModelConstructor: function() {
          return TreeGridViewModel;
+      },
+      getOptionTypes: function() {
+         return {
+            keyProperty: types(String).required(),
+            parentProperty: types(String).required()
+         };
       }
    });
    return Tree;
