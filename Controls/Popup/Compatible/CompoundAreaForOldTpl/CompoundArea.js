@@ -188,6 +188,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
                   self._toggleVisible(false);
                   def.addCallback(function() {
+                     self._notifyVDOM('controlResize', [], { bubbling: true });
                      self._toggleVisible(true);
                   });
                }
@@ -233,7 +234,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
             self.subscribe('onResize', function() {
-               this._notifyVDOM('resize', null, { bubbling: true });
+               this._notifyVDOM('controlResize', [], { bubbling: true });
             });
 
             self.rebuildChildControl().addCallback(function() {
