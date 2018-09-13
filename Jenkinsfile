@@ -608,24 +608,24 @@ node('controls') {
         sudo chmod -R 0777 ${workspace}
         sudo chmod -R 0777 /home/sbis/Controls
     """
-    dir(workspace){
-        sh """
-        7za a log_jinnee -t7z ${workspace}/jinnee/logs
-        """
-    }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || inte){
+        dir(workspace){
+            sh """
+            7za a log_jinnee -t7z ${workspace}/jinnee/logs
+            """
+        }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
         }
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
         }
     gitlabStatusUpdate()
         }
