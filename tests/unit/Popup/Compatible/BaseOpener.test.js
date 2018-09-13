@@ -97,7 +97,12 @@ define(
 
          it('_preparePopupCfgFromOldToNew', function() {
             config.autoHide = true;
+            config.onResultHandler = function() {};
+            config.onCloseHandler = function() {};
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.eventHandlers.onResult, config.onResultHandler);
+            assert.equal(config.eventHandlers.onClose, config.onCloseHandler);
+
             assert.equal(config.templateOptions.target, config.target);
             assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
