@@ -1149,17 +1149,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
-             * Установить размер для выделенного текста
-             * @param {Object} size Устанавливаемый размер текста
+             * Установить размер шрифта для выделенного текста
+             * @param {number} size Размер шрифта
+             * @param {boolean} force Устанавить размер даже если он уже такой по наследству
              * @protected
              */
-            _setFontSize: function(size) {
+            _setFontSize: function(size, force) {
                // Это "чистая" реализация, здесь не должно быть НИКАКИХ дополнительных манипуляций с рэнжем, фокусом, фиксацией значения компоненты и так далее!
                var editor = this._tinyEditor;
                if (editor) {
                   //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
                   editor.formatter.remove('fontsize', {value: undefined}, null, true);
-                  if (size) {
+                  if (size && (force || this.getCurrentFormats(['fontsize']).fontsize !== size)) {
                      editor.execCommand('FontSize', false, size + 'px');
                   }
                }
@@ -1281,7 +1282,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         hasOther = formats[name] || hasOther;
                      }
                   }
-                  formatter.apply('forecolor', {value: formats.color});
+                  if (formats.color !== this.getCurrentFormats(['color']).color) {
+                     formatter.apply('forecolor', {value: formats.color});
+                  }
                   if (formats.underline && formats.strikethrough) {
                      this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
