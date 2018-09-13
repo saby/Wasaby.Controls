@@ -211,8 +211,11 @@ define([
             instance._editObject.acceptChanges();
             instance._editObject.set('text', 'changed');
             instance.cancelEdit();
+            assert.equal(eventQueue.length, 2);
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+            assert.equal(eventQueue[1].event, 'afterEndEdit');
+            assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
             assert.equal(instance._editObject.get('text'), 'qwerty');
             assert.isFalse(instance._isEditing);
          });
@@ -227,6 +230,24 @@ define([
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
             assert.equal(instance._editObject.get('text'), 'changed');
+         });
+
+         it('deferred', function(done) {
+            instance._beforeMount(cfg);
+            instance._notify = mockNotify(Deferred.success());
+            instance._editObject.acceptChanges();
+            instance._editObject.set('text', 'changed');
+            instance.cancelEdit();
+            setTimeout(function() {
+               assert.equal(eventQueue.length, 2);
+               assert.equal(eventQueue[0].event, 'beforeEndEdit');
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(instance._editObject.get('text'), 'qwerty');
+               assert.equal(eventQueue[1].event, 'afterEndEdit');
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.isFalse(instance._isEditing);
+               done();
+            }, 0);
          });
       });
 
@@ -243,8 +264,11 @@ define([
             instance._notify = mockNotify();
             instance.commitEdit();
             setTimeout(function() {
+               assert.equal(eventQueue.length, 2);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
                assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(eventQueue[1].event, 'afterEndEdit');
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
                assert.isFalse(instance._isEditing);
                done();
             }, 0);
@@ -286,6 +310,28 @@ define([
             setTimeout(function() {
                assert.equal(eventQueue.length, 0);
                assert.isTrue(instance._isEditing);
+               done();
+            }, 0);
+         });
+
+         it('deferred', function(done) {
+            instance._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({});
+                  }
+               }
+            };
+            instance._beforeMount(cfg);
+            instance._notify = mockNotify(Deferred.success());
+            instance.commitEdit();
+            setTimeout(function() {
+               assert.equal(eventQueue.length, 2);
+               assert.equal(eventQueue[0].event, 'beforeEndEdit');
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(eventQueue[1].event, 'afterEndEdit');
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.isFalse(instance._isEditing);
                done();
             }, 0);
          });
