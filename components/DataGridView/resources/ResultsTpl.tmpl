@@ -1,37 +1,18 @@
 <tr class="controls-DataGridView__results">
     <ws:if data="{{multiselect}}">
-        <ws:if data="{{resultsPosition === 'top'}}">
-            <th class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-                style="{{(startScrollColumn === 0) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-            </th>
-        </ws:if>
-        <ws:else>
-            <td class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-                style="{{(startScrollColumn === 0) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-            </td>
-        </ws:else>
+        <td class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+            style="{{(startScrollColumn === 0) ? 'transform:translateX(' + columnsShift + 'px);'}}">
+        </td>
     </ws:if>
 
     <ws:for data="index, column in columns">
-        <ws:if data="{{resultsPosition === 'top'}}">
-            <th class="controls-DataGridView__td
-                      {{index === 0 ? 'controls-DataGridView__firstContentCell'}}
-                      {{(index + 1 === columns.length) ? 'controls-DataGridView__lastContentCell'}}
-                      {{column.className}}
-                      {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-                style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-                <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
-            </th>
-        </ws:if>
-        <ws:else>
-            <td class="controls-DataGridView__td
-                      {{index === 0 ? 'controls-DataGridView__firstContentCell'}}
-                      {{(index + 1 === columns.length) ? 'controls-DataGridView__lastContentCell'}}
-                      {{column.className}}
-                      {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-                style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-                <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
-            </td>
-        </ws:else>
+        <td class="controls-DataGridView__td
+                  {{index === 0 ? 'controls-DataGridView__firstContentCell'}}
+                  {{(index + 1 === columns.length) ? 'controls-DataGridView__lastContentCell'}}
+                  {{column.className}}
+                  {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
+            <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
+        </td>
     </ws:for>
 </tr>
