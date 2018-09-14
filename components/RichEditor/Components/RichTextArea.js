@@ -1998,6 +1998,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
                if (isDifferent || forced) {
                   this._updateHeight();
+               }
+               if (isDifferent || forced || !text) {
                   this._togglePlaceholder(text);
                }
             },
@@ -3668,7 +3670,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isEmpty) {
                      var editor = this.getTinyEditor();
                      var $content = editor ? $(editor.getBody()) : this._inputControl;
-                     isEmpty = !$content.text().trim() && !$content.find('img,table').length;
+                     // В нескольких задачах акцентировано внимание на том, что при наличии текста из одних пробелов тоже нужно скрывать подсказку
+                     // 1175789608 https://online.sbis.ru/opendoc.html?guid=51bf0fb4-16ff-4c3e-87ed-b20479c63f7e
+                     // 1175824589 https://online.sbis.ru/opendoc.html?guid=1cd7567a-24eb-4ae0-bbb8-e53a609057d1
+                     // 1175897557 https://online.sbis.ru/opendoc.html?guid=ece65d6d-19b4-4c46-95cf-3846fb2b8fa5
+                     isEmpty = !$content.find('img,table').length && !$content.text();
                   }
                }
                else {
