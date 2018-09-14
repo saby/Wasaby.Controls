@@ -23,10 +23,10 @@ define('Controls/Container/Scroll/Model/StickyHeader',
          _stickyHeaderId: null,
 
          /**
-          * Update information about the state of the fixation or change of the header.
-          * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Information about the update.
+          * Update information about the fixation state.
+          * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
           */
-         update: function(data) {
+         updateFixationState: function(data) {
             if (data.shouldBeFixed) {
                this._stickyHeaderId = data.id;
             } else if (this._stickyHeaderId === data.id) {

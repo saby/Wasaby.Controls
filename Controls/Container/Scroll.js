@@ -392,8 +392,13 @@ define('Controls/Container/Scroll',
                this._dragging = dragging;
             },
 
-            _fixedHandler: function(event, args) {
-               this._stickyHeaderModel.update(args);
+            /**
+             * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event
+             * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
+             * @private
+             */
+            _fixedHandler: function(event, fixedHeaderData) {
+               this._stickyHeaderModel.updateFixationState(fixedHeaderData);
 
                event.stopPropagation();
             },

@@ -28,9 +28,9 @@ define(
             });
          });
 
-         describe('update', function() {
+         describe('updateFixationState', function() {
             it('Header with id equal to "sticky" stops being fixed', function() {
-               model.update({
+               model.updateFixationState({
                   id: 'sticky',
                   shouldBeFixed: false
                });
@@ -38,7 +38,7 @@ define(
                assert.equal(model._stickyHeaderId, null);
             });
             it('Header with id equal to "sticky" fixed', function() {
-               model.update({
+               model.updateFixationState({
                   id: 'sticky',
                   shouldBeFixed: true
                });
@@ -46,11 +46,11 @@ define(
                assert.equal(model._stickyHeaderId, 'sticky');
             });
             it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
-               model.update({
+               model.updateFixationState({
                   id: 'sticky',
                   shouldBeFixed: true
                });
-               model.update({
+               model.updateFixationState({
                   id: 'sticky',
                   shouldBeFixed: false
                });
@@ -58,11 +58,11 @@ define(
                assert.equal(model._stickyHeaderId, null);
             });
             it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
-               model.update({
+               model.updateFixationState({
                   id: 'sticky1',
                   shouldBeFixed: true
                });
-               model.update({
+               model.updateFixationState({
                   id: 'sticky2',
                   shouldBeFixed: false
                });
@@ -70,11 +70,11 @@ define(
                assert.equal(model._stickyHeaderId, 'sticky1');
             });
             it('Header with id equal to "sticky1" stop being fixed, Header with id equal to "sticky2" fixed', function() {
-               model.update({
+               model.updateFixationState({
                   id: 'sticky1',
                   shouldBeFixed: false
                });
-               model.update({
+               model.updateFixationState({
                   id: 'sticky2',
                   shouldBeFixed: true
                });
