@@ -1690,9 +1690,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     var parent = this.getParent();
                                     var href = parent._hrefInput.getValue();
                                     var caption = parent._captionInput.getValue() || href;
-                                    var protocol = /(?:https?|ftp|file):\/\//gi;
-                                    if (href && href.search(protocol) === -1) {
-                                       href = 'http://' + href;
+                                    var reProtocol = /(?:https?|ftp|file):\/\//gi;
+                                    if (href && href.search(reProtocol) === -1) {
+                                       var reEmail = /^\s*[a-z0-9_\-\.]+@[a-z0-9\-]*[a-z0-9\-\.]*[a-z0-9\-]+\.[a-z]+\s*$/i;
+                                       href = (reEmail.test(href) ? 'mailto:' : 'http://') + href;
                                     }
                                     var dom = editor.dom;
                                     var done;
