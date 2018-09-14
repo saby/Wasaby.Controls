@@ -41,6 +41,7 @@ define('Controls/Container/Scroll/Watcher',
 
          sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
             var eventName;
+
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
                eventName = 'listTop';
