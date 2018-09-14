@@ -1,11 +1,11 @@
-define('Controls/Input/TimeInterval', [
+define('Controls/Input/Time/Interval', [
 ], function() {
 
    /**
     * Input for enter time interval information (with precision from days to minutes).
     * Only ISO_8601 dates can be entered.
     *
-    * @class Controls/Input/TimeInterval
+    * @class Controls/Input/Time/Interval
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
@@ -16,7 +16,7 @@ define('Controls/Input/TimeInterval', [
     */
 
    /**
-    * @name Controls/Input/TimeInterval#mask
+    * @name Controls/Input/Time/Interval#mask
     * @cfg {String} Format of the time interval.
     *
     * Allowed mask keys:
