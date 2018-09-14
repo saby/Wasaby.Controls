@@ -218,8 +218,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
             config.componentOptions._initCompoundArea = function() {
                var dialog = self._dialog;
-               if (dialog._recalcPosition) {
+               if (dialog._recalcPosition) { //for floatarea
                   dialog._recalcPosition();
+               }
+               if (dialog._adjustWindowPosition) { //for window
+                  dialog._adjustWindowPosition();
                }
                dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
             };
