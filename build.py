@@ -29,6 +29,8 @@ def build():
                 shutil.rmtree(os.path.join('SBIS3.CONTROLS', l))
     set(map(lambda x: _copy(x, os.path.join('SBIS3.CONTROLS', x)), list_dirs))
     set(map(lambda x: _copy(os.path.join('components', x), os.path.join('SBIS3.CONTROLS', x)), os.listdir('components')))
+    # TODO фикс чтобы собирать темы, до момента, пока модуль не включем в сборки
+    set(map(lambda x: _copy(os.path.join('Controls-theme', 'themes', x), os.path.join('SBIS3.CONTROLS', 'themes', x)), os.listdir(os.path.join('Controls-theme', 'themes'))))
 
 if __name__ == '__main__':
     build()
