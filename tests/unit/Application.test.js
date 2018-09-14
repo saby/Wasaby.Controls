@@ -6,11 +6,11 @@ define([
 ], function(Application) {
    describe('Controls.Application', function() {
 
-      /*beforeEach(function () {
-         /!* Пока не ясно, как мокать контексты *!/
+      beforeEach(function () {
+         /* Пока не ясно, как мокать контексты */
          this.skip();
-      });*/
-      it.skip('_tplConfig init', function(done) {
+      });
+      it('_tplConfig init', function(done) {
          var cfg = {
                templateConfig: {prop1: 123},
                content: Application
@@ -50,6 +50,10 @@ define([
          ctrl._openInfoBoxHandler(event1);
          ctrl._openInfoBoxHandler(event2);
          ctrl._openInfoBoxHandler(event3);
+
+         assert.deepEqual(result, ['open', 'open', 'open']);
+
+         result = [];
 
          assert.deepEqual(result, ['open', 'open', 'open']);
 
