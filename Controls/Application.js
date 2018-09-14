@@ -28,8 +28,8 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#staticDomains
-    * @cfg {Number} The list of domains for distributing static resources. Its value is setting
-    * by the cloud parameter PresentationService.StaticDomains.
+    * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
+    * for static resources and distribute downloading for several static domains.
     * There will be another way to propagate this data after this problem:
     * https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
     */
