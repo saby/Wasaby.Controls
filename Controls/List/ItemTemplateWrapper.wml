@@ -5,7 +5,6 @@
             swipeTemplate="{{swipeTemplate}}"
             multiSelectTpl="{{multiSelectTpl}}"
             template="{{itemTemplate}}"
-            contentTemplate="{{itemContentTemplate}}"
             itemData="{{itemData}}"/>
 </ws:template>
 

@@ -1,7 +1,6 @@
 define('Controls/Input/Password',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
@@ -9,7 +8,7 @@ define('Controls/Input/Password',
       'css!Controls/Input/Password/Password'
    ],
 
-   function(Control, types, tmplNotify, template, BaseViewModel) {
+   function(Control, tmplNotify, template, BaseViewModel) {
 
       /**
        *  Component that shows all entered characters as stars. Visibility of entered

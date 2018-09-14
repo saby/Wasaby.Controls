@@ -93,16 +93,7 @@ define('Controls-demo/List/Tree/Tree', [
             };
          },
          _showAction: function(action, item) {
-            if (item.get('id') === '471329') {
-               if (action.id === 2 || action.id === 3) {
-                  return false;
-               }
-               return true;
-            }
             if (action.id === 5) {
-               return false;
-            }
-            if (item.get('id') === '448390') {
                return false;
             }
 

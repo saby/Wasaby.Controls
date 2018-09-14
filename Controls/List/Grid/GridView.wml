@@ -14,6 +14,7 @@
                itemActionsTemplate="{{_options.itemActionsTemplate}}"
                groupTemplate="{{_groupTemplate}}"
                itemActionsPosition="{{_options.itemActionsPosition}}"
+               itemOutputWrapper="{{_itemOutputWrapper}}"
                swipeTemplate="{{_options.swipeTemplate}}"/>
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>

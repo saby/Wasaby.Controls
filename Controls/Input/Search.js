@@ -1,14 +1,13 @@
 define('Controls/Input/Search',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
       'wml!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Core/constants',
       'css!Controls/Input/Search/Search'
    ],
 
-   function(Control, types, template, BaseViewModel, constants) {
+   function(Control, template, BaseViewModel, constants) {
       'use strict';
 
       /**

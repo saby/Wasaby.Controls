@@ -98,13 +98,17 @@ define(
 
          it('_preparePopupCfgFromOldToNew', function() {
             config.autoHide = true;
+            config.onResultHandler = function() {};
+            config.onCloseHandler = function() {};
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.eventHandlers.onResult, config.onResultHandler);
+            assert.equal(config.eventHandlers.onClose, config.onCloseHandler);
+
             assert.equal(config.templateOptions.target, config.target);
-            assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
             assert.equal(config.templateOptions.draggable, config.draggable);
-            assert.isTrue(config.closeByExternalClick);
             assert.isTrue(config.isModal);
+            assert.isFalse(config.closeByExternalClick);
             assert.isTrue(cInstance.instanceOfModule(config.context,'Core/Abstract'));
             config.side = null;
             config.modal = true;
