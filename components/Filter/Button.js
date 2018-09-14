@@ -13,7 +13,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/helpers/Function/once",
    'View/Runner/requireHelper',
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
-   "Core/core-clone",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
    "i18n!SBIS3.CONTROLS/Filter/Button",
@@ -32,8 +31,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         IoC,
         once,
         requireHelper,
-        FilterPanelUtils,
-        clone
+        FilterPanelUtils
     ) {
 
        'use strict';
