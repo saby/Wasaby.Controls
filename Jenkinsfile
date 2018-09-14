@@ -559,8 +559,8 @@ node('controls') {
                     }
 
                     if ( skip ) {
-                         skip_tests_int = "--FAIL_FROM_RC '(int-ff) ${version} controls'"
-                         skip_tests_reg = "--FAIL_FROM_RC '(reg-ff) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-ff) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-ff) ${version} controls'"
                     }
                     parallel (
                         int_test: {
