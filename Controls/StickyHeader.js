@@ -29,7 +29,7 @@ define('Controls/StickyHeader',
 
       /**
        * @event Controls/StickyHeader#fixed Change the fixation state.
-       * @param {SyntheticEvent} event Event descriptor.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
        * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
        */
 
