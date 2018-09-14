@@ -1,62 +1,17 @@
-//base-colors
-@disabled-color:     #ccc;
-@error-color:        #ef463a;;
-@error-bg-color:     #fadadd;
-@warning-color:      #fec63f;
-@success-color:      #72be44;
-@additional-color:   #999999;
-//default-colors
-@default-text-color:                     #000;
-@default-border-color:                   #eaeaea;
-@default-border-color-second:            #ccc;
-@default-border-color-hover:             @disabled-color;
-@default-border-color-active:            @disabled-color;
-@default-border-color-disabled:          transparent;
-@default-border-color-bottom-disabled:   #e4e4e4;
-@default-border-color-error:             @error-color;
-@default-bg-color:                       #ffffff;
-@default-bg-color-hovered-item:          #F0F5FB;
-@default-bg-color-error:                 @error-bg-color;
-@default-bg-color-disabled:              transparent;
-@default-placeholder-color:              @disabled-color;
-@default-color-disabled:                 @disabled-color;
-//icons
-@icon-color-attention:                   @warning-color;
-@icon-color-done:                        @success-color;
-@icon-color-error:                       @error-color;
-@color_primary:                          #587ab0;
-@icon-color-primary-hover:               #313E78;
-@color_hover:                            #ff7033;
-@icon-color-disabled:                    @default-disabled-color;
-//InputRender
-@border-color_InputRender:                           @default-border-color @default-border-color @default-border-color-active @default-border-color;
-@border-color_InputRender_hover:                     @default-border-color @default-border-color #AAB0C1 @default-border-color;
-@border-color_InputRender_active:                    @default-border-color @default-border-color #AAB0C1 @default-border-color;
-@border-color_InputRender_disabled:                  transparent transparent @default-border-color-bottom-disabled transparent;
-@border-color_InputRender_error:                     @default-border-color-error;
-@background-color_InputRender:                       @default-bg-color;
-@background-color_InputRender_error:                 @default-bg-color-error;
-@background-color_InputRender_disabled:              @default-bg-color-disabled;
-@color_InputRender-placeholder:                      @default-placeholder-color;
-@color_InputRender:                                  @default-text-color;
-@color_InputRender-tagStyle_attention:               @icon-color-attention;
-@color_InputRender-tagStyle_done:                    @icon-color-done;
-@color_InputRender-tagStyle_error:                   @icon-color-error;
-@color_InputRender-tagStyle_primary:                 @color_primary;
-@color_InputRender-tagStyle_info:                    @icon-color-disabled;
-@color_InputRender_style_header:                     #313E78;
-@color_InputRender_style_accentHeader:               #D94700;
+@import "Controls-theme/themes/default/_colors";
 //suggest-text-box
 @suggest-text-box-icon-cross-color:            #8991A9;
 @suggest-text-box-bg-show-picker-color:        @background-color_InputRender;
 @suggest-text-box-bg-show-picker-font-color:   initial;
 @border-color_SuggestTextBox_withPicker:       @gray-ccc-color;
 
+//MoneyTextBox
+@color_MoneyTextBox-decimals:               @disabled-color;
+
 //RichArea
 @border-color_RichArea_editable: #eaeaea;
 @border-color_RichArea_readonly: transparent;
-//MoneyTextBox
-@color_MoneyTextBox-decimals:               @disabled-color;
+
 //FieldLink
 @color_FieldLink-showAllLinks:                    @color_Link-text;
 @color_FieldLink-showAllLinks_hovered:            @color_Link-text_hovered;
@@ -68,32 +23,10 @@
 @color_FieldLink_dropAllLinks:                    @color_FieldLink-Link_enabled;
 @color_FieldLink_item-cross:                      @disabled-color;
 
-//DropdownList
-@background_DropdownList:                #FFFFFF;
-@border-color_DropdownList:              #CCCCCC;
-@shadow_DropdownList-default:                    0px 0px 12px 0px rgba(0,0,0,0.25);
-@background_DropdownList-item_hover:     #F0F5FB;
-@background_DropdownList-marker:         #D94700;
-@background_DropdownList-header:         #f4f4f4;
-@color_DropdownList-header:              #313E78;
-@color-Dropdown-emptyItem:               #CCCCCC;
-@padding_DropdownList-content:           2px 0;
-@color_DropdownList-group-separator:     #EAEAEA;
-@color_DropdownList-group-text:          #8991A9;
-
 //FieldLink_Link
 @color_FieldLink-Link_enabled:             #8991A9;
 @color_FieldLink-Link_enabled_hover:       #313E78;
 @color_FieldLink-Link_disabled:            #8991A9;
-
-//StackTemplate
-@border-left_stackTemplate:                1px solid #BDBDBD;
-@background_stackTemplate_head:            #F8F8F8;
-@background_stackTemplate_content:         #FFFFFF;
-@background_stackTemplate_footer:          #F8F8F8;
-@border-bottom_stackTemplate_footer:       1px solid #F0F0F0;
-@border-bottom_stackTemplate_head:         1px solid #F0F0F0;
-@color_stackTemplate_head:                 #313E78;
 
 //search-form
 @border-color_SearchForm:                   transparent;
@@ -105,46 +38,18 @@
 @search-form-icon-search-hover-color:       @icon-color-primary-hover;
 @color_searchForm_icon_disabled:           @icon-color-disabled;
 
-// RangeSelectionController
-@border-color_RangeSelection-selected-startEnd:             #8991A9;
-@background-color_RangeSelection-selected-inner:            #F0F5FB;
-@border-color_RangeSelection-selected-startEnd-edgeBorder:  #0055BB;
-@background-color_RangeSelection-selected-unfinishedEdge:   #E6ECFA;
-@background-color_RangeSelection-selected-startEnd:         #E5ECFA;
-
 // MonthView
-@background_MonthView:                                   @default-bg-color;
-@color_MonthView-weekDayHeader:                          @gray-color;
-@color_MonthView-item:                                   @default-text-color;
-@background_MonthView-item:                              #F4F4F4;
 @color_MonthView-item-hover:                             @color_MonthView-item;
-@background_MonthView-item-hover:                        #E6ECFA;
-@border-color__MonthView-item-hover:                     rgba(0, 0, 0, 10%);
-@background_MonthView-item-selected:                     #F0F5FB;
-@border-color__MonthView-item-selected:                  #8991A9;
-@border-color__MonthView-item-selected-startEnd-hover:   #0055BB;
 //@background_MonthView-item-selected-hover:  @background_MonthView-item-selected;
 @color_MonthView-item-prev-next-month:      @gray-color;
 @color_MonthView-item-prev-next-month-hover:@color_MonthView-item-prev-next-month;
-@color_MonthView-item-weekend:              #D94700;
-@background-color_MonthView-item-today:     #DA4600;
-@color_MonthView-item-today:                #FFFFFF;
-// MonthSlider
-@color_MonthSlider-header-title:            @default-color;
-@color_MonthSlider-header-button:           @color_primary;
-@color_MonthSlider-header-button_hovered:   @default-hover-color;
+
 // DateRangeBigChoose
-@border-color_DateRangeBigChoose-range-unselected-hover:    #8991A9;
 @border-color_DateRangeBigChoose-range-selected-inner:      #8991A9;
 @background-color_DateRangeBigChoose-range-selected-inner:  #F0F5FB;
 @border-color_DateRangeBigChoose-range-selected-unfinishedEdge:      #8991A9;
-@background-color_DateRangeBigChoose-range-selected-unfinishedEdge:  #E6ECFA;
 @border-color_DateRangeBigChoose-range-selected-startEnd:            #8991A9;
-@background-color_DateRangeBigChoose-range-selected-startEnd:        #E5ECFA;
 @border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder: #0055BB;
-
-@background-color_DateRangeBigChoose:                       @default-bg-color;
-@border-color_DateRangeBigChoose:                           @float-area-border-color;
 @background-color__DateRangeBigChoose-header:					#F4F4F4;
 @color_DateRangeBigChoose-years-panel-rangeButton:          #999999;
 @background-color_DateRangeBigChoose-years-panel-rangeButton: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
@@ -185,56 +90,6 @@
 @color_dateRangeChoose__year_prev_next:                              @color_Link-text;
 @color_DateRangeChoose_year:                                         @color_Link-text;
 @color_dateRangeChoose__year_prev_next_hover:                        @color_Link-text_hovered;
-@background-color_DateRangeBigChoose-dates-months-period-hover:      #E6ECFA;
-
-// PeriodDialog
-@background-color_PeriodDialog:                       @default-bg-color;
-@border-color_PeriodDialog:                           @float-area-border-color;
-@background-color__PeriodDialog-header:					#F4F4F4;
-@color_PeriodDialog-years-rangeButton:          #999999;
-@color_PeriodDialog-years-panel-displayed-year:       #D94700;
-@color_PeriodDialog-years-panel-current-year:         #313E78;
-@color_PeriodDialog-DateRange-header-weekdays-workday:    #8991A9;
-@color_PeriodDialog-DateRange-header-weekdays-weekend:    #D94700;
-@color_PeriodDialog-DateRange-header-year:                #D94700;
-@border-color_PeriodDialog-MonthRange:               @default-border-color;
-@color_PeriodDialog-MonthRange-month-title: #313e78;
-@border-color_PeriodDialog-MonthRange-month:#8991A9;
-@color_PeriodDialog-MonthRange-header:               #D94700;
-@background-color_PeriodDialog-MonthRange_quartersPanel:         #FFFFFF;
-@color_PeriodDialog-MonthRange_halfyearsAndQuartersPanel:        #313E78;
-@border-color_PeriodDialog-MonthRange-monthWrapper: @default-border-color;
-@border-color_PeriodDialog-MonthRange-quartersPanel:                     @default-border-color;
-@border-color_PeriodDialog-MonthRange-halfYearsPanel:                    @default-border-color;
-@border-color_PeriodDialog-MonthRange-quarters-halhyears-selected:       #bdbdbd;
-@color_PeriodDialog-DateRange-months-button:  @default-text-color;
-@background-color_PeriodDialog-DateRange-months-button: transparent;
-@background-color_PeriodDialog-DateRange-months-button-hover:transparent;
-@border-color_PeriodDialog-DateRange-months-button-hover: #8991A9;
-@color_PeriodDialog-DateRange-months-nextYearButton:      #D94700;
-@border-color_PeriodDialog-DateRange-months-nextYearButton: #D94700;
-@color_PeriodDialog-DateRange-monthsWithDates-title:          #313E78;
-@border-color_PeriodDialog-DateRange-monthsWithDates-title-hover:   #8991A9;
-@background-color_PeriodDialog-DateRange-monthsWithDates-title: transparent;
-@background-color_PeriodDialog-DateRange-monthsWithDates-title-hover: transparent;
-@background-color_PeriodDialog-DateRange-months-nextYearButton: transparent;
-@background-color_PeriodDialog-DateRange-months-nextYearButton-hover: transparent;
-@border-color_PeriodDialog-DateRange-months: @default-border-color;
-
-// PeriodLiteDialog
-@background-color_PeriodLiteDialog:              @default-bg-color;
-@indents-color_PeriodLiteDialog:                 @gray-f4f4f4-color;
-@background-color_PeriodLiteDialog_hovered:      @default-bg-color;
-@border-color_PeriodLiteDialog_hovered:          @gray-lamantin-color;
-@color_PeriodLiteDialog-currentValue:            @blue-dark-color;
-@bg-color_PeriodLiteDialog-currentValue:         #F4F4F4;
-@bg-color_PeriodLiteDialog-yearWrapper:          @background-color_PeriodLiteDialog;
-@color_PeriodLiteDialog-quarter-caption_hovered: @black-color;
-@color_PeriodLiteDialog-years-only-curent-year:  @darkcyan-color;
-@color_PeriodLiteDialog-year:                    @color_Link-text;
-@color_PeriodLiteDialog-year_prev_next:          @color_Link-text;
-@color_PeriodLiteDialog-year-prev-next_hovered:  @color_Link-text_hovered;
-@color_PeriodLiteDialog-selected-year:           @darkcyan-color;
 
 //ComboBox
 @color_ComboBox-Arrow:                                @color_primary;
@@ -246,34 +101,22 @@
 @color_ComboBox-picker:                               @default-text-color;
 @border-color_ComboBox-picker:                        @default-border-color-active;
 @color_ComboBox_placeholder:                          @default-placeholder-color;
-//PasswordInput
-@color_PasswordInput-showPassword:                    @disabled-color;
 
 //DropdownList
 @border-color_DropDownList_error:                     @default-border-color-error;
-//MenuButton
-@color-Dropdown-pin:                                  #CCCCCC;
-@color-Dropdown-pin_hovered:                          #313E78;
-@color-Dropdown-cross:                                #CCCCCC;
-@color-Dropdown-cross_hovered:                        #313E78;
 
 //OperationsPanelButton
 @color_OperationsPanelButton_state_disabled: @disabled-color;
+
 //ListView
 @background-color_ListView-item_hovered:     @default-bg-color-hovered-item;
-@color_ListView-GroupBy_text:                @gray-color;
-@color_ListView-GroupBy_text_hovered:        @blue-dark-color;
-@color_ListView-GroupBy_separator:           @default-border-color;
-@color_ListView-marker:                      #ff7033;
-@width_ListView_marker:                      3px;
 @background-color_ListView-GroupBy_text:     @default-bg-color;
 @border-color_itemsActions_touchMode:        #D0D8E0;
 @outline-color_itemsActions_touchMode:       #E7EFF8;
 @background-color__itemsToolbar_touchmode:   #E7EFF8;
 @border-color__itemsToolbar_touchmode:       #D0D8E0;
 @color__itemsToolbar_buttonText_touchmode:   @hover-color;
-//ToolBar
-@color_Toolbar__text:                        @color_Link-main-text;
+
 //DataGridView
 @background-color_DataGridView-item_hovered: @default-bg-color-hovered-item;
 @background-color_DataGridView-item_multiselected: @white-color;
@@ -281,6 +124,7 @@
 @color_DataGridView-sorting:                 #0055BB;
 @color_DataGridView-sorting_hovered:         #0055BB;
 @color_DataGridView-sortingIcon:             #587AB0;
+
 //TreeDataGridView
 @color_TreeDataGridView-expand:              @blue-dark-color;
 @color_TreeDataGridView-expand_hovered:      @darkcyan-color;
@@ -289,112 +133,17 @@
 @color_TreeDataGridView-editArrow:           @color_primary;
 @color_TreeDataGridView-editArrow_hovered:   @icon-color-primary-hover;
 @background-color_TreeDataGridView-copyArrow:@white-color;
-//area-blocks
-@bg_BlockLayout:                         @default-border-color;
-@bg_Block_style-1:                       @default-bg-color;
-@bg_Block_style-2:                       #F8F8F8;
-@bg_Block_style-3:                       #FBF9F7;
-@bg_Block_style-4:                       #F7F4F0;
-@bg_Block_style-5:                       #F4F9FD;
-@bg_Block_style-6:                       #F0F5FB;
-@bg_BlockSeparator:                      @default-border-color;
-@border-color_Block:                     transparent;
-@box-shadow_Block:                       transparent;
-//header
-@header-orange:                             #D94700;
-//as link
-@color_asLink:                           #313E78;
-@color_asLink_hovered:                   #0055BB;
-@color_asLink_disabled:                  @color_Link-text_disabled;
-@color_asLink_disabled_hovered:          @color_Link-text_disabled;
-//Suggest
-@background_Suggest-loader:              @list-view-scroll-spritesheet 0 0 no-repeat;
-@color_Suggest-clear:                    @disabled-color;
-
-//Suggest VDOM
-@background-color_Suggest-suggestionsContainer: @default-bg-color;
-@shadow_suggestionsContainer:            0 6px 12px rgba(0, 0, 0, 0.25);
-@shadow_suggestionsOverlayContainer:  0 0 12px 0 rgba(0, 0, 0, 0.25);
-@border-color_suggestionsContainer:      #CCCCCC;
-//list add button
-@color_listAddButton_enabled:             #8991A9;
-@color_listAddButton_disabled:           @disabled-color;
-//CloseButton
-@background-color_CloseButton_primary:           #F8F8F8;
-@background-color_CloseButton_default: transparent;
-@border-color_CloseButton:               @border-color_IconButton_bordered;
-@box-shadow_CloseButton:                 @box-shadow-IconButton;
-@box-shadow_CloseButton_active:          @box-shadow-IconButton_activated;
-@border-color_CloseButton_hover:         @border-color_IconButton_bordered_standard_hovered;
-@background-color_CloseButton_primary_hover: #F8F8F8;
-@background-color_CloseButton_default_hover: transparent;
-
-@color_CloseButton-icon:                 #587AB0;
-@color_CloseButton-icon_hover:           #313E78;
-
-@color_CloseButton-light-icon:        #CCC;
-@color_CloseButton-light-icon_hover:  #313E78;
-
-//VDOM Paging
-@border-color_Paging-digit_active:       @color_hover;
-@background-color_Paging-button:         @default-bg-color;
-@background-color_Paging-button_hover:   @default-bg-color-hovered-item;
-@color_Paging-digit-text:                @default-text-color;
-@color_Paging-ellipsis-text:             @default-text-color;
-@background-color_Paging-ellispis:       @default-bg-color;
-@color_Paging_arrow-icon:                @default-color;
-@color_Paging_arrow-icon_disabled:       @disabled-color;
-
-//VDOM DragNDrop.DraggingTemplate
-@background-color_DraggingTemplate:                 #FFFFFF;
-@border-color_DraggingTemplate:                     #CCCCCC;
-@box-shadow-color_DraggingTemplate:                 rgba(0, 0, 0, 0.25);
-@color_DraggingTemplate-icon:                       #CCCCCC;
-@color_DraggingTemplate-mainText:                   #313E78;
-@color_DraggingTemplate-additionalText:             #000000;
-@background-color_DraggingTemplate-counter:         #0055BB;
-@color_DraggingTemplate-counter:                    #FFFFFF;
-
-//VDOM Operations.Panel
-@background-color_OperationsPanel:                 #e5ecf5;
-
-//VDOM Operations.Button
-@color_OperationsButton__icon:                           #587AB0;
-@color_OperationsButton__icon_hovered:                   #313E78;
-@color_OperationsButton__icon_readonly:                  @disabled-color;
-
-//VDOM Switcher
-@border-color_Switch:                              #E4E4E4;
-@background-color_Switch-track_enabled:             #CCC;
-@background-color_Switch-track_disabled:            #E4E4E4;
-@border-color_Switch-marker_enabled:               #CCC;
-@border-color_Switch_marker_enabled_hover:         #FF7033;
-@background_Switch-dot_enabled:                    #FF7033;
-@background_Switch-dot_disabled:                   #313E78;
-@border-color_Switch-marker_disabled:              #E4E4E4;
-@color_Switch-text_enabled_unselected:             #999;
-@color_Switch-text_disabled_unselected:            #CCC;
-@color_Switch-text_disabled_selected:              @default-text-color;
-@color_Switch-text_enabled_selected:               @default-text-color;
 
 //ToggleButton_square
 @color_ToggleButton-square-icon_hovered: @icon-active-color;
-//Search
-@color_Search-icon:                      @color_primary;
-@color_Search-iconSearch_hovered:        @icon-color-primary-hover;
-@color_Search-iconReset:                 #8991A9;
-@color_Search-icon_disabled:             @icon-color-disabled;
-@background-color_Search:                #F2F2F2;
-@background-color_Search_style_header:   #FFFFFF;
-@border-color_Search:                    transparent;
-@border-color_Search_active:             #DFDFDF;
-@border-color_Search_disabled:           transparent;
 
 //filterButtonArea
 @color_filterButton_area_header_link_hover:    @color_Link-text;
 @color_filterButton_area_header_link:          @darkcyan-color;
+
 //floatArea
 @background-color_FloatArea:             #ffffff;
+
 //Switcher
 @border-color_Switcher:                   #E4E4E4;
 @color_Switcher-line_enabled:             @default-border-color-active;
@@ -407,211 +156,19 @@
 @color_Switcher-text:                     @additional-color;
 @color_Switcher-text_checked:             @default-text-color;
 @color_Switcher-text_disabled:            @disabled-color;
-//Label
-@color_Label-caption_enabled:            #8991A9;
-@color_Label-caption_disabled:           @disabled-color;
-@color_Label-caption-after_enabled:      @error-color;
 
 //checkbox
-@color_CheckBox__iconBox:                       #999999;
-@color_CheckBox__iconBox_disabled:              #e4e4e4;
 @color_CheckBox-iconBox:                        #999999;
-@color_CheckBox__icon_disabled:                 #313E78;
-@color_CheckBox__caption_disabled:             #CCCCCC;
 @color_CheckBox-caption_enabled:                @default-text-color;
-@color_CheckBox__caption_enabled:               @default-text-color;
-@color_CheckBox__icon_enabled:                   @primary-color;
-//Icon
-@color-IconButtonBordered_default:             #587AB0;
-@color-IconButtonBordered_default_hovered:     #313E78;
-@color-Icon_style_attention:                   #fec63f;
-@color-Icon_style_done:                        #72be44;
-@color-Icon_style_error:                       #ef463a;
-//Link
-@color_Link-main-text:                         #0055BB;
-@color_Link-main-text_hovered:                 #313E78;
-@color_Link-main2-text:                        #8991A9;
-@color_Link-main3-text:                        #8991A9;
-@color_Link-main3-text_hovered:                #313E78;
-@color_Link-additional-text:                   #999999;
-@color_Link-additional2-text:                  #000000;
-@color_Link-additional3-text:                  #EF463A;
-@color_Link-additional4-text:                  #53A52C;
-@color_Link-additional5-text:                  #9122BF;
+
 //Button
 @box-shadow_Button_primary:                    none;
 @box-shadow_Button_primary_active:             none;
-@background_Button_primary_active:             #FDD2C0;
-@background_Button_default_active:             #587AB0;
-@color_Link-Vdom-text_readOnly:                #CCCCCC;
-@box-shadow_Button_active:                     none;
-@color_Button-Vdom-readOnly:                   #CCCCCC;
-@border-color_Button-Vdom_readOnly:            #CCCCCC;
-@color_Button-Vdom-text_primary:                #000000;
-@color_Button-Vdom-text_default:                #000000;
-@color_Button-style-addButton-icon_hovered:    #313E78;
-@color-IconButton__border_iconStyle-primary_hovered:          #cccccc;
-@color-Button_type-IconButton_readOnly:           #CCCCCC;
-@border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.08);
-@border-color-IconButton:                         rgba(0, 0, 0, 0.08);
-@color-IconButton__shadow:                        rgba(0, 0, 0, 0.05);
-@border-color-IconButton_toggled:                 @color_primary;
-@background-color-IconButton:                     none;
-@background-color-IconButton_transparent:         #F8F8F8;
-@background-color-IconButton_hovered:             none;
-@background-color-IconButton_transparent_hovered: @background-color-IconButton_transparent;
-@color_Button-style-addButton-icon:            #000000;
-@color_Button-icon:                       @color_primary;
-@color_Button-icon_primary:               @color_hover;
-@color_Link-main-icon:                          #587AB0;
 
-//Label
-@color_Label-caption_enabled:            #8991A9;
-@color_Label-caption_disabled:           @disabled-color;
-@color_Label-caption-after_enabled:      @error-color;
 //Tabs/Buttons
-@border-color_Tabs:                          #F0F0F0;
-@background-color_Tabs-separator:            #F0F0F0;
-@text-color_Tabs:                            #313E78;
+// not used in SBIS3.CONTROLS
 @border-color_Tabs-item_hover:               #F0F0F0;
-@text-color_Tabs-item_selected_default:      #D94700;
-@border-color_Tabs-item_selected_default:    #D94700;
-@text-color_Tabs-item_selected_additional:   #0055BB;
-@border-color_Tabs-item_selected_additional: #0055BB;
-//BaseLine pageLayout
-@background_PageLayout_Separator:                        @border-color_Tabs;
-//Scrollbar
-@bg_Scrollbar-thumb_normal:                  rgba(0, 0, 0, .1);
-@bg_Scrollbar-thumb_active_normal:           rgba(0, 0, 0, .15);
-@bg_Scrollbar-thumb_inverted:                rgba(255, 255, 255, .2);
-@bg_Scrollbar-thumb_active_inverted:         rgba(255, 255, 255, .5);
-//Scroll
-@start-color-gradient_Scroll-shadow:         rgba(0, 0, 0, .15);
-@end-color-gradient_Scroll-shadow:           rgba(0, 0, 0, 0);
-//SwipeActions
-@backgroun-color_itemActions_swipe_shadow:   rgba(0, 0, 0, 0.12);
-@backgroun-color_itemActions_swipe:          #F4F9FD;
-@backgroun-color_itemActions_separator:      #EBF1F6;
-@color_swipe_title:                          #313E78;
-@color_swipe_icon:                           #313E78;
-//FilterButton
-@height_FilterButton:                    @default-height;
-@color_FilterButton-icon:                @color_primary;
-@color_FilterButton-icon_hover:          @icon-color-primary-hover;
-@color_FilterButton-icon_disabled:        @icon-color-disabled;
-@color_FilterButton-clear:               #ccc;
-@color_FilterButton-arrow:               @color_primary;
-@color_FilterButton-arrow_disabled:      @icon-color-disabled;
-@color_FilterButton-icon-arrow_hover:    @icon-color-primary-hover;
-@color_FilterButton-text:                #0055bb;
-@color_FilterButton-text_hover:          #313E78;
-@color_FilterButton-text_disabled:       @default-color-disabled;
-
-//Lookup
-@color_Lookup_item-cross:                      #CCCCCC;
-@color_Lookup_item-size:                       16px;
-@color_Lookup_item-accent:                     #313E78;
-@color_Lookup_item-primary:                    #D94700;
-@color_Lookup_showSelector:                    @color_primary;
-@color_Lookup-showSelector_hovered:            @color_Link-text_hovered;
-
-//headers
-@color-BackButton__caption_style-default:      #D94700;
-@color-BackButton__caption_style-primary:      #313E78;
-@color_Heading__caption_style-primary:          #D94700;
-@color_Heading__caption_style-secondary:          #313E78;
-@color-BackButton__caption_style-default_hovered: @color_Heading__caption_style-primary_hovered;
-@color-BackButton__caption_style-primary_hovered: @color_Heading__caption_style-secondary_hovered;
-@color_Heading__caption_style-primary_hovered:  @color_hover;
-@color_Heading__caption_style-secondary_hovered:  #0055BB;
-@color_Counter_style-primary_hovered:    @color_Heading__caption_style-primary_hovered;
-@color_Counter_style-secondary_hovered:    @color_Heading__caption_style-secondary_hovered;
-@color_Counter_style-secondary:            @color_Heading__caption_style-secondary;
-@color_Counter_style-primary:            @color_Heading__caption_style-primary;
-@color_Counter_style-disabled:           #999999;
-@color-Separator__icon_style-secondary:              #587AB0;
-@color-Separator__icon_style-additional:          #8991A9;
-@color-Separator__icon_style-primary:                #D94700;
-@color-Separator__icon_style-secondary_hovered:      #313E78;
-@color-Separator__icon_style-primary_hovered:        #FF7033;
-@color-Separator__icon_style-additional_hovered:  #313E78;
-@color_HeaderSeparator_secondary:                     #729EE6;
-@color_HeaderSeparator_primary:                     #729EE6;
-@color_HeaderSeparator_primary_hovered:             #729EE6;
-@color_HeaderSeparator_secondary_hovered:             #729EE6;
-@color_BigSeparator-icon:                         #8991A9;
-@color_BigSeparator-icon_hovered:                 #313E78;
-
-//BreadCrumbs
-@color_BreadCrumbs-title:                          #0055BB;
-@color_BreadCrumbs-title_hovered:                  #313E78;
-
-//Path
-@color_Path-backButtonArrow_hovered:               #FF7033;
-@background-color_Path-backButtonArrow:            @default-bg-color;
 
 //radioGroup
-@color_ToggleCircle_innerCircle_selected_enabled:     #FF7033;
-@color_ToggleCircle_innerCircle_selected_disabled:    #313E78;
-@color_ToggleCircle_innerCircle_unselected:           none;
-@fill_RadioGroup_borderCircle:                     none;
-@color_ToggleCircle_outerCircle_enabled:           #CCCCCC;
-@color_ToggleCircle_outerCircle_disabled:          #e4e4e4;
-@color_ToggleCircle_outerCircle_enabled_hovered:   #FF7033;
-@color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_selected_size-l:          #313E78;
-@color_RadioItem_caption_unselected_disabled:      #CCCCCC;
-@color_RadioItem_caption_unselected_enabled:       #999999;
 @color_RadioItem_caption_selected_size-l_disabled: #CCCCCC;
-
-//FastFilter
-@color_FastFilter-iconArrow:                    @color_primary;
-@color_FastFilter-iconArrow_hover:         #313E78;
-@color_FastFilter-iconReset:               #CCCCCC;
-
-//FilterPanel
-@color_FilterPanel-caption:                  #313e78;
-//AdditionalParams
-@color_AdditionalParams-item:                 #313E78;
-//HistoryList
-@background-color_HistoryList:               #F4F4F4;
-@color_HistoryList-item:                 #313E78;
-//toggleButton
-@background_ToggleButton_state-on:              #F3F3F3;
-@background_ToggleButton:                       transparent;
-@background_ToggleButton_readOnly:               transparent;
-@border-color_ToggleButton_readOnly:            @color_Link-Vdom-text_readOnly;
-@color_ToggleButton_readOnly:                   @color_Link-Vdom-text_readOnly;
-@border-color_ToggleButton:                     @color_Link-main-icon;
-@color-ToggleButton__icon_hovered:              @icon-color-primary-hover;
-@background-ToggleButton_hovered:               @default-bg-color-hovered-item;
-@color-ToggleButton__icon:                      @color_Link-main-icon;
-@color-ToggleButton_text:                       @color_Link-main-icon;
-@color_ToggleButton_style-LinkMain:             @color_Link-main-icon;
-@color_ToggleButton_Link-main_hovered:          @color_Link-main-text_hovered;
-//NotificationBase
-@background-color_NotificationBase: #fff;
-@border-color_NotificationBase_error: @controls-InformationPopup-error-status-border-color;
-@border-color_NotificationBase_primary: @controls-InformationPopup-default-status-border-color;
-@border-color_NotificationBase_done: @controls-InformationPopup-success-status-border-color;
-@border-color_NotificationBase_warning: @controls-InformationPopup-warning-status-border-color;
-//VDOM ListView
-@color_ListView-group-text: @color_ListView-GroupBy_text;
-@color_ListView-group-text_hovered: @color_ListView-GroupBy_text_hovered;
-@color_ListView-group-separator: @color_ListView-GroupBy_separator;
-@color_ListView-group-results: #ccc;
-
-//dialog template
-@background-color_dialogTemplate-content:       #ffffff;
-@background-color_dialogTemplate-top-area:      #ffffff;
-@color_DialogTemplate-caption:                  #313E78;
-
-//VDOM TreeGridView
-@color_TreeGridView-nodeExpander: #313E78;
-@color_TreeGridView-nodeExpander_hover: #0055BB;
-//MasterList
-@border-color_MasterList: #eaeaea;
-@background-color_MasterList: #f8f8f8;
-@background-color_MasterList_item-selected: #ffffff;
-@border-color_MasterList_item-selected: #c2d0de transparent #9cb3ca transparent;
-@hover-color_MasterList_item: #ffffff;

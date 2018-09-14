@@ -105,6 +105,7 @@ module.exports = function less1by1Task(grunt) {
             var relpath = path.relative(rootPath, filepath);
             if (
                helpers.validateFile(relpath, [
+                  'Controls-theme/**/' + findFileName + '.less',
                   'components/**/' + findFileName + '.less',
                   'demo/**/' + findFileName + '.less',
                   'pages/**/' + findFileName + '.less',

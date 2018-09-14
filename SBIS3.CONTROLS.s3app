@@ -6,6 +6,7 @@
   <items>
     <ui_module id="3735da8d-a287-4fc1-a22d-7d00a7732ce8" name="SBIS3.CONTROLS" url="./SBIS3.CONTROLS/SBIS3.CONTROLS.s3mod"/>
     <ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" url="./Controls/Controls.s3mod"/>
+    <ui_module id="c7d8e465-1c28-4437-858f-81968ce81dec" name="Controls-theme" url="./Controls-theme/Controls-theme.s3mod"/>
   </items>
 
   <directoryes/>
