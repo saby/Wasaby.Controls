@@ -48,7 +48,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "4.13/future/pea/skip_test2",
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -559,8 +559,8 @@ node('controls') {
                     }
 
                     if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-ff) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-ff) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-chrome) ${version} controls'"
                     }
                     parallel (
                         int_test: {
