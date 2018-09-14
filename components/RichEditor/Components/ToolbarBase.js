@@ -226,53 +226,56 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       },
 
       _fillHistory: function() {
-         var
-            prepareHistory = function(value) {
-               var
-                  stripText, title,
-                  $tmpDiv = $('<div/>').append(value);
-               $tmpDiv.find('.ws-fre__smile').each(function() {
-                  var smileName = $(this).attr('title');
-                  $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
-               });
-               stripText = title = escapeHtml($tmpDiv.text());
-               stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
-               if (!stripText && value) {
-                  stripText = rk('Контент содержит только html-разметку, без текста.');
-               } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
-                  stripText = stripText.substr(0, 140) + ' ...';
-               }
-               return stripText;
-            };
          if (this.getItems().getRecordById('history')) {
-            this.getLinkedEditor().getHistory().addCallback(function(arrBL) {
-               //Проблема:
-               //          После прихода данных тулбар уже может быть уничтожен
-               //Решение 1:
-               //          Хранить deferred вызова и убивать его в destroy
-               //Решение 2:
-               //          Проверять на isDestroyed
-               if (!this.isDestroyed()) {
-                  var
-                     items = [],
-                     history = this.getItemInstance('history');
-                  for (var i in arrBL) {
-                     if (arrBL.hasOwnProperty(i)) {
-                        items.push({
-                           key: items.length,
-                           title: prepareHistory(arrBL[i]),
-                           value: arrBL[i]
-                        })
-                     }
-                  }
-                  if (!arrBL.length) {
-                     history.setEnabled(false);
-                  }
-                  history.setItems(items);
-               }
-            }.bind(this));
+            this.getLinkedEditor().getHistory().addCallback(this._onGetHistory.bind(this));
          }
       },
+
+      _prepareHistory: function (value) {
+         var
+            stripText, title,
+            $tmpDiv = $('<div/>').append(value);
+         $tmpDiv.find('.ws-fre__smile').each(function() {
+            var smileName = $(this).attr('title');
+            $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
+         });
+         stripText = title = escapeHtml($tmpDiv.text());
+         stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
+         if (!stripText && value) {
+            stripText = rk('Контент содержит только html-разметку, без текста.');
+         } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
+            stripText = stripText.substr(0, 140) + ' ...';
+         }
+         return stripText;
+      },
+
+      _onGetHistory: function (arrBL) {
+         //Проблема:
+         //          После прихода данных тулбар уже может быть уничтожен
+         //Решение 1:
+         //          Хранить deferred вызова и убивать его в destroy
+         //Решение 2:
+         //          Проверять на isDestroyed
+         if (!this.isDestroyed()) {
+            var
+               items = [],
+               history = this.getItemInstance('history');
+            for (var i in arrBL) {
+               if (arrBL.hasOwnProperty(i)) {
+                  items.push({
+                     key: items.length,
+                     title: this._prepareHistory(arrBL[i]),
+                     value: arrBL[i]
+                  })
+               }
+            }
+            if (!arrBL.length) {
+               history.setEnabled(false);
+            }
+            history.setItems(items);
+         }
+      },
+
       _setText: function(text) {
          if (this._options.linkedEditor) {
             this._options.linkedEditor.setText(text);

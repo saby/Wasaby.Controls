@@ -304,8 +304,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          getImagePanel: function(button){
-            var
-               self = this;
             //todo: https://online.sbis.ru/opendoc.html?guid=2842f4a3-d4b7-4454-a034-4051337f0e25&des=
             //кдалить проверку на destroyed после выполнения задачи
             if (!this._imagePanel || this._imagePanel.isDestroyed()) {
@@ -325,11 +323,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   linkedEditor: editor,
                   imageFolder: editor._options.imageFolder
                });
-               this.subscribeTo(this._imagePanel, 'onImageChange', function(event, key, fileobj){
-                  self._insertImageTemplate(key, fileobj);
-               });
+               this.subscribeTo(this._imagePanel, 'onImageChange', this._onImageChange.bind(this));
             }
             return this._imagePanel;
+         },
+
+         _onImageChange: function (event, key, fileobj) {
+            this._insertImageTemplate(key, fileobj);
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
