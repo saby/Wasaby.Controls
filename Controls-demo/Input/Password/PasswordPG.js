@@ -22,7 +22,7 @@ define('Controls-demo/Input/Password/PasswordPG',
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: false
+                  readOnly: true
                },
                tagStyle: {
                   emptyText: 'none',
