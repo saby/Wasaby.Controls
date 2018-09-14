@@ -262,8 +262,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             return error;
          });
           //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
-          //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
-         if (object !== "Excel" || !this._isLongOperationsEnabled()) {
+         if (!this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных'), exportDeferred);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);

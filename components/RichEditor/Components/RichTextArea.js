@@ -23,8 +23,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       'Core/helpers/String/escapeTagsFromStr',
       'Core/helpers/String/escapeHtml',
       'Core/helpers/String/linkWrap',
+      'View/Runner/requireHelper',
       'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
-      'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
       'Lib/LayoutManager/LayoutManager',
       'Core/EventBus',
       'SBIS3.CONTROLS/WaitIndicator',
@@ -53,8 +53,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                escapeTagsFromStr,
                escapeHtml,
                LinkWrap,
+               requireHelper,
                ImageOptionsPanel,
-               CodeSampleDialog,
                LayoutManager,
                EventBus,
                WaitIndicator) {
@@ -1899,28 +1899,36 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._beforeFocusOutRng = false;
             },
-            getCodeSampleDialog: function() {
-               var
-                  self = this;
-               if (!this._codeSampleDialog) {
-                  this._codeSampleDialog = new CodeSampleDialog({
-                     parent: this,
-                     element: $('<div></div>')
-                  });
-                  this._codeSampleDialog.subscribe('onApply', function(event, text, language) {
-                     self.codeSample(text, language);
-                  })
-               }
-               return this._codeSampleDialog;
+
+            getCodeSampleDialog: function () {
+               // Метод теперь асинхронный
+               // 1175897247 https://online.sbis.ru/opendoc.html?guid=835a2cd7-d159-441b-9895-e7abf3d7b942
+               var promise = new Deferred();
+               require(['SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog'], function (CodeSampleDialog) {
+                  var codeSampleDialog = this._codeSampleDialog;
+                  if (!codeSampleDialog) {
+                     this._codeSampleDialog = codeSampleDialog = new CodeSampleDialog({
+                        parent: this,
+                        element: $('<div></div>')
+                     });
+                     codeSampleDialog.subscribe('onApply', function (event, text, language) {
+                        this.codeSample(text, language);
+                     }.bind(this))
+                  }
+                  promise.callback(codeSampleDialog);
+               }.bind(this));
+               return promise;
             },
+
             showCodeSample: function() {
-               var
-                  editor = this._tinyEditor,
-                  codeDialog = this.getCodeSampleDialog();
-               this._beforeFocusOutRng = editor.selection.getRng(); // необходимо запоминать выделение пред открытием ддиалога, тк оно собьется при переходе в textarea
-               codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
-               codeDialog.show();
+               this.getCodeSampleDialog().addCallback(function (codeDialog) {
+                  var editor = this._tinyEditor;
+                  this._beforeFocusOutRng = editor.selection.getRng(); // необходимо запоминать выделение пред открытием ддиалога, тк оно собьется при переходе в textarea
+                  codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
+                  codeDialog.show();
+               }.bind(this));
             },
+
             /**
              * Метод возвращает объект вида { id: inEditor }
              * id - id файла на сбис-диске;
@@ -3460,7 +3468,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // Реквайрим модули только если они не были загружены ранее, т.к. require отрабатывает асинхронно и на ipad это
                // недопустимо (клавиатуру можно показывать синхронно), да и в целом можно считать это оптимизацией.
                EDITOR_MODULES.forEach(function(module) {
-                  if (!require.defined(module)) {
+                  if (!requireHelper.defined(module)) {
                      notDefined = true;
                   }
                });

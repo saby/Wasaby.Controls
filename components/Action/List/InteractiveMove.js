@@ -1,18 +1,29 @@
 /*global define, $ws, rk*/
 define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
-      'SBIS3.CONTROLS/Action/List/Move',
-      'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
-      'Core/helpers/String/format',
-      'Core/Indicator',
-      'Core/core-merge',
-      'Core/IoC',
-      'Core/core-instance',
-      'Core/constants',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
-   ],
-   function (ListMove, DialogMixin, format, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
+   'require',
+   'SBIS3.CONTROLS/Action/List/Move',
+   'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
+   'Core/helpers/String/format',
+   'Core/Indicator',
+   'Core/core-merge',
+   'Core/IoC',
+   'Core/core-instance',
+   'Core/constants',
+   'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
+],
+function (
+   require,
+   ListMove,
+   DialogMixin,
+   format,
+   Indicator,
+   cMerge,
+   IoC,
+   cInstance,
+   constants
+) {
       'use strict';
+
       /**
        * Класс, описывающий действие перемещения записей по иерархии с возможностью выбора позиции перемещения через диалог. По умолчанию переносит выделенные записи.
        * <br/>
@@ -150,12 +161,16 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
             meta = meta || {};
             meta.movedItems = meta.movedItems || meta.records || this.getSelectedItems();
             if (!meta.movedItems || meta.movedItems instanceof Array && meta.movedItems.length == 0) {
-               InformationPopupManager.showMessageDialog(
-                  {
-                     message: rk('Не выбрано ни одной записи для перемещения.'),
-                     status: 'default'
-                  }
-               );
+               require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                  InformationPopupManager.showMessageDialog(
+                     {
+                        message: rk('Не выбрано ни одной записи для перемещения.'),
+                        status: 'default'
+                     }
+                  );
+               }, function(err) {
+                  IoC.resolve('ILogger').log('InteractiveMove', err.message)
+               });
                return;
             }
             return InteractiveMove.superclass._doExecute.call(this, meta);

@@ -41,13 +41,13 @@ define('Controls/EditAtPlace', [
       },
 
       _onClickHandler: function(event) {
-         if (this.isEnabled() && !this._isEditing) {
+         if (!this._options.readOnly && !this._isEditing) {
             this.startEdit(event);
          }
       },
 
       _onDeactivatedHandler: function() {
-         if (this.isEnabled() && this._isEditing) {
+         if (!this._options.readOnly && this._isEditing) {
             this._options.commitOnDeactivate
                ? this.commitEdit()
                : this.cancelEdit();
