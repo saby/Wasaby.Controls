@@ -499,27 +499,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var url = escapeTagsFromStr(link, []);
                var id = this._getYouTubeVideoId(url);
                if (id) {
-                  var _byRe = function(re) {
-                     var ms = url.match(re);
-                     return ms ? ms[1] : null;
-                  };
-                  var protocol = _byRe(/^(https?:)/i) || '';
-                  var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
-                  this.insertHtml([
-                     '<iframe',
-                     ' width="' + constants.defaultYoutubeWidth + '"',
-                     ' height="' + constants.defaultYoutubeHeight + '"',
-                     ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight +
-                     'px;"',
-                     ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') +
-                     '"',
-                     ' allowfullscreen',
-                     ' frameborder="0" >',
-                     '</iframe>'
-                  ].join(''));
+                  this.insertHtml(this._makeYouTubeVideoHtml(url, id));
                   return true;
                }
                return false;
+            },
+
+            _makeYouTubeVideoHtml: function(url, id) {
+               var _byRe = function(re) {
+                  var ms = url.match(re);
+                  return ms ? ms[1] : null;
+               };
+               var protocol = _byRe(/^(https?:)/i) || '';
+               var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
+               return [
+                  '<iframe',
+                  ' width="' + constants.defaultYoutubeWidth + '"',
+                  ' height="' + constants.defaultYoutubeHeight + '"',
+                  ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight +
+                  'px;"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') +
+                  '"',
+                  ' allowfullscreen',
+                  ' frameborder="0" >',
+                  '</iframe>'
+               ].join('');
             },
 
             /**
@@ -1440,7 +1444,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
-
                   // Перед применением цитаты сбрасываем вначале прикладные стили
                   // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
                   for (var format in this._options.customFormats) {
@@ -1482,6 +1485,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         if (isChanged) {
                            selection.select(node, true);
                            rng = selection.getRng();
+                        }
+                     }
+                     if (isAlreadyApplied) {
+                        // При снятии цитаты если в ней было видео - нужно не потреть его
+                        // 1175588680 https://online.sbis.ru/opendoc.html?guid=0bdfcbe5-ccf2-434a-9da3-e457743a2a82
+                        var $node = $(node);
+                        var $video = ($node.is('blockquote') ? $node : $node.parent('blockquote')).find('iframe');
+                        if ($video.length) {
+                           var url = $video[0].src;
+                           var videoId = this._getYouTubeVideoId(url);
+                           if (videoId) {
+                              var attr = 'data-ws-video="' + videoId + '"';
+                              $video.before('<span ' + attr + '>temporary</span>').remove();
+                              afterProcess = function () {
+                                 var $video = $(editor.getBody()).find('[' + attr + ']');
+                                 $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                              }.bind(this);
+                           }
                         }
                      }
                   }
