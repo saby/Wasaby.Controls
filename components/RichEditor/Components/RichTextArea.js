@@ -1698,7 +1698,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           // Для MSIE и FF принудительно смещаем курсор ввода после вставленной ссылки
                                           // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                           // 1175114814 https://online.sbis.ru/opendoc.html?guid=4cef3009-ccbc-4751-b755-dea3d69b82f1
-                                          var appendix = BROWSER.isIE ? '&#65279;&#8203;' : (BROWSER.firefox ? '&#65279;' : '');
+                                          var appendix = BROWSER.isIE ? '&#xFEFF;&#8203;' : (BROWSER.firefox ? '&#xFEFF;' : '');
                                           editor.insertContent(linkHtml + appendix);
                                           if (!appendix) {
                                              selection.select(selection.getNode().querySelector('a'), true);
@@ -2644,12 +2644,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
                            this._selectNewRng(node, index - 1);
                         }
-                        else if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                        else
+                        if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
                            // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
-                           for (; !node.previousSibling && !node.nextSibling; node = node.parentNode) {
+                           // Если только выше не используется формат из списка constants.styles
+                           // 1175787389 https://online.sbis.ru/opendoc.html?guid=cd1de0c8-d0d9-456c-9892-d21fbe520c45
+                           var styles = constants.styles;
+                           var classes = Object.keys(styles).map(function (key) { return styles[key].classes; });
+                           var ancestor = node;
+                           var hasStyle;
+                           for (; !ancestor.previousSibling && !ancestor.nextSibling; ancestor = ancestor.parentNode) {
+                              if (classes.length && classes.indexOf(ancestor.className) !== -1) {
+                                 hasStyle = true;
+                                 break;
+                              }
                            }
-                           if (node.nodeType === 1) {
-                              selection.select(node);
+                           if (!hasStyle) {
+                              if (ancestor.nodeType === 1) {
+                                 selection.select(ancestor);
+                              }
                            }
                         }
                      }
