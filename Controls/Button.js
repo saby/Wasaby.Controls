@@ -1,7 +1,7 @@
 define('Controls/Button', [
    'Core/Control',
    'Controls/Button/Classes',
-   'tmpl!Controls/Button/Button',
+   'wml!Controls/Button/Button',
    'css!Controls/Button/Button'
 ], function(Control, Classes, template) {
    'use strict';
@@ -87,8 +87,7 @@ define('Controls/Button', [
    var Button = Control.extend({
       _template: template,
 
-      constructor: function(options) {
-         Button.superclass.constructor.apply(this, arguments);
+      _beforeMount: function(options) {
          _private.cssStyleGeneration(this, options);
       },
 

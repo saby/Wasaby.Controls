@@ -3,8 +3,8 @@ define('Controls-demo/Filter/Button/withOptions/ButtonVDOM',
       'Core/Control',
       'WS.Data/Source/Memory',
       'WS.Data/Chain',
-      'tmpl!Controls-demo/Filter/Button/withOptions/ButtonVDOM',
-      'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
+      'wml!Controls-demo/Filter/Button/withOptions/ButtonVDOM',
+      'wml!Controls-demo/Filter/Button/resources/withoutAdditional/filterPanelTemplateSimple',
       'tmpl!Controls-demo/Filter/Button/resources/withoutAdditional/mainBlockPanelSimple',
 
       'css!Controls-demo/Filter/Button/withOptions/ButtonVDOM'

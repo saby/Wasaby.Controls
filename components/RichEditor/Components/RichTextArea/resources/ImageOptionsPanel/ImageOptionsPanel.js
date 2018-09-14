@@ -121,8 +121,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                   inputHeight = linkedContainer.height(),
                   inputOffsetLeft = linkedContainer.offset().left,
                   panelOffsetleft = this._container.offset().left;
-               this._container.css('width',this.getTarget().width());
-               this._container.css('max-width', this.getParent().getInputContainer().width() - imagePanelhOffset);
+               this._container.css('width', this.getTarget().width());
+               this._container.css('max-width', this.getParent().getInputContainer().width());
                this._container.css('height',imagePanelHeight + 'px'); // dich3000
                this._container.css('overflow-y','hidden'); // dich3000
                if (this._container.hasClass('controls-popup-revert-vertical')) {

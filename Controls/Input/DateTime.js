@@ -15,6 +15,7 @@ define('Controls/Input/DateTime', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
+    * @author Журавлев М.С.
     * @category Input
     */
 

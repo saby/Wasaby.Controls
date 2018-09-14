@@ -64,7 +64,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin', [
          }
       },
       /**
-       * Обновляет drag-N-Drop, заного ищет элементы, навешивает обработчики
+       * Обновляет drag-N-Drop, заново ищет элементы, навешивает обработчики
        */
       updateDragAndDrop: function() {
          if(this._dragContainers.length) {

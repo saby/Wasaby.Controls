@@ -82,15 +82,10 @@ define('Controls/Dropdown/Opener',
             if (pOptions.templateOptions && pOptions.templateOptions.headConfig) {
                pOptions.templateOptions.headConfig.menuStyle = pOptions.templateOptions.headConfig.menuStyle || 'defaultHead';
             }
-            self._hasHeader = pOptions.templateOptions && pOptions.templateOptions.showHeader;
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, config) {
-            if (self._options.className) {
-               config.className = self._options.className;
-            } else {
-               config.className = self._hasHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin';
-            }
+            config.className = self._options.className;
             config.template = 'Controls/Dropdown/resources/template/DropdownList';
             config.closeByExternalClick = true;
          }

@@ -5,7 +5,7 @@ define('Controls-demo/Demo/Page',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/Demo/Page',
+      'wml!Controls-demo/Demo/Page',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'css',
@@ -32,7 +32,7 @@ define('Controls-demo/Demo/Page',
             presto: '/../components/themes/presto/presto',
             carry_m: '/../components/themes/carry_medium/carry_medium',
             presto_m: '/../components/themes/presto_medium/presto_medium',
-            online: '/../pages/presto/online',
+            online: '/../components/themes/online/online',
             base: '/../components/themes/online/online'
          },
          setCurrentThemeLinks = function(theme) {
@@ -88,7 +88,7 @@ define('Controls-demo/Demo/Page',
          _beforeMount: function() {
             var deferred = new Deferred();
             if (UrlParams.cname) {
-               this.componentName = 'Controls-demo/' + UrlParams.cname;
+               this.componentName = UrlParams.cname;
             }
             this._theme = themeLinks[UrlParams['theme']] || themeLinks['base'];
             requirejs([this.componentName], deferred.callback.bind(deferred));
@@ -99,9 +99,9 @@ define('Controls-demo/Demo/Page',
                newLocation = ~window.location.href.indexOf('theme')
                   ? window.location.href.replace(/theme=(.*)($|&)/, 'theme=' + theme)
                   : window.location.href + '&theme=' + theme;
-            setCurrentThemeLinks(themeLinks[theme]);
+
+            this._theme = themeLinks[theme];
             window.history.replaceState({}, '', newLocation);
-//            this._notify('themeChanged', [theme], {bubbling:true});
          },
 
          backClickHdl: function() {

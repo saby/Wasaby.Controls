@@ -6,8 +6,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC',
-   'Controls/Utils/isNewEnvironment'
-], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment) {
+   'Controls/Utils/isNewEnvironment',
+   'Controls/Utils/isVDOMTemplate'
+], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment, isVDOMTemplate) {
    'use strict';
 
    /**
@@ -67,7 +68,15 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             componentOptions: null,
 
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
+             * @cfg {Object} Объект со опциями контрола Lib/Control/Dialog/Dialog или Lib/Control/FloatArea/FloatArea, на основе которого создаётся диалог.
+             * @remark
+             * Выбор контрола определяется по значению опции {@link mode}.
+             * Для компонентов <a href="/doc/platform/developmentapl/interface-development/wasaby/">Wasaby</a>,
+             * которые планируется открывать с помощью SBIS3.CONTROLS/Action/OpenDialog, список опций расширен:
+             * <ul>
+             *    <li>onResultHandler - функция-обработчик на событие onResult</li>
+             *    <li>onCloseHandler - функция-обработчик на событие onClose</li>
+             * </ul>
              */
             dialogOptions: null
          },
@@ -163,17 +172,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                            config._initCompoundArea = function(compoundArea) {
                               self._dialog = compoundArea;
                            };
-                           if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+                           if (isVDOMTemplate(cfgTemplate)) {
                               CompatibleOpener._preparePopupCfgFromOldToNew(config, cfgTemplate);
                            }
                            BaseOpener.showDialog(cfgTemplate, config, Strategy);
                         });
                      });
                   } else {
-                     deps = ['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener', config.template];
-                     requirejs(deps, function(BaseOpener, CompatibleOpener, cfgTemplate) {
-                        self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
-                        self._dialog = new Component(config);
+                     requirejs([config.template], function (cfgTemplate) {
+                        //Если vdom - идем в слой совместимости
+                        if (isVDOMTemplate(cfgTemplate)) {
+                           requirejs(['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'], function (BaseOpener, CompatibleOpener) {
+                              self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
+                              self._dialog = new Component(config);
+                           });
+                        } else {
+                           self._dialog = new Component(config);
+                        }
                      });
                   }
                } catch (error) {
@@ -190,20 +205,23 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (meta.mode !== 'dialog' && cfg.isStack === true) {
             dependencies.push('Controls/Popup/Opener/Stack/StackController');
             cfg._type = 'stack';
+            cfg._popupComponent = 'floatArea';
             cfg.className = (cfg.className || '') + ' controls-Stack';
          } else if (meta.mode !== 'dialog' && cfg.isStack === false && cfg.target) {
             dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
             cfg._type = 'sticky';
+            cfg._popupComponent = 'floatArea';
          } else {
             dependencies.push('Controls/Popup/Opener/Dialog/DialogController');
             cfg._type = 'dialog';
+            cfg._popupComponent = cfg._mode;
          }
          dependencies.push(cfg.template);
          return dependencies
       },
 
       _prepareCfgForOldEnvironment: function(self, BaseOpener, CompatibleOpener, cfgTemplate, config) {
-         if (BaseOpener.isVDOMTemplate(cfgTemplate)) {
+         if (isVDOMTemplate(cfgTemplate)) {
             CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
             config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
             config.componentOptions._initCompoundArea = function() {

@@ -6,7 +6,7 @@
 define('Controls/Container/Scroll/Watcher',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Scroll/Watcher/Watcher',
+      'wml!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
       'Core/detection'
    ],
@@ -227,7 +227,11 @@ define('Controls/Container/Scroll/Watcher',
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
          _resizeHandler: function(e, force) {
-            _private.onResizeContainer(this, this._container, force !== undefined ? false : !!this._observer);
+            var withObserver = !!this._observer;
+            if (force) {
+               withObserver = false;
+            }
+            _private.onResizeContainer(this, this._container, withObserver);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {

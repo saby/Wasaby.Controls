@@ -4,7 +4,7 @@
  */
 define('Controls/List/Paging', [
    'Core/Control',
-   'tmpl!Controls/List/Paging/Paging',
+   'wml!Controls/List/Paging/Paging',
    'css!Controls/List/Paging/Paging'
 ], function(BaseControl,
    template

@@ -1,6 +1,6 @@
 define('Controls/Explorer', [
    'Core/Control',
-   'tmpl!Controls/Explorer/Explorer',
+   'wml!Controls/Explorer/Explorer',
    'css!Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
@@ -24,7 +24,7 @@ define('Controls/Explorer', [
             self._breadCrumbsVisibility = !!self._breadCrumbsItems.length;
             self._forceUpdate();
             if (self._options.dataLoadCallback) {
-               self._options.dataLoadCallback.apply(null, arguments);
+               self._options.dataLoadCallback(data);
             }
          }
       };
@@ -67,6 +67,9 @@ define('Controls/Explorer', [
       },
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
          _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
+      },
+      _notifyHandler: function(e, eventName) {
+         return this._notify(eventName, Array.prototype.slice.call(arguments, 2));
       }
    });
 

@@ -2,7 +2,7 @@ define('Controls/BreadCrumbs', [
    'Core/Control',
    'Controls/BreadCrumbs/Utils',
    'Controls/Utils/FontLoadUtil',
-   'tmpl!Controls/BreadCrumbs/BreadCrumbs'
+   'wml!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    BreadCrumbsUtil,

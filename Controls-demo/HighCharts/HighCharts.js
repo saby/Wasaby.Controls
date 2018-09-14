@@ -1,6 +1,6 @@
 define('Controls-demo/HighCharts/HighCharts', [
    'Core/Control',
-   'tmpl!Controls-demo/HighCharts/HighCharts',
+   'wml!Controls-demo/HighCharts/HighCharts',
    'Controls-demo/HighCharts/DemoSource'
 ], function(Control, template, DemoSource) {
    return Control.extend({

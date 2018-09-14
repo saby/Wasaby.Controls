@@ -1,7 +1,7 @@
 define('Controls/Toggle/Button', [
    'Core/Control',
    'Controls/Toggle/Button/Classes',
-   'tmpl!Controls/Button/Button',
+   'wml!Controls/Button/Button',
    'css!Controls/Button/Button',
    'css!Controls/Toggle/Button/Button'
 ], function(Control, Classes, template) {

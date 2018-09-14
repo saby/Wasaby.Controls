@@ -14,6 +14,7 @@ define('SBIS3.CONTROLS/ListView',
       'Core/IoC',
       'Core/helpers/String/format',
       'Lib/Control/CompoundControl/CompoundControl',
+      'View/Runner/requireHelper',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
       'SBIS3.CONTROLS/Mixins/MultiSelectable',
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ListView',
       'css!SBIS3.CONTROLS/ListView/ListView',
       'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
    ],
-   function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, requireHelper, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
       Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
       TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
       ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -539,6 +540,7 @@ define('SBIS3.CONTROLS/ListView',
                 * <ul>
                 *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Button/IconButton}.</li>
                 *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Link}</li>
+                *   <li><b>true</b> - будет отображаться как иконка + текст. Для отображения кнопки одновременно задайте опции icon и caption. 
                 * </ul>
                 *
                 * @property {String} [caption] Подпись на кнопке.
@@ -2572,7 +2574,7 @@ define('SBIS3.CONTROLS/ListView',
             }
 
             // Если модуль редактирования по месту уже загружен - то просто создаем его экземпляр
-            if (requirejs.defined(moduleName)) {
+            if (requireHelper.defined(moduleName)) {
                controller = requirejs(moduleName);
                result.callback(this._editInPlace = new controller(self._getEditInPlaceConfig()));
                return result;
@@ -4541,7 +4543,7 @@ define('SBIS3.CONTROLS/ListView',
           * При создании элемента коллекции происходит событие {@link onBeginAdd}.
           * @param {Object} [options] Параметры вызова команды.
           * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
-          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
+          * @param {WS.Data/Entity/Model} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
           * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
           * <ul>
           *     <li>top - отображается в начале списка;</li>

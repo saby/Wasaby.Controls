@@ -3,7 +3,7 @@
  */
 define('Controls/List/ItemsView', [
    'Core/Control',
-   'tmpl!Controls/List/ItemsView',
+   'wml!Controls/List/ItemsView',
    'Controls/List/ItemsViewModel'
 ], function(BaseControl,
    ItemsRenderTpl,
@@ -29,7 +29,7 @@ define('Controls/List/ItemsView', [
       {
          _template: ItemsRenderTpl,
 
-         constructor: function(cfg) {
+         constructor: function() {
             ItemsRender.superclass.constructor.apply(this, arguments);
             this._onListChangeFnc = _private.onListChange.bind(this);
          },

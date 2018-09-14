@@ -1,0 +1,16 @@
+<div style="margin: 32px; display: flex; flex-direction: column; width: 18em" class="test_root_div">
+
+   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
+      <h2>{{_options.title}}</h2>
+      <ws:for data="i in _options.componentClass">
+         <ws:partial template="{{i}}"/>
+      </ws:for>
+   </div>
+
+   <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
+      <ws:for data="i in _options.componentProperty">
+         <ws:partial template="{{i}}"/>
+      </ws:for>
+   </div>
+
+</div>

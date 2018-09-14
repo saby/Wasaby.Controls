@@ -462,7 +462,9 @@ define('SBIS3.CONTROLS/LongOperations/Tools/CallsPool',
             else
             // Только если потребитель не успел уже сам от-cancele-ить
             if (!o.promise.isReady()) {
-               o.promise.errback(new Error('Call is outdated'));
+               var err = new Error('Call is outdated');
+               err.name = 'OutdatedError';
+               o.promise.errback(err);
             }
          }
       };

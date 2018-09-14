@@ -1,6 +1,6 @@
 define('Controls-demo/Layouts/LayoutFilterComponent', [
    'Core/Control',
-   'tmpl!Controls-demo/Layouts/LayoutFilterComponent/LayoutFilterComponent',
+   'wml!Controls-demo/Layouts/LayoutFilterComponent/LayoutFilterComponent',
    'Controls/Toggle/Switch'
 
 ], function (BaseControl, template) {

@@ -3,7 +3,7 @@ define('Controls/Container/Async',
       'Core/Control',
       'Core/Deferred',
       'Controls/Application/HeadDataContext',
-      'tmpl!Controls/Container/Async/Async',
+      'wml!Controls/Container/Async/Async',
       'View/Runner/requireHelper'
    ],
 

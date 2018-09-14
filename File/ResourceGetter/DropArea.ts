@@ -74,6 +74,7 @@ const OPTION: Partial<DropAreaConfig> = {
  * @extends File/IResourceGetter
  * @public
  * @author Заляев А.В.
+ * @demo File-demo/ResourceGetter/DropArea
  */
 class DropArea extends IResourceGetterBase {
     protected readonly name = "DropArea";

@@ -10,7 +10,7 @@ define('Controls/Input/Number/InputProcessor',
       /**
        * @class Controls/Input/Number/InputProcessor
        * @private
-       * @author Баранов М.А.
+       * @author Журавлев М.С.
        */
 
       var
@@ -67,17 +67,43 @@ define('Controls/Input/Number/InputProcessor',
             processDeletionOfAllIntegers: function(splitValue) {
                // If all integers were removed, then we need to set first character in integers part to 0
                if (splitValue.before === '' || splitValue.before === '-') {
-                  if (splitValue.after === '') {
-                     splitValue.before = '';
-                  }
+                  // If we have decimals part right after cursor position, then we should add '0' at line start
                   if (splitValue.after[0] === '.') {
-                     if (splitValue.after[1]) {
-                        splitValue.before = '0';
+                     if (splitValue.before === '-') {
+                        splitValue.before = '-0';
                      } else {
-                        splitValue.after = '';
+                        splitValue.before = '0';
                      }
                   }
                }
+            },
+
+            /**
+             * Returns the number of characters remaining until the maximum integers length is reached
+             * Can return negative values
+             * @param splitValue
+             * @param integersLength
+             * @return {number}
+             */
+            integersLeftToMaxLength: function(splitValue, integersLength) {
+               var
+                  integers = _private.getClearValue(splitValue).split('.')[0];
+
+               return integersLength - integers.length;
+            },
+
+            /**
+             * Returns the number of characters remaining until the maximum decimals length is reached
+             * Can return negative values
+             * @param splitValue
+             * @param precision
+             * @return {number}
+             */
+            decimalsLeftToMaxLength: function(splitValue, precision) {
+               var
+                  decimals = _private.getClearValue(splitValue).split('.')[1];
+
+               return precision - decimals.length;
             },
 
             // Набор валидаторов для числа
@@ -173,6 +199,9 @@ define('Controls/Input/Number/InputProcessor',
                var
                   shift = 0;
 
+               // Remove delimiters from insert
+               splitValue.insert = splitValue.insert.replace(/ /g, '');
+
                if (
                   !_private.validators.isValidInsert(splitValue.insert) ||
                   (options.onlyPositive && splitValue.insert === '-') ||
@@ -205,13 +234,13 @@ define('Controls/Input/Number/InputProcessor',
 
                   if (splitValue.insert === '-') {
                      // Inserting '-' after '0' should result in '-0'
-                     if (splitValue.before === '0' && (splitValue.after === '' || splitValue.after === '.0')) {
+                     if (splitValue.before === '0' && splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
 
                      // Inserting '-' in empty field should result in '-0.0'
-                     if (splitValue.before === '' && splitValue.after === '' || splitValue.after === '.0') {
+                     if (splitValue.before === '' && splitValue.after === '.0') {
                         splitValue.before = '-0';
                         splitValue.insert = '';
                      }
@@ -234,20 +263,39 @@ define('Controls/Input/Number/InputProcessor',
 
                   // If we have exceeded the maximum number in integers part, then we should move cursor after dot
                   if (!_private.validators.maxIntegersLength(_private.getClearValue(splitValue), options.integersLength)) {
-                     if (options.precision !== 0) {
-                        if (splitValue.after[0] === '.') {
-                           shift += 2;
-                           splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
-                        } else {
-                           if (splitValue.after[1] === ' ') {
-                              shift += 2;
-                           } else {
-                              shift += 1;
-                           }
-                           splitValue.after = splitValue.insert + splitValue.after.slice(1);
+                     // If we insert more than one character, then we just need to slice insert value, if necessary
+                     if (splitValue.insert.length > 1) {
+                        var integersLeftToMaxLength = Math.abs(_private.integersLeftToMaxLength(splitValue, options.integersLength));
+                        var dotPosition = splitValue.after.indexOf('.');
+                        var integerAfterLength = dotPosition === -1
+                           ? splitValue.after.length
+                           : splitValue.after.substring(0, splitValue.after.indexOf('.')).length;
+
+                        /**
+                         * Do not insert more than the allowed length.
+                         */
+                        if (integerAfterLength < integersLeftToMaxLength) {
+                           splitValue.insert = splitValue.insert.slice(0, integerAfterLength - integersLeftToMaxLength);
                         }
+                        splitValue.after = splitValue.after.substring(0, integerAfterLength).slice(integersLeftToMaxLength) + splitValue.after.substring(integerAfterLength);
+                     } else {
+                        // If we insert single character and precision is not zero,
+                        // then we need to jump over a dot and insert character in decimals part
+                        if (options.precision !== 0) {
+                           if (splitValue.after[0] === '.') {
+                              shift += 2;
+                              splitValue.after = splitValue.after.substring(0, 1) + splitValue.insert + splitValue.after.substring(2, splitValue.after.length);
+                           } else {
+                              if (splitValue.after[1] === ' ') {
+                                 shift += 2;
+                              } else {
+                                 shift += 1;
+                              }
+                              splitValue.after = splitValue.insert + splitValue.after.slice(1);
+                           }
+                        }
+                        splitValue.insert = '';
                      }
-                     splitValue.insert = '';
                   }
 
                   // This block must be executed when we know for sure that in the next step the number can not become non-valid
@@ -257,19 +305,16 @@ define('Controls/Input/Number/InputProcessor',
 
                   // If we have exceeded the maximum number in decimals part, then we will replace the symbol on the right
                   if (!_private.validators.maxDecimalsLength(_private.getClearValue(splitValue), options.precision)) {
-                     // If the insert is at the end of the string, then we replace the symbol
-                     // Else - forbid input
+                     // If we insert value not at the end of the line, then we need to replace symbols on the right
                      if (splitValue.after !== '') {
                         splitValue.after = splitValue.after.slice(splitValue.insert.length);
-                     } else {
-                        splitValue.insert = '';
                      }
 
                      // Check whether we have exceeded the allowed number symbols in decimals part
                      // and slice the extra if it is necessary
-                     var symbolsOverPrecisionCount = splitValue.before.split('.')[1].length - options.precision;
-                     if (symbolsOverPrecisionCount > 0) {
-                        splitValue.before = splitValue.before.slice(0, -symbolsOverPrecisionCount);
+                     var decimalsLeftToMaxLength = _private.decimalsLeftToMaxLength(splitValue, options.precision);
+                     if (decimalsLeftToMaxLength < 0) {
+                        splitValue.insert = splitValue.insert.slice(0, decimalsLeftToMaxLength);
                      }
                   }
 
@@ -284,13 +329,16 @@ define('Controls/Input/Number/InputProcessor',
             /**
              * Delete value handler (fires only when we delete selected range)
              * @param splitValue
+             * @param options
              * @return {{value: (*|String), position: (*|Integer)}}
              */
-            processDelete: function(splitValue/*, options, splitValueHelper*/) {
+            processDelete: function(splitValue, options) {
                var
                   shift = 0;
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -301,9 +349,10 @@ define('Controls/Input/Number/InputProcessor',
             /**
              * Delete value forward handler ('delete' button)
              * @param splitValue
+             * @param options
              * @return {{value: (*|String), position: (*|Integer)}}
              */
-            processDeleteForward: function(splitValue/*, options, splitValueHelper*/) {
+            processDeleteForward: function(splitValue, options) {
                var
                   shift = 0;
 
@@ -322,7 +371,9 @@ define('Controls/Input/Number/InputProcessor',
                   }
                }
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -351,7 +402,15 @@ define('Controls/Input/Number/InputProcessor',
                   splitValue.after = '.' + splitValue.after;
                }
 
-               _private.processDeletionOfAllIntegers(splitValue);
+               // If we delete a single zero in integers part, and there is a minus before it,
+               // then we need to undo this and move the cursor to the left
+               if (splitValue.delete === '0' && splitValue.before === '-') {
+                  splitValue.after = '0' + splitValue.after;
+               }
+
+               if (options.precision !== 0) {
+                  _private.processDeletionOfAllIntegers(splitValue);
+               }
 
                // If a space was removed, we should delete the number to the left of it and move the cursor one unit to the left
                if (splitValue.delete === ' ') {

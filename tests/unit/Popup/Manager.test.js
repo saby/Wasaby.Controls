@@ -81,7 +81,7 @@ define(
             });
             assert.equal(element.popupOptions.testOption, 'updated');
          });
-   
+
          it('fireEventHandler', function() {
             let Manager = getManager();
             id = Manager.show({
@@ -97,9 +97,9 @@ define(
                   }
                }
             });
-            
+
             Manager._private.fireEventHandler(id, 'onClose');
-            
+
             assert.isTrue(eventCloseFired, 'event is not fired.');
          });
 
@@ -162,6 +162,76 @@ define(
             }, new BaseController());
 
             assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
+
+         });
+         it('managerPopupMaximized notified', function() {
+            let popupOptions = {
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            };
+            let Manager = getManager();
+            var isMaximizeNotified;
+            Manager._private._notify = function(event, args, params) {
+               isMaximizeNotified = event === 'managerPopupMaximized';
+               assert.isTrue(popupOptions === args[0].popupOptions);
+               assert.isTrue(params.hasOwnProperty('bubbling'));
+            };
+            let id0 = Manager.show(popupOptions, new BaseController());
+            Manager._private.popupMaximized(id0);
+            assert.isTrue(isMaximizeNotified);
+
+         });
+         it('managerPopupUpdated notified', function() {
+            let popupOptions = {
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            };
+            let Manager = getManager();
+            var isUpdateNotified;
+            Manager._private._notify = function(event, args, params) {
+               isUpdateNotified = event === 'managerPopupUpdated';
+               assert.isTrue(popupOptions === args[0].popupOptions);
+               assert.isTrue(params.hasOwnProperty('bubbling'));
+            };
+            let id0 = Manager.show(popupOptions, new BaseController());
+            Manager._private.popupUpdated(id0);
+            assert.isTrue(isUpdateNotified);
+
+         });
+         it('managerPopupDestroyed notified', function() {
+            let popupOptions = {
+               testOption: 'created'
+            };
+            let Manager = getManager();
+            var isDestroyNotified;
+            Manager._notify = function(event, args, params) {
+               isDestroyNotified = event === 'managerPopupDestroyed';
+               assert.isTrue(popupOptions === args[0].popupOptions);
+               assert.isTrue(params.hasOwnProperty('bubbling'));
+            };
+            id = Manager.show(popupOptions, new BaseController());
+            Manager.remove(id);
+            assert.isTrue(isDestroyNotified);
+
+         });
+         it('managerPopupCreated notified', function() {
+            let popupOptions = {
+               isModal: false,
+               maximize: false,
+               testOption: 'created'
+            };
+            let Manager = getManager();
+            var isCreateNotified;
+            Manager._private._notify = function(event, args, params) {
+               isCreateNotified = event === 'managerPopupCreated';
+               assert.isTrue(popupOptions === args[0].popupOptions);
+               assert.isTrue(params.hasOwnProperty('bubbling'));
+            };
+            let id0 = Manager.show(popupOptions, new BaseController());
+            Manager._private.popupCreated(id0);
+            assert.isTrue(isCreateNotified);
 
          });
       });

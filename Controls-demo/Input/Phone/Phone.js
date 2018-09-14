@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Phone/Phone',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Phone/Phone',
+      'wml!Controls-demo/Input/Phone/Phone',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {

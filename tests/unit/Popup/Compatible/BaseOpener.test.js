@@ -34,7 +34,7 @@ define(
          autoShow: false,
          autoCloseOnHide: false,
          offset: {
-            x:25,
+            x: '25',
             y:25
          },
          target: ['testTarget'],
@@ -50,6 +50,7 @@ define(
             onClose: 'onclose'
          },
          enabled: true,
+         draggable: true,
          closeChildWindows: true,
          closeOnTargetScroll: true
       };
@@ -97,12 +98,17 @@ define(
 
          it('_preparePopupCfgFromOldToNew', function() {
             config.autoHide = true;
+            config.onResultHandler = function() {};
+            config.onCloseHandler = function() {};
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.eventHandlers.onResult, config.onResultHandler);
+            assert.equal(config.eventHandlers.onClose, config.onCloseHandler);
+
             assert.equal(config.templateOptions.target, config.target);
-            assert.equal(config.closeByExternalClick, true);
             assert.equal(config.className,'testClass');
-            assert.isTrue(config.closeByExternalClick);
+            assert.equal(config.templateOptions.draggable, config.draggable);
             assert.isTrue(config.isModal);
+            assert.isFalse(config.closeByExternalClick);
             assert.isTrue(cInstance.instanceOfModule(config.context,'Core/Abstract'));
             config.side = null;
             config.modal = true;

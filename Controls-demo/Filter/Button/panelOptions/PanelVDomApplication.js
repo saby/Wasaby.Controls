@@ -1,6 +1,6 @@
 define('Controls-demo/Filter/Button/panelOptions/PanelVDomApplication', [
    'Core/Control',
-   'tmpl!Controls-demo/Filter/Button/panelOptions/PanelVDomApplication'
+   'wml!Controls-demo/Filter/Button/panelOptions/PanelVDomApplication'
 ], function(Control, template) {
    'use strict';
    

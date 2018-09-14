@@ -13,7 +13,7 @@ define('Controls/Input/Phone/ViewModel',
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
       var
          replacer = '',
@@ -52,6 +52,15 @@ define('Controls/Input/Phone/ViewModel',
                value: this._options.value,
                position: 0
             }).value;
+         },
+
+         isFilled: function() {
+            var value = this._options.value;
+            var mask = MaskBuilder.getMask(value);
+            var keysRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('|') + ']', 'g');
+            var maskOfKeys = mask.match(keysRegExp);
+
+            return value.length === maskOfKeys.length;
          }
       });
 

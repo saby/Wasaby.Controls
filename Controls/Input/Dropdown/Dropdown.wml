@@ -1,0 +1,23 @@
+<Controls.Dropdown.Controller
+        source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        parentProperty="{{_options.parentProperty}}"
+        nodeProperty="{{_options.nodeProperty}}"
+        itemTemplateProperty="{{_options.itemTemplateProperty}}"
+        itemTemplate="{{_options.itemTemplate}}"
+        headTemplate="{{_options.headTemplate}}"
+        headConfig="{{_options.headConfig}}"
+        footerTemplate="{{_options.footerTemplate}}"
+        selectedKeys="{{_options.selectedKeys}}"
+        showHeader="{{_options.showHeader}}"
+        emptyText="{{_options.emptyText}}"
+        popupClassName="{{_options.popupClassName ||  (_options.showHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin')}}"
+        caption="{{_options.caption || _text}}"
+        dataLoadCallback="{{_setText}}"
+        on:selectedItemsChanged="_selectedItemsChangedHandler()"
+        class="controls-Dropdown">
+   <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
+               icon="{{_icon}}"
+               text="{{_text}}"
+               class="{{!_options.readOnly ? 'controls-Dropdown__' + (_isEmptyItem ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}}"/>
+</Controls.Dropdown.Controller>

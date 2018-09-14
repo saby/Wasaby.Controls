@@ -11,7 +11,7 @@ define('Controls/Input/Mask/ViewModel',
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
       var ViewModel = BaseViewModel.extend({
          constructor: function(options) {

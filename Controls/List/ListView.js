@@ -3,14 +3,17 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/ListView/ListView',
-   'tmpl!Controls/List/ItemTemplate',
-   'tmpl!Controls/List/GroupTemplate',
+   'wml!Controls/List/ListView/ListView',
+   'wml!Controls/List/ItemTemplate',
+   'wml!Controls/List/GroupTemplate',
+   'wml!Controls/List/resources/ItemOutputWrapper',
+   'wml!Controls/List/resources/ItemOutput',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
    defaultItemTemplate,
-   GroupTemplate
+   GroupTemplate,
+   ItemOutputWrapper
 ) {
    'use strict';
 
@@ -39,8 +42,9 @@ define('Controls/List/ListView', [
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
+         _itemOutputWrapper: ItemOutputWrapper,
 
-         constructor: function(cfg) {
+         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];

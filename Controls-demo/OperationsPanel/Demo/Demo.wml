@@ -1,0 +1,57 @@
+<div class="demo-Grid__container">
+    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+        <Controls.Container.TreeMultiSelector on:selectedKeysChanged="_selectionChangeHandler()"
+                                              bind:selectedKeys="_selectedKeys"
+                                              bind:excludedKeys="_excludedKeys"
+                                              parentProperty="Раздел"
+                                              nodeProperty="Раздел@">
+            <div style="width: 100%;">
+                <Controls.Operations.Button bind:expanded="_panelExpanded"/>
+                <Controls.Operations.Panel
+                        expanded="{{_panelExpanded}}"
+                        name="myPanel"
+                        multiSelectorVisibility="{{true}}"
+                        parentProperty="parent"
+                        nodeProperty="@parent"
+                        keyProperty="id"
+                        source="{{_panelSource}}"
+                        on:itemClick="_panelItemClick()">
+                    <ws:rightTemplate>
+                        <Controls.Button
+                                caption="Доп. операции"
+                                on:click="_onClickAddBlock()"
+                                icon="icon-small icon-Settings"
+                                style="linkMain"/>
+                    </ws:rightTemplate>
+                </Controls.Operations.Panel>
+                <Controls.List.Remover name="remover"
+                                       nodeProperty="Раздел@"
+                                       parentProperty="Раздел"
+                                       on:beforeItemsRemove="_beforeItemsRemove()"/>
+                <Controls.List.DialogMover name="dialogMover"
+                                           columns="{{_moveDialogColumns}}"
+                                           parentProperty="Раздел"
+                                           on:afterItemsMove="_afterItemsMove()"
+                                           filter="{{_moveDialogFilter}}"
+                                           nodeProperty="Раздел@"
+                                           rootValue="{{null}}"/>
+                <Controls.Container.Scroll>
+                    <Controls.List.Container>
+                        <Controls.List.MultiSelector>
+                            <Controls.TreeGrid
+                                    name="list"
+                                    attr:class="demo-Grid__control"
+                                    parentProperty="{{_parentProperty}}"
+                                    nodeProperty="{{_nodeProperty}}"
+                                    itemsReadyCallback="{{_itemsReadyCallback}}"
+                                    multiSelectVisibility="{{_panelExpanded ? 'visible'}}"
+                                    columns="{{_gridColumns}}"
+                            />
+                        </Controls.List.MultiSelector>
+                    </Controls.List.Container>
+                </Controls.Container.Scroll>
+            </div>
+        </Controls.Container.TreeMultiSelector>
+    </Controls.Container.Data>
+    <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+</div>

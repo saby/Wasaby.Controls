@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/resources/MyTextBox',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'tmpl!Controls-demo/Popup/resources/MyTextBox',
+      'wml!Controls-demo/Popup/resources/MyTextBox',
       'css!Controls-demo/Popup/resources/MyTextBox',
       'SBIS3.CONTROLS/TextBox'
    ], function(CompoundControl, dotTplFn) {

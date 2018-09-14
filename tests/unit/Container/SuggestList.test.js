@@ -44,6 +44,25 @@ define(
             assert.isTrue(eventFired);
             assert.equal(tab, 'test');
          });
+   
+         it('isTabChanged', function() {
+            assert.isTrue(List._private.isTabChanged({tabsSelectedKey: 1}, 2));
+            assert.isFalse(List._private.isTabChanged({tabsSelectedKey: 1}, 1));
+         });
+   
+         it('getTabKeyFromContext', function() {
+            var emptyContext = {};
+            var contextWithValue = {
+               suggestOptionsField: {
+                  options: {
+                     tabsSelectedKey: 1
+                  }
+               }
+            };
+      
+            assert.equal(List._private.getTabKeyFromContext(emptyContext), null);
+            assert.equal(List._private.getTabKeyFromContext(contextWithValue), 1);
+         });
          
       });
    }

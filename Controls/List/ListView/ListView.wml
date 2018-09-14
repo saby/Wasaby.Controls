@@ -1,0 +1,16 @@
+<div class="controls-ListView controls-ListView_{{_options.style}}">
+   <ws:if data="{{_listModel}}">
+      <ws:partial
+              template="wml!Controls/List/resources/For"
+              listModel="{{_listModel}}"
+              itemActionsTemplate="{{_options.itemActionsTemplate}}"
+              swipeTemplate="{{_options.swipeTemplate}}"
+              groupTemplate="{{_groupTemplate}}"
+              multiSelectTpl="{{_options.multiSelectTpl}}"
+              editingItemData="{{_options.editingItemData}}"
+              isAdd="{{_options.isAdd}}"
+              itemOutputWrapper="{{_itemOutputWrapper}}"
+              itemTemplate="{{_itemTemplate}}">
+      </ws:partial>
+   </ws:if>
+</div>

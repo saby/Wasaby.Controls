@@ -71,6 +71,7 @@ define(
                assert.equal(toolbar._items, records);
                assert.equal(!!toolbar._needShowMenu, true);
                assert.equal(toolbar._menuItems.getCount(), 3);
+               assert.equal(toolbar._popupOptions.opener, toolbar);
             });
             it('need show menu', function() {
                return new Promise((resolve) => {
@@ -113,6 +114,7 @@ define(
             it('click item with menu', function() {
                let isNotify = false;
                let eventString = '';
+               toolbar._beforeMount(config, null, records);
                toolbar._notify = (e) => {
                   eventString += e;
                   isNotify = true;

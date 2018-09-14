@@ -1,7 +1,7 @@
 define('Controls/DragNDrop/Container',
    [
       'Core/Control',
-      'tmpl!Controls/DragNDrop/Container/Container',
+      'wml!Controls/DragNDrop/Container/Container',
       'Controls/DragNDrop/DraggingTemplate'
    ],
 

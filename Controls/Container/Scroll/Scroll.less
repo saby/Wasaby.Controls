@@ -6,10 +6,12 @@
    flex-direction: column;
 }
 
+// Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
 .controls-Scroll_webkitOverflowScrollingAuto .controls-Scroll__content {
    -webkit-overflow-scrolling: auto;
 }
 
+// Use momentum-based scrolling, where the content continues to scroll for a while after finishing the scroll gesture and removing your finger from the touchscreen.
 .controls-Scroll_webkitOverflowScrollingTouch .controls-Scroll .controls-Scroll__content {
    -webkit-overflow-scrolling: touch;
 }

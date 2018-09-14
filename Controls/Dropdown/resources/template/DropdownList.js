@@ -1,24 +1,29 @@
 define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/resources/template/DropdownList',
+      'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
-      'tmpl!Controls/Dropdown/resources/template/defaultGroupTemplate',
-      'tmpl!Controls/Dropdown/resources/template/itemTemplate',
-      'tmpl!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'tmpl!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
+      'Controls/Popup/PopupContext',
+      'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
+      'wml!Controls/Dropdown/resources/template/itemTemplate',
+      'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
+      'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
       'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
-         setPopupOptions: function(self) {
+         setPopupOptions: function(self, horizontalAlign) {
+            var align = horizontalAlign.side || 'right';
             self._popupOptions = {
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,
+               horizontalAlign: {
+                  side: align
+               },
                corner: {
-                  horizontal: 'right'
+                  horizontal: align
                },
                eventHandlers: {
                   onResult: self.resultHandler
@@ -107,11 +112,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
+               _private.setPopupOptions(this, newOptions);
             }
-            _private.setPopupOptions(this, newOptions);
          },
 
-         _beforeUpdate: function(newOptions) {
+         _beforeUpdate: function(newOptions, context) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
                itemsChanged = newOptions.items !== this._options.items;
 
@@ -129,6 +134,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (rootChanged || itemsChanged) {
                this._hasHierarchy = this._listModel.hasHierarchy();
             }
+
+            if (context && context.stickyCfg.horizontalAlign &&
+               (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
+               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign);
+            }
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
@@ -145,9 +155,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                      showHeader: false,
                      defaultItemTemplate: this._options.defaultItemTemplate
                   },
-                  corner: {
-                     horizontal: 'right'
-                  },
+                  corner: this._popupOptions.corner,
+                  horizontalAlign: this._popupOptions.horizontalAlign,
                   target: event.target
                };
                this._children.subDropdownOpener.open(config, this);
@@ -224,6 +233,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
       });
 
       Menu._private = _private;
+
+      Menu.contextTypes = function() {
+         return {
+            stickyCfg: PopupContext
+         };
+      };
 
       Menu.getDefaultOptions = function() {
          return {

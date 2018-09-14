@@ -1,6 +1,6 @@
 define('Controls-demo/Date/PeriodDialog', [
    'Core/Control',
-   'tmpl!Controls-demo/Date/PeriodDialog',
+   'wml!Controls-demo/Date/PeriodDialog',
    'css!themes/online/online'
 ], function(
    BaseControl,

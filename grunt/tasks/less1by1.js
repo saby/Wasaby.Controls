@@ -245,4 +245,15 @@ module.exports = function less1by1Task(grunt) {
          );
       }
    );
+   grunt.registerMultiTask(
+      'lessAll',
+      'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
+      function() {
+         buildLessInFolder(
+            rootPath,
+            'lessAll',
+            createAsyncThemeBuilder(this.async())
+         );
+      }
+   );
 };

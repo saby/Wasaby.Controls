@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Lookup/Lookup',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Input/Lookup/Lookup',
+      'wml!Controls-demo/Input/Lookup/Lookup',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls/Input/Lookup',

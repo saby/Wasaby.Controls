@@ -1,6 +1,6 @@
 define('Controls/Render/Money/Money', [
    'Core/Control',
-   'tmpl!Controls/Render/Money/Money',
+   'wml!Controls/Render/Money/Money',
    'css!Controls/Render/Money/Money'
 
 ], function(Control, Template) {
@@ -33,11 +33,6 @@ define('Controls/Render/Money/Money', [
 
       Money = Control.extend({
          _template: Template,
-
-         constructor: function(cfg) {
-            this._options = cfg;
-            Money.superclass.constructor.apply(this, arguments);
-         },
 
          getModel: function() {
             var

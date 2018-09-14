@@ -1,0 +1,31 @@
+<ws:if data="{{listModel.getDragTargetPosition() &&
+   listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
+   listModel.getDragTargetPosition().position === 'before'}}">
+   <ws:partial
+      multiSelectTpl="{{multiSelectTpl}}"
+      template="{{itemTemplate}}"
+      itemData="{{listModel.getDraggingItemData()}}"/>
+</ws:if>
+<ws:if data="{{listModel.getCurrent().isVisible !== false}}">
+   <ws:partial
+      on:click="_onItemClick(listModel.getCurrent().dispItem)"
+      on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
+      on:swipe="_onItemSwipe(listModel.getCurrent())"
+      on:mousedown="_onItemMouseDown(listModel.getCurrent())"
+      on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"
+      itemActionsTemplate="{{itemActionsTemplate}}"
+      swipeTemplate="{{swipeTemplate}}"
+      multiSelectTpl="{{multiSelectTpl}}"
+      itemTemplate="{{itemTemplate}}"
+      template="wml!Controls/List/ItemTemplateWrapper"
+      itemData="{{listModel.getCurrent()}}"
+      actionsType="{{itemActionsPosition}}"/>
+</ws:if>
+<ws:if data="{{listModel.getDragTargetPosition() &&
+   listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
+   listModel.getDragTargetPosition().position === 'after'}}">
+   <ws:partial
+      multiSelectTpl="{{multiSelectTpl}}"
+      template="{{itemTemplate}}"
+      itemData="{{listModel.getDraggingItemData()}}"/>
+</ws:if>

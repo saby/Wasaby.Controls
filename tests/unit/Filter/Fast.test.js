@@ -52,6 +52,9 @@ define(
                properties: {
                   keyProperty: 'key',
                   displayProperty: 'title',
+                  filter: {
+                     key: 0
+                  },
                   source: {
                      module: 'WS.Data/Source/Memory',
                      options: {
@@ -119,6 +122,15 @@ define(
             FastData._private.reload(fastDataItems).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
+                  done();
+               });
+            });
+         });
+
+         it('load config from items with filter', function(done) {
+            FastData._private.reload(fastDataItems).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(2), 0).addCallback(function() {
+                  assert.deepEqual(fastData._configs[0]._items.getRawData(), [{key: 0, title: 'все страны'}]);
                   done();
                });
             });

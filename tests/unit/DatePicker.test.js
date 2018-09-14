@@ -73,6 +73,7 @@ define(['SBIS3.CONTROLS/Date/Picker'], function (DatePicker) {
          afterEach(function () {
             testControl.destroy();
             testControl = undefined;
+            container && container.remove();
             container = undefined;
          });
 

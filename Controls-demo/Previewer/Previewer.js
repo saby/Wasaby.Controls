@@ -1,22 +1,45 @@
-define('Controls-demo/Previewer/Previewer',
-   [
-      'Core/Control',
-      'tmpl!Controls-demo/Previewer/Previewer'
-   ],
-   function(Control, template) {
+define('Controls-demo/Previewer/Previewer', [
+	'Core/Control',
+	'wml!Controls-demo/Previewer/Previewer',
+	'WS.Data/Source/Memory',
+	'css!Controls-demo/Previewer/Previewer',
+], function(Control, template, MemorySource) {
+		'use strcit';
 
-      'use strcit';
+		var Previewer = Control.extend({
+			_template: template,
+			_triggerSource: null,
+			_caption1: 'hover',
+			_caption2: 'click',
+			_trigger: 'hoverAndClick',
+			_value: true,	
+			_selectedTrigger: 'hoverAndClick',
 
-      var Previewer = Control.extend({
-         _template: template
-      });
+			_beforeMount: function() {
+				this._triggerSource = new MemorySource({
+					idProperty: 'title',
+					data: [
+						{title: 'hoverAndClick'},
+						{title: 'hover'},
+						{title: 'click'}
+					]
+				});
+			},
+			
+			changeTrigger: function(e, key) {
+				this._selectedTrigger = key;
+				this._trigger = key;
+			}
+			
+		});
 
-      Previewer.getDefaultOptions = function() {
-         return {
-            imgRoot: '/'
-         };
-      };
+		Previewer.getDefaultOptions = function() {
+			return {
+				imgRoot: '/'
+			};
+		};
 
-      return Previewer;
-   }
+		return Previewer;
+
+	}
 );

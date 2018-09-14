@@ -122,6 +122,7 @@ define('Controls/List/Tree/TreeViewModel', [
 
       TreeViewModel = ListViewModel.extend({
          _expandedNodes: null,
+         _hasMoreStorage: null,
 
          constructor: function(cfg) {
             this._options = cfg;
@@ -177,19 +178,44 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
+            current.parentProperty = this._options.parentProperty;
+            current.nodeProperty = this._options.nodeProperty;
 
-            if (!current.isGroup && current.dispItem.isNode() && this._selectedKeys.indexOf(current.key) !== -1) {
-               //TODO: проверка на hasMore должна быть тут
-               if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
-                  current.multiSelectStatus = true;
-               } else if (_private.getSelectedChildrenCount(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
-                  current.multiSelectStatus = null;
-               } else {
-                  current.multiSelectStatus = false;
+            if (!current.isGroup && current.dispItem.isNode()) {
+               if (current.isExpanded) {
+                  current.hasChildren = this._display.getChildren(current.dispItem).getCount();
+
+                  if (this._options.nodeFooterTemplate) {
+                     current.footerStorage = {};
+                     current.footerStorage.template = this._options.nodeFooterTemplate;
+                  }
+
+                  if (this._hasMoreStorage && this._hasMoreStorage[current.item.getId()]) {
+                     if (!current.footerStorage) {
+                        current.footerStorage = {};
+                     }
+                     current.footerStorage.hasMoreStorage = this._hasMoreStorage[current.item.getId()];
+                  }
+               }
+               if (this._selectedKeys.indexOf(current.key) !== -1) {
+
+                  //TODO: проверка на hasMore должна быть тут
+                  if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
+                     current.multiSelectStatus = true;
+                  } else if (_private.getSelectedChildrenCount(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
+                     current.multiSelectStatus = null;
+                  } else {
+                     current.multiSelectStatus = false;
+                  }
                }
             }
-
             return current;
+         },
+
+         setHasMoreStorage: function(hasMoreStorage) {
+            this._hasMoreStorage = hasMoreStorage;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          setRoot: function(root) {

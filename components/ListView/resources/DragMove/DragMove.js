@@ -384,7 +384,12 @@ define('SBIS3.CONTROLS/ListView/resources/DragMove/DragMove', [
             var targetDataSource = this._getView().getDataSource(),
                owner = DragObject.getOwner(),
                ownerDataSource = typeof owner.getDataSource == 'function' ? owner.getDataSource() : undefined;
-            if (ownerDataSource && targetDataSource && ownerDataSource.getEndpoint().contract === targetDataSource.getEndpoint().contract) {
+            if (ownerDataSource
+               && targetDataSource
+               && ownerDataSource.getEndpoint
+               && targetDataSource.getEndpoint
+               && ownerDataSource.getEndpoint().contract === targetDataSource.getEndpoint().contract
+            ) {
                return true;
             }
             return false;

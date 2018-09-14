@@ -1,32 +1,73 @@
 define('Controls/EditAtPlace', [
    'Core/Control',
-   'tmpl!Controls/EditAtPlace/EditAtPlace',
+   'Core/Deferred',
+   'wml!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/EditAtPlace/EditAtPlace',
    'css!Controls/List/EditInPlace/Text'
-], function(Control, template) {
+], function(
+   Control,
+   Deferred,
+   template
+) {
    'use strict';
-   var EditResult = {
+   var
+      EditResult = {
          CANCEL: 'Cancel' // Undo start editing
       },
       EndEditResult = {
          CANCEL: 'Cancel' // Undo completion of editing
+      },
+      _private = {
+         validate: function(self) {
+            return self._children.formController.submit();
+         },
+         afterEndEdit: function(self, commit) {
+            if (commit) {
+               self._editObject.acceptChanges();
+            } else {
+               self._editObject.rejectChanges();
+            }
+            self._isEditing = false;
+            self._notify('afterEndEdit', [self._editObject], { bubbling: true });
+            return Deferred.success();
+         },
+         endEdit: function(self, commit) {
+            var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
+
+            if (result === EndEditResult.CANCEL) {
+               return Deferred.success();
+            }
+
+            if (result instanceof Deferred) {
+               return result.addCallback(function() {
+                  return _private.afterEndEdit(self, commit);
+               });
+            }
+
+            return _private.afterEndEdit(self, commit);
+         }
       };
 
-   var EditAtPlace = Control.extend({
+   /**
+    * Controller for editing of input fields.
+    *
+    * @class Controls/List/EditAtPlace
+    * @extends Core/Control
+    * @mixes Controls/interface/IEditAtPlace
+    * @author Зайцев А.С.
+    * @public
+    */
+
+   var EditAtPlace = Control.extend(/** @lends Controls/List/EditAtPlace.prototype */{
       _template: template,
       _isEditing: false,
-      _editObject: null,
-      _startEditTarget: null,
 
       _beforeMount: function(newOptions) {
-         this._isEditing = newOptions.isEditing;
+         this._isEditing = newOptions.editWhenFirstRendered;
          this._editObject = newOptions.editObject.clone();
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.isEditing !== newOptions.isEditing) {
-            this._isEditing = newOptions.isEditing;
-         }
          if (this._options.editObject !== newOptions.editObject) {
             this._editObject = newOptions.editObject.clone();
          }
@@ -34,20 +75,20 @@ define('Controls/EditAtPlace', [
 
       _afterUpdate: function() {
          if (this._startEditTarget) {
-            //search closest input and focus
+            // search closest input and focus
             this._startEditTarget.getElementsByTagName('input')[0].focus();
             this._startEditTarget = null;
          }
       },
 
       _onClickHandler: function(event) {
-         if (this.isEnabled() && !this._isEditing) {
+         if (!this._options.readOnly && !this._isEditing) {
             this.startEdit(event);
          }
       },
 
       _onDeactivatedHandler: function() {
-         if (this.isEnabled() && this._isEditing) {
+         if (!this._options.readOnly && this._isEditing) {
             this._options.commitOnDeactivate
                ? this.commitEdit()
                : this.cancelEdit();
@@ -57,11 +98,10 @@ define('Controls/EditAtPlace', [
       _onKeyDown: function(event) {
          if (this._isEditing) {
             switch (event.nativeEvent.keyCode) {
-               case 13: //Enter
+               case 13: // Enter
                   this.commitEdit();
-
                   break;
-               case 27: //Esc
+               case 27: // Esc
                   this.cancelEdit();
                   break;
             }
@@ -74,41 +114,24 @@ define('Controls/EditAtPlace', [
          });
          if (result !== EditResult.CANCEL) {
             this._isEditing = true;
-            this._startEditTarget = event.target.closest(
-               '.controls-EditAtPlaceV__editorWrapper'
-            );
+            this._startEditTarget = event.target.closest('.controls-EditAtPlaceV__editorWrapper');
          }
       },
 
       cancelEdit: function() {
-         this._notify('cancelEdit', [], { bubbling: true });
-         this._isEditing = false;
+         return _private.endEdit(this, false);
       },
 
       commitEdit: function() {
-         this.validate().addCallback(
-            function(result) {
-               for (var key in result) {
-                  if (result.hasOwnProperty(key) && result[key]) {
-                     return;
-                  }
+         var self = this;
+         return _private.validate(this).addCallback(function(result) {
+            for (var key in result) {
+               if (result.hasOwnProperty(key) && result[key]) {
+                  return Deferred.success();
                }
-               var eventResult = this._notify(
-                  'beforeEndEdit',
-                  [this._editObject],
-                  { bubbling: true }
-               );
-               if (eventResult !== EndEditResult.CANCEL) {
-                  this._notify('editObjectChanged', [this._editObject]); //for bind
-                  this._isEditing = false;
-                  this._forceUpdate();
-               }
-            }.bind(this)
-         );
-      },
-
-      validate: function() {
-         return this._children.formController.submit();
+            }
+            return _private.endEdit(self, true);
+         });
       }
    });
 

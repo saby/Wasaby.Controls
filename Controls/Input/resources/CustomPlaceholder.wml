@@ -1,0 +1,8 @@
+<!--TODO убрать tabindex после выполнения задачи: https://online.sbis.ru/opendoc.html?guid=dfd29b8d-9b1e-4724-9456-41e0cf1fe853-->
+<div class="controls-InputRender__placeholder controls-InputRender__placeholder_simple" tabindex="-1">
+   <span class="controls-InputRender__placeholder__overflow">
+      <ws:if data="{{placeholder}}">
+         <ws:partial template="{{placeholder}}"/>
+      </ws:if>
+   </span>
+</div>

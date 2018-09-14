@@ -1,13 +1,13 @@
 define('Controls-demo/List/Tree/Tree', [
    'Core/Control',
    'Controls-demo/List/Tree/GridData',
-   'tmpl!Controls-demo/List/Tree/Tree',
+   'wml!Controls-demo/List/Tree/Tree',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls/Constants',
    'css!Controls-demo/List/Tree/Tree',
    'Controls/Container/Scroll',
    'Controls/TreeGrid',
-   'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
+   'wml!Controls-demo/List/Tree/DemoContentTemplate'
 ], function(BaseControl, GridData, template, MemorySource, ControlsConstants) {
    'use strict';
    var
@@ -25,7 +25,7 @@ define('Controls-demo/List/Tree/Tree', [
                {
                   displayProperty: 'Наименование',
                   width: '1fr',
-                  template: 'tmpl!Controls-demo/List/Tree/DemoContentTemplate'
+                  template: 'wml!Controls-demo/List/Tree/DemoContentTemplate'
                }
             ];
             this.showType = {
@@ -93,16 +93,7 @@ define('Controls-demo/List/Tree/Tree', [
             };
          },
          _showAction: function(action, item) {
-            if (item.get('id') === '471329') {
-               if (action.id === 2 || action.id === 3) {
-                  return false;
-               }
-               return true;
-            }
             if (action.id === 5) {
-               return false;
-            }
-            if (item.get('id') === '448390') {
                return false;
             }
 

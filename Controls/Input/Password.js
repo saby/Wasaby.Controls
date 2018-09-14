@@ -3,7 +3,7 @@ define('Controls/Input/Password',
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
-      'tmpl!Controls/Input/Password/Password',
+      'wml!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
 
       'css!Controls/Input/Password/Password'
@@ -30,7 +30,7 @@ define('Controls/Input/Password',
        * @demo Controls-demo/Input/Password/Password
        * @demo Controls-demo/Input/Password/Password
        *
-       * @author Зайцев А.С.
+       * @author Журавлев М.С.
        */
 
       'use strict';
@@ -67,7 +67,8 @@ define('Controls/Input/Password',
 
       PasswordInput.getOptionTypes = function getOptionsTypes() {
          return {
-            placeholder: types(String)
+
+            /*placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
          };
       };
 

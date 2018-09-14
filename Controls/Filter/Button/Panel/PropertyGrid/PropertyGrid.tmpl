@@ -1,0 +1,14 @@
+<div class="controls-PropertyGrid">
+    <ws:for data="index, item in _options.items">
+        <ws:if data="{{_isItemVisible(item)}}">
+            <div class="controls-PropertyGrid__item">
+                <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
+                            item="{{item}}"
+                            templateOptions="{{_options.itemTemplate.templateOptions}}"
+                            on:valueChanged="_valueChangedHandler(index)"
+                            on:visibilityChanged="_visibilityChangedHandler(index)"
+                            on:selectedKeysChanged="_valueChangedHandler(index)"/>
+            </div>
+        </ws:if>
+    </ws:for>
+</div>

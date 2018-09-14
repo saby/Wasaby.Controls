@@ -2,8 +2,8 @@ define('Controls/Container/Scroll/Scrollbar',
    [
       'Core/Control',
       'Core/detection',
-      'tmpl!Controls/Container/Scroll/Scrollbar/Scrollbar',
-      'Controls/Event/Emitter',
+      'wml!Controls/Container/Scroll/Scrollbar/Scrollbar',
+      'Controls/Event/Listener',
       'css!Controls/Container/Scroll/Scrollbar/Scrollbar'
    ],
    function(Control, detection, template) {

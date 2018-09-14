@@ -1,0 +1,25 @@
+<div class="controls-BreadCrumbsPath">
+    <div class="controls-BreadCrumbsPath__wrapper">
+        <ws:if data="{{_options.items && _options.items.length}}">
+            <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
+                <Controls.Header.BackButton attr:class="controls-BreadCrumbsPath__backButton"
+                                      caption="{{_backButtonCaption}}"
+                                      style="primary"
+                                      on:click="_onBackButtonClick()"/>
+                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                     on:click="_onArrowClick()"></div>
+            </div>
+            <ws:if data="{{_visibleItems.length}}">
+                <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+                                           items="{{_breadCrumbsItems}}"
+                                           visibleItems="{{_visibleItems}}"
+                                           keyProperty="{{_options.keyProperty}}"
+                                           displayProperty="{{_options.displayProperty}}"
+                                           on:itemClick="_onItemClick()"/>
+            </ws:if>
+        </ws:if>
+
+        <Controls.Event.Listener event="controlResize"
+                                on:controlResize="_onResize()"/>
+    </div>
+</div>

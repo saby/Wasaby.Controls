@@ -13,7 +13,7 @@ define([
    'Controls/List/ListView'
 ], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cDeferred, cInstance) {
    describe('Controls.List.BaseControl', function() {
-      var data, display, result, source, rs;
+      var data, result, source, rs;
       beforeEach(function() {
          data = [
             {
@@ -838,7 +838,7 @@ define([
       });
 
       describe('EditInPlace', function() {
-         it('editItem', function(done) {
+         it('editItem', function() {
             var opt = {
                test: 'test'
             };
@@ -872,14 +872,15 @@ define([
                editInPlace: {
                   editItem: function(options) {
                      assert.equal(options, opt);
-                     done();
+                     return cDeferred.success();
                   }
                }
             };
-            ctrl.editItem(opt);
+            var result = ctrl.editItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('addItem', function(done) {
+         it('addItem', function() {
             var opt = {
                test: 'test'
             };
@@ -913,14 +914,15 @@ define([
                editInPlace: {
                   addItem: function(options) {
                      assert.equal(options, opt);
-                     done();
+                     return cDeferred.success();
                   }
                }
             };
-            ctrl.addItem(opt);
+            var result = ctrl.addItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('cancelEdit', function(done) {
+         it('cancelEdit', function() {
             var cfg = {
                viewName: 'Controls/List/ListView',
                source: source,
@@ -950,14 +952,15 @@ define([
             ctrl._children = {
                editInPlace: {
                   cancelEdit: function() {
-                     done();
+                     return cDeferred.success();
                   }
                }
             };
-            ctrl.cancelEdit();
+            var result = ctrl.cancelEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
-         it('commitEdit', function(done) {
+         it('commitEdit', function() {
             var cfg = {
                viewName: 'Controls/List/ListView',
                source: source,
@@ -987,11 +990,12 @@ define([
             ctrl._children = {
                editInPlace: {
                   commitEdit: function() {
-                     done();
+                     return cDeferred.success();
                   }
                }
             };
-            ctrl.commitEdit();
+            var result = ctrl.commitEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
          });
 
          it('_onBeforeItemAdd', function() {

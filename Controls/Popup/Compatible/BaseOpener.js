@@ -28,6 +28,7 @@ function(cMerge,
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
+            popupComponent: cfg._popupComponent,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
             _mode: cfg._mode,
@@ -105,6 +106,9 @@ function(cMerge,
          cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
 
+         // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
+         cfg.templateOptions.ignoreTabCycles = false;
+
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
 
@@ -170,6 +174,7 @@ function(cMerge,
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
+            cfg.closeByExternalClick = false;
          }
 
          if (cfg.horizontalAlign) {
@@ -224,11 +229,11 @@ function(cMerge,
          if (cfg.hasOwnProperty('offset')) {
             if (cfg.offset.x) {
                cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
+               cfg.horizontalAlign.offset = parseInt(cfg.offset.x, 10);
             }
             if (cfg.offset.y) {
                cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
+               cfg.verticalAlign.offset = parseInt(cfg.offset.y, 10);
             }
          }
 
@@ -238,6 +243,14 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('draggable')) {
             cfg.templateOptions.draggable = cfg.draggable;
+         }
+
+         cfg.eventHandlers = cfg.eventHandlers || {};
+         if (cfg.hasOwnProperty('onResultHandler')) {
+            cfg.eventHandlers.onResult = cfg.onResultHandler;
+         }
+         if (cfg.hasOwnProperty('onCloseHandler')) {
+            cfg.eventHandlers.onClose = cfg.onCloseHandler;
          }
 
          cfg.isCompoundTemplate = true;
@@ -300,6 +313,10 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('closeChildWindows')) {
             newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
+         }
+
+         if (cfg.hasOwnProperty('nativeEvent')) {
+            newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
          }
 
          if (cfg.verticalAlign && cfg.verticalAlign.side) {
