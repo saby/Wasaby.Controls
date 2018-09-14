@@ -769,48 +769,51 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if(this._delayOffSelectionChange) {
                   clearTimeout(this._delayOffSelectionChange);
                }
-               this._tinyEditor.off('click');
-               this._tinyEditor.off('touchstart');
-               this._tinyEditor.off('dblclick');
-               this._tinyEditor.off('postRender');
-               this._tinyEditor.off('initContentBody');
-               this._tinyEditor.off('onBeforePaste');
-               this._tinyEditor.off('Paste');
-               this._tinyEditor.off('PastePreProcess');
-               this._tinyEditor.off('PastePostProcess');
-               this._tinyEditor.off('mousedown');
-               this._tinyEditor.off('mouseup');
-               this._tinyEditor.off('drop');
-               this._tinyEditor.off('dragstart');
-               this._tinyEditor.off('dragend');
-               this._tinyEditor.off('keyup');
-               this._tinyEditor.off('keydown');
-               this._tinyEditor.off('keypress');
-               this._tinyEditor.off('cut');
-               this._tinyEditor.off('change');
-               this._tinyEditor.off('blur');
-               this._tinyEditor.off('focusout');
-               this._tinyEditor.off('focus');
-               this._tinyEditor.off('focusin');
-               this._tinyEditor.off('NodeChange');
-               this._tinyEditor.off('TypingUndo');
-               this._tinyEditor.off('AddUndo');
-               this._tinyEditor.off('ClearUndos');
-               this._tinyEditor.off('redo');
-               this._tinyEditor.off('undo');
-               this._tinyEditor.off('beforeunload');
+               var editor = this._tinyEditor;
+               // Отписаться от всех указанных событий
+               [
+                  'click',
+                  'touchstart',
+                  'dblclick',
+                  'postRender',
+                  'initContentBody',
+                  'onBeforePaste',
+                  'Paste',
+                  'PastePreProcess',
+                  'PastePostProcess',
+                  'mousedown',
+                  'mouseup',
+                  'drop',
+                  'dragstart',
+                  'dragend',
+                  'keyup',
+                  'keydown',
+                  'keypress',
+                  'cut',
+                  'change',
+                  'blur',
+                  'focusout',
+                  'focus',
+                  'focusin',
+                  'NodeChange',
+                  'TypingUndo',
+                  'AddUndo',
+                  'ClearUndos',
+                  'redo',
+                  'undo',
+                  'beforeunload',
 
-               this._tinyEditor.off('scroll');
-               this._tinyEditor.off('mousewheel');
-               this._tinyEditor.off('input');
-               this._tinyEditor.off('resizeEditor');
-               this._tinyEditor.off('scrollIntoView');
-               this._tinyEditor.off('BeforeSetContent');
-               this._tinyEditor.off('PreInit');
-               this._tinyEditor.off('ready');
-               this._tinyEditor.off('resize');
-               this._tinyEditor.off('init');
-
+                  'scroll',
+                  'mousewheel',
+                  'input',
+                  'resizeEditor',
+                  'scrollIntoView',
+                  'BeforeSetContent',
+                  'PreInit',
+                  'ready',
+                  'resize',
+                  'init'
+               ].forEach(editor.off.bind(editor))
             },
 
             destroy: function() {
@@ -2165,30 +2168,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel.hide();
                }
             },
-            _onKeyDownCallback: function(e) {
+            _onKeyDownHideImageOptionsPanel: function (e) {
                if (e.ctrlKey && (e.key === 'End' || e.keyCode === 35 || e.key === 'Home' || e.keyCode === 36)) {
                   this._hideImageOptionsPanel();
                }
             },
-            _onKeyUpCallback: function(evt) {
+            _onKeyUpDeleteImage: function (evt) {
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
                if (evt.key === 'Delete' || evt.keyCode === 46) {
                   var imgOptsPanel = this._imageOptionsPanel;
-
                   if (imgOptsPanel && imgOptsPanel.isVisible()) {
-
                      var $img = imgOptsPanel.getTarget();
-
                      if ($img && $img.length) {
-
                         this._markListWithImage($img, false);
                         var selection = this.getTinyEditor().selection;
                         selection.select($img[0]);
                         selection.getRng().deleteContents();
                         imgOptsPanel.hide();
-
                      }
                   }
                }
+            },
+            _onKeyUpSetLastRng: function (evt) {
                this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _onMouseUpCallback: function(e) { //в ie криво отрабатывает клик
@@ -2261,11 +2263,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._bindImageEvent('click', this._onClickCallback);
                this._subscribeOnScroll();
 
-               editor.on('keydown', this._onKeyDownCallback);
+               editor.on('keydown', this._onKeyDownHideImageOptionsPanel);
 
-               // При нажатии клавиши Del - удалить изображение, если оно выделено
-               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
-               editor.on('keyup', this._onKeyUpCallback);
+               editor.on('keyup', this._onKeyUpDeleteImage);
+               editor.on('keyup', this._onKeyUpSetLastRng);
 
                this._inputControl.attr('tabindex', 1);
 
@@ -2607,7 +2608,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   evt.preventDefault();
                }
             },
-            _onKeyDownCallback3: function(e) {
+            _onKeyDownCtrlEnterOrEscape: function (e) {
+               //Передаём на контейнер нажатие ctrl+enter и escape
                if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
                   e.stopPropagation();
                }
@@ -2696,7 +2698,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
 
-            _onKeyUpCallback1: function(e) {
+            _onKeyUpDontBubbleEnterUpDown: function (e) {
+               //Запрещаем всплытие Enter, Up и Down
                var ctrlKey = e.ctrlKey;
 
                if (e.which === cConstants.key.enter && !ctrlKey && self._ctrlKeyUpTimestamp) {
@@ -2863,65 +2866,72 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
             saveCallbacks: function() {
-               this._sanitizeClasses = this._sanitizeClasses.bind(this);
-               this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
-               this._prepareReviewContent = this._prepareReviewContent.bind(this);
-               this._prepareContent = this._prepareContent.bind(this);
-               this._performByReadyCallback = this._performByReadyCallback.bind(this);
-               this._onCutTimeout = this._onCutTimeout.bind(this);
-               this._sanitizeClassCallback = this._sanitizeClassCallback.bind(this);
-               this._onSetupCallback = this._onSetupCallback.bind(this);
-               this._onInitCallback = this._onInitCallback.bind(this);
-               this._onInitContentBody = this._onInitContentBody.bind(this);
-               this._onBeforePasteCallback = this._onBeforePasteCallback.bind(this);
-               this._onPasteCallback = this._onPasteCallback.bind(this);
-               this._onPastePreProcessCallback = this._onPastePreProcessCallback.bind(this);
-               this._onPastePostProcessCallback = this._onPastePostProcessCallback.bind(this);
-               this._onSelectionChange2 = this._onSelectionChange2.bind(this);
-               this._onSelectionChange1 = this._onSelectionChange1.bind(this);
-               this._on_onSelectionChange2 = this._on_onSelectionChange2.bind(this);
-               this._off_onSelectionChange2 = this._off_onSelectionChange2.bind(this);
-               this._on_onSelectionChange1 = this._on_onSelectionChange1.bind(this);
-               this._onMousedownCallback1 = this._onMousedownCallback1.bind(this);
-               this._onDragStartCallback1FF = this._onDragStartCallback1FF.bind(this);
-               this._onDragEndCallbackFF = this._onDragEndCallbackFF.bind(this);
-               this._onInputCallback = this._onInputCallback.bind(this);
-               this._onKeyDownCallback3 = this._onKeyDownCallback3.bind(this);
-               this._onKeyUpCallback1 = this._onKeyUpCallback1.bind(this);
-               this._onKeyUpCallback2 = this._onKeyUpCallback2.bind(this);
-               this._onKeyDownCallback4 = this._onKeyDownCallback4.bind(this);
-               this._linkEditStart = this._linkEditStart.bind(this);
-               this._linkEditEnd = this._linkEditEnd.bind(this);
-               this._onKeyDownCallback5 = this._onKeyDownCallback5.bind(this);
-               this._onKeyUpCallback3 = this._onKeyUpCallback3.bind(this);
-               this._onKeyDownCallback6 = this._onKeyDownCallback6.bind(this);
-               this._onKeyPressCallback = this._onKeyPressCallback.bind(this);
-               this._onChangeEditorCallback = this._onChangeEditorCallback.bind(this);
-               this._onCut = this._onCut.bind(this);
-               this._onResizeEditorCallback = this._onResizeEditorCallback.bind(this);
-               this._undoCallback = this._undoCallback.bind(this);
-               this._redoCallback = this._redoCallback.bind(this);
-               this._onMouseDownCallback2 = this._onMouseDownCallback2.bind(this);
-               this._onMouseUpCallback2 = this._onMouseUpCallback2.bind(this);
-               this._onFocusOutCallback = this._onFocusOutCallback.bind(this);
-               this._saveBeforeWindowClose = this._saveBeforeWindowClose.bind(this);
-               this._onUNDOMANAGERChange = this._onUNDOMANAGERChange.bind(this);
-               this._onNodeChangeCallback = this._onNodeChangeCallback.bind(this);
-               this._onFocusChangedCallback = this._onFocusChangedCallback.bind(this);
-               this._onFocusOutCallback1 = this._onFocusOutCallback1.bind(this);
-               this._onFocusInCallback1 = this._onFocusInCallback1.bind(this);
-               this._onFocusOutCallback2 = this._onFocusOutCallback2.bind(this);
-               this._onTouchStartCallback1 = this._onTouchStartCallback1.bind(this);
-               this._onScrollIntoViewCallback = this._onScrollIntoViewCallback.bind(this);
-               this._ondblClickCallback = this._ondblClickCallback.bind(this);
-               this._onMouseupTouchstartCallback = this._onMouseupTouchstartCallback.bind(this);
-               this._onMouseDownCallback = this._onMouseDownCallback.bind(this);
-               this._onClickCallback = this._onClickCallback.bind(this);
-               this._hideImageOptionsPanel = this._hideImageOptionsPanel.bind(this);
-               this._onKeyDownCallback = this._onKeyDownCallback.bind(this);
-               this._onKeyUpCallback = this._onKeyUpCallback.bind(this);
-               this._onMouseUpCallback = this._onMouseUpCallback.bind(this);
-               this._tinyReadyCallback0 = this._tinyReadyCallback0.bind(this);
+               // Привязать все указанные методы к текущему контексту
+               var methods = [
+                  '_sanitizeClasses',
+                  '_onFocusChangedCallbackTimeout',
+                  '_prepareReviewContent',
+                  '_prepareContent',
+                  '_performByReadyCallback',
+                  '_onCutTimeout',
+                  '_sanitizeClassCallback',
+                  '_onSetupCallback',
+                  '_onInitCallback',
+                  '_onInitContentBody',
+                  '_onBeforePasteCallback',
+                  '_onPasteCallback',
+                  '_onPastePreProcessCallback',
+                  '_onPastePostProcessCallback',
+                  '_onSelectionChange2',
+                  '_onSelectionChange1',
+                  '_on_onSelectionChange2',
+                  '_off_onSelectionChange2',
+                  '_on_onSelectionChange1',
+                  '_onMousedownCallback1',
+                  '_onDragStartCallback1FF',
+                  '_onDragEndCallbackFF',
+                  '_onInputCallback',
+                  '_onKeyDownCtrlEnterOrEscape',
+                  '_onKeyUpDontBubbleEnterUpDown',
+                  '_onKeyUpCallback2',
+                  '_onKeyDownCallback4',
+                  '_linkEditStart',
+                  '_linkEditEnd',
+                  '_onKeyDownCallback5',
+                  '_onKeyUpCallback3',
+                  '_onKeyDownCallback6',
+                  '_onKeyPressCallback',
+                  '_onChangeEditorCallback',
+                  '_onCut',
+                  '_onResizeEditorCallback',
+                  '_undoCallback',
+                  '_redoCallback',
+                  '_onMouseDownCallback2',
+                  '_onMouseUpCallback2',
+                  '_onFocusOutCallback',
+                  '_saveBeforeWindowClose',
+                  '_onUNDOMANAGERChange',
+                  '_onNodeChangeCallback',
+                  '_onFocusChangedCallback',
+                  '_onFocusOutCallback1',
+                  '_onFocusInCallback1',
+                  '_onFocusOutCallback2',
+                  '_onTouchStartCallback1',
+                  '_onScrollIntoViewCallback',
+                  '_ondblClickCallback',
+                  '_onMouseupTouchstartCallback',
+                  '_onMouseDownCallback',
+                  '_onClickCallback',
+                  '_hideImageOptionsPanel',
+                  '_onKeyDownHideImageOptionsPanel',
+                  '_onKeyUpDeleteImage',
+                  '_onKeyUpSetLastRng',
+                  '_onMouseUpCallback',
+                  '_tinyReadyCallback0'
+               ];
+               for (var i = 0; i < methods.length; i++) {
+                  this[methods[i]] = this[methods[i]].bind(this);
+               }
             },
             _bindEvents: function() {
                var editor = this._tinyEditor;
@@ -2970,11 +2980,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   editor.on('keydown', this._onKeyDownCallback2.bind(this));
                }
 
-               //Передаём на контейнер нажатие ctrl+enter и escape
-               this._container.bind('keydown', this._onKeyDownCallback3);
+               this._container.bind('keydown', this._onKeyDownCtrlEnterOrEscape);
 
-               //Запрещаем всплытие Enter, Up и Down
-               this._container.bind('keyup', this._onKeyUpCallback1);
+               this._container.bind('keyup', this._onKeyUpDontBubbleEnterUpDown);
 
                editor.on('keyup', this._onKeyUpCallback2);
 
