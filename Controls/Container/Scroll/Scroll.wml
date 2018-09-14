@@ -40,7 +40,7 @@
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
-         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeaderModel.isFixed()}}">
+         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeaderId}}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
          </ws:if>
          <ws:if data="{{_displayState.shadowPosition.indexOf('bottom') > -1}}">

@@ -7,7 +7,6 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Context',
       'Controls/StickyHeader/Context',
       'Controls/Container/Scroll/ScrollWidthUtil',
-      'Controls/Container/Scroll/Model/StickyHeader',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
       'Controls/Container/Scroll/Watcher',
@@ -15,7 +14,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, StickyHeaderModel, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 
       'use strict';
 
@@ -145,6 +144,18 @@ define('Controls/Container/Scroll',
                self._displayState.heightFix = displayState.heightFix;
                self._displayState.contentHeight = displayState.contentHeight;
                self._displayState.shadowPosition = displayState.shadowPosition;
+            },
+
+            /**
+             * Update information about the fixation state.
+             * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
+             */
+            updateFixationState: function(self, data) {
+               if (data.shouldBeFixed) {
+                  self._stickyHeaderId = data.id;
+               } else if (self._stickyHeaderId === data.id) {
+                  self._stickyHeaderId = null;
+               }
             }
          },
          Scroll = Control.extend({
@@ -179,10 +190,10 @@ define('Controls/Container/Scroll',
             _pagingState: null,
 
             /**
-             * @type {Controls/Container/Scroll/Model/StickyHeader|null}
+             * @type {String|null}
              * @private
              */
-            _stickyHeaderModel: null,
+            _stickyHeaderId: null,
 
             /**
              * @type {Controls/StickyHeader/Context|null}
@@ -196,7 +207,6 @@ define('Controls/Container/Scroll',
                   def;
 
                this._displayState = {};
-               this._stickyHeaderModel = new StickyHeaderModel();
                this._stickyHeaderContext = new StickyHeaderContext({
                   shadowVisible: options.shadowVisible
                });
@@ -398,7 +408,7 @@ define('Controls/Container/Scroll',
              * @private
              */
             _fixedHandler: function(event, fixedHeaderData) {
-               this._stickyHeaderModel.updateFixationState(fixedHeaderData);
+               _private.updateFixationState(this, fixedHeaderData);
 
                event.stopPropagation();
             },
