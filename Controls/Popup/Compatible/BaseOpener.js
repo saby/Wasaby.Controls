@@ -174,6 +174,7 @@ function(cMerge,
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
+            cfg.closeByExternalClick = false;
          }
 
          if (cfg.horizontalAlign) {
@@ -242,6 +243,14 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('draggable')) {
             cfg.templateOptions.draggable = cfg.draggable;
+         }
+
+         cfg.eventHandlers = cfg.eventHandlers || {};
+         if (cfg.hasOwnProperty('onResultHandler')) {
+            cfg.eventHandlers.onResult = cfg.onResultHandler;
+         }
+         if (cfg.hasOwnProperty('onCloseHandler')) {
+            cfg.eventHandlers.onClose = cfg.onCloseHandler;
          }
 
          cfg.isCompoundTemplate = true;

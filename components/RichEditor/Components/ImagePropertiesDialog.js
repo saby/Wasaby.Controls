@@ -57,11 +57,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             else {
                size = pixelSize;
             }
-            this._imageWidth.setValue(size.width, undefined, !size.width);
+            this._imageWidth.setText(size.width);
             this._imageWidth.setTooltip(pixelSize.width);
-            this._imageHeight.setValue(size.height, undefined, !size.height);
+            this._imageHeight.setText(size.height);
             this._imageHeight.setTooltip(pixelSize.height);
-            this._valueType.setValue(isPercents ? 'per' : 'pix');
+            this._valueType.setSelectedKeys([isPercents ? 'per' : 'pix']);
+
+            this.subscribeTo(this._imageWidth, 'onTextChange', this._onSizeChanged.bind(this, true));
+            this.subscribeTo(this._imageHeight, 'onTextChange', this._onSizeChanged.bind(this, false));
          }.bind(this));
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
@@ -69,41 +72,45 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
                this._options.result.callback({
                   width: this._imageWidth.getValue(),
                   height: this._imageHeight.getValue(),
-                  valueType: this._valueType.getValue()
+                  valueType: this._getValueType()
                });
                this._dialog.close();
             }
          }.bind(this));
 
-         this.subscribeTo(this._imageWidth, 'onChange', this._onSizeChanged.bind(this, true));
-
-         this.subscribeTo(this._imageHeight, 'onChange', this._onSizeChanged.bind(this, false));
-
-         this.subscribeTo(this._valueType, 'onChange', function () {
+         this.subscribeTo(this._valueType, 'onSelectedItemsChange', function () {
             var options = this._options;
             var size;
-            if (this._isPercents()) {
+            if (this._getValueType() === 'per') {
                var percentValue = this._getInitialPercentValue();
                size = {width:percentValue, height:percentValue};
             }
             else {
                size = options.pixelSize;
             }
-            this._imageWidth.setValue(size.width);
-            this._imageHeight.setValue(size.height);
+            this._imageWidth.isSilent = true;
+            this._imageWidth.setText(size.width);
+            this._imageHeight.isSilent = true;
+            this._imageHeight.setText(size.height);
          }.bind(this));
       },
 
-      _onSizeChanged: function (useWidth) {
+      _onSizeChanged: function (useWidth, evt, val) {
          var primary = useWidth ? this._imageWidth : this._imageHeight;
          var secondary = useWidth ? this._imageHeight : this._imageWidth;
+         if (primary.isSilent) {
+            primary.isSilent = undefined;
+            return;
+         }
          var value = primary.getValue();
-         if (this._isPercents()) {
+         if (this._getValueType() === 'per') {
             if (100 < value) {
                value = 100;
-               primary.setValue(value, undefined, false);
+               primary.isSilent = true;
+               primary.setText(value);
             }
-            secondary.setValue(value, undefined, !value);
+            secondary.isSilent = true;
+            secondary.setText(value);
          }
          else {
             var options = this._options;
@@ -112,9 +119,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             var maxValue = useWidth ? options.editorWidth : options.editorWidth/aspect;
             if (maxValue < value) {
                value = maxValue;
-               primary.setValue(value, undefined, false);
+               primary.isSilent = true;
+               primary.setText(value);
             }
-            secondary.setValue(value ? value*aspect : null, undefined, !value);
+            secondary.isSilent = true;
+            secondary.setText(value ? value*aspect : null);
          }
       },
 
@@ -134,13 +143,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
          }
       },
 
-      _isPercents: function () {
-         return this._valueType.getValue() === 'per';
+      _getValueType: function () {
+         var keys = this._valueType.getSelectedKeys();
+         return keys && keys.length ? keys[0] : undefined;
       }
    });
 
    moduleClass.title = rk('Свойства');
-   moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":260,"height":84};
+   moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":218,"height":84};
 
    return moduleClass;
 });
