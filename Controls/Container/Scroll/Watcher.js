@@ -22,38 +22,48 @@ define('Controls/Container/Scroll/Watcher',
       var _private = {
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
+            var eventName;
             if (clientHeight < scrollHeight) {
                if (self._canScrollCache !== true) {
                   self._canScrollCache = true;
-                  _private.sendByRegistrar(self, 'canScroll');
+                  eventName = 'canScroll';
                }
             } else {
                if (self._canScrollCache !== false) {
                   self._canScrollCache = false;
-                  _private.sendByRegistrar(self, 'cantScroll');
+                  eventName = 'cantScroll';
+               }
+               if (eventName) {
+                  _private.sendByRegistrar(self, eventName);
                }
             }
          },
 
          sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
+            var eventName;
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
-               _private.sendByRegistrar(self, 'listTop', scrollTop);
+               eventName = 'listTop';
+
             }
             if (scrollTop + clientHeight >= scrollHeight) {
-               _private.sendByRegistrar(self, 'listBottom', scrollTop);
+               eventName = 'listBottom';
             }
 
             //Проверка на триггеры загрузки
             if (scrollTop <= SCROLL_LOAD_OFFSET) {
-               _private.sendByRegistrar(self, 'loadTopStart', scrollTop);
+               eventName = 'loadTopStart';
             } else {
-               _private.sendByRegistrar(self, 'loadTopStop', scrollTop);
+               eventName = 'loadTopStop';
             }
             if (scrollTop + clientHeight >= scrollHeight - SCROLL_LOAD_OFFSET) {
-               _private.sendByRegistrar(self, 'loadBottomStart', scrollTop);
+               eventName = 'loadBottomStart';
             } else {
-               _private.sendByRegistrar(self, 'loadBottomStop', scrollTop);
+               eventName = 'loadBottomStop';
+            }
+
+            if (eventName) {
+               _private.sendByRegistrar(self, eventName, scrollTop);
             }
          },
 
@@ -117,33 +127,38 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          initIntersectionObserver: function(self, elements) {
+            var eventName;
             self._observer = new IntersectionObserver(function(changes) {
                for (var i = 0; i < changes.length; i++) {
                   switch (changes[i].target) {
                      case elements.topLoadTrigger:
                         if (changes[i].isIntersecting) {
-                           _private.sendByRegistrar(self, 'loadTopStart');
+                           eventName = 'loadTopStart';
                         } else {
-                           _private.sendByRegistrar(self, 'loadTopStop');
+                           eventName = 'loadTopStop';
                         }
                         break;
                      case elements.bottomLoadTrigger:
                         if (changes[i].isIntersecting) {
-                           _private.sendByRegistrar(self, 'loadBottomStart');
+                           eventName = 'loadBottomStart';
                         } else {
-                           _private.sendByRegistrar(self, 'loadBottomStop');
+                           eventName = 'loadBottomStop';
                         }
                         break;
                      case elements.topListTrigger:
                         if (changes[i].isIntersecting) {
-                           _private.sendByRegistrar(self, 'listTop');
+                           eventName = 'listTop';
                         }
                         break;
                      case elements.bottomListTrigger:
                         if (changes[i].isIntersecting) {
-                           _private.sendByRegistrar(self, 'listBottom');
+                           eventName = 'listBottom';
                         }
                         break;
+                  }
+                  if (eventName) {
+                     _private.sendByRegistrar(self, eventName);
+                     eventName = null;
                   }
                }
             }, {});
