@@ -49,6 +49,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                var def = new Deferred();
 
                require([this._options.innerComponentOptions.template], function() {
+
+                  //Пока грузили шаблон, компонент могли задестроить
+                  if (self.isDestroyed()) {
+                     return;
+                  }
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
