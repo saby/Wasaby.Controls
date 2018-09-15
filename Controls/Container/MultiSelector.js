@@ -111,12 +111,21 @@ define('Controls/Container/MultiSelector', [
       _updateSelectionContext: function() {
          var currentSelection = this._multiselection.getSelection();
 
-         this._selectionContext = new SelectionContextField(
-            currentSelection.selected,
-            currentSelection.excluded,
-            this._multiselection.getSelectedKeysForRender(),
-            this._multiselection.getCount()
-         );
+         if (this._selectionContext) {
+            this._selectionContext.updateSelection(
+               currentSelection.selected,
+               currentSelection.excluded,
+               this._multiselection.getSelectedKeysForRender(),
+               this._multiselection.getCount()
+            );
+         } else {
+            this._selectionContext = new SelectionContextField(
+               currentSelection.selected,
+               currentSelection.excluded,
+               this._multiselection.getSelectedKeysForRender(),
+               this._multiselection.getCount()
+            );
+         }
 
          this._forceUpdate();
       },
