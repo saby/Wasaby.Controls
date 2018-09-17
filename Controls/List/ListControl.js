@@ -1,10 +1,12 @@
 define('Controls/List/ListControl', [
    'Core/Control',
    'wml!Controls/List/ListControl/ListControl',
+   'Core/Deferred',
    'Controls/List/BaseControl'
-], function(Control,
-
-   ListControlTpl
+], function(
+   Control,
+   ListControlTpl,
+   Deferred
 ) {
    'use strict';
 
@@ -33,10 +35,10 @@ define('Controls/List/ListControl', [
          this._children.baseControl.reload();
       },
       editItem: function(options) {
-         this._children.baseControl.editItem(options);
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.editItem(options);
       },
       addItem: function(options) {
-         this._children.baseControl.addItem(options);
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.addItem(options);
       },
 
       /**
@@ -44,9 +46,7 @@ define('Controls/List/ListControl', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.cancelEdit();
-         }
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.cancelEdit();
       },
 
       /**
@@ -54,9 +54,7 @@ define('Controls/List/ListControl', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.commitEdit();
-         }
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.commitEdit();
       },
       _onCheckBoxClick: function(e, key, status) {
          var newSelectedKeys = this._options.selectedKeys.slice();
