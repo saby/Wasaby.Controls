@@ -1,7 +1,12 @@
 .controls-BaseButton {
-  display: inline-flex;
+  display: inline-block;
   box-sizing: border-box;
   .user-select();
+  text-decoration: none;
+}
+
+.controls-BaseButton:active {
+  text-decoration: none;
 }
 
 .controls-Button__wrapper_type-iconButtonBordered_size-m, .controls-Button__wrapper_type-iconButtonBordered_size-l {
@@ -330,7 +335,11 @@
 }
 
 .ws-is-no-touch {
-   .controls-Button_style-primary-add:hover {
+  .controls-BaseButton:hover {
+    text-decoration: none;
+  }
+
+  .controls-Button_style-primary-add:hover {
       .controls-Button__icon-primary-add_iconStyle-default {
          color: @color_Button-style-addButton-icon_hovered;
       }

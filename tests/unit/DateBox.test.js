@@ -22,6 +22,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       afterEach(function () {
          this.testControl.destroy();
          this.testControl = undefined;
+         this.container && this.container.remove();
          this.container = undefined;
       });
    };
@@ -84,16 +85,24 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
 
       // this.ctx.initialDate = new Date(2016, 1, 2, 3, 4, 5, 6);
       //
-      this.ctx.controlClass = DateBox;
       // Добавляем опции нужные конкретно этим тестам.
       // Подумать как можно переиспользовать настройки DateBox и базовые общие тесты для DatePicker.
       // this.ctx.controlConfig = {
       //    date: this.ctx.initialDate
       // };
-      this.ctx.controlConfig = {};
+
+      before(function() {
+         this.controlClass = DateBox;
+      });
+
+      beforeEach(function() {
+         this.controlConfig = {};
+      });
 
       describe('initialization', function () {
-         this.ctx.controlConfig.validators = [];
+         before(function() {
+            this.controlConfig.validators = [];
+         });
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
          controlTestCase();
 
@@ -107,7 +116,9 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('auto set century with YY year mask', function () {
-         this.ctx.controlConfig.mask = 'DD.MM.YY';
+         before(function() {
+            this.controlConfig.mask = 'DD.MM.YY';
+         });
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
          controlTestCase();
 
@@ -156,6 +167,18 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
             // onPropertiesChanged вызывается 2 раза. Если будет актуально, то в будущем можно оптимизировать избавившись от лишних вызовов.
             assert(onPropertiesChanged.calledTwice, `onPropertiesChanged called ${onPropertiesChanged.callCount}`);
             assert(onPropertyChanged.calledTwice, `onPropertyChanged called ${onPropertyChanged.callCount}`);
+         });
+      });
+
+      describe('.setDate', function () {
+         controlTestCase();
+         it('should generate "onDateChange" in case dateBox.setDate(date, true); dateBox.setDate(null);', function () {
+            let onDateChange = sinon.spy();
+            this.testControl.setDate(new Date(), true);
+            this.testControl.subscribe('onDateChange', onDateChange);
+            this.testControl.setDate(null);
+            assert.isNull(this.testControl.getDate());
+            assert(onDateChange.calledOnce, `onDateChange called ${onDateChange.callCount}`);
          });
       });
 
@@ -288,4 +311,3 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
    });
 });
-

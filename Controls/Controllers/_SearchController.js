@@ -31,10 +31,19 @@ define('Controls/Controllers/_SearchController',
                var filter = self._options.filter;
                
                filter[self._options.searchParam] = value;
-               search.search(filter).addCallback(function(result) {
-                  self._options.searchCallback(result, filter);
-                  return result;
-               });
+               search.search(filter)
+                  .addCallback(function(result) {
+                     if (self._options.searchCallback) {
+                        self._options.searchCallback(result, filter);
+                     }
+                     return result;
+                  })
+                  .addErrback(function(result) {
+                     if (self._options.searchErrback) {
+                        self._options.searchErrback(result, filter);
+                     }
+                     return result;
+                  });
                
                return search;
             });

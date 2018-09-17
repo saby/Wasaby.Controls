@@ -1,6 +1,6 @@
 define('Controls/List/ListControl', [
    'Core/Control',
-   'tmpl!Controls/List/ListControl/ListControl',
+   'wml!Controls/List/ListControl/ListControl',
    'Controls/List/BaseControl'
 ], function(Control,
 
@@ -14,6 +14,7 @@ define('Controls/List/ListControl', [
     * @class Controls/List
     * @extends Controls/List/BaseControl
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation

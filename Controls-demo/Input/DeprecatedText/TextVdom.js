@@ -1,6 +1,6 @@
 define('Controls-demo/Input/DeprecatedText/TextVdom', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/DeprecatedText/TextVdom',
+	'wml!Controls-demo/Input/DeprecatedText/TextVdom',
 	'Controls/Input/Text',
 	'css!Controls-demo/Input/DeprecatedText/TextVdom'
 ], function ( Control, dotTplFn) {

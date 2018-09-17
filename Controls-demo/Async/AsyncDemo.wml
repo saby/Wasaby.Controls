@@ -1,0 +1,32 @@
+<div>
+   <ws:for data="key, value in data">
+      <Controls.Container.Async templateName="{{ value }}" templateOptions="{{ templateOptions }}">
+         <div>
+            <ws:partial template="{{ value }}" value="{{is_OK}}"></ws:partial>
+         </div>
+      </Controls.Container.Async>
+   </ws:for>
+   <script>
+      function checkDebug(scripts) {
+         for (var i = 0; i < scripts.length; i++) {
+            if (/scripts_[0-9]+/g.test(scripts[i].attributes.key)) {
+               return false;
+            }
+         }
+         return true;
+      }
+      var arr = document.getElementsByTagName('script');
+      var is_ok = false;
+      if(checkDebug(arr)) {
+         window.$is_OK$ = true;
+      } else {
+         for(var i = 0; i < arr.length; i++) {
+            if(!isDebug && /controls-input/ig.test(arr[i].src)) {
+               is_ok = true;
+               break;
+            }
+         }
+         window.$is_OK$ = (is_ok || isDebug);
+      }
+   </script>
+</div>

@@ -19,12 +19,16 @@ function(cMerge,
        */
    return {
       _prepareConfigForOldTemplate: function(cfg, templateClass) {
-         var templateOptions = this._getTemplateOptions(templateClass);
+         var
+            templateOptions = this._getTemplateOptions(templateClass),
+            parentContext;
+
          cfg.templateOptions = {
             templateOptions: cfg.templateOptions || cfg.componentOptions || {},
             componentOptions: cfg.templateOptions || cfg.componentOptions || {},
             template: cfg.template,
             type: cfg._type,
+            popupComponent: cfg._popupComponent,
             handlers: cfg.handlers,
             _initCompoundArea: cfg._initCompoundArea,
             _mode: cfg._mode,
@@ -48,6 +52,7 @@ function(cMerge,
          }
          if (cfg.parent) {
             cfg.templateOptions.__parentFromCfg = cfg.parent;
+            parentContext = cfg.parent.getLinkedContext && cfg.parent.getLinkedContext(); // получаем контекст родителя
          }
          if (cfg.opener) {
             cfg.templateOptions.__openerFromCfg = cfg.opener;
@@ -56,8 +61,8 @@ function(cMerge,
             cfg.templateOptions.newRecord = cfg.newRecord;
          }
 
-         if (cfg.context) {
-            this._prepareContext(cfg);
+         if (cfg.context || parentContext) {
+            this._prepareContext(cfg, parentContext);
          }
 
          if (cfg.linkedContext) {
@@ -98,7 +103,11 @@ function(cMerge,
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
+         cfg.autofocus = cfg.catchFocus;
          cfg.templateOptions.catchFocus = cfg.catchFocus;
+
+         // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
+         cfg.templateOptions.ignoreTabCycles = false;
 
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
          this._setSizes(cfg, templateClass);
@@ -111,18 +120,27 @@ function(cMerge,
          }
       },
 
-      _prepareContext: function(cfg) {
+      _prepareContext: function(cfg, parentContext) {
          var destroyDef = new Deferred(),
             destrFunc = function() {
                destroyDef.callback();
                destroyDef = null;
             };
 
-         if (cfg.context instanceof Context) {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
-         } else {
-            cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
-            cfg.templateOptions.context.setContextData(cfg.context);
+         if (cfg.context) {
+            if (cfg.context instanceof Context) {
+               // Если явно передан контекст, создаем дочерний от него, и передаем в опции открываемого компонента
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, cfg.context);
+            } else {
+               // Если передан простой объект, создаем пустой контекст и заполняем его полями и значениями
+               // из переданного объекта
+               cfg.templateOptions.context = Context.createContext(destroyDef, {}, null);
+               cfg.templateOptions.context.setContextData(cfg.context);
+            }
+         } else if (parentContext) {
+            // Если контекст не передан, но задан родитель, то берем контекст родителя, создаем дочерний от него
+            // и передаем в опции открываемого компонента
+            cfg.templateOptions.context = Context.createContext(destroyDef, {}, parentContext);
          }
 
          if (!cfg.templateOptions.handlers) {
@@ -150,10 +168,13 @@ function(cMerge,
 
          cfg.className = cfg.className || '';
 
-         cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         if (!cfg.hasOwnProperty('closeByExternalClick')) {
+            cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
+            cfg.closeByExternalClick = false;
          }
 
          if (cfg.horizontalAlign) {
@@ -208,16 +229,28 @@ function(cMerge,
          if (cfg.hasOwnProperty('offset')) {
             if (cfg.offset.x) {
                cfg.horizontalAlign = cfg.horizontalAlign || {};
-               cfg.horizontalAlign.offset = cfg.offset.x;
+               cfg.horizontalAlign.offset = parseInt(cfg.offset.x, 10);
             }
             if (cfg.offset.y) {
                cfg.verticalAlign = cfg.verticalAlign || {};
-               cfg.verticalAlign.offset = cfg.offset.y;
+               cfg.verticalAlign.offset = parseInt(cfg.offset.y, 10);
             }
          }
 
          if (cfg.hasOwnProperty('modal')) {
             cfg.isModal = cfg.modal;
+         }
+
+         if (cfg.hasOwnProperty('draggable')) {
+            cfg.templateOptions.draggable = cfg.draggable;
+         }
+
+         cfg.eventHandlers = cfg.eventHandlers || {};
+         if (cfg.hasOwnProperty('onResultHandler')) {
+            cfg.eventHandlers.onResult = cfg.onResultHandler;
+         }
+         if (cfg.hasOwnProperty('onCloseHandler')) {
+            cfg.eventHandlers.onClose = cfg.onCloseHandler;
          }
 
          cfg.isCompoundTemplate = true;
@@ -282,6 +315,10 @@ function(cMerge,
             newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
          }
 
+         if (cfg.hasOwnProperty('nativeEvent')) {
+            newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
+         }
+
          if (cfg.verticalAlign && cfg.verticalAlign.side) {
             newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
@@ -307,6 +344,10 @@ function(cMerge,
 
          if (cfg.closeOnTargetScroll) {
             newCfg.dialogOptions.closeOnTargetScroll = true;
+         }
+
+         if (cfg.className) {
+            newCfg.dialogOptions.className = cfg.className;
          }
 
          if (newCfg.target) {

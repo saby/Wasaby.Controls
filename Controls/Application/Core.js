@@ -4,7 +4,7 @@
 define('Controls/Application/Core',
    [
       'Core/Control',
-      'tmpl!Controls/Application/Core',
+      'wml!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
       'Core/Themes/ThemesController',

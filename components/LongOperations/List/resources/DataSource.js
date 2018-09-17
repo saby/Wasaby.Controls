@@ -10,6 +10,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Core/IoC',
+      'Core/helpers/Object/isEqual',
       'WS.Data/Source/ISource',
       'WS.Data/Entity/ObservableMixin',
       'WS.Data/Source/DataSet',
@@ -18,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'Core/TimeInterval'
    ],
 
-   function (CoreExtend, Deferred, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
+   function (CoreExtend, Deferred, IoC, cObjectIsEqual, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
 
@@ -31,13 +33,6 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       var _CUSTOM_CONDITION_EXTENSION = 4;
 
       /**
-       * Интервалы времени между попытками перезапроса данных при ошибке, мсек
-       * @private
-       * @type {Array<number>}
-       */
-      var _RETRY_DELAYS = [100, 500, 2500, 12500, 62500];
-
-      /**
        * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
        * @type {WS.Data/Source/ISource}
@@ -48,8 +43,11 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
          $protected: {
             _options: {
                customConditions: [],
-               navigationType: 'Page'
-            }
+               navigationType: 'Page',
+               useQueue: null
+            },
+            // Очередь незавершённых запросов
+            _queue: []
          },
 
          $constructor: function $LongOperationsListDataSource () {
@@ -78,6 +76,91 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
           * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Source/DataSet}.
           */
          query: function (query) {
+            var queue = this._queue;
+            if (this._options.useQueue) {
+               var item = {
+                  query: query,
+                  //callPromise: undefined,
+                  resultPromise: new Deferred()
+               };
+               queue.push(item);
+               if (queue.length === 1) {
+                  this._nextQuery();
+               }
+               return item.resultPromise;
+            }
+            else {
+               return this._query(query);
+            }
+         },
+
+         _nextQuery: function () {
+            var queue = this._queue;
+            var len = queue.length;
+            if (len) {
+               var next = queue[0];
+               if (1 < len) {
+                  var pattern = this._getQuerySnapshot(next.query);
+                  for (var i = 1; i < len; i++) {
+                     var item = queue[i];
+                     if (this._isEquivalentQuery(pattern, item.query)) {
+                        next = item;
+                     }
+                  }
+               }
+               var promise = next.callPromise = this._query(next.query);
+               promise.addCallbacks(
+                  this._onQueryDone.bind(this, promise, true),
+                  this._onQueryDone.bind(this, promise, false)
+               );
+            }
+         },
+
+         _onQueryDone: function (callPromise, isSuccess, result) {
+            var queue = this._queue;
+            var index; queue.some(function (v, i) { if (v.callPromise === callPromise) { index = i; return true; } });
+            var pattern;
+            if (0 < index) {
+               pattern = this._getQuerySnapshot(queue[index].query);
+            }
+            for (var i = 0; i <= index; i++) {
+               var item = queue[i];
+               if (i === index || this._isEquivalentQuery(pattern, item.query)) {
+                  var callPromise = item.callPromise;
+                  if (callPromise && !callPromise.isReady()) {
+                     callPromise.cancel();
+                  }
+                  var resultPromise = item.resultPromise;
+                  if (!resultPromise.isReady()) {
+                     // Только если обещание ещё не разрешено. Обещание может быть разрешено снаружи отказом ожидать дальше
+                     if (isSuccess) {
+                        resultPromise.callback(result);
+                     }
+                     else {
+                        //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                        if (result.name !== 'OutdatedError') {
+                           IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + result);
+                        }
+                     }
+                  }
+                  queue.splice(i, 1);
+                  i--;
+                  index--;
+               }
+            }
+            this._nextQuery();
+            return result;
+         },
+
+         _getQuerySnapshot: function (query) {
+            return query ? JSON.parse(JSON.stringify(query)) : null;
+         },
+
+         _isEquivalentQuery: function (snapshot, query) {
+            return snapshot ? !!query && cObjectIsEqual(snapshot, this._getQuerySnapshot(query)) : !query;
+         },
+
+         _query: function (query) {
             var options = {};
             var filter = query.getWhere();
             if (filter) {
@@ -142,7 +225,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                options.extra = {needUserInfo:true};
             }
             this._notify('onBeforeProviderCall');
-            var promise = new Deferred();
+            var promise = new Deferred({cancelCallback:function () { promise.isCanceled = true; }});
             this._queryCall(promise, options, hasCustomConditions ? customConditions : null, limit, 0);
             return promise;
          },
@@ -160,26 +243,27 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                      items = items.slice(0, origLimit);
                   }
                }
-               promise.callback(new DataSet({
-                  rawData: {
-                     items: items,
-                     more: meta && meta.more
-                  },
-                  idProperty: recordSet.getIdProperty(),
-                  itemsProperty: 'items',
-                  totalProperty: 'more',
-                  model: recordSet.getModel()
-               }));
+               if (!(promise.isReady() && promise.isCanceled)) {
+                  promise.callback(new DataSet({
+                     rawData: {
+                        items: items,
+                        more: meta && meta.more
+                     },
+                     idProperty: recordSet.getIdProperty(),
+                     itemsProperty: 'items',
+                     totalProperty: 'more',
+                     model: recordSet.getModel()
+                  }));
+               }
             }.bind(this),
             function (err) {
-               if (!promise.isReady()) {
-                  // Только если обещание ещё не разрешено. Обещание может быть разрешено снаружи отказом ожидать дальше
-                  if (retryCounter < _RETRY_DELAYS.length) {
-                     setTimeout(this._queryCall.bind(this, promise, options, customConditions, origLimit), _RETRY_DELAYS[retryCounter], retryCounter + 1);
-                  }
-                  else {
-                     //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
-                     //promise.errback(err);
+               if (this._options.useQueue) {
+                  promise.errback(err);
+               }
+               else {
+                  //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                  if (err.name !== 'OutdatedError') {
+                     IoC.resolve('ILogger').log('LongOperations', 'Ошибка получения данных: ' + err);
                   }
                }
             }.bind(this));

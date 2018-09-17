@@ -1,6 +1,8 @@
 [
   {
     "include": [
+      "SBIS3.CONTROLS/Browser",
+      "SBIS3.CONTROLS/Browser/*",
       "SBIS3.CONTROLS/SearchForm/*",
       "SBIS3.CONTROLS/BreadCrumbs",
       "SBIS3.CONTROLS/BreadCrumbs/*",
@@ -8,9 +10,21 @@
       "SBIS3.CONTROLS/ComponentBinder/*"
     ],
     "exclude": [
-      "css!*"
+      "css!*",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor/*"
     ],
     "output": "sbis3controls-browser.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Browser/ColumnsEditor",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-columnseditor.package.js"
   },
   {
     "include": [
@@ -20,7 +34,8 @@
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
       "SBIS3.CONTROLS/Filter/Button/Line",
       "SBIS3.CONTROLS/Filter/Button/Line/*",
-      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/HistoryController"
     ],
     "exlucde": [
       "css!*"
@@ -51,7 +66,12 @@
       "SBIS3.CONTROLS/Filter/Button/Line/*",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
-      "SBIS3.CONTROLS/Utils/FilterPanelUtils"
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/FilterPanel",
+      "SBIS3.CONTROLS/Filter/Panel/*",
+      "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
+      "SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil",
+      "SBIS3.CONTROLS/Filter/HistoryController"
     ],
     "output": "sbis3controls-filterpicker.package.js"
   },
@@ -140,9 +160,21 @@
       "SBIS3.CONTROLS/Tree/*"
     ],
     "exclude": [
-      "css!*"
+      "css!*",
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
     ],
     "output": "sbis3controls-tree.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-treecompositeview.package.js"
   },
   {
     "include": [
@@ -187,7 +219,14 @@
   {
     "include": [
       "SBIS3.CONTROLS/Action",
-      "SBIS3.CONTROLS/Action/*"
+      "SBIS3.CONTROLS/Action/OpenDialog",
+      "SBIS3.CONTROLS/Action/OpenDialogAction",
+      "SBIS3.CONTROLS/Action/DialogActionBase",
+      "SBIS3.CONTROLS/Action/ActionBase",
+      "SBIS3.CONTROLS/Action/Utils/*",
+      "SBIS3.CONTROLS/Action/Mixin/*",
+      "SBIS3.CONTROLS/Action/Compatible/*",
+      "SBIS3.CONTROLS/Action/List/Mixin/*"
     ],
     "exclude": [
       "css!*"
@@ -196,13 +235,37 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Browser",
-      "SBIS3.CONTROLS/Browser/*"
+      "SBIS3.CONTROLS/Action/List/Sum",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-controls-browser.package.js"
+    "output": "sbis3controls-actionsum.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Save",
+      "SBIS3.CONTROLS/Action/Save/*",
+      "SBIS3.CONTROLS/Action/List/Save"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-actionsave.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Selector/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog",
+      "SBIS3.CONTROLS/Action/SelectorAction"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-actionselector.package.js"
   },
   {
     "include": [
@@ -265,12 +328,14 @@
   {
     "include": [
       "SBIS3.CONTROLS/Date/Box",
-      "SBIS3.CONTROLS/Date/Box/*"
+      "SBIS3.CONTROLS/Date/Box/*",
+      "SBIS3.CONTROLS/Date/Picker",
+      "SBIS3.CONTROLS/Date/Picker/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-datebox.package.js"
+    "output": "sbis3controls-datepicker.package.js"
   },
   {
     "include": [
@@ -296,8 +361,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Date/RangeBigChoose",
-      "SBIS3.CONTROLS/Date/RangeBigChoose/*",
       "SBIS3.CONTROLS/Date/RangeChoose",
       "SBIS3.CONTROLS/Date/RangeChoose/*"
     ],
@@ -305,6 +368,26 @@
       "css!*"
     ],
     "output": "sbis3controls-daterangechoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/*"
+    ],
+    "exclude": [
+      "css!*",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "output": "sbis3controls-daterangebigchoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-daterangebigchooseutils.package.js"
   },
   {
     "include": [
@@ -322,19 +405,33 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/Date/Picker",
-      "SBIS3.CONTROLS/Date/Picker/*",
-      "SBIS3.CONTROLS/Date/MonthPicker",
-      "SBIS3.CONTROLS/Date/MonthPicker/*",
-      "SBIS3.CONTROLS/Date/TimePicker",
-      "SBIS3.CONTROLS/Date/TimePicker/*",
       "SBIS3.CONTROLS/Date/MonthView",
       "SBIS3.CONTROLS/Date/MonthView/*"
     ],
     "exclude": [
       "css!*"
     ],
-    "output": "sbis3controls-datepicker.package.js"
+    "output": "sbis3controls-datemonthview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/TimePicker",
+      "SBIS3.CONTROLS/Date/TimePicker/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-datetimepicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/MonthPicker",
+      "SBIS3.CONTROLS/Date/MonthPicker/*"
+    ],
+    "exclude": [
+      "css!*"
+    ],
+    "output": "sbis3controls-datemonthpicker.package.js"
   },
   {
     "include": [
@@ -689,7 +786,11 @@
       "SBIS3.CONTROLS/Suggest/*"
     ],
     "exclude": [
-      "css!*"
+      "css!*",
+      "SBIS3.CONTROLS/Suggest/SuggestView",
+      "SBIS3.CONTROLS/Suggest/SuggestView/*",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll/*"
     ],
     "output": "sbis3controls-suggest.package.js"
   },

@@ -335,6 +335,17 @@ define([
                   dragMove._canDragMove();
                });
             });
+            it('should not raise error when data sourse have no edpoint', function () {
+               owner.getDataSource = function () {
+                  return {}
+               };
+               view.getDataSource = function () {
+                  return {}
+               };
+               assert.doesNotThrow(function() {
+                  dragMove._canDragMove();
+               });
+            });
          });
       });
       describe('._findItemByElement', function () {

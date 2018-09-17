@@ -1,8 +1,8 @@
 
 define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection/RecordSet'], function(DropdownList, RecordSet) {
-   
+
    'use strict';
-   
+
    var rawData = [
       {
          id: 1,
@@ -32,9 +32,9 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          '@parent': true
       }
    ];
-   
+
    var items =  new RecordSet({rawData: rawData, idProperty: 'id'});
-   
+
    var getDropDownConfig = function() {
       return {
          items: items,
@@ -45,46 +45,46 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          parentProperty: 'parent'
       };
    };
-   
+
    var getDropDownListWithConfig = function(config) {
       var dropDownList = new DropdownList(config);
       dropDownList.saveOptions(config);
       return dropDownList;
    };
-   
+
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
-      
+
       describe('DropdownList::_beforeUpdate', function() {
-         
+
          it('check hierarchy', function() {
             var dropDownConfig, dropDownList;
-   
+
             dropDownConfig = getDropDownConfig();
             dropDownList = getDropDownListWithConfig(dropDownConfig);
-   
+
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
-   
+
             assert.isTrue(dropDownList._hasHierarchy);
-   
+
             /**** CHANGE ROOT *******************/
-            
+
             dropDownConfig = getDropDownConfig();
             dropDownConfig.rootKey = 1;
             dropDownList._beforeUpdate(dropDownConfig);
-   
+
             assert.isTrue(dropDownList._hasHierarchy);
-   
+
             dropDownConfig = getDropDownConfig();
             dropDownConfig.rootKey = 2;
             dropDownList._beforeUpdate(dropDownConfig);
-   
+
             assert.isFalse(dropDownList._hasHierarchy);
-            
+
             /******************************/
-   
+
             /**** CHANGE EXPAND *******************/
-            
+
             dropDownConfig = getDropDownConfig();
             dropDownConfig.additionalProperty = 'isAdditional';
             dropDownList = getDropDownListWithConfig(dropDownConfig);
@@ -99,10 +99,45 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             assert.isTrue(dropDownList._hasHierarchy);
             
             /*************************************/
+
+            /**** CHANGE ORIENTATION POPUP *******************/
+
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+
+            var context = {
+               stickyCfg: {
+                  horizontalAlign: {
+                     offset: 0,
+                     side: 'right'
+                  }
+               }
+            };
+
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig, context);
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'right'});
+
+            context.stickyCfg.horizontalAlign.side = 'left';
+            dropDownList._beforeUpdate(dropDownConfig, context);
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'left'});
+
          });
          
       });
-      
+
+      describe('DropdownList::_beforeMount', function() {
+         it('check popup options', function() {
+            var dropDownConfig, dropDownList;
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+
+            dropDownList._beforeMount(dropDownConfig);
+            assert.isTrue(dropDownList._popupOptions !== undefined);
+         });
+
+      });
+
    });
-   
+
 });

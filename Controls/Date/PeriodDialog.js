@@ -7,10 +7,10 @@ define('Controls/Date/PeriodDialog', [
    'Controls/Date/PeriodDialog/MonthsRange',
    'Controls/Date/PeriodDialog/Utils',
    'Controls/Utils/Date',
-   'tmpl!Controls/Date/PeriodDialog/PeriodDialog',
-   'tmpl!Controls/Date/PeriodDialog/header',
-   'css!?Controls/Date/PeriodDialog/PeriodDialog',
-   'css!?Controls/Date/Utils/RangeSelection'
+   'wml!Controls/Date/PeriodDialog/PeriodDialog',
+   'wml!Controls/Date/PeriodDialog/header',
+   'css!Controls/Date/PeriodDialog/PeriodDialog',
+   'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    coreMerge,

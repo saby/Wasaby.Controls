@@ -1,0 +1,69 @@
+<Controls-demo.Wrapper.Wrapper title="Area">
+   <ws:componentClass>
+      <Controls.Popup.Opener.InfoBox name="infoBoxArea"/>
+      <Controls.Input.Area
+         attr:id="main_field"
+         attr:class="demo-TextBox ControlsDemo-Area__demo"
+         bind:value="_text1"
+         name="textArea"
+         placeholder="{{_placeholder}}"
+         constraint="{{_constraint}}"
+         trim="{{_trim}}"
+         maxLength="{{_maxLength}}"
+         minLines="{{_minLines}}"
+         maxLines="{{_maxLines}}"
+         tagStyle="{{_tagStyle}}"
+         readOnly="{{_readOnly}}"
+         selectOnClick="{{_selectOnClick}}"
+         validationErrors="{{_validationErrors}}"
+         tooltip="{{_tooltip}}"
+         newLineKey="{{_newLineKey}}"
+         on:valueChanged="_eventHandler()"
+         on:inputCompleted="_eventHandler()"
+         on:tagHover="_tagStyleHandler()"
+         on:tagClick="_tagStyleClickHandler()"
+      />
+   </ws:componentClass>
+   <ws:componentProperty>
+      <Controls.Label name="myLabel1" caption="placeholder"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox ControlsDemo-Area__placeholder"/>
+      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox ControlsDemo-Area__tagStyle"/>
+      <Controls.Label name="myLabel1" caption="constraint"/>
+      <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint" source="{{_items}}"
+                                      attr:class="demo-TextBox ControlsDemo-Area__constraint"/>
+      <Controls.Label name="myLabel1" caption="maxLength"/>
+      <Controls.Input.Text attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox ControlsDemo-Area__maxLength"/>
+      <Controls.Label name="myLabel1" caption="minLines"/>
+      <Controls.Input.Number attr:id="minLines" bind:value="_minLines" precision="{{0}}" attr:class="demo-TextBox ControlsDemo-Area__minLines"/>
+      <Controls.Label name="myLabel1" caption="maxLines"/>
+      <Controls.Input.Number attr:id="maxLines" bind:value="_maxLines" precision="{{0}}" attr:class="demo-TextBox ControlsDemo-Area__maxLines"/>
+      <Controls.Label caption="tooltip"/>
+      <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip" attr:class="ControlsDemo-Area__tooltip"/>
+      <Controls.Label name="myLabel1" caption="newLineKey:"/>
+      <Controls.Input.ComboBox
+         attr:class="ControlsDemo-Area__newLineKey"
+         source="{{_newLineKeySource}}"
+         keyProperty="title"
+         placeholder="select"
+         displayProperty="title"
+         emptyText="none"
+         selectedKey="{{_newLineKey}}"
+         on:selectedKeyChanged="changeNewLineKey()"
+      />
+      <div>
+         <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_trim" caption="trim" attr:class="ControlsDemo-Area__trim"/>
+         <Controls-demo.PropertyGrid.PropertyGrid 
+            attr:id="propertyGrid"
+            attr:class="ControlsDemo-Area__propertyGrid"
+            bind:selectOnClickValue="_selectOnClick"
+            bind:readOnlyValue="_readOnly"
+            on:validationErrorsValueChanged="_validationChangedHandler()"
+            bind:validationErrorsValue="_validationErrorsValue"
+         />
+      </div>
+      <div>
+         <Controls.Button attr:class="demo-pasteButton" on:click="paste_text()" style="linkMain3" caption="paste"/>
+      </div>
+   </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

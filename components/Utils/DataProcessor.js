@@ -16,8 +16,9 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
    "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "File/Downloader",
+   "Core/IoC",
    "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
-], function( cExtend, coreClone, EventBus, Deferred, Query, Record, Serializer, SbisSave, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager, Downloader) {
+], function( cExtend, coreClone, EventBus, Deferred, Query, Record, Serializer, SbisSave, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager, Downloader, IoC) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -29,6 +30,25 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
     * @author Крайнов Д.О.
     * @public
     */
+
+   var _private = {
+      convertConfig: function(cfg, sync) {
+         cfg.PageLandscape = cfg.PageOrientation === 2;
+         delete cfg.PageOrientation;
+
+         if (cfg.html) {
+            cfg.Name = cfg.FileName;
+            delete cfg.FileName;
+            cfg.Html = cfg.html;
+            delete cfg.html;
+            cfg.Sync = sync;
+         } else {
+            cfg.HierarchyField = cfg.HierarchyField || null;
+            cfg.Sync = sync;
+         }
+      }
+   };
+
    return cExtend({},/** @lends SBIS3.CONTROLS/Utils/DataProcessor.prototype */ {
 
       $protected: {
@@ -171,6 +191,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
        * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
       exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName, isExcel){
+         IoC.resolve("ILogger").error("Методы PDF.SaveRecordSet и Excel.SaveRecordSet будут удалены в 3.18.610. Для перехода на новую версию этих методов нужно указать binding.saveList или binding.saveDataSet в опциях кнопки выгрузки.");
          var
             columns  = coreClone(this._options.columns),
             rawData  = {s : [], d : []},
@@ -218,7 +239,22 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
              exportDeferred,
              source = new SbisService({
                 endpoint: object
-            });
+            }),
+            syncUnload = !this._isLongOperationsEnabled();
+
+         /*
+          TODO:Костыль из-за того что у объектов Excel и PDF методы называются по разному и разные сигнатуры
+          Убрать после этой задачи: https://online.sbis.ru/opendoc.html?guid=22570030-999d-47cc-892f-115080fae08c
+          */
+         if (object === 'PDF') {
+            if (methodName !== 'SaveRecordSet') {
+               _private.convertConfig(cfg, syncUnload);
+               methodName = 'Save';
+            } else {
+               syncUnload = true;
+            }
+         }
+
          exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
             //Не показываем ошибку, если было прервано соединение с интернетом
             if (!error._isOfflineMode) {
@@ -231,8 +267,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             return error;
          });
           //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
-          //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
-         if (object !== "Excel" || !this._isLongOperationsEnabled()) {
+         if (syncUnload) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных'), exportDeferred);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);

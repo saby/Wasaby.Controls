@@ -3,8 +3,8 @@ define('Controls/Date/PeriodDialog/YearsRange', [
    'Controls/Date/model/DateRange',
    'Controls/Date/Utils/RangeSelection',
    'Controls/Utils/Date',
-   'tmpl!Controls/Date/PeriodDialog/YearsRange',
-   'css!?Controls/Date/Utils/RangeSelection'
+   'wml!Controls/Date/PeriodDialog/YearsRange',
+   'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    DateRangeModel,

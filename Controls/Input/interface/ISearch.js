@@ -10,7 +10,7 @@ define('Controls/Input/interface/ISearch', [
 
    /**
     * @name Controls/Input/interface/ISearch#searchParam
-    * @cfg {String} Name of the field that search should operate on.
+    * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
 
    /**

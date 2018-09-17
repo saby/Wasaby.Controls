@@ -3,6 +3,10 @@
    height: @height-HeaderSeparator;
    padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
 }
+//in ie click to svg not bubble without it
+.controls-HeaderSeparator__svg_click {
+   pointer-events: none;
+}
 
 .controls-HeaderSeparator__wrapper {
    display: inline-flex;

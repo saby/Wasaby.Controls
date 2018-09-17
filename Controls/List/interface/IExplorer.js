@@ -19,6 +19,11 @@ define('Controls/List/interface/IExplorer', [
     */
 
    /**
+    * @name Controls/List/interface/IExplorer#root
+    * @cfg {String} Identifier of the root node.
+    */
+
+   /**
     * @event Controls/List/interface/IExplorer#itemOpen Occurs before opening a folder.
     */
    /**

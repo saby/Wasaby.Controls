@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/FilterDropdown', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
-   'css!?Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
+   'wml!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
+   'css!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
 ], function(Control, template) {
    /**
     * Input for selection from the list of options with cross.
@@ -9,6 +9,7 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
     * @class Controls/Filter/Button/Panel/FilterDropdown
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/Input/interface/IDropdownEmptyText

@@ -3,7 +3,7 @@ define('Controls/Application/_Wait',
       'Core/Control',
       'Core/Deferred',
       'Controls/Application/HeadDataContext',
-      'tmpl!Controls/Application/_Wait'
+      'wml!Controls/Application/_Wait'
    ],
 
    function(Base, Deferred, HeadDataContext, template) {

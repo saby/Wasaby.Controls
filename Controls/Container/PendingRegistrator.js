@@ -1,35 +1,42 @@
 define('Controls/Container/PendingRegistrator', [
    'Core/Control',
-   'tmpl!Controls/Container/PendingRegistrator/PendingRegistrator',
+   'wml!Controls/Container/PendingRegistrator/PendingRegistrator',
    'Core/Deferred',
    'Core/ParallelDeferred',
    'Core/IoC'
 ], function(Control, tmpl, Deferred, ParallelDeferred, IoC) {
    'use strict';
 
+   // pending identificator counter
    var cnt = 0;
 
    var module = Control.extend({
       _template: tmpl,
-      _pendings: {},
+      _pendings: null,
       _parallelDef: null,
+      _beforeMount: function() {
+         this._pendings = {};
+      },
       _registerPendingHandler: function(e, def, config) {
          this._pendings[cnt] = {
+
+            // its deferred what signalling about pending finish
             def: def,
+
+            // its function what helps pending to finish when query goes from finishPendingOperations
             onPendingFail: config.onPendingFail,
+
+            // show indicator when pending is registered
             showLoadingIndicator: config.showLoadingIndicator
          };
          if (config.showLoadingIndicator && !def.isReady()) {
+            // show indicator if deferred still not finished on moment of registration
             this._children.loadingIndicator.toggleIndicator(true);
          }
 
-         def.addCallback(function(cnt, res) {
+         def.addBoth(function(cnt, res) {
             this._unregisterPending(cnt);
             return res;
-         }.bind(this, cnt));
-         def.addErrback(function(cnt, e) {
-            this._unregisterPending(cnt);
-            return e;
          }.bind(this, cnt));
 
          cnt++;
@@ -37,10 +44,12 @@ define('Controls/Container/PendingRegistrator', [
       _unregisterPending: function(id) {
          delete this._pendings[id];
 
+         // hide indicator if no more pendings with indicator showing
          if (!this._hasPendingsWithIndicator()) {
             this._children.loadingIndicator.toggleIndicator(false);
          }
 
+         // notify if no more pendings
          if (!this._hasRegisteredPendings()) {
             this._notify('pendingsFinished', [], { bubbling: true });
          }
@@ -59,7 +68,7 @@ define('Controls/Container/PendingRegistrator', [
          });
          return res;
       },
-      finishPendingOperations: function() {
+      finishPendingOperations: function(forceFinishValue) {
          var resultDeferred = new Deferred(),
             parallelDef = new ParallelDeferred(),
             pendingResults = [];
@@ -68,25 +77,24 @@ define('Controls/Container/PendingRegistrator', [
          Object.keys(this._pendings).forEach(function(key) {
             var pending = self._pendings[key];
             if (pending.onPendingFail) {
-               var res = pending.onPendingFail();
+               var res = pending.onPendingFail(forceFinishValue);
                if (res instanceof Deferred) {
                   parallelDef.push(res);
                } else {
+                  // save result of pending finish
                   pendingResults.push(res);
                }
             } else {
-               pendingResults.push(false);
+               // pending is finished without result
+               pendingResults.push(undefined);
             }
          });
 
-         if (this._parallelDef) {
-            this._parallelDef._fired = -1;
-            this._parallelDef.cancel();
-         }
+         // cancel previous query of pending finish. create new query.
+         this._cancelFinishingPending();
          this._parallelDef = parallelDef.done().getResult();
 
          this._parallelDef.addCallback(function(results) {
-            var wholeResult = false;
             if (typeof results === 'object') {
                for (var resultIndex in results) {
                   if (results.hasOwnProperty(resultIndex)) {
@@ -96,15 +104,9 @@ define('Controls/Container/PendingRegistrator', [
                }
             }
 
-            pendingResults.forEach(function(pendingResult) {
-               if (!pendingResult) {
-                  wholeResult = true;
-               }
-            });
-
             self._parallelDef = null;
 
-            resultDeferred.callback(wholeResult);
+            resultDeferred.callback(pendingResults);
          }).addErrback(function(e) {
             if (!e.canceled) {
                IoC.resolve('ILogger').error('PendingRegistrator', 'PendingRegistrator error', e);
@@ -113,6 +115,13 @@ define('Controls/Container/PendingRegistrator', [
          });
 
          return resultDeferred;
+      },
+      _cancelFinishingPending: function() {
+         if (this._parallelDef) {
+            // its need to cancel result deferred of parallel defered. reset state of deferred to achieve it.
+            this._parallelDef._fired = -1;
+            this._parallelDef.cancel();
+         }
       }
    });
 

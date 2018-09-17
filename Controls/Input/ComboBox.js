@@ -1,7 +1,7 @@
 define('Controls/Input/ComboBox',
    [
       'Core/Control',
-      'tmpl!Controls/Input/ComboBox/ComboBox',
+      'wml!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
@@ -15,8 +15,10 @@ define('Controls/Input/ComboBox',
        * @class Controls/Input/ComboBox
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
@@ -25,11 +27,6 @@ define('Controls/Input/ComboBox',
        * @author Зайцев А.С.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
-       */
-
-      /**
-       * @name Controls/Input/ComboBox#displayProperty
-       * @cfg {String} Name of the item property that content will be displayed. Only affects the value when selecting.
        */
 
       /**
@@ -69,6 +66,10 @@ define('Controls/Input/ComboBox',
             };
             this._width = this._container.offsetWidth;
             this._forceUpdate();
+         },
+
+         _beforeUpdate: function() {
+            this._width = this._container.offsetWidth;
          },
 
          _mouseDownHandler: function() {

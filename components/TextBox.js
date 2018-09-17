@@ -253,6 +253,8 @@ define('SBIS3.CONTROLS/TextBox', [
       
             })
             .on('drop', function(event){
+               //Если не дёргать фокус у поля ввода, то хром по какой-то причине вставляет текст в конец
+               self._inputField.focus();
                window.setTimeout(function(){
                   self._pasteHandler(event);
                }, 100);
@@ -491,9 +493,12 @@ define('SBIS3.CONTROLS/TextBox', [
          this._setPlaceholder(text);
       },
 
-      _setPlaceholder: function(text){
+      _setPlaceholder: function(){
          this._destroyCompatPlaceholder();
-         this._createCompatiblePlaceholder();
+
+         if (this.isEnabled()) {
+            this._createCompatiblePlaceholder();
+         }
       },
 
       /**

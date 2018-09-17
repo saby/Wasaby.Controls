@@ -1,6 +1,6 @@
 define('Controls/List/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/List/MultiSelector/MultiSelector',
+   'wml!Controls/List/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField'
 ], function(
    Control,

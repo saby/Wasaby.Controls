@@ -3,7 +3,7 @@
  */
 define('Controls/List', [
    'Core/Control',
-   'tmpl!Controls/List/List',
+   'wml!Controls/List/List',
    'Controls/List/ListViewModel',
    'Controls/List/ListView',
    'Controls/List/ListControl'
@@ -19,6 +19,7 @@ define('Controls/List', [
     * @class Controls/List
     * @extends Core/Control
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
@@ -74,7 +75,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       editItem: function(options) {
-         this._children.listControl.editItem(options);
+         return this._children.listControl.editItem(options);
       },
 
       /**
@@ -83,7 +84,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       addItem: function(options) {
-         this._children.listControl.addItem(options);
+         return this._children.listControl.addItem(options);
       },
 
       /**
@@ -92,7 +93,7 @@ define('Controls/List', [
        */
       cancelEdit: function() {
          if (!this._options.readOnly) {
-            this._children.listControl.cancelEdit();
+            return this._children.listControl.cancelEdit();
          }
       },
 
@@ -102,7 +103,7 @@ define('Controls/List', [
        */
       commitEdit: function() {
          if (!this._options.readOnly) {
-            this._children.listControl.commitEdit();
+            return this._children.listControl.commitEdit();
          }
       },
 
@@ -141,7 +142,8 @@ define('Controls/List', [
 
    ListControl.getDefaultOptions = function() {
       return {
-         multiSelectVisibility: 'hidden'
+         multiSelectVisibility: 'hidden',
+         style: 'default'
       };
    };
 
@@ -151,12 +153,6 @@ define('Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-
-   ListControl.getDefaultOptions = function() {
-      return {
-         style: 'default'
-      };
-   };
 
    return ListControl;
 });

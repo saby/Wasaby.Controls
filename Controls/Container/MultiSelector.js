@@ -1,17 +1,48 @@
 define('Controls/Container/MultiSelector', [
    'Core/Control',
-   'tmpl!Controls/Container/MultiSelector/MultiSelector',
+   'wml!Controls/Container/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
    'Controls/Controllers/Multiselect/Selection',
-   'Controls/Container/Data/ContextOptions'
+   'Controls/Container/Data/ContextOptions',
+   'Controls/Utils/ArraySimpleValuesUtil',
+   'WS.Data/Collection/IBind'
 ], function(
    Control,
    template,
    SelectionContextField,
    Selection,
-   DataContext
+   DataContext,
+   ArraySimpleValuesUtil,
+   IBind
 ) {
    'use strict';
+
+   var _private = {
+      notifyAndUpdateContext: function(self, oldSelection) {
+         var
+            newSelection = self._multiselection.getSelection(),
+            selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelection.selected, newSelection.selected),
+            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelection.excluded, newSelection.excluded);
+
+         if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
+            self._notify('selectedKeysChanged', [newSelection.selected, selectedKeysDiff.added, selectedKeysDiff.removed]);
+         }
+
+         if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
+            self._notify('excludedKeysChanged', [newSelection.excluded, excludedKeysDiff.added, excludedKeysDiff.removed]);
+         }
+
+         self._updateSelectionContext();
+      },
+
+      getItemsKeys: function(items) {
+         var keys = [];
+         items.forEach(function(item) {
+            keys.push(item.getId());
+         });
+         return keys;
+      }
+   };
 
    /**
     * Container for content that can work with multiselection.
@@ -25,7 +56,7 @@ define('Controls/Container/MultiSelector', [
     * @public
     */
 
-   var MultiSelector = Control.extend({
+   var MultiSelector = Control.extend(/** @lends Controls/Container/MultiSelector.prototype */{
       _template: template,
       _multiselection: null,
       _items: null,
@@ -37,24 +68,22 @@ define('Controls/Container/MultiSelector', [
       },
 
       _afterMount: function() {
-         var self = this;
-
-         this._items.subscribe('onCollectionChange', function() {
-            self._updateSelectionContext();
-            self._notify('selectionChange', [self._multiselection.getSelection()]);
-         });
+         this._items.subscribe('onCollectionChange', this._onCollectionChange.bind(this));
       },
 
       _beforeUpdate: function(newOptions, context) {
-         var self = this;
          if (this._items !== context.dataOptions.items) {
             this._items = context.dataOptions.items;
             this._multiselection.setItems(context.dataOptions.items);
             this._updateSelectionContext();
-            this._items.subscribe('onCollectionChange', function() {
-               self._updateSelectionContext();
-               self._notify('selectionChange', [self._multiselection.getSelection()]);
-            });
+            this._items.subscribe('onCollectionChange', this._onCollectionChange.bind(this));
+         }
+
+         if (newOptions.selectedKeys !== this._options.selectedKeys || newOptions.excludedKeys !== this._options.excludedKeys) {
+            this._multiselection.unselectAll();
+            this._multiselection.select(newOptions.selectedKeys);
+            this._multiselection.unselect(newOptions.excludedKeys);
+            this._updateSelectionContext();
          }
       },
 
@@ -63,37 +92,48 @@ define('Controls/Container/MultiSelector', [
       },
 
       _onListSelectionChange: function(event, keys, added, removed) {
+         var oldSelection = this._multiselection.getSelection();
+
          this._multiselection.unselect(removed);
          this._multiselection.select(added);
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
 
-         this._updateSelectionContext();
+         _private.notifyAndUpdateContext(this, oldSelection);
       },
 
       _selectedTypeChangedHandler: function(event, typeName) {
-         this._multiselection[typeName]();
-         this._notify('selectionChange', [this._multiselection.getSelection()]);
+         var oldSelection = this._multiselection.getSelection();
 
-         this._updateSelectionContext();
+         this._multiselection[typeName]();
+
+         _private.notifyAndUpdateContext(this, oldSelection);
       },
 
       _updateSelectionContext: function() {
          var currentSelection = this._multiselection.getSelection();
 
-         this._selectionContext = new SelectionContextField(
-            currentSelection.selected,
-            currentSelection.excluded,
-            this._multiselection.getSelectedKeysForRender(),
-            this._multiselection.getCount()
-         );
+         if (this._selectionContext) {
+            this._selectionContext.updateSelection(
+               currentSelection.selected,
+               currentSelection.excluded,
+               this._multiselection.getSelectedKeysForRender(),
+               this._multiselection.getCount()
+            );
+         } else {
+            this._selectionContext = new SelectionContextField(
+               currentSelection.selected,
+               currentSelection.excluded,
+               this._multiselection.getSelectedKeysForRender(),
+               this._multiselection.getCount()
+            );
+         }
 
          this._forceUpdate();
       },
 
       _createMultiselection: function(options, context) {
          this._multiselection = new Selection({
-            selectedKeys: options.selectedKeys || [],
-            excludedKeys: options.excludedKeys || [],
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
             items: context.dataOptions.items
          });
       },
@@ -102,12 +142,29 @@ define('Controls/Container/MultiSelector', [
          return {
             selection: this._selectionContext
          };
+      },
+
+      _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems) {
+         var oldSelection = this._multiselection.getSelection();
+
+         if (action === IBind.ACTION_REMOVE) {
+            this._multiselection.unselect(_private.getItemsKeys(removedItems));
+         }
+
+         _private.notifyAndUpdateContext(this, oldSelection);
       }
    });
 
    MultiSelector.contextTypes = function() {
       return {
          dataOptions: DataContext
+      };
+   };
+
+   MultiSelector.getDefaultOptions = function() {
+      return {
+         selectedKeys: [],
+         excludedKeys: []
       };
    };
 

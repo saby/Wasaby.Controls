@@ -13,9 +13,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
+   'Controls/Utils/isNewEnvironment',
    "Core/constants",
    'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants) {
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, isNewEnvironment, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -24,7 +25,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             eventsChannel.notify('onDocumentClick', e);
          },
          dragCallback = function(e) {
-            if (e.dataTransfer.types[0] === 'Files') {
+            if (e.dataTransfer.types.includes('Files')) {
                eventsChannel.notify('onDocumentDrag', e);
             }
 
@@ -1242,7 +1243,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       },
 
       _getZIndex: function(){
-         if (!this._isNewEnvironment() || this._options._isSubmitPopup) {
+         if (!isNewEnvironment() || this._options._isSubmitPopup) {
             this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
             cWindowManager.setVisible(this._zIndex);
 
@@ -1282,10 +1283,6 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          }
 
          return openerPopup && openerPopup.css('z-index');
-      },
-
-      _isNewEnvironment: function() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
       },
 
       /**

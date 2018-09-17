@@ -1,0 +1,25 @@
+<ws:template name="toggle">
+   <span class="controls-Switch__toggle__wrapper
+                controls-Switch__toggle_{{_options.captionPosition}}Caption
+               {{!_options.readOnly ? 'controls-Switch_enabled'}}
+               {{_options.value ? ' controls-Switch_checked'}}"
+         title="{{tooltip}}">
+      <ws:partial template="wml!Controls/Toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{_options.readOnly}}" selected="{{_options.value ? true : false}}"/>
+      <span class="controls-Switch__line{{_options.readOnly ? ' controls-Switch__line_disabled' : ' controls-Switch__line_enabled'}}"></span>
+   </span>
+</ws:template>
+<ws:template name="caption">
+   <span class="controls-Switch__text_{{_options.captionPosition}}Caption
+               controls-Switch__text_{{_options.readOnly ? 'disabled' : 'enabled'}}_{{_options.value ? 'selected' : 'unselected'}}" >{{_options.caption}}</span>
+</ws:template>
+
+<span class="controls-Switch" on:click="_clickHandler()" title="{{_options.tooltip}}">
+   <ws:if data="{{_options.captionPosition === 'left'}}">
+      <ws:partial template="caption"/>
+      <ws:partial template="toggle"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="toggle"/>
+      <ws:partial template="caption"/>
+   </ws:else>
+</span>

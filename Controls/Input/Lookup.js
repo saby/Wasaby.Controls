@@ -1,14 +1,14 @@
 define('Controls/Input/Lookup', [
    'Core/Control',
-   'tmpl!Controls/Input/Lookup/Lookup',
+   'wml!Controls/Input/Lookup/Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
    'Controls/Controllers/SourceController',
    'WS.Data/Collection/List',
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'Core/Deferred',
-   'tmpl!Controls/Input/resources/input',
-   'css!?Controls/Input/Lookup/Lookup'
+   'wml!Controls/Input/resources/input',
+   'css!Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
    
    'use strict';
@@ -19,6 +19,7 @@ define('Controls/Input/Lookup', [
     * @class Controls/Input/Lookup
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
     * @mixes Controls/Input/interface/ISuggest
     * @mixes Controls/Input/interface/ILookup
@@ -196,6 +197,10 @@ define('Controls/Input/Lookup', [
    
       _deactivated: function() {
          this._suggestState = false;
+      },
+   
+      _itemClick: function(event, item) {
+         this._notify('itemClick', [item]);
       }
    
    });

@@ -1,6 +1,6 @@
 define('Controls-demo/Input/ThemesDemo/ThemesDemo', [
 	'Core/Control',
-	'tmpl!Controls-demo/Input/ThemesDemo/ThemesDemo',
+	'wml!Controls-demo/Input/ThemesDemo/ThemesDemo',
 	'Controls/Input/Text',
 	'css!Controls-demo/Input/ThemesDemo/ThemesDemo'
 ], function ( Control, dotTplFn) {

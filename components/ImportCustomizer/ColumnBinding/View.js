@@ -8,8 +8,8 @@
 define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
    [
       'Core/core-merge',
-      'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/head',
@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'css!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View'
    ],
 
-   function (cMerge, cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
+   function (cMerge, CompoundControl, objectChange, RecordSet, dotTplFn) {
       'use strict';
 
       /**
@@ -179,54 +179,41 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
+            if ('mapping' in values && !values.mapping) {
+               values.mapping = {};
+            }
+            if ('skippedRows' in values && !(0 < values.skippedRows)) {
+               values.skippedRows = 0;
+            }
             var options = this._options;
-            var prevMapping = options.mapping;
-            var has = {};
-            for (var name in values) {
-               var value = values[name];
-               switch (name) {
-                  case 'rows':
-                  case 'fields':
-                     break;
-                  case 'mapping':
-                     value = value || {};
-                     break;
-                  case 'skippedRows':
-                     value = 0 < value ? value : 0;
-                     break;
-                  default:
-                     continue;
+            var changes = objectChange(options, values, {rows:true, fields:true, mapping:true, skippedRows:false});
+            if (changes) {
+               var grid = this._grid;
+               if ('rows' in changes || 'fields' in changes) {
+                  if (!('mapping' in changes) && !('mapping' in values)) {
+                     options.mapping = {};
+                  }
+                  var inf = this._makeUpdateInfo(options);
+                  grid.setColumns(inf.columns);
+                  grid.setItems(inf.rows);
                }
-               if (name === 'skippedRows' ? value !== options[name] : !cObjectIsEqual(value, options[name])) {
-                  has[name] = true;
-                  options[name] = value;
-               }
-            }
-            var grid = this._grid;
-            if (has.rows || has.fields) {
-               if (!has.mapping && !('mapping' in values)) {
-                  options.mapping = {};
-               }
-               var inf = this._makeUpdateInfo(options);
-               grid.setColumns(inf.columns);
-               grid.setItems(inf.rows);
-            }
-            else {
-               if (!has.mapping) {
-                  options.mapping = {};
-               }
-               if (has.skippedRows) {
-                  this._updateSkippedRows();
-               }
-               if (has.mapping && options.fields) {
-                  var rows = options.rows;
-                  var len = rows && rows.length ? rows[0].length : 0;
-                  if (len) {
-                     var mapping = options.mapping;
-                     var prevMenuIds = Object.keys(prevMapping).reduce(function (r, v) { r[prevMapping[v]] = v; return r; }, []);
-                     var menuIds = Object.keys(mapping).reduce(function (r, v) { r[mapping[v]] = v; return r; }, []);
-                     for (var i = 0; i < len; i++) {
-                        this._changeMenuSelection(grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (i + 1)), menuIds[i] || _ID_MENU_EMPTY, prevMenuIds[i] || _ID_MENU_EMPTY);
+               else {
+                  if (!('mapping' in changes)) {
+                     options.mapping = {};
+                  }
+                  if ('skippedRows' in changes) {
+                     this._updateSkippedRows();
+                  }
+                  if ('mapping' in changes && options.fields) {
+                     var rows = options.rows;
+                     var len = rows && rows.length ? rows[0].length : 0;
+                     if (len) {
+                        var mapping = options.mapping;
+                        var prevMenuIds = Object.keys(prevMapping).reduce(function (r, v) { r[prevMapping[v]] = v; return r; }, []);
+                        var menuIds = Object.keys(mapping).reduce(function (r, v) { r[mapping[v]] = v; return r; }, []);
+                        for (var i = 0; i < len; i++) {
+                           this._changeMenuSelection(grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (i + 1)), menuIds[i] || _ID_MENU_EMPTY, prevMenuIds[i] || _ID_MENU_EMPTY);
+                        }
                      }
                   }
                }

@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       'Core/Deferred',
       'Core/EventBus',
       'Lib/Tab/Message',
+      'SBIS3.CONTROLS/Action/OpenDialog',
       "SBIS3.CONTROLS/NotificationPopup",
       'SBIS3.CONTROLS/LongOperations/Entry',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
@@ -14,7 +15,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "i18n!SBIS3.CONTROLS/LongOperations/Popup",
       'SBIS3.CONTROLS/LongOperations/Registry'
    ],
-   function (cMerge, UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
+   function (cMerge, UserInfo, Deferred, EventBus, TabMessage, OpenDialogAction, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
       'use strict';
 
       /**
@@ -105,7 +106,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._longOpList = this.getChildControlByName('operationList');
             this._resultButton = this.getChildControlByName('downloadButton');
-            this._actionOpenRegistry = this.getChildControlByName('controls-LongOperationsPopup__actionOpenRegistry');
 
             var customConditions = this._options.customConditions;
             // В текущей реализации наличие непустой опции customConditions обязательно
@@ -279,9 +279,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                userId: this._options.userId
             };
             var actionOptions = this._options._actionOpenRegistry;
+            // При удалении всех операций реестр не должен закрываться вслед за попапом, поэтому создаем его здесь без ссылки на попап
+            // 1175888203 https://online.sbis.ru/opendoc.html?guid=757f20f2-0d31-4011-9608-0176464dd566
+            if (!this._actionOpenRegistry) {
+               this._actionOpenRegistry = new OpenDialogAction({
+                  mode: actionOptions.mode,
+                  template: actionOptions.template
+               });
+            }
             this._actionOpenRegistry.execute({
                dialogOptions: cMerge({
-                  opener: this
+                  opener: null
                }, actionOptions.dialogOptions),
                componentOptions: componentOptions
             }).addBoth(this._onRegistryClose.bind(this));

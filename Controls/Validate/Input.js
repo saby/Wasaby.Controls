@@ -1,7 +1,7 @@
 define('Controls/Validate/Input',
    [
       'Controls/Validate/Controller',
-      'tmpl!Controls/Validate/Input'
+      'wml!Controls/Validate/Input'
    ],
    function(
       Controller,

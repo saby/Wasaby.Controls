@@ -5,9 +5,9 @@ define('Controls/Date/MonthView', [
    'Controls/Calendar/Utils',
    'Controls/Date/MonthView/MonthViewModel',
    'Controls/Utils/Date',
-   'tmpl!Controls/Date/MonthView/MonthView',
-   'tmpl!Controls/Date/MonthView/MonthViewTableBody',
-   'tmpl!Controls/Date/MonthView/day',
+   'wml!Controls/Date/MonthView/MonthView',
+   'wml!Controls/Date/MonthView/MonthViewTableBody',
+   'wml!Controls/Date/MonthView/day',
    'Controls/Date/interface/IMonth',
    'css!?Controls/Date/MonthView/MonthView'
 ], function(

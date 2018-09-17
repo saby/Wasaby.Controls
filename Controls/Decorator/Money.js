@@ -3,7 +3,7 @@ define('Controls/Decorator/Money',
       'Core/IoC',
       'Core/Control',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Decorator/Money/Money',
+      'wml!Controls/Decorator/Money/Money',
 
       'css!?Controls/Decorator/Money/Money'
    ],

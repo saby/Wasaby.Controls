@@ -5,8 +5,8 @@ define('Controls/Date/PeriodDialog/MonthsRange', [
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
    'Controls/Date/PeriodDialog/MonthsRangeItem',
-   'tmpl!Controls/Date/PeriodDialog/MonthsRange',
-   'css!?Controls/Date/Utils/RangeSelection'
+   'wml!Controls/Date/PeriodDialog/MonthsRange',
+   'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    coreMerge,

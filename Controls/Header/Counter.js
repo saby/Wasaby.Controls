@@ -1,6 +1,6 @@
 define('Controls/Header/Counter', [
    'Core/Control',
-   'tmpl!Controls/Header/Counter/Counter',
+   'wml!Controls/Header/Counter/Counter',
    'WS.Data/Type/descriptor',
    'css!?Controls/Header/Counter/Counter'
 ], function(Control, template, types) {

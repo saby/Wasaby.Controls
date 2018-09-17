@@ -1,9 +1,8 @@
 define('Controls/Container/Scroll/ScrollWidthUtil',
    [
-      'Core/detection',
-      'Core/compatibility'
+      'Core/detection'
    ],
-   function(detection, compatibility) {
+   function(detection) {
 
       'use strict';
 
@@ -55,16 +54,11 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
           * @param compatibility
           * @return {string}
           */
-         calcStyleHideScrollbar: function(scrollbarWidth, detection, compatibility) {
+         calcStyleHideScrollbar: function(scrollbarWidth) {
             var style;
 
             if (scrollbarWidth) {
                style = 'margin-right: -' + scrollbarWidth + 'px;';
-
-               // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
-               if (compatibility.touch && detection.isIE) {
-                  style += 'padding-right: ' + scrollbarWidth + 'px;';
-               }
             } else if (scrollbarWidth === 0) {
                style = '';
             }
@@ -83,7 +77,7 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
                styleHideScrollbar = _private.styleHideScrollbar;
             } else {
                scrollbarWidth = _private.calcScrollbarWidth(detection);
-               styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, detection, compatibility);
+               styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
             }
 
             /**

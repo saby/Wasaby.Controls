@@ -53,14 +53,14 @@ define('Controls/Dropdown/Opener',
                parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
                items = configOptions && configOptions.items,
                optIconSize = configOptions && configOptions.iconSize,
-               headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.icon),
+               headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.showHeader && compOptions.icon),
                menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
                parents = {},
                iconSize, pid, icon;
 
             // необходимо учесть иконку в шапке
-            if (headerIcon && menuStyle !== 'cross') {
-               parents['null'] = [null, this.getIconSize(headerIcon, optIconSize)];
+            if (headerIcon && menuStyle !== 'titleHead') {
+               parents[parentProperty ? 'null' : 'undefined'] = [null, this.getIconSize(headerIcon, optIconSize)];
             }
 
             items.each(function(item) {
@@ -82,10 +82,15 @@ define('Controls/Dropdown/Opener',
             if (pOptions.templateOptions && pOptions.templateOptions.headConfig) {
                pOptions.templateOptions.headConfig.menuStyle = pOptions.templateOptions.headConfig.menuStyle || 'defaultHead';
             }
+            self._hasHeader = pOptions.templateOptions && pOptions.templateOptions.showHeader;
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, config) {
-            config.className = self._options.className || 'controls-DropdownList__margin';
+            if (self._options.className) {
+               config.className = self._options.className;
+            } else {
+               config.className = self._hasHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin';
+            }
             config.template = 'Controls/Dropdown/resources/template/DropdownList';
             config.closeByExternalClick = true;
          }

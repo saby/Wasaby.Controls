@@ -1,8 +1,8 @@
 define('Controls/Input/Dropdown',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Dropdown/Dropdown',
-      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
+      'wml!Controls/Input/Dropdown/Dropdown',
+      'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
@@ -16,16 +16,18 @@ define('Controls/Input/Dropdown',
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
+       * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
        * @author Зайцев А.С.
        * @category Input
-       * @demo Controls-demo/Dropdown/MenuVdom
+       * @demo Controls-demo/Input/Dropdown/Dropdown
        */
 
       /**
@@ -56,6 +58,15 @@ define('Controls/Input/Dropdown',
          _beforeMount: function() {
             this._setText = this._setText.bind(this);
          },
+
+         _afterMount: function(options) {
+            /*Updating the text in the header.
+            Since the text is set after loading source, the caption stored old value*/
+            if (options.showHeader && options.caption !== this._text) {
+               this._forceUpdate();
+            }
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
             this._setText(items);
             this._notify('textValueChanged', [this._text]);
@@ -67,7 +78,7 @@ define('Controls/Input/Dropdown',
             if (this._isEmptyItem) {
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
-               this._text = getPropValue(items[0], this._options.displayProperty || 'title');
+               this._text = getPropValue(items[0], this._options.displayProperty);
                this._icon = items[0].get('icon');
             }
             if (items.length > 1) {

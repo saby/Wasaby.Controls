@@ -1,6 +1,6 @@
 define('Controls/Button/Separator', [
    'Core/Control',
-   'tmpl!Controls/Button/Separator/Separator',
+   'wml!Controls/Button/Separator/Separator',
    'WS.Data/Type/descriptor',
    'css!?Controls/Button/Separator/Separator'
 ], function(Control, template, types) {

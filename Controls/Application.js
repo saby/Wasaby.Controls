@@ -4,16 +4,18 @@
 define('Controls/Application',
    [
       'Core/Control',
-      'tmpl!Controls/Application/Page',
+      'Core/detection',
+      'wml!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
       'Core/compatibility',
       'Controls/Application/AppData',
+      'Controls/Container/Scroll/Context',
       'Controls/Application/HeadDataContext',
       'Controls/Application/LinkResolver',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
-      'css!?Controls/Application/Application'
+      'css!Controls/Application/Application'
    ],
 
    /**
@@ -26,12 +28,22 @@ define('Controls/Application',
     * @author Зуев Д.В.
     */
 
+   /**
+    * @name Controls/Application#staticDomains
+    * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
+    * for static resources and distribute downloading for several static domains.
+    * There will be another way to propagate this data after this problem:
+    * https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
+    */
+
    function(Base,
+      detection,
       template,
       Deferred,
       BodyClasses,
       compatibility,
       AppData,
+      ScrollContext,
       HeadDataContext,
       LinkResolver,
       ThemesController) {
@@ -57,10 +69,31 @@ define('Controls/Application',
             // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
             // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+
+            if (detection.isMobileIOS) {
+               bodyClasses += ' ' + this._scrollingClass;
+            }
+
+            return bodyClasses;
          }
       };
       var Page = Base.extend({
          _template: template,
+
+         /**
+          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for inner scrollable areas.
+          * @private
+          */
+         _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
+
+         _getChildContext: function() {
+            return {
+               ScrollData: this._scrollData
+            };
+         },
 
          _scrollPage: function(ev) {
             this._children.scrollDetect.start(ev);
@@ -94,9 +127,21 @@ define('Controls/Application',
                   : 'ws-is-no-touch';
          },
 
+         _popupCreatedHandler: function() {
+            this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+         },
+
+         _popupDestroyedHandler: function(event, element, popupItems) {
+            if (popupItems.getCount() === 0) {
+               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
+            }
+         },
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
+
+            self._scrollData = new ScrollContext({pagingVisible: false});
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
@@ -104,10 +149,10 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
+            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
@@ -160,11 +205,16 @@ define('Controls/Application',
          },
 
          _openInfoBoxHandler: function(event, config) {
+            this._activeInfobox = event.target;
+
             this._children.infoBoxOpener.open(config);
          },
 
-         _closeInfoBoxHandler: function() {
-            this._children.infoBoxOpener.close();
+         _closeInfoBoxHandler: function(event) {
+            if (this._activeInfobox === event.target) {
+               this._activeInfobox = null;
+               this._children.infoBoxOpener.close();
+            }
          },
 
          _openPreviewerHandler: function(event, config, type) {
@@ -189,4 +239,5 @@ define('Controls/Application',
       };
 
       return Page;
-   });
+   }
+);

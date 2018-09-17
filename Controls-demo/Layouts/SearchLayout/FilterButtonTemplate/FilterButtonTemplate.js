@@ -3,7 +3,7 @@
  */
 define('Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate', [
    'Lib/Control/CompoundControl/CompoundControl',
-   'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
+   'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
 
 ], function(CompoundControl, template) {
    'use strict';

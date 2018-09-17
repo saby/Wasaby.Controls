@@ -1,11 +1,12 @@
 define('Controls-demo/Popup/PopupPage',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/PopupPage',
+      'wml!Controls-demo/Popup/PopupPage',
+      'Core/helpers/Number/randomId',
       'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPage'
    ],
-   function (Control, template) {
+   function (Control, template, randomId) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -48,6 +49,17 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openExecutingPopup: function () {
+            this._children.executingStack.open({
+               opener: this._children.stackButton,
+               templateOptions: {text: randomId('popup-random')}
+            });
+            this._children.executingStack.open({
+               opener: this._children.stackButton,
+               templateOptions: {text: randomId('popup-random')}
+            });
+         },
+
          openMaximizedStack: function () {
             this._children.maximizedStack.open({
                minWidth: 900,
@@ -61,6 +73,18 @@ define('Controls-demo/Popup/PopupPage',
          openOldTemplate: function () {
             this._children.openOldTemplate.open({
                opener: this._children.stackButton2,
+               isCompoundTemplate: true
+            });
+         },
+         openStackWithPending: function() {
+            this._children.openStackWithPending.open({
+               opener: this._children.stackButton3,
+               isCompoundTemplate: true
+            });
+         },
+         openStackWithFormController: function() {
+            this._children.openStackWithFormController.open({
+               opener: this._children.stackButton4,
                isCompoundTemplate: true
             });
          },

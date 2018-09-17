@@ -1,7 +1,7 @@
 define('Controls/Popup/Manager',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Manager/Manager',
+      'wml!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/Number/randomId',
       'WS.Data/Collection/List'
@@ -20,7 +20,7 @@ define('Controls/Popup/Manager',
 
          removeElement: function(element, container, id) {
             var self = this;
-            var removeDeferred = element.controller.elementDestroyed(element, container, id);
+            var removeDeferred = element.controller._elementDestroyed(element, container, id);
             _private.redrawItems(self._popupItems);
 
             if (element.popupOptions.maximize) {
@@ -44,7 +44,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
-               element.controller.elementCreated(element, _private.getItemContainer(id), id);
+               element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], {bubbling: true});
                return true;
             }
@@ -54,9 +54,9 @@ define('Controls/Popup/Manager',
          popupUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.controller.elementUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               var needUpdate = element.controller._elementUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
                this._notify('managerPopupUpdated', [element, this._popupItems], {bubbling: true});
-               return true;
+               return !!needUpdate;
             }
             return false;
          },
@@ -74,7 +74,7 @@ define('Controls/Popup/Manager',
          popupAfterUpdated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               return element.controller.elementAfterUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+               return element.controller._elementAfterUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
             }
             return false;
          },
@@ -83,6 +83,24 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                element.controller.popupDeactivated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+            }
+            return false;
+         },
+
+         popupDragStart: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
+               return true;
+            }
+            return false;
+         },
+
+         popupDragEnd: function(id, offset) {
+            var element = ManagerController.find(id);
+            if (element) {
+               element.controller.popupDragEnd(element, offset);
+               return true;
             }
             return false;
          },
@@ -118,7 +136,15 @@ define('Controls/Popup/Manager',
          getItemContainer: function(id) {
             var popupContainer = ManagerController.getContainer();
             var item = popupContainer && popupContainer._children[id];
-            return item && item._container;
+            var container = item && item._container;
+
+            // При работе popup'ов внутри слоя совместимости, _container может быть обернут
+            // в jQuery. Так как система работает с нативными элементами, нужно в таком случае
+            // снять jQuery-обертку
+            if (container && container.jquery) {
+               container = container[0];
+            }
+            return container;
          },
 
          redrawItems: function(items) {
@@ -166,6 +192,7 @@ define('Controls/Popup/Manager',
                isModal: options.isModal,
                controller: controller,
                popupOptions: options,
+               popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };
          },
@@ -179,10 +206,14 @@ define('Controls/Popup/Manager',
          update: function(id, options) {
             var element = this.find(id);
             if (element) {
+               var oldOptions = element.popupOptions;
                element.popupOptions = options;
-               element.controller.elementUpdated(element, _private.getItemContainer(id));
-               _private.updateOverlay.call(this);
-               _private.redrawItems(this._popupItems);
+               if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
+                  _private.updateOverlay.call(this);
+                  _private.redrawItems(this._popupItems);
+               } else {
+                  element.popupOptions = oldOptions;
+               }
                return id;
             }
             return null;

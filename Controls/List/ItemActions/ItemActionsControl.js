@@ -1,16 +1,18 @@
 define('Controls/List/ItemActions/ItemActionsControl', [
    'Core/Control',
-   'tmpl!Controls/List/ItemActions/ItemActionsControl',
+   'wml!Controls/List/ItemActions/ItemActionsControl',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
-   'css!?Controls/List/ItemActions/ItemActions'
+   'Controls/Application/TouchDetector/TouchContextField',
+   'css!Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
    tUtil,
    aUtil,
-   ControlsConstants
+   ControlsConstants,
+   TouchContextField
 ) {
    'use strict';
 
@@ -25,7 +27,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       fillItemAllActions: function(item, itemActions, itemActionVisibilityCallback) {
          var actions = [];
-         itemActions.sort(_private.sortActions);
          itemActions.forEach(function(action) {
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
@@ -43,7 +44,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateItemActions: function(self, item, options, isEditingItem) {
+      updateItemActions: function(self, item, options, isEditingItem, isTouch) {
          var
             all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
 
@@ -52,6 +53,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                : all.filter(function(action) {
                   return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
                });
+
+         if (isTouch) {
+            showed.sort(_private.sortActions);
+         }
 
          if (isEditingItem && options.showToolbar) {
             showed.push({
@@ -85,23 +90,23 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
       },
 
-      updateActions: function(self, options) {
+      updateActions: function(self, options, isTouch) {
          if (options.itemActions) {
             for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
                var
                   itemData = options.listModel.getCurrent(),
                   item = itemData.item;
                if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                  _private.updateItemActions(self, item, options, itemData.isEditing);
+                  _private.updateItemActions(self, item, options, itemData.isEditing, isTouch);
                }
             }
          }
       },
 
-      updateModel: function(self, newOptions) {
-         _private.updateActions(self, newOptions);
+      updateModel: function(self, newOptions, isTouch) {
+         _private.updateActions(self, newOptions, isTouch);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self, self._options);
+            _private.updateActions(self, self._options, self.context.get('isTouch').isTouch);
          });
       },
 
@@ -126,19 +131,19 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _template: template,
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function(newOptions, context) {
          if (newOptions.listModel) {
-            _private.updateModel(this, newOptions);
+            _private.updateModel(this, newOptions, context.isTouch.isTouch);
          }
       },
 
-      _beforeUpdate: function(newOptions) {
+      _beforeUpdate: function(newOptions, context) {
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(this, newOptions);
+            _private.updateModel(this, newOptions, context.isTouch.isTouch);
          }
 
          if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
-            _private.updateActions(this, newOptions);
+            _private.updateActions(this, newOptions, context.isTouch.isTouch);
          }
       },
 
@@ -155,7 +160,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(this, item, this._options, isEditingItem);
+         _private.updateItemActions(this, item, this._options, isEditingItem, this.context.get('isTouch').isTouch);
       }
    });
 
@@ -166,6 +171,12 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             return true;
          },
          itemActions: []
+      };
+   };
+
+   ItemActionsControl.contextTypes = function contextTypes() {
+      return {
+         isTouch: TouchContextField
       };
    };
 

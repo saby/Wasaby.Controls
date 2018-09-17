@@ -1,8 +1,8 @@
 define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
    [
       'Core/Control',
-      'tmpl!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-      'css!?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
+      'wml!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
+      'css!Controls/Popup/Templates/Dialog/ConfirmationTemplate'
    ],
    function(Control, template) {
       'use strict';

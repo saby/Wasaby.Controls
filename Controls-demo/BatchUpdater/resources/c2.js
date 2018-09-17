@@ -2,7 +2,7 @@ define('Controls-demo/BatchUpdater/resources/c2',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls-demo/BatchUpdater/resources/c2'
+      'wml!Controls-demo/BatchUpdater/resources/c2'
    ],
    function(Base, Deferred, template) {
       'use strict';
@@ -18,7 +18,7 @@ define('Controls-demo/BatchUpdater/resources/c2',
             var def = new Deferred();
             var self = this;
             self.text = '2';
-            self._notify('requestBatchUpdate', [def, self._forceUpdate], { bubbling: true, shouldUpdate: false });
+            self._notify('requestBatchUpdate', [def, self._forceUpdate], { bubbling: true });
             setTimeout(function() {
                var first = document.getElementById('div1');
                if (first.innerText === '1') {

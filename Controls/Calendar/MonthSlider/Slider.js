@@ -2,8 +2,8 @@ define('Controls/Calendar/MonthSlider/Slider', [
    'Core/Control',
    'Core/core-merge',
    'WS.Data/Type/descriptor',
-   'tmpl!Controls/Calendar/MonthSlider/Slider/Slider',
-   'css!?Controls/Calendar/MonthSlider/Slider/Slider'
+   'wml!Controls/Calendar/MonthSlider/Slider/Slider',
+   'css!Controls/Calendar/MonthSlider/Slider/Slider'
 ], function(
    BaseControl,
    coreMerge,

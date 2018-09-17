@@ -1,8 +1,8 @@
 define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Suggest/Layout/Suggest',
-      'tmpl!Controls/Container/Suggest/Layout/empty',
+      'wml!Controls/Container/Suggest/Layout/Suggest',
+      'wml!Controls/Container/Suggest/Layout/empty',
       'WS.Data/Type/descriptor',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
@@ -40,6 +40,14 @@ define('Controls/Container/Suggest/Layout',
          open: function(self) {
             _private.loadDependencies(self).addCallback(function() {
                _private.suggestStateNotify(self, true);
+            });
+         },
+         
+         searchErrback: function(self) {
+            self._loading = false;
+            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+               self._emptyTemplate = result;
+               self._forceUpdate();
             });
          },
          
@@ -255,8 +263,10 @@ define('Controls/Container/Suggest/Layout',
          _beforeMount: function(options) {
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
+            this._searchErrback = this._searchErrback.bind(this);
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
+            this._emptyTemplate = options.emptyTemplate;
          },
          
          _afterMount: function() {
@@ -268,6 +278,7 @@ define('Controls/Container/Suggest/Layout',
             this._tabsSource = null;
             this._searchStart = null;
             this._searchEnd = null;
+            this._searchErrback = null;
             this._select = null;
          },
          
@@ -278,6 +289,10 @@ define('Controls/Container/Suggest/Layout',
             
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
+            }
+            
+            if (this._emptyTemplate !== newOptions.emptyTemplate) {
+               this._emptyTemplate = newOptions.emptyTemplate;
             }
          },
    
@@ -386,6 +401,10 @@ define('Controls/Container/Suggest/Layout',
             }
             this._forceUpdate();
          },
+   
+         _searchErrback: function() {
+            _private.searchErrback(this);
+         },
          
          _showAllClick: function() {
             var self = this;
@@ -424,7 +443,7 @@ define('Controls/Container/Suggest/Layout',
          return {
             emptyTemplate: emptyTemplate,
             footerTemplate: {
-               templateName: 'tmpl!Controls/Container/Suggest/Layout/footer'
+               templateName: 'wml!Controls/Container/Suggest/Layout/footer'
             },
             suggestStyle: 'default',
             suggestState: false,

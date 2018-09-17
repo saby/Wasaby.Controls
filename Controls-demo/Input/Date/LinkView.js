@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Date/LinkView', [
    'Core/Control',
-   'tmpl!Controls-demo/Input/Date/LinkView'
+   'wml!Controls-demo/Input/Date/LinkView'
 ], function(
    BaseControl,
    template

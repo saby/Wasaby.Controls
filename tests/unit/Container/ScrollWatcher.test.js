@@ -105,7 +105,7 @@ define([
 
          evType = [];
          ScrollWatcher._private.onResizeContainer(ins, containerMock);
-         assert.deepEqual(['listBottom', 'loadBottom'], evType, 'Not send edge positions withodut observer');
+         assert.deepEqual(['listBottom', 'loadBottom'], evType, 'Not send edge positions without observer');
       });
 
       it('onScrollContainer', function () {
@@ -119,7 +119,13 @@ define([
 
          evType = [];
          ScrollWatcher._private.onScrollContainer(ins, containerMock);
-         assert.deepEqual(['listBottom', 'loadBottom', 'scrollMove'], evType, 'Wrong scroll commands on change scroll withodut observer');
+         assert.deepEqual(['scrollMove', 'listBottom', 'loadBottom'], evType, 'Wrong scroll commands on change scroll without observer');
+
+         evType = [];
+         ins._scrollPositionCache = null;
+         ScrollWatcher._private.onScrollContainer(ins, containerMock, true);
+         assert.deepEqual(['scrollMove'], evType, 'Wrong scroll commands on change scroll with observer');
+
          assert.equal(111, ins._scrollTopCache, 'Wrong scrollTop cache value after scroll');
 
       });
@@ -156,7 +162,7 @@ define([
          setTimeout(function(){
             assert.deepEqual([
                {eType: 'scrollMove', eArgs : {position : "middle", scrollTop: 22}}
-            ], evType, 'Wrong scroll commands on change scroll withodut observer');
+            ], evType, 'Wrong scroll commands on change scroll without observer');
             done();
          }, 100);
       });
@@ -195,7 +201,7 @@ define([
                assert.deepEqual([
                   {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12}},
                   {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22}}
-               ], evType, 'Wrong scroll commands on change scroll withodut observer');
+               ], evType, 'Wrong scroll commands on change scroll without observer');
                done();
             }, 100);
 

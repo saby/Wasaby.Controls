@@ -98,6 +98,7 @@ define('Controls/Popup/Opener/InfoBox',
                position: cfg.position,
                autofocus: false,
                eventHandlers: cfg.eventHandlers,
+               opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
@@ -105,7 +106,7 @@ define('Controls/Popup/Opener/InfoBox',
                   float: cfg.float
                },
                className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
-               template: 'tmpl!Controls/Popup/Opener/InfoBox/resources/template'
+               template: 'wml!Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
          close: function(delay) {

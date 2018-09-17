@@ -6,10 +6,10 @@
 define('Controls/Event/Listener',
    [
       'Core/Control',
-      'tmpl!Controls/Event/Listener',
+      'wml!Controls/Event/Listener',
       'Controls/Event/Registrar',
       'WS.Data/Type/descriptor',
-      'tmpl!Controls/Application/CompatibleScripts'
+      'wml!Controls/Application/CompatibleScripts'
    ],
    function(Control, template, Registrar, types) {
 
@@ -18,6 +18,13 @@ define('Controls/Event/Listener',
       var EventCatcher = Control.extend({
          _template: template,
          _listner: null,
+         constructor: function() {
+            EventCatcher.superclass.constructor.apply(this, arguments);
+            this._forceUpdate = function() {
+               // Do nothing
+               // This method will be called because of handling event.
+            };
+         },
          _beforeMount: function(newOptions) {
             this._registrar = new Registrar({register: newOptions.register});
          },

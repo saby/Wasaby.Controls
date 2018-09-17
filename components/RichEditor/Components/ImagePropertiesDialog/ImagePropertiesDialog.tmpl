@@ -1,45 +1,44 @@
-<div data-lmtype="Dialog">
+<div data-lmtype="Dialog" style="position:relative; padding-bottom:20px;">
    <div class="ws-window-titlebar-custom" data-lmchild="WindowTitle" style="font-size:0; padding-right:30px">
-      <Deprecated.Controls.Button.Button
+      <SBIS3.CONTROLS.Button
          caption="ОК"
          tabindex="5"
          name="applyButton"
          defaultButton="{{true}}"
+         style="primary"
          attributes="{{ {
-            'style': 'width:90px;vertical-align:top;display:inline-block;position:absolute;top:8px;right:48px;margin-right:0px;'
+            'style': 'position:absolute;top:8px;right:48px;'
          } }}"
       />
    </div>
-   <Deprecated.Controls.FieldDropdown.FieldDropdown
+   <SBIS3.CONTROLS.DropdownList
       tabindex="3"
       name="valueType"
-      renderStyle="simple"
-      data="{{ [
-         {
-            'key': 'pix',
-            'value': 'пикселей'
-         },
-         {
-            'key': 'per',
-            'value': 'процентов'
-         }
+      type="simple"
+      multiselect="{{false}}"
+      idProperty="key"
+      displayProperty="value"
+      items="{{ [
+         {'key':'pix', 'value':'пикселей'},
+         {'key':'per', 'value':'процентов'}
       ] }}"
       attributes="{{ {
-         'style': 'position:absolute;left:174px;width:80px;top:20px;'
+         'style': 'position:absolute;left:132px;width:80px;top:15px;'
       } }}"
    />
    <label class="ws-Label ws-Label-ws-control" data-lmtype="Label" style="position:static;display:block;margin-left:22px;margin-top:8px;">
       <span data-lmchild="label-title" class="ws-Label-title">Высота</span>
       <div data-lmchild="label-content" class="ws-Label-content" style="display:inline-block;">
-         <Deprecated.Controls.FieldInteger.FieldInteger
+         <SBIS3.CONTROLS.NumberTextBox
             integers="4"
             tabindex="1"
-            tooltip="999"
+            placeholder="999"
             name="imageHeight"
-            notNegative="{{true}}"
-            tooltipInside="{{true}}"
+            onlyInteger="{{true}}"
+            onlyPositive="{{true}}"
+            selectOnClick="{{true}}"
             attributes="{{ {
-               'style': 'width:90px;'
+               'style': 'width:40px;margin-left:8px;text-align:right;'
             } }}"
          />
       </div>
@@ -47,15 +46,16 @@
    <label class="ws-Label ws-Label-ws-control" data-lmtype="Label" style="position:relative;display:inline-block;margin-left:16px;margin-top:8px;">
       <span data-lmchild="label-title" class="ws-Label-title">Ширина</span>
       <div data-lmchild="label-content" class="ws-Label-content" style="display:inline-block;">
-         <Deprecated.Controls.FieldInteger.FieldInteger
+         <SBIS3.CONTROLS.NumberTextBox
             integers="4"
             tabindex="2"
-            tooltip="999"
+            placeholder="999"
             name="imageWidth"
-            notNegative="{{true}}"
-            tooltipInside="{{true}}"
+            onlyInteger="{{true}}"
+            onlyPositive="{{true}}"
+            selectOnClick="{{true}}"
             attributes="{{ {
-               'style': 'width:90px;'
+               'style': 'width:40px;margin-left:8px;text-align:right;'
             } }}"
          />
       </div>

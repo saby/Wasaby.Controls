@@ -1,7 +1,7 @@
 define('Controls/Controllers/PrimaryAction',
    [
       'Core/Control',
-      'tmpl!Controls/Controllers/PrimaryAction/PrimaryAction'
+      'wml!Controls/Controllers/PrimaryAction/PrimaryAction'
    ],
 
    function(Control, template) {

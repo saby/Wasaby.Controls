@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * Событие происходит перед тем, как компонент выполняет синхронизацию изменений со связанным списком, если такой установлен в опции linkedObject.
        * Такая синхронизация выполняется каждый раз при удалении или редактировании записи.
-       * В обработчике события onUpdateModel можно отметить базовую логику сохранения записи (см. {@link /doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/ Синхронизация изменений со списком} )
+       * В обработчике события onUpdateModel можно отметить базовую логику сохранения записи (см. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/ Синхронизация изменений со списком} )
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
@@ -726,6 +726,9 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
 
       destroy: function() {
          $(document).unbind('keydown keyup', this._setOpeningModeHandler);
+         if (this._overlay) {
+            this._overlay.remove();
+         }
          OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });

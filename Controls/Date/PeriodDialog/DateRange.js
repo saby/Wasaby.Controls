@@ -7,9 +7,9 @@ define('Controls/Date/PeriodDialog/DateRange', [
    'Controls/Date/Utils/DateRangeQuantum',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date',
-   'tmpl!Controls/Date/PeriodDialog/DateRange',
-   'tmpl!Controls/Date/PeriodDialog/DateRangeItem',
-   'css!?Controls/Date/Utils/RangeSelection'
+   'wml!Controls/Date/PeriodDialog/DateRange',
+   'wml!Controls/Date/PeriodDialog/DateRangeItem',
+   'css!Controls/Date/Utils/RangeSelection'
 ], function(
    BaseControl,
    formatDate,

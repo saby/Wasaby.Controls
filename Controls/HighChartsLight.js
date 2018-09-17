@@ -1,7 +1,7 @@
 define('Controls/HighChartsLight',
    [
       'Core/Control',
-      'tmpl!Controls/HighChartsLight/HighChartsLight',
+      'wml!Controls/HighChartsLight/HighChartsLight',
       'Core/constants',
       'Core/core-clone',
       'Core/Date',

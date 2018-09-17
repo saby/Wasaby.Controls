@@ -8,6 +8,7 @@
       showPaging="{{false}}"
       infiniteScroll="{{null}}"
       listName="operationListDataGrid"
+      useDataSourceQueue="{{true}}"
       className="controls-LongOperationsPopup__content_list controls-ListView__withoutMarker controls-DataGridView__hasSeparator"
       columns="{{ {
          'startedAt': false,
@@ -19,11 +20,6 @@
          name="registryOperationButton"
          className="controls-LongOperationsPopup__content_showRegistryButton"
          caption="{[Все операции]}"
-      />
-      <SBIS3.CONTROLS.Action.OpenDialog
-         name="controls-LongOperationsPopup__actionOpenRegistry"
-         mode="{{_actionOpenRegistry.mode}}"
-         template="{{_actionOpenRegistry.template}}"
       />
    </div>
 </div>

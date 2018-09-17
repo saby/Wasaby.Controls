@@ -1,7 +1,7 @@
 define('Controls/Input/Suggest',
    [
       'Core/Control',
-      'tmpl!Controls/Input/Suggest/Suggest',
+      'wml!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputRender/BaseViewModel',
@@ -16,7 +16,7 @@ define('Controls/Input/Suggest',
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
        * @class Controls/Input/Suggest
-       * @extends Controls/Input/Text
+       * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter

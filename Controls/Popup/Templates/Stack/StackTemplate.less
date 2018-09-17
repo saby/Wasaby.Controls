@@ -23,8 +23,8 @@
    flex-direction: column;
    flex-grow: 1;
    flex-shrink: 1;
-   z-index: 0;
    background: @background_stackTemplate_content;
+   overflow: hidden;
 }
 
 .controls-StackTemplate__top-area-content {
@@ -47,11 +47,12 @@
    position: absolute;
    top: @top-space_stackTemplate_close-button;
    right: 0;
+   z-index: 2;
 }
 
 .controls-StackTemplate__maximized_button {
    position: absolute;
-   right: 44px;
+   right: @right-space_stackTemplate_maximized-button;
    top: @top-space_stackTemplate_maximized-button;
    background-image: url('resources/images/resize.svg');
    width: 24px;

@@ -4,7 +4,7 @@ define('Controls/Input/Area', [
 
    'WS.Data/Type/descriptor',
    'Core/detection',
-   'tmpl!Controls/Input/Area/Area',
+   'wml!Controls/Input/Area/Area',
    'Controls/Input/resources/InputHelper',
 
    'css!?Controls/Input/Area/Area'

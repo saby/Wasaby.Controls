@@ -1,6 +1,6 @@
 define('Controls-demo/Headers/BigSeparator/BigSeparatorDemo', [
    'Core/Control',
-   'tmpl!Controls-demo/Headers/BigSeparator/BigSeparatorDemo',
+   'wml!Controls-demo/Headers/BigSeparator/BigSeparatorDemo',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function (Control,

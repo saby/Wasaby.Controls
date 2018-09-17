@@ -1,7 +1,7 @@
 define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo',
+   'wml!Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo',
    'WS.Data/Collection/RecordSet',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
@@ -9,30 +9,30 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
              MemorySource,
              template) {
    'use strict';
-
-   var separatorStyleSource = new MemorySource({
-      idProperty: 'title',
-      data: [
-         {
-            title: 'secondary'
-         },
-         {
-            title: 'additional'
-         },
-         {
-            title: 'primary'
-         }
-      ]
-   });
-
    var ModuleClass = Control.extend(
       {
          _template: template,
          _separatorSelectedStyle: 'secondary',
-         _separatorStyleSource: separatorStyleSource,
+         _separatorStyleSource: null,
          _bold: true,
          _activeFlag: false,
          _eventName: 'no event',
+         _beforeMount: function() {
+            this._separatorStyleSource = new MemorySource({
+               idProperty: 'title',
+               data: [
+                  {
+                     title: 'secondary'
+                  },
+                  {
+                     title: 'additional'
+                  },
+                  {
+                     title: 'primary'
+                  }
+               ]
+            });
+         },
 
          activatedHandler: function(e) {
             this._activeFlag = true;

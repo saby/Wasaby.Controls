@@ -1,8 +1,8 @@
 define('Controls/Toolbar', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Toolbar/Toolbar',
-   'tmpl!Controls/Toolbar/ToolbarItemTemplate',
+   'wml!Controls/Toolbar/Toolbar',
+   'wml!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/Button',
@@ -20,6 +20,7 @@ define('Controls/Toolbar', [
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/List/interface/IHierarchy
     * @control
     * @public
@@ -64,6 +65,7 @@ define('Controls/Toolbar', [
                onResult: self._onResult,
                onClose: self._closeHandler
             },
+            opener: self,
             templateOptions: {
                keyProperty: newOptions.keyProperty,
                parentProperty: newOptions.parentProperty,
@@ -158,7 +160,11 @@ define('Controls/Toolbar', [
       _onResult: function(result) {
          if (result.action === 'itemClick') {
             this._onItemClick(result.event, result.data[0]);
-            this._children.menuOpener.close();
+            
+            //menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
+            if (this._children.menuOpener) {
+               this._children.menuOpener.close();
+            }
          }
       },
 

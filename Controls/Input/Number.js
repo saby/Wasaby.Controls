@@ -1,7 +1,7 @@
 define('Controls/Input/Number', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
-   'tmpl!Controls/Input/Number/Number',
+   'wml!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
@@ -70,11 +70,15 @@ define('Controls/Input/Number', [
    'use strict';
 
    var _private = {
-      trimEmptyDecimals: function(self) {
+      trimEmptyDecimals: function(self, target) {
          if (!self._options.showEmptyDecimals) {
             var
                processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
             self._numberViewModel.updateValue(processedVal);
+
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            target.value = self._numberViewModel.getDisplayValue();
          }
       }
    };
@@ -84,12 +88,17 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
+      // We should store previous value, so we could notify it when only '-' left in a field
+      _previousValue: undefined,
+
       _notifyHandler: tmplNotify,
 
       _beforeMount: function(options) {
          if (options.integersLength <= 0) {
             IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
          }
+
+         this._previousValue = String(options.value);
 
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
@@ -142,7 +151,13 @@ define('Controls/Input/Number', [
       },
 
       _valueChangedHandler: function(e, value) {
-         this._notify('valueChanged', [this._getNumericValue(value)]);
+         if (value === '-') {
+            this._notify('valueChanged', [this._getNumericValue(this._previousValue)]);
+         } else {
+            this._notify('valueChanged', [this._getNumericValue(value)]);
+         }
+
+         this._previousValue = value;
       },
 
       /**
@@ -157,13 +172,18 @@ define('Controls/Input/Number', [
          return isNaN(val) ? undefined : val;
       },
 
-      _focusinHandler: function() {
+      _focusinHandler: function(e) {
          var
             self = this,
             value = this._numberViewModel.getValue();
 
          if (this._options.precision !== 0 && value && value.indexOf('.') === -1) {
             value = this._numberViewModel.updateValue(value + '.0');
+
+            // Не меняется value у dom-элемента, при смене аттрибута value
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
+            e.target.value = this._numberViewModel.getDisplayValue();
+
             if (!this._options.readOnly) {
                if (this._options.selectOnClick) {
                   this._isFocus = true;
@@ -177,12 +197,12 @@ define('Controls/Input/Number', [
          }
       },
 
-      _focusoutHandler: function() {
-         _private.trimEmptyDecimals(this);
+      _focusoutHandler: function(e) {
+         _private.trimEmptyDecimals(this, e.target);
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
       }
    });
 

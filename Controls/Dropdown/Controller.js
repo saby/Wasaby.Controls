@@ -1,7 +1,7 @@
 define('Controls/Dropdown/Controller',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/Controller',
+      'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEqual',
       'WS.Data/Chain',
@@ -18,6 +18,7 @@ define('Controls/Dropdown/Controller',
        * @class Controls/Dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IItemTemplate
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/interface/ICaption
@@ -30,13 +31,6 @@ define('Controls/Dropdown/Controller',
 
       /**
        * @event Controls/Dropdown/Controller#selectedItemsChanged Occurs when the selected items change.
-       */
-
-      /**
-       * @name Controls/Dropdown/Controller#headConfig
-       * @cfg {Object} Menu style menuStyle.
-       * @variant defaultHead The head with icon and caption.
-       * @variant duplicateHead The icon set under first item.
        */
 
       /**
@@ -93,7 +87,7 @@ define('Controls/Dropdown/Controller',
                   break;
                case 'itemClick':
                   _private.selectItem.call(this, result.data);
-                  
+
                   //FIXME тут необходимо перевести на кэширующий источник,
                   //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
                   //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
@@ -107,6 +101,7 @@ define('Controls/Dropdown/Controller',
                   break;
                case 'footerClick':
                   this._notify('footerClick', [result.event]);
+                  this._children.DropdownOpener.close();
             }
          },
 
@@ -152,8 +147,10 @@ define('Controls/Dropdown/Controller',
             }
          },
 
-         _open: function() {
-            if (this._options.readOnly) {
+         _open: function(event) {
+
+            //Проверям что нажата левая кнопка мыши
+            if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
             }
             var self = this;
@@ -166,6 +163,7 @@ define('Controls/Dropdown/Controller',
                   },
                   target: self._container,
                   corner: self._options.corner,
+                  opener: self,
                   horizontalAlign: self._options.horizontalAlign,
                   verticalAlign: self._options.verticalAlign
                };

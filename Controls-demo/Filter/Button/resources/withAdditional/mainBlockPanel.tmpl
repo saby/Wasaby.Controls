@@ -1,6 +1,7 @@
 <ws:template name="period">
    <Controls.Input.Dropdown bind:selectedKeys="item.value"
                             bind:textValue="item.textValue"
+                            displayProperty="title"
                             keyProperty="key">
    <ws:source module='WS.Data/Source/Memory'>
       <ws:options idProperty="key">
@@ -21,6 +22,7 @@
 <ws:template name="state">
 <Controls.Input.Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
+                         displayProperty="title"
                          keyProperty="key">
 <ws:source module='WS.Data/Source/Memory'>
    <ws:options idProperty="key">

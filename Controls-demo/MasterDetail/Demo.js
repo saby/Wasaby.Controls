@@ -1,10 +1,10 @@
 define('Controls-demo/MasterDetail/Demo', [
    'Core/Control',
-   'tmpl!Controls-demo/MasterDetail/Demo',
+   'wml!Controls-demo/MasterDetail/Demo',
    'Controls-demo/MasterDetail/Data',
    'Core/core-clone',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
+   'wml!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
    'Controls-demo/MasterDetail/DemoSource',
    'css!Controls-demo/MasterDetail/Demo'
 ], function(Control, template, data, cClone, Memory, itemTemplate, DemoSource) {

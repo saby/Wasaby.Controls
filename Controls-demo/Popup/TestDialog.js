@@ -1,16 +1,22 @@
 define('Controls-demo/Popup/TestDialog',
    [
       'Core/Control',
-      'tmpl!Controls-demo/Popup/TestDialog'
+      'wml!Controls-demo/Popup/TestDialog'
    ],
    function (Control, template) {
       'use strict';
 
       var TestDialog = Control.extend({
          _template: template,
+         _draggable: false,
 
          _close: function(){
             this._notify('close', [], {bubbling: true});
+         },
+
+         _draggableChanged: function(event, value) {
+            this._draggable = value;
+            this._notify('sendResult', [value], {bubbling: true});
          },
 
          _onClick: function(){

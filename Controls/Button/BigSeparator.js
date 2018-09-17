@@ -1,6 +1,6 @@
 define('Controls/Button/BigSeparator', [
    'Core/Control',
-   'tmpl!Controls/Button/BigSeparator/BigSeparator',
+   'wml!Controls/Button/BigSeparator/BigSeparator',
    'WS.Data/Type/descriptor',
 
    'css!?Controls/Button/BigSeparator/BigSeparator'

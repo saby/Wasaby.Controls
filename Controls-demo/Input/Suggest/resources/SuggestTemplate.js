@@ -1,7 +1,7 @@
 define('Controls-demo/Input/Suggest/resources/SuggestTemplate', [
     'Core/Control',
-    'tmpl!Controls-demo/Input/Suggest/resources/SuggestTemplate',
-    'tmpl!Controls-demo/Input/Suggest/resources/CustomTemplate',
+    'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
+    'wml!Controls-demo/Input/Suggest/resources/CustomTemplate',
     'Controls/List'
 ], function(Control, template, custom) {
 

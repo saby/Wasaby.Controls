@@ -1,22 +1,12 @@
 define('Controls/Container/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Search/Search',
+      'wml!Controls/Container/Search/Search',
       'Controls/Container/Search/SearchContextField',
       'Core/IoC'
    ],
    
    function(Control, template, SearchContextField, IoC) {
-      
-      /**
-       * Container for content that can be filtered by Controls/Input/Search.
-       *
-       * @class Controls/Container/Search
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
       
       'use strict';
       

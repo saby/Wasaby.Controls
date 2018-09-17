@@ -806,7 +806,8 @@ define('SBIS3.CONTROLS/DropdownList',
             if (id !== undefined) {
                //Попадаем сюда, когда в selectedKeys установлены ключи, которых нет в наборе данных
                //В этом случае выбираем первый элемент как выбранный.
-               this.addItemsSelection([id]);
+               //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
+               keys.splice(0, keys.length, id);
             }
          },
          _setHasMoreButtonVisibility: function(){
@@ -830,7 +831,6 @@ define('SBIS3.CONTROLS/DropdownList',
                pickerContainer = this._getPickerContainer();
                this._pickerListContainer = $('.controls-DropdownList__list', pickerContainer);
                this._pickerCloseContainer = $('.controls-DropdownList__close-picker', pickerContainer);
-               this._pickerCloseContainer.on('click tap', this.hidePicker.bind(this)); //ipad лагает и не ловит click
                this._pickerBodyContainer = $('.controls-DropdownList__body', pickerContainer);
                this._pickerHeadContainer = $('.controls-DropdownList__header', pickerContainer);
                this._pickerFooterContainer = $('.controls-DropdownList__footer', pickerContainer);
@@ -851,6 +851,9 @@ define('SBIS3.CONTROLS/DropdownList',
                   });
                }
             }
+         },
+         _closeButtonClick: function() {
+            this.hidePicker();
          },
          _setHeadVariables: function(){
             if (this._resetButton){

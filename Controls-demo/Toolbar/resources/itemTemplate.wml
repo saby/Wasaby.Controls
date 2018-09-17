@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/Toolbar/ToolbarItemTemplate" item="{{item}}" attr:class="controls-Toolbar-item_owned" contentTemplate="wml!Controls-demo/Toolbar/resources/itemTemplateContent"></ws:partial>

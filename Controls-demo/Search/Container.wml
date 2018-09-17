@@ -1,0 +1,29 @@
+<div class="controls-demo__search-container">
+    <Controls.Container.Data source="{{_source}}" navigation="{{_navigation}}" keyProperty="id" bind:filter="_filter">
+        <ws:content>
+            <Controls.Search.Controller searchParam="department">
+                <div>
+                    <Controls.Search.Input.Container>
+                        <Controls.Input.Search bind:value="_searchValue" attr:class="controls-demo__search"/>
+                    </Controls.Search.Input.Container>
+
+                    <Controls.List.Container>
+                        <Controls.List emptyTemplate="Не найдено">
+                            <ws:itemTemplate>
+                                <ws:partial template="wml!Controls/List/ItemTemplate">
+                                    <ws:contentTemplate>
+                                        <div style="padding: 4px; display: flex; justify-content: space-between">
+                                            <div style="width: 300px">{{itemTemplate.itemData.item.get('department')}}</div>
+                                            <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('owner')}}</div>
+                                            <div style="font-size: 13px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
+                                        </div>
+                                    </ws:contentTemplate>
+                                </ws:partial>
+                            </ws:itemTemplate>
+                        </Controls.List>
+                    </Controls.List.Container>
+                </div>
+            </Controls.Search.Controller>
+        </ws:content>
+    </Controls.Container.Data>
+</div>

@@ -17,7 +17,6 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    "Core/Sanitize",
    "Lib/LayoutManager/LayoutManager",
    "Core/core-instance",
-   "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "Core/helpers/Function/forAliveOnly",
    'Core/helpers/String/escapeHtml',
    "SBIS3.CONTROLS/Utils/SourceUtil",
@@ -46,7 +45,6 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    Sanitize,
    LayoutManager,
    cInstance,
-   InformationPopupManager,
    forAliveOnly,
    escapeHtml,
    SourceUtil,
@@ -1769,6 +1767,12 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback(forAliveOnly(function (list) {
+                   // https://online.sbis.ru/opendoc.html?guid=fc18c7f9-60f3-492f-a3ad-57b54bd5a63c
+                   for (var group in this._options._groupCollapsing) {
+                      if (this._options._groupCollapsing.hasOwnProperty(group)) {
+                         delete this._options._groupCollapsing[group];
+                      }
+                   }
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
                    self._onDataLoad(list);
@@ -1843,13 +1847,13 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-               InformationPopupManager.showMessageDialog(
-                 {
-                    message: error.message,
-                    opener: self,
-                    status: 'error'
-                 }
-               );
+               require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                  InformationPopupManager.showMessageDialog({
+                     message: error.message,
+                     opener: self,
+                     status: 'error'
+                  });
+               });
                error.processed = true;
             }
          }

@@ -1,0 +1,17 @@
+<div class="controls-Lookup__collection">
+    <ws:for data="index, item in _options.items">
+        <ws:partial template="{{_options.itemTemplate}}"
+                    item="{{item}}"
+                    displayProperty="{{_options.displayProperty}}"
+                    isSingleItem="{{_options.items.getCount() === 1}}"
+                    isLastItem="{{_options.items.getCount() === index + 1}}"
+                    readyOnly="{{_options.readOnly}}">
+            <ws:contentTemplate>
+                <ws:partial template="wml!Controls/Input/Lookup/_ContentTemplate" on:click="_itemClick(item)"/>
+            </ws:contentTemplate>
+            <ws:crossTemplate>
+                <ws:partial template="wml!Controls/Input/Lookup/_CrossTemplate" on:click="_crossClick(item)"/>
+            </ws:crossTemplate>
+        </ws:partial>
+    </ws:for>
+</div>

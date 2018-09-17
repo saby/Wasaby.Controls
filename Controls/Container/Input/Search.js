@@ -1,22 +1,11 @@
 define('Controls/Container/Input/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Container/Input/Search/Search',
+      'wml!Controls/Container/Input/Search/Search',
       'Core/IoC'
    ],
    
    function(Control, template, IoC) {
-      
-      /**
-       * Container component for Input
-       * Notify bubbling event "search".
-       * Should be located inside Controls/Container/Search.
-       * @class Controls/Container/Input/Search
-       * @extends Core/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
-       */
       
       'use strict';
       

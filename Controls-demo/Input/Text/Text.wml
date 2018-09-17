@@ -1,0 +1,48 @@
+<Controls-demo.Wrapper.Wrapper title="Text">
+   <ws:componentClass>
+      <Controls.Popup.Opener.InfoBox name="infoBox"/>
+      <Controls.Input.Text
+         attr:id="main_field"
+         name="textBox"
+         bind:value="_text1"
+         placeholder="{{_placeholder}}"
+         constraint="{{_constraint}}"
+         validationErrors="{{_validationErrors}}"
+         trim="{{_trim}}"
+         tagStyle="{{_tagStyle}}"
+         selectOnClick="{{_selectOnClick}}"
+         maxLength="{{_maxLength}}"
+         on:valueChanged="_eventHandler()"
+         on:inputCompleted="_eventHandler()"
+         readOnly="{{ _readOnly }}"
+         tooltip="{{_tooltip}}"
+         on:tagHover="_tagStyleHandler()"
+         on:tagClick="_tagStyleClickHandler()"
+         attr:class="demo-TextBox ControlsDemo-Text__demo"
+      />
+   </ws:componentClass>
+   <ws:componentProperty>
+      <Controls.Label name="myLabel1" caption="placeholder"/>
+      <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
+      <Controls.Label name="myLabel1" caption="tagStyle"/>
+      <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
+      <Controls.Label name="myLabel1" caption="constraint"/>
+      <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint" source="{{_items}}"
+                                      attr:class="demo-TextBox"/>
+      <Controls.Label name="myLabel1" caption="maxLength"/>
+      <Controls.Input.Number attr:id="maxLength" bind:value="_maxLength" precision="{{0}}" attr:class="demo-TextBox"/>
+       <Controls.Label caption="tooltip"/>
+       <Controls.Input.Text attr:id="tooltip" bind:value="_tooltip"/>
+      <div>
+         <Controls.Toggle.Checkbox attr:id="trim" bind:value="_trim" caption="trim"/>
+         <Controls-demo.PropertyGrid.PropertyGrid attr:id="propertyGrid" bind:selectOnClickValue="_selectOnClick" attr:class="ControlsDemo-Text__propertyGrid"
+                                      bind:readOnlyValue="_readOnly"
+                                      on:validationErrorsValueChanged="valueChangedHandler()"
+                                      bind:validationErrorsValue="_validationErrorsValue"/>
+      </div>
+      <div>
+         <Controls.Button attr:class="demo-pasteButton" on:click="paste_text()" style="linkMain3" caption="paste"/>
+      </div>
+      <div hidden="hidden" id="event_test">{{ _eventResult }}</div>
+   </ws:componentProperty>
+</Controls-demo.Wrapper.Wrapper>

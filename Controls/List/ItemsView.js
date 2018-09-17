@@ -3,7 +3,7 @@
  */
 define('Controls/List/ItemsView', [
    'Core/Control',
-   'tmpl!Controls/List/ItemsView',
+   'wml!Controls/List/ItemsView',
    'Controls/List/ItemsViewModel'
 ], function(BaseControl,
    ItemsRenderTpl,

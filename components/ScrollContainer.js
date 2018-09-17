@@ -4,7 +4,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
       'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
-      'Core/compatibility',
       'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
@@ -17,7 +16,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
              template,
              isElementVisible,
              cDetection,
-             compatibility,
              StickyHeaderManager,
              constants,
              EventBus,
@@ -269,11 +267,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                style = {
                   marginRight: -width
                };
-
-            // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
-            if (compatibility.touch && cDetection.isIE) {
-               style.paddingRight = width;
-            }
 
             this._content.css(style);
          },

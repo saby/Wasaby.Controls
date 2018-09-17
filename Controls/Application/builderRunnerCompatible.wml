@@ -1,0 +1,28 @@
+<div>
+   <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.3.1/jquery-min.js"  data-pack-name="skip"></script>
+   <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
+   <script>
+      window.wsConfig.compatible = true;
+      require(['Core/patchRequireJS',
+         'Core/load-contents',
+         'Core/app-init',
+         'Core/constants',
+         'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+         'Lib/Control/BaseCompatible/BaseCompatible',
+         'Core/nativeExtensions'
+      ], function(path, lc, appinit, constants) {
+         constants.$body = body;
+         constants.$window = window;
+         appinit();
+         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext', 'Core/app-start', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, HeadDataContext, AppStart, control, tclosure) {
+            window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
+            var templateFn = {{_options.builder | unescape}};
+            var cnt = control.extend({
+               _template: templateFn
+            });
+            AppStart._shouldStart = false;
+            AppStart.createControl(cnt, {}, document.getElementById('root'));
+         });
+      });
+   </script>
+</div>

@@ -4,10 +4,9 @@
 define('Controls/Tabs/Buttons', [
    'Core/Control',
    'Controls/Controllers/SourceController',
-   'tmpl!Controls/Tabs/Buttons/Buttons',
-   'tmpl!Controls/Tabs/Buttons/ItemTemplate',
-   'css!?Controls/Tabs/Buttons/Buttons'
-
+   'wml!Controls/Tabs/Buttons/Buttons',
+   'wml!Controls/Tabs/Buttons/ItemTemplate',
+   'css!Controls/Tabs/Buttons/Buttons'
 ], function(Control,
    SourceController,
    TabButtonsTpl,
@@ -72,6 +71,7 @@ define('Controls/Tabs/Buttons', [
      * @class Controls/Tabs/Buttons
      * @extends Core/Control
      * @mixes Controls/interface/ISource
+     * @mixes Controls/interface/IItemTemplate
      * @mixes Controls/interface/ISingleSelectable
      * @control
      * @public

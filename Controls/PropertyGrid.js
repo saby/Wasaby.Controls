@@ -1,6 +1,6 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
-   'tmpl!Controls/PropertyGrid/PropertyGrid',
+   'wml!Controls/PropertyGrid/PropertyGrid',
    'WS.Data/Utils',
    'css!?Controls/PropertyGrid/PropertyGrid'
 ], function(Control, template, Utils) {
@@ -13,6 +13,7 @@ define('Controls/PropertyGrid', [
     * @extends Core/Control
     * @mixes Controls/interface/IPropertyGrid
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @control
     * @public
     * @author Золотова Э.Е.

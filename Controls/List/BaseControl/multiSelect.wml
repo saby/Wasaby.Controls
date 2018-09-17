@@ -1,0 +1,6 @@
+<Controls.Toggle.Checkbox triState="{{triState}}"
+                          readOnly="{{false}}"
+                          attr:class="js-controls-ListView__notEditable js-controls-ListView__checkbox"
+                          value="{{multiSelectStatus}}"
+                          on:valueChanged="_onCheckBoxClick(key, multiSelectStatus)"
+/>

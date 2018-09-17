@@ -2,10 +2,9 @@ define('Controls/Application/_Head',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/Application/_Head',
+      'wml!Controls/Application/_Head',
       'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController',
-      'Controls/Application/LinkResolver'
+      'Core/Themes/ThemesController'
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
@@ -14,14 +13,13 @@ define('Controls/Application/_Head',
 
       var Page = Base.extend({
          _template: template,
-         _beforeMount: function(options, context) {
+         _beforeMount: function(options, context, receivedState) {
             if (typeof window !== 'undefined') {
                var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
                this.simpleCss = csses.simpleCss;
                return;
             }
-
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();

@@ -4,7 +4,7 @@
 define('Controls/Filter/Button',
    [
       'Core/Control',
-      'tmpl!Controls/Filter/Button/Button',
+      'wml!Controls/Filter/Button/Button',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Core/Deferred',

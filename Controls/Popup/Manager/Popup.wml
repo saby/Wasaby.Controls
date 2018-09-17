@@ -1,0 +1,17 @@
+<div class="controls-Popup" on:animationend="_animated()">
+    <ws:partial
+            attr:class="controls-Popup__template"
+            template="{{_options.template}}"
+            scope="{{_options.templateOptions}}"
+            on:sendResult="_sendResult()"
+            on:close="_close()"
+            on:popupDragStart="_popupDragStart()"
+            on:popupDragEnd="_popupDragEnd()"
+            on:maximized="_maximized()"
+            on:keyup="_keyUp()"
+            on:transitionend="_animated()"
+            on:controlResize="_update()">
+    </ws:partial>
+    <Controls.Event.Emitter event="controlResize" on:controlResize="_delayedUpdate()"/>
+    <Controls.Event.Emitter event="scroll" on:scroll="_update()"/>
+</div>
