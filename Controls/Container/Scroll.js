@@ -305,8 +305,8 @@ define('Controls/Container/Scroll',
              */
             _adjustContentMarginsForBlockRender: function() {
                var computedStyle = getComputedStyle(this._children.content);
-               var marginTop = parseInt(computedStyle.marginTop);
-               var marginRight = parseInt(computedStyle.marginRight);
+               var marginTop = parseInt(computedStyle.marginTop, 10);
+               var marginRight = parseInt(computedStyle.marginRight, 10);
 
                this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
                   return parseInt(found) + marginRight;
