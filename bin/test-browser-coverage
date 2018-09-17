@@ -24,6 +24,9 @@ mv Controls-origin Controls
 
 node coverageUnusedFiles
 
+mv artifacts/coverageComponents.json artifacts/components/coverage.json
+mv artifacts/coverageControls.json artifacts/controls/coverage.json
+
 #node node_modules/istanbul/lib/cli report --dir "coverage-report" --include "**/coverage.json" html
 #node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report
 #node node_modules/istanbul/lib/cli report --dir "cobertura" --include "**/coverage.json" cobertura

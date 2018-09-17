@@ -4,8 +4,8 @@ var path = require('path'),
     componentsPath = path.join(__dirname, 'components'),
     controlsPath = path.join(__dirname, 'Controls'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
-    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverage', 'controls', 'coverage.json'),
-    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverage', 'components', 'coverage.json'),
+    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
+    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
     allFiles = [];
 
 dirWalker = function (dir) {
@@ -29,17 +29,18 @@ dirWalker(controlsPath);
 
 var rawCover = fs.readFileSync(coveragePath, 'utf8'),
     cover = JSON.parse(rawCover),
-    instrumenter = new istanbul.Instrumenter(),
+    instrumenter = new nyc().instrumenter(),
     transformer = instrumenter.instrumentSync.bind(instrumenter);
 
 allFiles.forEach(function (name) {
     if (!cover[name]) {
         var rawFile = fs.readFileSync(name, 'utf-8');
         transformer(rawFile, name);
-        Object.keys(instrumenter.coverState.s).forEach(function (key) {
-            instrumenter.coverState.s[key] = 0;
+        var coverState = instrumenter.lastFileCoverage();
+        Object.keys(coverState.s).forEach(function (key) {
+           coverState.s[key] = 0;
         });
-        cover[name] = instrumenter.coverState;
+        cover[name] = coverState;
         console.log('File ' + name.replace(__dirname, '').slice(1) + ' not using in tests')
     }
 });
