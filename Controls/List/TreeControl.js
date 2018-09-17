@@ -4,14 +4,16 @@ define('Controls/List/TreeControl', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil',
+   'Core/Deferred'
 ], function(
    Control,
    TreeControlTpl,
    ItemsUtil,
    cClone,
    HierarchyRelation,
-   ArraySimpleValuesUtil
+   ArraySimpleValuesUtil,
+   Deferred
 ) {
    'use strict';
 
@@ -127,10 +129,10 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
-         this._children.baseControl.editItem(options);
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.editItem(options);
       },
       addItem: function(options) {
-         this._children.baseControl.addItem(options);
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.addItem(options);
       },
 
 
@@ -139,9 +141,7 @@ define('Controls/List/TreeControl', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.cancelEdit();
-         }
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.cancelEdit();
       },
 
       /**
@@ -149,9 +149,7 @@ define('Controls/List/TreeControl', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.commitEdit();
-         }
+         return this._options.readOnly ? Deferred.success() : this._children.baseControl.commitEdit();
       },
       _onCheckBoxClick: function(e, key, status) {
          var
