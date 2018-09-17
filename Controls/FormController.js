@@ -7,7 +7,11 @@ define('Controls/FormController', [
 ], function(Control, tmpl, Model, Deferred, IoC) {
    'use strict';
 
-
+   /**
+    * @name Controls/FormController#initValues
+    * @cfg {Object} initial values what will be argument of create method called when key option and record option are not exist.
+    * Also its default value for read method.
+    */
    /**
     * @name Controls/FormController#readMetaData
     * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists.
@@ -62,7 +66,7 @@ define('Controls/FormController', [
             // если ни рекорда, ни ключа, создаем новый рекорд и используем его
             // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
             self._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-            var createDef = cfg.dataSource.create();
+            var createDef = cfg.dataSource.create(cfg.initValues);
             createDef.addCallback(function(record) {
                self._record = record;
 
@@ -126,7 +130,7 @@ define('Controls/FormController', [
             this.read(this._options.key, this._options.readMetaData);
          } else {
             // если нет ни рекорда ни ключа - создадим рекорд
-            this.create();
+            this.create(this._options.initValues);
          }
       },
       _beforeUnmount: function() {
@@ -232,6 +236,7 @@ define('Controls/FormController', [
       },
 
       create: function(initValues) {
+         initValues = initValues || this._options.initValues;
          var res = this._children.crud.create(initValues);
          res.addCallback(this._createHandler.bind(this));
          return res;
