@@ -12,7 +12,7 @@ mv components-covered components
 mv Controls Controls-origin
 mv Controls-covered Controls
 
-#node depencyCollector
+node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
 #rm -rf components
