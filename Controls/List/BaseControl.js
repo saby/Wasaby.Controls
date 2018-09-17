@@ -87,11 +87,11 @@ define('Controls/List/BaseControl', [
 
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
-                  // Virtual scroll added later by task: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
+                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
                   // self._virtualScroll.appendItems(addedItems.getCount());
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
-                  // Virtual scroll added later by task: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
+                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
                   // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
