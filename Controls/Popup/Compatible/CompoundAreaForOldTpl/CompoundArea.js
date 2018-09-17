@@ -293,18 +293,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _getCustomHeaderContainer: function() {
-            var child = this._childControl.getContainer().children();
-            var header = [];
+            var customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
 
             // Ищем кастомную шапку только на первом уровне вложенности шаблона.
             // Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
             // На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
-            child.each(function(index, elem) {
-               if (elem.className.indexOf('ws-window-titlebar-custom') > -1) {
-                  header = $(elem);
+            if (customHeader.length) {
+               var nesting = 0;
+               var parent;
+               for (var i = 0; i < customHeader.length; i++) {
+                  parent = customHeader[i];
+
+                  // Ищем класс с кастомным заголовком, с вложенностью не более 5. 5 вычислено эмпирическим путем
+                  // Старая панель так умела
+                  while (parent !== this._childControl._container[0] && nesting < 5) {
+                     parent = parent.parentElement;
+                     nesting++;
+                  }
+                  if (nesting < 5) {
+                     return $(customHeader[i]);
+                  }
                }
-            });
-            return header;
+            }
+
+            return [];
          },
 
          _headerMouseDown: function(event) {
