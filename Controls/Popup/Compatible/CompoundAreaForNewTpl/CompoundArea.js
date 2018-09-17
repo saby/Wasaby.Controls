@@ -207,6 +207,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          destroy: function() {
+            this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
             if (this._vDomTemplate) {
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
