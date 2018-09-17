@@ -1,11 +1,11 @@
 var path = require('path'),
     fs = require('fs'),
-    istanbul = require('istanbul'),
+    nyc = require('nyc'),
     componentsPath = path.join(__dirname, 'components'),
     controlsPath = path.join(__dirname, 'Controls'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
-    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
-    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
+    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverage', 'controls', 'coverage.json'),
+    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverage', 'components', 'coverage.json'),
     allFiles = [];
 
 dirWalker = function (dir) {

@@ -17,12 +17,12 @@ cp -nR Controls-origin/* Controls
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
-#rm -rf components
-#mv components-origin components
-#rm -rf Controls
-#mv Controls-origin Controls
+rm -rf components
+mv components-origin components
+rm -rf Controls
+mv Controls-origin Controls
 
-#node coverageUnusedFiles
+node coverageUnusedFiles
 
 #node node_modules/istanbul/lib/cli report --dir "coverage-report" --include "**/coverage.json" html
 #node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report
