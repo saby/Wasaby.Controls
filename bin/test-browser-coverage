@@ -9,8 +9,10 @@ node node_modules/nyc/bin/nyc instrument ./Controls ./Controls-covered
 
 mv components components-origin
 mv components-covered components
+cp -nR components-origin components
 mv Controls Controls-origin
 mv Controls-covered Controls
+cp -nR Controls-origin Controls
 
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
