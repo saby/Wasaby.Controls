@@ -26,6 +26,14 @@ define('Controls/Application',
     * @author Зуев Д.В.
     */
 
+   /**
+    * @name Controls/Application#staticDomains
+    * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
+    * for static resources and distribute downloading for several static domains.
+    * There will be another way to propagate this data after this problem:
+    * https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
+    */
+
    function(Base,
       detection,
       template,
@@ -137,6 +145,7 @@ define('Controls/Application',
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
+            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
