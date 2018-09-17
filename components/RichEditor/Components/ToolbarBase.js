@@ -93,6 +93,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          this._itemsContainer = this._container.find('[class*="__itemsContainer"]');
          this._container.on('mousedown focus', this._blockFocusEvents);
          this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
+
+         // Привязать обработчики
+         this._onStylesPanelChangeFormat = this._onStylesPanelChangeFormat.bind(this);
+         this._onGetHistory = this._onGetHistory.bind(this);
+         this._handlersInstances.format = this._formatChangeHandler.bind(this);
       },
 
       //в buttonGroupBase проставляет активность всем дочерним контролам, избавляемся от этого
@@ -147,7 +152,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       _bindEditor: function() {
          var editor = this._options.linkedEditor;
 
-         this._handlersInstances.format = this._formatChangeHandler.bind(this);
          this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
 
          //Грузим историю сразу, для того чтобы в случае ее отсутствия можно было заблокировать кнопку!
@@ -227,7 +231,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
       _fillHistory: function() {
          if (this.getItems().getRecordById('history')) {
-            this.getLinkedEditor().getHistory().addCallback(this._onGetHistory.bind(this));
+            this.getLinkedEditor().getHistory().addCallback(this._onGetHistory);
          }
       },
 
@@ -371,7 +375,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                });
                this._stylesPanel = new StylesPanel(options);
 
-               this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat.bind(this));
+               this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
 
                returnDef.callback(this._stylesPanel);
             }.bind(this));
@@ -402,6 +406,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          this._container.off('focus', this._blockFocusEvents);
          this._itemsContainer.off('mousedown', this._blockFocusEvents);
          this._itemsContainer.off('focus', this._blockFocusEvents);
+
+         this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
 
          RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
          this._itemsContainer = null;
