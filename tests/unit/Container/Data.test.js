@@ -1,10 +1,9 @@
 define(
    [
       'Controls/Container/Data',
-      'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Source/Memory'
    ],
-   function(Data, Memory, RecordSet) {
+   function(Data, Memory) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -48,6 +47,43 @@ define(
             });
          });
 
+         it('update equal source', function(done) {
+            var
+               items,
+               config = {source: source, keyProperty: 'id'},
+               data = getDataWithConfig(config);
 
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new Memory({
+                  idProperty: 'id',
+                  data: sourceDataEdited
+               }), idProperty: 'id'}).addCallback(function() {
+                  assert.isTrue(data._items === items);
+                  done();
+               });
+            });
+         });
+
+         it('update not equal source', function(done) {
+            var
+               items,
+               config = {source: source, keyProperty: 'id'},
+               data = getDataWithConfig(config);
+
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new Memory({
+                  idProperty: 'id',
+                  data: sourceDataEdited,
+                  adapter: 'adapter.sbis'
+               }), idProperty: 'id'}).addCallback(function() {
+                  assert.isFalse(data._items === items);
+                  done();
+               });
+            });
+         });
       });
    });

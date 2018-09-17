@@ -1,26 +1,15 @@
-define('Controls/Input/DateTime', [
+define('Controls/Input/interface/IDateTimeMask', [
 ], function() {
 
    /**
-    * Control for entering date and time.
-    * Depending on {@link mask mask} can be used to enter:
-    * <ol>
-    *    <li>just date,</li>
-    *    <li>just time,</li>
-    *    <li>date and time.</li>
-    * </ol>
-    * @class Controls/Input/DateTime
-    * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IInputDateTime
-    * @mixes Controls/Input/interface/IValidation
-    * @control
+    * Interface for date/time inputs mask.
+    *
+    * @interface Controls/Input/interface/IDateTimeMask
     * @public
-    * @author Журавлев М.С.
-    * @category Input
     */
 
    /**
-    * @name Controls/Input/DateTime#mask
+    * @name Controls/Input/IDateTimeMask#mask
     * @cfg {String} Data format.
     *
     * One of the listed mask must be choosen. Allowed mask chars:
@@ -60,4 +49,5 @@ define('Controls/Input/DateTime', [
     * @variant 'YYYY'
     * @variant 'MM/YYYY'
     */
+
 });
