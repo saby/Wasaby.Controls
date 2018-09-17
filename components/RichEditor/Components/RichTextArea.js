@@ -684,7 +684,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             getText: function () {
                var text = RichTextArea.superclass.getText.apply(this, arguments);
-               // Не выпускаем наружу символы с \00 по \x08, т.к. при дальнейшем использовании (наприменр при серверной вёрстке) от них могут быть проблемы
+               // Если в текст при редактировании (например через copy-paste) попали спецсимволы (с \00 по \x08), то экранируем их т.к. они могу ломать страницу при серверной вёрстке
                return text.replace(/[\x00-\x08]/g, function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
             },
 
