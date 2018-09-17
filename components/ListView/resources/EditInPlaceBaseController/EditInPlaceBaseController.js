@@ -18,11 +18,10 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
    "WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/Indicator",
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
 
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, Indicator, InformationPopupManager) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, Indicator) {
 
       'use strict';
 
@@ -501,13 +500,13 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                      deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
                         self._acceptChanges(eip, eipRecord);
                      }).addErrback(function (error) {
-                       InformationPopupManager.showMessageDialog(
-                         {
-                            message: error.message,
-                            opener: self,
-                            status: 'error'
-                         }
-                       );
+                        require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                           InformationPopupManager.showMessageDialog({
+                              message: error.message,
+                              opener: self,
+                              status: 'error'
+                           });
+                        });
                         return error;
                      });
                   } else {
