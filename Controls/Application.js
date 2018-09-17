@@ -37,16 +37,16 @@ define('Controls/Application',
     */
 
    function(Base,
-            detection,
-            template,
-            Deferred,
-            BodyClasses,
-            compatibility,
-            AppData,
-            ScrollContext,
-            HeadDataContext,
-            LinkResolver,
-            ThemesController) {
+      detection,
+      template,
+      Deferred,
+      BodyClasses,
+      compatibility,
+      AppData,
+      ScrollContext,
+      HeadDataContext,
+      LinkResolver,
+      ThemesController) {
       'use strict';
 
       var _private,
@@ -69,8 +69,9 @@ define('Controls/Application',
             // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
             // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
-            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+
+            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             if (detection.isMobileIOS) {
@@ -141,7 +142,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self._scrollData = new ScrollContext({pagingVisible: false});
+            self._scrollData = new ScrollContext({ pagingVisible: false });
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
@@ -161,6 +162,7 @@ define('Controls/Application',
             self.BodyClasses = _private.calculateBodyClasses;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
+
             // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
             context.headData.pushDepComponent(self.application, false);
@@ -239,5 +241,4 @@ define('Controls/Application',
       };
 
       return Page;
-   }
-);
+   });

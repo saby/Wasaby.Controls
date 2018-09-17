@@ -59,16 +59,15 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          var res = link;
          if (this.isDebug) {
             res = link + '.' + ext;
+         } else if (!this.buildNumber) {
+            res = link + '.min.' + ext;
          } else {
-            if (!this.buildNumber) {
-               res = link + '.min.' + ext;
-            } else {
-               res = link + '.min.v' + this.buildNumber + '.' + ext;
-            }
+            res = link + '.min.v' + this.buildNumber + '.' + ext;
          }
          return res;
       }
    });
+
    // LinkResolver.getInstance = function getInstance() {
    //    if (process && process.domain && process.domain.req) {
    //       if (!process.domain.req._$LinkResolver) {

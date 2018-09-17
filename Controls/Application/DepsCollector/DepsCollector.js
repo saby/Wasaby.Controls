@@ -3,7 +3,6 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    'Core/IoC',
    'Core/core-extend'
 ], function(Logger, IoC, coreExtend) {
-
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
@@ -38,7 +37,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       default: {
          hasDeps: false
       }
-   }
+   };
 
    function getPlugin(name) {
       var res;
@@ -104,6 +103,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             //    packages[key.split(allDeps[key].typeInfo.plugin + '!')] = DEPTYPES.SINGLE;
             // } else {
             packages[key] = DEPTYPES.SINGLE;
+
             // }
          }
       }
@@ -188,6 +188,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    }
 
    var DepsCollector = coreExtend.extend([], {
+
       /**
        * @param modDeps - object, contains all nodes of dependency tree
        * @param modInfo - contains info about path to module files
@@ -201,7 +202,9 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          this.appRoot = appRoot;
       },
       collectDependencies: function(deps) {
-         var files = {js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: []};
+         var files = {
+            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: []
+         };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
