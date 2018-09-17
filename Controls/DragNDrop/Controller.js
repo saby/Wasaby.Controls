@@ -14,8 +14,8 @@ define('Controls/DragNDrop/Controller',
                pageX = event.touches[0].pageX;
                pageY = event.touches[0].pageY;
             } else if (event.type === 'touchend') {
-               pageX = event.originalEvent.changedTouches[0].pageX;
-               pageY = event.originalEvent.changedTouches[0].pageY;
+               pageX = event.changedTouches[0].pageX;
+               pageY = event.changedTouches[0].pageY;
             } else {
                pageX = event.pageX;
                pageY = event.pageY;

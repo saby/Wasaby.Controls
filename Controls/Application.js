@@ -176,11 +176,16 @@ define('Controls/Application',
          },
 
          _openInfoBoxHandler: function(event, config) {
+            this._activeInfobox = event.target;
+
             this._children.infoBoxOpener.open(config);
          },
 
-         _closeInfoBoxHandler: function() {
-            this._children.infoBoxOpener.close();
+         _closeInfoBoxHandler: function(event) {
+            if (this._activeInfobox === event.target) {
+               this._activeInfobox = null;
+               this._children.infoBoxOpener.close();
+            }
          },
 
 

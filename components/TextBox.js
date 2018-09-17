@@ -493,9 +493,12 @@ define('SBIS3.CONTROLS/TextBox', [
          this._setPlaceholder(text);
       },
 
-      _setPlaceholder: function(text){
+      _setPlaceholder: function(){
          this._destroyCompatPlaceholder();
-         this._createCompatiblePlaceholder();
+
+         if (this.isEnabled()) {
+            this._createCompatiblePlaceholder();
+         }
       },
 
       /**
