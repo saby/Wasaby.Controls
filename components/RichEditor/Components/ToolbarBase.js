@@ -288,10 +288,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       _openStylesPanel: function(button) {
          var editor = this.getLinkedEditor();
          var formats = editor ? editor.getCurrentFormats() : {};
-         this.getStylesPanel(button, formats).addCallback(function(stylesPanel) {
-            stylesPanel.setStylesFromObject(formats);
-            stylesPanel.show();
-         });
+         this.getStylesPanel(button, formats).addCallback(this._onOpenStylesPanel.bind(this, formats));
+      },
+
+      _onOpenStylesPanel: function (formats, stylesPanel) {
+         stylesPanel.setStylesFromObject(formats);
+         stylesPanel.show();
       },
 
       _toggleState: function(state, obj) {
@@ -369,9 +371,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                });
                this._stylesPanel = new StylesPanel(options);
 
-               this.subscribeTo(this._stylesPanel, 'changeFormat', function() {
-                  this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
-               }.bind(this));
+               this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat.bind(this));
 
                returnDef.callback(this._stylesPanel);
             }.bind(this));
@@ -380,6 +380,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          else {
             return Deferred.success(this._stylesPanel);
          }
+      },
+
+      _onStylesPanelChangeFormat: function () {
+         this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
       },
 
       _execCommand: function(name) {
