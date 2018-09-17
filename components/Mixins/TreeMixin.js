@@ -802,6 +802,10 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        */
       setParentProperty: function (pp) {
          this._options.parentProperty = pp;
+         
+         if (this._getItemsProjection()) {
+            this._getItemsProjection().setParentProperty(pp);
+         }
       },
       /**
        * Возвращает название поля иерархии.
