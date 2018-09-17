@@ -47,9 +47,9 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             delete cfg.FileName;
             cfg.Html = cfg.html;
             delete cfg.html;
-            cfg.Sync = true;
+            cfg.Sync = sync;
          } else {
-            if (cfg.Limit) {
+            if (cfg.hasOwnProperty('Limit')) {
                delete cfg.Limit;
                cfg.Pagination = null;
             }
@@ -265,9 +265,13 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
                methodName = METHODS_NAME[meta.endpoint][methodName][useLongOperations ? 0 : 1];
             }
 
-           if (meta.endpoint === 'PDF' && methodName !== 'SaveRecordSet') {
-              _private.convertConfig(cfg, !useLongOperations);
-              methodName = 'Save';
+           if (meta.endpoint === 'PDF') {
+               if (methodName !== 'SaveRecordSet' && methodName !== 'SaveRecordSetLRS') {
+                  _private.convertConfig(cfg, !useLongOperations);
+                  methodName = 'Save';
+               } else {
+                  useLongOperations = false;
+               }
            }
 
             cfg = this._normalizeMethodData(cfg, methodName, meta.endpoint);

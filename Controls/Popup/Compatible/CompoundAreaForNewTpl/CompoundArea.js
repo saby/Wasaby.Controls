@@ -48,6 +48,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                var def = new Deferred();
 
                require([this._options.innerComponentOptions.template], function() {
+
+                  //Пока грузили шаблон, компонент могли задестроить
+                  if (self.isDestroyed()) {
+                     return;
+                  }
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
@@ -78,7 +83,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                rootContainer = this._getRootContainer(),
                additionalEventProperties = {
                   'on:close': this._onCloseHandler,
-                  'on:resize': this._onResizeHandler,
+                  'on:controlresize': this._onResizeHandler,
                   'on:sendresult': this._onResultHandler,
                   'on:register': this._onRegisterHandler,
                   'on:unregister': this._onRegisterHandler

@@ -39,7 +39,6 @@ define('SBIS3.CONTROLS/ListView',
       'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
       'tmpl!SBIS3.CONTROLS/ListView/resources/ItemContentTemplate',
       'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
-      'browser!SBIS3.CONTROLS/Utils/InformationPopupManager',
       'SBIS3.CONTROLS/Paging',
       'SBIS3.CONTROLS/ComponentBinder',
       'WS.Data/Di',
@@ -71,7 +70,7 @@ define('SBIS3.CONTROLS/ListView',
    function(ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, requireHelper, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
       Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
       TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
-      ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+      ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate,
       Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
       'use strict';
 
@@ -2056,6 +2055,7 @@ define('SBIS3.CONTROLS/ListView',
             var MAX_SELECTED = 1000;
             var
                result,
+               self = this,
                selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < MAX_SELECTED && this.getItems().getMetaData().more){
                result = this._loadFullData.apply(this, arguments)
@@ -2070,10 +2070,12 @@ define('SBIS3.CONTROLS/ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
-                        InformationPopupManager.showMessageDialog({
-                           status: 'default',
-                           opener: this,
-                           message: rk('Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.')
+                        require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                           InformationPopupManager.showMessageDialog({
+                              status: 'default',
+                              opener: self,
+                              message: rk('Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.')
+                           });
                         });
                      }
                   }.bind(this));
@@ -5132,33 +5134,36 @@ define('SBIS3.CONTROLS/ListView',
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? coreClone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
-            InformationPopupManager.showConfirmDialog({
-               parent: self,
-               message: message,
-               hasCancelButton: false,
-               opener: self
-            }, function() {
-               beginDeleteResult = self._notify('onBeginDelete', idArray);
-               if (beginDeleteResult instanceof Deferred) {
-                  beginDeleteResult.addCallback(function(result) {
-                     self._deleteRecords(idArray, result);
-                  }).addErrback(function (result) {
-                     InformationPopupManager.showMessageDialog({
-                        parent: self,
-                        message: result.message,
-                        opener: self,
-                        status: 'error'
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+               InformationPopupManager.showConfirmDialog({
+                  parent: self,
+                  message: message,
+                  hasCancelButton: false,
+                  opener: self
+               }, function() {
+                  beginDeleteResult = self._notify('onBeginDelete', idArray);
+                  if (beginDeleteResult instanceof Deferred) {
+                     beginDeleteResult.addCallback(function(result) {
+                        self._deleteRecords(idArray, result);
+                     }).addErrback(function (result) {
+                        InformationPopupManager.showMessageDialog({
+                           parent: self,
+                           message: result.message,
+                           opener: self,
+                           status: 'error'
+                        });
                      });
-                  });
-               } else {
-                  self._deleteRecords(idArray, beginDeleteResult);
-               }
-               res.callback(true);
-            }, function() {
-               res.callback(false);
-            }, function() {
-               res.callback();
+                  } else {
+                     self._deleteRecords(idArray, beginDeleteResult);
+                  }
+                  res.callback(true);
+               }, function() {
+                  res.callback(false);
+               }, function() {
+                  res.callback();
+               });
             });
+
             return res;
          },
 
@@ -5190,11 +5195,13 @@ define('SBIS3.CONTROLS/ListView',
                   }
                   return resultDeferred;
                }, this)).addErrback(function (result) {
-                  InformationPopupManager.showMessageDialog({
-                     parent: self,
-                     message: result.message,
-                     opener: self,
-                     status: 'error'
+                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                     InformationPopupManager.showMessageDialog({
+                        parent: self,
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     });
                   });
                   //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
                   return result;

@@ -3,6 +3,6 @@
         <ws:partial template="{{contentTemplate}}"/>
     </ws:if>
     <ws:else>
-        Нет данных
+        {[Нет данных]}
     </ws:else>
 </div>
