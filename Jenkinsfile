@@ -31,10 +31,10 @@ node('controls') {
     gitLabConnection('git'),
     buildDiscarder(
         logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
+            artifactDaysToKeepStr: '',
+            artifactNumToKeepStr: '30',
+            daysToKeepStr: '',
+            numToKeepStr: '30')),
         parameters([
             string(
                 defaultValue: 'sdk',
@@ -56,14 +56,14 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
+            choice(choices: "ff\nchrome\nie\nedge", description: '', name: 'browser_type'),
+            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: true, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
             booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
-        pipelineTriggers([])
+        pipelineTriggers([cron("*/30  1-8 * * 1-5")])
     ])
 
     echo "Определяем рабочую директорию"
