@@ -342,6 +342,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
                   options.text = options.__savedHtmlJson.render();
+
+                  // Костыль для отображения плейсхолдера при пустом json.
+                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  if (options.text === '<span></span>') {
+                     options.text = '';
+                  }
                }
 
                if (options.singleLine) {
@@ -709,7 +717,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
-               this.setText(this._htmlJson.render());
+
+               // Костыль для отображения плейсхолдера при пустом json.
+               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+               var text = this._htmlJson.render();
+               if (text === '<span></span>') {
+                  text = '';
+               }
+               this.setText(text);
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
