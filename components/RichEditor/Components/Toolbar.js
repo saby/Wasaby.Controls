@@ -121,16 +121,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          $constructor: function() {
-            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton');
-            this._toggleToolbarButton.bind('click', this.toggleToolbar);
-            this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
-
             // Привязать обработчики
             this._onImageChange = this._onImageChange.bind(this);
             this.toggleToolbar = this.toggleToolbar.bind(this);
             this._handlersInstances.undoRedo = this._undoRedoChangeHandler.bind(this);
             this._handlersInstances.node = this._nodeChangeHandler.bind(this);
             this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
+
+            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton');
+            this._toggleToolbarButton.bind('click', this.toggleToolbar);
+            this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
 
          _modifyOptions: function (options) {

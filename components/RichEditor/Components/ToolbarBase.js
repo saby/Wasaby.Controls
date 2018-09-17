@@ -90,14 +90,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
       $constructor: function() {
          this._publish('onExpandedChange');
-         this._itemsContainer = this._container.find('[class*="__itemsContainer"]');
-         this._container.on('mousedown focus', this._blockFocusEvents);
-         this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
 
          // Привязать обработчики
          this._onStylesPanelChangeFormat = this._onStylesPanelChangeFormat.bind(this);
          this._onGetHistory = this._onGetHistory.bind(this);
          this._handlersInstances.format = this._formatChangeHandler.bind(this);
+
+         this._itemsContainer = this._container.find('[class*="__itemsContainer"]');
+         this._container.on('mousedown focus', this._blockFocusEvents);
+         this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
       },
 
       //в buttonGroupBase проставляет активность всем дочерним контролам, избавляемся от этого
