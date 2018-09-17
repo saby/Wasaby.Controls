@@ -7,7 +7,6 @@ define('Controls/Tabs/Buttons', [
    'wml!Controls/Tabs/Buttons/Buttons',
    'wml!Controls/Tabs/Buttons/ItemTemplate',
    'css!Controls/Tabs/Buttons/Buttons'
-
 ], function(Control,
    SourceController,
    TabButtonsTpl,

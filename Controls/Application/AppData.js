@@ -9,6 +9,7 @@ define('Controls/Application/AppData', [
       jsLinks: [],
       constructor: function(cfg) {
          this.appRoot = cfg.appRoot;
+         this.lite = cfg.lite;
          this.application = cfg.application;
          this.wsRoot = cfg.wsRoot;
          this.resourceRoot = cfg.resourceRoot;

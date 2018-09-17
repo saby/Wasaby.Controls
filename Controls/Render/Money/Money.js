@@ -2,7 +2,6 @@ define('Controls/Render/Money/Money', [
    'Core/Control',
    'wml!Controls/Render/Money/Money',
    'css!Controls/Render/Money/Money'
-
 ], function(Control, Template) {
 
    'use strict';

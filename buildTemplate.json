@@ -1,0 +1,72 @@
+{
+  "cache": "%cd%/builder-ui/builder-json-cache",
+  "output": "%cd%/application",
+  "logs": "%cd%/builder-ui/logs",
+  "mode": "release",
+  "modules": [
+    {
+      "name": "TodoMvc",
+      "path": "%cd%/TodoMvc"
+    },
+    {
+      "name": "Controls",
+      "path": "%cd%/Controls"
+    },
+    {
+      "name": "Controls-demo",
+      "path": "%cd%/Controls-demo"
+    },
+    {
+      "name": "Core",
+      "path": "%cd%/node_modules/sbis3-ws/Core"
+    },
+    {
+      "name": "WS.Core",
+      "path": "%cd%/node_modules/sbis3-ws/ws"
+    },
+    {
+      "name": "Lib",
+      "path": "%cd%/node_modules/sbis3-ws/ws/lib"
+    },
+    {
+      "name": "Ext",
+      "path": "%cd%/node_modules/sbis3-ws/ws/lib/Ext"
+    },
+    {
+      "name": "Transport",
+      "path": "%cd%/node_modules/sbis3-ws/ws/transport"
+    },
+    {
+      "name": "View",
+      "path": "%cd%/node_modules/sbis3-ws/View"
+    },
+    {
+      "name": "WS.Data",
+      "path": "%cd%/node_modules/ws-data/WS.Data"
+    },
+    {
+      "name": "Data",
+      "path": "%cd%/node_modules/ws-data/Data"
+    },
+    {
+      "name": "SBIS3.CONTROLS",
+      "path": "%cd%/SBIS3.CONTROLS"
+    },
+    {
+      "name": "Examples",
+      "path": "%cd%/Examples"
+    },
+    {
+      "name": "WSTest",
+      "path": "%cd%/tests/WSTest"
+    },
+    {
+      "name": "ControlsSandbox",
+      "path": "%cd%/pages/sandbox"
+    },
+    {
+      "name": "Data",
+      "path": "%cd%/pages/sandbox"
+    }
+  ]
+}
