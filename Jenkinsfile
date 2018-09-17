@@ -63,7 +63,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
             booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
             ]),
-        pipelineTriggers()
+        pipelineTriggers([])
     ])
 
     echo "Определяем рабочую директорию"
