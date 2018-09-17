@@ -20,6 +20,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
       },
+
       // init: function(isDebug, buildNumber, appRoot, resourceRoot) {
       //    this.isDebug = isDebug;
       //    this.buildNumber = buildNumber || '';

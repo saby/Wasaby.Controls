@@ -37,16 +37,16 @@ define('Controls/Application',
     */
 
    function(Base,
-      detection,
-      template,
-      Deferred,
-      BodyClasses,
-      compatibility,
-      AppData,
-      ScrollContext,
-      HeadDataContext,
-      LinkResolver,
-      ThemesController) {
+            detection,
+            template,
+            Deferred,
+            BodyClasses,
+            compatibility,
+            AppData,
+            ScrollContext,
+            HeadDataContext,
+            LinkResolver,
+            ThemesController) {
       'use strict';
 
       var _private,

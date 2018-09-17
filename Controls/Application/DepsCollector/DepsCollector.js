@@ -103,7 +103,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             // if(allDeps[key].typeInfo.plugin) {
             //    packages[key.split(allDeps[key].typeInfo.plugin + '!')] = DEPTYPES.SINGLE;
             // } else {
-               packages[key] = DEPTYPES.SINGLE;
+            packages[key] = DEPTYPES.SINGLE;
             // }
          }
       }
@@ -201,7 +201,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          this.appRoot = appRoot;
       },
       collectDependencies: function(deps) {
-         var files = { js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: [] };
+         var files = {js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: []};
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
