@@ -7,7 +7,7 @@ define('Controls/Input/Area', [
    'tmpl!Controls/Input/Area/Area',
    'Controls/Input/resources/InputHelper',
 
-   'css!theme?Controls/Input/Area/Area'
+   'css!?Controls/Input/Area/Area'
 ], function(Text,
    constants,
    types,

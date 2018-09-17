@@ -6,7 +6,7 @@ define('Controls/Input/Password',
       'tmpl!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
 
-      'css!theme?Controls/Input/Password/Password'
+      'css!?Controls/Input/Password/Password'
    ],
 
    function(Control, types, tmplNotify, template, BaseViewModel) {

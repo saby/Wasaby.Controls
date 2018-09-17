@@ -8,7 +8,7 @@ define('Controls/Container/Suggest/Layout',
       'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
       'Core/core-clone',
-      'css!theme?Controls/Container/Suggest/Layout/Suggest'
+      'css!?Controls/Container/Suggest/Layout/Suggest'
    ],
    function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone) {
       

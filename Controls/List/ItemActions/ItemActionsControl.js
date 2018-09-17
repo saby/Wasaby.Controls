@@ -4,7 +4,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
-   'css!theme?Controls/List/ItemActions/ItemActions'
+   'css!?Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,

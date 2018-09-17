@@ -3,7 +3,7 @@ define('Controls/Button/Menu',
       'Core/Control',
       'tmpl!Controls/Button/Menu/Menu',
       'Controls/Button/Classes',
-      'css!theme?Controls/Button/Menu/Menu',
+      'css!?Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
    function(Control, template, Classes) {

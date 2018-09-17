@@ -5,7 +5,7 @@ define('Controls/Operations/Panel/View', [
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
    'Controls/Toolbar',
-   'css!theme?Controls/Operations/Panel/View/View'
+   'css!?Controls/Operations/Panel/View/View'
 ], function(Control, template, ItemTemplate, Memory, WidthUtils) {
    'use strict';
 

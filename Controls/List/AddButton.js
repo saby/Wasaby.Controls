@@ -2,7 +2,7 @@ define('Controls/List/AddButton', [
    'Core/Control',
    'tmpl!Controls/List/AddButton/AddButton',
    'WS.Data/Type/descriptor',
-   'css!theme?Controls/List/AddButton/AddButton'
+   'css!?Controls/List/AddButton/AddButton'
 ], function(Control, template, types) {
 
    var AddButton = Control.extend({

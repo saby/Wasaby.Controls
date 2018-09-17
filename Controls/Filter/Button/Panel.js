@@ -6,7 +6,7 @@ define('Controls/Filter/Button/Panel', [
    'Core/helpers/Object/isEqual',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'tmpl!Controls/Filter/Button/Panel/Panel',
-   'css!theme?Controls/Filter/Button/Panel/Panel'
+   'css!?Controls/Filter/Button/Panel/Panel'
 
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
 

@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-      'css!theme?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
+      'css!?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
    ],
    function(Control, template) {
       'use strict';

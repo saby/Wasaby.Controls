@@ -1,7 +1,7 @@
 define('Controls/Container/LoadingIndicator', [
    'Core/Control',
    'tmpl!Controls/Container/LoadingIndicator/LoadingIndicator',
-   'css!theme?Controls/Container/LoadingIndicator/LoadingIndicator'
+   'css!?Controls/Container/LoadingIndicator/LoadingIndicator'
 ], function(Control, tmpl) {
    'use strict';
 

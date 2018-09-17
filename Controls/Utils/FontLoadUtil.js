@@ -1,6 +1,6 @@
 define('Controls/Utils/FontLoadUtil', [
    'Core/Deferred',
-   'css!theme?Controls/Utils/FontLoadUtil'
+   'css!?Controls/Utils/FontLoadUtil'
 ], function(Deferred) {
    'use strict';
 

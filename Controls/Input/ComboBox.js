@@ -6,7 +6,7 @@ define('Controls/Input/ComboBox',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify',
-      'css!theme?Controls/Input/ComboBox/ComboBox'
+      'css!?Controls/Input/ComboBox/ComboBox'
    ],
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {

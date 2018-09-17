@@ -2,7 +2,7 @@ define('Controls/Header/Counter', [
    'Core/Control',
    'tmpl!Controls/Header/Counter/Counter',
    'WS.Data/Type/descriptor',
-   'css!theme?Controls/Header/Counter/Counter'
+   'css!?Controls/Header/Counter/Counter'
 ], function(Control, template, types) {
    'use strict';
 

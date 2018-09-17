@@ -6,7 +6,7 @@ define('Controls/List/EditInPlace', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
-   'css!theme?Controls/List/EditInPlace/Text'
+   'css!?Controls/List/EditInPlace/Text'
 ], function(Control, template, Deferred, Record, ItemsUtil, getWidthUtil, hasHorizontalScrollUtil) {
 
    var

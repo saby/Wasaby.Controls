@@ -5,7 +5,7 @@ define('Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Controls/Container/Scroll/Context',
-      'css!theme?Controls/Container/Suggest/Layout/Dialog',
+      'css!?Controls/Container/Suggest/Layout/Dialog',
       'Controls/Container/Scroll',
       'Controls/Popup/Templates/Dialog/DialogTemplate'
    ],

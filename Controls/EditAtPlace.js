@@ -1,8 +1,8 @@
 define('Controls/EditAtPlace', [
    'Core/Control',
    'tmpl!Controls/EditAtPlace/EditAtPlace',
-   'css!theme?Controls/EditAtPlace/EditAtPlace',
-   'css!theme?Controls/List/EditInPlace/Text'
+   'css!?Controls/EditAtPlace/EditAtPlace',
+   'css!?Controls/List/EditInPlace/Text'
 ], function(Control, template) {
    'use strict';
    var EditResult = {

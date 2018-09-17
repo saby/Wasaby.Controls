@@ -5,7 +5,7 @@ define('Controls/Decorator/Money',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Decorator/Money/Money',
 
-      'css!theme?Controls/Decorator/Money/Money'
+      'css!?Controls/Decorator/Money/Money'
    ],
    function(IoC, Control, descriptor, template) {
 

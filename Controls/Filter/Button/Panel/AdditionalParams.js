@@ -5,7 +5,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'Core/core-clone',
    'tmpl!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
    'WS.Data/Chain',
-   'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
+   'css!?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
 ], function(Control, Utils, isEqual, Clone, template, Chain) {
 
    /**

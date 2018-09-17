@@ -5,7 +5,7 @@ define('Controls/Input/Search',
       'tmpl!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Core/constants',
-      'css!theme?Controls/Input/Search/Search'
+      'css!?Controls/Input/Search/Search'
    ],
 
    function(Control, types, template, BaseViewModel, constants) {

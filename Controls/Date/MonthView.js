@@ -9,7 +9,7 @@ define('Controls/Date/MonthView', [
    'tmpl!Controls/Date/MonthView/MonthViewTableBody',
    'tmpl!Controls/Date/MonthView/day',
    'Controls/Date/interface/IMonth',
-   'css!theme?Controls/Date/MonthView/MonthView'
+   'css!?Controls/Date/MonthView/MonthView'
 ], function(
    BaseControl,
    coreMerge,

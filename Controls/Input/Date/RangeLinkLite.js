@@ -6,7 +6,7 @@ define('Controls/Input/Date/RangeLinkLite', [
    'Controls/Date/model/DateRange',
    'Controls/Calendar/Utils',
    'tmpl!Controls/Input/Date/RangeLinkLite/RangeLinkLite',
-   'css!theme?Controls/Input/Date/RangeLinkLite/RangeLinkLite'
+   'css!?Controls/Input/Date/RangeLinkLite/RangeLinkLite'
 ], function(
    BaseControl,
    coreMerge,

@@ -3,7 +3,7 @@ define('Controls/PageLayout', [
    'Core/Control',
    'tmpl!Controls/PageLayout/PageLayout',
    'Controls/Controllers/SourceController',
-   'css!theme?Controls/PageLayout/PageLayout'
+   'css!?Controls/PageLayout/PageLayout'
 ], function(Control, template, SourceController) {
    'use strict';
 

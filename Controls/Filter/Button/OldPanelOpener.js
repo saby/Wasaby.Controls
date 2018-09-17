@@ -10,7 +10,7 @@ define('Controls/Filter/Button/OldPanelOpener',
       'Controls/Filter/Button/converterFilterStructure',
       'SBIS3.CONTROLS/Button/IconButton',
       'i18n!SBIS3.CONTROLS/Filter/Button',
-      'css!theme?SBIS3.CONTROLS/Filter/Button/FilterButton'
+      'css!?SBIS3.CONTROLS/Filter/Button/FilterButton'
    ],
    function(
       CommandDispatcher,

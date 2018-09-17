@@ -2,7 +2,7 @@ define('Controls/PropertyGrid', [
    'Core/Control',
    'tmpl!Controls/PropertyGrid/PropertyGrid',
    'WS.Data/Utils',
-   'css!theme?Controls/PropertyGrid/PropertyGrid'
+   'css!?Controls/PropertyGrid/PropertyGrid'
 ], function(Control, template, Utils) {
 
    /**
