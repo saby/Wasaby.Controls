@@ -43,5 +43,71 @@ define(
             });
          });
       });
+
+      describe('StickyHeader', function() {
+         var event = {
+            stopPropagation: function() {}
+         };
+         var scroll;
+
+         beforeEach(function() {
+            scroll = new Scroll({});
+         });
+
+         describe('updateFixationState', function() {
+            it('Header with id equal to "sticky" stops being fixed', function() {
+               scroll._fixedHandler(event, {
+                  id: 'sticky',
+                  shouldBeFixed: false
+               });
+
+               assert.equal(scroll._stickyHeaderId, null);
+            });
+            it('Header with id equal to "sticky" fixed', function() {
+               scroll._fixedHandler(event, {
+                  id: 'sticky',
+                  shouldBeFixed: true
+               });
+
+               assert.equal(scroll._stickyHeaderId, 'sticky');
+            });
+            it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
+               scroll._fixedHandler(event, {
+                  id: 'sticky',
+                  shouldBeFixed: true
+               });
+               scroll._fixedHandler(event, {
+                  id: 'sticky',
+                  shouldBeFixed: false
+               });
+
+               assert.equal(scroll._stickyHeaderId, null);
+            });
+            it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
+               scroll._fixedHandler(event, {
+                  id: 'sticky1',
+                  shouldBeFixed: true
+               });
+               scroll._fixedHandler(event, {
+                  id: 'sticky2',
+                  shouldBeFixed: false
+               });
+
+               assert.equal(scroll._stickyHeaderId, 'sticky1');
+            });
+            it('Header with id equal to "sticky1" stop being fixed, Header with id equal to "sticky2" fixed', function() {
+               scroll._fixedHandler(event, {
+                  id: 'sticky1',
+                  shouldBeFixed: false
+               });
+               scroll._fixedHandler(event, {
+                  id: 'sticky2',
+                  shouldBeFixed: true
+               });
+
+               assert.equal(scroll._stickyHeaderId, 'sticky2');
+            });
+         });
+      });
    }
 );
