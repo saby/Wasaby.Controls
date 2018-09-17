@@ -5,11 +5,16 @@
          <script type="text/javascript" src="{{ _options.linkResolver.resolveLink(value, 'js') }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
       </ws:for>
    </ws:if>
-   <!--<ws:if data="{{ tmpl }}">-->
-      <!--<ws:for data="index, value in tmpl">-->
-         <!--<script type="text/javascript" src="{{ _options.linkResolver.resolveLink(value, 'tmpl') }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>-->
-      <!--</ws:for>-->
-   <!--</ws:if>-->
+   <ws:if data="{{ tmpl }}">
+      <ws:for data="index, value in tmpl">
+         <script type="text/javascript" src="{{ _options.linkResolver.resolveLink(value, 'tmpl') }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
+      </ws:for>
+   </ws:if>
+   <ws:if data="{{ wml }}">
+      <ws:for data="index, value in wml">
+         <script type="text/javascript" src="{{ _options.linkResolver.resolveLink(value, 'wml') }}" defer="defer" key="{{ 'scripts_' + index }}" data-vdomignore="true"></script>
+      </ws:for>
+   </ws:if>
    <ws:if data="{{ receivedStateArr }}">
       <ws:for data="key, value in receivedStateArr">
          <script data-vdomignore="true">window['inline{{key}}']='{{__setHTMLUnsafe(value)}}';</script>

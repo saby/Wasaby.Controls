@@ -7,7 +7,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
    // and if it's debug mode
    // /**appRoot**/**resourceRoot**/path/to/file.css
 
-   return coreExtend.extend([], {
+   var LinkResolver = coreExtend.extend([], {
       constructor: function(isDebug, buildNumber, appRoot, resourceRoot) {
          this.isDebug = isDebug;
          this.buildNumber = buildNumber || '';
@@ -20,6 +20,18 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
       },
+      // init: function(isDebug, buildNumber, appRoot, resourceRoot) {
+      //    this.isDebug = isDebug;
+      //    this.buildNumber = buildNumber || '';
+      //    var fullResourcePath = '';
+      //    if (appRoot) {
+      //       fullResourcePath += '/' + appRoot + '/';
+      //    }
+      //    if (resourceRoot) {
+      //       fullResourcePath += '/' + resourceRoot + '/';
+      //    }
+      //    this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
+      // },
       getLinkWithResourceRoot: function(cssName) {
          return this.resourceRoot + cssName;
       },
@@ -56,4 +68,22 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          return res;
       }
    });
+   // LinkResolver.getInstance = function getInstance() {
+   //    if (process && process.domain && process.domain.req) {
+   //       if (!process.domain.req._$LinkResolver) {
+   //          // Create instance on server
+   //          process.domain.req._$LinkResolver = new LinkResolver();
+   //       }
+   //       return process.domain.req._$LinkResolver;
+   //    }
+   //    if (typeof window !== 'undefined') {
+   //       if(!window._$LinkResolver) {
+   //          // Create instance on client
+   //          window._$LinkResolver = new LinkResolver();
+   //       }
+   //       return window._$LinkResolver;
+   //    }
+   //    IoC.resolve('ILogger').error('Cannot create link resolver');
+   // }
+   return LinkResolver;
 });

@@ -23,6 +23,7 @@ define('Controls/Application/_JsLinks',
             def.addCallback(function onLoad(res) {
                self.js = res.js;
                self.tmpl = res.tmpl;
+               self.wml = res.wml;
                self.themedCss = res.css.themedCss;
                self.simpleCss = res.css.simpleCss;
                self.receivedStateArr = res.receivedStateArr;

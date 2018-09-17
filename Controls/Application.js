@@ -13,7 +13,7 @@ define('Controls/Application',
       'Controls/Application/LinkResolver',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
-      'css!theme?theme?Controls/Application/Application'
+      'css!theme?Controls/Application/Application'
    ],
 
    /**
@@ -116,6 +116,7 @@ define('Controls/Application',
             self.BodyClasses = _private.calculateBodyClasses;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
+            // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
             context.headData.pushDepComponent(self.application, false);
 
@@ -165,7 +166,6 @@ define('Controls/Application',
          _closeInfoBoxHandler: function() {
             this._children.infoBoxOpener.close();
          },
-
 
          _openPreviewerHandler: function(event, config, type) {
             this._children.previewerOpener.open(config, type);
