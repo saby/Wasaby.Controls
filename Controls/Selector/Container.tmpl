@@ -1,0 +1,4 @@
+<div>
+    <ws:partial template="{{_options.content}}" scope="{{_options}}" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" on:selectedKeysChanged="_selectedKeysChanged()"/>
+    <Controls.Event.Emitter event="selectComplete" on:selectComplete="_selectComplete()" />
+</div>
