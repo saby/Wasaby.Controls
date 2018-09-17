@@ -4108,12 +4108,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                node.innerHTML = html;
                var texts = [];
                var dom = this._tinyEditor.dom;
+               // Регулярное выражение для символа, соответствующему &nbsp;
                var reNbsp = /\xA0/g;
+               // Регулярное выражение для перевода строк
                var reRn = /^(?:\r?\n)+$/;
                for (var i = 0, list = node.childNodes; i < list.length; i++) {
                   var e = list[i];
                   var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
                   if (e.nodeType === 3 && reRn.test(txt)) {
+                     // Если это просто текстовый узел, содержащий только переводы строки - игнорировать его
                      continue;
                   }
                   if (txt) {
