@@ -25,7 +25,8 @@ define('Controls/Popup/Compatible/Layer', [
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
-      'Core/nativeExtensions'
+      'Core/nativeExtensions',
+      'css!SBIS3.CONTROLS/themes/online/online'
    ];
    var defaultLicense = {
       defaultLicense: true
