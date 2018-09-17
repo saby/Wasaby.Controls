@@ -167,7 +167,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          //TODO FOR COMPATIBLE. для чистого вдома этот метод излишен, но логику не ломает
          _mouseOutHandler: function(event) {
-            this._children.subDropdownOpener.close();
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
+               this._children.subDropdownOpener.close();
+            }
          },
    
          _additionMouseenter: function() {
@@ -220,10 +222,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._notify('close');
          },
          _mousemoveHandler: function(emitterEvent, event) {
-            this._checkLeaveCursor(event);
-         },
-         _checkLeaveCursor: function(event) {
-            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { // Если увели курсор мимо - закрываемся
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
                this._notify('close');
             }
          },
