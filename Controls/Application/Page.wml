@@ -8,6 +8,7 @@
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}"
+   staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
    servicesPath="{{ servicesPath }}">
