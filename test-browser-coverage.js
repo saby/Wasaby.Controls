@@ -18,7 +18,7 @@ app.run(
       process.env.test_url_host || config.test_url.host,
       process.env.test_url_port || config.test_url.port,
       process.env.test_url_path || config.test_url.path,
-      process.env.test_url_query || 'reporter=JSCoverage'
+      process.env.test_url_query || 'reporter=HTML'
    ),
    process.env.test_report || config.jsonCoverageReport
 );
