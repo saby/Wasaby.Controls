@@ -33,38 +33,38 @@ define('Controls/Container/Scroll/Watcher',
                   self._canScrollCache = false;
                   eventName = 'cantScroll';
                }
-               if (eventName) {
-                  _private.sendByRegistrar(self, eventName);
-               }
+            }
+            if (eventName) {
+               _private.sendByRegistrar(self, eventName);
             }
          },
 
          sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
-            var eventName;
+            var eventNames = [], i;
 
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
-               eventName = 'listTop';
+               eventNames.push('listTop');
 
             }
             if (scrollTop + clientHeight >= scrollHeight) {
-               eventName = 'listBottom';
+               eventNames.push('listBottom');
             }
 
             //Проверка на триггеры загрузки
             if (scrollTop <= SCROLL_LOAD_OFFSET) {
-               eventName = 'loadTopStart';
+               eventNames.push('loadTopStart');
             } else {
-               eventName = 'loadTopStop';
+               eventNames.push('loadTopStop');
             }
             if (scrollTop + clientHeight >= scrollHeight - SCROLL_LOAD_OFFSET) {
-               eventName = 'loadBottomStart';
+               eventNames.push('loadBottomStart');
             } else {
-               eventName = 'loadBottomStop';
+               eventNames.push('loadBottomStop');
             }
 
-            if (eventName) {
-               _private.sendByRegistrar(self, eventName, scrollTop);
+            for (i = 0; i < eventNames.length; i++) {
+               _private.sendByRegistrar(self, eventNames[i], scrollTop);
             }
          },
 
