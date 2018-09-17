@@ -1,10 +1,12 @@
 .controls-MasterDetail {
    border-top: 1px solid @border-color_MasterList;
+   display: flex;
 }
 
 .controls-MasterDetail_master {
    position: relative;
    background-color: @background-color_MasterList;
+   flex-shrink: 0;
 
    &:after {
       content: '';
