@@ -79,6 +79,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _replaceVDOMContainer: function() {
+            // заполняем eventProperties у контейнера compoundArea, а не у vdom-компоента внутри
+            // потому что у vdom-компонента эти подписки удаляется inferno
+            // события долетят до элемента compoundArea и будут обработаны
             var
                rootContainer = this._container[0],
                additionalEventProperties = {
