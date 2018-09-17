@@ -28,10 +28,13 @@ define('Controls-demo/Input/Area/AreaPG',
                   emptyText: 'none',
                   placeholder: 'select',
                   keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
+                  displayProperty: 'title'
                },
-
+               newLineKey: {
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title'
+               },
                constraint: {
                   source: [
                      { id: 1, title: '[0-9]', example: 'You can use only digits' },
@@ -49,7 +52,7 @@ define('Controls-demo/Input/Area/AreaPG',
             this._componentOptions = {
                name: 'Area',
                placeholder: 'Input text',
-               tagStyle: 'primary',
+               tagStyle: undefined,
                constraint: '',
                value: '',
                trim: false,
@@ -60,7 +63,7 @@ define('Controls-demo/Input/Area/AreaPG',
                validationErrors: '',
                minLines: 3,
                maxLines: 6,
-               newLineKey: 'enter'
+               newLineKey: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -12,7 +12,7 @@ define('Controls-demo/Input/Phone/PhonePG',
 
    function(Control, template, myTmpl, config) {
       'use strict';
-      var PasswordPG = Control.extend({
+      var PhonePG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Input/Phone',
@@ -22,7 +22,7 @@ define('Controls-demo/Input/Phone/PhonePG',
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: false
+                  readOnly: true
                },
                tagStyle: {
                   emptyText: 'none',
@@ -43,5 +43,5 @@ define('Controls-demo/Input/Phone/PhonePG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return PasswordPG;
+      return PhonePG;
    });
