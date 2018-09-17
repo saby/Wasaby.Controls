@@ -3,7 +3,7 @@ define('Controls/PageLayout', [
    'Core/Control',
    'wml!Controls/PageLayout/PageLayout',
    'Controls/Controllers/SourceController',
-   'css!?Controls/PageLayout/PageLayout'
+   'css!Controls/PageLayout/PageLayout'
 ], function(Control, template, SourceController) {
    'use strict';
 

@@ -12,7 +12,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Watcher',
       'Controls/Event/Emitter',
       'Controls/Container/Scroll/Scrollbar',
-      'css!?Controls/Container/Scroll/Scroll'
+      'css!Controls/Container/Scroll/Scroll'
    ],
    function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template) {
 

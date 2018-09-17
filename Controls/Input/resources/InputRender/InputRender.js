@@ -7,7 +7,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
       'Controls/Utils/hasHorizontalScroll',
-      'css!?Controls/Input/resources/InputRender/InputRender'
+      'css!Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil) {
 

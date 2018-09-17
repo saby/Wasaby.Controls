@@ -2,7 +2,7 @@ define('Controls/Button/Separator', [
    'Core/Control',
    'wml!Controls/Button/Separator/Separator',
    'WS.Data/Type/descriptor',
-   'css!?Controls/Button/Separator/Separator'
+   'css!Controls/Button/Separator/Separator'
 ], function(Control, template, types) {
    'use strict';
 

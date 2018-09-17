@@ -2,7 +2,7 @@ define('Controls/PropertyGrid', [
    'Core/Control',
    'wml!Controls/PropertyGrid/PropertyGrid',
    'WS.Data/Utils',
-   'css!?Controls/PropertyGrid/PropertyGrid'
+   'css!Controls/PropertyGrid/PropertyGrid'
 ], function(Control, template, Utils) {
 
    /**

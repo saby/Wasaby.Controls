@@ -9,7 +9,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
-      'css!?Controls/Dropdown/resources/template/DropdownList'
+      'css!Controls/Dropdown/resources/template/DropdownList'
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {

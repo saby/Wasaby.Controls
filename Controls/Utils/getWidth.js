@@ -1,5 +1,5 @@
 define('Controls/Utils/getWidth', [
-   'css!?Controls/Utils/getWidth'
+   'css!Controls/Utils/getWidth'
 ], function() {
    'use strict';
 

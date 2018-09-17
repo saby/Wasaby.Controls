@@ -6,8 +6,8 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       'Core/core-merge',
       'Controls/Popup/Manager/ManagerController',
 
-      'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
-      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
+      'css!Controls/Popup/Opener/InfoBox/InfoBox',
+      'css!Controls/Popup/Opener/Previewer/PreviewerController'
    ],
    function(Deferred, StickyController, themeConstantsGetter, cMerge, ManagerController) {
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {

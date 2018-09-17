@@ -3,7 +3,7 @@ define('Controls/Label',
       'Core/Control',
       'wml!Controls/Label/Label',
 
-      'css!?Controls/Label/Label'
+      'css!Controls/Label/Label'
    ],
    function(Control, template) {
 

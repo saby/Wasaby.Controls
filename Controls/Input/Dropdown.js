@@ -6,7 +6,7 @@ define('Controls/Input/Dropdown',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
-      'css!?Controls/Input/Dropdown/Dropdown'
+      'css!Controls/Input/Dropdown/Dropdown'
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
 

@@ -2,7 +2,7 @@ define('Controls/Header/Separator', [
    'Core/Control',
    'wml!Controls/Header/Separator/Separator',
    'WS.Data/Type/descriptor',
-   'css!?Controls/Header/Separator/Separator'
+   'css!Controls/Header/Separator/Separator'
 ], function(Control, template, types) {
    'use strict';
 

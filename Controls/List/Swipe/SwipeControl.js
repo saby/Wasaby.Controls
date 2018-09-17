@@ -4,7 +4,7 @@ define('Controls/List/Swipe/SwipeControl', [
    'Controls/Application/TouchDetector/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar',
-   'css!?Controls/List/Swipe/Swipe'
+   'css!Controls/List/Swipe/Swipe'
 ], function(Control, template, TouchContextField, aUtil) {
    'use strict';
 

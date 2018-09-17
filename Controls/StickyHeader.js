@@ -7,7 +7,7 @@ define('Controls/StickyHeader',
       'Controls/Utils/IntersectionObserver',
       'wml!Controls/StickyHeader/StickyHeader',
 
-      'css!?Controls/StickyHeader/StickyHeader'
+      'css!Controls/StickyHeader/StickyHeader'
    ],
    function(Control, detection, Model, Context, IntersectionObserver, template) {
 

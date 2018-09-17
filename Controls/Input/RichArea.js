@@ -4,7 +4,7 @@ define('Controls/Input/RichArea', [
    'Controls/Input/RichArea/RichAreaModel',
    'Core/helpers/domToJsonML',
    'Core/HtmlJson',
-   'css!?Controls/Input/RichArea/RichArea'
+   'css!Controls/Input/RichArea/RichArea'
 ], function(Control, template, RichModel, domToJson, HtmlJson) {
    'use strict';
 

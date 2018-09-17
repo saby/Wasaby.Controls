@@ -25,7 +25,7 @@ define('Controls/Input/RichArea/resources/TinyMCE',
 
       'css!?WS/css/styles/RichContentStyles',
       'i18n!SBIS3.CONTROLS/RichEditor',
-      'css!?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+      'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
    ], function(
       cContext,
       cIndicator,
