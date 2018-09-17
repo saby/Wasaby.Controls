@@ -80,7 +80,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
          _replaceVDOMContainer: function() {
             var
-               rootContainer = this._getRootContainer(),
+               rootContainer = this._container[0],
                additionalEventProperties = {
                   'on:close': this._onCloseHandler,
                   'on:controlresize': this._onResizeHandler,
