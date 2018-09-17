@@ -10,14 +10,14 @@ define('Controls/StickyHeader/Context',
           * @public
           * @type {Number}
           */
-         position: null,
+         position: 0,
 
          /**
           * Determines whether shadow should be shown.
           * @public
           * @type {Boolean}
           */
-         shadowVisible: null,
+         shadowVisible: false,
 
          constructor: function(config) {
             this.shadowVisible = config.shadowVisible;
