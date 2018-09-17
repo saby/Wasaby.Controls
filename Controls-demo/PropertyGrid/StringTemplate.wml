@@ -12,7 +12,7 @@
             readOnly="{{_options.readOnly}}"
             displayProperty="title"
             searchParam="title"
-            autoDropDown="{{true}}"
+            autoDropDown="{{!_options.readOnly}}"
             source="{{_suggestSource()}}"
             minSearchLength="1"
             on:valueChanged="_valueChangedHandler()"

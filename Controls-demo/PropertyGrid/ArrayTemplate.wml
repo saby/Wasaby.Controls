@@ -15,7 +15,7 @@
               source="{{_suggestSource()}}"
               minSearchLength="1"
               on:choose ="_suggestChooseHandler()"
-              attr:class="controls-demo_suggest">
+              attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}">
          <ws:navigation source="page" view="page">
             <ws:sourceConfig pageSize="{{_options.source.length}}" page="{{0}}" mode="totalCount"/>
          </ws:navigation>
