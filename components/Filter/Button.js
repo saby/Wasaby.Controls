@@ -282,9 +282,7 @@ define('SBIS3.CONTROLS/Filter/Button',
           },
 
           _getAreaOptions: function() {
-             var prepTpl = TemplateUtil.prepareTemplate,
-                 components = this._filterTemplates,
-                 config = {
+             var config = {
                     historyController: this._historyController,
                     viewMode: this._options.viewMode,
                     areaCaption: this._options.areaCaption,
@@ -297,20 +295,10 @@ define('SBIS3.CONTROLS/Filter/Button',
                  self = this,
                  templateProperty;
 
-             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
-             function getCompTpl(tpl) {
-                return prepTpl(dotTplForComp({component: (requireHelper.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
-             }
-
-             /* Если в качестве шаблона передали вёрстку */
-             function getTpl(tpl) {
-                return prepTpl(tpl);
-             }
-
              for (var key in TEMPLATES) {
                 if (TEMPLATES.hasOwnProperty(key)) {
                    templateProperty = self.getProperty(TEMPLATES[key]);
-                   config[TEMPLATES[key]] = components[TEMPLATES[key]] ? getCompTpl(templateProperty) : getTpl(templateProperty);
+                   config[TEMPLATES[key]] = templateProperty;
                 }
              }
 
@@ -355,6 +343,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                          self._notify('onPickerClose');
                          self._picker.destroy();
                          self._picker = null;
+                         self._pickerContext = null;
                       }
                    }
                 }
