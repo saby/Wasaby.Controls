@@ -1,31 +1,21 @@
 <div>
-<Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
-<ws:if data="{{!_options.source}}">
-    <Controls.Input.Text bind:value="_options.value"
-                         readOnly="{{_options.readOnly}}"
-                          attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
-                         on:valueChanged="_valueChangedHandler()"/>
-</ws:if>
-<ws:else>
-    <Controls.Input.Suggest
-            value="{{_options.value}}"
-            readOnly="{{_options.readOnly}}"
-            displayProperty="title"
-            searchParam="title"
-            autoDropDown="{{!_options.readOnly}}"
-            source="{{_suggestSource()}}"
-            minSearchLength="1"
-            on:valueChanged="_valueChangedHandler()"
-            attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}">
-        <ws:navigation source="page" view="page">
-            <ws:sourceConfig pageSize="{{_options.source.length}}" page="{{0}}" mode="totalCount"/>
-        </ws:navigation>
-        <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-            <ws:templateOptions demoClass="demo-SuggestInputList"
-                                itemSuggestTemplate="{{_options.config.template}}"
-                                title="{{_options.config.value}}"
-                               comment="{{_options.config.comment}}"/>
-        </ws:suggestTemplate>
-    </Controls.Input.Suggest>
-</ws:else>
+   <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+   <ws:if data="{{!_options.items}}">
+      <Controls.Input.Text value="{{_options.value}}"
+                           readOnly="{{_options.readOnly}}"
+                           attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
+                           on:valueChanged="_valueChangedHandler()"/>
+   </ws:if>
+   <ws:else>
+      <Controls-demo.PropertyGrid.SuggestTemplate.SuggestTemplate
+              value="{{_options.value}}"
+              displayProperty="title"
+              searchParam="title"
+              autoDropDown="{{true}}"
+              items="{{_options.items}}"
+              minSearchLength="1"
+              on:valueChanged="_valueChangedHandler()"
+              config="{{_options.config}}"
+      />
+   </ws:else>
 </div>

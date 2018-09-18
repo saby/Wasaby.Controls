@@ -1,12 +1,27 @@
 <div>
-    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+   <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
 
-    <div style="display: flex; width: 100%;">
-        <Controls.Toggle.Checkbox bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()" attr:class="js-Controls-PropertyGridEditor__StringOrFunction"/>
-            <Controls.Input.Text value="{{_value}}"
-                                 readOnly="{{_options.readOnly}}"
-                                 on:valueChanged="_valueChangedHandler()"
-                                 attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
-            />
-    </div>
+   <ws:if data="{{!_options.items}}">
+      <div style="display: flex; width: 100%;">
+         <Controls.Toggle.Checkbox bind:value="checkBoxFlag" on:valueChanged="_checkBoxValueChanged()"
+                                   attr:class="js-Controls-PropertyGridEditor__StringOrFunction"/>
+         <Controls.Input.Text value="{{_value}}"
+                              readOnly="{{_options.readOnly}}"
+                              on:valueChanged="_valueChangedHandler()"
+                              attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
+         />
+      </div>
+   </ws:if>
+   <ws:else>
+      <Controls-demo.PropertyGrid.SuggestTemplate.SuggestTemplate
+              value="{{_options.value}}"
+              displayProperty="title"
+              searchParam="title"
+              autoDropDown="{{true}}"
+              items="{{_options.items}}"
+              minSearchLength="1"
+              on:valueChanged="_valueChangedHandler()"
+              config="{{_options.config}}"
+      />
+   </ws:else>
 </div>

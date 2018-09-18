@@ -56,8 +56,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
 
       PGWrapper.getDefaultOptions = function() {
          return {
-            nameOption: 'value',
-            eventType: 'valueChanged'
+
          };
       };
       return PGWrapper;

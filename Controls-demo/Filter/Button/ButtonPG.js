@@ -9,10 +9,9 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Wrapper/Wrapper',
       'Controls/Input/Dropdown',
-      'wml!Controls-demo/Filter/Button/buttonPGTemplateContacts',
+      'wml!Controls-demo/Filter/Button/buttonPGTemplate',
       'wml!Controls-demo/Filter/Button/mainBlockPG',
-      'wml!Controls-demo/Filter/Button/buttonPGTemplateKaizen',
-      'wml!Controls-demo/Filter/Button/mainBlockPGKaizen'
+      'wml!Controls-demo/Filter/Button/ChooseDate'
    ],
 
    function(Control, template, MemorySource, config) {
@@ -32,8 +31,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
 
          _beforeMount: function() {
             this._items = [
-               {id: 'type', value: ['0'], resetValue: ['0'], textValue: 'All'},
-               {id: 'interval', value: ['0'], resetValue: ['0'], textValue: ''}
+               {id: 'kind', value: ['0'], resetValue: ['0'], textValue: 'All'},
+               {id: 'type', value: ['0'], resetValue: ['0'], textValue: ''}
             ];
             this._itemsKaizen = [
                {id: 'own', value: ['0'], resetValue: ['0'], textValue: 'All'},
@@ -47,27 +46,28 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   keyProperty: 'id'
                },
                items: {
-                  source: [
-                     {id: '1', title: 'Filters in contacts'},
+                  items: [
+                     {id: '1', title: 'Filters in discussions'},
                      {id: '2', title: 'Filters in kaizen'}
                   ],
-                  value: 'Filters in contacts'
+                  value: 'Filters in discussions'
                },
                templateName: {
-                  source: [
-                     {id: '1', title: 'wml!Controls-demo/Filter/Button/buttonPGTemplateContacts'},
-                     {id: '2', title: 'wml!Controls-demo/Filter/Button/buttonPGTemplateKaizen'}
+                  readOnly: true
+               },
+               lineSpaceTemplate: {
+                  items: [
+                     {id: '1', title: 'Selection a period'}
                   ],
-                  readOnly: true,
-                  value: 'wml!Controls-demo/Filter/Button/buttonPGTemplateContacts'
+                  value: 'Selection a period'
                }
             };
             this._componentOptions = {
                name: 'filterButton',
                readOnly: false,
                orientation: 'left',
-               lineSpaceTemplate: undefined,
-               templateName: 'wml!Controls-demo/Filter/Button/buttonPGTemplateContacts',
+               lineSpaceTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate',
+               templateName: 'wml!Controls-demo/Filter/Button/buttonPGTemplate',
                items: this._items
             };
             this._metaData = config[this._content].properties['ws-config'].options;
@@ -76,14 +76,18 @@ define('Controls-demo/Filter/Button/ButtonPG',
          _optionsChanged: function(event, options) {
             if (this._currentItems !== options.description.items.value) {
                if (options.description.items.value === 'Filters in kaizen') {
-                  this._componentOptions.templateName = 'wml!Controls-demo/Filter/Button/buttonPGTemplateKaizen';
                   this._componentOptions.items = this._itemsKaizen;
-               } else if (options.description.items.value === 'Filters in contacts') {
-                  this._componentOptions.templateName = 'wml!Controls-demo/Filter/Button/buttonPGTemplateContacts';
+               } else if (options.description.items.value === 'Filters in discussions') {
                   this._componentOptions.items = this._items;
                }
+               this._currentItems = options.description.items.value;
             }
-            this._currentItems = options.description.items.value;
+            if (options.description.lineSpaceTemplate.value === '') {
+               this._componentOptions.lineSpaceTemplate = undefined;
+            } else if (options.description.lineSpaceTemplate.value === 'Selection a period'){
+               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/ChooseDate';
+            }
+            
          }
       });
       return FilterButtonPG;

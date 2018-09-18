@@ -31,7 +31,7 @@ define('Controls-demo/Input/Text/TextPG',
                },
 
                constraint: {
-                  source: [
+                  items: [
                      { id: 1, title: '[0-9]', example: 'You can use only digits' },
                      { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
                      { id: 3, title: '[a-z]', example: 'You can use only lowercase letters' },
@@ -50,6 +50,7 @@ define('Controls-demo/Input/Text/TextPG',
                tagStyle: 'primary',
                constraint: '',
                trim: false,
+               value: '',
                maxLength: 100,
                selectOnClick: true,
                readOnly: false,

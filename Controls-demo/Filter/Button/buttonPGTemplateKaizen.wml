@@ -1,3 +1,0 @@
-<Controls.Filter.Button.Panel itemTemplateProperty="myTemplate">
-   <ws:itemTemplate templateName="wml!Controls-demo/Filter/Button/mainBlockPGKaizen"/>
-</Controls.Filter.Button.Panel>

@@ -1,30 +1,21 @@
 <div>
-    <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
-    <ws:if data="{{!_options.source}}">
+   <Controls.Label caption="{{_options.caption}}" attr:class="demo-TextBox"/>
+   <ws:if data="{{!_options.items}}">
       <Controls.Input.Area
-            scope="{{_options}}"
-            on:valueChanged="_valueChangedHandler()"
-            attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"/>
-      </ws:if>
+              scope="{{_options}}"
+              on:valueChanged="_valueChangedHandler()"
+              attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"/>
+   </ws:if>
    <ws:else>
-      <Controls.Input.Suggest
+      <Controls-demo.PropertyGrid.SuggestTemplate.SuggestTemplate
               value="{{_options.value}}"
               displayProperty="title"
               searchParam="title"
               autoDropDown="{{true}}"
-              source="{{_suggestSource()}}"
+              items="{{_options.items}}"
               minSearchLength="1"
-              on:choose ="_suggestChooseHandler()"
-              attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}">
-         <ws:navigation source="page" view="page">
-            <ws:sourceConfig pageSize="{{_options.source.length}}" page="{{0}}" mode="totalCount"/>
-         </ws:navigation>
-         <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
-            <ws:templateOptions demoClass="demo-SuggestInputList"
-                                itemSuggestTemplate="{{_options.config.template}}"
-                                title="{{_options.config.value}}"
-                                comment="{{_options.config.comment}}"/>
-         </ws:suggestTemplate>
-      </Controls.Input.Suggest>
+              on:valueChanged="_valueChangedHandler()"
+              config="{{_options.config}}"
+      />
    </ws:else>
 </div>
