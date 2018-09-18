@@ -2329,7 +2329,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                // при вставке из google таблиц, они вставляются с шириной 0px, которая плохо работает в IE и FireFox
                // меняем ширину на auto во всех таблицах с width: 0px; для исправной работы во всех браузерах
-               e.content = e.content.replace(/(<table.*? style=".*?width:)0px(.*?")/, '$1auto$2');
+               e.content = e.content.replace(/(<table.*? style=".*?width:)0px(.*?")/g, '$1auto$2');
 
                var options = this._options;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
