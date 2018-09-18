@@ -21,14 +21,14 @@ mv components-origin components
 rm -rf Controls
 mv Controls-origin Controls
 
-#node coverageUnusedFiles
+node coverageUnusedFiles
 
 #mkdir artifacts/components
 #mv artifacts/coverageComponents.json artifacts/components/coverage.json
 #mkdir artifacts/controls
 #mv artifacts/coverageControls.json artifacts/controls/coverage.json
 
-#node node_modules/nyc/bin/nyc report --reporter=cobertura --report-dir=cobertura --temp-directory=artifacts
-#node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report --temp-directory=artifacts
+node node_modules/nyc/bin/nyc report --reporter=cobertura --report-dir=cobertura --temp-directory=artifacts
+node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report --temp-directory=artifacts
 #node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-controls-report --temp-directory=artifacts/controls
 #node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-components-report --temp-directory=artifacts/components
