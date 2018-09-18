@@ -821,6 +821,7 @@ define([
             };
             var result = ctrl.editItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('addItem', function() {
@@ -863,6 +864,7 @@ define([
             };
             var result = ctrl.addItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('cancelEdit', function() {
@@ -901,6 +903,41 @@ define([
             };
             var result = ctrl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('cancelEdit, readOnly: true', function() {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               readOnly: true
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            var result = ctrl.cancelEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('commitEdit', function() {
@@ -939,6 +976,41 @@ define([
             };
             var result = ctrl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('commitEdit, readOnly: true', function() {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     mode: 'totalCount'
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               readOnly: true
+            };
+            var ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            var result = ctrl.commitEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('_onBeforeItemAdd', function() {
@@ -1330,14 +1402,9 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  editItem: function() {
-                     throw new Error('editItem shouldn\'t be called if BaseControl is readOnly');
-                  }
-               }
-            };
-            ctrl.editItem(opt);
+            var result = ctrl.editItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('readOnly, addItem', function() {
@@ -1372,14 +1439,9 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  addItem: function() {
-                     throw new Error('addItem shouldn\'t be called if BaseControl is readOnly');
-                  }
-               }
-            };
-            ctrl.addItem(opt);
+            var result = ctrl.addItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
       });
 
