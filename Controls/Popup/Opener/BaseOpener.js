@@ -161,8 +161,7 @@ define('Controls/Popup/Opener/BaseOpener',
                //Ещё нужно удалить текущий id из массива всех id
                this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
-               this._action.destroy();
-               this._action = null;
+               this._action.closeDialog();
             }
          },
 
