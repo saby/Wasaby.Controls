@@ -26,6 +26,9 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
       'Core/nativeExtensions',
+
+      //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
+      //для того чтобы корректно работали стили, которые используют прикладные программисты в старых окнах
       'css!SBIS3.CONTROLS/themes/online/online'
    ];
    var defaultLicense = {
