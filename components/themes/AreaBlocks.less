@@ -1,6 +1,12 @@
 .ws-Block {
    position: relative;
    border-style: solid;
+   /**
+    * Из-за того, что классы устройств вешаются на body после первого отображения верстки, border отображается
+    * со значением цвета по умолчанию(черный). Устанавливаем его сдесь, чтобы перебить значение по умолчанию.
+    * В 610 костыль удален и ошибка будет правиться устранением причины. https://online.sbis.ru/opendoc.html?guid=87832130-6dac-4dbc-b7de-80d61b15711e
+    */
+   border-color: @bg_BlockLayout;
    border-width: @spacing_Block / 2 + @border-width_Block;
    .box-sizing();
    .for(6, { &_style_@{_i} {

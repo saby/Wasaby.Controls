@@ -121,7 +121,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          $constructor: function() {
-            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this.toggleToolbar.bind(this));
+            // Привязать обработчики
+            this._onImageChange = this._onImageChange.bind(this);
+            this.toggleToolbar = this.toggleToolbar.bind(this);
+            this._handlersInstances.undoRedo = this._undoRedoChangeHandler.bind(this);
+            this._handlersInstances.node = this._nodeChangeHandler.bind(this);
+            this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
+
+            this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton');
+            this._toggleToolbarButton.bind('click', this.toggleToolbar);
             this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
 
@@ -288,10 +296,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                editor = this._options.linkedEditor;
             RichEditorToolbar.superclass._bindEditor.apply(this, arguments);
 
-            this._handlersInstances.undoRedo = this._undoRedoChangeHandler.bind(this);
-            this._handlersInstances.node = this._nodeChangeHandler.bind(this);
-            this._handlersInstances.source = this._toggleContentSourceHandler.bind(this);
-
             if (this.getItems().getRecordById('undo') && this.getItems().getRecordById('redo')) {
                this.subscribeTo(editor, 'onUndoRedoChange', this._handlersInstances.undoRedo);
             }
@@ -304,8 +308,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
          },
 
          getImagePanel: function(button){
-            var
-               self = this;
             //todo: https://online.sbis.ru/opendoc.html?guid=2842f4a3-d4b7-4454-a034-4051337f0e25&des=
             //кдалить проверку на destroyed после выполнения задачи
             if (!this._imagePanel || this._imagePanel.isDestroyed()) {
@@ -325,11 +327,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                   linkedEditor: editor,
                   imageFolder: editor._options.imageFolder
                });
-               this.subscribeTo(this._imagePanel, 'onImageChange', function(event, key, fileobj){
-                  self._insertImageTemplate(key, fileobj);
-               });
+               this.subscribeTo(this._imagePanel, 'onImageChange', this._onImageChange);
             }
             return this._imagePanel;
+         },
+
+         _onImageChange: function (event, key, fileobj) {
+            this._insertImageTemplate(key, fileobj);
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
