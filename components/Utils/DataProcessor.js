@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             delete cfg.FileName;
             cfg.Html = cfg.html;
             delete cfg.html;
-            cfg.Sync = true;
+            cfg.Sync = sync;
          } else {
             cfg.HierarchyField = cfg.HierarchyField || null;
             cfg.Sync = sync;
@@ -239,7 +239,8 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
              exportDeferred,
              source = new SbisService({
                 endpoint: object
-            });
+            }),
+            syncUnload = !this._isLongOperationsEnabled();
 
          /*
           TODO:Костыль из-за того что у объектов Excel и PDF методы называются по разному и разные сигнатуры
@@ -262,7 +263,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             return error;
          });
           //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
-         if (!this._isLongOperationsEnabled()) {
+         if (syncUnload) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных'), exportDeferred);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);

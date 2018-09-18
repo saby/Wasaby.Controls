@@ -1,12 +1,13 @@
 define('Controls/Container/Data',
    [
       'Core/Control',
+      'Core/core-instance',
       'wml!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
       'Controls/Container/Data/ContextOptions'
    ],
    
-   function(Control, template, getPrefetchSource, ContextOptions) {
+   function(Control, cInstance, template, getPrefetchSource, ContextOptions) {
 
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
@@ -37,6 +38,12 @@ define('Controls/Container/Data',
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
       
       var _private = {
+         isEqualItems: function(oldList, newList) {
+            return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet') &&
+               (newList.getModel() === oldList.getModel()) &&
+               (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
+               (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
+         },
          createOptionsObject: function(self) {
             function reducer(result, optName) {
                if (optName === 'source' && self._source) {
@@ -76,7 +83,11 @@ define('Controls/Container/Data',
             self._keyProperty = options.keyProperty;
          },
          resolvePrefetchSourceResult: function(self, result) {
-            self._items = result.data;
+            if (_private.isEqualItems(self._items, result.data)) {
+               self._items.assign(result.data);
+            } else {
+               self._items = result.data;
+            }
             self._prefetchSource = result.source;
          }
       };

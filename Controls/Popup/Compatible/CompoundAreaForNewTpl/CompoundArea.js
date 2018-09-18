@@ -49,6 +49,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                var def = new Deferred();
 
                require([this._options.innerComponentOptions.template], function() {
+
+                  //Пока грузили шаблон, компонент могли задестроить
+                  if (self.isDestroyed()) {
+                     return;
+                  }
                   if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
                      self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
                      self._afterMountHandler();
@@ -75,8 +80,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _replaceVDOMContainer: function() {
+            // заполняем eventProperties у контейнера compoundArea, а не у vdom-компоента внутри
+            // потому что у vdom-компонента эти подписки удаляется inferno
+            // события долетят до элемента compoundArea и будут обработаны
             var
-               rootContainer = this._getRootContainer(),
+               rootContainer = this._container[0],
                additionalEventProperties = {
                   'on:close': this._onCloseHandler,
                   'on:controlresize': this._onResizeHandler,
@@ -206,6 +214,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          destroy: function() {
+            this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
             if (this._vDomTemplate) {
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);

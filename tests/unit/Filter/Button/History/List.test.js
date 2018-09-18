@@ -58,6 +58,10 @@ define(
             {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
          ];
 
+         after(() => {
+            list.destroy();
+         });
+
          it('get text', function(done) {
             var savedList = list,
                text = [];
@@ -119,7 +123,6 @@ define(
                      assert.deepEqual(histItems, itemsHistory[index]);
                   }
                });
-               list.destroy();
                done();
             });
          });

@@ -2,24 +2,31 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
    'use strict';
 
    let requiredValidator = [{validator: ControlsValidators.required}],
-      now = new Date(2017, 0, 1),
-      clock;
+      now = new Date(2017, 0, 1);
 
-   var controlTestCase = function () {
+   var controlTestCase = function (withClock) {
+      let clock;
+
       // Попытка вынести общую логику тестов, не уверен что правильная.. Пусть пока полежит здесь.
       beforeEach(function () {
          if (typeof $ === 'undefined') {
             this.skip();
+            return;
          }
-         else {
-            var cfg = this.controlConfig || {};
-            this.container = $('<div id="component"></div>').appendTo('#mocha');
-            cfg.element = this.container;
-            this.testControl = new this.controlClass(this.controlConfig);
+
+         if (withClock) {
+            clock = sinon.useFakeTimers(now.getTime(), 'Date');
          }
+
+         var cfg = this.controlConfig || {};
+         this.container = $('<div id="component"></div>').appendTo('#mocha');
+         cfg.element = this.container;
+         this.testControl = new this.controlClass(this.controlConfig);
       });
 
       afterEach(function () {
+         withClock && clock && clock.restore();
+
          this.testControl.destroy();
          this.testControl = undefined;
          this.container && this.container.remove();
@@ -29,13 +36,6 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
 
 
    describe('SBIS3.CONTROLS/Date/Box', function () {
-      beforeEach(function () {
-         clock = sinon.useFakeTimers(now.getTime(), 'Date');
-      });
-      afterEach(function () {
-         clock.restore();
-         clock = undefined;
-      });
 
       describe('._createAutocomplitedDate ', function () {
 
@@ -67,6 +67,14 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
                [[2000, 1, 1, null, 10], null, 'HH:II', []],
          ];
          DateBox.prototype._options = {};
+
+         let clock;
+         beforeEach(() => {
+            clock = sinon.useFakeTimers(now.getTime(), 'Date');
+         });
+         afterEach(() => {
+            clock && clock.restore();
+         });
 
          tests.forEach(function (test, index) {
             it('should return "' + (test[1] ? test[1].toISOString() : 'null') + '" for year=' + test[0][0] +
@@ -151,7 +159,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('.setText', function () {
-         controlTestCase();
+         controlTestCase(true);
          it('should generate onTextChange and onDateChange events', function () {
             let onTextChange = sinon.spy(),
                onDateChange = sinon.spy(),
@@ -171,7 +179,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('.setDate', function () {
-         controlTestCase();
+         controlTestCase(true);
          it('should generate "onDateChange" in case dateBox.setDate(date, true); dateBox.setDate(null);', function () {
             let onDateChange = sinon.spy();
             this.testControl.setDate(new Date(), true);
@@ -183,7 +191,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('._onKeyDown', function () {
-         controlTestCase();
+         controlTestCase(true);
          it('should not change control properties if control disabled', function () {
             let sandbox = sinon.sandbox.create(),
                date = this.testControl.getDate(),
@@ -250,7 +258,7 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
       });
 
       describe('._onKeyPress', function () {
-         controlTestCase();
+         controlTestCase(true);
          it('should not change control properties if control disabled', function () {
             let sandbox = sinon.sandbox.create(),
                date = this.testControl.getDate(),

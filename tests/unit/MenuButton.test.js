@@ -73,5 +73,22 @@ define(
             menu._beforeMount(newOptions);
             assert.equal(menu._filter, newOptions.filter);
          });
+
+         it('_beforeUpdate', function() {
+            let newOptions = {
+               icon: 'icon-medium icon-Doge icon-primary',
+               style: 'linkMain'
+            };
+            menu.saveOptions(newOptions);
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_medium');
+            newOptions = {
+               icon: 'icon-small icon-Doge icon-primary',
+               style: 'linkMain'
+            };
+            menu.saveOptions(newOptions);
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_small');
+         });
       })
    });

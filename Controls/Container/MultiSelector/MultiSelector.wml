@@ -1,5 +1,6 @@
 <ws:partial
    template="{{_options.content}}"
+   scope="{{_options}}"
    on:listSelectionChange="_onListSelectionChange()"
    on:itemsChanged="_onItemsChanged()"
    on:selectedTypeChanged="_selectedTypeChangedHandler()"

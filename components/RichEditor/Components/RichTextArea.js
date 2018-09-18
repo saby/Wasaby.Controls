@@ -342,6 +342,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
                   options.text = options.__savedHtmlJson.render();
+
+                  // Костыль для отображения плейсхолдера при пустом json.
+                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  if (options.text === '<span></span>') {
+                     options.text = '';
+                  }
                }
 
                if (options.singleLine) {
@@ -499,27 +507,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var url = escapeTagsFromStr(link, []);
                var id = this._getYouTubeVideoId(url);
                if (id) {
-                  var _byRe = function(re) {
-                     var ms = url.match(re);
-                     return ms ? ms[1] : null;
-                  };
-                  var protocol = _byRe(/^(https?:)/i) || '';
-                  var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
-                  this.insertHtml([
-                     '<iframe',
-                     ' width="' + constants.defaultYoutubeWidth + '"',
-                     ' height="' + constants.defaultYoutubeHeight + '"',
-                     ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight +
-                     'px;"',
-                     ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') +
-                     '"',
-                     ' allowfullscreen',
-                     ' frameborder="0" >',
-                     '</iframe>'
-                  ].join(''));
+                  this.insertHtml(this._makeYouTubeVideoHtml(url, id));
                   return true;
                }
                return false;
+            },
+
+            _makeYouTubeVideoHtml: function(url, id) {
+               var _byRe = function(re) {
+                  var ms = url.match(re);
+                  return ms ? ms[1] : null;
+               };
+               var protocol = _byRe(/^(https?:)/i) || '';
+               var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
+               return [
+                  '<iframe',
+                  ' width="' + constants.defaultYoutubeWidth + '"',
+                  ' height="' + constants.defaultYoutubeHeight + '"',
+                  ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight +
+                  'px;"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') +
+                  '"',
+                  ' allowfullscreen',
+                  ' frameborder="0" >',
+                  '</iframe>'
+               ].join('');
             },
 
             /**
@@ -678,6 +690,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
+            getText: function () {
+               var text = RichTextArea.superclass.getText.apply(this, arguments);
+               // Не выпускаем наружу символы с \00 по \x08, т.к. при дальнейшем использовании (наприменр при серверной вёрстке) от них могут быть проблемы
+               return text.replace(/[\x00-\x08]/g, function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
+            },
+
             /**
              * Устанавливает текстовое значение внутри поля ввода.
              * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
@@ -705,7 +723,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
-               this.setText(this._htmlJson.render());
+
+               // Костыль для отображения плейсхолдера при пустом json.
+               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+               var text = this._htmlJson.render();
+               if (text === '<span></span>') {
+                  text = '';
+               }
+               this.setText(text);
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -765,48 +792,51 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if(this._delayOffSelectionChange) {
                   clearTimeout(this._delayOffSelectionChange);
                }
-               this._tinyEditor.off('click');
-               this._tinyEditor.off('touchstart');
-               this._tinyEditor.off('dblclick');
-               this._tinyEditor.off('postRender');
-               this._tinyEditor.off('initContentBody');
-               this._tinyEditor.off('onBeforePaste');
-               this._tinyEditor.off('Paste');
-               this._tinyEditor.off('PastePreProcess');
-               this._tinyEditor.off('PastePostProcess');
-               this._tinyEditor.off('mousedown');
-               this._tinyEditor.off('mouseup');
-               this._tinyEditor.off('drop');
-               this._tinyEditor.off('dragstart');
-               this._tinyEditor.off('dragend');
-               this._tinyEditor.off('keyup');
-               this._tinyEditor.off('keydown');
-               this._tinyEditor.off('keypress');
-               this._tinyEditor.off('cut');
-               this._tinyEditor.off('change');
-               this._tinyEditor.off('blur');
-               this._tinyEditor.off('focusout');
-               this._tinyEditor.off('focus');
-               this._tinyEditor.off('focusin');
-               this._tinyEditor.off('NodeChange');
-               this._tinyEditor.off('TypingUndo');
-               this._tinyEditor.off('AddUndo');
-               this._tinyEditor.off('ClearUndos');
-               this._tinyEditor.off('redo');
-               this._tinyEditor.off('undo');
-               this._tinyEditor.off('beforeunload');
+               var editor = this._tinyEditor;
+               // Отписаться от всех указанных событий
+               [
+                  'click',
+                  'touchstart',
+                  'dblclick',
+                  'postRender',
+                  'initContentBody',
+                  'onBeforePaste',
+                  'Paste',
+                  'PastePreProcess',
+                  'PastePostProcess',
+                  'mousedown',
+                  'mouseup',
+                  'drop',
+                  'dragstart',
+                  'dragend',
+                  'keyup',
+                  'keydown',
+                  'keypress',
+                  'cut',
+                  'change',
+                  'blur',
+                  'focusout',
+                  'focus',
+                  'focusin',
+                  'NodeChange',
+                  'TypingUndo',
+                  'AddUndo',
+                  'ClearUndos',
+                  'redo',
+                  'undo',
+                  'beforeunload',
 
-               this._tinyEditor.off('scroll');
-               this._tinyEditor.off('mousewheel');
-               this._tinyEditor.off('input');
-               this._tinyEditor.off('resizeEditor');
-               this._tinyEditor.off('scrollIntoView');
-               this._tinyEditor.off('BeforeSetContent');
-               this._tinyEditor.off('PreInit');
-               this._tinyEditor.off('ready');
-               this._tinyEditor.off('resize');
-               this._tinyEditor.off('init');
-
+                  'scroll',
+                  'mousewheel',
+                  'input',
+                  'resizeEditor',
+                  'scrollIntoView',
+                  'BeforeSetContent',
+                  'PreInit',
+                  'ready',
+                  'resize',
+                  'init'
+               ].forEach(editor.off.bind(editor))
             },
 
             destroy: function() {
@@ -1147,17 +1177,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
-             * Установить размер для выделенного текста
-             * @param {Object} size Устанавливаемый размер текста
+             * Установить размер шрифта для выделенного текста
+             * @param {number} size Размер шрифта
+             * @param {boolean} force Устанавить размер даже если он уже такой по наследству
              * @protected
              */
-            _setFontSize: function(size) {
+            _setFontSize: function(size, force) {
                // Это "чистая" реализация, здесь не должно быть НИКАКИХ дополнительных манипуляций с рэнжем, фокусом, фиксацией значения компоненты и так далее!
                var editor = this._tinyEditor;
                if (editor) {
                   //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
                   editor.formatter.remove('fontsize', {value: undefined}, null, true);
-                  if (size) {
+                  if (size && (force || this.getCurrentFormats(['fontsize']).fontsize !== size)) {
                      editor.execCommand('FontSize', false, size + 'px');
                   }
                }
@@ -1279,7 +1310,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         hasOther = formats[name] || hasOther;
                      }
                   }
-                  formatter.apply('forecolor', {value: formats.color});
+                  if (formats.color !== this.getCurrentFormats(['color']).color) {
+                     formatter.apply('forecolor', {value: formats.color});
+                  }
                   if (formats.underline && formats.strikethrough) {
                      this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
@@ -1377,8 +1410,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                   if (typeof smile === 'object') {
-                     this.insertHtml(this._smileHtml(smile));
                      this._tinyLastRng = this._tinyEditor.selection.getRng();
+                     this.insertHtml(this._smileHtml(smile));
                   }
                }
             },
@@ -1437,7 +1470,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
-
                   // Перед применением цитаты сбрасываем вначале прикладные стили
                   // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
                   for (var format in this._options.customFormats) {
@@ -1479,6 +1511,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         if (isChanged) {
                            selection.select(node, true);
                            rng = selection.getRng();
+                        }
+                     }
+                     if (isAlreadyApplied) {
+                        // При снятии цитаты если в ней было видео - нужно не потреть его
+                        // 1175588680 https://online.sbis.ru/opendoc.html?guid=0bdfcbe5-ccf2-434a-9da3-e457743a2a82
+                        var $node = $(node);
+                        var $video = ($node.is('blockquote') ? $node : $node.parent('blockquote')).find('iframe');
+                        if ($video.length) {
+                           var url = $video[0].src;
+                           var videoId = this._getYouTubeVideoId(url);
+                           if (videoId) {
+                              var attr = 'data-ws-video="' + videoId + '"';
+                              $video.before('<span ' + attr + '>temporary</span>').remove();
+                              afterProcess = function () {
+                                 var $video = $(editor.getBody()).find('[' + attr + ']');
+                                 $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                              }.bind(this);
+                           }
                         }
                      }
                   }
@@ -1666,9 +1716,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     var parent = this.getParent();
                                     var href = parent._hrefInput.getValue();
                                     var caption = parent._captionInput.getValue() || href;
-                                    var protocol = /(?:https?|ftp|file):\/\//gi;
-                                    if (href && href.search(protocol) === -1) {
-                                       href = 'http://' + href;
+                                    var reProtocol = /(?:https?|ftp|file):\/\//gi;
+                                    if (href && href.search(reProtocol) === -1) {
+                                       var reEmail = /^\s*[a-z0-9_\-\.]+@[a-z0-9\-]*[a-z0-9\-\.]*[a-z0-9\-]+\.[a-z]+\s*$/i;
+                                       href = (reEmail.test(href) ? 'mailto:' : 'http://') + href;
                                     }
                                     var dom = editor.dom;
                                     var done;
@@ -1698,7 +1749,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           // Для MSIE и FF принудительно смещаем курсор ввода после вставленной ссылки
                                           // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                           // 1175114814 https://online.sbis.ru/opendoc.html?guid=4cef3009-ccbc-4751-b755-dea3d69b82f1
-                                          var appendix = BROWSER.isIE ? '&#65279;&#8203;' : (BROWSER.firefox ? '&#65279;' : '');
+                                          var appendix = BROWSER.isIE ? '&#xFEFF;&#8203;' : (BROWSER.firefox ? '&#xFEFF;' : '');
                                           editor.insertContent(linkHtml + appendix);
                                           if (!appendix) {
                                              selection.select(selection.getNode().querySelector('a'), true);
@@ -1970,6 +2021,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
                if (isDifferent || forced) {
                   this._updateHeight();
+               }
+               if (isDifferent || forced || !text) {
                   this._togglePlaceholder(text);
                }
             },
@@ -2140,30 +2193,29 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._imageOptionsPanel.hide();
                }
             },
-            _onKeyDownCallback: function(e) {
+            _onKeyDownHideImageOptionsPanel: function (e) {
                if (e.ctrlKey && (e.key === 'End' || e.keyCode === 35 || e.key === 'Home' || e.keyCode === 36)) {
                   this._hideImageOptionsPanel();
                }
             },
-            _onKeyUpCallback: function(evt) {
+            _onKeyUpDeleteImage: function (evt) {
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
                if (evt.key === 'Delete' || evt.keyCode === 46) {
                   var imgOptsPanel = this._imageOptionsPanel;
-
                   if (imgOptsPanel && imgOptsPanel.isVisible()) {
-
                      var $img = imgOptsPanel.getTarget();
-
                      if ($img && $img.length) {
-
                         this._markListWithImage($img, false);
                         var selection = this.getTinyEditor().selection;
                         selection.select($img[0]);
                         selection.getRng().deleteContents();
                         imgOptsPanel.hide();
-
                      }
                   }
                }
+            },
+            _onKeyUpSetLastRng: function (evt) {
                this._tinyLastRng = this._tinyEditor.selection.getRng();
             },
             _onMouseUpCallback: function(e) { //в ie криво отрабатывает клик
@@ -2236,11 +2288,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._bindImageEvent('click', this._onClickCallback);
                this._subscribeOnScroll();
 
-               editor.on('keydown', this._onKeyDownCallback);
+               editor.on('keydown', this._onKeyDownHideImageOptionsPanel);
 
-               // При нажатии клавиши Del - удалить изображение, если оно выделено
-               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
-               editor.on('keyup', this._onKeyUpCallback);
+               editor.on('keyup', this._onKeyUpDeleteImage);
+               editor.on('keyup', this._onKeyUpSetLastRng);
 
                this._inputControl.attr('tabindex', 1);
 
@@ -2582,7 +2633,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   evt.preventDefault();
                }
             },
-            _onKeyDownCallback3: function(e) {
+            _onKeyDownCtrlEnterOrEscape: function (e) {
+               //Передаём на контейнер нажатие ctrl+enter и escape
                if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
                   e.stopPropagation();
                }
@@ -2644,12 +2696,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
                            this._selectNewRng(node, index - 1);
                         }
-                        else if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                        else
+                        if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
                            // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
-                           for (; !node.previousSibling && !node.nextSibling; node = node.parentNode) {
+                           // Если только выше не используется формат из списка constants.styles
+                           // 1175787389 https://online.sbis.ru/opendoc.html?guid=cd1de0c8-d0d9-456c-9892-d21fbe520c45
+                           var styles = constants.styles;
+                           var classes = Object.keys(styles).map(function (key) { return styles[key].classes; });
+                           var ancestor = node;
+                           var hasStyle;
+                           for (; !ancestor.previousSibling && !ancestor.nextSibling; ancestor = ancestor.parentNode) {
+                              if (classes.length && classes.indexOf(ancestor.className) !== -1) {
+                                 hasStyle = true;
+                                 break;
+                              }
                            }
-                           if (node.nodeType === 1) {
-                              selection.select(node);
+                           if (!hasStyle) {
+                              if (ancestor.nodeType === 1) {
+                                 selection.select(ancestor);
+                              }
                            }
                         }
                      }
@@ -2671,7 +2736,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
 
-            _onKeyUpCallback1: function(e) {
+            _onKeyUpDontBubbleEnterUpDown: function (e) {
+               //Запрещаем всплытие Enter, Up и Down
                var ctrlKey = e.ctrlKey;
 
                if (e.which === cConstants.key.enter && !ctrlKey && self._ctrlKeyUpTimestamp) {
@@ -2838,65 +2904,72 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
             saveCallbacks: function() {
-               this._sanitizeClasses = this._sanitizeClasses.bind(this);
-               this._onFocusChangedCallbackTimeout = this._onFocusChangedCallbackTimeout.bind(this);
-               this._prepareReviewContent = this._prepareReviewContent.bind(this);
-               this._prepareContent = this._prepareContent.bind(this);
-               this._performByReadyCallback = this._performByReadyCallback.bind(this);
-               this._onCutTimeout = this._onCutTimeout.bind(this);
-               this._sanitizeClassCallback = this._sanitizeClassCallback.bind(this);
-               this._onSetupCallback = this._onSetupCallback.bind(this);
-               this._onInitCallback = this._onInitCallback.bind(this);
-               this._onInitContentBody = this._onInitContentBody.bind(this);
-               this._onBeforePasteCallback = this._onBeforePasteCallback.bind(this);
-               this._onPasteCallback = this._onPasteCallback.bind(this);
-               this._onPastePreProcessCallback = this._onPastePreProcessCallback.bind(this);
-               this._onPastePostProcessCallback = this._onPastePostProcessCallback.bind(this);
-               this._onSelectionChange2 = this._onSelectionChange2.bind(this);
-               this._onSelectionChange1 = this._onSelectionChange1.bind(this);
-               this._on_onSelectionChange2 = this._on_onSelectionChange2.bind(this);
-               this._off_onSelectionChange2 = this._off_onSelectionChange2.bind(this);
-               this._on_onSelectionChange1 = this._on_onSelectionChange1.bind(this);
-               this._onMousedownCallback1 = this._onMousedownCallback1.bind(this);
-               this._onDragStartCallback1FF = this._onDragStartCallback1FF.bind(this);
-               this._onDragEndCallbackFF = this._onDragEndCallbackFF.bind(this);
-               this._onInputCallback = this._onInputCallback.bind(this);
-               this._onKeyDownCallback3 = this._onKeyDownCallback3.bind(this);
-               this._onKeyUpCallback1 = this._onKeyUpCallback1.bind(this);
-               this._onKeyUpCallback2 = this._onKeyUpCallback2.bind(this);
-               this._onKeyDownCallback4 = this._onKeyDownCallback4.bind(this);
-               this._linkEditStart = this._linkEditStart.bind(this);
-               this._linkEditEnd = this._linkEditEnd.bind(this);
-               this._onKeyDownCallback5 = this._onKeyDownCallback5.bind(this);
-               this._onKeyUpCallback3 = this._onKeyUpCallback3.bind(this);
-               this._onKeyDownCallback6 = this._onKeyDownCallback6.bind(this);
-               this._onKeyPressCallback = this._onKeyPressCallback.bind(this);
-               this._onChangeEditorCallback = this._onChangeEditorCallback.bind(this);
-               this._onCut = this._onCut.bind(this);
-               this._onResizeEditorCallback = this._onResizeEditorCallback.bind(this);
-               this._undoCallback = this._undoCallback.bind(this);
-               this._redoCallback = this._redoCallback.bind(this);
-               this._onMouseDownCallback2 = this._onMouseDownCallback2.bind(this);
-               this._onMouseUpCallback2 = this._onMouseUpCallback2.bind(this);
-               this._onFocusOutCallback = this._onFocusOutCallback.bind(this);
-               this._saveBeforeWindowClose = this._saveBeforeWindowClose.bind(this);
-               this._onUNDOMANAGERChange = this._onUNDOMANAGERChange.bind(this);
-               this._onNodeChangeCallback = this._onNodeChangeCallback.bind(this);
-               this._onFocusChangedCallback = this._onFocusChangedCallback.bind(this);
-               this._onFocusOutCallback1 = this._onFocusOutCallback1.bind(this);
-               this._onFocusInCallback1 = this._onFocusInCallback1.bind(this);
-               this._onFocusOutCallback2 = this._onFocusOutCallback2.bind(this);
-               this._onTouchStartCallback1 = this._onTouchStartCallback1.bind(this);
-               this._onScrollIntoViewCallback = this._onScrollIntoViewCallback.bind(this);
-               this._ondblClickCallback = this._ondblClickCallback.bind(this);
-               this._onMouseupTouchstartCallback = this._onMouseupTouchstartCallback.bind(this);
-               this._onMouseDownCallback = this._onMouseDownCallback.bind(this);
-               this._onClickCallback = this._onClickCallback.bind(this);
-               this._hideImageOptionsPanel = this._hideImageOptionsPanel.bind(this);
-               this._onKeyDownCallback = this._onKeyDownCallback.bind(this);
-               this._onKeyUpCallback = this._onKeyUpCallback.bind(this);
-               this._onMouseUpCallback = this._onMouseUpCallback.bind(this);
-               this._tinyReadyCallback0 = this._tinyReadyCallback0.bind(this);
+               // Привязать все указанные методы к текущему контексту
+               var methods = [
+                  '_sanitizeClasses',
+                  '_onFocusChangedCallbackTimeout',
+                  '_prepareReviewContent',
+                  '_prepareContent',
+                  '_performByReadyCallback',
+                  '_onCutTimeout',
+                  '_sanitizeClassCallback',
+                  '_onSetupCallback',
+                  '_onInitCallback',
+                  '_onInitContentBody',
+                  '_onBeforePasteCallback',
+                  '_onPasteCallback',
+                  '_onPastePreProcessCallback',
+                  '_onPastePostProcessCallback',
+                  '_onSelectionChange2',
+                  '_onSelectionChange1',
+                  '_on_onSelectionChange2',
+                  '_off_onSelectionChange2',
+                  '_on_onSelectionChange1',
+                  '_onMousedownCallback1',
+                  '_onDragStartCallback1FF',
+                  '_onDragEndCallbackFF',
+                  '_onInputCallback',
+                  '_onKeyDownCtrlEnterOrEscape',
+                  '_onKeyUpDontBubbleEnterUpDown',
+                  '_onKeyUpCallback2',
+                  '_onKeyDownCallback4',
+                  '_linkEditStart',
+                  '_linkEditEnd',
+                  '_onKeyDownCallback5',
+                  '_onKeyUpCallback3',
+                  '_onKeyDownCallback6',
+                  '_onKeyPressCallback',
+                  '_onChangeEditorCallback',
+                  '_onCut',
+                  '_onResizeEditorCallback',
+                  '_undoCallback',
+                  '_redoCallback',
+                  '_onMouseDownCallback2',
+                  '_onMouseUpCallback2',
+                  '_onFocusOutCallback',
+                  '_saveBeforeWindowClose',
+                  '_onUNDOMANAGERChange',
+                  '_onNodeChangeCallback',
+                  '_onFocusChangedCallback',
+                  '_onFocusOutCallback1',
+                  '_onFocusInCallback1',
+                  '_onFocusOutCallback2',
+                  '_onTouchStartCallback1',
+                  '_onScrollIntoViewCallback',
+                  '_ondblClickCallback',
+                  '_onMouseupTouchstartCallback',
+                  '_onMouseDownCallback',
+                  '_onClickCallback',
+                  '_hideImageOptionsPanel',
+                  '_onKeyDownHideImageOptionsPanel',
+                  '_onKeyUpDeleteImage',
+                  '_onKeyUpSetLastRng',
+                  '_onMouseUpCallback',
+                  '_tinyReadyCallback0'
+               ];
+               for (var i = 0; i < methods.length; i++) {
+                  this[methods[i]] = this[methods[i]].bind(this);
+               }
             },
             _bindEvents: function() {
                var editor = this._tinyEditor;
@@ -2945,11 +3018,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   editor.on('keydown', this._onKeyDownCallback2.bind(this));
                }
 
-               //Передаём на контейнер нажатие ctrl+enter и escape
-               this._container.bind('keydown', this._onKeyDownCallback3);
+               this._container.bind('keydown', this._onKeyDownCtrlEnterOrEscape);
 
-               //Запрещаем всплытие Enter, Up и Down
-               this._container.bind('keyup', this._onKeyUpCallback1);
+               this._container.bind('keyup', this._onKeyUpDontBubbleEnterUpDown);
 
                editor.on('keyup', this._onKeyUpCallback2);
 
@@ -3635,7 +3706,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isEmpty) {
                      var editor = this.getTinyEditor();
                      var $content = editor ? $(editor.getBody()) : this._inputControl;
-                     isEmpty = !$content.text().trim() && !$content.find('img,table').length;
+                     isEmpty = !$content.find('img,table').length && !$content.text();
                   }
                }
                else {
@@ -4114,11 +4185,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                node.innerHTML = html;
                var texts = [];
                var dom = this._tinyEditor.dom;
+               // Регулярное выражение для символа, соответствующему &nbsp;
+               var reNbsp = /\xA0/g;
+               // Регулярное выражение для перевода строк
+               var reRn = /^(?:\r?\n)+$/;
                for (var i = 0, list = node.childNodes; i < list.length; i++) {
                   var e = list[i];
                   var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
+                  if (e.nodeType === 3 && reRn.test(txt)) {
+                     // Если это просто текстовый узел, содержащий только переводы строки - игнорировать его
+                     continue;
+                  }
                   if (txt) {
-                     txt = txt.replace(/\xA0/g, ' ');
+                     txt = txt.replace(reNbsp, ' ');
                      if (texts.length && e.nodeType === 1 && dom.isBlock(e)) {
                         texts.push('\r\n\r\n');
                      }

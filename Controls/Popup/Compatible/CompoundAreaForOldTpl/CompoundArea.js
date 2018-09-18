@@ -86,7 +86,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             }
 
-            //Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
+            // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
             if (this._options.type === 'dialog' || this._options.type === 'stack') {
                this._className += ' controls-CompoundArea-close_button';
             }
@@ -136,7 +136,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _changeMaximizedMode: function(event) {
             event.stopPropagation();
             var state = this.getContainer().hasClass('ws-float-area-maximized-mode');
-            this._notifyVDOM('maximized', [!state], {bubbling: true});
+            this._notifyVDOM('maximized', [!state], { bubbling: true });
          },
 
          rebuildChildControl: function() {
@@ -161,16 +161,17 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
             self._logicParent.waitForPopupCreated = true;
+            self._isPopupCreated = false;
+            self._waitReadyDeferred = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
-               }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
                   runDelayed(function() {
-                     self._logicParent.callbackCreated && self._logicParent.callbackCreated();
-                     self._logicParent.waitForPopupCreated = false;
+                     self._isPopupCreated = true;
+                     if (!self._waitReadyDeferred) { // Если попап создан и отработал getReadyDeferred - начинаем показ
+                        self._callCallbackCreated();
+                     }
                   });
                });
             });
@@ -178,21 +179,38 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return rebuildDeferred;
          },
 
-         //AreaAbstract.js::getReadyDeferred
-         //getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
-         //не завершится деферред
+         // AreaAbstract.js::getReadyDeferred
+         // getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
+         // не завершится деферред
          _getReadyDeferred: function() {
             var self = this;
             if (this._childControl.getReadyDeferred) {
                var def = this._childControl.getReadyDeferred();
                if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
-                  self._toggleVisible(false);
                   def.addCallback(function() {
+                     self._waitReadyDeferred = false;
+                     if (self._isPopupCreated) { // Если попап создан и отработал getReadyDeferred - начинаем показ
+                        self._callCallbackCreated();
+                     }
                      self._notifyVDOM('controlResize', [], { bubbling: true });
-                     self._toggleVisible(true);
                   });
+               } else {
+                  self._waitReadyDeferred = false;
                }
+            } else {
+               self._waitReadyDeferred = false;
             }
+         },
+
+         _callCallbackCreated: function() {
+            this._logicParent.callbackCreated && this._logicParent.callbackCreated();
+            this._logicParent.waitForPopupCreated = false;
+            var self = this;
+            runDelayed(function() {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
+                  self._childControl.setActive(true);
+               }
+            });
          },
 
          _afterMount: function(cfg) {
@@ -270,27 +288,38 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
             if (this._options.draggable) {
-
-               //Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
-               //mousedown на ней и проксируем его на dialogTemplate.
+               // Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
+               // mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
          },
 
          _getCustomHeaderContainer: function() {
-            var child = this._childControl.getContainer().children();
-            var header = [];
+            var customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
 
-            //Ищем кастомную шапку только на первом уровне вложенности шаблона.
-            //Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
-            //На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
-            child.each(function(index, elem) {
-               if (elem.className.indexOf('ws-window-titlebar-custom') > -1) {
-                  header = $(elem);
+            // Ищем кастомную шапку только на первом уровне вложенности шаблона.
+            // Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
+            // На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
+            if (customHeader.length) {
+               var nesting = 0;
+               var parent;
+               for (var i = 0; i < customHeader.length; i++) {
+                  parent = customHeader[i];
+
+                  // Ищем класс с кастомным заголовком, с вложенностью не более 5. 5 вычислено эмпирическим путем
+                  // Старая панель так умела
+                  while (parent !== this._childControl._container[0] && nesting < 5) {
+                     parent = parent.parentElement;
+                     nesting++;
+                  }
+                  if (nesting < 5) {
+                     return $(customHeader[i]);
+                  }
                }
-            });
-            return header;
+            }
+
+            return [];
          },
 
          _headerMouseDown: function(event) {
@@ -360,7 +389,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
          _mouseleaveHandler: function(event) {
-            //Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
+            // Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
             if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
                var _this = this;
 
@@ -370,7 +399,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         //По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
+         // По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
          _isLinkedPanel: function(event) {
             var target = $(event.nativeEvent.relatedTarget);
             var compoundArea = target.closest('.controls-CompoundArea');
@@ -387,7 +416,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return this._checkLink(opener);
          },
 
-         //TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
+         // TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
          _checkLink: function(opener) {
             while (opener && opener._moduleName !== this._moduleName) {
                opener = opener.getParent && opener.getParent();
@@ -410,6 +439,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 

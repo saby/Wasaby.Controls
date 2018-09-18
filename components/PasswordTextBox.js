@@ -70,7 +70,10 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
          this._passwordIcon.attr('title', this._options.type === 'password' ? rk('Показать') : rk('Скрыть'));
          this._passwordIcon.toggleClass('icon-Show', this._options.type === 'password');
          this._passwordIcon.toggleClass('icon-Hide', this._options.type === 'text');
-      }
+      },
+   
+      // Заглушка, у поля пароля не должна показываться подсказка
+      _applyTooltip: function() {}
    });
 
    return PasswordTextBox;

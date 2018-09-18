@@ -1,0 +1,6 @@
+<Controls.Button.MenuButton name="myMenuButton2"
+                            keyProperty="id"
+                            style="linkMain"
+                            caption="{{_menuCaption}}"
+                            on:onMenuItemActivate="_onMenuItemActivate()"
+                            source="{{_menuSource}}"/>
