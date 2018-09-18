@@ -48,7 +48,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "",
+                defaultValue: "4.13/feature/bls/new_locator_btn_more",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -56,7 +56,7 @@ node('controls') {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: true, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
@@ -508,6 +508,8 @@ node('controls') {
                             [regression]
                             IMAGE_DIR = capture
                             RUN_REGRESSION=True
+							[filestostart]
+							test_vdom_list_tree.py
                             """
                     }
 
