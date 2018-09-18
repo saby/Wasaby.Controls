@@ -107,9 +107,9 @@ define('Controls/Input/interface/IInputText', [
 
    /**
     * @name Controls/Input/interface/IInputText#style
-    * @cfg {String}
+    * @cfg {String} Display style of the field.
     * @variant default
-    * @variant error
+    * @variant danger
     * @default Default
     * @remark Depending on the option's value, different styles are applied to the field. This option is used by validation controller to mark input as invalid.
     * @example
