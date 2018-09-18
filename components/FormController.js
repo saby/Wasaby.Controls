@@ -952,6 +952,9 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
+         this._onBeforeUnloadHandler = null;
+         this._onAfterShowHandler = null;
+         this._onBeforeNavigateHandler = null;
          this._resetUrl();
          this._unsubscribeFromRecordChange();
          FormController.superclass.destroy.apply(this, arguments);

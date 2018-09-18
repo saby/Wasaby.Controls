@@ -263,6 +263,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
+         
+         _beforeUnmount: function() {
+            this.__parentFromCfg = null;
+            this.__openerFromCfg = null;
+            this._parent = null;
+            this._logicParent = null;
+         },
 
          isOpened: function() {
             return true;
