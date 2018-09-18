@@ -703,6 +703,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var sheets = options.sheets;
                   if (sheets && sheets.length) {
                      var results = {};
+                     var columnBindingMapping = options.columnBindingMapping;
                      for (var i = 0; i < sheets.length; i++) {
                         var sheet = sheets[i];
                         var parserName = sheet.parser;
@@ -713,7 +714,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName),
-                           columnBinding: {mapping:options.columnBindingMapping[i] || {}, skippedRows:skippedRows}
+                           columnBinding: {mapping:columnBindingMapping ? columnBindingMapping[i] || {} : {}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -938,7 +939,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var views = this._views;
             //this._setSubviewValues('baseParams', {fields:fields});
             var sheetIndex = options.sheetIndex;
-            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] || {}});
+            var columnBindingMapping = options.columnBindingMapping;
+            this._setSubviewValues('columnBinding', {fields:fields, mapping:columnBindingMapping ? columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] || {} : {}});
             this._setSubviewValues('mapper', {fields:fields});
          },
 
