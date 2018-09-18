@@ -33,15 +33,16 @@ var rawCover = fs.readFileSync(coveragePath, 'utf8'),
     transformer = instrumenter.instrumentSync.bind(instrumenter);
 
 allFiles.forEach(function (name) {
-    if (!cover[name]) {
+    var coverName = name.replace(componentsPath, '').replace(controlsPath, '').slice(1);
+    if (!cover[coverName]) {
         var rawFile = fs.readFileSync(name, 'utf-8');
         transformer(rawFile, name);
         var coverState = instrumenter.lastFileCoverage();
         Object.keys(coverState.s).forEach(function (key) {
            coverState.s[key] = 0;
         });
-        cover[name] = coverState;
-        console.log('File ' + name.replace(__dirname, '').slice(1) + ' not using in tests')
+        cover[coverName] = coverState;
+        console.log('File ' + coverName + ' not using in tests')
     }
 });
 
