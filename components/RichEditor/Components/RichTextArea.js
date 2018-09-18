@@ -342,6 +342,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
                   options.text = options.__savedHtmlJson.render();
+
+                  // Костыль для отображения плейсхолдера при пустом json.
+                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  if (options.text === '<span></span>') {
+                     options.text = '';
+                  }
                }
 
                if (options.singleLine) {
@@ -682,6 +690,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
+            getText: function () {
+               var text = RichTextArea.superclass.getText.apply(this, arguments);
+               // Не выпускаем наружу символы с \00 по \x08, т.к. при дальнейшем использовании (наприменр при серверной вёрстке) от них могут быть проблемы
+               return text.replace(/[\x00-\x08]/g, function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
+            },
+
             /**
              * Устанавливает текстовое значение внутри поля ввода.
              * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
@@ -709,7 +723,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
-               this.setText(this._htmlJson.render());
+
+               // Костыль для отображения плейсхолдера при пустом json.
+               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+               var text = this._htmlJson.render();
+               if (text === '<span></span>') {
+                  text = '';
+               }
+               this.setText(text);
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -1387,8 +1410,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                   if (typeof smile === 'object') {
-                     this.insertHtml(this._smileHtml(smile));
                      this._tinyLastRng = this._tinyEditor.selection.getRng();
+                     this.insertHtml(this._smileHtml(smile));
                   }
                }
             },
@@ -4162,11 +4185,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                node.innerHTML = html;
                var texts = [];
                var dom = this._tinyEditor.dom;
+               // Регулярное выражение для символа, соответствующему &nbsp;
+               var reNbsp = /\xA0/g;
+               // Регулярное выражение для перевода строк
+               var reRn = /^(?:\r?\n)+$/;
                for (var i = 0, list = node.childNodes; i < list.length; i++) {
                   var e = list[i];
                   var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
+                  if (e.nodeType === 3 && reRn.test(txt)) {
+                     // Если это просто текстовый узел, содержащий только переводы строки - игнорировать его
+                     continue;
+                  }
                   if (txt) {
-                     txt = txt.replace(/\xA0/g, ' ');
+                     txt = txt.replace(reNbsp, ' ');
                      if (texts.length && e.nodeType === 1 && dom.isBlock(e)) {
                         texts.push('\r\n\r\n');
                      }

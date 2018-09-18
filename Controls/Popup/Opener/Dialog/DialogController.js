@@ -6,7 +6,8 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
-            item.position = DialogStrategy.getPosition(window.innerWidth, window.innerHeight, sizes, item);
+            // Positioning relative to body
+            item.position = DialogStrategy.getPosition(document.body.clientWidth, document.body.clientHeight, sizes, item);
             _private.fixCompatiblePosition(item);
          },
          fixCompatiblePosition: function(cfg) {
