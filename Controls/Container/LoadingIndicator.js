@@ -5,8 +5,6 @@ define('Controls/Container/LoadingIndicator', [
 ], function(Control, tmpl) {
    'use strict';
 
-   var DEFAULT_DELAY = 2000;
-
    var module = Control.extend({
       _template: tmpl,
       isLoading: false,
@@ -33,7 +31,7 @@ define('Controls/Container/LoadingIndicator', [
                   self.useSpinner = useSpinner;
                   self._forceUpdate();
                }
-            }, cfg.delay || DEFAULT_DELAY);
+            }, cfg.delay);
          }
          this._prevLoading = this.isLoading;
       },
@@ -71,6 +69,12 @@ define('Controls/Container/LoadingIndicator', [
          e.stopPropagation();
       }
    });
+
+   module.getDefaultOptions = function() {
+      return {
+         delay: 2000
+      };
+   };
 
    return module;
 });
