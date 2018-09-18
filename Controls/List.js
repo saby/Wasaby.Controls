@@ -5,11 +5,13 @@ define('Controls/List', [
    'Core/Control',
    'wml!Controls/List/List',
    'Controls/List/ListViewModel',
+   'Core/Deferred',
    'Controls/List/ListView',
    'Controls/List/ListControl'
 ], function(Control,
    ListControlTpl,
-   ListViewModel
+   ListViewModel,
+   Deferred
 ) {
    'use strict';
 
@@ -75,7 +77,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       editItem: function(options) {
-         return this._children.listControl.editItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.editItem(options);
       },
 
       /**
@@ -84,7 +86,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       addItem: function(options) {
-         return this._children.listControl.addItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.addItem(options);
       },
 
       /**
@@ -92,9 +94,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         if (!this._options.readOnly) {
-            return this._children.listControl.cancelEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.cancelEdit();
       },
 
       /**
@@ -102,9 +102,7 @@ define('Controls/List', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         if (!this._options.readOnly) {
-            return this._children.listControl.commitEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.commitEdit();
       },
 
       _onBeforeItemAdd: function(e, options) {
