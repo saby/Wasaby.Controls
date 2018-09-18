@@ -1639,8 +1639,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   fre = this,
                   context = cContext.createContext(this),
                   dialogWidth = 440;
-               require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString',
-                  'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
+               require(['Lib/Control/Dialog/Dialog', 'SBIS3.CONTROLS/TextBox',
+                  'SBIS3.CONTROLS/Button'], function(Dialog, TextBox, Button) {
                   new Dialog({
                      title: rk('Web-ссылка'),
                      disableActions: true,
@@ -1675,16 +1675,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               .append(hrefInput)
                               .append(captionLabel)
                               .append(captionInput);
-                           //TODO: перевечсти поле ввода на SBIS3.CONTROLS.TextBoxтк в нём нет доскрола при активации
-                           this._hrefInput = new FieldString({
-                              value: origHref,
+                           this._hrefInput = new TextBox({
+                              text: origHref,
                               parent: this,
                               element: hrefInput,
                               linkedContext: context,
                               name: 'RichEditor__InsertLink__href'
                            });
-                           this._captionInput = new FieldString({
-                              value: origCaption,
+                           this._captionInput = new TextBox({
+                              text: origCaption,
                               parent: this,
                               element: captionInput,
                               linkedContext: context,
