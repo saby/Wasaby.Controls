@@ -97,13 +97,18 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
           _onProjectionChangeAdd: function(newItems) {
              var
                 itemId,
+                contents,
                 addSelection = [],
                 selection = this._selection.getSelection();
              if (selection.markedAll) {
                 newItems.forEach(function(item) {
-                   itemId = item.getContents().get(this._options.idProperty);
-                   if (!ArraySimpleValuesUtil.hasInArray(selection.excluded, itemId)) {
-                      addSelection.push(itemId);
+                   contents = item.getContents();
+                   //Проверка на элементы проекции GroupItem
+                   if (contents.get) {
+                      itemId = contents.get(this._options.idProperty);
+                      if (!ArraySimpleValuesUtil.hasInArray(selection.excluded, itemId)) {
+                         addSelection.push(itemId);
+                      }
                    }
                 }, this);
                 if (addSelection.length) {
