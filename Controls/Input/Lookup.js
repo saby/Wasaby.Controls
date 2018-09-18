@@ -8,9 +8,11 @@ define('Controls/Input/Lookup', [
    'Core/core-clone',
    'Core/Deferred',
    'Core/core-merge',
+   'wml!Controls/Input/Lookup/CollectionItem',
+   'Controls/Utils/getWidth',
    'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, collectionItem, getWidthUtil) {
    
    'use strict';
 
@@ -124,6 +126,14 @@ define('Controls/Input/Lookup', [
          if (!self._isEmpty) {
             self._suggestState = false;
          }
+      },
+
+      getCollectionSlice: function(self, startIndex, endIndex) {
+         var newCollection = self._items.clone();
+
+         newCollection._$items = self._items._$items.slice(startIndex, endIndex);
+
+         return newCollection;
       }
    };
 
@@ -143,6 +153,7 @@ define('Controls/Input/Lookup', [
       _needSetFocusInInput: false,
 
       _beforeMount: function(options) {
+         this._onClosePickerBind = this._onClosePicker.bind(this);
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
@@ -194,7 +205,31 @@ define('Controls/Input/Lookup', [
 
          if (!this._collectionIsReady) {
             this._alignSelectedCollection();
+            this._forceUpdate();
          }
+      },
+
+      _togglePicker: function(state) {
+         state = typeof state === 'boolean' ? state : !this._isPickerVisible;
+
+         if (state) {
+            this._isPickerVisible = true;
+            this._suggestState = false;
+            this._children.sticky.open({
+               target: this._container,
+               opener: this._children.layout,
+               templateOptions: {
+                  collectionWidth: this._container.offsetWidth
+               }
+            });
+         } else {
+            this._children.sticky.close();
+         }
+      },
+
+      _onClosePicker: function() {
+         this._isPickerVisible = false;
+         this._forceUpdate();
       },
 
       _getInputMinWidth: function() {
@@ -208,28 +243,32 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
+      _getItemWidth: function(indexItem) {
+         return getWidthUtil.getWidth(collectionItem({
+            _options: this._children.collection._options,
+            item: this._items.at(indexItem),
+            index: indexItem,
+            itemsCount: this._items.getCount()
+         }));
+      },
+
       _alignSelectedCollection: function() {
          var
             itemsWidth = 0,
-            containerHiddenCollection,
+            displayItems = 0,
             container = $(this._container),
-            displayItems = 0, itemsCount = 0,
-            items, availableWidth, additionalWidth, itemWidth, item;
+            itemsCount = this._items.getCount(),
+            additionalWidth = 0, availableWidth, itemWidth;
 
          if (this._selectedKeys.length) {
             if (!this._options.readOnly) {
                additionalWidth = this._getInputMinWidth() + $(this._children.showSelector).outerWidth();
             }
 
-            containerHiddenCollection = $(this._children.hiddenCollection._container);
-            items = containerHiddenCollection.find('.controls-Lookup__item');
-            itemsCount = items.length;
             additionalWidth += parseInt(container.css('border-left-width')) * 2;
-
-            /* Высчитываем ширину, доступную для элементов */
             availableWidth = $(this._children.inputRender._container).width() - additionalWidth;
 
-            if (itemsCount === 1 || containerHiddenCollection.outerWidth() <= availableWidth) {
+            if (itemsCount === 1) {
                displayItems = itemsCount;
             } else {
                /* Учтем ширину кнопки, показывающей все записи */
@@ -237,8 +276,7 @@ define('Controls/Input/Lookup', [
 
                /* Считаем, сколько элементов может отобразиться */
                for (var i = itemsCount - 1; i >= 0; i--) {
-                  item = items[i];
-                  itemWidth = Math.ceil(item.getBoundingClientRect().width);
+                  itemWidth = this._getItemWidth(i);
 
                   if ((itemsWidth + itemWidth) > availableWidth) {
                      /* Если ни один элемент не влезает, то отобразим только последний выбранный */
@@ -256,8 +294,7 @@ define('Controls/Input/Lookup', [
          this._collectionIsReady = true;
          this._availableWidthCollection = availableWidth;
          this._isAllRecordsDisplay = displayItems >= itemsCount;
-         this._visibleCollection = this._items.clone();
-         this._visibleCollection._$items = this._items._$items.slice(itemsCount - displayItems);
+         this._visibleCollection = _private.getCollectionSlice(this, itemsCount - displayItems);
       },
 
       _beforeUnmount: function() {
@@ -267,6 +304,7 @@ define('Controls/Input/Lookup', [
 
       _changeValueHandler: function(event, value) {
          _private.notifyValue(this, value);
+         this._togglePicker(false);
       },
 
       _choose: function(event, item) {
@@ -283,10 +321,21 @@ define('Controls/Input/Lookup', [
 
          /* move focus to input after remove, because focus will be lost after removing dom element  */
          this._needSetFocusInInput = true;
+
+         if (!this._selectedKeys.length) {
+            this._togglePicker(false);
+         }
       },
 
       _deactivated: function() {
          this._suggestState = false;
+         this._togglePicker(false);
+      },
+
+      _suggestStateChanged: function() {
+         if (this._isPickerVisible) {
+            this._suggestState = false;
+         }
       },
    
       _showSelector: function() {
@@ -308,13 +357,11 @@ define('Controls/Input/Lookup', [
          _private.getItems(this).assign(result);
          this._forceUpdate();
       }
-
    });
 
    Lookup.getDefaultOptions = function() {
       return {
-         selectedKeys: [],
-         multiSelect: false
+         selectedKeys: []
       };
    };
 
