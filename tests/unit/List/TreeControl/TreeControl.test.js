@@ -155,6 +155,7 @@ define([
             };
             var result = treeControl.editItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('editItem, readOnly: true', function() {
@@ -166,6 +167,7 @@ define([
             treeControl.saveOptions({ readOnly: true });
             var result = treeControl.editItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('addItem', function() {
@@ -184,6 +186,7 @@ define([
             };
             var result = treeControl.addItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('addItem, readOnly: true', function() {
@@ -195,6 +198,7 @@ define([
             treeControl.saveOptions({ readOnly: true });
             var result = treeControl.addItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
          it('cancelEdit', function() {
             var
@@ -208,6 +212,7 @@ define([
             };
             var result = treeControl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('cancelEdit, readOnly: true', function() {
@@ -216,6 +221,7 @@ define([
             treeControl.saveOptions({ readOnly: true });
             var result = treeControl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('commitEdit', function() {
@@ -230,6 +236,7 @@ define([
             };
             var result = treeControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('commitEdit, readOnly: true', function() {
@@ -238,6 +245,7 @@ define([
             treeControl.saveOptions({ readOnly: true });
             var result = treeControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
       });
       it('TreeControl._onNodeRemoved', function() {

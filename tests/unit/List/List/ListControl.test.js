@@ -25,6 +25,7 @@ define([
             };
             var result = listControl.editItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('editItem, readOnly: true', function() {
@@ -36,6 +37,7 @@ define([
             listControl.saveOptions({ readOnly: true });
             var result = listControl.editItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('addItem', function() {
@@ -54,6 +56,7 @@ define([
             };
             var result = listControl.addItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('addItem, readOnly: true', function() {
@@ -65,6 +68,7 @@ define([
             listControl.saveOptions({ readOnly: true });
             var result = listControl.addItem(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('cancelEdit', function() {
@@ -79,6 +83,7 @@ define([
             };
             var result = listControl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('cancelEdit, readOnly: true', function() {
@@ -87,6 +92,7 @@ define([
             listControl.saveOptions({ readOnly: true });
             var result = listControl.cancelEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
 
          it('commitEdit', function() {
@@ -101,6 +107,7 @@ define([
             };
             var result = listControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
          it('commitEdit, readOnly: true', function() {
@@ -109,6 +116,7 @@ define([
             listControl.saveOptions({ readOnly: true });
             var result = listControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
       });
    });

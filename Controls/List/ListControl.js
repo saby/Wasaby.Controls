@@ -35,10 +35,10 @@ define('Controls/List/ListControl', [
          this._children.baseControl.reload();
       },
       editItem: function(options) {
-         return this._options.readOnly ? Deferred.success() : this._children.baseControl.editItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.editItem(options);
       },
       addItem: function(options) {
-         return this._options.readOnly ? Deferred.success() : this._children.baseControl.addItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.addItem(options);
       },
 
       /**
@@ -46,7 +46,7 @@ define('Controls/List/ListControl', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         return this._options.readOnly ? Deferred.success() : this._children.baseControl.cancelEdit();
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.cancelEdit();
       },
 
       /**
@@ -54,7 +54,7 @@ define('Controls/List/ListControl', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         return this._options.readOnly ? Deferred.success() : this._children.baseControl.commitEdit();
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
       },
       _onCheckBoxClick: function(e, key, status) {
          var newSelectedKeys = this._options.selectedKeys.slice();
