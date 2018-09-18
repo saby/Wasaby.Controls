@@ -165,9 +165,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waitReadyDeferred = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
-               }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
                   runDelayed(function() {
@@ -208,6 +205,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _callCallbackCreated: function() {
             this._logicParent.callbackCreated && this._logicParent.callbackCreated();
             this._logicParent.waitForPopupCreated = false;
+            var self = this;
+            runDelayed(function() {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
+                  self._childControl.setActive(true);
+               }
+            });
          },
 
          _afterMount: function(cfg) {
@@ -435,6 +438,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 
