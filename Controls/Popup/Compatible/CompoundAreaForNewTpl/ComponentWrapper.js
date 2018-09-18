@@ -11,10 +11,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
          this._onResultHandler = cfg._onResultHandler;
          this._onRegisterHandler = cfg._onRegisterHandler;
       },
-      _beforeMount: function (cfg) {
+      _beforeMount: function(cfg) {
          this._fillCallbacks(cfg);
       },
-      _beforeUpdate: function (cfg) {
+      _beforeUpdate: function(cfg) {
          this._fillCallbacks(cfg);
       }
    });
