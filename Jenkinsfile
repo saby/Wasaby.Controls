@@ -15,7 +15,6 @@ def gitlabStatusUpdate() {
 def exception(err, reason) {
     currentBuild.displayName = "#${env.BUILD_NUMBER} ${reason}"
     error(err)
-
 }
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
@@ -58,10 +57,10 @@ node('controls') {
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST'),
-            booleanParam(defaultValue: false, description: "Запуск всех интеграционных тестов", name: 'run_all_int')
+            booleanParam(defaultValue: true, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
     ])
@@ -69,12 +68,14 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def all_inte = params.run_all_int
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
-        def only_fail = params.RUN_ONLY_FAIL_TEST
+        def skip = params.skip
+        def only_fail = params.run_only_fail_test
         def changed_files
+        def skip_tests_int = ""
+        def skip_tests_reg = ""
 
         try {
         echo "Чистим рабочую директорию"
@@ -107,9 +108,6 @@ node('controls') {
             regr = true
             unit = true
         }
-        if ( inte ) {
-            all_inte = false
-        }
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -138,11 +136,13 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
-                        echo "Изменения были в файлах: ${changed_files}"
-
+                        if ( changed_files ) {
+                            echo "Изменения были в файлах: ${changed_files}"
+                        }
                     }
+
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || all_inte || unit || inte || only_fail )) {
+                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
                         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
                     }
                     parallel (
@@ -235,7 +235,7 @@ node('controls') {
         if ( only_fail ) {
             run_test_fail = "-sf"
             // если галки не отмечены, сами определим какие тесты перезапустить
-            if ( !inte && !regr && !all_inte ) {
+            if ( !inte && !regr ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
                 for ( type in ["int", "reg"] ) {
@@ -340,7 +340,7 @@ node('controls') {
             }
             echo items
         }
-        if ( all_inte || regr || inte) {
+        if ( regr || inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -444,7 +444,7 @@ node('controls') {
                 }
             },
             int_reg: {
-                    if ( all_inte || regr || inte) {
+                    if ( regr || inte) {
                         def soft_restart = "True"
                         if ( params.browser_type in ['ie', 'edge'] ){
                             soft_restart = "False"
@@ -531,7 +531,7 @@ node('controls') {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
                     def tests_for_run = ""
-                    if ( inte && !only_fail ) {
+                    if ( inte && !only_fail && changed_files ) {
                         dir("./controls/tests") {
                             echo "Выкачиваем файл с зависимостями"
                             url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
@@ -557,15 +557,20 @@ node('controls') {
                             }
                         }
                     }
+
+                    if ( skip ) {
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-chrome) ${version} controls'"
+                    }
                     parallel (
                         int_test: {
                             stage("Инт.тесты"){
-                                if ( all_inte || inte ){
+                                if ( inte ){
                                     echo "Запускаем интеграционные тесты"
                                     dir("./controls/tests/int"){
                                         sh """
                                         source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                         deactivate
                                         """
                                     }
@@ -581,7 +586,7 @@ node('controls') {
                                     dir("./controls/tests/reg"){
                                         sh """
                                             source /home/sbis/venv_for_test/bin/activate
-                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                             deactivate
                                         """
                                     }
@@ -606,7 +611,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || all_inte || inte){
+    if ( regr || inte){
         dir(workspace){
             sh """
             7za a log_jinnee -t7z ${workspace}/jinnee/logs

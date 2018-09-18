@@ -52,12 +52,6 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
-               //pre scroll loading
-               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (self._mounted && !list.getCount()) {
-                  self._notify('checkScroll', [], {bubbling: true});
-               }
-
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
@@ -87,16 +81,14 @@ define('Controls/List/BaseControl', [
 
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
-                  self._virtualScroll.appendItems(addedItems.getCount());
+
+                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
+                  // self._virtualScroll.appendItems(addedItems.getCount());
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
-                  self._virtualScroll.prependItems(addedItems.getCount());
-               }
 
-               //pre scroll loading
-               //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-               if (self._mounted && !addedItems.getCount()) {
-                  self._notify('checkScroll', [], {bubbling: true});
+                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
+                  // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
                return addedItems;
@@ -133,6 +125,26 @@ define('Controls/List/BaseControl', [
             }
          }
          return error;
+      },
+
+      viewResize: function(self) {
+         if (self._needScrollCalculation) {
+            if (self._scrollLoadStarted['up']) {
+               _private.onScrollLoadEdge(self, 'up');
+            }
+            if (self._scrollLoadStarted['down']) {
+               _private.onScrollLoadEdge(self, 'down');
+            }
+         }
+      },
+
+      onScrollLoadEdgeStart: function(self, direction) {
+         self._scrollLoadStarted[direction] = true;
+         _private.onScrollLoadEdge(self, direction);
+      },
+
+      onScrollLoadEdgeStop: function(self, direction) {
+         self._scrollLoadStarted[direction] = false;
       },
 
       onScrollLoadEdge: function(self, direction) {
@@ -397,6 +409,7 @@ define('Controls/List/BaseControl', [
       _itemTemplate: null,
 
       _needScrollCalculation: false,
+      _scrollLoadStarted: null,
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
@@ -416,6 +429,13 @@ define('Controls/List/BaseControl', [
          });
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
+
+         if (this._needScrollCalculation) {
+            this._scrollLoadStarted = {
+               up: false,
+               down: false
+            };
+         }
 
          /* Load more data after reaching end or start of the list.
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
@@ -507,6 +527,7 @@ define('Controls/List/BaseControl', [
          if (this._listViewModel) {
             this._listViewModel.destroy();
          }
+         this._scrollLoadStarted = null;
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
@@ -530,8 +551,10 @@ define('Controls/List/BaseControl', [
       __onEmitScroll: function(e, type, params) {
          var self = this;
          switch (type) {
-            case 'loadTop': _private.onScrollLoadEdge(self, 'up'); break;
-            case 'loadBottom': _private.onScrollLoadEdge(self, 'down'); break;
+            case 'loadTopStart': _private.onScrollLoadEdgeStart(self, 'up'); break;
+            case 'loadTopStop': _private.onScrollLoadEdgeStop(self, 'up'); break;
+            case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
+            case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
             case 'listTop': _private.onScrollListEdge(self, 'up'); break;
             case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
@@ -594,6 +617,10 @@ define('Controls/List/BaseControl', [
          }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
+      },
+
+      _viewResize: function() {
+         _private.viewResize(this);
       },
 
       /**
