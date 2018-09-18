@@ -9,7 +9,7 @@
 @color-Grid-row-separator-boundary: #EAEAEA;
 @color-Grid-row-separator: #F5F5F5;
 
-@min-height_Grid-row: 24px;
+@min-height_Grid-row: 31px;
 @background-color_Grid-row_hover: #F0F5FB;
 
 @background-color_Grid-sticky-row: #ffffff;
@@ -111,6 +111,8 @@
    // http://css-live.ru/articles/chto-mozhet-polomat-maket-na-gridax-css-grid-layout.html
    min-width: 0;
    font-size: @font-size_Grid-row-cell;
+   height: 100%;
+   box-sizing: border-box;
 }
 
 .controls-Grid__header-cell_halign_left {

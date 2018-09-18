@@ -46,7 +46,7 @@ define('SBIS3.CONTROLS/SwitchableArea', [
                }
             }
             for (i = 0, l = items.length; i < l; i++){
-               this.addArea(items[i].id, items[i].content, items[i].template, items[i].componentOptions);
+               this.addArea(items[i].id, items[i].content, items[i].template, items[i].componentOptions, items[i]);
             }
             tabControl._setActiveArea(tabControl.getSelectedKey()); //После новой установки итемов - делаем активной уже выбранную вкладку
          }
