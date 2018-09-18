@@ -232,7 +232,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                if (!options.fileUuid) {
-                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false, true]}, {method:'open', args:[useApp, true]}]);
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false, true]}, {method:'open', args:[useApp]}]);
                }
                else {
                   this._callFormatterOpen(useApp);
@@ -528,23 +528,29 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
          _updatePreviewStart: function () {
             this._waitIndicatorStart();
-            var options = this._options;
             this._callFormatterGetPreviewUrl().addCallbacks(
-               function (url) {
-                  var cache = new Image();
-                  cache.onload = cache.onerror = function () {
-                     var img = this._preview[0];
-                     img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
-                     img.src = url;
-                     img.width = PREVIEW_SCALE*cache.width;
-                     img.title = options.previewTitle;
-                     this._preview.removeClass('ws-disabled').addClass('ws-enabled');
-                  }.bind(this);
-                  cache.onerror = this._updatePreviewClearStop.bind(this);
-                  cache.src = url;
-               }.bind(this),
+               this._updatePreviewStartOnUrl.bind(this),
                this._updatePreviewClearStop.bind(this)
             );
+         },
+         _updatePreviewStartOnUrl: function (url) {
+            var cache = new Image();
+            cache.onload = cache.onerror = this._updatePreviewStartOnImgGet.bind(this, cache);
+            cache.onerror = this._updatePreviewClearStop.bind(this);
+            cache.src = url;
+         },
+         _updatePreviewStartOnImgGet: function (cache) {
+            var img = this._preview[0];
+            img.onload = img.onerror = this._updatePreviewStartOnImgComplete.bind(this);
+            img.src = cache.src;
+            img.width = PREVIEW_SCALE*cache.width;
+            img.title = this._options.previewTitle;
+            this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+         },
+         _updatePreviewStartOnImgComplete: function () {
+            this._updatePreviewClearStop();
+            var img = this._preview[0];
+            img.onload = img.onerror = null;
          },
 
          /**
@@ -600,7 +606,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   args.fileUuid = options.primaryUuid;
                   args.title = historyInfo.title;
                }
-               this._exportFormatter.commit(args, options.serviceParams);
+               this._exportFormatter.commit(args, options.serviceParams).addCallback(this._updatePreview.bind(this));
                result = saving && saving.isClone ? fileUuid : options.primaryUuid || fileUuid;
                /*if (fileUuid && !(saving && saving.isClone)) {
                   var deleteUuid = options.primaryUuid;
@@ -613,7 +619,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             else {
                if (fileUuid) {
-                  this._callFormatterDelete(fileUuid);
+                  this._callFormatterDelete(fileUuid).addCallback(this._updatePreview.bind(this));
                }
                result = options.primaryUuid;
             }
