@@ -1170,7 +1170,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          _prepareAdditionalFilterForCursor: function(parentFn, filter, direction) {
             var
                position = [],
-               nodeId = filter[this._options.parentProperty];
+               nodeId = filter[this._options.parentProperty],
+               fields = this._options.navigation.config.field instanceof Array ? this._options.navigation.config.field : [this._options.navigation.config.field];
             if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
                !(nodeId === null && typeof this.getCurrentRoot() === 'undefined')) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
@@ -1178,7 +1179,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                } else {
                   position.push(null);
                }
-               return CursorListNavigationUtils.getNavigationParams([this._options.navigation.config.field], position, this._options.navigation.config.direction);
+               return CursorListNavigationUtils.getNavigationParams(fields, position, this._options.navigation.config.direction);
             } else {
                return parentFn.call(this, filter, direction);
             }
