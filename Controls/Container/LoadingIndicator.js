@@ -33,7 +33,7 @@ define('Controls/Container/LoadingIndicator', [
                   self.useSpinner = useSpinner;
                   self._forceUpdate();
                }
-            }, DEFAULT_DELAY);
+            }, cfg.delay || DEFAULT_DELAY);
          }
          this._prevLoading = this.isLoading;
       },
