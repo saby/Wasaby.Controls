@@ -309,7 +309,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
 
          //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay, .ws-OperationsPanel__wrapper');
          return !!infoBox.length;
       },
 
