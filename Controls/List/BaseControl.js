@@ -629,9 +629,7 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       editItem: function(options) {
-         if (!this._options.readOnly) {
-            return this._children.editInPlace.editItem(options);
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.editItem(options);
       },
 
       /**
@@ -640,9 +638,7 @@ define('Controls/List/BaseControl', [
       * @returns {Core/Deferred}
       */
       addItem: function(options) {
-         if (!this._options.readOnly) {
-            return this._children.editInPlace.addItem(options);
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.addItem(options);
       },
 
       /**
@@ -650,9 +646,7 @@ define('Controls/List/BaseControl', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         if (!this._options.readOnly) {
-            return this._children.editInPlace.cancelEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.cancelEdit();
       },
 
       /**
@@ -660,9 +654,7 @@ define('Controls/List/BaseControl', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         if (!this._options.readOnly) {
-            return this._children.editInPlace.commitEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
       },
 
       _onBeforeItemAdd: function(e, options) {
