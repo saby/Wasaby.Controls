@@ -1410,8 +1410,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                   if (typeof smile === 'object') {
-                     this.insertHtml(this._smileHtml(smile));
                      this._tinyLastRng = this._tinyEditor.selection.getRng();
+                     this.insertHtml(this._smileHtml(smile));
                   }
                }
             },
