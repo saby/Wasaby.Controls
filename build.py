@@ -30,7 +30,10 @@ def build():
     set(map(lambda x: _copy(x, os.path.join('SBIS3.CONTROLS', x)), list_dirs))
     set(map(lambda x: _copy(os.path.join('components', x), os.path.join('SBIS3.CONTROLS', x)), os.listdir('components')))
     # TODO фикс чтобы собирать темы, до момента, пока модуль не включем в сборки
-    set(map(lambda x: _copy(os.path.join('Controls-theme', 'themes', x), os.path.join('SBIS3.CONTROLS', 'themes', x)), os.listdir(os.path.join('Controls-theme', 'themes'))))
+    themepath = os.path.join('SBIS3.CONTROLS', 'default-theme') 
+    if not os.path.exists(themepath):
+        os.makedirs(themepath)
+    set(map(lambda x: _copy(os.path.join('Controls-theme', 'themes', 'default', x), os.path.join(themepath, x)), os.listdir(os.path.join('Controls-theme', 'themes', 'default'))))
 
 if __name__ == '__main__':
     build()
