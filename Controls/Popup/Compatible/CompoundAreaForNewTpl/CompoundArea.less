@@ -4,13 +4,18 @@
    .controls-DialogTemplate, .controls-DialogTemplate {
       box-shadow: none;
    }
-}
 
-/* Для совместимости, когда открывают новое меню на старой странице */
-.controls-CompoundArea__new .controls-DropdownList__content {
-   white-space: nowrap;
-}
-.controls-CompoundArea__new .controls-DropdownList__popup {
-   border: none;
-   max-height: 100vh;
+   /* Для совместимости, когда открывают новое меню на старой странице */
+   .controls-DropdownList__content {
+      white-space: nowrap;
+   }
+
+   .controls-DropdownList__popup {
+      border: none;
+      max-height: 100vh;
+   }
+
+   .controls-ConfirmationTemplate {
+      margin: 0;
+   }
 }
