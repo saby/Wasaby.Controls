@@ -303,8 +303,9 @@
 
    /* Кроме MSIE 12
     * 1174787393 https://online.sbis.ru/opendoc.html?guid=37d3adf2-546a-4c4e-b5a4-010b237ddcb4
+    * 1175698651 https://online.sbis.ru/opendoc.html?guid=f5ac4722-cc20-4a74-9444-28a61ec574a5
    */
-   &:not(.ws-is-ie12) .controls-RichEditor br[data-mce-bogus] {
+   &:not(.ws-is-ie12) .controls-RichEditor br[data-mce-bogus]:not(:first-child) {
       display: none;
    }
 
