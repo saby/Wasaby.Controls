@@ -106,7 +106,7 @@ module.exports = function less1by1Task(grunt) {
             if (
                helpers.validateFile(relpath, [
                   'Controls-theme/**/' + findFileName + '.less',
-                  'components/**/' + findFileName + '.less',
+                  'SBIS3.CONTROLS/**/' + findFileName + '.less',
                   'demo/**/' + findFileName + '.less',
                   'pages/**/' + findFileName + '.less',
                   'Controls-demo/**/' + findFileName + '.less',

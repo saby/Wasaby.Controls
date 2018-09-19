@@ -1,0 +1,5 @@
+<Controls.Toggle.Checkbox caption="{{_options.caption}}"
+                          value="{{_options.value}}"
+                          triState="{{true}}"
+                          on:valueChanged="_valueChangedHandler()"
+                          attr:class="js-Controls-PropertyGridEditor__options-{{_options.caption}}"/>
