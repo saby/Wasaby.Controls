@@ -117,7 +117,6 @@ define(
                let isNotify = false;
                let eventString = '';
                let isHeadConfigCorrect = false;
-               toolbar._options = true;
                toolbar._children.menuOpener.open = function(config) {
                   let standart = {
                      icon: 'icon-Ezy',
