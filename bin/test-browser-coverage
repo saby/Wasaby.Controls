@@ -1,10 +1,10 @@
 #!/bin/sh
 # Run unit testing via browser
 
+paths=(Controls File components)
+
 node -v
 npm install
-
-paths=(Controls File components)
 
 for item in ${paths[*]}
 do
@@ -26,10 +26,11 @@ rm -rf goga/
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
-#rm -rf Controls
-#rm -rf components
-#mv Controls-origin Controls
-#mv components-origin components
+for item in ${paths[*]}
+do
+    rm -rf ${item}
+    mv ${item}-origin ${item}
+done
 
 #node coverageUnusedFiles
 
