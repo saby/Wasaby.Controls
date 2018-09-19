@@ -3,13 +3,20 @@
 
 node -v
 npm install
-cd ../
-node node_modules/nyc/bin/nyc instrument sbis3-controls sbis3-controls-covered
-cd sbis3-controls/
 
-#mv sbis3-controls sbis3-controls-origin
-#mv sbis3-controls-covered sbis3-controls
-#cp -nR sbis3-controls-origin/* sbis3-controls
+mkdir -p tmp/{Controls,components}
+cp -rf Controls/* tmp/Controls/
+cp -rf components/* tmp/components/
+
+node node_modules/nyc/bin/nyc instrument tmp tmp-covered
+
+rm -rf tmp/
+mv components components-origin
+mv tmp-covered/components components
+cp -nR components-origin/* components
+mv Controls Controls-origin
+mv tmp-covered/Controls Controls
+cp -nR Controls-origin/* Controls
 
 #node depencyCollector
 #node node_modules/ws-unit-testing/queue test-server test-browser-coverage
