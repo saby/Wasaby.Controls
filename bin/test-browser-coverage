@@ -10,16 +10,17 @@ cp -rf components/* tmp/components/
 
 node node_modules/nyc/bin/nyc instrument tmp tmp-covered
 
-rm -rf tmp/
-mv components components-origin
 mv tmp-covered/components components
+mv components components-origin
 cp -nR components-origin/* components
-mv Controls Controls-origin
 mv tmp-covered/Controls Controls
+mv Controls Controls-origin
 cp -nR Controls-origin/* Controls
+rm -rf tmp/
+rm -rf tmp-covered/
 
-#node depencyCollector
-#node node_modules/ws-unit-testing/queue test-server test-browser-coverage
+node depencyCollector
+node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
 #rm -rf components
 #mv components-origin components
