@@ -43,7 +43,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                   opts.componentOpt[opts.nameOption] = arg[0];
                }
                notOrigin.apply(this, arguments);
-               self._forceUpdate();
+               self._children.PropertyGrid._forceUpdate();
             };
          },
          _valueChangedHandler: function() {
@@ -53,11 +53,5 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             this.myEvent = '';
          }
       });
-
-      PGWrapper.getDefaultOptions = function() {
-         return {
-
-         };
-      };
       return PGWrapper;
    });
