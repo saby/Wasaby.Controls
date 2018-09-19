@@ -21,6 +21,8 @@ define('Controls/Popup/Compatible/Notification/Base',
                   _this._notify('controlResize', [], {bubbling: true});
                }
             };
+
+            return Notification.superclass._beforeMount.apply(_this, arguments);
          }
       });
 
