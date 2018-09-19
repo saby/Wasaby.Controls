@@ -16,8 +16,12 @@ define([
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
          getWidth = getWidthUtil.getWidth;
-         getWidthUtil.getWidth = function() {
-            return backButtonWidth;
+         getWidthUtil.getWidth = function(item) {
+            if (item === '<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>') {
+               return 24;
+            } else {
+               return backButtonWidth;
+            }
          };
          getMaxCrumbsWidth = BreadCrumbsUtil.getMaxCrumbsWidth;
          BreadCrumbsUtil.getMaxCrumbsWidth = function() {
@@ -154,6 +158,27 @@ define([
             }
          };
          path._onBackButtonClick({}, path._options.items[0]);
+      });
+
+      it('_onHomeClick', function() {
+         path._notify = function(e, args) {
+            if (e === 'itemClick') {
+               assert.equal(path._options.items[1], args[0]);
+               assert.isTrue(args[1]);
+            }
+         };
+         path._onHomeClick();
+      });
+
+      it('_onArrowClick', function() {
+         var eventFired = false;
+         path._notify = function(e) {
+            if (e === 'arrowActivated') {
+               eventFired = true;
+            }
+         };
+         path._onArrowClick();
+         assert.isTrue(eventFired);
       });
    });
 });
