@@ -11,6 +11,7 @@ let path = require('path'),
     coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
     allFiles = [];
 
+// функция пробегает по папке и находит все js файлы
 dirWalker = function (dir) {
     let pattern = /\.js$/,
         files = fs.readdirSync(dir),
@@ -27,6 +28,7 @@ dirWalker = function (dir) {
     }
 };
 
+// пробегаем по папкам Controls, File, Components
 dirWalker(controlsPath);
 dirWalker(filePath);
 dirWalker(componentsPath);
@@ -40,6 +42,8 @@ let rawCover = fs.readFileSync(coveragePath, 'utf8'),
     fileFiles = allFiles.filter(file => file.includes('File')),
     componentsFiles = allFiles.filter(file => file.includes('components'));
 
+// функция дописывает 0 покрытие для файлов которые не использовались в тестах
+// и меняет относительные пути на абсолютные
 function coverFiles(files, replacer) {
     files.forEach(file => {
         let relPath = file.replace(replacer, '').slice(1),
@@ -61,10 +65,12 @@ function coverFiles(files, replacer) {
     });
 }
 
+// дописываем 0 покрытия для файлов которые не использовались в тестах
 coverFiles(controlsFiles, controlsPath);
 coverFiles(fileFiles, filePath);
 coverFiles(componentsFiles, componentsPath);
 
+// функция возвращает покрытие для опредленного пути
 function getCoverByPath(path) {
     let coverageByPath = {};
     Object.keys(newCover).forEach(function (name) {
@@ -79,6 +85,7 @@ let controlsCoverage = getCoverByPath(controlsPath),
     fileCoverage = getCoverByPath(filePath),
     componentsCoverage = getCoverByPath(componentsPath);
 
+// сохраняем покрытие Общее, Controls, File, components
 fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
 fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
 fs.writeFileSync(coverageFilePath, JSON.stringify(fileCoverage), 'utf8');
