@@ -1,4 +1,5 @@
 <Controls.Toggle.Checkbox caption="{{_options.caption}}"
+                          readOnly="{{false}}"
                           value="{{_options.value}}"
                           triState="{{true}}"
                           on:valueChanged="_valueChangedHandler()"
