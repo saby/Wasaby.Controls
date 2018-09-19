@@ -114,7 +114,7 @@ define('Controls/interface/IEditAtPlace', [
 
    /**
     * @name Controls/interface/IEditAtPlace#commitOnDeactivate
-    * @cfg {Boolean} Commit changes after losing focus.
+    * @cfg {Boolean} Determines whether changes will be committed after component loses focus.
     * @default false
     * @remark
     * Even if this option is set to true, changes will be saved and editing will end only if changes are valid.
@@ -125,12 +125,12 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#showToolbar
+    * @name Controls/interface/IEditAtPlace#toolbarVisibility
     * @cfg {Boolean} Determines whether buttons 'Save' and 'Cancel' should be displayed.
     * @default false
     * @example
     * <pre>
-    *    <Controls.EditAtPlace showToolbar="{{true}}" editObject="{{_editObject}}" />
+    *    <Controls.EditAtPlace toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
     * </pre>
     */
 

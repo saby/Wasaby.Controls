@@ -82,7 +82,7 @@ define([
          it('isEditing: true', function() {
             var result = false;
             instance.saveOptions({
-               enabled: true
+               readOnly: false
             });
             instance._beforeMount(cfg);
             instance.startEdit = function() {
@@ -94,7 +94,7 @@ define([
          it('isEditing: false', function() {
             var result = false;
             instance.saveOptions({
-               enabled: true
+               readOnly: false
             });
             instance._beforeMount(cfg2);
             instance.startEdit = function() {
@@ -121,7 +121,7 @@ define([
 
          it('commitOnDeactivate: true, isEditing: true', function() {
             instance.saveOptions({
-               enabled: true,
+               readOnly: false,
                commitOnDeactivate: true
             });
             instance._beforeMount(cfg);
@@ -131,7 +131,7 @@ define([
 
          it('commitOnDeactivate: false, isEditing: true', function() {
             instance.saveOptions({
-               enabled: true,
+               readOnly: false,
                commitOnDeactivate: false
             });
             instance._beforeMount(cfg);
@@ -174,9 +174,7 @@ define([
             event = {
                target: {
                   closest: function(selector) {
-                     if (selector === '.controls-EditAtPlaceV__editorWrapper') {
-                        return true;
-                     }
+                     return selector === '.controls-EditAtPlaceV__editorWrapper';
                   }
                }
             };
