@@ -1,1 +1,1 @@
-<ws:partial template="{{_options.templateName}}" scope="{{_options.templateOptions}}" tabsSelectedKey="{{_options.tabsSelectedKey}}"/>
+<ws:partial template="{{_options.templateName}}" scope="{{_options.templateOptions}}" tabsSelectedKey="{{_options.tabsSelectedKey}}" dialogMode="{{_options.dialogMode}}"/>

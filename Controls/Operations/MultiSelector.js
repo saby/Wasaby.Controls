@@ -1,10 +1,13 @@
 define('Controls/Operations/MultiSelector', [
    'Core/Control',
    'wml!Controls/Operations/MultiSelector/MultiSelector',
-   'WS.Data/Source/Memory',
    'Controls/Container/MultiSelector/SelectionContextField',
    'css!Controls/Operations/MultiSelector/MultiSelector'
-], function(Control, template, Memory, SelectionContextField) {
+], function(
+   Control,
+   template,
+   SelectionContextField
+) {
    'use strict';
    
    var MultiSelector = Control.extend({

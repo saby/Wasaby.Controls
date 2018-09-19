@@ -145,15 +145,18 @@
       box-sizing: border-box;
       word-wrap: break-word;
       padding: 2px 0 0 4px;
+      outline: none !important;
       table {
          margin-bottom: 5px;
       }
-      outline: none !important;
       img{
          &:hover {
             .box-shadow(0px 0px 5px #587AB0);
             .box-sizing(border-box);
          }
+      }
+      & > p > img {
+         max-width: 100%;
       }
       & > ol.has-img-left,
       & > ul.has-img-left {
@@ -242,7 +245,7 @@
 
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLink__label,
-.controls-RichEditor__InsertLink__input.ws-field-string,
+.controls-RichEditor__InsertLink__input.controls-InputRender,
 .controls-RichEditor__InsertLink__okButton.controls-Button {
    font-weight: normal;
    position: absolute;

@@ -25,6 +25,18 @@ define(
                assert.equal(result, true);
             });
          });
+
+         it('The value of the properties upon creation', function() {
+            result = {
+               position: StickyHeader.prototype.position,
+               shadowVisible: StickyHeader.prototype.shadowVisible
+            };
+
+            assert.deepEqual(result, {
+               position: 0,
+               shadowVisible: false
+            });
+         });
       });
    }
 );

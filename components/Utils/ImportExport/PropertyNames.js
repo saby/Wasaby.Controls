@@ -21,6 +21,18 @@ define('SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
        * @param {Object} obj Объект, у которого свойства названы в стиле CamelCase.
        * @return {Object} Объект, у которого имена свойств приведены к стилю с разделением через символ нижнего подчеркивания.
        * @throws {Error} Если не передан аргумент или тип аргумент не Object, возвращается объект Error с сообщением "No arguments".
+       * @example
+       * <pre>
+       *    var myObj = {
+       *       myField1: 'Привет',
+       *       myField2Number: 20
+       *    }
+       *    require(['SBIS3.CONTROLS/Utils/ImportExport/PropertyNames'], function(PropertyNames) {
+       *
+       *       // { my_field1:'Привет', my_field2_number: 20 }
+       *       console.log(PropertyNames.camelCaseToLowDash(myObj));
+       *    });
+       * </pre>
        * @see SBIS3.CONTROLS/Utils/ImportExport/PropertyNames#lowDashToCamelCase
        */
       PropertyNames.camelCaseToLowDash = function (obj) {
@@ -37,6 +49,18 @@ define('SBIS3.CONTROLS/Utils/ImportExport/PropertyNames',
        * @param {object} obj Объект, у которого имена свойств названы в стиле, при котором слова разделяются через символ нижнего подчеркивания.
        * @return {object} Объект, у которого свойства названы в стиле CamelCase.
        * @throws {Error} Если не передан аргумент или тип аргумент не Object, возвращается объект Error с сообщением "No arguments".
+       * @example
+       * <pre>
+       *    var myObj = {
+       *       my_field1: 'Привет',
+       *       my_field2_number: 20
+       *    }
+       *    require(['SBIS3.CONTROLS/Utils/ImportExport/PropertyNames'], function(PropertyNames) {
+       *
+       *       // { myField1:'Привет', myField2Number: 20 }
+       *       console.log(PropertyNames.lowDashToCamelCase(myObj));
+       *    });
+       * </pre>   
        * @see SBIS3.CONTROLS/Utils/ImportExport/PropertyNames#camelCaseToLowDash
        */
       PropertyNames.lowDashToCamelCase = function (obj) {
