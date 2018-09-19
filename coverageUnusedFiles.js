@@ -1,4 +1,4 @@
-const path = require('path'),
+let path = require('path'),
     fs = require('fs'),
     nyc = require('nyc'),
     controlsPath = path.join(__dirname, 'Controls'),
@@ -8,8 +8,8 @@ const path = require('path'),
     coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
     coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
     coverageFilePath = path.join(__dirname, 'artifacts', 'coverageFile.json'),
-    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json');
-let allFiles = [];
+    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
+    allFiles = [];
 
 dirWalker = function (dir) {
     let pattern = /\.js$/,
