@@ -342,6 +342,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
                   options.text = options.__savedHtmlJson.render();
+
+                  // Костыль для отображения плейсхолдера при пустом json.
+                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  if (options.text === '<span></span>') {
+                     options.text = '';
+                  }
                }
 
                if (options.singleLine) {
@@ -416,6 +424,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (text[0] !== '<') {
                      text = '<p>' + text + '</p>';
                   }
+                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
                   var div = document.createElement('div');
                   div.innerHTML = text;
                   self._options.json = typeof self._options.json === 'string'
@@ -715,7 +724,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
-               this.setText(this._htmlJson.render());
+
+               // Костыль для отображения плейсхолдера при пустом json.
+               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+               var text = this._htmlJson.render();
+               if (text === '<span></span>') {
+                  text = '';
+               }
+               this.setText(text);
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -1393,8 +1411,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                   if (typeof smile === 'object') {
-                     this.insertHtml(this._smileHtml(smile));
                      this._tinyLastRng = this._tinyEditor.selection.getRng();
+                     this.insertHtml(this._smileHtml(smile));
                   }
                }
             },
@@ -1732,7 +1750,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           // Для MSIE и FF принудительно смещаем курсор ввода после вставленной ссылки
                                           // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                           // 1175114814 https://online.sbis.ru/opendoc.html?guid=4cef3009-ccbc-4751-b755-dea3d69b82f1
-                                          var appendix = BROWSER.isIE ? '&#65279;&#8203;' : (BROWSER.firefox ? '&#65279;' : '');
+                                          var appendix = BROWSER.isIE ? '&#xFEFF;&#8203;' : (BROWSER.firefox ? '&#xFEFF;' : '');
                                           editor.insertContent(linkHtml + appendix);
                                           if (!appendix) {
                                              selection.select(selection.getNode().querySelector('a'), true);
@@ -2679,12 +2697,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
                            this._selectNewRng(node, index - 1);
                         }
-                        else if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
+                        else
+                        if (text.length === 2 && text.charCodeAt(0) === 65279/*&#xFEFF;*/) {
                            // Или если после удаления последнего символа останется только символ &#xFEFF; , - то подготовить к удалению весь узел, если он не текстовый
-                           for (; !node.previousSibling && !node.nextSibling; node = node.parentNode) {
+                           // Если только выше не используется формат из списка constants.styles
+                           // 1175787389 https://online.sbis.ru/opendoc.html?guid=cd1de0c8-d0d9-456c-9892-d21fbe520c45
+                           var styles = constants.styles;
+                           var classes = Object.keys(styles).map(function (key) { return styles[key].classes; });
+                           var ancestor = node;
+                           var hasStyle;
+                           for (; !ancestor.previousSibling && !ancestor.nextSibling; ancestor = ancestor.parentNode) {
+                              if (classes.length && classes.indexOf(ancestor.className) !== -1) {
+                                 hasStyle = true;
+                                 break;
+                              }
                            }
-                           if (node.nodeType === 1) {
-                              selection.select(node);
+                           if (!hasStyle) {
+                              if (ancestor.nodeType === 1) {
+                                 selection.select(ancestor);
+                              }
                            }
                         }
                      }
@@ -4155,11 +4186,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                node.innerHTML = html;
                var texts = [];
                var dom = this._tinyEditor.dom;
+               // Регулярное выражение для символа, соответствующему &nbsp;
+               var reNbsp = /\xA0/g;
+               // Регулярное выражение для перевода строк
+               var reRn = /^(?:\r?\n)+$/;
                for (var i = 0, list = node.childNodes; i < list.length; i++) {
                   var e = list[i];
                   var txt = e.nodeType === 1 ? e.innerText : e.nodeValue;
+                  if (e.nodeType === 3 && reRn.test(txt)) {
+                     // Если это просто текстовый узел, содержащий только переводы строки - игнорировать его
+                     continue;
+                  }
                   if (txt) {
-                     txt = txt.replace(/\xA0/g, ' ');
+                     txt = txt.replace(reNbsp, ' ');
                      if (texts.length && e.nodeType === 1 && dom.isBlock(e)) {
                         texts.push('\r\n\r\n');
                      }
