@@ -18,14 +18,17 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
        * @extends Core/Control
        * @author Журавлев М. С.
        */
-      var VdomPhoneTextBox = CompoundControl.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
+      var VdomPhoneTextBox = CompoundControl.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS/VdomPhoneTextBox.prototype*/{
          _dotTplFn: dotTplFn,
 
          $protected: {
             _options: {
                value: '',
 
-               validationTrigger: 'focusOut'
+               /**
+                * Требуется ли валидировать поле по уходу фокуса.
+                */
+               validateOnFocusOut: true
             }
          },
 
@@ -37,7 +40,16 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
             wrapper = this.getChildControlByName('wrapper');
 
             wrapper.subscribe('onValueChange', this._valueChangedHandler.bind(this));
-            if (this._options.validationTrigger === 'focusOut') {
+
+            /**
+             * По стандарту поле ввода должно валидироваться по уходу фокуса. В старых полях, это делается самим контролом.
+             * В нашей обертке над VDOM полем мы также сами зовем валидации, но есть случаи когда этого елать не нужно.
+             * Пример: поле вставили в EditInPlace. Для этого добавлена опция validateOnFocusOut.
+             * https://online.sbis.ru/opendoc.html?guid=af7e946e-c691-43cd-9788-bbb9663ae775
+             * В VDOM полях валидацию устанавливает прикладник через механиз валидации на основе
+             * компонентов из Control.Validate.
+             */
+            if (this._options.validateOnFocusOut) {
                wrapper.subscribe('onFocusOut', this.validate.bind(this));
             }
 
