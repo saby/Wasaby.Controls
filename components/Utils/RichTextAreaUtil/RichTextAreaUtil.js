@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
     */
    var RichTextAreaUtil = /** @lends SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil.prototype */{
       /**
-       * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
+       * Метод для добавления определяющей метки в контент при копировании/вырезке из БТРа
        * @param {object}object - DOM элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
        */
       markRichContentOnCopy: function(target) {
@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
       /*Блок приватных методов*/
 
       /**
-       * Определить, поддерживается функциональность для текущего браузера
+       * Определить, поддерживается ли для текущего браузера маркирование контента при копировании/вырезке в клипборд из БТРа
        * @protected
        * @return {boolean}
        */
