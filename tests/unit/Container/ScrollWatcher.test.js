@@ -54,27 +54,27 @@ define([
          scrollTop = 0;
          evType = [];
          ScrollWatcher._private.sendEdgePositions(ins, clientHeight, scrollHeight, scrollTop);
-         assert.deepEqual(['listTop', 'loadTop'], evType, 'Wrong scroll commands');
+         assert.deepEqual(['listTop', 'loadTopStart', 'loadBottomStop'], evType, 'Wrong scroll commands');
 
          scrollTop = 99;
          evType = [];
          ScrollWatcher._private.sendEdgePositions(ins, clientHeight, scrollHeight, scrollTop);
-         assert.deepEqual(['loadTop'], evType, 'Wrong scroll commands');
+         assert.deepEqual(['loadTopStart', 'loadBottomStop'], evType, 'Wrong scroll commands');
 
          scrollTop = 2700;
          evType = [];
          ScrollWatcher._private.sendEdgePositions(ins, clientHeight, scrollHeight, scrollTop);
-         assert.deepEqual(['listBottom', 'loadBottom'], evType, 'Wrong scroll commands');
+         assert.deepEqual(['listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands');
 
          scrollTop = 2601;
          evType = [];
          ScrollWatcher._private.sendEdgePositions(ins, clientHeight, scrollHeight, scrollTop);
-         assert.deepEqual(['loadBottom'], evType, 'Wrong scroll commands');
+         assert.deepEqual(['loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands');
 
          scrollTop = 1500;
          evType = [];
          ScrollWatcher._private.sendEdgePositions(ins, clientHeight, scrollHeight, scrollTop);
-         assert.deepEqual([], evType, 'Wrong scroll commands');
+         assert.deepEqual(['loadTopStop', 'loadBottomStop'], evType, 'Wrong scroll commands');
       });
 
       it('calcSizeCache', function () {
@@ -98,6 +98,7 @@ define([
          };
 
          ins._scrollTopCache = 111;
+         evType = [];
          ScrollWatcher._private.onResizeContainer(ins, containerMock, true);
          assert.deepEqual({clientHeight: 300, scrollHeight: 400}, ins._sizeCache, 'Wrong size cache values');
          assert.deepEqual(111, containerMock.scrollTop, 'Wrong scrollTop value after resize');
@@ -105,7 +106,7 @@ define([
 
          evType = [];
          ScrollWatcher._private.onResizeContainer(ins, containerMock);
-         assert.deepEqual(['listBottom', 'loadBottom'], evType, 'Not send edge positions without observer');
+         assert.deepEqual(['listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Not send edge positions without observer');
       });
 
       it('onScrollContainer', function () {
@@ -119,7 +120,7 @@ define([
 
          evType = [];
          ScrollWatcher._private.onScrollContainer(ins, containerMock);
-         assert.deepEqual(['scrollMove', 'listBottom', 'loadBottom'], evType, 'Wrong scroll commands on change scroll without observer');
+         assert.deepEqual(['scrollMove', 'listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands on change scroll without observer');
 
          evType = [];
          ins._scrollPositionCache = null;

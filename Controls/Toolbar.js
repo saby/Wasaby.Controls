@@ -160,10 +160,11 @@ define('Controls/Toolbar', [
 
       _onResult: function(result) {
          if (result.action === 'itemClick') {
-            this._onItemClick(result.event, result.data[0]);
-            
-            //menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
-            if (this._children.menuOpener) {
+            var item = result.data[0];
+            this._notify('itemClick', [item]);
+
+            // menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
+            if (this._children.menuOpener && !item.get(this._nodeProperty)) {
                this._children.menuOpener.close();
             }
          }

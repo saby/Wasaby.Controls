@@ -30,7 +30,7 @@
 
 .controls-ListView__item__selected {
    > .controls-DataGridView__td:first-child {
-      .marker()
+      .marker(@marker-bg-image)
    }
 }
 
@@ -38,14 +38,14 @@
    &.controls-DataGridView__markerRight {
       .controls-ListView__item__selected:hover {
          .controls-DataGridView__td:last-child {
-            .marker(right top);
+            .marker(@marker-bg-image, right top);
          }
       }
    }
    &:not(.controls-DataGridView__markerRight) {
       .controls-ListView__item__selected:hover {
          .controls-DataGridView__td:first-child {
-            .marker();
+            .marker(@marker-bg-image);
          }
          .controls-ListView__withoutMarker {
             .controls-DataGridView__td:first-child {
