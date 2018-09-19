@@ -2,12 +2,8 @@
   "cache": "%cd%/builder-ui/builder-json-cache",
   "output": "%cd%/application",
   "logs": "%cd%/builder-ui/logs",
-  "mode": "release",
+  "mode": "debug",
   "modules": [
-    {
-      "name": "TodoMvc",
-      "path": "%cd%/TodoMvc"
-    },
     {
       "name": "Controls",
       "path": "%cd%/Controls"
@@ -67,10 +63,7 @@
     {
       "name": "ControlsSandbox",
       "path": "%cd%/pages/sandbox"
-    },
-    {
-      "name": "Data",
-      "path": "%cd%/pages/sandbox"
     }
+
   ]
 }

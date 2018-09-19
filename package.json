@@ -64,7 +64,7 @@
       "gulp-livereload": "^3.8.1",
       "requirejs": "2.1.18",
       "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.600",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.18.600",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.18.600/feature/theme-new-life-2",
       "serve-static": "1.11.x",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#3.18.600/feature/any-testing-folder",
       "typescript": "2.5.3",
