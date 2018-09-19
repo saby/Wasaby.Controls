@@ -4,18 +4,22 @@
 node -v
 npm install
 
-mkdir -p ara/{Controls,components}
-cp -rf Controls/* ara/Controls/
-cp -rf components/* ara/components/
+paths=(Controls components)
 
-node node_modules/nyc/bin/nyc instrument ara goga
+for item in ${paths[*]}
+do
+    mkdir -p ara/${item}
+    cp -rf ${item}/* ara/${item}/
+done
 
-mv Controls Controls-origin
-mv components components-origin
-mv goga/Controls Controls
-mv goga/components components
-cp -nR Controls-origin/* Controls
-cp -nR components-origin/* components
+#node node_modules/nyc/bin/nyc instrument ara goga
+
+#for item in ${paths[*]}
+#do
+#    mv ${item} ${item}-origin
+#    mv goga/${item} ${item}
+#    cp -nR ${item}-origin/* ${item}
+#done
 #rm -rf ara/
 #rm -rf goga/
 
