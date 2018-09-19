@@ -1699,15 +1699,14 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
        */
       reloadItem: function(id, meta) {
          var
-            self = this,
-            currentItem = this.getItems().getRecordById(id);
-         if (this.getDataSource() && currentItem) {
+            items = this.getItems(),
+            currentIndex = items.getIndexByValue(items.getIdProperty(), id);
+         if (this.getDataSource() && currentIndex !== -1) {
             return this.getDataSource().read(id, meta).addCallback(function(newItem) {
-               currentItem.merge(newItem);
+               items.replace(newItem, currentIndex);
             });
-         } else {
-            return Deferred.success();
          }
+         return Deferred.success();
       },
       /**
        * @name SBIS3.CONTROLS/Mixins/ItemsControlMixin#reload
