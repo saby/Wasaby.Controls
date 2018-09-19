@@ -53,7 +53,7 @@ function coverFiles(files, replacer) {
             let coverState = instrumenter.lastFileCoverage();
             Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
             newCover[file] = coverState;
-            console.log('File ' + file + ' not using in tests')
+            console.log('File ' + file.replace(__dirname, '').slice(1) + ' not using in tests')
         } else {
             coverData['path'] = file;
             newCover[file] = coverData;
