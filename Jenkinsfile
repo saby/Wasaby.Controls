@@ -48,7 +48,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "4.13/feature/bls/new_locator_btn_more",
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
