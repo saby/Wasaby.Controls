@@ -53,7 +53,8 @@ define('Controls/Toolbar', [
       getMenuItems: function(items) {
          return tUtil.getMenuItems(items).value(recordSetFactory, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
+            idProperty: items.getIdProperty(),
+            format: items.getFormat()
          });
       },
 
@@ -130,7 +131,12 @@ define('Controls/Toolbar', [
             config = {
                templateOptions: {
                   items: this._items,
-                  rootKey: item.get(this._options.keyProperty)
+                  rootKey: item.get(this._options.keyProperty),
+                  headConfig: {
+                     icon: item.get('icon'),
+                     caption: item.get('title'),
+                     iconStyle: item.get('iconStyle')
+                  }
                },
                target: event.target
             };
