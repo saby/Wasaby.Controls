@@ -1,0 +1,86 @@
+<ws:template name="kind">
+   <Controls.Input.Dropdown
+           keyProperty="key"
+           displayProperty="title"
+           bind:textValue="item.textValue"
+           bind:selectedKeys="item.value">
+      <ws:source module='WS.Data/Source/Memory'>
+         <ws:options idProperty="key">
+            <ws:data>
+               <ws:Array>
+                  <ws:Object key="{{'0'}}" title='All topics' ></ws:Object>
+                  <ws:Object key="{{'1'}}" title='Unread' ></ws:Object>
+                  <ws:Object key="{{'2'}}" title='My topics' ></ws:Object>
+                  <ws:Object key="{{'3'}}" title='Favourites' ></ws:Object>
+                  <ws:Object key="{{'4'}}" title='Without comments' ></ws:Object>
+               </ws:Array>
+            </ws:data>
+         </ws:options>
+      </ws:source>
+   </Controls.Input.Dropdown>
+</ws:template>
+
+<ws:template name="type">
+<Controls.Input.Dropdown
+        keyProperty="key"
+        displayProperty="title"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value">
+   <ws:source module='WS.Data/Source/Memory'>
+      <ws:options idProperty="key">
+         <ws:data>
+            <ws:Array>
+               <ws:Object key="{{'0'}}" title='All types' ></ws:Object>
+               <ws:Object key="{{'1'}}" title='Discussions' ></ws:Object>
+               <ws:Object key="{{'2'}}" title='Suggestions' ></ws:Object>
+            </ws:Array>
+         </ws:data>
+      </ws:options>
+   </ws:source>
+</Controls.Input.Dropdown>
+</ws:template>
+
+<ws:template name="own">
+<Controls.Input.Dropdown
+        keyProperty="key"
+        displayProperty="title"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value">
+   <ws:source module='WS.Data/Source/Memory'>
+      <ws:options idProperty="key">
+         <ws:data>
+            <ws:Array>
+               <ws:Object key="{{'0'}}" title='All' ></ws:Object>
+               <ws:Object key="{{'1'}}" title='My' ></ws:Object>
+            </ws:Array>
+         </ws:data>
+      </ws:options>
+   </ws:source>
+</Controls.Input.Dropdown>
+</ws:template>
+
+<ws:template name="used">
+<Controls.Input.Dropdown
+        keyProperty="key"
+        displayProperty="title"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value">
+   <ws:source module='WS.Data/Source/Memory'>
+      <ws:options idProperty="key">
+         <ws:data>
+            <ws:Array>
+               <ws:Object key="{{'0'}}" title='Used' ></ws:Object>
+               <ws:Object key="{{'1'}}" title='In archive' ></ws:Object>
+               <ws:Object key="{{'2'}}" title='All states' ></ws:Object>
+            </ws:Array>
+         </ws:data>
+      </ws:options>
+   </ws:source>
+</Controls.Input.Dropdown>
+</ws:template>
+
+<ws:template name="deleted">
+<Controls.Toggle.Checkbox bind:value="item.value" caption="Show deleted" attr:style="margin-left: -5px;"/>
+</ws:template>
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

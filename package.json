@@ -14,7 +14,7 @@
       "build": "grunt build",
       "rebuild": "grunt rebuild",
       "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
-      "test-debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
+      "test:debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
       "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish ."
    },
@@ -24,7 +24,6 @@
          "View": "sbis3-ws/View",
          "Core": "sbis3-ws/Core"
       },
-      "resources": "./",
       "tests": "tests/unit",
       "test_server_port": 1025,
       "test_report": "artifacts/xunit-report.xml",
@@ -83,7 +82,7 @@
       "progress": "^2.0.0",
       "requirejs": "2.1.18",
       "serve-static": "1.11.x",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600",
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#3.18.600/feature/any-testing-folder",
       "typescript": "2.5.3",
       "ws-data": "git+http://git.sbis.ru/ws/data.git#3.18.600/bugfix/d-t-pj"
    }

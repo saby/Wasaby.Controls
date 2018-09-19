@@ -164,6 +164,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
+
+         //TODO FOR COMPATIBLE. для чистого вдома этот метод излишен, но логику не ломает
+         _mouseOutHandler: function(event) {
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
+               this._children.subDropdownOpener.close();
+            }
+         },
    
          _additionMouseenter: function() {
             if (this._hasHierarchy) {
@@ -215,7 +222,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._notify('close');
          },
          _mousemoveHandler: function(emitterEvent, event) {
-            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) { // Если увели курсор мимо - закрываемся
+            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
                this._notify('close');
             }
          },

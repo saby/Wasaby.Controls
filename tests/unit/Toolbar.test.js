@@ -143,10 +143,23 @@ define(
                });
             });
             it('menu item click', () => {
+               let isMenuClosed = false;
+               toolbar._nodeProperty = '@parent';
                toolbar._notify = (e) => {
                   assert.equal(e, 'itemClick');
                };
+               toolbar._children.menuOpener.close = function() {
+                  isMenuClosed = true;
+               };
                toolbar._onResult({action: 'itemClick', event: {name: 'event', stopPropagation: () => {}}, data: [itemWithMenu]});
+            });
+            it('menu not closed if item has child', function() {
+               let isMenuClosed = false;
+               toolbar._nodeProperty = '@parent';
+               toolbar._children.menuOpener.close = function() {
+                  isMenuClosed = true;
+               };
+               assert.equal(isMenuClosed, false);
             });
          });
 
