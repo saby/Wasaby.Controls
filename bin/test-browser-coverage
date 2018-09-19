@@ -22,10 +22,10 @@ rm -rf tmp-covered/
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
-mv Controls-origin Controls
-mv components-origin components
 rm -rf Controls
 rm -rf components
+mv Controls-origin Controls
+mv components-origin components
 
 #node coverageUnusedFiles
 

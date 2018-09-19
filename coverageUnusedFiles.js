@@ -35,40 +35,46 @@ var rawCover = fs.readFileSync(coveragePath, 'utf8'),
     transformer = instrumenter.instrumentSync.bind(instrumenter);
 
 allFiles.forEach(function (name) {
-    var coverName = name.replace(componentsPath, '').replace(controlsPath, '').slice(1),
-        nycCover = null;
-    if (!cover[coverName]) {
-        var rawFile = fs.readFileSync(name, 'utf-8');
-        transformer(rawFile, name);
-        var coverState = instrumenter.lastFileCoverage();
-        Object.keys(coverState.s).forEach(function (key) {
-           coverState.s[key] = 0;
-        });
-        nycCover = coverState;
-        nycCover['path'] = name;
-        newCover[name] = nycCover;
-        console.log('File ' + name + ' not using in tests')
-    } else {
-        nycCover = cover[coverName];
-        nycCover['path'] = name;
-        newCover[name] = nycCover;
+    var replacer = null;
+    if (name.contains('Controls')){
+        replacer = controlsPath;
+    } else if (name.contains('components')){
+        replacer = componentsPath
     }
+    var coverName = name.replace(replacer, '').slice(1);
+    console.log(name);
+//    if (!cover[coverName]) {
+//        var rawFile = fs.readFileSync(name, 'utf-8');
+//        transformer(rawFile, name);
+//        var coverState = instrumenter.lastFileCoverage();
+//        Object.keys(coverState.s).forEach(function (key) {
+//           coverState.s[key] = 0;
+//        });
+//        nycCover = coverState;
+//        nycCover['path'] = name;
+//        newCover[name] = nycCover;
+//        console.log('File ' + name + ' not using in tests')
+//    } else {
+//        nycCover = cover[coverName];
+//        nycCover['path'] = name;
+//        newCover[name] = nycCover;
+//    }
 });
 
-fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
-
-function getCoverByPath(path) {
-    var coverageByPath = {};
-    Object.keys(newCover).forEach(function (name) {
-        if (name.includes(path)) {
-            coverageByPath[name] = newCover[name]
-        }
-    });
-    return coverageByPath
-}
-
-var componentsCoverage = getCoverByPath(componentsPath),
-    controlsCoverage = getCoverByPath(controlsPath);
-
-fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
-fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');
+//fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
+//
+//function getCoverByPath(path) {
+//    var coverageByPath = {};
+//    Object.keys(newCover).forEach(function (name) {
+//        if (name.includes(path)) {
+//            coverageByPath[name] = newCover[name]
+//        }
+//    });
+//    return coverageByPath
+//}
+//
+//var componentsCoverage = getCoverByPath(componentsPath),
+//    controlsCoverage = getCoverByPath(controlsPath);
+//
+//fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
+//fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');
