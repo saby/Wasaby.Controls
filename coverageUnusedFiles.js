@@ -4,6 +4,7 @@ var path = require('path'),
     componentsPath = path.join(__dirname, 'components'),
     controlsPath = path.join(__dirname, 'Controls'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
+    coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
     coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
     coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
     allFiles = [];
@@ -29,11 +30,13 @@ dirWalker(controlsPath);
 
 var rawCover = fs.readFileSync(coveragePath, 'utf8'),
     cover = JSON.parse(rawCover),
+    newCover = JSON.parse("{}"),
     instrumenter = new nyc().instrumenter(),
     transformer = instrumenter.instrumentSync.bind(instrumenter);
 
 allFiles.forEach(function (name) {
-    var coverName = name.replace(componentsPath, '').replace(controlsPath, '').slice(1);
+    var coverName = name.replace(componentsPath, '').replace(controlsPath, '').slice(1),
+        nycCover = null;
     if (!cover[coverName]) {
         var rawFile = fs.readFileSync(name, 'utf-8');
         transformer(rawFile, name);
@@ -41,18 +44,24 @@ allFiles.forEach(function (name) {
         Object.keys(coverState.s).forEach(function (key) {
            coverState.s[key] = 0;
         });
-        cover[coverName] = coverState;
-        console.log('File ' + coverName + ' not using in tests')
+        nycCover = coverState;
+        nycCover['path'] = name;
+        newCover[name] = nycCover;
+        console.log('File ' + name + ' not using in tests')
+    } else {
+        nycCover = cover[coverName];
+        nycCover['path'] = name;
+        newCover[name] = nycCover;
     }
 });
 
-fs.writeFileSync(coveragePath, JSON.stringify(cover), 'utf8');
+fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
 
 function getCoverByPath(path) {
     var coverageByPath = {};
-    Object.keys(cover).forEach(function (name) {
+    Object.keys(newCover).forEach(function (name) {
         if (name.includes(path)) {
-            coverageByPath[name] = cover[name]
+            coverageByPath[name] = newCover[name]
         }
     });
     return coverageByPath
