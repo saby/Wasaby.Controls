@@ -6,11 +6,14 @@ define('Controls/List/ListView', [
    'wml!Controls/List/ListView/ListView',
    'wml!Controls/List/ItemTemplate',
    'wml!Controls/List/GroupTemplate',
+   'wml!Controls/List/resources/ItemOutputWrapper',
+   'wml!Controls/List/resources/ItemOutput',
    'css!Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
    defaultItemTemplate,
-   GroupTemplate
+   GroupTemplate,
+   ItemOutputWrapper
 ) {
    'use strict';
 
@@ -26,9 +29,6 @@ define('Controls/List/ListView', [
 
             //command to scroll watcher
             self._notify('controlResize', [], {bubbling: true});
-
-            //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-            self._notify('checkScroll', [], {bubbling: true});
          }
       }
    };
@@ -42,6 +42,7 @@ define('Controls/List/ListView', [
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
+         _itemOutputWrapper: ItemOutputWrapper,
 
          constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);

@@ -10,9 +10,9 @@ define('Controls/Input/DateTime', [
     *    <li>date and time.</li>
     * </ol>
     * @class Controls/Input/DateTime
+    * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
     * @author Журавлев М.С.

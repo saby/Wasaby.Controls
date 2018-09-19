@@ -1,10 +1,118 @@
 define(
    [
-      'Controls/Container/Scroll'
+      'Controls/Container/Scroll',
+      'wml!tests/unit/Container/resources/Content'
    ],
-   function(Scroll) {
+   function(Scroll, Content) {
 
       'use strict';
+
+      describe('Controls.Container.Scroll', function() {
+         var scroll, result;
+
+         beforeEach(function() {
+            scroll = new Scroll({});
+
+            var templateFn = scroll._template;
+
+            scroll._template = function(inst) {
+               inst._options = {
+                  content: Content
+               };
+               var markup = templateFn.call(this, inst);
+
+               markup = markup.replace(/ ?(ws-delegates-tabfocus|ws-creates-context|__config|tabindex|name)=".+?"/g, '');
+               markup = markup.replace(/\s+/g, ' ');
+
+               return markup;
+            };
+         });
+
+         describe('Template', function() {
+            it('Hiding the native scroll', function() {
+               result = scroll._template({});
+
+               assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
+                                       '<span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                                          '<div class="ws-flex-shrink-0">test</div>' +
+                                       '</span>' +
+                                       '<div></div>' +
+                                    '</div>');
+
+               result = scroll._template({
+                  _contentStyles: 'margin-right: -15px;'
+               });
+
+               assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
+                                       '<span style="margin-right: -15px;" class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
+                                          '<div class="ws-flex-shrink-0">test</div>' +
+                                       '</span>' +
+                                       '<div></div>' +
+                                    '</div>');
+            });
+         });
+
+         describe('StickyHeader', function() {
+            var event = {
+               stopPropagation: function() {}
+            };
+
+            describe('updateFixationState', function() {
+               it('Header with id equal to "sticky" stops being fixed', function() {
+                  scroll._fixedHandler(event, {
+                     id: 'sticky',
+                     shouldBeFixed: false
+                  });
+
+                  assert.equal(scroll._stickyHeaderId, null);
+               });
+               it('Header with id equal to "sticky" fixed', function() {
+                  scroll._fixedHandler(event, {
+                     id: 'sticky',
+                     shouldBeFixed: true
+                  });
+
+                  assert.equal(scroll._stickyHeaderId, 'sticky');
+               });
+               it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
+                  scroll._fixedHandler(event, {
+                     id: 'sticky',
+                     shouldBeFixed: true
+                  });
+                  scroll._fixedHandler(event, {
+                     id: 'sticky',
+                     shouldBeFixed: false
+                  });
+
+                  assert.equal(scroll._stickyHeaderId, null);
+               });
+               it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     shouldBeFixed: true
+                  });
+                  scroll._fixedHandler(event, {
+                     id: 'sticky2',
+                     shouldBeFixed: false
+                  });
+
+                  assert.equal(scroll._stickyHeaderId, 'sticky1');
+               });
+               it('Header with id equal to "sticky1" stop being fixed, Header with id equal to "sticky2" fixed', function() {
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     shouldBeFixed: false
+                  });
+                  scroll._fixedHandler(event, {
+                     id: 'sticky2',
+                     shouldBeFixed: true
+                  });
+
+                  assert.equal(scroll._stickyHeaderId, 'sticky2');
+               });
+            });
+         });
+      });
 
       describe('Controls.Container.Shadow', function() {
          var result;

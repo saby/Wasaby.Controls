@@ -18,13 +18,13 @@
          </a>
       </div>
       <div>
+         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Group">List/Group</a>
+      </div>
+      <div>
          <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Grid/Grid">List/Grid</a>
       </div>
       <div>
          <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/Tree">List/Tree</a>
-      </div>
-      <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/TreeGroups">List/TreeGroups</a>
       </div>
       <div>
          <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/TreeWithPhoto">List/TreeWithPhoto</a>

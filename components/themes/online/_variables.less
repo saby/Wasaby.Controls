@@ -1,4 +1,4 @@
-@import "Controls-theme/themes/default/_variables";
+@import "../../default-theme/_variables";
 @import "_colors";
 @import "_sizes";
 //headers
@@ -20,6 +20,7 @@
 @background_EditActions-closeButton_hovered:transparent;
 
 @link-icon-field-margin:                  0 0 0 6px;
+@marker-bg-image: url("img/rowSelect.png");
 // ------ //
 // Button //
 // ------ //
@@ -742,6 +743,7 @@
 @width_EditActions-cancelButton:        @width_EditButton;
 @height_EditActions-cancelButton:       @height_EditButton;
 @font-size_EditActions-cancelButton:    22px;
+@font-size_EditActions-okButtonIcon:    @default-icon-size;
 @width_itemsToolbar_closeButton:       29px;
 @height_itemsToolbar_closeButton:      24px;
 @font-size_itemsToolbar_closeButton:   20px;
@@ -951,9 +953,11 @@
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
 @size_dropdownList_picker_close_cross:                @default-icon-size-medium;
+@size_dropdownList_picker_close_cross_width:          38px;
+@size_dropdownList_picker_close_cross_left:           8px;
 @color_dropdownList_picker_close_cross:               @default-disabled-color;
 @color_dropdownList_picker_close_cross_hover:         #313E78;
-@DropdownList-picker-close-btn-right:                 6px;
+@DropdownList-picker-close-btn-right:                 0px;
 @DropdownList-picker-head-padding:                    4px 12px;
 @DropdownList-picker-head-weight:                     bold;
 @DropdownList-picker-head-height:                     24px;

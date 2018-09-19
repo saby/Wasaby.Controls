@@ -1,7 +1,6 @@
 define('Controls/Input/Password',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/Password/Password',
       'Controls/Input/resources/InputRender/BaseViewModel',
@@ -9,18 +8,17 @@ define('Controls/Input/Password',
       'css!Controls/Input/Password/Password'
    ],
 
-   function(Control, types, tmplNotify, template, BaseViewModel) {
+   function(Control, tmplNotify, template, BaseViewModel) {
 
       /**
-       *  Component that shows all entered characters as stars. Visibility of entered
-       *  text can be toggled by clicking on 'eye' icon.
+       *  Control that hides all entered characters and shows replacer-symbols in place of them.
+       *  Visibility of entered text can be toggled by clicking on 'eye' icon.
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
        * @class Controls/Input/Password
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/Password/PasswordStyles
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles

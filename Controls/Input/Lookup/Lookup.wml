@@ -39,7 +39,12 @@
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <div class="controls-Lookup__showSelector icon-ListView"></div>
+                <div class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
+                <Controls.Selector.Opener name="selectorOpener">
+                    <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
+                        <ws:eventHandlers onResult="{{_selectCallback}}"/>
+                    </ws:popupOptions>
+                </Controls.Selector.Opener>
             </ws:if>
         </ws:afterFieldWrapper>
 

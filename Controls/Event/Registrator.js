@@ -15,11 +15,11 @@ define('Controls/Event/Registrator',
 
       'use strict';
 
-      var EventCatcher = Control.extend({
+      var EventRegistrator = Control.extend({
          _template: template,
          _listner: null,
          constructor: function() {
-            EventCatcher.superclass.constructor.apply(this, arguments);
+            EventRegistrator.superclass.constructor.apply(this, arguments);
             this._forceUpdate = function() {
                // Do nothing
                // This method will be called because of handling event.
@@ -43,12 +43,12 @@ define('Controls/Event/Registrator',
          }
       });
 
-      EventCatcher.getOptionTypes = function() {
+      EventRegistrator.getOptionTypes = function() {
          return {
             register: types(String).required()
          };
       };
 
-      return EventCatcher;
+      return EventRegistrator;
    }
 );

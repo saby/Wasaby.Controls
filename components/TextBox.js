@@ -18,20 +18,20 @@ define('SBIS3.CONTROLS/TextBox', [
    'css!SBIS3.CONTROLS/TextBox/TextBox'
 
 ], function(
-    EventBus,
-    constants,
-    TextBoxBase,
-    dotTplFn,
-    textFieldWrapper,
-    compatiblePlaceholderTemplate,
-    TemplateUtil,
-    TextBoxUtils,
-    getTextWidth,
-    forAliveOnly,
-    i18n,
-    ControlHierarchyManager,
-    Sanitize,
-    detection
+   EventBus,
+   constants,
+   TextBoxBase,
+   dotTplFn,
+   textFieldWrapper,
+   compatiblePlaceholderTemplate,
+   TemplateUtil,
+   TextBoxUtils,
+   getTextWidth,
+   forAliveOnly,
+   i18n,
+   ControlHierarchyManager,
+   Sanitize,
+   detection
 ) {
 
    'use strict';
@@ -78,6 +78,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/TextBox.prototype */ {
       _dotTplFn: dotTplFn,
+
       /**
        * @event onInformationIconMouseEnter Происходит когда курсор мыши входит в область информационной иконки.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -90,9 +91,10 @@ define('SBIS3.CONTROLS/TextBox', [
        */
       $protected: {
       	_fromTouch: false,
-         _pasteProcessing : 0,
-         _inputField : null,
+         _pasteProcessing: 0,
+         _inputField: null,
          _compatPlaceholder: null,
+
          //Сделаем значение по умолчанию undefined, т.к. это отсутствие значение, а null может прилететь из контекста.
          _tooltipText: undefined,
          _beforeFieldWrapper: null,
@@ -105,6 +107,7 @@ define('SBIS3.CONTROLS/TextBox', [
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
+
             /**
              * @cfg {String} Устанавливает форматирование регистра текстового значения в поле ввода.
              * @variant uppercase Все символы верхним регистром.
@@ -127,6 +130,7 @@ define('SBIS3.CONTROLS/TextBox', [
              *
              */
             textTransform: 'none',
+
             /**
              * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
              * * true Выделять текст.
@@ -144,6 +148,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see SBIS3.CONTROLS/TextBox/TextBoxBase#text
              */
             selectOnClick: false,
+
             /**
              * @cfg {Content} Устанавливает текст подсказки внутри поля ввода.
              * @remark
@@ -164,6 +169,7 @@ define('SBIS3.CONTROLS/TextBox', [
              * @content
              */
             placeholder: '',
+
             /**
              * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
              * @remark
@@ -171,7 +177,8 @@ define('SBIS3.CONTROLS/TextBox', [
              * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
              * несоответствующие символы ввести будет невозможно.
              */
-            inputRegExp : '',
+            inputRegExp: '',
+
             /**
              * @cfg {Boolean} Включает отображение информационной иконки в поле ввода.
              * @remark
@@ -209,6 +216,7 @@ define('SBIS3.CONTROLS/TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
+
          //В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
          //но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/
          //Так что в Safari тоже нельзя убирать плейсхолдер
@@ -230,41 +238,42 @@ define('SBIS3.CONTROLS/TextBox', [
             this._inputField.removeAttr('placeholder');
          }
          this._inputField
-            .on('paste', function(event){
+            .on('paste', function(event) {
                var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
       
-               if(userPasteResult !== false){
+               if (userPasteResult !== false) {
                   self._pasteProcessing++;
-                  self._inputField.addClass('controls-InputRender__field_pasteProcessing')
+                  self._inputField.addClass('controls-InputRender__field_pasteProcessing');
+
                   /* зачем делаем setTimeout?
                      в момент события в поле ввода нет перенесенных данных,
                      поэтому вставка выполняется с задержкой, чтобы браузер самостоятельно обработал данные из буфера обмена(изображение, верстка)
                    */
-                  window.setTimeout(function(){
+                  window.setTimeout(function() {
                      self._pasteProcessing--;
                      if (!self._pasteProcessing) {
                         self._inputField.removeClass('controls-InputRender__field_pasteProcessing');
                         self._pasteHandler(event);
                      }
                   }, 100);
-               }else {
+               } else {
                   event.preventDefault();
                }
       
             })
-            .on('drop', function(event){
-               //Если не дёргать фокус у поля ввода, то хром по какой-то причине вставляет текст в конец
-               self._inputField.focus();
-               window.setTimeout(function(){
+            .on('drop', function(event) {
+               self._isDropped = true;
+
+               window.setTimeout(function() {
                   self._pasteHandler(event);
                }, 100);
             })
-            .on('change',function(){
+            .on('change', function() {
                var newText = $(this).val(),
                   inputRegExp = self._options.inputRegExp;
          
                if (newText != self._options.text) {
-                  if(inputRegExp) {
+                  if (inputRegExp) {
                      newText = self._checkRegExp(newText, inputRegExp);
                   }
                   self.setText(newText);
@@ -278,7 +287,7 @@ define('SBIS3.CONTROLS/TextBox', [
             Проверить, что это была вставка, можно по опции текст, т.к. в остальных случаях,
             мы обновляем опцию, раньше наступления события input. */
          if (constants.browser.isMobileSafari) {
-            this._inputField.on('input', function (event) {
+            this._inputField.on('input', function(event) {
                if (self._getInputValue() !== self.getText()) {
                   /* У текста при вставке нельзя обрезать пробелы, иначе слово вставленное из autocorrecta,
                      вставится без пробела */
@@ -289,12 +298,17 @@ define('SBIS3.CONTROLS/TextBox', [
          
          this._container
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
-            .on('keyup mouseenter', function() { self._applyTooltip(); })
-            .on('touchstart', function() { self._fromTouch = true;});
+            .on('keyup mouseenter', function() {
+               self._applyTooltip(); 
+            })
+            .on('touchstart', function() {
+               self._fromTouch = true;
+            });
       },
 
       _modifyOptions: function() {
          var cfg = TextBox.superclass._modifyOptions.apply(this, arguments);
+
          /* Надо подготовить шаблоны beforeFieldWrapper и afterFieldWrapper,
             чтобы у них был __vStorage, для возможности обращаться к опциям по ссылке (ref) */
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
@@ -309,15 +323,15 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
 
-      _checkRegExp: function (text, regExp) {
-          var newText = '',
-              inputRegExp = new RegExp(regExp);
-          for (var i = 0; i < text.length; i++){
-              if (inputRegExp.test(text[i])){
-                  newText = newText + text[i];
-              }
-          }
-          return newText;
+      _checkRegExp: function(text, regExp) {
+         var newText = '',
+            inputRegExp = new RegExp(regExp);
+         for (var i = 0; i < text.length; i++) {
+            if (inputRegExp.test(text[i])) {
+               newText = newText + text[i];
+            }
+         }
+         return newText;
       },
 
       init: function() {
@@ -357,7 +371,7 @@ define('SBIS3.CONTROLS/TextBox', [
        * @see informationIcon
        * @see informationIconColor
        */
-      setInformationIconColor: function (color) {
+      setInformationIconColor: function(color) {
          if (!color) {
             this._options.informationIconColor = color;
             this._destroyInformationIcon();
@@ -394,8 +408,8 @@ define('SBIS3.CONTROLS/TextBox', [
          }
       },
 
-      _keyboardDispatcher: function(event){
-         return forAliveOnly(function(event){
+      _keyboardDispatcher: function(event) {
+         return forAliveOnly(function(event) {
             var result = true;
             switch (event.type) {
                case 'keydown':
@@ -419,8 +433,9 @@ define('SBIS3.CONTROLS/TextBox', [
          if (this._options.trim && !fromInit) {
             text = text.trim();
          }
+
          //Установим текст только если значения различны и оба не пустые
-         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)){
+         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)) {
             this.setText(text);
          }
       },
@@ -436,19 +451,19 @@ define('SBIS3.CONTROLS/TextBox', [
             var scrollWidth;
             if (constants.browser.isIE) {
                scrollWidth = getTextWidth(this._options.text);
-            }
-            else {
+            } else {
                scrollWidth = field[0].scrollWidth;
             }
+
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
             if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
                field.attr('title', this._options.text === '' ? constants.browser.isIE ? '' : ' ' : this._options.text);
-            }
-            else if (this._options.tooltip) {
+            } else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             } else {
-                this._container.attr('title', '');
+               this._container.attr('title', '');
+
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
                field.attr('title', constants.browser.isIE ? '' : ' ');
@@ -457,7 +472,7 @@ define('SBIS3.CONTROLS/TextBox', [
          }
       },
 
-      _getFieldForTooltip: function () {
+      _getFieldForTooltip: function() {
          return this._inputField;
       },
 
@@ -474,7 +489,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength',num);
+         this._inputField.attr('maxlength', num);
       },
 
       /**
@@ -488,12 +503,12 @@ define('SBIS3.CONTROLS/TextBox', [
        * </pre>
        * @see placeholder
        */
-      setPlaceholder: function(text){
+      setPlaceholder: function(text) {
          this._options.placeholder = text;
          this._setPlaceholder(text);
       },
 
-      _setPlaceholder: function(){
+      _setPlaceholder: function() {
          this._destroyCompatPlaceholder();
 
          if (this.isEnabled()) {
@@ -513,7 +528,7 @@ define('SBIS3.CONTROLS/TextBox', [
        * </pre>
        * @see textTransform
        */
-      setTextTransform: function(textTransform){
+      setTextTransform: function(textTransform) {
          switch (textTransform) {
             case 'uppercase':
                this._inputField.removeClass('controls-TextBox__field-lowercase')
@@ -529,8 +544,8 @@ define('SBIS3.CONTROLS/TextBox', [
          }
       },
 
-      _keyDownBind: function(event){
-         if (event.which == 13){
+      _keyDownBind: function(event) {
+         if (event.which == 13) {
             this._checkInputVal();
          }
       },
@@ -538,8 +553,8 @@ define('SBIS3.CONTROLS/TextBox', [
       _keyUpBind: function(event) {
          var newText = this._getInputValue(),
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
-         if (this._options.text !== newText && !textsEmpty){
-            if (this._options.inputRegExp){
+         if (this._options.text !== newText && !textsEmpty) {
+            if (this._options.inputRegExp) {
                newText = this._checkRegExp(newText, this._options.inputRegExp);
             }
             this._setTextByKeyboard(newText);
@@ -550,7 +565,7 @@ define('SBIS3.CONTROLS/TextBox', [
          }
       },
 
-      _setTextByKeyboard: function(newText){
+      _setTextByKeyboard: function(newText) {
          this.setText(newText);
       },
 
@@ -565,7 +580,7 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _keyPressBind: function(event) {
-         if (this._options.inputRegExp && !event.ctrlKey){
+         if (this._options.inputRegExp && !event.ctrlKey) {
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
       },
@@ -574,8 +589,9 @@ define('SBIS3.CONTROLS/TextBox', [
          return this._inputField;
       },
 
-      _setEnabled : function(enabled) {
+      _setEnabled: function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
+
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
             placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
@@ -584,14 +600,16 @@ define('SBIS3.CONTROLS/TextBox', [
          } else {
             this._destroyCompatPlaceholder();
          }
+
          // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
       },
-      _inputRegExp: function (e, regexp) {
+      _inputRegExp: function(e, regexp) {
          var keyCode = e.which || e.keyCode;
+
          //Клавиши стрелок, delete, backspace и тд
-         if (!e.charCode){
+         if (!e.charCode) {
             return true;
          }
          if (keyCode < 32 || e.ctrlKey || e.altKey) {
@@ -603,18 +621,19 @@ define('SBIS3.CONTROLS/TextBox', [
          return true;
       },
 
-       _pasteHandler: function(event, noTrimText) {
-           var text = this._getInputValue(),
-               inputRegExp = this._options.inputRegExp;
-           if (inputRegExp){
-               text = this._checkRegExp(text, inputRegExp);
-           }
-           if (this._options.trim && noTrimText !== true) {
-               text = text.trim();
-           }
-           text = this._formatText(text);
-           this._drawText(text);
-          /* Событие paste может срабатывать:
+      _pasteHandler: function(event, noTrimText) {
+         var text = this._getInputValue(),
+            inputRegExp = this._options.inputRegExp;
+         if (inputRegExp) {
+            text = this._checkRegExp(text, inputRegExp);
+         }
+         if (this._options.trim && noTrimText !== true) {
+            text = text.trim();
+         }
+         text = this._formatText(text);
+         this._drawText(text);
+
+         /* Событие paste может срабатывать:
            1) При нажатии горячих клавиш
            2) При вставке из котекстного меню.
 
@@ -623,15 +642,15 @@ define('SBIS3.CONTROLS/TextBox', [
            можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
            которые на это рассчитывают.
            */
-           this._setTextByKeyboard(text);
-       },
+         this._setTextByKeyboard(text);
+      },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
+         if (!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0]))) {
             this._checkInputVal();
          }
 
-         if (this._fromTouch){
+         if (this._fromTouch) {
             EventBus.globalChannel().notify('MobileInputFocusOut');
             this._fromTouch = false;
          }
@@ -640,7 +659,7 @@ define('SBIS3.CONTROLS/TextBox', [
          TextBox.superclass._focusOutHandler.apply(this, arguments);
       },
 
-      _inputMousedownHandler: function () {
+      _inputMousedownHandler: function() {
          this._clicked = true;
       },
 
@@ -650,16 +669,16 @@ define('SBIS3.CONTROLS/TextBox', [
          this._inputField[0].scrollLeft = 99999;
       },
       
-      _inputClickHandler: function (e) {
+      _inputClickHandler: function(e) {
 
       },
 
       _inputFocusInHandler: function(e) {
          var self = this;
-         if (this._fromTouch){
+         if (this._fromTouch) {
             EventBus.globalChannel().notify('MobileInputFocus');
          }
-         if (this._options.selectOnClick){
+         if (this._options.selectOnClick) {
             //IE теряет выделение, если select вызывается из обработчика focusin, так что обернём в setTimeout.
             //https://codepen.io/anon/pen/LBYLpJ
             if (detection.isIE) {
@@ -671,18 +690,27 @@ define('SBIS3.CONTROLS/TextBox', [
             }
          } else {
             if (this.isEnabled() && !this._clicked) {
-               this._moveCursorAfterActivation();
+               /**
+                * Нельзя перемещать курсор, если фокус перешел по средствам перетаскивания значения в поле.
+                */
+               if (this._isDropped) {
+                  this._isDropped = false;
+               } else {
+                  this._moveCursorAfterActivation();
+               }
             }
          }
+
          /* При получении фокуса полем ввода, сделаем контрол активным.
           *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
           *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
-         if(!this.isActive()) {
+         if (!this.isActive()) {
             this.setActive(true, false, true);
             e.stopPropagation();
          }
+
          // убираем курсор на ipad'e при нажатии на readonly поле ввода
-         if(!this.isEnabled() && constants.browser.isMobilePlatform){
+         if (!this.isEnabled() && constants.browser.isMobilePlatform) {
             this._inputField.blur();
          }
       },

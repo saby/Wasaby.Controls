@@ -25,6 +25,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          _onNodeRemoved: function(event, nodeId) {
             this._notify('onNodeRemoved', nodeId);
          },
+         setHasMoreStorage: function(hasMoreStorage) {
+            this._model.setHasMoreStorage(hasMoreStorage);
+         },
          destroy: function() {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);

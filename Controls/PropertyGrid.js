@@ -1,7 +1,8 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
-   'wml!Controls/PropertyGrid/PropertyGrid'
-], function(Control, template) {
+   'wml!Controls/PropertyGrid/PropertyGrid',
+   'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate'
+], function(Control, template, pgTemplate) {
    /**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
@@ -23,6 +24,7 @@ define('Controls/PropertyGrid', [
 
    var PropertyGrid = Control.extend({
       _template: template,
+      _defaultTemplate: pgTemplate,
       _index: '',
       _valueChangedHandler: function(event, index) {
          this._notify('itemsChanged', [this._options.scopeObject[index]]);

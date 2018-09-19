@@ -1,3 +1,11 @@
-<Controls.DragNDrop.Container>
-   <ws:partial template="{{_options.template}}" scope="{{_options}}"></ws:partial>
+<Controls.DragNDrop.Container a="{{debug()}}">
+   <ws:partial
+         template="{{_options.template}}"
+         scope="{{_options}}"
+         on:close="_onCloseHandler()"
+         on:resize="_onResizeHandler()"
+         on:sendresult="_onResultHandler()"
+         on:register="_onRegisterHandler()"
+         on:unregister="_onRegisterHandler()"
+   ></ws:partial>
 </Controls.DragNDrop.Container>

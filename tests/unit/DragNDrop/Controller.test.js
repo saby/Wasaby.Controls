@@ -21,12 +21,10 @@ define([
             pageY: pageY
          }];
       } else if (type === 'touchend') {
-         result.originalEvent = {
-            changedTouches: [{
-               pageX: pageX,
-               pageY: pageY
-            }]
-         };
+         result.changedTouches = [{
+            pageX: pageX,
+            pageY: pageY
+         }];
       } else {
          result.pageX = pageX;
          result.pageY = pageY;

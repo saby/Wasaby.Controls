@@ -3,16 +3,13 @@
 
   <description>Новая библиотека контролов реализованных на технологии VDOM</description>
 
-  <depends>
-    <bl_module id="c7d8e465-1c28-4437-858f-81968ce81dec" name="Controls-theme"/>
-    <bl_module id="f5e3850a-12d1-4805-b5de-8a40474b17ba" name="WS.Data"/>
-  </depends>
+    <depends>
+      <bl_module id="f5e3850a-12d1-4805-b5de-8a40474b17ba" name="WS.Data"/>
+    </depends>
 
   <load_after/>
 
   <parameters/>
-
-  <cluster_endpoints/>
 
   <resources/>
 

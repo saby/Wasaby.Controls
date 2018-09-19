@@ -30,7 +30,7 @@
    </div>
 </ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
-   <tr attr:class="controls-Grid__row {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="{{itemData.item}}">
+   <tr attr:class="controls-Grid__row {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
       <td class="controls-ListView__groupCellContent" colspan="{{columnAlignGroup ? columnAlignGroup : itemData.columns.length}}">
          <ws:partial template="groupContentTemplate"/>
       </td>
@@ -42,7 +42,7 @@
    </tr>
 </ws:if>
 <ws:else>
-   <div attr:class="controls-Grid__row {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="{{itemData.item}}">
+   <div attr:class="controls-Grid__row {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
       <ws:partial template="groupContentTemplate" attr:style="{{columnAlignGroup ? 'grid-column: 1 / ' + (columnAlignGroup + 1) + ';' : 'grid-column: 1 / ' + (itemData.columns.length + 1) + ';'}}"/>
       <ws:if data="{{columnAlignGroup !== undefined}}">
          <ws:partial template="groupRightTemplate" attr:style="{{'grid-column: ' + (columnAlignGroup + 1) + ' / ' + (itemData.columns.length + 1) + ';'}}"/>

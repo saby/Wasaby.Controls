@@ -15,7 +15,8 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @typedef {String} BeforeEndEditResult
+    * @typedef {String|Core/Deferred} BeforeEndEditResult
+    * @variant {Core/Deferred} Deferred Deferred is used for saving with custom logic.
     * @variant {String} Cancel Cancel ending of editing.
     */
 
@@ -39,6 +40,7 @@ define('Controls/interface/IEditAtPlace', [
     *    }
     * </pre>
     * @see beforeEndEdit
+    * @see afterEndEdit
     * @see editObject
     */
 
@@ -49,9 +51,9 @@ define('Controls/interface/IEditAtPlace', [
     * @param {Boolean} commit If it is true editing ends with saving.
     * @returns {BeforeEndEditResult}
     * @remark
-    * This event fires only if the validation was successful.
+    * This event fires only if the validation was successful. If you return {@link Core/Deferred Core/Deferred} from the event handler then editing will end only if the deferred resolved successfully.
     * @example
-    * The following example creates EditAtPlace and shows how to handle the event.
+    * The following example shows how to cancel the end of the editing if certain condition is met.
     * TMPL:
     * <pre>
     *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
@@ -59,12 +61,54 @@ define('Controls/interface/IEditAtPlace', [
     * JS:
     * <pre>
     *    beforeEndEditHandler: function(e, record, commit) {
-    *       if (commit && record.get("text").length === 0) { //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
+    *       //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
+    *       if (commit && record.get("text").length === 0) {
     *          return 'Cancel';
     *       }
     *    }
     * </pre>
+    * The following example shows how to handle the event asynchronously.
+    * TMPL:
+    * <pre>
+    *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    beforeEndEditHandler: function(e, record, commit) {
+    *       if (commit) {
+    *          return this._source.update(record);
+    *       }
+    *    }
+    * </pre>
     * @see beforeEdit
+    * @see afterEndEdit
+    * @see editObject
+    */
+
+   /**
+    * @event Controls/interface/IEditAtPlace#afterEndEdit Happens after the end of editing.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {WS.Data/Entity/Record} editObject Editing record.
+    * @example
+    * The following example shows how to hide and show an image based on the state of editing.
+    * TMPL:
+    * <pre>
+    *    <Controls.EditAtPlace on:beforeEdit="beforeEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+    *    <ws:if data="{{_imgVisible}}">
+    *       <img src="/media/examples/frog.png" alt="Frog"/>
+    *    </ws:if>
+    * </pre>
+    * JS:
+    * <pre>
+    *    beforeEditHandler: function(e, record) {
+    *       this._imgVisible = false;
+    *    },
+    *    afterEndEditHandler: function(e, record) {
+    *       this._imgVisible = true;
+    *    }
+    * </pre>
+    * @see beforeEdit
+    * @see beforeEndEdit
     * @see editObject
     */
 

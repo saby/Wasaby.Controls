@@ -10,11 +10,13 @@ define('SBIS3.CONTROLS/History/HistoryList',
       'WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/Number/randomId',
+      'Core/helpers/Array/isPlainArray',
+      'Core/helpers/Object/isPlainObject',
       'Core/helpers/Object/isEqual',
       'Core/IoC'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isEqualObject, IoC) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isPlainArray, isPlainObject, isEqualObject, IoC) {
 
       'use strict';
 
