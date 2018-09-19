@@ -2327,10 +2327,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
 
-               // при вставке из google таблиц, они вставляются с шириной 0px, которая плохо работает в IE и FireFox
-               // меняем ширину на auto во всех таблицах с width: 0px; для исправной работы во всех браузерах
-               e.content = e.content.replace(/(<table.*? style=".*?width:)0px(.*?")/g, '$1auto$2');
-
                var options = this._options;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
@@ -2384,6 +2380,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
                var offset;
+
+               // при вставке из google таблиц, они вставляются с шириной 0px, которая плохо работает в IE и FireFox
+               // меняем ширину на auto во всех таблицах с width: 0px; для исправной работы во всех браузерах
+               var tables = content.querySelectorAll('table');
+
+               tables.forEach(function(table) {
+                  if (table.style.width === '0px') {
+                     table.style.width = 'auto';
+                  }
+               });
+
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
                   var $images = $content.find('img:not(.ws-fre__smile)');
