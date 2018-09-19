@@ -520,6 +520,9 @@
          background: @DropdownList-picker-menu-item-hover;
       }
    }
+   .controls-DropdownList__picker.controls-FloatArea {
+      -webkit-transform: translate3d(0,0,0); //Решает проблемы с отрисвкой z-index https://stackoverflow.com/questions/18271460/fixed-positioning-z-index-issue-in-mobile-safari
+   }
 }
 .ws-is-ie, .ws-is-firefox {
    .controls-DropdownList .controls-DropdownList__selectedItem{
