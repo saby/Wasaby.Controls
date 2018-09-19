@@ -508,26 +508,30 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обновить изображение предпросмотра
           *
           * @protected
-          * @param {boolean} withClear Указывает очистить сразу от предыдущего изображения
+          * @param {object} features Уточняющие параметры (опционально)
+          * @param {boolean} [features.withClear] Очистить сразу от предыдущего изображения (опционально)
+          * @param {boolean} [features.isSilent] Не показывать индикатор ожидания (опционально)
           */
-         _updatePreview: function (withClear) {
+         _updatePreview: function (features) {
             var fieldIds = this._options.fieldIds;
             var has = !!(fieldIds && fieldIds.length);
-            if (!has || withClear) {
+            if (!has || (features && features.withClear)) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
                this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
             if (has) {
-               this._updatePreviewStart();
+               this._updatePreviewStart(!(features && features.isSilent));
             }
          },
          _updatePreviewClearStop: function () {
             this._waitIndicatorEnd();
          },
-         _updatePreviewStart: function () {
-            this._waitIndicatorStart();
+         _updatePreviewStart: function (withWaitIndicator) {
+            if (withWaitIndicator) {
+               this._waitIndicatorStart();
+            }
             this._callFormatterGetPreviewUrl().addCallbacks(
                this._updatePreviewStartOnUrl.bind(this),
                this._updatePreviewClearStop.bind(this)
@@ -606,7 +610,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                   args.fileUuid = options.primaryUuid;
                   args.title = historyInfo.title;
                }
-               this._exportFormatter.commit(args, options.serviceParams).addCallback(this._updatePreview.bind(this));
+               this._exportFormatter.commit(args, options.serviceParams);
                result = saving && saving.isClone ? fileUuid : options.primaryUuid || fileUuid;
                /*if (fileUuid && !(saving && saving.isClone)) {
                   var deleteUuid = options.primaryUuid;
@@ -619,7 +623,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             }
             else {
                if (fileUuid) {
-                  this._callFormatterDelete(fileUuid).addCallback(this._updatePreview.bind(this));
+                  this._callFormatterDelete(fileUuid);
                }
                result = options.primaryUuid;
             }
@@ -698,7 +702,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._callFormatterMethods(methods);
             }
             else {
-               this._updatePreview();
+               this._updatePreview({withClear:isConsumerChanged, isSilent:!(isConsumerChanged || isFieldsChanged || !options.primaryUuid)});
             }
             this.setEnabled(hasFields);
             this.setVisible(hasFields);
