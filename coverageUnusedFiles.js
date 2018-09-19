@@ -43,12 +43,11 @@ var rawCover = fs.readFileSync(coveragePath, 'utf8'),
 function coverFiles(files, replacer) {
     files.forEach(file => {
         var relPath = file.replace(replacer, '').slice(1),
-            rootPaths = replacer.split('\\'),
+            rootPaths = replacer.split(path.sep),
             rootDir = rootPaths[rootPaths.length - 1],
-            key = [rootDir, relPath].join('\\').replace(/\\/g, '/'),
+            key = [rootDir, relPath].join(path.sep),
             coverData = cover[key];
         if (!coverData) {
-            console.log('ARA\n');
             var rawFile = fs.readFileSync(file, 'utf-8');
             transformer(rawFile, file);
             var coverState = instrumenter.lastFileCoverage();
