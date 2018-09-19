@@ -21,14 +21,14 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
        */
       markRichContentOnCopy: function(target) {
          //поддерживаем форматное копирование не во всех браузерах
-         if (this._isSupportedBrowser()) {
+         if (this._isFormatCopySupported()) {
             target.addEventListener('copy', this._markingRichContent, true);
             target.addEventListener('cut', this._markingRichContent, true);
          }
       },
 
       unmarkRichContentOnCopy: function(target) {
-         if (this._isSupportedBrowser()) {
+         if (this._isFormatCopySupported()) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             target.removeEventListener('copy', this._markingRichContent, true);
             target.removeEventListener('cut', this._markingRichContent, true);
@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
        * @protected
        * @return {boolean}
        */
-      _isSupportedBrowser: function () {
+      _isFormatCopySupported: function () {
          var browser = constants.browser;
          return browser.chrome || browser.firefox || browser.isIE || (browser.safari && browser.isMacOSDesktop);
       },
