@@ -240,7 +240,10 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
              source = new SbisService({
                 endpoint: object
             }),
-            syncUnload = !this._isLongOperationsEnabled();
+            //В .510 все кроме PDF и Excel пользуются синхронной выгрузкой.
+            //В .710 выписана задача по переводу всех, кто использует свои механизмы выгрузки,
+            //на длительныее операции https://online.sbis.ru/opendoc.html?guid=f2593e5c-84f8-47b6-9cf7-798ced8d0f50
+            syncUnload = !this._isLongOperationsEnabled() || (object !== 'PDF' && object !== 'Excel');
 
          /*
           TODO:Костыль из-за того что у объектов Excel и PDF методы называются по разному и разные сигнатуры

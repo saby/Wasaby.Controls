@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/Menu', [
    'SBIS3.CONTROLS/Mixins/TreeMixinDS',
    'SBIS3.CONTROLS/FloatArea',
    'WS.Data/Relation/Hierarchy',
+   'Core/detection',
    'Core/helpers/Hcontrol/configStorage',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/Menu', [
    'SBIS3.CONTROLS/Menu/MenuItem',
    'css!SBIS3.CONTROLS/Menu/Menu'
 
-], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, configStorage, Sanitize, escapeHtml, IoC, cMerge) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, detection, configStorage, Sanitize, escapeHtml, IoC, cMerge) {
 
    'use strict';
 
@@ -242,7 +243,7 @@ define('SBIS3.CONTROLS/Menu', [
       _getItemsContainer: function() {
          return $('.controls-Menu__itemsContainer', this._container);
       },
-   
+
       _drawItems: function() {
          this.destroySubObjects();
          this._checkIcons();
@@ -350,7 +351,7 @@ define('SBIS3.CONTROLS/Menu', [
                   }
 
                   //получаем саб меню для текущей кнопки и показываем его
-                  var mySubmenu;
+                  var mySubmenu, submenuContainer;
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
@@ -362,6 +363,17 @@ define('SBIS3.CONTROLS/Menu', [
                      self._createdSubMenuId = id;
                      mySubmenu = self._subMenus[id];
                      mySubmenu.show();
+
+                     submenuContainer = mySubmenu.getContainer();
+                     if (detection.isMobileIOS) {
+                        // В документах после открытия меню не перкого уровня оно оказывается под iframe и через
+                        // какое то время(через 5-10 секунд) отображается нормально над ним. Пересчет лайаута
+                        // решает проблему.
+                        submenuContainer.height(0);
+                        submenuContainer.height();
+                        submenuContainer.height('');
+                     }
+
                      /* Само меню не должно вызывать перерасчёта у соседних элементов,
                       т.к. создаётся абсолютом в body, однако, в меню могу лежать контролы,
                       которым требуется расчитывать ширину, поэтому запускаем расчёты только для дочерних */
