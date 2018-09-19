@@ -144,7 +144,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} options.dialogTitle Заголовок диалога настройщика импорта (опционально)
           * @param {string} options.dialogButtonTitle Подпись кнопки диалога применения результата редактирования (опционально)
           * @param {string} options.allSheetsTitle Название опции для выбора одинаковых настроек для всех листов файла в под-компоненте выбора области данных (опционально)
-          * @param {string} options.columnBindingMenuTitle Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+          * @param {string} options.columnBindingMenuTitle Заголовок для меню выбора соответствия в колонках в под-компоненте привязки колонок (опционально)
           * @param {string} options.columnBindingHeadTitle Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
           * @param {string} options.mapperFieldColumnTitle Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
           * @param {string} options.mapperVariantColumnTitle Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
