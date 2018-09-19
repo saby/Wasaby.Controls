@@ -135,6 +135,7 @@ define('Controls/Container/Data',
             var self = this;
             _private.createPrefetchSource(this, items).addCallback(function(result) {
                _private.resolvePrefetchSourceResult(self, result);
+               _private.updateDataOptions(self, self._dataOptionsContext);
                self._forceUpdate();
                return result;
             });
