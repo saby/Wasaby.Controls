@@ -23,7 +23,9 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
 
          $protected: {
             _options: {
-               value: ''
+               value: '',
+
+               validationTrigger: 'focusOut'
             }
          },
 
@@ -35,7 +37,9 @@ define('SBIS3.CONTROLS/VdomPhoneTextBox',
             wrapper = this.getChildControlByName('wrapper');
 
             wrapper.subscribe('onValueChange', this._valueChangedHandler.bind(this));
-            wrapper.subscribe('onFocusOut', this.validate.bind(this));
+            if (this._options.validationTrigger === 'focusOut') {
+               wrapper.subscribe('onFocusOut', this.validate.bind(this));
+            }
 
             this._wrapper = wrapper;
          },
