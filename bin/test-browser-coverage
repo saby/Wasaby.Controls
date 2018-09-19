@@ -6,40 +6,51 @@ paths=(Controls File components)
 node -v
 npm install
 
+# создаем темповую папку и копируем туда Controls, File и components
+# делаем это чтобы nyc правильно прописывал пути для инструментированных файлов
+# не Attach.js а File/Attach.js
 for item in ${paths[*]}
 do
-    mkdir -p ara/${item}
-    cp -rf ${item}/* ara/${item}/
+    mkdir -p temp/${item}
+    cp -rf ${item}/* temp/${item}/
 done
 
-node node_modules/nyc/bin/nyc instrument ara goga
+# запускаем инструментирование JavaScript кода
+node node_modules/nyc/bin/nyc instrument temp temp-covered
 
+# копируем в инструментируемый код css, tmpl, wml
+# чистим темповые дирректории
 for item in ${paths[*]}
 do
     mv ${item} ${item}-origin
-    mv goga/${item} ${item}
+    mv temp-covered/${item} ${item}
     cp -nR ${item}-origin/* ${item}
 done
-rm -rf ara/
-rm -rf goga/
+rm -rf temp/
+rm -rf temp-covered/
 
+# собираем зависимости и запускаем сбор покрытия
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
+# удаляем папки с инструментированным кодом
 for item in ${paths[*]}
 do
     rm -rf ${item}
     mv ${item}-origin ${item}
 done
 
+# дописываем 0 покрытие для файлов которые не использовались в тестах
 node coverageUnusedFiles
 
+# подготавливаем файлы покрытия для создания отчетов
 mkdir -p artifacts/{all,controls,file,components}
 mv artifacts/coverageAll.json artifacts/all/coverage.json
 mv artifacts/coverageControls.json artifacts/controls/coverage.json
 mv artifacts/coverageFile.json artifacts/file/coverage.json
 mv artifacts/coverageComponents.json artifacts/components/coverage.json
 
+# создаем отчеты о покрытии
 node node_modules/nyc/bin/nyc report --reporter=cobertura --report-dir=cobertura --temp-directory=artifacts/all
 node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report --temp-directory=artifacts/all
 node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-controls-report --temp-directory=artifacts/controls
