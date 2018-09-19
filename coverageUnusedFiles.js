@@ -1,11 +1,13 @@
 var path = require('path'),
     fs = require('fs'),
     nyc = require('nyc'),
-    componentsPath = path.join(__dirname, 'components'),
     controlsPath = path.join(__dirname, 'Controls'),
+    filePath = path.join(__dirname, 'File'),
+    componentsPath = path.join(__dirname, 'components'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
     coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
     coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
+    coverageFilePath = path.join(__dirname, 'artifacts', 'coverageFile.json'),
     coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
     allFiles = [];
 
@@ -25,56 +27,60 @@ dirWalker = function (dir) {
     }
 };
 
-dirWalker(componentsPath);
 dirWalker(controlsPath);
+dirWalker(filePath);
+dirWalker(componentsPath);
 
 var rawCover = fs.readFileSync(coveragePath, 'utf8'),
     cover = JSON.parse(rawCover),
-    newCover = JSON.parse("{}"),
+    newCover = {},
     instrumenter = new nyc().instrumenter(),
-    transformer = instrumenter.instrumentSync.bind(instrumenter);
+    transformer = instrumenter.instrumentSync.bind(instrumenter),
+    controlsFiles = allFiles.filter(file => file.includes('Controls')),
+    fileFiles = allFiles.filter(file => file.includes('File')),
+    componentsFiles = allFiles.filter(file => file.includes('components'));
 
-allFiles.forEach(function (name) {
-    var replacer = null;
-    if (name.contains('Controls')){
-        replacer = controlsPath;
-    } else if (name.contains('components')){
-        replacer = componentsPath
-    }
-    var coverName = name.replace(replacer, '').slice(1);
-    console.log(name);
-//    if (!cover[coverName]) {
-//        var rawFile = fs.readFileSync(name, 'utf-8');
-//        transformer(rawFile, name);
-//        var coverState = instrumenter.lastFileCoverage();
-//        Object.keys(coverState.s).forEach(function (key) {
-//           coverState.s[key] = 0;
-//        });
-//        nycCover = coverState;
-//        nycCover['path'] = name;
-//        newCover[name] = nycCover;
-//        console.log('File ' + name + ' not using in tests')
-//    } else {
-//        nycCover = cover[coverName];
-//        nycCover['path'] = name;
-//        newCover[name] = nycCover;
-//    }
-});
+function coverFiles(files, replacer) {
+    files.forEach(file => {
+        var relPath = file.replace(replacer, '').slice(1),
+            rootPaths = replacer.split('\\'),
+            rootDir = rootPaths[rootPaths.length - 1],
+            key = [rootDir, relPath].join('\\').replace(/\\/g, '/'),
+            coverData = cover[key];
+        if (!coverData) {
+            var rawFile = fs.readFileSync(file, 'utf-8');
+            transformer(rawFile, file);
+            var coverState = instrumenter.lastFileCoverage();
+            Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
+            newCover[file] = coverState;
+            // console.log('File ' + file + ' not using in tests')
+        } else {
+            coverData['path'] = file;
+            newCover[file] = coverData;
+        }
+    });
+}
 
-//fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
-//
-//function getCoverByPath(path) {
-//    var coverageByPath = {};
-//    Object.keys(newCover).forEach(function (name) {
-//        if (name.includes(path)) {
-//            coverageByPath[name] = newCover[name]
-//        }
-//    });
-//    return coverageByPath
-//}
-//
-//var componentsCoverage = getCoverByPath(componentsPath),
-//    controlsCoverage = getCoverByPath(controlsPath);
-//
-//fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
-//fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');
+coverFiles(controlsFiles, controlsPath);
+coverFiles(fileFiles, filePath);
+coverFiles(componentsFiles, componentsPath);
+
+fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
+
+function getCoverByPath(path) {
+    var coverageByPath = {};
+    Object.keys(newCover).forEach(function (name) {
+        if (name.includes(path)) {
+            coverageByPath[name] = newCover[name]
+        }
+    });
+    return coverageByPath
+}
+
+var controlsCoverage = getCoverByPath(controlsPath),
+    fileCoverage = getCoverByPath(filePath),
+    componentsCoverage = getCoverByPath(componentsPath);
+
+fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
+fs.writeFileSync(coverageFilePath, JSON.stringify(fileCoverage), 'utf8');
+fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');
