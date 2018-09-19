@@ -3,8 +3,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'Core/Control',
       'Core/Deferred',
       'Core/core-merge',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridWrapper',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
+      'wml!Controls-demo/PropertyGrid/PropertyGridWrapper',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -40,16 +39,25 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                notOrigin = this._children[opts.componentOpt.name]._notify;
             this._children[opts.componentOpt.name]._notify = function(event, arg) {
                self.myEvent += event + '\n';
+               if (event === opts.eventType) {
+                  opts.componentOpt[opts.nameOption] = arg[0];
+               }
                notOrigin.apply(this, arguments);
                self._forceUpdate();
             };
          },
          _valueChangedHandler: function() {
-            this._forceUpdate();
+            this._notify('optionsChanged', [this._options]);
          },
          reset: function() {
             this.myEvent = '';
          }
       });
+
+      PGWrapper.getDefaultOptions = function() {
+         return {
+
+         };
+      };
       return PGWrapper;
    });
