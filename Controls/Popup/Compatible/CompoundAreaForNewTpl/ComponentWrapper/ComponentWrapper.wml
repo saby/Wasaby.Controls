@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Container a="{{debug()}}">
+<Controls.DragNDrop.Container>
    <ws:partial
          template="{{_options.template}}"
          scope="{{_options}}"
