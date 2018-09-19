@@ -25,20 +25,92 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#triState
-    * @cfg {Boolean} Determines whether the state of the tristate.
+    * @cfg {Boolean} Determines whether the CheckBox will allow three check status rather than two.
+    * @variant True Enable triState.
+    * @variant False Disable triState.
+    * @default False
+    * @remark TriState is undefined state of checkbox, when checkbox children are checked, but no all.
+    * @example
+    * Checkbox with enabled triState.
+    * <pre>
+    *    Boolean variable vlue: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+    * </pre>
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _updateCheckBox(event, value) {
+    *          _checkBoxValue = value;
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    * @see option Value
     */
 
    /**
     * @name Controls/Toggle/Checkbox#value
-    * @cfg {Boolean|null} Current value.
+    * @cfg {Boolean|null} Current value. It's determines current state.
     * @variant True Selected checkbox state.
     * @variant False Unselected checkbox state. It is default state.
     * @variant Null Tristate checkbox state.
+    * @default False
+    * @remark Variant null of value this option is possible only when the triState option is enabled.
+    * @example
+    * Checkbox regulate theme in control.
+    * <pre>
+    *    <Controls.Toggle.Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+    * </pre>
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _darkThemeSwitched(e, value) {
+    *          _checkBoxValue = value;
+    *          this._notify('themeChanged', [_checkBoxValue]);
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    * Checkbox value when triState option is true.
+    * <pre>
+    *    <Controls.Toggle.Checkbox triState="{{true}}" value="{{_checkBoxValue}}"/>
+    *
+    *    <Controls.List items="{{items}}" on:itemClick="_updateCheckBox()"/>
+    * </pre>
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _updateCheckBox() {
+    *          if (!items.isAllSelected() && !items.isAllNotSelected) {
+    *             this._checkBoxValue= null;
+    *          }
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    * @see option triState
+    * @see event valueChanged()
     */
 
    /**
     * @event Controls/Toggle/Checkbox#valueChanged Occurs when state changes.
-    * @param {Boolean|null} value New value.
+    * @param {Boolean|null} New value.
+    * @remark This event should be used to react to changes user makes in the checkbox. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Value may be null only when checkbox tristate option is true.
+    * @example
+    * Example description.
+    * <pre>
+    *    <Controls.Toggle.Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
+    * </pre>
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _valueChangedHandler(e, value) {
+    *          this._checkBoxValue= value;
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    * @see value
+    * @see triState
     */
 
    var _private = {
