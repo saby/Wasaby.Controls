@@ -4,7 +4,7 @@
 node -v
 npm install
 
-paths=(Controls components)
+paths=(Controls File components)
 
 for item in ${paths[*]}
 do
@@ -12,19 +12,19 @@ do
     cp -rf ${item}/* ara/${item}/
 done
 
-#node node_modules/nyc/bin/nyc instrument ara goga
+node node_modules/nyc/bin/nyc instrument ara goga
 
-#for item in ${paths[*]}
-#do
-#    mv ${item} ${item}-origin
-#    mv goga/${item} ${item}
-#    cp -nR ${item}-origin/* ${item}
-#done
-#rm -rf ara/
-#rm -rf goga/
+for item in ${paths[*]}
+do
+    mv ${item} ${item}-origin
+    mv goga/${item} ${item}
+    cp -nR ${item}-origin/* ${item}
+done
+rm -rf ara/
+rm -rf goga/
 
-#node depencyCollector
-#node node_modules/ws-unit-testing/queue test-server test-browser-coverage
+node depencyCollector
+node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
 #rm -rf Controls
 #rm -rf components
