@@ -1,10 +1,6 @@
 define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
    'Lib/Control/CompoundControl/CompoundControl',
-   'tmpl!SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog/ImagePropertiesDialog',
-   'Deprecated/Controls/Button/Button',
-   'Deprecated/Controls/FieldInteger/FieldInteger',
-   'Deprecated/Controls/FieldDropdown/FieldDropdown',
-   'Deprecated/Controls/FieldLabel/FieldLabel'
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog/ImagePropertiesDialog'
 ], function (CompoundControl, dotTplFn) {
 
 
@@ -33,7 +29,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
          var validators = [{
             validator: function () {
-               var value = this.getValue();
+               var value = this.getNumericValue();
                return value && value !== 0;
             },
             errorMessage: 'Значение не может быть равно нулю!'
@@ -63,15 +59,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             this._imageHeight.setTooltip(pixelSize.height);
             this._valueType.setSelectedKeys([isPercents ? 'per' : 'pix']);
 
-            this.subscribeTo(this._imageWidth, 'onTextChange', this._onSizeChanged.bind(this, true));
-            this.subscribeTo(this._imageHeight, 'onTextChange', this._onSizeChanged.bind(this, false));
+            // Так как события onTextChange и onPropertyChanged происходят в TextBox-е и при вводе пользователем, и при установке значений из кода,
+            // то они не подходят. Нужно реагировать только на пользовательский ввод, поэтому подписываемся на события input-ов непосредственно
+            this._imageWidth.getContainer().find('input').on('keyup', this._onWidthChanged = this._onSizeChanged.bind(this, true));
+            this._imageHeight.getContainer().find('input').on('keyup', this._onHeightChanged = this._onSizeChanged.bind(this, false));
          }.bind(this));
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
             if (this._imageWidth.validate() && this._imageHeight.validate()) {
                this._options.result.callback({
-                  width: this._imageWidth.getValue(),
-                  height: this._imageHeight.getValue(),
+                  width: this._imageWidth.getNumericValue(),
+                  height: this._imageHeight.getNumericValue(),
                   valueType: this._getValueType()
                });
                this._dialog.close();
@@ -88,28 +86,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             else {
                size = options.pixelSize;
             }
-            this._imageWidth.isSilent = true;
             this._imageWidth.setText(size.width);
-            this._imageHeight.isSilent = true;
             this._imageHeight.setText(size.height);
          }.bind(this));
       },
 
-      _onSizeChanged: function (useWidth, evt, val) {
+      _onSizeChanged: function (useWidth) {
          var primary = useWidth ? this._imageWidth : this._imageHeight;
          var secondary = useWidth ? this._imageHeight : this._imageWidth;
-         if (primary.isSilent) {
-            primary.isSilent = undefined;
-            return;
-         }
-         var value = primary.getValue();
+         var value = primary.getNumericValue();
          if (this._getValueType() === 'per') {
             if (100 < value) {
                value = 100;
-               primary.isSilent = true;
-               primary.setText(value);
+               setTimeout(primary.setText.bind(primary, value), 1);
             }
-            secondary.isSilent = true;
             secondary.setText(value);
          }
          else {
@@ -119,11 +109,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             var maxValue = useWidth ? options.editorWidth : options.editorWidth/aspect;
             if (maxValue < value) {
                value = maxValue;
-               primary.isSilent = true;
-               primary.setText(value);
+               setTimeout(primary.setText.bind(primary, value), 1);
             }
-            secondary.isSilent = true;
-            secondary.setText(value ? value*aspect : null);
+            secondary.setText(value ? Math.round(value*aspect) : '');
          }
       },
 
@@ -146,6 +134,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
       _getValueType: function () {
          var keys = this._valueType.getSelectedKeys();
          return keys && keys.length ? keys[0] : undefined;
+      },
+
+      destroy: function () {
+         this._imageWidth.getContainer().find('input').off('keyup', this._onWidthChanged);
+         this._imageHeight.getContainer().find('input').off('keyup', this._onHeightChanged);
       }
    });
 
