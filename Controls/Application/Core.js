@@ -42,24 +42,6 @@ define('Controls/Application/Core',
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-            if (cfg.lite) {
-               var myLoadCssFn = function(path, require, load, conf) {
-                  var parseInfo = parseTheme(path);
-                  if (parseInfo.hasTheme) {
-                     ThemesController.getInstance().pushThemedCss(cssResolve(parseInfo.name));
-                  } else {
-                     ThemesController.getInstance().pushSimpleCss(cssResolve(path));
-                  }
-                  load(null);
-               };
-
-               if (typeof process !== 'undefined' && process.domain && process.domain.req && process.domain.req.loadCss) {
-                  process.domain.req.loadCss = myLoadCssFn;
-               } else {
-                  nativeCss.load = myLoadCssFn;
-               }
-            }
-
             try {
                /* TODO: set to presentation service */
                process.domain.req.compatible = false;

@@ -28,6 +28,32 @@ var copyRecursiveSync = function(src, dest) {
    }
 };
 
+var rmRecursiveSync = function(src) {
+   var exists = fs.existsSync(src);
+   var stats = exists && fs.statSync(src);
+   var isDirectory = exists && stats.isDirectory();
+   if (isDirectory) {
+      fs.readdirSync(src).forEach(function(childItemName) {
+         rmRecursiveSync(path.join(src, childItemName));
+      });
+      try{
+         fs.rmdirSync(src);
+      }catch(e){}
+   } else {
+      try {
+         if (src.indexOf('s3mod') === -1) {
+            fs.unlinkSync(src);
+         }
+      }catch(e){}
+
+   }
+};
+
+rmRecursiveSync(path.join(root, 'SBIS3.CONTROLS'));
+
+
+copyRecursiveSync(path.join(root, 'components'), path.join(root, 'SBIS3.CONTROLS'));
+
 var gultConfig = JSON.stringify(require('./buildTemplate.json'));
 gultConfig = gultConfig.replace(/%cd%/ig, root).replace(/\\/ig, '/');
 
@@ -37,35 +63,6 @@ if (!fs.existsSync(path.join(root, 'application'))) {
 if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
    fs.mkdirSync(path.join(root, 'application', 'resources'));
 }
-
-/*gultConfig = JSON.parse(gultConfig);
-var alljson = {links: {}, nodes: {}};
-gultConfig.modules.forEach((one) => {
-   if (one.name.indexOf('WS.Core') === -1)
-{
-   let fileName = path.join(root, 'application', one.name, 'module-dependencies.json');
-   if (fs.existsSync(fileName)) {
-      let oneJson = require(fileName);
-
-      for (var i in oneJson.links) {
-         alljson.links[i] = oneJson.links[i];
-      }
-
-      for (var j in oneJson.nodes) {
-         alljson.nodes[j] = oneJson.nodes[j];
-      }
-   }
-}
-});
-
-if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
-   fs.mkdirSync(path.join(root, 'application', 'resources'));
-}
-
-fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
-   JSON.stringify(alljson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//ig, ''));
-
-return*/
 
 fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
    const { spawn } = require('child_process');

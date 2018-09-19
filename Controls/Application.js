@@ -161,7 +161,8 @@ define('Controls/Application',
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
-            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
+            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot,
+               self.resourceRoot);
 
             // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
