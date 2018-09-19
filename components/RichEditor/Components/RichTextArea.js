@@ -694,7 +694,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             getText: function () {
                var text = RichTextArea.superclass.getText.apply(this, arguments);
                // Если в текст при редактировании (например через copy-paste) попали спецсимволы (с \00 по \x08), то экранируем их т.к. они могу ломать страницу при серверной вёрстке
-               return text.replace(/[\x00-\x08]/g, function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
+               var pattern = '[\\x00-\\x08]';
+               return text.replace(new RegExp(pattern, 'g'), function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
             },
 
             /**
