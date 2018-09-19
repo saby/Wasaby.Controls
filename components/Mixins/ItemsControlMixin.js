@@ -1695,16 +1695,29 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
        * @param {Number} id Идентификатор модели
        * @param {Object|WS.Data/Entity/Model} meta Мета информация
+       * @param {Boolean} replaceItem Заменять элемент при перезагрузке
        * @returns {*}
        */
-      reloadItem: function(id, meta) {
+      reloadItem: function(id, meta, replaceItem) {
          var
-            items = this.getItems(),
+            currentItem,
+            currentIndex,
+            items = this.getItems();
+
+         if (replaceItem) {
             currentIndex = items.getIndexByValue(items.getIdProperty(), id);
-         if (this.getDataSource() && currentIndex !== -1) {
-            return this.getDataSource().read(id, meta).addCallback(function(newItem) {
-               items.replace(newItem, currentIndex);
-            });
+            if (this.getDataSource() && currentIndex !== -1) {
+               return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+                  items.replace(newItem, currentIndex);
+               });
+            }
+         } else {
+            currentItem = items.getRecordById(id);
+            if (this.getDataSource() && currentItem) {
+               return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+                  currentItem.merge(newItem);
+               });
+            }
          }
          return Deferred.success();
       },
