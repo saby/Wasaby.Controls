@@ -11,10 +11,10 @@ cp -rf components/* tmp/components/
 node node_modules/nyc/bin/nyc instrument tmp tmp-covered
 
 mv Controls Controls-origin
-mv tmp-covered/Controls Controls
-cp -nR Controls-origin/* Controls
 mv components components-origin
+mv tmp-covered/Controls Controls
 mv tmp-covered/components components
+cp -nR Controls-origin/* Controls
 cp -nR components-origin/* components
 rm -rf tmp/
 rm -rf tmp-covered/
@@ -22,10 +22,10 @@ rm -rf tmp-covered/
 node depencyCollector
 node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 
-rm -rf components
+mv Controls-origin Controls
 mv components-origin components
 rm -rf Controls
-mv Controls-origin Controls
+rm -rf components
 
 #node coverageUnusedFiles
 
