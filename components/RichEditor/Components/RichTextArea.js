@@ -1112,6 +1112,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Установить новый текст подсказки
+             * @public
+             * @param {string} value Текст подсказки
+             */
+            setPlaceholder: function (value) {
+               this._options.placeholder = value;
+               this._container.find('.controls-RichEditor__placeholder').text(value);
+            },
+
+            /**
              * Почистить выделение от <br data-mce-bogus="1">
              * @private
              */
@@ -1463,6 +1473,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
+               var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
                   isAlreadyApplied = formatter.match(command);
@@ -1525,10 +1536,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var videoId = this._getYouTubeVideoId(url);
                            if (videoId) {
                               var attr = 'data-ws-video="' + videoId + '"';
-                              $video.before('<span ' + attr + '>temporary</span>').remove();
+                              var undoManager = editor.undoManager;
+                              undoManager.ignore(function () {
+                                 $video.before('<span ' + attr + '>temporary</span>').remove();
+                              }.bind(this));
+                              skipUndo = true;
                               afterProcess = function () {
-                                 var $video = $(editor.getBody()).find('[' + attr + ']');
-                                 $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 undoManager.ignore(function () {
+                                    var $video = $(editor.getBody()).find('[' + attr + ']');
+                                    $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 }.bind(this));
+                                 undoManager.add();
                               }.bind(this);
                            }
                         }
@@ -1612,7 +1630,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                }
-               editor.execCommand(editorCmd || command);
+               if (skipUndo) {
+                  editor.undoManager.ignore(editor.execCommand.bind(editor, editorCmd || command));
+               }
+               else {
+                  editor.execCommand(editorCmd || command);
+               }
                if (afterProcess) {
                   afterProcess();
                }
