@@ -27,7 +27,7 @@ define('Controls/Filter/Button',
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
-       * @demo Controls-demo/Filter/Button/withOptions/ButtonVDOM
+       * @demo Controls-demo/Filter/Button/ButtonPG
        * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
@@ -159,6 +159,9 @@ define('Controls/Filter/Button',
          _beforeUpdate: function(options) {
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
+            }
+            if (this._options.orientation !== options.orientation) {
+               _private.setPopupOptions(this, options);
             }
          },
 
