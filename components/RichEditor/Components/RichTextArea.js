@@ -1111,6 +1111,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Установить новый текст подсказки
+             * @public
+             * @param {string} value Текст подсказки
+             */
+            setPlaceholder: function (value) {
+               this._options.placeholder = value;
+               this._container.find('.controls-RichEditor__placeholder').text(value);
+            },
+
+            /**
              * Почистить выделение от <br data-mce-bogus="1">
              * @private
              */
