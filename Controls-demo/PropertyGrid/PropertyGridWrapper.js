@@ -43,6 +43,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                   opts.componentOpt[opts.nameOption] = arg[0];
                }
                notOrigin.apply(this, arguments);
+               self._forceUpdate();
                self._children.PropertyGrid._forceUpdate();
             };
          },
