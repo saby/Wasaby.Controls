@@ -313,7 +313,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          validators: [
             {
                validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
-               errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+               errorMessage: rk('Не установлено соответствие между колонками и полями', 'НастройщикИмпорта')
             }
          ]
       };
@@ -375,7 +375,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                allSheetsTitle: null,
                /**
-                * @cfg {string} Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+                * @cfg {string} Заголовок для меню выбора соответствия в колонках в под-компоненте привязки колонок (опционально)
                 */
                columnBindingMenuTitle: null,
                /**
@@ -867,7 +867,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @protected
           */
          _onChangeMapper: function () {
-            // Изменился перечень соответсвий
+            // Изменился перечень соответствий
             var values = this._getSubviewValues('mapper');
             var mapping = values.mapping;
             if (mapping) {
