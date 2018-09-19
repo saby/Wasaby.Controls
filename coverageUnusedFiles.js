@@ -48,6 +48,7 @@ function coverFiles(files, replacer) {
             key = [rootDir, relPath].join('\\').replace(/\\/g, '/'),
             coverData = cover[key];
         if (!coverData) {
+            console.log('ARA\n');
             var rawFile = fs.readFileSync(file, 'utf-8');
             transformer(rawFile, file);
             var coverState = instrumenter.lastFileCoverage();
@@ -55,6 +56,7 @@ function coverFiles(files, replacer) {
             newCover[file] = coverState;
             console.log('File ' + file + ' not using in tests')
         } else {
+            console.log('GOGA\n');
             coverData['path'] = file;
             newCover[file] = coverData;
         }
