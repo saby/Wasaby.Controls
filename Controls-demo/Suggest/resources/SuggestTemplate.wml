@@ -1,3 +1,3 @@
 <Controls.Container.Suggest.List>
-    <Controls.List displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass}}"/>
+    <Controls.List displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass + (_options.dialogMode ? ' demo-suggestSelector')}}"/>
 </Controls.Container.Suggest.List>
