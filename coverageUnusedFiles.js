@@ -53,7 +53,7 @@ function coverFiles(files, replacer) {
             var coverState = instrumenter.lastFileCoverage();
             Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
             newCover[file] = coverState;
-            // console.log('File ' + file + ' not using in tests')
+            console.log('File ' + file + ' not using in tests')
         } else {
             coverData['path'] = file;
             newCover[file] = coverData;
@@ -64,8 +64,6 @@ function coverFiles(files, replacer) {
 coverFiles(controlsFiles, controlsPath);
 coverFiles(fileFiles, filePath);
 coverFiles(componentsFiles, componentsPath);
-
-fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
 
 function getCoverByPath(path) {
     var coverageByPath = {};
@@ -81,6 +79,7 @@ var controlsCoverage = getCoverByPath(controlsPath),
     fileCoverage = getCoverByPath(filePath),
     componentsCoverage = getCoverByPath(componentsPath);
 
+fs.writeFileSync(coverageAllPath, JSON.stringify(newCover), 'utf8');
 fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
 fs.writeFileSync(coverageFilePath, JSON.stringify(fileCoverage), 'utf8');
 fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');
