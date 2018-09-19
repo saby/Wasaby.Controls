@@ -32,7 +32,7 @@ do
     mv ${item}-origin ${item}
 done
 
-#node coverageUnusedFiles
+node coverageUnusedFiles
 
 mkdir artifacts/all
 mv artifacts/coverageAll.json artifacts/all/coverage.json
