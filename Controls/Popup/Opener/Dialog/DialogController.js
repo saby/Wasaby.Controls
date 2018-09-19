@@ -38,6 +38,12 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             var height = container.style.height;
             container.style.width = 'auto';
             container.style.height = 'auto';
+            if (cfg.popupOptions.maxWidth) {
+               container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
+            }
+            if (cfg.popupOptions.maxHeight) {
+               container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
+            }
 
             /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
             this.prepareConfig(cfg, container);
@@ -45,6 +51,8 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
             container.style.width = width;
             container.style.height = height;
+            container.style.maxWidth = '';
+            container.style.maxHeight = '';
 
             /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
          },
