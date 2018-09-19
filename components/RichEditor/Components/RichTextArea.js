@@ -424,6 +424,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (text[0] !== '<') {
                      text = '<p>' + text + '</p>';
                   }
+                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
                   var div = document.createElement('div');
                   div.innerHTML = text;
                   self._options.json = typeof self._options.json === 'string'
