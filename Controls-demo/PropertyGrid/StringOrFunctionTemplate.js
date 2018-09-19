@@ -1,7 +1,7 @@
 define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
+      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
       'Core/tmpl/tmplstr',
       'css!Controls-demo/Input/resources/VdomInputs',
    ],

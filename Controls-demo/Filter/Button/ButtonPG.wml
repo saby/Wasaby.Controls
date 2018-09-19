@@ -3,6 +3,8 @@
         dataObject="{{_dataObject}}"
         componentOpt="{{_componentOptions}}"
         content="{{_content}}"
+        on:optionsChanged="_optionsChanged()"
         eventType="{{_eventType}}"
-        nameOption="{{_nameOption}}">
+        nameOption="{{_nameOption}}"
+        attr:class="controls-demo_Wrapper-ButtonPG">
 </Controls-demo.PropertyGrid.PropertyGridWrapper>

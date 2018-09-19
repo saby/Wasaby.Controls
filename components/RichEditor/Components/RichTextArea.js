@@ -693,8 +693,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             getText: function () {
                var text = RichTextArea.superclass.getText.apply(this, arguments);
-               // Не выпускаем наружу символы с \00 по \x08, т.к. при дальнейшем использовании (наприменр при серверной вёрстке) от них могут быть проблемы
-               return text.replace(/[\x00-\x08]/g, function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
+               // Если в текст при редактировании (например через copy-paste) попали спецсимволы (с \00 по \x08), то экранируем их т.к. они могу ломать страницу при серверной вёрстке
+               var pattern = '[\\x00-\\x08]';
+               return text.replace(new RegExp(pattern, 'g'), function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
             },
 
             /**
@@ -1640,8 +1641,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   fre = this,
                   context = cContext.createContext(this),
                   dialogWidth = 440;
-               require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString',
-                  'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
+               require(['Lib/Control/Dialog/Dialog', 'SBIS3.CONTROLS/TextBox',
+                  'SBIS3.CONTROLS/Button'], function(Dialog, TextBox, Button) {
                   new Dialog({
                      title: rk('Web-ссылка'),
                      disableActions: true,
@@ -1676,16 +1677,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               .append(hrefInput)
                               .append(captionLabel)
                               .append(captionInput);
-                           //TODO: перевечсти поле ввода на SBIS3.CONTROLS.TextBoxтк в нём нет доскрола при активации
-                           this._hrefInput = new FieldString({
-                              value: origHref,
+                           this._hrefInput = new TextBox({
+                              text: origHref,
                               parent: this,
                               element: hrefInput,
                               linkedContext: context,
                               name: 'RichEditor__InsertLink__href'
                            });
-                           this._captionInput = new FieldString({
-                              value: origCaption,
+                           this._captionInput = new TextBox({
+                              text: origCaption,
                               parent: this,
                               element: captionInput,
                               linkedContext: context,
