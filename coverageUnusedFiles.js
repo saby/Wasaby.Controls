@@ -1,4 +1,4 @@
-var path = require('path'),
+const path = require('path'),
     fs = require('fs'),
     nyc = require('nyc'),
     controlsPath = path.join(__dirname, 'Controls'),
@@ -8,14 +8,14 @@ var path = require('path'),
     coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
     coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
     coverageFilePath = path.join(__dirname, 'artifacts', 'coverageFile.json'),
-    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
-    allFiles = [];
+    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json');
+let allFiles = [];
 
 dirWalker = function (dir) {
-    var pattern = /\.js$/,
+    let pattern = /\.js$/,
         files = fs.readdirSync(dir),
         newPath = '';
-    for (var i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
         newPath = path.join(dir, files[i]);
         if (fs.statSync(newPath).isDirectory()) {
             dirWalker(newPath);
@@ -31,7 +31,7 @@ dirWalker(controlsPath);
 dirWalker(filePath);
 dirWalker(componentsPath);
 
-var rawCover = fs.readFileSync(coveragePath, 'utf8'),
+let rawCover = fs.readFileSync(coveragePath, 'utf8'),
     cover = JSON.parse(rawCover),
     newCover = {},
     instrumenter = new nyc().instrumenter(),
@@ -42,20 +42,19 @@ var rawCover = fs.readFileSync(coveragePath, 'utf8'),
 
 function coverFiles(files, replacer) {
     files.forEach(file => {
-        var relPath = file.replace(replacer, '').slice(1),
+        let relPath = file.replace(replacer, '').slice(1),
             rootPaths = replacer.split(path.sep),
             rootDir = rootPaths[rootPaths.length - 1],
             key = [rootDir, relPath].join(path.sep),
             coverData = cover[key];
         if (!coverData) {
-            var rawFile = fs.readFileSync(file, 'utf-8');
+            let rawFile = fs.readFileSync(file, 'utf-8');
             transformer(rawFile, file);
-            var coverState = instrumenter.lastFileCoverage();
+            let coverState = instrumenter.lastFileCoverage();
             Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
             newCover[file] = coverState;
             console.log('File ' + file + ' not using in tests')
         } else {
-            console.log('GOGA\n');
             coverData['path'] = file;
             newCover[file] = coverData;
         }
@@ -67,7 +66,7 @@ coverFiles(fileFiles, filePath);
 coverFiles(componentsFiles, componentsPath);
 
 function getCoverByPath(path) {
-    var coverageByPath = {};
+    let coverageByPath = {};
     Object.keys(newCover).forEach(function (name) {
         if (name.includes(path)) {
             coverageByPath[name] = newCover[name]
@@ -76,7 +75,7 @@ function getCoverByPath(path) {
     return coverageByPath
 }
 
-var controlsCoverage = getCoverByPath(controlsPath),
+let controlsCoverage = getCoverByPath(controlsPath),
     fileCoverage = getCoverByPath(filePath),
     componentsCoverage = getCoverByPath(componentsPath);
 
