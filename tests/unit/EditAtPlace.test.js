@@ -111,9 +111,6 @@ define([
             instance.commitEdit = function() {
                result = true;
             };
-            instance.cancelEdit = function() {
-               result = false;
-            };
          });
          afterEach(function() {
             result = null;
@@ -121,22 +118,11 @@ define([
 
          it('commitOnDeactivate: true, isEditing: true', function() {
             instance.saveOptions({
-               readOnly: false,
-               commitOnDeactivate: true
+               readOnly: false
             });
             instance._beforeMount(cfg);
             instance._onDeactivatedHandler();
             assert.isTrue(result);
-         });
-
-         it('commitOnDeactivate: false, isEditing: true', function() {
-            instance.saveOptions({
-               readOnly: false,
-               commitOnDeactivate: false
-            });
-            instance._beforeMount(cfg);
-            instance._onDeactivatedHandler();
-            assert.isFalse(result);
          });
       });
 
