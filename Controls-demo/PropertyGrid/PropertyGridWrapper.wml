@@ -4,6 +4,7 @@
         <Controls.PropertyGrid items="{{_options.description}}"
                                data="{{_options.dataObject}}"
                                scopeObject="{{_options.componentOpt}}"
+                               name="PropertyGrid"
                                on:itemsChanged="_valueChangedHandler()">
         </Controls.PropertyGrid>
     </div>

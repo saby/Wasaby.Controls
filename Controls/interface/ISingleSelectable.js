@@ -12,47 +12,44 @@ define('Controls/interface/ISingleSelectable', [
 
    /**
     * @name Controls/interface/ISingleSelectable#selectedKey
-    * @cfg {?(Number|String)} Key of selected item.
-    * @default null
+    * @cfg {Number|String} Selected item key.
+    * @default Undefined
+    * @remark You can pass node's key property to select every item inside that node.
     * @example
-    * The following example creates ComboBox and sets the selectedKey to 1. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
-    * TMPL:
+    * The following example creates RadioGroup and selects first item. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
     * <pre>
-    *    <Controls.Input.ComboBox bind:selectedKey="{{ _selectedKey }}" />
+    *    <Controls.Toggle.RadioGroup bind:selectedKey="_selectedKey"/>
     * </pre>
-    * JS:
     * <pre>
     *    _beforeMount: function() {
-    *       this._selectedKey = 1;
+    *       this._selectedKeys = '1';
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
     * @see selectedKeyChanged
+    * @see keyProperty
     */
 
    /**
-    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Occurs when selected key changes.
-    * @param {?(Number|String)} key Key of selected item.
+    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
+    * @param {Number|String} key Selected item key.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @example
-    * The following example creates ComboBox, sets the selectedKey to 1 and shows how to handle the event.
-    * TMPL:
+    * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
     * <pre>
-    *    <Controls.Input.ComboBox on:selectedKeyChanged="onSelectedKeyChanged()" selectedKey="{{ _selectedKey }}" />
+    *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
+    *       <Controls.Operations.Panel source="{{ _panelSource }} />
+    *    </Controls.Container.RadioGroup>
     * </pre>
-    * JS:
     * <pre>
     *    _beforeMount: function() {
-    *       this._selectedKey = 1;
+    *       this._selectedKey = undefined;
     *    },
-    *    onSelectedKeyChanged: function(e, key) {
-    *       if (key === 3) { //Let's say that we want to make item with the key 3 unselectable.
-    *          return;
-    *       } else {
-    *          this._selectedKey = key;
-    *       }
+    *    onSelectedKeysChanged: function(e, selectedKey) {
+    *
+    *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    *       this._panelSource = this._getPanelSource(selectedKey);
     *    }
     * </pre>
-    * @see Controls/interface/ISource#keyProperty
     * @see selectedKey
     */
 

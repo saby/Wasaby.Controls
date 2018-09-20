@@ -1112,6 +1112,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Установить новый текст подсказки
+             * @public
+             * @param {string} value Текст подсказки
+             */
+            setPlaceholder: function (value) {
+               this._options.placeholder = value;
+               this._container.find('.controls-RichEditor__placeholder').text(value);
+            },
+
+            /**
              * Почистить выделение от <br data-mce-bogus="1">
              * @private
              */
@@ -1463,6 +1473,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
+               var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
                   isAlreadyApplied = formatter.match(command);
@@ -1525,10 +1536,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var videoId = this._getYouTubeVideoId(url);
                            if (videoId) {
                               var attr = 'data-ws-video="' + videoId + '"';
-                              $video.before('<span ' + attr + '>temporary</span>').remove();
+                              var undoManager = editor.undoManager;
+                              undoManager.ignore(function () {
+                                 $video.before('<span ' + attr + '>temporary</span>').remove();
+                              }.bind(this));
+                              skipUndo = true;
                               afterProcess = function () {
-                                 var $video = $(editor.getBody()).find('[' + attr + ']');
-                                 $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 undoManager.ignore(function () {
+                                    var $video = $(editor.getBody()).find('[' + attr + ']');
+                                    $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 }.bind(this));
+                                 undoManager.add();
                               }.bind(this);
                            }
                         }
@@ -1612,7 +1630,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                }
-               editor.execCommand(editorCmd || command);
+               if (skipUndo) {
+                  editor.undoManager.ignore(editor.execCommand.bind(editor, editorCmd || command));
+               }
+               else {
+                  editor.execCommand(editorCmd || command);
+               }
                if (afterProcess) {
                   afterProcess();
                }
@@ -2350,6 +2373,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                e.content = this._prepareContent(e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
+
                var options = this._options;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
@@ -2364,7 +2388,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText !== false) {
+               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
@@ -2388,7 +2412,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // (\n\n), как в хроме. И нет возможности отличить конец параграфа от простого перехода на новую строку после <br/>. Поэтому
                      // поличим текст из html сами:
                      // 1175818368 https://online.sbis.ru/opendoc.html?guid=5f01390b-7210-4e40-b168-c49265a71aa8
-                     this._clipboardText = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(clipboardData.getData('text/html'))));
+                     var content = clipboardData.getData('text/html');
+                     if (content) {
+                        content = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(content)));
+                     }
+                     this._clipboardText = content || clipboardData.getData('text/plain');
                   }
                   else {
                      this._clipboardText = clipboardData.getData(BROWSER.isMobileIOS ? 'text/plain' : 'text');
@@ -2403,6 +2431,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
                var offset;
+
+               // при вставке из google таблиц, они вставляются с шириной 0px, которая плохо работает в IE и FireFox
+               // меняем ширину на auto во всех таблицах с width: 0px; для исправной работы во всех браузерах
+               var tables = content.querySelectorAll('table');
+
+               tables.forEach(function(table) {
+                  if (table.style.width === '0px') {
+                     table.style.width = 'auto';
+                  }
+               });
+
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
                   var $images = $content.find('img:not(.ws-fre__smile)');
