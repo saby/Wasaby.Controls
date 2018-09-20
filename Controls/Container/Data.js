@@ -123,10 +123,11 @@ define('Controls/Container/Data',
                   self._forceUpdate();
                   return result;
                });
-            } if (newOptions.filter !== this._options.filter ||
-                     newOptions.navigation !== this._options.navigation ||
-                     newOptions.sorting !== this._options.sorting ||
-                     newOptions.keyProperty !== this._options.keyProperty) {
+            } if (newOptions.filter !== self._options.filter ||
+                     newOptions.navigation !== self._options.navigation ||
+                     newOptions.sorting !== self._options.sorting ||
+                     newOptions.keyProperty !== self._options.keyProperty) {
+               _private.updateDataOptions(self, self._dataOptionsContext);
                self._dataOptionsContext.updateConsumers();
             }
          },
