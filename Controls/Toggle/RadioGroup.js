@@ -8,7 +8,7 @@ define('Controls/Toggle/RadioGroup', [
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
-    * Radio group with support  vertical and horizontal direction.
+    * Controls are designed to give users a choice among two or more settings.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
     *
@@ -30,8 +30,15 @@ define('Controls/Toggle/RadioGroup', [
    /**
     * @name Controls/Toggle/RadioGroup#direction
     * @cfg {string} Arrangement of elements in the container.
-    * @variant horizontal RadioGroup is a row of RadioButton. It is default value.
-    * @variant vertical RadioGroup is a column of RadioButton.
+    * @variant horizontal Elements are located one after another.
+    * @variant vertical Elements are located one after another.
+    * @default Horizontal
+    * @remark It's only displaying option, it's only regulates the location of the control.
+    * @example
+    * Vertical orientation.
+    * <pre>
+    *    <Controls.Toggle.RadioGroup direction="horizontal"/>
+    * </pre>
     */
 
    var _private = {
