@@ -620,7 +620,20 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-        }
+		dir("/home/sbis/Controls/intest"){
+            sh """
+            7za a log_intest -t7z /home/sbis/Controls/intest/logs
+            """
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest.7z', caseSensitive: false
+		}
+		dir("/home/sbis/Controls/intest-ps"){
+            sh """
+            7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs
+            """
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest_ps.7z', caseSensitive: false
+		}
+		
+	}
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
