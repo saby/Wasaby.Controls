@@ -2411,7 +2411,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // (\n\n), как в хроме. И нет возможности отличить конец параграфа от простого перехода на новую строку после <br/>. Поэтому
                      // поличим текст из html сами:
                      // 1175818368 https://online.sbis.ru/opendoc.html?guid=5f01390b-7210-4e40-b168-c49265a71aa8
-                     this._clipboardText = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(clipboardData.getData('text/html'))));
+                     var content = clipboardData.getData('text/html');
+                     if (content) {
+                        content = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(content)));
+                     }
+                     this._clipboardText = content || clipboardData.getData('text/plain');
                   }
                   else {
                      this._clipboardText = clipboardData.getData(BROWSER.isMobileIOS ? 'text/plain' : 'text');
