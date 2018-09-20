@@ -105,12 +105,13 @@ define('Controls/Application/HeadDataContext', [
                   additionalDepsArray.push(key);
                }
             }
+
             // Костыль. Чтобы сериализовать receivedState, нужно собрать зависимости, т.к. в receivedState у компонента
             // Application сейчас будет список css, для восстановления состояния с сервера.
             // Но собирать зависимости нам нужно после receivedState, потому что в нем могут тоже могут быть зависимости
             var additionalDeps = depsCollector.collectDependencies(additionalDepsArray);
-            for(var i = 0; i < additionalDeps.js.length; i++) {
-               if(!~files.js.indexOf(additionalDeps.js[i])) {
+            for (var i = 0; i < additionalDeps.js.length; i++) {
+               if (!~files.js.indexOf(additionalDeps.js[i])) {
                   files.js.push(additionalDeps.js[i]);
                }
             }
