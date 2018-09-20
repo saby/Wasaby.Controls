@@ -2387,7 +2387,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText !== false) {
+               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
