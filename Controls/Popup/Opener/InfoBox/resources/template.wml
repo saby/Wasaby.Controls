@@ -1,24 +1,20 @@
-<Controls.Container.Scroll attr:class="controls-InfoBox__scrollContainer" attr:ws-no-focus="true">
-   <ws:content>
-      <div class="controls-InfoBox controls-Container__popup-scrolling-content">
-         <div
-                 class="controls-InfoBox__closeButton icon-24 icon-Close"
-                 on:click="_close()">
-         </div>
-         <ws:if data="{{float}}">
-            <div class="controls-InfoBox_floatElement"></div>
-         </ws:if>
+<div class="controls-InfoBox controls-Container__popup-scrolling-content" attr:ws-no-focus="true">
+   <div
+      class="controls-InfoBox__closeButton icon-24 icon-Close"
+      on:click="_close()">
+   </div>
+   <ws:if data="{{float}}">
+      <div class="controls-InfoBox_floatElement"></div>
+   </ws:if>
 
-         <ws:if data="{{template}}">
-            <ws:partial
-               template="{{template}}"
-               scope="{{templateOptions}}"
-               class="{{!float ? 'controls-InfoBox__message_margin'}}">
-            </ws:partial>
-         </ws:if>
-         <ws:else>
-            <div class="{{!float ? 'controls-InfoBox__message_margin'}}">{{message}}</div>
-         </ws:else>
-      </div>
-   </ws:content>
-</Controls.Container.Scroll>
+   <ws:if data="{{template}}">
+      <ws:partial
+         template="{{template}}"
+         scope="{{templateOptions}}"
+         class="{{!float ? 'controls-InfoBox__message_margin'}}">
+      </ws:partial>
+   </ws:if>
+   <ws:else>
+      <div class="{{!float ? 'controls-InfoBox__message_margin'}}">{{message}}</div>
+   </ws:else>
+</div>
