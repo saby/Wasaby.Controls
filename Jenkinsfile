@@ -72,7 +72,6 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
-        def inte = params.run_int
         def all_inte = params.run_all_int
         def skip = params.skip
         def only_fail = params.run_only_fail_test
