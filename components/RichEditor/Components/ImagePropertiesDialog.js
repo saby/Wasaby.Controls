@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 ], function (CompoundControl, dotTplFn) {
 
 
-   var moduleClass = CompoundControl.extend({
+   var ImageSizeDialog = CompoundControl.extend({
       _dotTplFn: dotTplFn,
       $protected: {
          /*_options: {
@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
       },*/
 
       init: function () {
-         moduleClass.superclass.init.call(this);
+         ImageSizeDialog.superclass.init.call(this);
 
          this._dialog = this.getParent();
          this._applyButton = this.getChildControlByName('applyButton');
@@ -61,8 +61,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
             // Так как события onTextChange и onPropertyChanged происходят в TextBox-е и при вводе пользователем, и при установке значений из кода,
             // то они не подходят. Нужно реагировать только на пользовательский ввод, поэтому подписываемся на события input-ов непосредственно
-            this._imageWidth.getContainer().find('input').on('keyup', this._onWidthChanged = this._onSizeChanged.bind(this, true));
-            this._imageHeight.getContainer().find('input').on('keyup', this._onHeightChanged = this._onSizeChanged.bind(this, false));
+            this._imageWidth.getContainer().find('input').on('keyup paste', this._onWidthChanged = this._onSizeChanged.bind(this, true));
+            this._imageHeight.getContainer().find('input').on('keyup paste', this._onHeightChanged = this._onSizeChanged.bind(this, false));
          }.bind(this));
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
@@ -137,13 +137,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
       },
 
       destroy: function () {
-         this._imageWidth.getContainer().find('input').off('keyup', this._onWidthChanged);
-         this._imageHeight.getContainer().find('input').off('keyup', this._onHeightChanged);
+         ImageSizeDialog.superclass.destroy.apply(this, arguments);
+
+         this._imageWidth.getContainer().find('input').off('keyup paste', this._onWidthChanged);
+         this._imageHeight.getContainer().find('input').off('keyup paste', this._onHeightChanged);
       }
    });
 
-   moduleClass.title = rk('Свойства');
-   moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":218,"height":84};
+   ImageSizeDialog.title = rk('Свойства');
+   ImageSizeDialog.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":218,"height":84};
 
-   return moduleClass;
+   return ImageSizeDialog;
 });
