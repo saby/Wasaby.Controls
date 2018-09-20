@@ -60,7 +60,7 @@ node('controls') {
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: true, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
             booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
