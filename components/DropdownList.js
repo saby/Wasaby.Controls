@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/DropdownList',
    "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
    'Core/helpers/Object/isEqual',
+   'Controls/Utils/isNewEnvironment',
    "Lib/Control/CompoundControl/CompoundControl",
    'Controls/Utils/ArraySimpleValuesUtil',
    "SBIS3.CONTROLS/Mixins/PickerMixin",
@@ -34,7 +35,7 @@ define('SBIS3.CONTROLS/DropdownList',
    'css!SBIS3.CONTROLS/DropdownList/DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, isEqual, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, isEqual, isNewEnvironment, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -1143,6 +1144,34 @@ define('SBIS3.CONTROLS/DropdownList',
             DropdownList.superclass.destroy.apply(this, arguments);
          }
       });
+
+      if (isNewEnvironment()) {
+         // todo хак, который будет убран в 610. если у dropdownlist есть скрытый попап, мы не должны смотреть на него при вычислении canAcceptFocus()
+         DropdownList.prototype.canAcceptFocus = function(){
+            function childOk(child) {
+               return child && child.canAcceptFocus();
+            }
+
+            var
+               childs = this._childControls || [],
+               result = this._canAreaAcceptFocus();
+
+            childs = childs.filter(function(child) {
+               return child.isVisible();
+            });
+
+            if (result) {
+               //Если дочерние контролы есть, то canAcceptFocus зависит от них. Если нет, то от своего isEnabled
+               if (childs.length === 0) {
+                  result = !this.isEnabled || this.isEnabled();
+               } else {
+                  result = !! objectFind(this._childControls, childOk);
+               }
+            }
+
+            return result;
+         };
+      }
 
       return DropdownList;
    });
