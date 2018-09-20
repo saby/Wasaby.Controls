@@ -53,7 +53,8 @@ define('Controls/Toolbar', [
       getMenuItems: function(items) {
          return tUtil.getMenuItems(items).value(recordSetFactory, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty()
+            idProperty: items.getIdProperty(),
+            format: items.getFormat()
          });
       },
 
@@ -129,7 +130,12 @@ define('Controls/Toolbar', [
             config = {
                templateOptions: {
                   items: this._items,
-                  rootKey: item.get(this._options.keyProperty)
+                  rootKey: item.get(this._options.keyProperty),
+                  headConfig: {
+                     icon: item.get('icon'),
+                     caption: item.get('title'),
+                     iconStyle: item.get('iconStyle')
+                  }
                },
                target: event.target
             };
@@ -159,10 +165,11 @@ define('Controls/Toolbar', [
 
       _onResult: function(result) {
          if (result.action === 'itemClick') {
-            this._onItemClick(result.event, result.data[0]);
-            
-            //menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
-            if (this._children.menuOpener) {
+            var item = result.data[0];
+            this._notify('itemClick', [item]);
+
+            // menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
+            if (this._children.menuOpener && !item.get(this._nodeProperty)) {
                this._children.menuOpener.close();
             }
          }

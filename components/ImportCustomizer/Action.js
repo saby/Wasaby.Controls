@@ -11,13 +11,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
    [
       'Core/core-merge',
       'Core/Deferred',
-      'Lib/Control/FloatArea/FloatArea',
+      'SBIS3.CONTROLS/Action/OpenDialog',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area, RemoteCall) {
+   function (cMerge, Deferred, OpenDialogAction, Action, Area, RemoteCall) {
       'use strict';
 
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
@@ -112,7 +112,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             _options: {
             },
             _result: null,
-            _resultHandler: null
+            _resultHandler: null,
+            _areaContainer: null
          },
 
          /**
@@ -143,7 +144,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} options.dialogTitle Заголовок диалога настройщика импорта (опционально)
           * @param {string} options.dialogButtonTitle Подпись кнопки диалога применения результата редактирования (опционально)
           * @param {string} options.allSheetsTitle Название опции для выбора одинаковых настроек для всех листов файла в под-компоненте выбора области данных (опционально)
-          * @param {string} options.columnBindingMenuTitle Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+          * @param {string} options.columnBindingMenuTitle Заголовок для меню выбора соответствия в колонках в под-компоненте привязки колонок (опционально)
           * @param {string} options.columnBindingHeadTitle Всплывающая подсказака в заголовке колонки в под-компоненте привязки колонок (опционально)
           * @param {string} options.mapperFieldColumnTitle Заголовок колонки целевых элементов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
           * @param {string} options.mapperVariantColumnTitle Заголовок колонки вариантов сопоставления в под-компоненте настройки соответствия/мэпинга значений (опционально)
@@ -220,24 +221,28 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                this._completeWithError(true, err);
                return;
             }
-            this._areaContainer = new FloatArea({
-               opener: this,
-               direction: 'left',
-               animation: 'slide',
-               isStack: true,
-               autoCloseOnHide: true,
-               //parent: this,
-               template: 'SBIS3.CONTROLS/ImportCustomizer/Area',
-               className: 'ws-float-area__block-layout controls-ImportCustomizer__area',
-               closeByExternalClick: true,
-               closeButton: true,
-               componentOptions: componentOptions,
-               handlers: {
-                  onClose: this._onAreaClose.bind(this)
-               }
+            this._areaContainer = new OpenDialogAction({
+               mode: 'floatArea',
+               template: 'SBIS3.CONTROLS/ImportCustomizer/Area'
             });
+            this._areaContainer.execute({
+               dialogOptions: {
+                  opener: this,
+                  direction: 'left',
+                  animation: 'slide',
+                  isStack: true,
+                  autoCloseOnHide: true,
+                  className: 'controls-ImportCustomizer__area',
+                  closeByExternalClick: true,
+                  closeButton: true,
+                  handlers: {
+                     //onClose: this._onAreaClose.bind(this)
+                  }
+               },
+               componentOptions: componentOptions
+            }).addBoth(this._onAreaClose.bind(this));
             this._notify('onSizeChange');
-            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            this.subscribeOnceTo(this._areaContainer, 'onDestroy', this._notify.bind(this, 'onSizeChange'));
             //this._notify('onOpen');
          },
 
@@ -305,7 +310,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             this._result = null;
             this._resultHandler = null;
             if (this._areaContainer) {
-               this._areaContainer.close();
+               this._areaContainer.closeDialog();
             }
             if (isSuccess) {
                if (resultHandler) {

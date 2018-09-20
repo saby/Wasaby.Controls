@@ -304,11 +304,16 @@ define('Controls/Container/Scroll',
              * https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
              */
             _adjustContentMarginsForBlockRender: function() {
-               var marginRight = getComputedStyle(this._children.content).marginRight;
+               var computedStyle = getComputedStyle(this._children.content);
+               var marginTop = parseInt(computedStyle.marginTop, 10);
+               var marginRight = parseInt(computedStyle.marginRight, 10);
 
                this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
-                  return parseFloat(found) + parseFloat(marginRight);
+                  return parseInt(found, 10) + marginRight;
                });
+
+               this._stickyHeaderContext.position = -marginTop;
+               this._stickyHeaderContext.updateConsumers();
             },
 
             _resizeHandler: function() {

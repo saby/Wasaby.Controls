@@ -313,7 +313,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          validators: [
             {
                validator: function (data, optionGetter) { return data.dataType === 'cml' || data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
-               errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+               errorMessage: rk('Не установлено соответствие между колонками и полями', 'НастройщикИмпорта')
             }
          ]
       };
@@ -375,7 +375,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                allSheetsTitle: null,
                /**
-                * @cfg {string} Заголовок для меню выбора соответсвия в колонках в под-компоненте привязки колонок (опционально)
+                * @cfg {string} Заголовок для меню выбора соответствия в колонках в под-компоненте привязки колонок (опционально)
                 */
                columnBindingMenuTitle: null,
                /**
@@ -703,6 +703,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var sheets = options.sheets;
                   if (sheets && sheets.length) {
                      var results = {};
+                     var columnBindingMapping = options.columnBindingMapping;
                      for (var i = 0; i < sheets.length; i++) {
                         var sheet = sheets[i];
                         var parserName = sheet.parser;
@@ -713,7 +714,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                         results[i + 1] = {
                            provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                            providerArgs: this._getProviderArgsOptions(options, parserName),
-                           columnBinding: {mapping:options.columnBindingMapping[i] || {}, skippedRows:skippedRows}
+                           columnBinding: {mapping:columnBindingMapping ? columnBindingMapping[i] || {} : {}, skippedRows:skippedRows}
                         };
                      }
                      results[''] = cMerge({}, results[1]);
@@ -866,7 +867,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @protected
           */
          _onChangeMapper: function () {
-            // Изменился перечень соответсвий
+            // Изменился перечень соответствий
             var values = this._getSubviewValues('mapper');
             var mapping = values.mapping;
             if (mapping) {
@@ -938,7 +939,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var views = this._views;
             //this._setSubviewValues('baseParams', {fields:fields});
             var sheetIndex = options.sheetIndex;
-            this._setSubviewValues('columnBinding', {fields:fields, mapping:options.columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] || {}});
+            var columnBindingMapping = options.columnBindingMapping;
+            this._setSubviewValues('columnBinding', {fields:fields, mapping:columnBindingMapping ? columnBindingMapping[0 < sheetIndex ? sheetIndex : 0] || {} : {}});
             this._setSubviewValues('mapper', {fields:fields});
          },
 

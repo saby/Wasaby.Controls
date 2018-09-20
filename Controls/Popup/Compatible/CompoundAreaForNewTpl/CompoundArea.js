@@ -39,7 +39,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._onResultHandler = this._onResultHandler.bind(this);
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
+            this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
+
+            var innerOptions = this._options.innerComponentOptions;
+            innerOptions._onCloseHandler = this._onCloseHandler;
+            innerOptions._onResultHandler = this._onResultHandler;
+            innerOptions._onResizeHandler = this._onResizeHandler;
+            innerOptions._onRegisterHandler = this._onRegisterHandler;
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
@@ -64,48 +71,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                         self._notifyOnSizeChanged(self, self);
                         self._options._initCompoundArea(self);
                      }
-                     self._replaceVDOMContainer();
                   }
-
-                  self._getRootContainer().addEventListener('DOMNodeRemoved', function() {
-                     self._replaceVDOMContainer();
-                  });
 
                   def.callback();
                });
 
                return def;
             });
-         },
-
-         _replaceVDOMContainer: function() {
-            var
-               rootContainer = this._getRootContainer(),
-               additionalEventProperties = {
-                  'on:close': this._onCloseHandler,
-                  'on:controlresize': this._onResizeHandler,
-                  'on:sendresult': this._onResultHandler,
-                  'on:register': this._onRegisterHandler,
-                  'on:unregister': this._onRegisterHandler
-               };
-
-            //Отлавливаем события с дочернего vdom компонента
-            for (var event in additionalEventProperties) {
-               if (additionalEventProperties.hasOwnProperty(event)) {
-                  rootContainer.eventProperties = rootContainer.eventProperties || {};
-                  rootContainer.eventProperties[event] = rootContainer.eventProperties[event] || [];
-                  var events = rootContainer.eventProperties[event];
-                  var hasEvent = false;
-                  for (var i = 0; i < events.length; i++) {
-                     if (events[i].fn === additionalEventProperties[event]) {
-                        hasEvent = true;
-                     }
-                  }
-                  if (!hasEvent) {
-                     rootContainer.eventProperties[event].push(this._createEventProperty(additionalEventProperties[event]));
-                  }
-               }
-            }
          },
 
          _createEventProperty: function(handler) {
@@ -149,8 +121,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                self._isVDomTemplateMounted = true;
                if (self._closeAfterMount) {
                   self.sendCommand('close');
-               } else {
-                  self._replaceVDOMContainer();
                }
             };
          },
@@ -207,6 +177,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          destroy: function() {
+            this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
             if (this._vDomTemplate) {
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
@@ -225,6 +196,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          setInnerComponentOptions: function(newOptions) {
             if (this._vDomTemplate) { //могут позвать перерисоку до того, как компонент создался
                this._isNewOptions = true;
+
+               newOptions._onCloseHandler = this._onCloseHandler;
+               newOptions._onResultHandler = this._onResultHandler;
+               newOptions._onResizeHandler = this._onResizeHandler;
+               newOptions._onRegisterHandler = this._onRegisterHandler;
 
                //Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');

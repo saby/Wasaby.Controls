@@ -4,12 +4,12 @@
 define('Controls/Controllers/_SearchController',
    [
       'Core/core-extend',
-      'Core/moduleStubs',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Core/moduleStubs'
    ],
    
-   function(extend, moduleStubs, clone) {
-      
+   function(extend, clone, moduleStubs) {
+
       'use strict';
       
       var _private = {

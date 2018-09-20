@@ -342,6 +342,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
                   options.text = options.__savedHtmlJson.render();
+
+                  // Костыль для отображения плейсхолдера при пустом json.
+                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  if (options.text === '<span></span>') {
+                     options.text = '';
+                  }
                }
 
                if (options.singleLine) {
@@ -416,6 +424,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (text[0] !== '<') {
                      text = '<p>' + text + '</p>';
                   }
+                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
                   var div = document.createElement('div');
                   div.innerHTML = text;
                   self._options.json = typeof self._options.json === 'string'
@@ -682,6 +691,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             },
 
+            getText: function () {
+               var text = RichTextArea.superclass.getText.apply(this, arguments);
+               // Если в текст при редактировании (например через copy-paste) попали спецсимволы (с \00 по \x08), то экранируем их т.к. они могу ломать страницу при серверной вёрстке
+               var pattern = '[\\x00-\\x08]';
+               return text.replace(new RegExp(pattern, 'g'), function (ch) { return '&#0' + ch.charCodeAt(0) + ';'; });
+            },
+
             /**
              * Устанавливает текстовое значение внутри поля ввода.
              * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
@@ -709,7 +725,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._options.json = json;
                this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
-               this.setText(this._htmlJson.render());
+
+               // Костыль для отображения плейсхолдера при пустом json.
+               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+               var text = this._htmlJson.render();
+               if (text === '<span></span>') {
+                  text = '';
+               }
+               this.setText(text);
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -1087,6 +1112,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Установить новый текст подсказки
+             * @public
+             * @param {string} value Текст подсказки
+             */
+            setPlaceholder: function (value) {
+               this._options.placeholder = value;
+               this._container.find('.controls-RichEditor__placeholder').text(value);
+            },
+
+            /**
              * Почистить выделение от <br data-mce-bogus="1">
              * @private
              */
@@ -1387,8 +1422,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                   if (typeof smile === 'object') {
-                     this.insertHtml(this._smileHtml(smile));
                      this._tinyLastRng = this._tinyEditor.selection.getRng();
+                     this.insertHtml(this._smileHtml(smile));
                   }
                }
             },
@@ -1438,6 +1473,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var rng;
                var isAlreadyApplied;
                var afterProcess;
+               var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
                   isAlreadyApplied = formatter.match(command);
@@ -1500,10 +1536,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var videoId = this._getYouTubeVideoId(url);
                            if (videoId) {
                               var attr = 'data-ws-video="' + videoId + '"';
-                              $video.before('<span ' + attr + '>temporary</span>').remove();
+                              var undoManager = editor.undoManager;
+                              undoManager.ignore(function () {
+                                 $video.before('<span ' + attr + '>temporary</span>').remove();
+                              }.bind(this));
+                              skipUndo = true;
                               afterProcess = function () {
-                                 var $video = $(editor.getBody()).find('[' + attr + ']');
-                                 $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 undoManager.ignore(function () {
+                                    var $video = $(editor.getBody()).find('[' + attr + ']');
+                                    $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
+                                 }.bind(this));
+                                 undoManager.add();
                               }.bind(this);
                            }
                         }
@@ -1587,7 +1630,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                }
-               editor.execCommand(editorCmd || command);
+               if (skipUndo) {
+                  editor.undoManager.ignore(editor.execCommand.bind(editor, editorCmd || command));
+               }
+               else {
+                  editor.execCommand(editorCmd || command);
+               }
                if (afterProcess) {
                   afterProcess();
                }
@@ -1616,8 +1664,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   fre = this,
                   context = cContext.createContext(this),
                   dialogWidth = 440;
-               require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString',
-                  'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
+               require(['Lib/Control/Dialog/Dialog', 'SBIS3.CONTROLS/TextBox',
+                  'SBIS3.CONTROLS/Button'], function(Dialog, TextBox, Button) {
                   new Dialog({
                      title: rk('Web-ссылка'),
                      disableActions: true,
@@ -1652,16 +1700,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               .append(hrefInput)
                               .append(captionLabel)
                               .append(captionInput);
-                           //TODO: перевечсти поле ввода на SBIS3.CONTROLS.TextBoxтк в нём нет доскрола при активации
-                           this._hrefInput = new FieldString({
-                              value: origHref,
+                           this._hrefInput = new TextBox({
+                              text: origHref,
                               parent: this,
                               element: hrefInput,
                               linkedContext: context,
                               name: 'RichEditor__InsertLink__href'
                            });
-                           this._captionInput = new FieldString({
-                              value: origCaption,
+                           this._captionInput = new TextBox({
+                              text: origCaption,
                               parent: this,
                               element: captionInput,
                               linkedContext: context,
