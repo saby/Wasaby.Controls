@@ -1,0 +1,49 @@
+<div>
+    <Controls.Popup.Opener.Stack name="eventStackOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestStack"
+            isCompoundTemplate="{{true}}"
+            autoCloseOnHide="{{false}}"/>
+    </Controls.Popup.Opener.Stack>
+    <Controls.Popup.Opener.Stack name="reviveStackOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestRevive"
+            isCompoundTemplate="{{true}}"/>
+    </Controls.Popup.Opener.Stack>
+    <Controls.Popup.Opener.Stack name="inputStackOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestInput"
+            isCompoundTemplate="{{true}}"/>
+    </Controls.Popup.Opener.Stack>
+    <Controls.Popup.Opener.Stack name="validateStackOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestValidate"
+            isCompoundTemplate="{{true}}"/>
+    </Controls.Popup.Opener.Stack>
+    <Controls.Popup.Opener.Dialog name="dialogOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestStack"
+            isCompoundTemplate="{{true}}"
+            autoCloseOnHide="{{false}}"
+            closeByExternalClick="{{false}}"
+            isModal="{{true}}"/>
+    </Controls.Popup.Opener.Dialog>
+    <Controls.Popup.Opener.Stack name="openerStackOpener">
+        <ws:popupOptions
+            template="Controls-demo/Popup/Compatible/TestOpener"
+            isCompoundTemplate="{{true}}"/>
+    </Controls.Popup.Opener.Stack>
+    <div>
+        <Controls.Button attr:class="openStackButton" caption="Open Stack" on:click="openTestStack()"/>
+        <Controls.Button attr:class="openReviveButton" caption="Revive Test" on:click="openReviveStack()"/>
+        <Controls.Button attr:class="openInputButton" caption="Input Test" on:click="openInputStack()"/>
+        <Controls.Button attr:class="openValidateButton" caption="Validate Test" on:click="openValidateStack()"/>
+        <Controls.Button attr:class="openOpenerButton" caption="Opener Test" on:click="openOpenerStack()"/>
+    </div>
+    <div style="text-align: center;">
+        <Controls.Button attr:class="openDialogButton" name="dialogButton" caption="Dialog Test" on:click="openDialog()"/>
+    </div>
+    <div>
+        <Controls.Input.Text attr:class="outerTextInput" attr:tabindex="{{1}}" placeholder="For catching focus"/>
+    </div>
+</div>
