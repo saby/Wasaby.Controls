@@ -109,6 +109,9 @@
   "include": [
     "Controls/Popup/Compatible/*"
   ],
+  "exclude": [
+    "Controls/Popup/Compatible/Layer"
+  ],
   "output": "controls-popup-compat.package.js"
 }, {
   "include": [
