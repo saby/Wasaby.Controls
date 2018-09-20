@@ -32,7 +32,7 @@
    word-wrap: break-word;
    padding: @spacing_CheckBox-between-icon-caption;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @line-height_Checkbox__caption;
+   line-height: @line-height_CheckBox__caption;
 }
 .controls-Checkbox__icon {
    position: relative;
@@ -45,39 +45,39 @@
    box-sizing: border-box;
    content: '';
    position: absolute;
-   border-width: @default-border-width;
+   border-width: @width_CheckBox__border;
    border-style: solid;
-   width: @check-box-icon-box-size;
-   height: @check-box-icon-box-size;
-   margin: (@height_CheckBox - @check-box-icon-box-size) / 2 (@width_CheckBox - @check-box-icon-box-size) / 2;;
+   width: @size_CheckBox__icon-box;
+   height: @size_CheckBox__icon-box;
+   margin: (@height_CheckBox - @size_CheckBox__icon-box) / 2 (@width_CheckBox - @size_CheckBox__icon-box) / 2;
 }
 .controls-Checkbox__icon-checked:after {
    font-family: 'cbuc-icons';
    content: '\e616';
    position: absolute;
-   font-size: @check-box-icon-successful-size;
-   height: @check-box-icon-successful-size;
-   width: @check-box-icon-successful-size;
-   line-height: @check-box-icon-successful-size;
-   top: @check-box-icon-successful-top;
-   left: @check-box-icon-successful-left;
+   font-size: @size_CheckBox__icon-successful;
+   height:@size_CheckBox__icon-successful;
+   width: @size_CheckBox__icon-successful;
+   line-height: @size_CheckBox__icon-successful;
+   top: @size_CheckBox__icon-successful-top;
+   left: @size_CheckBox__icon-successful-left;
 
 
    // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
    // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
    // увеличим line-height в iPad на 1px;
    .ws-is-mobile-platform & {
-      line-height: calc(~"@{check-box-icon-successful-size} + 1px");
+      line-height: calc(~"@{size_CheckBox__icon-successful} + 1px");
    }
 }
 .controls-Checkbox__icon-tristate:after {
    left: 0;
    content: '';
    position: absolute;
-   height: @check-box-icon-null-size;
-   width: @check-box-icon-null-size;
-   line-height: @check-box-icon-null-size;
-   margin: (@height_CheckBox - @check-box-icon-null-size) / 2 (@width_CheckBox - @check-box-icon-null-size) / 2;
+   height: @size_CheckBox__icon-null;
+   width: @size_CheckBox__icon-null;
+   line-height: @size_CheckBox__icon-null;
+   margin: (@height_CheckBox - @size_CheckBox__icon-null) / 2 (@width_CheckBox - @size_CheckBox__icon-null) / 2;
 }
 .controls-Checkbox__icon-tristate-color__disabled:after{
    background-color: @color_CheckBox__icon_disabled;
