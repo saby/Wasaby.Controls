@@ -1,18 +1,26 @@
-@color_CheckBox__iconBox:  #999999;
-@color_CheckBox__iconBox_disabled: #e4e4e4;
-@color_CheckBox__caption_enabled:  @color_text_default;
-@color_CheckBox__caption_disabled:  @color_disabled;
-@color_CheckBox__icon_disabled:   #313E78;
-@color_CheckBox__icon_enabled: @color_active;
+//CheckBox
+@height_CheckBox:     @height_control_default;
+@width_CheckBox:	  24px;
+@font-size_CheckBox:  @size_text_default;
 
-@font-size_CheckBox: @size_text_default;
-@height_CheckBox: @height_control_default;
-@spacing_CheckBox-between-icon-caption:  3px 0;
-@line-height_Checkbox__caption:   18px;
-@width_CheckBox__border:	@thickness_border_default;
-@width_CheckBox:	24px;
+//iconBox
+@color_CheckBox__iconBox:           #999999;
+@color_CheckBox__iconBox_disabled:  @color_border_disabled;
+@check-box-icon-box-size:           12px;
+
+//icon
+@color_CheckBox__icon_disabled:     #313E78;
+@color_CheckBox__icon_enabled:      @color_active;
 @check-box-icon-successful-size:	18px;
-@check-box-icon-successful-top:	0px;
+@check-box-icon-successful-top:	    0px;
 @check-box-icon-successful-left:	5px;
-@check-box-icon-null-size:	6px;
-@check-box-icon-box-size:       12px;
+@check-box-icon-null-size:	        6px; //TODO rename variables from mixins
+
+//caption
+@color_CheckBox__caption_enabled:    @color_text_default;
+@color_CheckBox__caption_disabled:   @color_disabled;
+@line-height_Checkbox__caption:      18px;
+
+//other
+@spacing_CheckBox-between-icon-caption:   3px 0;
+@width_CheckBox__border:	              @thickness_border_default;
