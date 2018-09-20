@@ -88,20 +88,19 @@
 }
 
 .controls-Lookup__collectionItem_layout_default {
-  max-width: calc(100% - 4px);
+  max-width: calc(~"100% - @{spacing_Lookup-item}");
 }
 
 .controls-Lookup__collectionItem_layout_twoColumns {
-  width: calc(50% - 4px);
+  width: calc(~"50% - @{spacing_Lookup-item}");
 }
 
 .controls-Lookup__showAllLinks {
-  padding: 0 4px 0 0;
+  padding: 0 @spacing_Lookup-showAllLinks 0 0;
   cursor: pointer;
-  color: #0055BB;
-}
-
-.controls-Lookup__showAllLinks:hover {
-  text-decoration: underline;
-  color: #313E78;
+  color: @color_Lookup_showAllLinks;
+  &:hover {
+	text-decoration: underline;
+	color: @color_Lookup-showAllLinks_hovered;
+  }
 }

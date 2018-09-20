@@ -10,9 +10,10 @@ define('Controls/Input/Lookup', [
    'Core/core-merge',
    'wml!Controls/Input/Lookup/CollectionItem',
    'Controls/Utils/getWidth',
+   'Controls/Utils/DOMUtil',
    'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, collectionItem, getWidthUtil) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, collectionItem, getWidthUtil, DOMUtil) {
    
    'use strict';
 
@@ -128,10 +129,10 @@ define('Controls/Input/Lookup', [
          }
       },
 
-      getCollectionSlice: function(self, startIndex, endIndex) {
-         var newCollection = self._items.clone();
+      getCollectionSlice: function(self, startIndex) {
+         var newCollection = _private.getItems(self).clone();
 
-         newCollection._$items = self._items._$items.slice(startIndex, endIndex);
+         newCollection._$items = self._items._$items.slice(startIndex);
 
          return newCollection;
       }
@@ -256,23 +257,21 @@ define('Controls/Input/Lookup', [
          var
             itemsWidth = 0,
             displayItems = 0,
-            container = $(this._container),
-            itemsCount = this._items.getCount(),
+            itemsCount = _private.getItems(this).getCount(),
             additionalWidth = 0, availableWidth, itemWidth;
 
          if (this._selectedKeys.length) {
             if (!this._options.readOnly) {
-               additionalWidth = this._getInputMinWidth() + $(this._children.showSelector).outerWidth();
+               additionalWidth = this._getInputMinWidth() + this._children.showSelector.offsetWidth;
             }
 
-            additionalWidth += parseInt(container.css('border-left-width')) * 2;
-            availableWidth = $(this._children.inputRender._container).width() - additionalWidth;
+            availableWidth =  DOMUtil.width(this._children.inputRender._container) - additionalWidth;
 
             if (itemsCount === 1) {
                displayItems = itemsCount;
             } else {
                /* Учтем ширину кнопки, показывающей все записи */
-               availableWidth -= $(this._children.showAllLinks).outerWidth();
+               availableWidth -= this._children.showAllLinks.offsetWidth;
 
                /* Считаем, сколько элементов может отобразиться */
                for (var i = itemsCount - 1; i >= 0; i--) {
