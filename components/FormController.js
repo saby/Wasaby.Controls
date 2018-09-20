@@ -948,10 +948,15 @@ function(cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC
       },
 
       destroy: function() {
-         this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
-         this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
-         this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
-         window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
+         /* Из-за косяка, что у панели при закрытии может несколько раз позваться destroy, добавляю такую проверку.
+            несколько раз позваться destroy может, если несколько раз послать комманду close.
+            Красильников в курсе проблемы. Поправить это тяжело. */
+         if (this._onAfterShowHandler) {
+            this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
+            this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
+            this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+            window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
+         }
          this._onBeforeUnloadHandler = null;
          this._onAfterShowHandler = null;
          this._onBeforeNavigateHandler = null;
