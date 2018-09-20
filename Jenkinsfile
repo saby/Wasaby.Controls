@@ -58,8 +58,9 @@ node('controls') {
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: true, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
             booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
@@ -71,6 +72,8 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         def inte = params.run_int
+        def inte = params.run_int
+        def all_inte = params.run_all_int
         def skip = params.skip
         def only_fail = params.run_only_fail_test
         def changed_files
@@ -108,6 +111,9 @@ node('controls') {
             regr = true
             unit = true
         }
+        if ( inte && all_inte ) {
+            inte = false
+        }
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -142,7 +148,7 @@ node('controls') {
                     }
 
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || only_fail )) {
+                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || all_inte || only_fail )) {
                         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
                     }
                     parallel (
@@ -235,7 +241,7 @@ node('controls') {
         if ( only_fail ) {
             run_test_fail = "-sf"
             // если галки не отмечены, сами определим какие тесты перезапустить
-            if ( !inte && !regr ) {
+            if ( !inte && !regr && !all_inte ) {
                 step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                 script = "python3 ../fail_tests.py"
                 for ( type in ["int", "reg"] ) {
@@ -340,7 +346,7 @@ node('controls') {
             }
             echo items
         }
-        if ( regr || inte) {
+        if ( regr || inte || all_inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -444,7 +450,7 @@ node('controls') {
                 }
             },
             int_reg: {
-                    if ( regr || inte) {
+                    if ( regr || inte || all_inte) {
                         def soft_restart = "True"
                         if ( params.browser_type in ['ie', 'edge'] ){
                             soft_restart = "False"
@@ -565,7 +571,7 @@ node('controls') {
                     parallel (
                         int_test: {
                             stage("Инт.тесты"){
-                                if ( inte ){
+                                if ( inte || all_inte ){
                                     echo "Запускаем интеграционные тесты"
                                     dir("./controls/tests/int"){
                                         sh """
@@ -611,7 +617,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
-    if ( regr || inte){
+    if ( regr || inte || all_inte){
         dir(workspace){
             sh """
             7za a log_jinnee -t7z ${workspace}/jinnee/logs
