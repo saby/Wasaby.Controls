@@ -61,8 +61,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
             // Так как события onTextChange и onPropertyChanged происходят в TextBox-е и при вводе пользователем, и при установке значений из кода,
             // то они не подходят. Нужно реагировать только на пользовательский ввод, поэтому подписываемся на события input-ов непосредственно
-            this._imageWidth.getContainer().find('input').on('keyup paste', this._onWidthChanged = this._onSizeChanged.bind(this, true));
-            this._imageHeight.getContainer().find('input').on('keyup paste', this._onHeightChanged = this._onSizeChanged.bind(this, false));
+            // Пользователь может печатать с клавиатуры (keyup), вставлять текст из клипборда (paste и следом input) или перетащить и бросить текст (drop и следом input)
+            this._imageWidth.getContainer().find('input').on('keyup input', this._onWidthChanged = this._onSizeChanged.bind(this, true));
+            this._imageHeight.getContainer().find('input').on('keyup input', this._onHeightChanged = this._onSizeChanged.bind(this, false));
          }.bind(this));
 
          this.subscribeTo(this._applyButton, 'onActivated', function () {
