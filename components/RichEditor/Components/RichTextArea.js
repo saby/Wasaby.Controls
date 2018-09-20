@@ -1664,14 +1664,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   fre = this,
                   context = cContext.createContext(this),
                   dialogWidth = 440;
-               require(['Lib/Control/Dialog/Dialog', 'SBIS3.CONTROLS/TextBox',
-                  'SBIS3.CONTROLS/Button'], function(Dialog, TextBox, Button) {
+               require(['Lib/Control/Dialog/Dialog', 'SBIS3.CONTROLS/TextBox', 'SBIS3.CONTROLS/TextArea',
+                  'SBIS3.CONTROLS/Button'], function(Dialog, TextBox, TextArea, Button) {
                   new Dialog({
                      title: rk('Web-ссылка'),
                      disableActions: true,
                      resizable: false,
                      width: dialogWidth,
-                     height: 80,
+                     height: 116,
                      autoHeight: false,
                      keepSize: false,
                      opener: fre,
@@ -1707,12 +1707,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               linkedContext: context,
                               name: 'RichEditor__InsertLink__href'
                            });
-                           this._captionInput = new TextBox({
-                              text: origCaption,
+                           this._captionInput = new TextArea({
+                              // Текст ссылки может быть из нескольких параграфов - в таком случае нужно заменить двойные переводы строк на одинарные
+                              text: origCaption.replace(/\r?\n\r?\n/g, '\n'),
                               parent: this,
                               element: captionInput,
                               linkedContext: context,
-                              name: 'RichEditor__InsertLink__caption'
+                              name: 'RichEditor__InsertLink__caption',
+                              minLinesCount: 3,
+                              maxLinesCount: 3
                            });
                            var handler = function(e) {
                               if (e.which == cConstants.key.enter) {
@@ -1738,8 +1741,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               handlers: {
                                  onActivated: function() {
                                     var parent = this.getParent();
-                                    var href = parent._hrefInput.getValue();
-                                    var caption = parent._captionInput.getValue() || href;
+                                    var href = parent._hrefInput.getText();
+                                    var caption = parent._captionInput.getText();
+                                    // Заменить обрато одинарные переводы строк на двойные
+                                    caption = caption ? caption.replace(/(\r?\n)/g, '$1$1') : href;
                                     var reProtocol = /(?:https?|ftp|file):\/\//gi;
                                     if (href && href.search(reProtocol) === -1) {
                                        var reEmail = /^\s*[a-z0-9_\-\.]+@[a-z0-9\-]*[a-z0-9\-\.]*[a-z0-9\-]+\.[a-z]+\s*$/i;
