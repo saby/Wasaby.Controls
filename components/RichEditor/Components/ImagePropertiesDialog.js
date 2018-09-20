@@ -140,8 +140,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
       destroy: function () {
          ImageSizeDialog.superclass.destroy.apply(this, arguments);
 
-         this._imageWidth.getContainer().find('input').off('keyup paste', this._onWidthChanged);
-         this._imageHeight.getContainer().find('input').off('keyup paste', this._onHeightChanged);
+         this._imageWidth.getContainer().find('input').off('keyup input', this._onWidthChanged);
+         this._imageHeight.getContainer().find('input').off('keyup input', this._onHeightChanged);
       }
    });
 
