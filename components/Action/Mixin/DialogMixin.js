@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC',
-   'Controls/Utils/isNewEnvironment',
+   'Core/helpers/isNewEnvironment',
    'Controls/Utils/isVDOMTemplate'
 ], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment, isVDOMTemplate) {
    'use strict';

@@ -131,6 +131,9 @@
     "Controls/Utils/*",
     "Controls/Calendar/Utils"
   ],
+  "exclude": [
+    "Controls/Utils/isVDOMTemplate"
+  ],
   "output": "controls-utils.package.js"
 }, {
   "include": [
