@@ -36,15 +36,48 @@
 }
 .controls-Checkbox__icon {
    position: relative;
-   .checkbox-border-size();
-   .checkbox();
+   user-select: none;
+   width: @width_CheckBox;
+   height: @height_CheckBox;
    flex-shrink: 0;
 }
-.controls-Checkbox__icon-checked {
-   .checkbox-checked-size();
+.controls-Checkbox__icon:before {
+   box-sizing: border-box;
+   content: '';
+   position: absolute;
+   border-width: @default-border-width;
+   border-style: solid;
+   width: @check-box-icon-box-size;
+   height: @check-box-icon-box-size;
+   margin: (@height_CheckBox - @check-box-icon-box-size) / 2 (@width_CheckBox - @check-box-icon-box-size) / 2;;
 }
-.controls-Checkbox__icon-tristate {
-   .checkbox-null-size();
+.controls-Checkbox__icon-checked:after {
+   font-family: 'cbuc-icons';
+   content: '\e616';
+   position: absolute;
+   font-size: @check-box-icon-successful-size;
+   height: @check-box-icon-successful-size;
+   width: @check-box-icon-successful-size;
+   line-height: @check-box-icon-successful-size;
+   top: @check-box-icon-successful-top;
+   left: @check-box-icon-successful-left;
+
+
+   // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
+   // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
+   // увеличим line-height в iPad на 1px;
+   .ws-is-mobile-platform & {
+      line-height: calc(~"@{check-box-icon-successful-size} + 1px");
+   }
+}
+.controls-Checkbox__icon-tristate:after {
+   left: 0;
+   content: '';
+   position: absolute;
+   height: @check-box-icon-null-size;
+   width: @check-box-icon-null-size;
+   line-height: @check-box-icon-null-size;
+   margin: (@height_CheckBox - @check-box-icon-null-size) / 2 (@width_CheckBox - @check-box-icon-null-size) / 2;
 }
 .controls-Checkbox__icon-tristate-color__disabled:after{
    background-color: @color_CheckBox__icon_disabled;
