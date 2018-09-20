@@ -1142,36 +1142,34 @@ define('SBIS3.CONTROLS/DropdownList',
                this._buttonHasMore.destroy();
             }
             DropdownList.superclass.destroy.apply(this, arguments);
-         }
-      });
-
-      if (isNewEnvironment()) {
-         // todo хак, который будет убран в 610. если у dropdownlist есть скрытый попап, мы не должны смотреть на него при вычислении canAcceptFocus()
-         DropdownList.prototype.canAcceptFocus = function(){
-            function childOk(child) {
-               return child && child.canAcceptFocus();
-            }
-
-            var
-               childs = this._childControls || [],
-               result = this._canAreaAcceptFocus();
-
-            childs = childs.filter(function(child) {
-               return child.isVisible();
-            });
-
-            if (result) {
-               //Если дочерние контролы есть, то canAcceptFocus зависит от них. Если нет, то от своего isEnabled
-               if (childs.length === 0) {
-                  result = !this.isEnabled || this.isEnabled();
-               } else {
-                  result = !! objectFind(this._childControls, childOk);
+         },
+         canAcceptFocus: isNewEnvironment()
+            ? function(){
+               function childOk(child) {
+                  return child && child.canAcceptFocus();
                }
-            }
 
-            return result;
-         };
-      }
+               var
+                  childs = this._childControls || [],
+                  result = this._canAreaAcceptFocus();
+
+               childs = childs.filter(function(child) {
+                  return child.isVisible();
+               });
+
+               if (result) {
+                  //Если дочерние контролы есть, то canAcceptFocus зависит от них. Если нет, то от своего isEnabled
+                  if (childs.length === 0) {
+                     result = !this.isEnabled || this.isEnabled();
+                  } else {
+                     result = !! objectFind(this._childControls, childOk);
+                  }
+               }
+
+               return result;
+            }
+            : Control.prototype.canAcceptFocus
+      });
 
       return DropdownList;
    });
