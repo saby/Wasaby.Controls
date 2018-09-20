@@ -716,6 +716,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
+            getJson: function() {
+               return this._options.json;
+            },
+            setJson: function(json) {
+               this._options.json = json;
+               this.setText(this.getTextFromJson());
+            },
             getTextFromJson: function() {
                if (!this._htmlJson) {
                   this._initHtmlJson();
@@ -728,13 +735,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
                var text = this._htmlJson.render();
                return text === '<span></span>' ? '' : text;
-            },
-            getJson: function() {
-               return this._options.json;
-            },
-            setJson: function(json) {
-               this._options.json = json;
-               this.setText(this.getTextFromJson());
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
