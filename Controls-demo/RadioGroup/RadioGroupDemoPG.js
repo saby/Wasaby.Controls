@@ -24,18 +24,17 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                value: {
                   readOnly: true
                },
-               captionPosition: {
+               direction: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
                }
             };
             this._componentOptions = {
-               name: 'Switch',
+               selectedKey: 1,
                readOnly: false,
-               tooltip: 'myTooltip',
-               caption: 'State1',
-               captionPosition: 'left'
+               keyProperty: 'myTooltip',
+               direction: 'horizontal'
 
             };
             this._metaData = config[this._content].properties['ws-config'].options;
