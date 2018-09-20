@@ -18,7 +18,9 @@ define(
                id: '2',
                title: 'Запись 2',
                parent: null,
-               '@parent': true
+               '@parent': true,
+               icon: 'icon-Ezy',
+               iconStyle: 'super'
             },
             {
                id: '3',
@@ -114,6 +116,19 @@ define(
             it('click item with menu', function() {
                let isNotify = false;
                let eventString = '';
+               let isHeadConfigCorrect = false;
+               toolbar._children.menuOpener.open = function(config) {
+                  let standart = {
+                     icon: 'icon-Ezy',
+                     caption: 'Запись 2',
+                     iconStyle: 'super'
+                  };
+                  if(standart.caption === config.templateOptions.headConfig.caption &&
+                     standart.icon === config.templateOptions.headConfig.icon &&
+                     standart.iconStyle === config.templateOptions.headConfig.iconStyle) {
+                     isHeadConfigCorrect = true;
+                  }
+               };
                toolbar._notify = (e) => {
                   eventString += e;
                   isNotify = true;
@@ -121,6 +136,7 @@ define(
                toolbar._onItemClick({stopPropagation: () => {}}, itemWithMenu);
                assert.equal(eventString, 'menuOpeneditemClick');
                assert.equal(isNotify, true);
+               assert.equal(isHeadConfigCorrect, true);
             });
             it('before update source', () => {
                defaultItems.push({
