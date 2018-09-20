@@ -110,6 +110,7 @@ define('Controls/Application/HeadDataContext', [
             // Application сейчас будет список css, для восстановления состояния с сервера.
             // Но собирать зависимости нам нужно после receivedState, потому что в нем могут тоже могут быть зависимости
             var additionalDeps = depsCollector.collectDependencies(additionalDepsArray);
+            files.js = files.js || [];
             for (var i = 0; i < additionalDeps.js.length; i++) {
                if (!~files.js.indexOf(additionalDeps.js[i])) {
                   files.js.push(additionalDeps.js[i]);

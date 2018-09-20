@@ -59,6 +59,7 @@
       "cookie-parser": "^1.4.3",
       "eslint": "^5.5.0",
       "express": "^4.16.3",
+      "body-parser": "^1.18.3",
       "gulp": "^4.0.0",
       "gulp-less": "^3.5.0",
       "gulp-livereload": "^3.8.1",
