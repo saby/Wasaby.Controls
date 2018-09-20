@@ -620,15 +620,21 @@ node('controls') {
         dir(workspace){
             sh """
             7za a log_jinnee -t7z ${workspace}/jinnee/logs
-			7za a log_intest -t7z /home/sbis/Controls/intest/logs
-			7za a log_intest -t7z /home/sbis/Controls/intest-ps/logs
             """
         }
+		if (fileExists('home/sbis/Controls/intest/logs')){
+			sh """7za a log_intest -t7z /home/sbis/Controls/intest/logs """
+			archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest/logs/log_intest.7z', caseSensitive: false
+		}
+		
+		if (fileExists('home/sbis/Controls/intest/logs')){
+			sh """7za a log_intest -t7z /home/sbis/Controls/intest-ps/logs"""
+			archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest-ps/logs/log_intest_ps.7z', caseSensitive: false
+		}
+		
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-		archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest/logs/log_intest.7z', caseSensitive: false
-		archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest/logs/log_intest_ps.7z', caseSensitive: false
 	}
     if ( regr ){
         dir("./controls") {
