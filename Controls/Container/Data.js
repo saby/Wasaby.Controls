@@ -46,14 +46,14 @@ define('Controls/Container/Data',
          updateDataOptions: function(self, dataOptions) {
             function reducer(result, optName) {
                if (optName === 'source' && self._source) {
-                  //TODO: При построении на сервере в сериализованом состоянии в компонент приходят prefetchSource и
-                  //source изначально заданный в опциях. prefetchSource содержит в себе source из опций, но так как
-                  //это 2 разных парамтра, при десериализации получаем 2 разных source. Один десериализуется внутри
-                  //prefetchSource, второй из опций. prefetchSource передаётся в табличные представления данных, а
-                  //source из опций распространяется по контексту. Получется тот кто влияет на source из контекста,
-                  //не влияет на source из таблицы. Решение: Не будем брать source из опций, а в контекс положим
-                  //source, который лежит внутри prefetchSource.
-                  //Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
+                  // TODO: При построении на сервере в сериализованом состоянии в компонент приходят prefetchSource и
+                  // source изначально заданный в опциях. prefetchSource содержит в себе source из опций, но так как
+                  // это 2 разных парамтра, при десериализации получаем 2 разных source. Один десериализуется внутри
+                  // prefetchSource, второй из опций. prefetchSource передаётся в табличные представления данных, а
+                  // source из опций распространяется по контексту. Получется тот кто влияет на source из контекста,
+                  // не влияет на source из таблицы. Решение: Не будем брать source из опций, а в контекс положим
+                  // source, который лежит внутри prefetchSource.
+                  // Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
                   result.source = self._prefetchSource._$target;
                } else {
                   result[optName] = self['_' + optName];
@@ -91,7 +91,7 @@ define('Controls/Container/Data',
          }
       };
 
-      var Data =  Control.extend(/** @lends Controls/Container/Data.prototype */{
+      var Data = Control.extend(/** @lends Controls/Container/Data.prototype */{
 
          _template: template,
 
@@ -119,9 +119,15 @@ define('Controls/Container/Data',
                return _private.createPrefetchSource(this).addCallback(function(result) {
                   _private.resolvePrefetchSourceResult(self, result);
                   _private.updateDataOptions(self, self._dataOptionsContext);
+                  self._dataOptionsContext.updateConsumers();
                   self._forceUpdate();
                   return result;
                });
+            } if (newOptions.filter !== this._options.filter ||
+                     newOptions.navigation !== this._options.navigation ||
+                     newOptions.sorting !== this._options.sorting ||
+                     newOptions.keyProperty !== this._options.keyProperty) {
+               self._dataOptionsContext.updateConsumers();
             }
          },
 
@@ -137,6 +143,7 @@ define('Controls/Container/Data',
             _private.createPrefetchSource(this, items).addCallback(function(result) {
                _private.resolvePrefetchSourceResult(self, result);
                _private.updateDataOptions(self, self._dataOptionsContext);
+               self._dataOptionsContext.updateConsumers();
                self._forceUpdate();
                return result;
             });
