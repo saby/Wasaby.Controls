@@ -2388,7 +2388,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText !== false) {
+               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
@@ -2412,7 +2412,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // (\n\n), как в хроме. И нет возможности отличить конец параграфа от простого перехода на новую строку после <br/>. Поэтому
                      // поличим текст из html сами:
                      // 1175818368 https://online.sbis.ru/opendoc.html?guid=5f01390b-7210-4e40-b168-c49265a71aa8
-                     this._clipboardText = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(clipboardData.getData('text/html'))));
+                     var content = clipboardData.getData('text/html');
+                     if (content) {
+                        content = this._htmlToText(this._sanitizeClasses(this._clearPasteContent(content)));
+                     }
+                     this._clipboardText = content || clipboardData.getData('text/plain');
                   }
                   else {
                      this._clipboardText = clipboardData.getData(BROWSER.isMobileIOS ? 'text/plain' : 'text');
