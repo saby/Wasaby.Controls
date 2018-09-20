@@ -716,25 +716,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
-            getJson: function() {
-               return this._options.json;
-            },
-            setJson: function(json) {
+            getTextFromJson: function() {
                if (!this._htmlJson) {
                   this._initHtmlJson();
                }
-               this._options.json = json;
-               this._htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
+               this._htmlJson.setJson(typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json);
 
                // Костыль для отображения плейсхолдера при пустом json.
                // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
                // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
                // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
                var text = this._htmlJson.render();
-               if (text === '<span></span>') {
-                  text = '';
-               }
-               this.setText(text);
+               return text === '<span></span>' ? '' : text;
+            },
+            getJson: function() {
+               return this._options.json;
+            },
+            setJson: function(json) {
+               this._options.json = json;
+               this.setText(this.getTextFromJson());
             },
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
@@ -3551,7 +3551,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                if (this._dataReview) {
-                  this._updateDataReview(this.getText() || '', !enabled);
+                  this._updateDataReview(this.getJson() ? this.getTextFromJson() : (this.getText() || ''), !enabled);
                   this._dataReview.toggleClass('ws-hidden', enabled);
                }
                container.toggleClass('ws-hidden', !enabled);
