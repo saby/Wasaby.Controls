@@ -208,7 +208,12 @@ define('SBIS3.CONTROLS/TextBox', [
              * @see setInformationIconColor
              * @see informationIconColor
              */
-            informationIconColor: ''
+            informationIconColor: '',
+
+            /**
+             * @cfg {Boolean} Включает нативное автодополнение в поле.
+             */
+            autocomplete: true
          }
       },
 
