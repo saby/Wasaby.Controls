@@ -2440,12 +2440,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // при вставке из google таблиц, они вставляются с шириной 0px, которая плохо работает в IE и FireFox
                // меняем ширину на auto во всех таблицах с width: 0px; для исправной работы во всех браузерах
                var tables = content.querySelectorAll('table');
-
-               tables.forEach(function(table) {
-                  if (table.style.width === '0px') {
-                     table.style.width = 'auto';
-                  }
-               });
+               if (tables.length) {
+                  // В MSIE11 не поддерживатется метод forEach для NodeList-а
+                  // 1175946750 https://online.sbis.ru/opendoc.html?guid=8ca1b4d5-7774-413f-870d-2c971018e80a
+                  Array.prototype.forEach.call(tables, function (table) {
+                     if (table.style.width === '0px') {
+                        table.style.width = 'auto';
+                     }
+                  });
+               }
 
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
