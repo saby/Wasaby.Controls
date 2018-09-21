@@ -459,7 +459,7 @@
       }
     }
   },
-  "Controls/Toggle/Radio": {
+  "Controls/Toggle/RadioGroup": {
     "name": "Controls/Toggle/Radio",
     "title": "Radio button switch.",
     "className": "Controls/Toggle/Radio",

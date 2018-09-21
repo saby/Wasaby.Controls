@@ -15,15 +15,15 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
          _beforeMount: function(opt) {
             this._source = [];
             for (var i in opt.enum) {
-               this._source.push({ id: k, title: i, comment: opt.enum[i] });
+               this._source.push({ id: k, title: (i.hasOwnProperty('title') ? i.title : i), comment: opt.enum[i] });
                k++;
             }
          },
-         _valueChangedHandler: function(event, tmp) {
-            if (!tmp) {
-               this._notify('valueChanged', undefined);
+         _selectedItemHandler: function(event, tmp) {
+            if (this._source[tmp]) {
+               this._notify('valueChanged', [this._source[tmp].comment]);
             } else {
-               this._notify('valueChanged', [tmp]);
+               this._notify('valueChanged', undefined);
             }
          },
          _comboBoxSource: function() {
