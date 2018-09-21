@@ -54,5 +54,13 @@
     </Controls-demo.PropertyGrid.ArrayTemplate>
 </ws:template>
 
+<ws:template name="Boolean|null">
+    <Controls-demo.PropertyGrid.BooleanOrNullTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.BooleanOrNullTemplate>
+</ws:template>
+
 
 <ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" />

@@ -28,12 +28,12 @@ define('Controls-demo/Demo/Page',
             return data;
          })(),
          themeLinks = {
-            carry: '/../components/themes/carry/carry',
-            presto: '/../components/themes/presto/presto',
-            carry_m: '/../components/themes/carry_medium/carry_medium',
-            presto_m: '/../components/themes/presto_medium/presto_medium',
-            online: '/../components/themes/online/online',
-            base: '/../components/themes/online/online'
+            carry: '/../SBIS3.CONTROLS/themes/carry/carry',
+            presto: '/../SBIS3.CONTROLS/themes/presto/presto',
+            carry_m: '/../SBIS3.CONTROLS/themes/carry_medium/carry_medium',
+            presto_m: '/../SBIS3.CONTROLS/themes/presto_medium/presto_medium',
+            online: '/../SBIS3.CONTROLS/themes/online/online',
+            base: '/../SBIS3.CONTROLS/themes/online/online'
          },
          setCurrentThemeLinks = function(theme) {
             var createCSSLink = function(id, href) {
