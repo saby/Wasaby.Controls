@@ -292,10 +292,10 @@ define('Controls/Filter/Controller',
                };
                _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
             }
-            if(this._filterButtonItems) {
+            if (this._filterButtonItems) {
                this._filterContext.filterButtonItems = _private.cloneItems(this._filterButtonItems);
             }
-            if(this._fastFilterItems) {
+            if (this._fastFilterItems) {
                this._filterContext.fastFilterItems = _private.cloneItems(this._fastFilterItems);
             }
             this._filterContext.updateConsumers();
