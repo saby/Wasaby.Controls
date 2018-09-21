@@ -274,6 +274,11 @@
       .controls-TreeDataGridView__levelPadding {
          width: ~"@{tree-view-level-padding-photo-@{val}}";
       }
+      .controls-DataGridView__th, .controls-DataGridView__td {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: ~"@{controls-view-photo-padding-left-@{val}}";
+         }
+      }
       .controls-ListView__item {
          &.controls-ListView__item-type-node .controls-TreeView__expand {
             padding: ~"@{controls-view-photo-padding-@{val}}";
@@ -382,15 +387,17 @@
 }
 
 .controls-TreeDataGridView:not(.controls-TreeDataGridView__withPhoto) {
-   &:not(.controls-ListView__multiselect):not(.controls-ListView__padding-XS):not(.controls-ListView__padding-S) {
-      &:not(.controls-ListView__padding-M):not(.controls-ListView__padding-L):not(.controls-ListView__padding-XL) {
-         .controls-DataGridView__th, .controls-DataGridView__td {
-            &.controls-DataGridView__firstContentCell {
+   &:not(.controls-TreeDataGridView__withPhoto-S):not(.controls-TreeDataGridView__withPhoto-M):not(.controls-TreeDataGridView__withPhoto-L) {
+      &:not(.controls-ListView__multiselect):not(.controls-ListView__padding-XS):not(.controls-ListView__padding-S) {
+         &:not(.controls-ListView__padding-M):not(.controls-ListView__padding-L):not(.controls-ListView__padding-XL) {
+            .controls-DataGridView__th, .controls-DataGridView__td {
+               &.controls-DataGridView__firstContentCell {
+                  padding-left: @tree-view-padding-left-DEFAULT;
+               }
+            }
+            .controls-TreeView__folderFooterContainer {
                padding-left: @tree-view-padding-left-DEFAULT;
             }
-         }
-         .controls-TreeView__folderFooterContainer {
-            padding-left: @tree-view-padding-left-DEFAULT;
          }
       }
    }
