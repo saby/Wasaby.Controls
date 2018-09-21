@@ -93,7 +93,7 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _itemClick: function (event, record) {
             var popupOptions = {
-               closeByExternalClick: false
+               closeByExternalClick: false,
             };
             this._children.EditOpener.open({record: record}, popupOptions);
          },
@@ -104,7 +104,7 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _beforeSyncRecord: function(event, action, record, additionaData) {
             if (this._cancelEdit) {
-               return 'custom';
+               return 'cancel';
             }
 
             if (additionaData && additionaData.isNewRecord) {

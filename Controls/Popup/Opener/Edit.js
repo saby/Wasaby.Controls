@@ -8,10 +8,9 @@ define('Controls/Popup/Opener/Edit',
       'Core/core-clone',
       'Core/core-merge',
       'Core/core-instance',
-      'WS.Data/Entity/Record',
-      'WS.Data/Di'
+      'Core/Deferred'
    ],
-   function(Control, template, CoreClone, CoreMerge, cInstance, Record, Di) {
+   function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
       /**
        * action of open the edit popup
        * @class Controls/Popup/Opener/Edit
@@ -40,109 +39,67 @@ define('Controls/Popup/Opener/Edit',
             }
             return cfg;
          },
-         processingResult: function(instance, eventName, record, additionalData) {
-            if (eventName === 'update') {
-               if (additionalData.isNewRecord) {
-                  _private.addRecord(instance, record, additionalData);
+         processingResult: function(RecordSynchronizer, data, items, editKey) {
+            if (data.formControllerEvent === 'update') {
+               if (data.additionalData.isNewRecord) {
+                  RecordSynchronizer.addRecord(data.record, data.additionalData, items);
                } else {
-                  _private.mergeRecord(instance, record);
+                  RecordSynchronizer.mergeRecord(data.record, items, editKey);
                }
-            } else if (eventName === 'delete') {
-               _private.deleteRecord(instance, record);
+            } else if (data.formControllerEvent === 'delete') {
+               RecordSynchronizer.deleteRecord(items, editKey);
             }
          },
 
-         addRecord: function(instance, editRecord, additionalData) {
-            var newRecord = _private.createRecord(instance, editRecord);
-            var items = _private.getItems(instance);
-            var at = additionalData.at || 0;
-
-            if (additionalData.isNewRecord) {
-               newRecord.set(items.getIdProperty(), additionalData.key);
-            }
-
-            items.add(newRecord, at);
+         getResultArgs: function(instance, data, RecordSynchronizer) {
+            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey];
          },
+         synchronize: function(instance, eventResult, data, Synchronizer) {
+            if (cInstance.instanceOfModule(eventResult, 'Core/Deferred')) {
+               data.additionalData = data.additionalData || {};
 
-         mergeRecord: function(instance, editRecord) {
-            var syncRecord = _private.getSyncRecord(instance);
-            var changedValues = _private.getChangedValues(syncRecord, editRecord);
-
-            _private.setRecordValues(syncRecord, changedValues);
-         },
-
-         deleteRecord: function(instance) {
-            var syncRecord = _private.getSyncRecord(instance);
-            var items = _private.getItems(instance);
-            items.remove(syncRecord);
-         },
-
-         createRecord: function(instance, editRecord) {
-            var items = _private.getItems(instance);
-            var syncRecord;
-
-            syncRecord = Di.resolve(items.getModel(), {
-               adapter: items.getAdapter(),
-               format: items.getFormat(),
-               idProperty: items.getIdProperty()
-            });
-
-            var changedValues = _private.getChangedValues(syncRecord, editRecord);
-            _private.setRecordValues(syncRecord, changedValues);
-
-            return syncRecord;
-         },
-
-         getSyncRecord: function(instance) {
-            var items = _private.getItems(instance);
-            var index = items.getIndexByValue(items.getIdProperty(), _private.getLinkedKey(instance));
-            return items.at(index);
-         },
-         getChangedValues: function(syncRecord, editRecord) {
-            var newValues = {};
-            var recValue;
-
-            Record.prototype.each.call(syncRecord, function(key, value) {
-               if (editRecord.has(key)) {
-                  recValue = editRecord.get(key);
-
-                  if (recValue !== value && key !== editRecord.getIdProperty()) {
-                     // clone the model, flags, etc because when they lose touch with the current record, the edit can still continue.
-                     if (recValue && (typeof recValue.clone === 'function')) {
-                        recValue = recValue.clone();
-                     }
-                     newValues[key] = recValue;
-                  }
-               }
-            });
-
-            return newValues;
-         },
-         setRecordValues: function(record, values) {
-            // The property may not have a setter
-            try {
-               record.set(values);
-            } catch (e) {
-               if (!(e instanceof ReferenceError)) {
-                  throw e;
-               }
+               eventResult.addCallback(function(record) {
+                  data.record = record;
+                  _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer));
+               });
+            } else {
+               _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer));
             }
          },
-         getItems: function(instance) {
-            return instance._options.items;
-         },
-         getLinkedKey: function(instance) {
-            return instance._linkedKey;
+         loadSynchronizer: function() {
+            var synchronizedModule = 'Controls/Utils/RecordSynchronizer';
+            var loadDef = new Deferred();
+            if (requirejs.defined(synchronizedModule)) {
+               loadDef.callback(requirejs(synchronizedModule));
+            } else {
+               requirejs([synchronizedModule], function(RecordSynchronizer) {
+                  loadDef.callback(RecordSynchronizer);
+               });
+            }
+            return loadDef;
          }
       };
 
       var Edit = Control.extend({
          _template: template,
          _resultHandler: null,
+         _openerTemplate: '',
          _linkedKey: null, // key to obtain a synchronized record
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._onResult = this._onResult.bind(this);
+            var def = new Deferred();
+
+            if (options.mode === 'dialog') {
+               this._openerTemplate = 'Controls/Popup/Opener/Dialog';
+            } else if (options.mode === 'dialog') {
+               this._openerTemplate = 'Controls/Popup/Opener/Sticky';
+            } else {
+               this._openerTemplate = 'Controls/Popup/Opener/Stack';
+            }
+
+            requirejs([this._openerTemplate], def.callback.bind(def));
+            return def;
          },
 
          open: function(meta, popupOptions) {
@@ -153,17 +110,11 @@ define('Controls/Popup/Opener/Edit',
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
+               var self = this;
                if (eventResult !== Edit.CANCEL && this._options.items) {
-                  if (cInstance.instanceOfModule(eventResult, 'Core/Deferred')) {
-                     data.additionalData = data.additionalData || {};
-
-                     // todo Написать unit для случая с deferred
-                     eventResult.addCallback(function(record) {
-                        _private.processingResult(this, data.formControllerEvent, record, data.additionalData);
-                     });
-                  } else {
-                     _private.processingResult(this, data.formControllerEvent, data.record, data.additionalData);
-                  }
+                  _private.loadSynchronizer().addCallback(function(Synchronizer) {
+                     _private.synchronize(self, eventResult, data, Synchronizer);
+                  });
                }
             } else if (this._resultHandler) {
                this._resultHandler.apply(this, arguments);
