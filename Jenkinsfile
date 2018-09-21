@@ -628,12 +628,12 @@ node('controls') {
 		
 		if ( exist_logs ){
 			sh """7za a log_intest -t7z /home/sbis/Controls/intest/logs """
-			archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest/logs/log_intest.7z', caseSensitive: false
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest.7z', caseSensitive: false
 		}
 		
 		if ( exist_logs_ps ){
 			sh """7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs"""
-			archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest-ps/logs/log_intest_ps.7z', caseSensitive: false
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest_ps.7z', caseSensitive: false
 		}
 		
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
