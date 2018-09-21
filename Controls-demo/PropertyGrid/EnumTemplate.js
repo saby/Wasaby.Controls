@@ -8,16 +8,17 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
    ],
    function(Control, template, Memory) {
       'use strict';
-      var k = 0;
       var stringTmpl = Control.extend({
          _template: template,
          _source: null,
          _beforeMount: function(opt) {
-            this._source = [];
-            for (var i in opt.enum) {
-               this._source.push({ id: k, title: (i.hasOwnProperty('title') ? i.title : i), comment: opt.enum[i] });
-               k++;
-            }
+            this._source = Object.keys(opt.enum).map(function(key, index) {
+               return {
+                  id: index,
+                  title: (key.hasOwnProperty('title') ? key.title : key)
+                  comment: opt.enum[key]
+               };
+            });
          },
          _selectedItemHandler: function(event, tmp) {
             if (this._source[tmp]) {
