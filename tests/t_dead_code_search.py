@@ -323,30 +323,31 @@ def get_trees():
     """Получить набор последних веток с тестами"""
 
     cur_dir = os.path.dirname(os.path.realpath(__file__))
-    products = ('reg', 'int')
-    paths = path_reg, path_int = [os.path.join(cur_dir, pr) for pr in products]
+    # products = ('reg', 'int')
+    # path_reg, path_int = [os.path.join(cur_dir, pr) for pr in products]
+    #
+    # excl = Config().get('EXCLUDE_PATHS').split(',')
+    # reg_trees = [os.path.join(path_reg, item) for item in os.listdir(path_reg)
+    #              if os.path.isdir(os.path.join(path_reg, item)) and item not in excl]
+    # int_trees = [os.path.join(path_int, item) for item in os.listdir(path_int)
+    #                  if os.path.isdir(os.path.join(path_int, item)) and item not in excl]
+    # trees = (reg_trees, int_trees)
+    # log('--------------- СУЩЕСТВУЮЩИЕ ВЕТКИ ---------------')
+    # for tr in trees:
+    #     log(tr)
+    # log('--------------------------------------------------')
+    #
+    # tree_list = []
+    # for tr in trees:
+    #
+    #     [tree_list.append(folder) for folder in tr ]
+    # log('--------------- ПРОВЕРЯЕМЫЕ ВЕТКИ ---------------')
+    # log(tree_list)
+    # log('--------------------------------------------------')
+    #
+    # return tree_list
 
-    excl = Config().get('EXCLUDE_PATHS').split(',')
-    reg_trees = [os.path.join(path_reg, item) for item in os.listdir(path_reg)
-                 if os.path.isdir(os.path.join(path_reg, item)) and item not in excl]
-    int_trees = [os.path.join(path_int, item) for item in os.listdir(path_int)
-                     if os.path.isdir(os.path.join(path_int, item)) and item not in excl]
-    trees = (reg_trees, int_trees)
-    log('--------------- СУЩЕСТВУЮЩИЕ ВЕТКИ ---------------')
-    for tr in trees:
-        log(tr)
-    log('--------------------------------------------------')
-
-    tree_list = []
-    for tr in trees:
-        
-        [tree_list.append(folder) for folder in tr ]
-    log('--------------- ПРОВЕРЯЕМЫЕ ВЕТКИ ---------------')
-    log(tree_list)
-    log('--------------------------------------------------')
-
-    return tree_list
-
+    return (os.path.join(cur_dir, 'int'), os.path.join(cur_dir, 'reg'))
 
 class TestDeadCodeSearch(TestCase):
     """Поиск мёртвого кода"""
