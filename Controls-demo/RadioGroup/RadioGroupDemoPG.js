@@ -82,6 +82,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0,
+                  displayType: 'source',
                   enum: {
                      source1: this._source,
                      source2: this._source2

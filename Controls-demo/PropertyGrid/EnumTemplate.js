@@ -15,14 +15,20 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             this._source = Object.keys(opt.enum).map(function(key, index) {
                return {
                   id: index,
-                  title: (key.hasOwnProperty('title') ? key.title : key)
-                  comment: opt.enum[key]
+                  value: opt.enum[key],
+                  title: key,
+                  comment: opt.enum[key],
+                  type: (opt.displayType ? 'source' : '')
                };
             });
          },
          _selectedItemHandler: function(event, tmp) {
             if (this._source[tmp]) {
-               this._notify('valueChanged', [this._source[tmp].comment]);
+               if (this._source[tmp].type === 'source') {
+                  this._notify('valueChanged',  [this._source[tmp].comment]);
+               } else {
+                  this._notify('valueChanged',  [this._source[tmp].title]);
+               }
             } else {
                this._notify('valueChanged', undefined);
             }
