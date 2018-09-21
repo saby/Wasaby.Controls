@@ -13,6 +13,7 @@
               searchParam="title"
               autoDropDown="{{true}}"
               items="{{_options.items}}"
+              caption="{{_options.caption}}"
               minSearchLength="1"
               on:valueChanged="_valueChangedHandler()"
               config="{{_options.config}}"
