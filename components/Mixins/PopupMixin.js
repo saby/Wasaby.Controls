@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
-   'Controls/Utils/isNewEnvironment',
+   'Core/helpers/isNewEnvironment',
    "Core/constants",
    'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
 ], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, isNewEnvironment, constants) {
