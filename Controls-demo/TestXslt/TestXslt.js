@@ -43,8 +43,9 @@ define('Controls-demo/TestXslt/TestXslt', [
             a.transformToText().addCallback(function(result) {
                var checkStr = result.replace(/(\r)|(\n)/g, '').replace(/( )* /g, ' ');
                if (~checkStr.indexOf('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">')) {
-                  checkStr = unescape(checkStr.replace('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix"> ', '')
-                     .replace('</transformiix:result>', '')).replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+                  checkStr = unescape(checkStr.replace('</transformiix:result>', '')
+                     .replace('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix"> ', '')
+                     .replace(' xmlns="http://www.w3.org/1999/xhtml"', ''));
                }
                self.checkResult(checkStr, self.result) ? self.passed() : self.refused();
             });
