@@ -3,9 +3,9 @@
    .align-items(center);
    .justify-content(center);
    .baseline-fix();
-   border-width: @border-width_Switch;
-   border-color: @border-color_Switch;
-   border-radius: @border-radius_Switch;
+   border-width: @width_Switch__border;
+   border-color:@color_Switch__border;
+   border-radius: @size_Switch__border-radius;
    border-style: solid;
    box-sizing: border-box;
 }
@@ -27,7 +27,7 @@
    margin: 0;
    &:before {
       height: 0;
-      line-height: @line-height_DoubleSwitch_vertical;
+      line-height: @line-height_DoubleSwitch__vertical;
    }
 }
 
@@ -57,12 +57,12 @@
 }
 
 .controls-DoubleSwitch__line_enabled {
-   background-color: @background-color_Switch-track_enabled;
+   background-color: @background-color_Switch-track__enabled;
    display: inline-block;
 }
 
 .controls-DoubleSwitch__line_disabled {
-   background-color: @background-color_Switch-track_disabled;
+   background-color: @background-color_Switch-track__disabled;
    display: inline-block;
 }
 
@@ -70,17 +70,17 @@
    display: block;
    //If border is in height text block base line between text and toggle circle deviates to switch border height.
    //In vertical state width = height, height = width.
-   height: @width_Switch / 2 - @border-width_Switch;
+   height: @width_Switch / 2 - @width_Switch__border;
    line-height: @width_Switch / 2;
 }
 
 .controls-DoubleSwitch__text_enabled_unselected {
-   color: @color_Switch-text_enabled_unselected;
+   color: @color_Switch-text__enabled_unselected;
    cursor: pointer;
 }
 
 .controls-DoubleSwitch__text_disabled_unselected {
-   color: @color_Switch-text_disabled_unselected;
+   color: @color_Switch-text__disabled_unselected;
 }
 
 .ws-is-no-touch {
@@ -92,7 +92,7 @@
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @color_ToggleCircle_outerCircle_enabled_hovered;
+         fill: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
 }
