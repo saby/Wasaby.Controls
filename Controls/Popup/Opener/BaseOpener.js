@@ -8,7 +8,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred',
-      'Controls/Utils/isNewEnvironment'
+      'Core/helpers/isNewEnvironment'
    ],
    function(
       Control,
