@@ -55,29 +55,29 @@
    font-family: 'cbuc-icons';
    content: '\e616';
    position: absolute;
-   font-size: @size_CheckBox__icon-successful;
-   height:@size_CheckBox__icon-successful;
-   width: @size_CheckBox__icon-successful;
-   line-height: @size_CheckBox__icon-successful;
-   top: @size_CheckBox__icon-successful-top;
-   left: @size_CheckBox__icon-successful-left;
+   font-size: @size_CheckBox__iconSuccessful;
+   height:@size_CheckBox__iconSuccessful;
+   width: @size_CheckBox__iconSuccessful;
+   line-height: @size_CheckBox__iconSuccessful;
+   top: @top_CheckBox__iconSuccessful;
+   left: @left_CheckBox__iconSuccessful;
 
 
    // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
    // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
    // увеличим line-height в iPad на 1px;
    .ws-is-mobile-platform & {
-      line-height: calc(~"@{size_CheckBox__icon-successful} + 1px");
+      line-height: calc(~"@{size_CheckBox__iconSuccessful} + 1px");
    }
 }
 .controls-Checkbox__icon-tristate:after {
    left: 0;
    content: '';
    position: absolute;
-   height: @size_CheckBox__icon-null;
-   width: @size_CheckBox__icon-null;
-   line-height: @size_CheckBox__icon-null;
-   margin: (@height_CheckBox - @size_CheckBox__icon-null) / 2 (@width_CheckBox - @size_CheckBox__icon-null) / 2;
+   height:@size_CheckBox__iconTristate;
+   width: @size_CheckBox__iconTristate;
+   line-height: @size_CheckBox__iconTristate;
+   margin: (@height_CheckBox - @size_CheckBox__iconTristate) / 2 (@width_CheckBox - @size_CheckBox__iconTristate) / 2;
 }
 .controls-Checkbox__icon-tristate-color__disabled:after{
    background-color: @color_CheckBox__icon_disabled;
