@@ -24,12 +24,12 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
     * @css @color_CheckBox__icon_enabled Enabled icon color of selected or tristate checkbox.
     *
     * @css @width_CheckBox__border Border thickness in iconBox.
-    * @css @size-CheckBox__iconBox Size of checkbox iconBox.
+    * @css @size_CheckBox__iconBox Size of checkbox iconBox.
     *
     * @css @size_CheckBox__iconSuccessful Size of selected checkbox icon.
     * @css @top_CheckBox__iconSuccessful Top coordinate of selected checkbox icon.
     *
     * @css @left_CheckBox__iconSuccessful Left coordinate of selected checkbox icon.
-    * @css @size-CheckBox__iconTristate Size of tristate checkbox icon.
+    * @css @size_CheckBox__iconTristate Size of tristate checkbox icon.
     */
 );
