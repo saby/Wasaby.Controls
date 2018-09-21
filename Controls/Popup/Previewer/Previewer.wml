@@ -1,7 +1,7 @@
 <div>
    <ws:if data="{{_options.trigger === 'click'}}">
       <ws:partial template="{{_options.content}}"
-                  on:mousedown="_contentMousedownHandler()"/>
+                  on:mousedown="_contentMousedownHandler()" on:click="_previewerClickHandler()"/>
    </ws:if>
    <ws:else data="{{_options.trigger === 'hover'}}">
       <ws:partial template="{{_options.content}}"
@@ -13,7 +13,8 @@
       <ws:partial template="{{_options.content}}"
                   on:mousedown="_contentMousedownHandler()"
                   on:mouseenter="_contentMouseenterHandler()"
-                  on:mouseleave="_contentMouseleaveHandler()"/>
+                  on:mouseleave="_contentMouseleaveHandler()"
+                  on:click="_previewerClickHandler()"/>
    </ws:else>
    <ws:if data="{{!_isNewEnvironment()}}">
       <Controls.Popup.Opener.Previewer name="openerPreviewer"/>
