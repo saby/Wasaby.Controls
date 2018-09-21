@@ -632,7 +632,7 @@ node('controls') {
 		}
 		
 		if ( exist_logs_ps ){
-			sh """7za a log_intest -t7z /home/sbis/Controls/intest-ps/logs"""
+			sh """7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs"""
 			archiveArtifacts allowEmptyArchive: true, artifacts: '/home/sbis/Controls/intest-ps/logs/log_intest_ps.7z', caseSensitive: false
 		}
 		
