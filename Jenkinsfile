@@ -56,7 +56,7 @@ node('controls') {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
