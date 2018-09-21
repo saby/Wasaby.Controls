@@ -1,3 +1,9 @@
+"""
+Файл используется в сборке по поиску мертвого кода
+http://ci-platform.sbis.ru/job/MAINTENANCE/job/check%20dead%20code/
+Здесь указаны атрибуты для исключения.
+"""
+
 any_crumbs_vcbc  # unused variable (int/pages/vdom/vdom_breadcrumbs.py:7)
 one_crumb_vcbc  # unused variable (int/pages/vdom/vdom_breadcrumbs.py:8)
 two_crumbs_vcbc  # unused variable (int/pages/vdom/vdom_breadcrumbs.py:9)
@@ -24,6 +30,3 @@ bold_vcfl  # unused variable (int/pages/vdom/vdom_input.py:208)
 accent_vcfl  # unused variable (int/pages/vdom/vdom_input.py:209)
 primary_vcfl  # unused variable (int/pages/vdom/vdom_input.py:210)
 switch_vcs  # unused variable (int/pages/vdom/vdom_toggle.py:35)
-_.hover  # unused attribute (reg/pages/engine_browser.py:29)
-_.hover  # unused attribute (reg/pages/fast_data_filter.py:8)
-_.hover  # unused attribute (reg/pages/fast_data_filter.py:10)
