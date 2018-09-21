@@ -15,9 +15,9 @@ define('Controls/Input/DateTime/StringValueConverter', [
       },
 
       reAllMaskChars: /[YMDHms]+|[. :-]/g,
-      reDateMaskChars: /[YMD]+/g,
-      reTimeMaskChars: /[Hms]+/g,
-      reDateTimeMaskChars: /[YMDHms]+/g,
+      reDateMaskChars: /[YMD]+/,
+      reTimeMaskChars: /[Hms]+/,
+      reDateTimeMaskChars: /[YMDHms]+/,
       reNumbers: /\d/,
 
       isFilled: function(self, value) {
@@ -45,7 +45,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
          var valueModel = {
                year: { str: null, value: 1900, valid: false },
                month: { str: null, value: 0, valid: false },
-               date: { str: null, value: 0, valid: false },
+               date: { str: null, value: 1, valid: false },
                hours: { str: null, value: 0, valid: false },
                minutes: { str: null, value: 0, valid: false },
                seconds: { str: null, value: 0, valid: false }
@@ -77,7 +77,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
       },
 
       fillFromBaseValue: function(self, valueModel, baseValue) {
-         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 0);
+         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1);
 
          if (valueModel.year.str === null) {
             valueModel.year.value = baseValue.getFullYear();
@@ -85,7 +85,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
          if (valueModel.month.str === null) {
             valueModel.month.value = baseValue.getMonth();
          }
-         if (valueModel.date.str === null && self._mask === 'MM/YYYY') {
+         if (valueModel.date.str === null && !self._mask === 'MM/YYYY') {
             // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
             // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
             // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь
@@ -102,7 +102,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
             valueModel.seconds.value = baseValue.getSeconds();
          }
          for (var value in valueModel) {
-            if (valueModel.hasOwnProperty(value)) {
+            if (valueModel.hasOwnProperty(value) && valueModel[value].str === null) {
                valueModel[value].valid = true;
             }
          }
@@ -155,7 +155,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
                   } else {
                      // Current year is filled
                      if (!valueModel.month.valid) {
-                        setValue(valueModel.date, now.getMonth());
+                        setValue(valueModel.month, now.getMonth());
                      }
                      if (!valueModel.date.valid) {
                         setValue(valueModel.date, getDate());
@@ -259,7 +259,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
        */
       update: function(options) {
          this._mask = options.mask;
-         this._replacer = options._replacer;
+         this._replacer = options.replacer;
       },
 
       /**

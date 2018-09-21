@@ -1,0 +1,37 @@
+<div attr:class="controls-DateRange">
+   <Controls.Input.DateTime
+      value="{{_rangeModel.startValue}}"
+      mask="{{_options.mask}}"
+      size="{{ _options.size }}"
+      selectOnClick="{{_options.selectOnClick}}"
+      validationErrors="{{_options.validationErrors}}"
+      on:valueChanged="_proxyEvent('valueChanged')"
+      on:inputCompleted="_proxyEvent('inputCompleted')">
+   </Controls.Input.DateTime>
+   <Controls.Input.DateTime
+      value="{{_rangeModel.endValue}}"
+      mask="{{_options.mask}}"
+      size="{{ _options.size }}"
+      selectOnClick="{{_options.selectOnClick}}"
+      validationErrors="{{_options.validationErrors}}"
+      on:valueChanged="_proxyEvent('valueChanged')"
+      on:inputCompleted="_proxyEvent('inputCompleted')">
+   </Controls.Input.DateTime>
+   <Controls.Button
+      attr:class="controls-DateRange__button"
+      style="linkMain"
+      icon="icon-small icon-Calendar2 icon-primary"
+      on:click="_openDialog()"
+   />
+   <Controls.Popup.Opener.Sticky name="opener">
+      <ws:popupOptions
+         template="Controls/Date/PeriodDialog"
+         closeByExternalClick="{{true}}"
+      >
+         <ws:eventHandlers onResult="{{_onResult}}"/>
+         <ws:verticalAlign side="bottom"/>
+         <ws:horizontalAlign side="center"/>
+         <ws:corner vertical="top" horizontal="center"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Sticky>
+</div>

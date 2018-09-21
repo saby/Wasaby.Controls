@@ -11,6 +11,7 @@ define('Controls/Input/DateTime/Model', [
    StringValueConverter,
    dateUtils
 ) {
+   'use strict';
 
    /**
     * Model for 'Controls/Input/DateTime' control.
@@ -18,6 +19,15 @@ define('Controls/Input/DateTime/Model', [
     * @public
     * @noShow
     */
+
+   var _private = {
+      updateLastValue: function(self) {
+         if (dateUtils.isValidDate(self._value)) {
+            self._lastValue = self._value;
+         }
+      }
+   };
+
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
       _textValue: null,
       _value: null,
@@ -59,9 +69,8 @@ define('Controls/Input/DateTime/Model', [
          }
          this._nextVersion();
          this._value = value;
-         if (value) {
-            this._lastValue = value;
-         }
+         _private.updateLastValue(this);
+         this._textValue = this._stringValueConverter.getStringByValue(value);
          this._notify('valueChanged', [value]);
       },
 
@@ -79,7 +88,8 @@ define('Controls/Input/DateTime/Model', [
          }
          this._nextVersion();
          this._textValue = value;
-         this.value = this._stringValueConverter.getValueByString(value, this._lastValue);
+         this._value = this._stringValueConverter.getValueByString(value, this._lastValue);
+         _private.updateLastValue(this);
       },
 
       /**
