@@ -292,8 +292,12 @@ define('Controls/Filter/Controller',
                };
                _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
             }
-            this._filterContext.filterButtonItems = _private.cloneItems(this._filterButtonItems);
-            this._filterContext.fastFilterItems = _private.cloneItems(this._fastFilterItems);
+            if(this._filterButtonItems) {
+               this._filterContext.filterButtonItems = _private.cloneItems(this._filterButtonItems);
+            }
+            if(this._fastFilterItems) {
+               this._filterContext.fastFilterItems = _private.cloneItems(this._fastFilterItems);
+            }
             this._filterContext.updateConsumers();
             _private.applyItemsToFilter(this, this._options.filter, items);
             _private.notifyFilterChanged(this);
