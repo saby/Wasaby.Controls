@@ -1160,10 +1160,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                skippedRows: provider.skippedRows,
                columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
-            if (provider.separator) {
-               item.separator = provider.separator;
-            }
             item.parserConfig = ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v] || null; return r; }, {});
+            if (provider.separator) {
+               item.parserConfig.dilimiter = provider.separator;
+            }
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;
