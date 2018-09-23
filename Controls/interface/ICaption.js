@@ -2,7 +2,7 @@ define('Controls/interface/ICaption', [
 ], function() {
 
    /**
-    * Button caption interface.
+    * Caption text.
     *
     * @interface Controls/interface/ICaption
     * @public
