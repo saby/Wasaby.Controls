@@ -301,6 +301,19 @@
 }
 .generate-padding-class-DGV();
 
+/* Отступы для классов .controls-DataGridView__withPhoto-S|M|L */
+.generate-photo-class-DGV(@i: 1) when (@i =< length(@controls-view-photo-padding-variants)) {
+   @val: extract(@controls-view-photo-padding-variants, @i);
+   //стили для  __withPhoto в таблице, но не в дереве
+   .controls-DataGridView__withPhoto-@{val}{
+      &.controls-ListView__multiselect.controls-ListView__hideCheckBoxes {
+         .check-box-width(0);//все задано в паддинге, поэтому не нужна ширина вообще
+      }
+   }
+   .generate-photo-class-DGV(@i + 1);
+}
+.generate-photo-class-DGV();
+
 .controls-ListView__multiselect .controls-ListView__serviceFooter {
    margin-left: @width_CheckBox;
    padding-left: 0;

@@ -31,13 +31,13 @@ define('Controls/Filter/Fast/Container',
       var Container = Control.extend(/** @lends Controls/Filter/Fast/Container.prototype */{
          
          _template: template,
-         
+
          _beforeUpdate: function(options, context) {
             //context from Filter layout
+            // Временно не будем проверять поменялось ли значение контекста, потому что
+            // объект контекста один, и значения в нем меняются по ссылке.
             var filterItems = context.filterLayoutField.fastFilterItems;
-            if (!isEqual(this.context.get('filterLayoutField').fastFilterItems, filterItems)) {
-               this._items = filterItems;
-            }
+            this._items = filterItems;
          },
          
          _beforeMount: function(options, context) {
