@@ -1,1 +1,9 @@
-<ws:partial template="{{_options.content}}" scope="{{_options}}" bind:selectedKeys="_selectedKeys" bind:markedKey="_markedKey" on:itemClick="_itemClick()" on:checkboxClick="_checkboxClick()"/>
+<ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
+            bind:markedKey="_markedKey"
+            on:itemClick="_itemClick()"
+            on:checkboxClick="_checkboxClick()"
+            on:itemActionsClick="_itemActionsClick()"
+            itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+/>

@@ -21,6 +21,7 @@ define('Controls/List/TreeControl', [
 
    var _private = {
       clearSourceControllers: function(self) {
+         return;
          var
             listViewModel = self._children.baseControl.getViewModel();
          for (var prop in self._nodesSourceControllers) {

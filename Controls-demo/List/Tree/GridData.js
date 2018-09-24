@@ -3,7 +3,7 @@ define('Controls-demo/List/Tree/GridData', function() {
       data = {
          catalog: [
             {
-               'id': 2246,
+               'id': '2246',
                'Раздел': null,
                'Группа': 'group_1',
                'Раздел@': true,
@@ -12,7 +12,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 454339,
+               'id': '454339',
                'Раздел': null,
                'Группа': 'group_1',
                'Раздел@': true,
@@ -21,7 +21,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 2253,
+               'id': '2253',
                'Раздел': null,
                'Группа': 'group_1',
                'Раздел@': true,
@@ -30,7 +30,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 457275,
+               'id': '457275',
                'Раздел': null,
                'Группа': 'group_1',
                'Раздел@': true,
@@ -39,7 +39,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 452815,
+               'id': '452815',
                'Раздел': null,
                'Группа': 'group_2',
                'Раздел@': true,
@@ -48,7 +48,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 457244,
+               'id': '457244',
                'Раздел': null,
                'Группа': 'group_2',
                'Раздел@': true,
@@ -57,7 +57,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 454687,
+               'id': '454687',
                'Раздел': null,
                'Группа': 'group_2',
                'Раздел@': true,
@@ -66,7 +66,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 3988,
+               'id': '3988',
                'Раздел': null,
                'Группа': 'group_2',
                'Раздел@': true,
@@ -75,7 +75,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 440833,
+               'id': '440833',
                'Раздел': null,
                'Группа': 'group_3',
                'Раздел@': true,
@@ -84,7 +84,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 439374,
+               'id': '439374',
                'Раздел': null,
                'Группа': 'group_3',
                'Раздел@': true,
@@ -93,7 +93,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 455558,
+               'id': '455558',
                'Раздел': null,
                'Группа': 'group_3',
                'Раздел@': true,
@@ -102,7 +102,7 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 458962,
+               'id': '458962',
                'Раздел': null,
                'Группа': 'group_4',
                'Раздел@': true,
@@ -111,8 +111,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 471641,
-               'Раздел': 2246,
+               'id': '471641',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -120,8 +120,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 453094,
-               'Раздел': 2246,
+               'id': '453094',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -129,8 +129,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 453062,
-               'Раздел': 2246,
+               'id': '453062',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -138,8 +138,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 465756,
-               'Раздел': 2246,
+               'id': '465756',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -147,8 +147,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 466943,
-               'Раздел': 2246,
+               'id': '466943',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -156,8 +156,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 453063,
-               'Раздел': 2246,
+               'id': '453063',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -165,8 +165,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 461394,
-               'Раздел': 2246,
+               'id': '461394',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -174,8 +174,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 466938,
-               'Раздел': 2246,
+               'id': '466938',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -183,8 +183,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 453064,
-               'Раздел': 2246,
+               'id': '453064',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -192,8 +192,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 452955,
-               'Раздел': 2246,
+               'id': '452955',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -201,8 +201,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 452922,
-               'Раздел': 2246,
+               'id': '452922',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -210,8 +210,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 452954,
-               'Раздел': 2246,
+               'id': '452954',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': true,
                'Раздел$': null,
@@ -219,8 +219,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 439491,
-               'Раздел': 2246,
+               'id': '439491',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -228,8 +228,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 500
             },
             {
-               'id': 452639,
-               'Раздел': 2246,
+               'id': '452639',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -237,8 +237,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 150000
             },
             {
-               'id': 468884,
-               'Раздел': 2246,
+               'id': '468884',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -246,8 +246,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 30000
             },
             {
-               'id': 445056,
-               'Раздел': 2246,
+               'id': '445056',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -255,8 +255,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 500
             },
             {
-               'id': 445199,
-               'Раздел': 2246,
+               'id': '445199',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -264,8 +264,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': null
             },
             {
-               'id': 92,
-               'Раздел': 2246,
+               'id': '92',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -273,8 +273,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 3000
             },
             {
-               'id': 4117,
-               'Раздел': 2246,
+               'id': '4117',
+               'Раздел': '2246',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -282,8 +282,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 2000
             },
             {
-               'id': 3139,
-               'Раздел': 454339,
+               'id': '3139',
+               'Раздел': '454339',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -291,8 +291,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 4900
             },
             {
-               'id': 464182,
-               'Раздел': 454339,
+               'id': '464182',
+               'Раздел': '454339',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -300,8 +300,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 250000
             },
             {
-               'id': 445507,
-               'Раздел': 454339,
+               'id': '445507',
+               'Раздел': '454339',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -309,8 +309,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 1
             },
             {
-               'id': 461101,
-               'Раздел': 454339,
+               'id': '461101',
+               'Раздел': '454339',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
@@ -318,8 +318,8 @@ define('Controls-demo/List/Tree/GridData', function() {
                'p0': 2000
             },
             {
-               'id': 461104,
-               'Раздел': 454339,
+               'id': '461104',
+               'Раздел': '454339',
                'Группа': 'group_1',
                'Раздел@': null,
                'Раздел$': null,
