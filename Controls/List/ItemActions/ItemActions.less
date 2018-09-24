@@ -102,13 +102,16 @@
 }
 
 .controls-itemActionsV__action_title {
-  color: @color_Link-text;
-  font-size:@small-text-size;
   min-height: @default-icon-size;
 }
 
+.controls-itemActionsV__action_title_style_default {
+  color: @color_Link-text;
+  font-size:@small-text-size;
+}
+
 .ws-is-no-touch {
-  .controls-itemActionsV__action_title {
+  .controls-itemActionsV__action_title_style_default {
     &:hover {
       color: @color_Link-text_active;
       text-decoration: underline;
