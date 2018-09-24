@@ -5,11 +5,10 @@ define('Controls/Input/Dropdown',
       'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
-      'Core/helpers/Object/isEqual',
       'Controls/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, isEqual, dropdownUtils) {
+   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
       /**
        * Input for selection from the list of options.
        *
