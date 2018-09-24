@@ -48,7 +48,7 @@ define(
          });
 
          let config = {
-            selectedKeys: '2',
+            selectedKeys: ['2'],
             displayProperty: 'title',
             keyProperty: 'id',
             source: new Memory({
@@ -75,15 +75,12 @@ define(
          it('check selectedItemsChanged event', () => {
             let ddl = getDropdown(config);
             ddl._notify = (e, data) => {
-               if (e === 'textValueChanged') {
-                  assert.equal(data[0], 'Запись 6');
-               }
                if (e === 'selectedKeysChanged') {
                   assert.deepEqual(data[0], ['6']);
                }
             };
             ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
          });
-
       });
-   });
+   }
+);
