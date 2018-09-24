@@ -167,7 +167,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          //TODO FOR COMPATIBLE. для чистого вдома этот метод излишен, но логику не ломает
          _mouseOutHandler: function(event) {
-            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
+            //todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            var container = this._container.get ? this._container.get(0) : this._container;
+            if (!event.target.closest('.controls-DropdownList__popup') && container.closest('.controls-DropdownList__subMenu')) {
                this._children.subDropdownOpener.close();
             }
          },
@@ -222,7 +224,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._notify('close');
          },
          _mousemoveHandler: function(emitterEvent, event) {
-            if (!event.target.closest('.controls-DropdownList__popup') && this._container.closest('.controls-DropdownList__subMenu')) {
+            //todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            var container = this._container.get ? this._container.get(0) : this._container;
+            if (!event.target.closest('.controls-DropdownList__popup') && container.closest('.controls-DropdownList__subMenu')) {
                this._notify('close');
             }
          },

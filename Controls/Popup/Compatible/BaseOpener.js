@@ -275,6 +275,8 @@ function(cMerge,
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
 
+         cfg.componentOptions.catchFocus = cfg.hasOwnProperty('catchFocus') ? cfg.catchFocus : true;
+
          if (cfg.onCloseHandler) {
             cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }

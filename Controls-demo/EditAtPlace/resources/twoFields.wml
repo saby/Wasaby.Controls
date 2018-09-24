@@ -1,0 +1,24 @@
+<div class="ControlsDemo-EditAtPlace__template">
+   <div class="ControlsDemo-EditAtPlace__fieldWrapper">
+      <span class="ControlsDemo-EditAtPlace__title">Регламент:</span>
+      <Controls.EditAtPlace.EditAtPlaceTemplate
+         bind:value="editObject.title"
+         isEditing="{{isEditing}}"
+      >
+         <ws:editorTemplate>
+            <Controls.Input.Text selectOnClick="{{ false }}" />
+         </ws:editorTemplate>
+      </Controls.EditAtPlace.EditAtPlaceTemplate>
+   </div>
+   <div class="ControlsDemo-EditAtPlace__fieldWrapper">
+      <span class="ControlsDemo-EditAtPlace__title">Дата создания:</span>
+      <Controls.EditAtPlace.EditAtPlaceTemplate
+         bind:value="editObject.date"
+         isEditing="{{isEditing}}"
+      >
+         <ws:editorTemplate>
+            <Controls.Input.Text selectOnClick="{{ false }}" />
+         </ws:editorTemplate>
+      </Controls.EditAtPlace.EditAtPlaceTemplate>
+   </div>
+</div>

@@ -1,0 +1,37 @@
+{
+  "Controls/EditAtPlace": {
+    "name": "Controls/EditAtPlace",
+    "title": "Controller for editing of input fields.",
+    "className": "Controls/EditAtPlace",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/EditAtPlace",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "toolbarVisibility": {
+            "type": "Boolean",
+            "title": "Determines whether buttons 'Save' and 'Cancel' should be displayed."
+          },
+          "style": {
+            "type": "String",
+            "title": "Edit at place display style."
+          },
+          "editObject": {
+            "type": "enum",
+            "title": "Record with initial data."
+          },
+          "editWhenFirstRendered": {
+            "type": "Boolean",
+            "title": "Determines whether editing should start on first render."
+          },
+          "content": {
+            "type": "enum",
+            "title": "Template that will be used for editing."
+          }
+        }
+      }
+    }
+  }
+}

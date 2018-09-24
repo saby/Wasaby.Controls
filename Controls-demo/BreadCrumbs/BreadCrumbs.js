@@ -1,7 +1,12 @@
 define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
-   'wml!Controls-demo/BreadCrumbs/BreadCrumbs'
-], function(Control, template) {
+   'wml!Controls-demo/BreadCrumbs/BreadCrumbs',
+   'WS.Data/Entity/Model'
+], function(
+   Control,
+   template,
+   Model
+) {
    var BreadCrumbs = Control.extend({
       _template: template,
       items: null,
@@ -42,12 +47,22 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6'
             }
-         ];
+         ].map(function(item) {
+            return new Model({
+               rawData: item,
+               idProperty: 'id'
+            });
+         });
          this.items1 = [{
             id: 1,
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
-         }];
+         }].map(function(item) {
+            return new Model({
+               rawData: item,
+               idProperty: 'id'
+            });
+         });
          this.items2 = [{
             id: 1,
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
@@ -56,16 +71,26 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             id: 6,
             title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
             secondTitle: 'тест6'
-         }];
+         }].map(function(item) {
+            return new Model({
+               rawData: item,
+               idProperty: 'id'
+            });
+         });
          this.items3 = [{ id: 5, title: 'Recor' },
             {
                id: 6,
                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6'
-            }];
+            }].map(function(item) {
+            return new Model({
+               rawData: item,
+               idProperty: 'id'
+            });
+         });
       },
       _onItemClick: function(e, item) {
-         this.info = item.id;
+         this.info = item.getId();
          this._arrowActivated = false;
       },
 
@@ -101,7 +126,12 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6'
             }
-         ];
+         ].map(function(item) {
+            return new Model({
+               rawData: item,
+               idProperty: 'id'
+            });
+         });
          this.info = '';
          this._arrowActivated = false;
       },

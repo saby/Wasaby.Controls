@@ -167,6 +167,7 @@ define('Controls/Popup/Opener/BaseController',
       });
 
       BaseController.POPUP_STATE_INITIALIZING = 'initializing';
+      BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING; //For Manager Controller that uses the BaseController inheritor
       BaseController.POPUP_STATE_CREATING = 'creating';
       BaseController.POPUP_STATE_CREATED = 'created';
       BaseController.POPUP_STATE_UPDATING = 'updating';

@@ -22,7 +22,7 @@ define('Controls-demo/Checkbox/CheckBoxDemoPG',
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: true
+                  readOnly: false
                }
             };
             this._componentOptions = {
