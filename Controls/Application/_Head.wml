@@ -1,6 +1,6 @@
 <head key="1_1_">
    <meta name="viewport" content="{{_options.viewport || 'width=1024'}}"/>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+   <meta charset="utf-8"/>
    <script key="ws-config">
       window.wsConfig = {
          wsRoot: '{{_options.wsRoot}}',

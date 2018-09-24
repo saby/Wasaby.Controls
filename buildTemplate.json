@@ -33,6 +33,10 @@
       "path": "%cd%/node_modules/sbis3-ws/ws/lib/Ext"
     },
     {
+      "name": "WS.Deprecated",
+      "path": "%cd%/node_modules/sbis3-ws/ws/deprecated"
+    },
+    {
       "name": "Transport",
       "path": "%cd%/node_modules/sbis3-ws/ws/transport"
     },
@@ -63,6 +67,14 @@
     {
       "name": "ControlsSandbox",
       "path": "%cd%/pages/sandbox"
+    },
+    {
+      "name": "tests",
+      "path": "%cd%/tests"
+    },
+    {
+      "name": "File",
+      "path": "%cd%/File"
     }
 
   ]

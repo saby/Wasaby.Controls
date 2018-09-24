@@ -16,7 +16,7 @@ module.exports = function less1by1Task(grunt) {
    let root = grunt.option('root') || '',
       app = grunt.option('application') || '',
       rootPath = path.join(root, app),
-      themesPath = path.join(rootPath, './components/themes/');
+      themesPath = path.join(rootPath, './SBIS3.CONTROLS/themes/');
 
    function processLessFile(data, filePath, progBar, asyncCallback) {
       let lessData = data.toString(),
@@ -106,7 +106,7 @@ module.exports = function less1by1Task(grunt) {
             if (
                helpers.validateFile(relpath, [
                   'Controls-theme/**/' + findFileName + '.less',
-                  'components/**/' + findFileName + '.less',
+                  'SBIS3.CONTROLS/**/' + findFileName + '.less',
                   'demo/**/' + findFileName + '.less',
                   'pages/**/' + findFileName + '.less',
                   'Controls-demo/**/' + findFileName + '.less',

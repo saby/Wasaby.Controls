@@ -1,45 +1,114 @@
-'use strict';
+var root = process.cwd(),
+   baseRequire = require,
+   fs = require('fs'),
+   path = require('path');
+
+var reqfile = fs.readFileSync(path.join(root, 'node_modules', 'sbis3-ws', 'ws', 'ext', 'requirejs', 'r.js'), {'encoding': 'utf-8'});
+eval(reqfile);
+require = baseRequire;
+
+/**
+ * Look ma, it cp -R.
+ * @param {string} src The path to the thing to copy.
+ * @param {string} dest The path to the new copy.
+ */
+var copyRecursiveSync = function(src, dest) {
+   var exists = fs.existsSync(src);
+   var stats = exists && fs.statSync(src);
+   var isDirectory = exists && stats.isDirectory();
+   if (exists && isDirectory) {
+      if (!fs.existsSync(dest)) {
+         fs.mkdirSync(dest);
+      }
+      fs.readdirSync(src).forEach(function(childItemName) {
+         copyRecursiveSync(path.join(src, childItemName),
+            path.join(dest, childItemName));
+      });
+   } else {
+      if (!fs.existsSync(dest)) {
+         fs.linkSync(src, dest);
+      }
+   }
+};
+
 var express = require('express'),
-   path = require('path'),
-   http = require('http'), //###
+   http = require('http'),
    https = require('https'),
    cookieParser = require('cookie-parser'),
-   fs = require('fs'),
    spawn = require('child_process').spawn,
    bodyParser = require('body-parser'),
    serveStatic = require('serve-static'),
    app = express();
 
-var resourcesPath = path.join('', 'components');
 
-//Run testing server
-require('./test-server');
+var global = (function() {
+   return this || (0, eval)('this');
+})();
+
+function createConfig(baseUrl, wsPath, resourcesPath) {
+   return {
+         baseUrl: baseUrl,
+         paths: {
+            'tslib': path.join(wsPath, 'lib/Ext/tslib'),
+            'Resources': resourcesPath || '.',
+            'css': path.join(wsPath, 'ext/requirejs/plugins/css'),
+            'native-css': path.join(wsPath, 'ext/requirejs/plugins/native-css'),
+            'normalize': path.join(wsPath, 'ext/requirejs/plugins/normalize'),
+            'html': path.join(wsPath, 'ext/requirejs/plugins/html'),
+            'tmpl': path.join(wsPath, 'ext/requirejs/plugins/tmpl'),
+            'wml': path.join(wsPath, 'ext/requirejs/plugins/wml'),
+            'text': path.join(wsPath, 'ext/requirejs/plugins/text'),
+            'is': path.join(wsPath, 'ext/requirejs/plugins/is'),
+            'is-api': path.join(wsPath, 'ext/requirejs/plugins/is-api'),
+            'i18n': path.join(wsPath, 'ext/requirejs/plugins/i18n'),
+            'json': path.join(wsPath, 'ext/requirejs/plugins/json'),
+            'order': path.join(wsPath, 'ext/requirejs/plugins/order'),
+            'template': path.join(wsPath, 'ext/requirejs/plugins/template'),
+            'cdn': path.join(wsPath, 'ext/requirejs/plugins/cdn'),
+            'datasource': path.join(wsPath, 'ext/requirejs/plugins/datasource'),
+            'xml': path.join(wsPath, 'ext/requirejs/plugins/xml'),
+            'preload': path.join(wsPath, 'ext/requirejs/plugins/preload'),
+            'browser': path.join(wsPath, 'ext/requirejs/plugins/browser'),
+            'optional': path.join(wsPath, 'ext/requirejs/plugins/optional'),
+            'remote': path.join(wsPath, 'ext/requirejs/plugins/remote'),
+
+            'Core/i18n': path.join(wsPath, 'core', 'i18n')
+         }
+      };
+
+}
+
+function setupConfig(require) {
+   global.wsConfig = {wsRoot: root+'\\application\\WS.Core\\',
+      resourceRoot: root+'\\application\\'};
+
+   require.config(createConfig(
+      root+ '/application/',
+      global.wsConfig.wsRoot,
+      global.wsConfig.resourceRoot
+   ));
+}
+
+
+var resourcesPath = path.join('', 'application');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(express.static(path.resolve(__dirname)));
-app.use('/~resources/', serveStatic(resourcesPath));
-app.use('/~ws/', serveStatic('./'));
+app.use('/', serveStatic(resourcesPath));
 
-var port = process.env.PORT || 666;
+var port = process.env.PORT || 777;
 var server = app.listen(port);
 
 console.log('app available on port ' + port);
-console.log('collecting deps...');
-
-var collectDeps = spawn('node', ['depencyCollector']);
-
-collectDeps.stdout.pipe(process.stdout);
-collectDeps.stderr.pipe(process.stderr);
-collectDeps.on('close', function(code) {
-   console.log('deps collected successfuly');
-});
 
 // Кошерный редирект на CDN, который РАБОТАЕТ
 app.get('/cdn*', function(req, res) {
-   res.redirect('https://localhost:' + port + req.url);
+   if (req.url.indexOf('require-min.js')>-1){
+      res.redirect('/WS.Core/ext/requirejs/require.js');
+   } else {
+      res.redirect(req.url);
+   }
 });
-
 
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
 var simpleProxy = function(proxyParams, req, res) {
@@ -84,7 +153,7 @@ var simpleProxy = function(proxyParams, req, res) {
             path: reqPath,
             headers: Object.assign({}, req.headers, {
                cookie: Object.keys(cookies).map(function(n) {
-                  return n + '=' + cookies[n]; 
+                  return n + '=' + cookies[n];
                }).join('; ')
             })
          },
@@ -110,8 +179,8 @@ var simpleProxy = function(proxyParams, req, res) {
    if (authHost === proxyParams.host) {
       cookies = cookieNames.reduce(function(acc, n) {
          var k = authHost + '-' + n; if (req.cookies[k]) {
-            acc[n] = req.cookies[k]; 
-         } return acc; 
+            acc[n] = req.cookies[k];
+         } return acc;
       }, {});
       if (!simpleProxy.authCookies || !simpleProxy.authCookies[authHost]) {
          (simpleProxy.authCookies = simpleProxy.authCookies || {})[authHost] = cookies;
@@ -164,14 +233,59 @@ var simpleProxy = function(proxyParams, req, res) {
    );
 };
 
-
-
 // Параметры, куда и как перенаправлять запросы
 var PROXY_PARAMS = {
    host: 'test-online.sbis.ru',
    user: 'Демо',
    password: 'Демо123'
 };
+
+console.log('path rjs');
+
+global.require = global.requirejs = require = requirejs;
+setupConfig(requirejs);
+
+console.log('start init');
+require(['Core/core-init'], function(){
+   console.log('core init success');
+}, function(err){
+   console.log(err);
+   console.log('core init failed');
+});
+
+/*server side render*/
+app.get('/app/*', function(req, res){
+
+   req.compatible=false;
+   if (!process.domain) {
+      process.domain = {
+         enter: function(){},
+         exit: function(){}
+      };
+   }
+   
+   process.domain.req = req;
+
+   var tpl = require('tmpl!Controls/Application/Route');
+   require(req.query.app);
+   var html = tpl({
+      lite: true,
+      wsRoot: '/WS.Core/',
+      resourceRoot: '/',
+      application: req.query.app
+   });
+
+   if (html.addCallback) {
+      html.addCallback(function(htmlres){
+         res.writeHead(200, {'Content-Type': 'text/html'});
+         res.end(htmlres);
+      });
+   } else {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(html);
+   }
+});
+
 
 // Проксировать запросы по этим роутам
 app.get('/!hash/', simpleProxy.bind(null, PROXY_PARAMS));
@@ -182,14 +296,12 @@ app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, Object.as
    }
 })));
 
-app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
-   host: 'stomp-test-online.sbis.ru',
-   fixPath: function(reqPath, cookies) {
-      return '/stomp/s-' + cookies['sid'] + '/info';
-   }
-}));
+   app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
+      host: 'stomp-test-online.sbis.ru',
+      fixPath: function(reqPath, cookies) {
+         return '/stomp/s-' + cookies['sid'] + '/info';
+      }
+   }));
 
 
 
-/*server.on('upgrade', function (inMsg, socket, head) {
-});*/

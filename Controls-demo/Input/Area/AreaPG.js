@@ -36,7 +36,7 @@ define('Controls-demo/Input/Area/AreaPG',
                   displayProperty: 'title'
                },
                constraint: {
-                  source: [
+                  items: [
                      { id: 1, title: '[0-9]', example: 'You can use only digits' },
                      { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
                      { id: 3, title: '[a-z]', example: 'You can use only lowercase letters' },

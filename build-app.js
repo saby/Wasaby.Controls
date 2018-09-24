@@ -50,8 +50,6 @@ var rmRecursiveSync = function(src) {
 };
 
 rmRecursiveSync(path.join(root, 'SBIS3.CONTROLS'));
-
-
 copyRecursiveSync(path.join(root, 'components'), path.join(root, 'SBIS3.CONTROLS'));
 
 var gultConfig = JSON.stringify(require('./buildTemplate.json'));

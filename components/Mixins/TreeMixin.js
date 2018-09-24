@@ -1172,7 +1172,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                position = [],
                nodeId = filter[this._options.parentProperty],
                fields = this._options.navigation.config.field instanceof Array ? this._options.navigation.config.field : [this._options.navigation.config.field];
-            if (nodeId !== this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
+            if (nodeId != this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
                !(nodeId === null && typeof this.getCurrentRoot() === 'undefined')) {
                if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
                   position.push(this._hierNodesCursor[nodeId]);
