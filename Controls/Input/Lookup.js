@@ -132,9 +132,20 @@ define('Controls/Input/Lookup', [
       getCollectionSlice: function(self, startIndex) {
          var newCollection = _private.getItems(self).clone();
 
-         newCollection._$items = self._items._$items.slice(startIndex);
+         for (; startIndex; startIndex--) {
+            newCollection.removeAt(0);
+         }
 
          return newCollection;
+      },
+
+      getItemWidth: function(self, indexItem) {
+         return getWidthUtil.getWidth(collectionItem({
+            _options: self._children.collection._options,
+            item: self._items.at(indexItem),
+            index: indexItem,
+            itemsCount: self._items.getCount()
+         }));
       }
    };
 
@@ -204,7 +215,7 @@ define('Controls/Input/Lookup', [
             }
          }
 
-         if (!this._collectionIsReady) {
+         if (!this._collectionIsReady && !this._isPickerVisible) {
             this._alignSelectedCollection();
             this._forceUpdate();
          }
@@ -244,15 +255,6 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      _getItemWidth: function(indexItem) {
-         return getWidthUtil.getWidth(collectionItem({
-            _options: this._children.collection._options,
-            item: this._items.at(indexItem),
-            index: indexItem,
-            itemsCount: this._items.getCount()
-         }));
-      },
-
       _alignSelectedCollection: function() {
          var
             itemsWidth = 0,
@@ -275,7 +277,7 @@ define('Controls/Input/Lookup', [
 
                /* Считаем, сколько элементов может отобразиться */
                for (var i = itemsCount - 1; i >= 0; i--) {
-                  itemWidth = this._getItemWidth(i);
+                  itemWidth = _private.getItemWidth(this, i);
 
                   if ((itemsWidth + itemWidth) > availableWidth) {
                      /* Если ни один элемент не влезает, то отобразим только последний выбранный */
@@ -316,7 +318,14 @@ define('Controls/Input/Lookup', [
       },
 
       _crossClick: function(event, item) {
-         _private.removeItem(this, item);
+
+         // item из _visibleCollection, а необходим из _items
+         var
+            items = _private.getItems(this),
+            indexOriginalItem = items.getIndexByValue(this._options.keyProperty, item.getId()),
+            originalItem = items.at(indexOriginalItem);
+
+         _private.removeItem(this, originalItem);
 
          /* move focus to input after remove, because focus will be lost after removing dom element  */
          this._needSetFocusInInput = true;
@@ -326,21 +335,40 @@ define('Controls/Input/Lookup', [
          }
       },
 
+      _setItems: function(items) {
+         var
+            selectedKeys = [],
+            keyProperty = this._options.keyProperty;
+
+         if (items) {
+            items.each(function(item) {
+               selectedKeys.push(item.get(keyProperty));
+            });
+         }
+
+         _private.setSelectedKeys(this, selectedKeys);
+         _private.getItems(this).assign(items);
+         _private.notifySelectedKeys(this, this._selectedKeys);
+      },
+
       _deactivated: function() {
          this._suggestState = false;
          this._togglePicker(false);
       },
 
       _suggestStateChanged: function() {
-         if (this._isPickerVisible) {
+         if (this._isPickerVisible || this._options.readOnly) {
             this._suggestState = false;
          }
       },
    
       _showSelector: function() {
+         var multiSelect = this._options.multiSelect;
+
          var templateOptions = {
-            selectedItems: _private.getItems(this),
-            isCompoundTemplate: this._options.isCompoundTemplate
+            selectedItems: multiSelect ? _private.getItems(this) : null,
+            isCompoundTemplate: this._options.isCompoundTemplate,
+            multiSelect: multiSelect
          };
          
          this._children.selectorOpener.open({
@@ -353,8 +381,7 @@ define('Controls/Input/Lookup', [
       },
       
       _selectCallback: function(result) {
-         _private.getItems(this).assign(result);
-         this._forceUpdate();
+         this._setItems(result);
       }
    });
 

@@ -65,20 +65,20 @@
 
     </Controls.Input.resources.InputRender.InputRender>
     <Controls.Popup.Opener.Sticky name="sticky">
-          <ws:popupOptions>
-              <ws:template>
-                  <Controls.Input.Lookup._Collection
-                          attr:class="controls-Lookup__picker"
-                          itemsLayout="twoColumns"
-                          items="{{_items}}"
-                          displayProperty="{{_options.displayProperty}}"
-                          itemTemplate="{{_options.itemTemplate}}"
-                          on:itemClick="_itemClick()"
-                          on:crossClick="_crossClick()"/>
-              </ws:template>
-              <ws:eventHandlers onClose="{{_onClosePickerBind}}"/>
-              <ws:verticalAlign side="bottom"/>
-              <ws:corner vertical="bottom"/>
+        <ws:popupOptions>
+            <ws:template>
+                <Controls.Input.Lookup._Collection
+                        attr:class="controls-Lookup__picker"
+                        itemsLayout="twoColumns"
+                        items="{{_items}}"
+                        displayProperty="{{_options.displayProperty}}"
+                        itemTemplate="{{_options.itemTemplate}}"
+                        on:itemClick="_itemClick()"
+                        on:crossClick="_crossClick()"/>
+            </ws:template>
+            <ws:eventHandlers onClose="{{_onClosePickerBind}}"/>
+            <ws:verticalAlign side="bottom"/>
+            <ws:corner vertical="bottom"/>
           </ws:popupOptions>
     </Controls.Popup.Opener.Sticky>
 </Controls.Container.Suggest.Layout>

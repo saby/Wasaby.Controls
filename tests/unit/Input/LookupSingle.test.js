@@ -1,7 +1,14 @@
 /**
  * Created by am.gerasimov on 31.05.2018.
  */
-define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/List', 'WS.Data/Source/Memory'], function(Lookup, Model, List, Memory) {
+define([
+   'Controls/Input/Lookup',
+   'WS.Data/Entity/Model',
+   'WS.Data/Collection/List',
+   'WS.Data/Source/Memory',
+   'Controls/Popup/Opener/Sticky',
+   'Controls/Input/Lookup/_Collection'
+], function(Lookup, Model, List, Memory, Sticky, Collection) {
    
    describe('Controls/Input/Lookup', function() {
       
@@ -147,6 +154,39 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
       });
+
+      it('getCollectionSlice', function() {
+         var
+            startIndex = 3,
+            initialCollection = [7, 2, 4, 11, 4 ,5],
+            self = {
+               _items: new List({
+                  items: initialCollection
+               })
+            },
+            newCollection = Lookup._private.getCollectionSlice(self, startIndex);
+
+         assert.equal(newCollection.getCount(), initialCollection.length - startIndex);
+      });
+
+      it('getItemWidth', function() {
+         var lookup = new Lookup();
+
+         lookup._children.collection = {
+            _options: Collection.getDefaultOptions()
+         };
+
+         lookup._items = new List({
+            items: [new Model({
+               rawData: {
+                  id: 1,
+                  title: 'Тестовый текст'
+               }
+            })]
+         });
+
+         assert.isTrue(Lookup._private.getItemWidth(lookup, 0) > 100);
+      });
    
       it('_beforeMount', function() {
          var lookup = new Lookup();
@@ -156,7 +196,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
             selectedKeys: selectedKeys,
             source: new Memory({
                data: [ {id: 1} ],
-               idProperty: 'id',
+               idProperty: 'id'
             })
          });
       
@@ -214,6 +254,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
          var lookup = new Lookup();
          lookup._needSetFocusInInput = true;
          lookup._active = true;
+         lookup._selectedKeys = [];
          
          var activated = false;
          lookup.activate = function() {
@@ -225,15 +266,23 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
       });
    
       it('_crossClick', function() {
-         var lookup = new Lookup();
-         var activated = false;
-         
+         var
+            lookup = new Lookup(),
+            idProperty = 'id';
+
+         lookup._children.sticky = new Sticky();
+         lookup._children.sticky._popupIds = [];
          lookup._selectedKeys = [1];
-         lookup._items = new List({items: ['test']});
+         lookup._items = new List({
+            items: [new Model({
+               rawData: {id: 1},
+               idProperty: idProperty
+            })]
+         });
          lookup._options = {
-            keyProperty: 'id'
+            keyProperty: idProperty
          };
-      
+
          var keysChangedResult;
          lookup._notify = function(event, value) {
             if (event === 'selectedKeysChanged') {
@@ -241,9 +290,32 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
             }
          };
       
-         lookup._crossClick(null, new Model({rawData: {id: 1}}));
+         lookup._crossClick(null, lookup._items.at(0));
          assert.deepEqual(lookup._selectedKeys, []);
          assert.equal(lookup._items.getCount(), 0);
+      });
+
+      it('_setItems', function() {
+         var
+            lookup = new Lookup(),
+            items = [
+               new Model({
+                  rawData: {id: 1}
+               }), new Model({
+                  rawData: {id: 2}
+               })
+            ];
+
+         lookup._options.keyProperty = 'id';
+
+         lookup._setItems(
+            new List({
+               items: items
+            })
+         );
+
+         assert.deepEqual(lookup._selectedKeys, [1, 2]);
+         assert.equal(lookup._items.getCount(), items.length);
       });
       
    
@@ -262,8 +334,7 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
                keysChangedResult = value[0];
             }
          };
-         
-         var activated = false;
+
          lookup.activate = function() {
             activated = true;
          };
@@ -277,12 +348,12 @@ define(['Controls/Input/Lookup', 'WS.Data/Entity/Model', 'WS.Data/Collection/Lis
    
       it('_deactivated', function() {
          var lookup = new Lookup();
+         lookup._children.sticky = new Sticky();
+         lookup._children.sticky._popupIds = [];
          lookup._suggestState = true;
          
          lookup._deactivated();
          assert.isFalse(lookup._suggestState);
       });
-
    });
-   
 });

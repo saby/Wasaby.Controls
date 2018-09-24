@@ -4,7 +4,7 @@
         <div class="demo-Lookup-centered">
             <div class="control-Lookup-demo-block">
                 <div class="control-Lookup-demo-title">
-                    Lookup single select
+                    Lookup multi select
                 </div>
                 <div>
                     base line test
@@ -15,9 +15,10 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
-                            lookupTemplate="Controls-demo/Selector/FlatListSelector/FlatListSelector"
                             displayProperty="title"
+                            multiSelect="{{true}}"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
+                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -39,6 +40,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
+                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -63,6 +65,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__accentitems">
+                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -87,6 +90,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__primaryitems">
+                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>

@@ -1,0 +1,21 @@
+<Controls.Selector.Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
+    <Controls.Container.Data source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_options.filter}}">
+        <Controls.Selector.Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
+            <Controls.Container.MultiSelector>
+                <Controls.List.Container>
+                    <Controls.List.MultiSelector>
+                        <Controls.Selector.List.Container multiSelect="{{_options.multiSelect ? 'visible'}}">
+                            <div attr:class="ControlsDemo-FlatListSelector-container">
+                                <ws:if data="{{_options.multiSelect}}">
+                                    <Controls.Button attr:class="ControlsDemo-FlatListSelector-confirmButton" caption="Выбрать" on:click="_closeSelectorBind()"/>
+                                </ws:if>
+
+                                <Controls.List displayProperty="title" idProperty="{{_keyProperty}}" multiSelectVisibility="{{_options.multiSelect ? 'visible'}}"/>
+                            </div>
+                        </Controls.Selector.List.Container>
+                    </Controls.List.MultiSelector>
+                </Controls.List.Container>
+            </Controls.Container.MultiSelector>
+        </Controls.Selector.Container>
+    </Controls.Container.Data>
+</Controls.Selector.Controller>
