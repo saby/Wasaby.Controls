@@ -221,7 +221,7 @@ define(
             newConfig.onCloseHandler = 'onCloseHandler';
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
-            assert.isTrue(newConfig.catchFocus);
+            assert.equal(newConfig.componentOptions.catchFocus, true);
             assert.equal(newConfig.componentOptions.innerComponentOptions, config.templateOptions);
             assert.equal(newConfig.componentOptions.innerComponentOptions.template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
