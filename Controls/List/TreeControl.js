@@ -233,36 +233,6 @@ define('Controls/List/TreeControl', [
          }
       },
 
-      _onAfterItemsRemoveHandler: function(e, keys, result) {
-         this._notify('afterItemsRemove', [keys, result]);
-
-         if (this._options.selectedKeys) {
-            var
-               self = this,
-               newSelectedKeys = this._options.selectedKeys.slice(),
-               diff,
-               parents;
-
-            ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
-
-            keys.forEach(function(key) {
-               parents = _private.getAllParentsIds(self._hierarchyRelation, key, self._options.items);
-               for (var i = 0; i < parents.length; i++) {
-                  //TODO: проверка на hasMore должна быть тут
-                  if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self._options.items) === 0) {
-                     newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
-                  } else {
-                     break;
-                  }
-               }
-            });
-
-            diff = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, newSelectedKeys);
-
-            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
-         }
-      },
-
       _markedKeyChangedHandler: function(event, key) {
          this._notify('markedKeyChanged', [key]);
       },

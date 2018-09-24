@@ -89,9 +89,7 @@ define('Controls/EditAtPlace', [
 
       _onDeactivatedHandler: function() {
          if (!this._options.readOnly && this._isEditing) {
-            this._options.commitOnDeactivate
-               ? this.commitEdit()
-               : this.cancelEdit();
+            this.commitEdit();
          }
       },
 
