@@ -4,7 +4,7 @@
       name="edit"
       editObject="{{_record}}"
       style="withBackground"
-      showToolbar="{{true}}"
+      toolbarVisibility="{{true}}"
       attr:class="ControlsDemo-EditAtPlace__firstExample"
    >
       <div class="ControlsDemo-EditAtPlace__firstExampleWrapper">
