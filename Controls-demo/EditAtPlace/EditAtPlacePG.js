@@ -93,7 +93,6 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
 
          this._componentOptions = {
             name: 'EditAtPlace',
-            commitOnDeactivate: false,
             style: '',
             toolbarVisibility: false,
             editWhenFirstRendered: false,

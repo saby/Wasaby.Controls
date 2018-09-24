@@ -11,7 +11,7 @@
       <div
          class="controls-EditAtPlaceV__Text
                 {{enabled ? 'controls-EditAtPlaceV__Text_enabled'}}
-                controls-EditAtPlaceV__Text_{{_options.style ? _options.style  : 'default'}}
+                controls-EditAtPlaceV__Text_style_{{_options.style ? _options.style  : 'default'}}
                 controls-EditingTemplateText_size_{{_options.size ? _options.size : 'default'}}"
       >
          <div class="controls-EditingTemplateText__inner">{{ _options.value }}</div>
