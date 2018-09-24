@@ -9,7 +9,7 @@ define('Controls/Controllers/_SearchController',
    ],
    
    function(extend, clone, moduleStubs) {
-      
+
       'use strict';
       
       var _private = {
