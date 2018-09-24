@@ -45,6 +45,8 @@ define('Controls/Input/Password',
             this._simpleViewModel = new BaseViewModel({
                value: options.value
             });
+
+            this._inputName = options.name || 'input';
          },
 
          _beforeUpdate: function(newOptions) {

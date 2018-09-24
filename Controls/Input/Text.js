@@ -83,6 +83,11 @@ define('Controls/Input/Text',
             });
          },
 
+         _beforeMount: function(options) {
+            this._inputName = options.name || 'input';
+         },
+
+
          _beforeUpdate: function(newOptions) {
             this._textViewModel.updateOptions({
                constraint: newOptions.constraint,
@@ -93,7 +98,7 @@ define('Controls/Input/Text',
 
          _afterUpdate: function(oldOptions) {
             if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+               this._children[this._inputName].setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
          },
@@ -111,7 +116,7 @@ define('Controls/Input/Text',
          },
          _notifyHandler: tmplNotify,
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children[this._inputName], text);
          }
       });
 
