@@ -167,7 +167,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             if (splitted[0] === 'optional' && splitted.length > 1) { // OPTIONAL BRANCH
                splitted.shift();
                node = splitted.join('!');
-               if(!modInfo[node]) {
+               if (!modInfo[node]) {
                   return;
                }
             }
