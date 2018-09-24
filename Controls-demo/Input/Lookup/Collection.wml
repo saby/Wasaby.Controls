@@ -2,7 +2,7 @@
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Single item:<br/></div>
         <div>
-            <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id"/>
+            <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_single"/>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
@@ -44,7 +44,7 @@
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Items bold clickable:<br/></div>
         <div>
-            <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
+            <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_clickable">
                 <ws:itemTemplate>
                     <ws:partial template="wml!Controls/Input/Lookup/ItemTemplate" style="bold" clickable="{{true}}"/>
                 </ws:itemTemplate>
