@@ -96,6 +96,12 @@ define('Controls/Button', [
          _private.cssStyleGeneration(this, newOptions);
       },
 
+      _keyUpHandler: function(e) {
+         if (e.nativeEvent.keyCode === 13) {
+            this._notify('click');
+         }
+      },
+
       _clickHandler: function(e) {
          if (this._options.readOnly) {
             e.stopPropagation();
