@@ -24,7 +24,6 @@
 /artifacts/*
 /tests/int/.idea
 /tests/int/config.ini
-/tests/int/result.db
 /tests/int/js_errors
 /tests/int/preprocessor_logs
 /tests/int/screenshots
@@ -36,7 +35,7 @@
 /tests/css/presto/gemini-coverage
 /tests/reg/.idea
 /tests/reg/config.ini
-/tests/reg/result.db
+/tests/**/*result.db
 /tests/reg/js_errors
 /tests/reg/preprocessor_logs
 /tests/reg/screenshots
