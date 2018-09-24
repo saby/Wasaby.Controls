@@ -5,11 +5,10 @@ define('Controls/Filter/Fast/Container',
    [
       'Core/Control',
       'wml!Controls/Filter/Fast/Container',
-      'Controls/Container/Filter/FilterContextField',
-      'Core/helpers/Object/isEqual'
+      'Controls/Container/Filter/FilterContextField'
    ],
    
-   function(Control, template, FilterContextField, isEqual) {
+   function(Control, template, FilterContextField) {
       
       /**
        * Special container for {@link Controls/Filter/Fast}.
