@@ -112,7 +112,7 @@ define('Controls/Toggle/RadioGroup', [
     * @see itemTemplate
     */
 
-    /**
+   /**
     * @name Controls/Toggle/RadioGroup#direction
     * @cfg {string} Arrangement of elements in the container.
     * @variant horizontal Elements are located one after another.
