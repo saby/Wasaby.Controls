@@ -1,11 +1,12 @@
 define('Controls/Popup/InfoBox',
    [
       'Core/Control',
+      'Core/detection',
       'wml!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener) {
+   function(Control, detection, template, OpenerTemplate, InfoBoxOpener) {
 
       'use strict';
 
@@ -93,6 +94,10 @@ define('Controls/Popup/InfoBox',
          },
 
          _open: function(event) {
+            if (detection.isMobilePlatform && this._options.trigger === 'hover') {
+               return;
+            }
+
             var config = _private.getCfg(this, event);
 
             if (this._isNewEnvironment()) {
