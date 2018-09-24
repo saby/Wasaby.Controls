@@ -109,6 +109,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   }, 1000);
                });
             }
+            if (this._options.popupComponent === 'recordFloatArea') {
+               this.subscribeOnBeforeUnload();
+            }
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -269,6 +272,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.__openerFromCfg = null;
             this._parent = null;
             this._logicParent = null;
+            if (this._options.popupComponent === 'recordFloatArea') {
+               this.unsubscribeOnBeforeUnload();
+            }
          },
 
          isOpened: function() {
@@ -645,6 +651,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _beforeUnloadHandler: function() {
             return DialogRecord.prototype._beforeUnloadHandler.apply(this);
+         },
+         subscribeOnBeforeUnload: function() {
+            DialogRecord.prototype.subscribeOnBeforeUnload.apply(this);
          },
          unsubscribeOnBeforeUnload: function() {
             DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);
