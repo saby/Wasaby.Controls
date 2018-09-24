@@ -94,6 +94,9 @@ define('Controls/Popup/InfoBox',
          },
 
          _open: function(event) {
+            /**
+             * On mobile devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
+             */
             if (detection.isMobilePlatform && this._options.trigger === 'hover') {
                return;
             }
