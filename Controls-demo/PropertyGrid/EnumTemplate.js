@@ -15,16 +15,22 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             this._source = Object.keys(opt.enum).map(function(key, index) {
                return {
                   id: index,
+                  value: opt.enum[key],
                   title: key,
-                  comment: opt.enum[key]
+                  comment: opt.enum[key],
+                  type: (opt.displayType ? 'source' : '')
                };
             });
          },
-         _valueChangedHandler: function(event, tmp) {
-            if (!tmp) {
-               this._notify('valueChanged', undefined);
+         _selectedItemHandler: function(event, tmp) {
+            if (this._source[tmp]) {
+               if (this._source[tmp].type === 'source') {
+                  this._notify('valueChanged',  [this._source[tmp].comment]);
+               } else {
+                  this._notify('valueChanged',  [this._source[tmp].title]);
+               }
             } else {
-               this._notify('valueChanged', [tmp]);
+               this._notify('valueChanged', undefined);
             }
          },
          _comboBoxSource: function() {
