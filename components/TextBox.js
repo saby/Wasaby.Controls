@@ -213,7 +213,7 @@ define('SBIS3.CONTROLS/TextBox', [
             /**
              * @cfg {Boolean} Включает нативное автодополнение в поле.
              */
-            autocomplete: true
+            autocomplete: false
          }
       },
 
