@@ -5,13 +5,13 @@
 //border
 @width_Switch__border:              @thickness_border_default;
 @color_Switch__border:              @color_border_disabled;
-@size_Switch__border-radius:        30px;
+@size_Switch__border-radius:        @height_Switch / 2;
 
 //Switch-track
-@background-color_Switch-track__enabled:            #CCC;
-@background-color_Switch-track__disabled:           @color_border_disabled;
-@length_Switch-track:                               34px;
-@thickness_Switch-track:                            2px;
+@background-color_Switch-track__enabled:           #CCC;
+@background-color_Switch-track__disabled:          @color_border_disabled;
+@length_Switch-track:                              34px;
+@thickness_Switch-track:                           @size_default_xxs;
 
 //text
 @color_Switch-text__enabled_unselected:      @color_unselected;
@@ -20,17 +20,17 @@
 @color_Switch-text__disabled_unselected:     @color_text_disabled;
 
 //ToggleCircle_outerCircle
-@color_ToggleCircle_outerCircle__enabled_hovered:    @color_active;
-@color_ToggleCircle_outerCircle__enabled:            #CCCCCC;
+@color_ToggleCircle_outerCircle__enabled_hovered:    @color_primary;
+@color_ToggleCircle_outerCircle__enabled:            @color_border;
 @color_ToggleCircle_outerCircle__disabled:           @color_border_disabled;
-@size_Switch__ToggleCircle:                          12px;
+@size_Switch__ToggleCircle:                          @size_default_l;
 
 //ToggleCirce_innerCircle
-@color_ToggleCircle_innerCircle__selected_enabled:     @color_active;
-@color_ToggleCircle_innerCircle__selected_disabled:    #313E78;
+@color_ToggleCircle_innerCircle__selected_enabled:     @color_primary;
+@color_ToggleCircle_innerCircle__selected_disabled:    @color_hover;
 @color_ToggleCircle_innerCircle__unselected:           none;
 
 //other
-@spacing_Switch-between-toggle-text:                  6px;
+@spacing_Switch-between-toggle-text:                  @spacing_default_s;
 
 

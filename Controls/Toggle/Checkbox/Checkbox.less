@@ -14,7 +14,7 @@
    display: inline-flex;
    font-size: @font-size_CheckBox;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @height_CheckBox;
+   line-height: @height_CheckBox__clickArea;
 }
 .controls-Checkbox__icon-border-color__enabled {
    color: @color_CheckBox__iconBox;
@@ -37,8 +37,8 @@
 .controls-Checkbox__icon {
    position: relative;
    user-select: none;
-   width: @width_CheckBox;
-   height: @height_CheckBox;
+   width: @width_CheckBox__clickArea;
+   height: @height_CheckBox__clickArea;
    flex-shrink: 0;
 }
 .controls-Checkbox__icon:before {
