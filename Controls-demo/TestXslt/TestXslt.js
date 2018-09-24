@@ -6,24 +6,6 @@ define('Controls-demo/TestXslt/TestXslt', [
 ], function(Control, template, Xslt) {
    'use strict';
 
-   function unescape(s) {
-      if (!s || !s.replace) {
-         return s;
-      }
-      var translateRe = /&(nbsp|amp|quot|apos|lt|gt);/g,
-         translateDict = {
-            nbsp: String.fromCharCode(160),
-            amp: '&',
-            quot: '\'',
-            apos: '\'',
-            lt: '<',
-            gt: '>'
-         };
-      return s.replace(translateRe, function(match, entity) {
-         return translateDict[entity];
-      });
-   }
-
    return Control.extend({
       _template: template,
       xml: '',
@@ -40,14 +22,12 @@ define('Controls-demo/TestXslt/TestXslt', [
          var self = this;
          var a = new Xslt({xml: self.xml, xsl: self.xsl, errback: self.refused});
          a.execute().addCallback(function() {
+            if (a.checkDocument(a._xmlDoc)) {
+               self.refused();
+               return;
+            }
             a.transformToText().addCallback(function(result) {
-               var checkStr = result.replace(/(\r)|(\n)/g, '').replace(/( )* /g, ' ');
-               if (~checkStr.indexOf('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">')) {
-                  checkStr = unescape(checkStr.replace('</transformiix:result>', '')
-                     .replace('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix"> ', '')
-                     .replace(' xmlns="http://www.w3.org/1999/xhtml"', ''));
-               }
-               self.checkResult(checkStr, self.result) ? self.passed() : self.refused();
+               self.checkResult(result, self.result) ? self.passed() : self.refused();
             });
          });
       },
@@ -56,26 +36,18 @@ define('Controls-demo/TestXslt/TestXslt', [
       },
       refused: function() {
          this.status = 'Неверно';
+         debugger;
       },
 
-      /**
-       * Такая проверка введена из-за проблем с firefox.
-       * Например, firefox выкидывает теги html, head, body, tbody. Возможно, ещё какие-то.
-       * Будем считать, что преобразование верно, если проверяемый результат полностью содержится в верном результате
-       * в правильном порядке с любыми разделителями.
-       * */
       checkResult: function(checkStr, goodStr) {
-         var goodIndex = 0;
-         for (var checkIndex = 0; checkIndex < checkStr.length; ++checkIndex) {
-            while (goodIndex < goodStr.length && checkStr[checkIndex] !== goodStr[goodIndex]) {
-               goodIndex++;
-            }
-            if (goodIndex >= goodStr.length) {
-               return false;
-            }
-            goodIndex++;
+         if (~checkStr.indexOf('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">')) {
+            checkStr = /*unescape(*/checkStr.replace('</transformiix:result>', '')
+               .replace('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">', '')/*)*/;
          }
-         return true;
+         var toRemoveRegExp = /(\r)|(\n)|(<html[^>]*>)|(<\/html>)|(<head[^>]*>)|(<\/head>)|(<body[^>]*>)|(<\/body>)|(<tbody[^>]*>)|(<\/tbody>)|( )|(\t)|(xmlns="http:\/\/www\.w3\.org\/1999\/xhtml")/g;
+         checkStr = checkStr.replace(toRemoveRegExp, '');
+         goodStr = goodStr.replace(toRemoveRegExp, '');
+         return  goodStr.indexOf(checkStr) === 0;
       }
    });
 });
