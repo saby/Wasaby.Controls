@@ -36,7 +36,6 @@ define('Controls-demo/TestXslt/TestXslt', [
       },
       refused: function() {
          this.status = 'Неверно';
-         debugger;
       },
 
       checkResult: function(checkStr, goodStr) {
