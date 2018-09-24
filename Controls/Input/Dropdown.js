@@ -5,11 +5,11 @@ define('Controls/Input/Dropdown',
       'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Utils',
       'WS.Data/Chain',
+      'Core/helpers/Object/isEqual',
       'Controls/Dropdown/Util',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
-
+   function(Control, template, defaultContentTemplate, Utils, Chain, isEqual, dropdownUtils) {
       /**
        * Input for selection from the list of options.
        *
@@ -60,15 +60,21 @@ define('Controls/Input/Dropdown',
          },
 
          _afterMount: function(options) {
-            /*Updating the text in the header.
-            Since the text is set after loading source, the caption stored old value*/
+            /* Updating the text in the header.
+            Since the text is set after loading source, the caption stored old value */
             if (options.showHeader && options.caption !== this._text) {
                this._forceUpdate();
             }
          },
 
+         _beforeUpdate: function(newOptions) {
+            if (!isEqual(this._options.selectedKeys, newOptions.selectedKeys)) {
+               this._setText(this._items);
+            }
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
-            this._setText(items);
+            this._items = items;
             this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
@@ -88,5 +94,4 @@ define('Controls/Input/Dropdown',
       });
 
       return DropdownList;
-   }
-);
+   });
