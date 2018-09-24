@@ -150,7 +150,7 @@ define("File/Attach", ["require", "exports", "tslib", "File/Attach/Option/Getter
      * @public
      * @class
      * @name File/Attach
-     * @extends Core/Abstract
+     * @extends File/Attach/Abstract
      * @author Заляев А.В.
      */
     var Attach = /** @class */ (function (_super) {

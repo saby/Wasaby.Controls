@@ -43,7 +43,7 @@ define("File/Attach/Base", ["require", "exports", "tslib", "File/Attach/Abstract
      * @public
      * @class
      * @name File/Attach/Base
-     * @extends Core/Abstract
+     * @extends File/Attach/Abstract
      * @author Заляев А.В.
      */
     var Base = /** @class */ (function (_super) {
