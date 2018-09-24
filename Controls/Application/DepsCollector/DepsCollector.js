@@ -99,12 +99,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       }
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            // if(allDeps[key].typeInfo.plugin) {
-            //    packages[key.split(allDeps[key].typeInfo.plugin + '!')] = DEPTYPES.SINGLE;
-            // } else {
-            packages[key] = DEPTYPES.SINGLE;
-
-            // }
+            if (allDeps[key].typeInfo.plugin) {
+               packages[key.split(allDeps[key].typeInfo.plugin + '!')[1]] = DEPTYPES.SINGLE;
+            } else {
+               packages[key] = DEPTYPES.SINGLE;
+            }
          }
       }
       return packages;
@@ -160,7 +159,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
     * @param curNodeDeps
     * @param modDeps
     */
-   function recursiveWalker(allDeps, curNodeDeps, modDeps) {
+   function recursiveWalker(allDeps, curNodeDeps, modDeps, modInfo) {
       if (curNodeDeps && curNodeDeps.length) {
          for (var i = 0; i < curNodeDeps.length; i++) {
             var node = curNodeDeps[i];
@@ -168,6 +167,9 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             if (splitted[0] === 'optional' && splitted.length > 1) { // OPTIONAL BRANCH
                splitted.shift();
                node = splitted.join('!');
+               if(!modInfo[node]) {
+                  return;
+               }
             }
             var module = parseModuleName(node);
             if (module) {
@@ -179,7 +181,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                   allDeps[moduleType][module.fullName] = module;
                   if (module.typeInfo.hasDeps) {
                      var nodeDeps = modDeps[node];
-                     recursiveWalker(allDeps, nodeDeps, modDeps);
+                     recursiveWalker(allDeps, nodeDeps, modDeps, modInfo);
                   }
                }
             }
@@ -203,10 +205,10 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       collectDependencies: function(deps) {
          var files = {
-            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: []
+            js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: []
          };
          var allDeps = {};
-         recursiveWalker(allDeps, deps, this.modDeps);
+         recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
          for (var key in packages.js) {
             if (packages.js.hasOwnProperty(key)) {

@@ -20,19 +20,6 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
       },
-
-      // init: function(isDebug, buildNumber, appRoot, resourceRoot) {
-      //    this.isDebug = isDebug;
-      //    this.buildNumber = buildNumber || '';
-      //    var fullResourcePath = '';
-      //    if (appRoot) {
-      //       fullResourcePath += '/' + appRoot + '/';
-      //    }
-      //    if (resourceRoot) {
-      //       fullResourcePath += '/' + resourceRoot + '/';
-      //    }
-      //    this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
-      // },
       getLinkWithResourceRoot: function(cssName) {
          return this.resourceRoot + cssName;
       },
@@ -42,11 +29,11 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          res = this.getLinkWithExt(res, ext);
          return res;
       },
-      resolveCssWithTheme: function(link, ext, theme) {
+      resolveCssWithTheme: function(link, theme) {
          var res = link;
          res = this.getLinkWithResourceRoot(res);
          res = this.getLinkWithTheme(res, theme);
-         res = this.getLinkWithExt(res, ext);
+         res = this.getLinkWithExt(res, 'css');
          return res;
       },
       getLinkWithTheme: function(cssName, theme) {
