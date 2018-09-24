@@ -15,6 +15,7 @@ define('Controls/Popup/Opener/Edit',
        * action of open the edit popup
        * @class Controls/Popup/Opener/Edit
        * @control
+       * @public
        * @author Красильников А.С.
        * @category Popup
        * @extends Core/Control
@@ -92,7 +93,7 @@ define('Controls/Popup/Opener/Edit',
 
             if (options.mode === 'dialog') {
                this._openerTemplate = 'Controls/Popup/Opener/Dialog';
-            } else if (options.mode === 'dialog') {
+            } else if (options.mode === 'sticky') {
                this._openerTemplate = 'Controls/Popup/Opener/Sticky';
             } else {
                this._openerTemplate = 'Controls/Popup/Opener/Stack';

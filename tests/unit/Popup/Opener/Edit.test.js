@@ -30,7 +30,21 @@ define(
       editOpener._beforeMount({});
       editOpener._options.items = dataRS;
 
-      describe('EditOpener', () => {
+      describe('Controls/Popup/Opener/Edit', () => {
+         it('mode', () => {
+            editOpener._beforeMount({});
+            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Stack');
+
+            editOpener._beforeMount({ mode: 'dialog' });
+            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Dialog');
+
+            editOpener._beforeMount({ mode: 'sticky' });
+            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Sticky');
+
+            editOpener._beforeMount({ mode: 'stack' });
+            assert.equal(editOpener._openerTemplate, 'Controls/Popup/Opener/Stack');
+         });
+
          it('get config', () => {
             let record = dataRS.at(0);
             let meta = {
