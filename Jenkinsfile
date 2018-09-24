@@ -626,16 +626,16 @@ node('controls') {
         }
 		
 				
-		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/*_errors.log'
-		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/*_errors.log'
+		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/_errors.log'
+		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/_errors.log'
 		
 		if ( exist_logs ){
-			sh """7za a log_intest -t7z /home/sbis/Controls/intest/logs/*_errors.log """
+			sh """7za a log_intest -t7z /home/sbis/Controls/intest/logs/**/_errors.log """
 			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest.7z', caseSensitive: false
 		}
 		
 		if ( exist_logs_ps ){
-			sh """7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs/*_errors.log"""
+			sh """7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs/**/_errors.log"""
 			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest_ps.7z', caseSensitive: false
 		}
 		
