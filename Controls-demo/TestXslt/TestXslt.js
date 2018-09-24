@@ -6,6 +6,24 @@ define('Controls-demo/TestXslt/TestXslt', [
 ], function(Control, template, Xslt) {
    'use strict';
 
+   function unescape(s) {
+      if (!s || !s.replace) {
+         return s;
+      }
+      var translateRe = /&(nbsp|amp|quot|apos|lt|gt);/g,
+         translateDict = {
+            nbsp: String.fromCharCode(160),
+            amp: '&',
+            quot: '\'',
+            apos: '\'',
+            lt: '<',
+            gt: '>'
+         };
+      return s.replace(translateRe, function(match, entity) {
+         return translateDict[entity];
+      });
+   }
+
    return Control.extend({
       _template: template,
       xml: '',
@@ -40,8 +58,7 @@ define('Controls-demo/TestXslt/TestXslt', [
 
       checkResult: function(checkStr, goodStr) {
          if (~checkStr.indexOf('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">')) {
-            checkStr = /*unescape(*/checkStr.replace('</transformiix:result>', '')
-               .replace('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">', '')/*)*/;
+            checkStr = unescape(checkStr.replace(/<(\/|)transformiix:result[^>]*>/g, ''));
          }
          var toRemoveRegExp = /(\r)|(\n)|(<html[^>]*>)|(<\/html>)|(<head[^>]*>)|(<\/head>)|(<body[^>]*>)|(<\/body>)|(<tbody[^>]*>)|(<\/tbody>)|( )|(\t)|(xmlns="http:\/\/www\.w3\.org\/1999\/xhtml")/g;
          checkStr = checkStr.replace(toRemoveRegExp, '');
