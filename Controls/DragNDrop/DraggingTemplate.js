@@ -1,7 +1,7 @@
 define('Controls/DragNDrop/DraggingTemplate', [
    'Core/Control',
    'wml!Controls/DragNDrop/DraggingTemplate/DraggingTemplate',
-   'css!Controls/DragNDrop/DraggingTemplate/DraggingTemplate'
+   'css!theme?Controls/DragNDrop/DraggingTemplate/DraggingTemplate'
 ], function(Control, template) {
 
    var MAX_ITEMS_COUNT = 999;

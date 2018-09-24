@@ -7,7 +7,7 @@ define('Controls/BreadCrumbs/Path', [
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Header/BackButton/Back',
    'Controls/Header/BackButton',
-   'css!Controls/BreadCrumbs/Path/Path'
+   'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,

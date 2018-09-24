@@ -5,7 +5,7 @@ define('Controls/Input/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
       'Controls/Utils/tmplNotify',
-      'css!Controls/Input/Suggest/Suggest'
+      'css!theme?Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, BaseViewModel, tmplNotify) {
       

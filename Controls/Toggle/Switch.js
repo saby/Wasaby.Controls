@@ -2,8 +2,8 @@ define('Controls/Toggle/Switch', [
    'Core/Control',
    'wml!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/Switch/Switch',
-   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'css!theme?Controls/Toggle/Switch/Switch',
+   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, template, types) {
 
    /**

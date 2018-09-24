@@ -2,7 +2,7 @@ define('Controls/Operations/MultiSelector', [
    'Core/Control',
    'wml!Controls/Operations/MultiSelector/MultiSelector',
    'Controls/Container/MultiSelector/SelectionContextField',
-   'css!Controls/Operations/MultiSelector/MultiSelector'
+   'css!theme?Controls/Operations/MultiSelector/MultiSelector'
 ], function(
    Control,
    template,

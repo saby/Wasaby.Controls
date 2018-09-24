@@ -2,7 +2,7 @@ define('Controls/Header/BackButton', [
    'Core/Control',
    'wml!Controls/Header/BackButton/Back',
    'WS.Data/Type/descriptor',
-   'css!Controls/Header/BackButton/Back'
+   'css!theme?Controls/Header/BackButton/Back'
 ], function(Control, template, types) {
 
    /**

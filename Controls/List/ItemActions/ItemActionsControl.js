@@ -5,7 +5,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
    'Controls/Application/TouchDetector/TouchContextField',
-   'css!Controls/List/ItemActions/ItemActions'
+   'css!theme?Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,

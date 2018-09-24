@@ -2,8 +2,8 @@ define('Controls/EditAtPlace', [
    'Core/Control',
    'Core/Deferred',
    'wml!Controls/EditAtPlace/EditAtPlace',
-   'css!Controls/EditAtPlace/EditAtPlace',
-   'css!Controls/List/EditInPlace/Text'
+   'css!theme?Controls/EditAtPlace/EditAtPlace',
+   'css!theme?Controls/List/EditInPlace/Text'
 ], function(
    Control,
    Deferred,

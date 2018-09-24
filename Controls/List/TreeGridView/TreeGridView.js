@@ -3,7 +3,7 @@ define('Controls/List/TreeGridView/TreeGridView', [
    'wml!Controls/List/TreeGridView/Item',
    'wml!Controls/List/TreeGridView/ItemOutputWrapper',
    'wml!Controls/List/TreeGridView/NodeFooter',
-   'css!Controls/List/TreeGridView/TreeGridView'
+   'css!theme?Controls/List/TreeGridView/TreeGridView'
 ], function(GridView, DefaultItemTpl, ItemOutputWrapper) {
 
    'use strict';

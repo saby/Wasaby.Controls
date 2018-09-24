@@ -5,7 +5,7 @@ define('Controls/Input/Lookup/_Collection',
       'wml!Controls/Input/Lookup/ItemTemplate',
       'wml!Controls/Input/Lookup/_ContentTemplate',
       'wml!Controls/Input/Lookup/_CrossTemplate',
-      'css!Controls/Input/Lookup/Collection'
+      'css!theme?Controls/Input/Lookup/Collection'
    ],
    
    function(Control, template, ItemTemplate) {

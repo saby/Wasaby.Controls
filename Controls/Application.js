@@ -15,7 +15,7 @@ define('Controls/Application',
       'Controls/Application/LinkResolver',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
-      'css!Controls/Application/Application'
+      'css!theme?Controls/Application/Application'
    ],
 
    /**

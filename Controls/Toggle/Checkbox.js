@@ -2,7 +2,7 @@ define('Controls/Toggle/Checkbox', [
    'Core/Control',
    'wml!Controls/Toggle/Checkbox/Checkbox',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/Checkbox/Checkbox'
+   'css!theme?Controls/Toggle/Checkbox/Checkbox'
 ], function(Control, template, types) {
 
    /**
