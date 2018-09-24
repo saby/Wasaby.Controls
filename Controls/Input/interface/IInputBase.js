@@ -120,7 +120,8 @@ define('Controls/Input/interface/IInputBase', [], function() {
 
    /**
     * Paste text into the field.
-    * @function Controls/Input/interface/IInputBase#paste
+    * @name Controls/Input/interface/IInputBase#paste
+    * @cfg {String} Paste text into the field.
     * @param {String} text The text to replace.
     * @remark
     * If the text is not selected, the line is inserted at the carriage position.
