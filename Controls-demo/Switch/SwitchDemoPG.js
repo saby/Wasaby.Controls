@@ -22,7 +22,7 @@ define('Controls-demo/Switch/SwitchDemoPG',
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: true
+                  readOnly: false
                },
                captionPosition: {
                   keyProperty: 'id',

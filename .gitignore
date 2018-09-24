@@ -48,3 +48,10 @@
 /__pycache__
 /application
 /builder-ui
+/tests/**/.idea
+/tests/**/result.db
+/tests/**/config.ini
+/tests/**/js_errors
+/tests/**/preprocessor_logs
+/tests/**/screenshots
+/tests/**/__pycache__

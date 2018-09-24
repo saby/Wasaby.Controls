@@ -3,8 +3,7 @@ define('Controls/Date/Month', [
    'Core/core-merge',
    'wml!Controls/Date/Month/Month',
    'Controls/Date/interface/IMonth',
-   'Controls/Date/Month/Model',
-   'css!?SBIS3.CONTROLS/Date/MonthView/MonthView'
+   'Controls/Date/Month/Model'
 ], function(
    BaseControl,
    coreMerge,

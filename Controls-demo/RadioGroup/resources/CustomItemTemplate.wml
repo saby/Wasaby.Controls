@@ -1,0 +1,7 @@
+<ws:partial template='wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+            item="{{item}}"
+            readOnly="{{readOnly}}"
+            selected="{{selected}}"
+            displayProperty="{{_displayProperty}}"
+            contentTemplate="{{_contentTemplate}}"
+/>

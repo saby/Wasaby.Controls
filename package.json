@@ -69,6 +69,6 @@
       "serve-static": "1.11.x",
       "typescript": "2.5.3",
       "ws-data": "git+http://git.sbis.ru/ws/data.git#3.18.600/bugfix/d-t-pj",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#3.18.600/feature/any-testing-folder"
+      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
    }
 }

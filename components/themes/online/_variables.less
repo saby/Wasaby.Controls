@@ -774,10 +774,14 @@
 @controls-view-padding-XL:                         24px;
 // Padding with photo
 @controls-view-photo-padding-variants:             S, M, L;
-@controls-view-photo-padding-S:                    0 4px 0 0;
-@controls-view-photo-padding-M:                    0 10px 0 4px;
-@controls-view-photo-padding-L:                    0 14px 0 8px;
-@controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
+@controls-view-photo-padding-left-S:               0;
+@controls-view-photo-padding-left-M:               4px;
+@controls-view-photo-padding-left-L:               8px;
+@controls-view-photo-padding-left-DEFAULT:         12px;
+@controls-view-photo-padding-S:                    0 4px 0 @controls-view-photo-padding-left-S;
+@controls-view-photo-padding-M:                    0 10px 0 @controls-view-photo-padding-left-M;
+@controls-view-photo-padding-L:                    0 14px 0 @controls-view-photo-padding-left-L;
+@controls-view-photo-padding-DEFAULT:              0 18px 0 @controls-view-photo-padding-left-DEFAULT;
 // Edit in place padding
 @controls-view-eip-padding-DEFAULT:                7px;
 @controls-view-eip-padding-XS:                     0px;
