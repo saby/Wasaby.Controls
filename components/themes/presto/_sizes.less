@@ -279,15 +279,21 @@
 @width_TreeDataGridView-copyArrow:                    round(42px * @multiplier);
 @right_TreeDataGridView-copyArrow:                    0;
 //TreeDataGridView_Padding with photo
-@controls-view-photo-padding-S:                       0 round(4px * @multiplier) 0 round(4px * @multiplier);
-@controls-view-photo-padding-M:                       0 round(16px * @multiplier) 0 round(10px * @multiplier);
-@controls-view-photo-padding-L:                       0 round(22px * @multiplier) 0 round(16px * @multiplier);
-@controls-view-photo-padding-DEFAULT:                 @controls-view-photo-padding-M;
+@controls-view-photo-padding-left-S:                  round(8px * @multiplier);
+@controls-view-photo-padding-left-M:                  round(12px * @multiplier);
+@controls-view-photo-padding-left-L:                  round(16px * @multiplier);
+@controls-view-photo-padding-left-DEFAULT:            @controls-view-photo-padding-S;
+
+@controls-view-photo-padding-S:                       0 round(8px * @multiplier) 0 @controls-view-photo-padding-left-S;
+@controls-view-photo-padding-M:                       0 round(12px * @multiplier) 0 @controls-view-photo-padding-left-M;
+@controls-view-photo-padding-L:                       0 round(16px * @multiplier) 0 @controls-view-photo-padding-left-L;
+@controls-view-photo-padding-DEFAULT:                 @controls-view-photo-padding-S;
 //TreeDataGridView_Level padding with photo
-@tree-view-level-padding-photo-S:                     round(50px * @multiplier);
-@tree-view-level-padding-photo-M:                     round(68px * @multiplier);
-@tree-view-level-padding-photo-L:                     round(80px * @multiplier);
-@tree-view-level-padding-photo:                       @tree-view-level-padding-photo-M;
+@tree-view-level-padding-photo-S:                     round(61px * @multiplier);
+//рулится паддингом, поэтому ширина одинаковая
+@tree-view-level-padding-photo-M:                     @tree-view-level-padding-photo-S;
+@tree-view-level-padding-photo-L:                     @tree-view-level-padding-photo-S;
+@tree-view-level-padding-photo:                       @tree-view-level-padding-photo-S;
 
 //waitIndicator
 @wait-indicator-font-size:                            round(32px * @multiplier);
@@ -658,8 +664,8 @@
 @tab-button-large-firstAddText-font-size:       @large-text-size;
 //editAtPlace
 @line-height_editAtPlace_fieldWrapper:          normal;
-@font-size_EditActions-cancelButton:            @default-icon-size-large;
-@font-size_EditActions-okButtonIcon:            @default-icon-size-large;
+@font-size_EditActions-cancelButton:            @default-icon-size-medium;
+@font-size_EditActions-okButtonIcon:            @default-icon-size-medium;
 //image
 @editdialog-template-minwidth:                  round(870px * @multiplier);
 //CloseButton

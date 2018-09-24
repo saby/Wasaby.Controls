@@ -1,4 +1,4 @@
-define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred', 'Core/moduleStubs', 'Controls/Utils/isNewEnvironment'],
+define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred', 'Core/moduleStubs', 'Core/helpers/isNewEnvironment'],
    function(require, Deferred, moduleStubs, isNewEnvironment) {
       var _private = {
          prepareDeps: function(config) {

@@ -1,140 +1,79 @@
 define('Controls-demo/EditAtPlace/EditAtPlace', [
    'Core/Control',
    'wml!Controls-demo/EditAtPlace/EditAtPlace',
-   'Core/core-clone',
    'WS.Data/Entity/Record',
    'WS.Data/Source/Memory',
-   'wml!Controls-demo/EditAtPlace/resources/tabTemplate',
-   'wml!Controls-demo/EditAtPlace/resources/tabTemplate2',
+   'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate',
+   'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate2',
 
    'css!Controls-demo/EditAtPlace/EditAtPlace'
 ], function(
    Control,
    template,
-   cClone,
    Record,
    MemorySource,
-   tabTemplate,
-   tabTemplate2
+   exampleTabTemplate,
+   exampleTabTemplate2
 ) {
    'use strict';
    var tabsData = [
          {
-            id: '0',
-            title: 'Ошибка в разработку',
+            id: 0,
+            title: 'Поручение',
             align: 'left',
-            number: '1175501898',
-            date: '26.06.18',
-            itemTemplate: tabTemplate
+            number: '3565654',
+            date: '09.01.17',
+            itemTemplate: exampleTabTemplate
          },
          {
-            id: '1',
-            title: 'Kochnev',
-            align: 'left'
-         },
-         {
-            id: '2',
-            title: 'Cheremushkin',
-            align: 'left'
-         },
-         {
-            id: '3',
-            title: 'Izigin'
-         },
-         {
-            id: '4',
-            align: 'left',
-            title: 'Stepin'
-         },
-         {
-            id: '5',
-            align: 'left',
-            title: 'Romanov'
-         },
-         {
-            id: '6',
-            align: 'left',
-            title: 'Borisov'
-         },
-         {
-            id: '7',
-            title: ' Zaitsev'
-         },
-         {
-            id: '8',
-            title: ' Sukhoruchkin'
+            id: 1,
+            align: 'right',
+            title: 'Лента событий'
          }
       ],
       tabsData2 = [
          {
-            id: '0',
+            id: 0,
             align: 'left',
-            name: 'Имя',
-            surname: 'Фамилия',
-            patronymic: 'Отчество',
-            itemTemplate: tabTemplate2
-         },
+            name: 'Компания "Сбис плюс"',
+            itemTemplate: exampleTabTemplate2
+         }],
+      toolbarItems = [
          {
             id: '1',
-            title: 'Kochnev',
-            align: 'left'
+            icon: 'icon-Print',
+            title: 'Распечатать',
+            '@parent': false,
+            parent: null
          },
          {
             id: '2',
-            title: 'Cheremushkin',
-            align: 'left'
+            icon: 'icon-RelatedDocumentsDown',
+            title: 'Связанные документы',
+            '@parent': false,
+            parent: null
          },
          {
             id: '3',
-            title: 'Izigin'
-         },
-         {
-            id: '4',
-            align: 'left',
-            title: 'Stepin'
-         },
-         {
-            id: '5',
-            align: 'left',
-            title: 'Romanov'
-         },
-         {
-            id: '6',
-            align: 'left',
-            title: 'Borisov'
-         },
-         {
-            id: '7',
-            title: ' Zaitsev'
-         },
-         {
-            id: '8',
-            title: ' Sukhoruchkin'
+            icon: 'icon-Question2',
+            title: 'Задать вопрос',
+            '@parent': false,
+            parent: null
          }
       ];
 
    var EditAtPlace = Control.extend({
       _template: template,
       _record: null,
-      _record2: null,
-      _record3: null,
-      _selectedTab: '1',
-      _selectedTab2: '2',
+      _selectedTab: 0,
+      _selectedTab2: 0,
       _tabSource: null,
 
       _beforeMount: function() {
          this._record = new Record({
             rawData: {
                id: 1,
-               text1: '1037739877295',
-               text2: '00083262',
-               text3: '80209801001'
-            }
-         });
-         this._record2 = new Record({
-            rawData: {
-               id: 1,
-               text1: 'Smirnov'
+               text1: 'Мой отдел'
             }
          });
          this._tabSource = new MemorySource({
@@ -144,6 +83,10 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
          this._tabSource2 = new MemorySource({
             idProperty: 'id',
             data: tabsData2
+         });
+         this._toolbarSource = new MemorySource({
+            idProperty: 'id',
+            data: toolbarItems
          });
       }
    });

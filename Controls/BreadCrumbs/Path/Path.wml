@@ -10,6 +10,8 @@
                      on:click="_onArrowClick()"></div>
             </div>
             <ws:if data="{{_visibleItems.length}}">
+                <div attr:class="controls-BreadCrumbsView__home icon-Home3 icon-primary"
+                     on:click="_onHomeClick()"></div>
                 <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                            items="{{_breadCrumbsItems}}"
                                            visibleItems="{{_visibleItems}}"

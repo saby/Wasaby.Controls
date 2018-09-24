@@ -4,7 +4,7 @@
 >
    <div
       class="controls-EditAtPlaceV
-      {{_options.showToolbar ? 'controls-EditAtPlaceV__withToolbar'}}
+      {{_options.toolbarVisibility ? 'controls-EditAtPlaceV__withToolbar'}}
       {{_isEditing ? 'controls-EditAtPlaceV_isEditing_style_' + (_options.style ? _options.style : 'default')}}"
    >
       <ws:partial
@@ -15,7 +15,7 @@
          on:keyDown="_onKeyDown()"
          isEditing="{{_isEditing}}"
       />
-      <ws:if data="{{_options.showToolbar && _isEditing}}">
+      <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
          <div class="controls-EditAtPlaceV__Toolbar">
             <Controls.Button
                on:click="commitEdit()"
