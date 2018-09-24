@@ -67,15 +67,7 @@ define('Controls/Input/Dropdown',
             }
          },
 
-         _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.selectedKeys, newOptions.selectedKeys)) {
-               this._setText(this._items);
-            }
-         },
-
          _selectedItemsChangedHandler: function(event, items) {
-            this._items = items;
-            this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
@@ -90,6 +82,7 @@ define('Controls/Input/Dropdown',
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }
+            this._notify('textValueChanged', [this._text]);
          }
       });
 
