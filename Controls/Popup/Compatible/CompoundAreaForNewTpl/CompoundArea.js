@@ -55,8 +55,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                var def = new Deferred();
 
                require([this._options.innerComponentOptions.template], function() {
-
-                  //Пока грузили шаблон, компонент могли задестроить
+                  // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
                   }
@@ -87,12 +86,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             };
          },
 
-         //Создаем обработчик события, который положим в eventProperties узла
+         // Создаем обработчик события, который положим в eventProperties узла
          _createFnForEvents: function(callback) {
             var fn = callback;
 
-            //Нужно для событийного канала vdom'a.
-            //У fn.control позовется forceUpdate. На compoundArea его нет, поэтому ставим заглушку
+            // Нужно для событийного канала vdom'a.
+            // У fn.control позовется forceUpdate. На compoundArea его нет, поэтому ставим заглушку
             fn.control = {
                _forceUpdate: this._forceUpdate
             };
@@ -100,8 +99,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          _beforeCloseHandler: function(event) {
-            //Если позвали закрытие панели до того, как построился VDOM компонент - дожидаемся когда он построится
-            //Только после этого закрываем панель
+            // Если позвали закрытие панели до того, как построился VDOM компонент - дожидаемся когда он построится
+            // Только после этого закрываем панель
             if (!this._isVDomTemplateMounted) {
                this._closeAfterMount = true;
                event.setResult(false);
@@ -121,6 +120,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                self._isVDomTemplateMounted = true;
                if (self._closeAfterMount) {
                   self.sendCommand('close');
+               } else {
+                  if (self._options.catchFocus) {
+                     self._vDomTemplate.activate && self._vDomTemplate.activate();
+                  }
                }
             };
          },
@@ -132,9 +135,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             self._vDomTemplate._afterUpdate = function() {
                self._baseAfterUpdate.apply(this, arguments);
                if (self._isNewOptions) {
-
-                  //костыль от дубровина не позволяет перерисовать окно, если prevHeight > текущей высоты.
-                  //Логику в панели не меняю, решаю на стороне совместимости
+                  // костыль от дубровина не позволяет перерисовать окно, если prevHeight > текущей высоты.
+                  // Логику в панели не меняю, решаю на стороне совместимости
                   self._panel._prevHeight = 0;
                   self._panel._recalcPosition && self._panel._recalcPosition();
                   self._panel.getContainer().closest('.ws-float-area').removeClass('ws-invisible');
@@ -151,7 +153,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._result = null;
          },
          _onResultHandler: function() {
-            this._result = Array.prototype.slice.call(arguments, 1); //first arg - event;
+            this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
             if (this._options.onResultHandler) {
                this._options.onResultHandler.apply(this, this._result);
             }
@@ -194,7 +196,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          setInnerComponentOptions: function(newOptions) {
-            if (this._vDomTemplate) { //могут позвать перерисоку до того, как компонент создался
+            if (this._vDomTemplate) { // могут позвать перерисоку до того, как компонент создался
                this._isNewOptions = true;
 
                newOptions._onCloseHandler = this._onCloseHandler;
@@ -202,7 +204,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                newOptions._onResizeHandler = this._onResizeHandler;
                newOptions._onRegisterHandler = this._onRegisterHandler;
 
-               //Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
+               // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
                this._vDomTemplate._options = newOptions;
                this._vDomTemplate._forceUpdate();
