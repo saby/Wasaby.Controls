@@ -60,9 +60,9 @@ define('Controls/Container/Suggest/Layout',
                   resultObj = bc.toJSON();
                } else {
                   for (var i in bc) {
-                     if (bc.hasOwnProperty(i)) {
-                        resultObj[i] = bc[i];
-                     }
+                     // bc.hasOwnProperty(i) does not make sense,
+                     // because it does not work correctly on clientRect object in FireFox (not all versions)
+                     resultObj[i] = bc[i];
                   }
                }
 
