@@ -27,7 +27,8 @@ define('Controls/Input/Lookup/_Collection',
       Collection.getDefaultOptions = function() {
          return {
             itemTemplate: ItemTemplate,
-            itemsLayout: 'default'
+            itemsLayout: 'default',
+            displayItemsIndex: 0
          };
       };
       

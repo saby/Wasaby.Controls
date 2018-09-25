@@ -9,6 +9,6 @@
         <ws:partial template="wml!Controls/Input/Lookup/_ContentTemplate" on:click="_itemClick(item)"/>
     </ws:contentTemplate>
     <ws:crossTemplate>
-        <ws:partial template="wml!Controls/Input/Lookup/_CrossTemplate" on:click="_crossClick(index)"/>
+        <ws:partial template="{{!_options.readOnly ? 'wml!Controls/Input/Lookup/_CrossTemplate'}}" on:click="_crossClick(index)"/>
     </ws:crossTemplate>
 </ws:partial>

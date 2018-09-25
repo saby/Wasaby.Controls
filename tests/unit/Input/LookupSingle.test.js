@@ -187,6 +187,11 @@ define([
 
          assert.isTrue(Lookup._private.getItemWidth(lookup, 0) > 100);
       });
+
+      it('getInputMinWidth', function() {
+         assert.equal(Lookup._private.getInputMinWidth(330, 30), 99);
+         assert.equal(Lookup._private.getInputMinWidth(530, 30), 100);
+      });
    
       it('_beforeMount', function() {
          var lookup = new Lookup();

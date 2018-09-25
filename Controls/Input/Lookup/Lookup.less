@@ -14,7 +14,17 @@
 	color: @color_Lookup-showSelector_hovered;
 }
 
-.controls-Lookup__hidden_item {
+.controls-Lookup__showAllLinks {
+  padding: 0 @spacing_Lookup-showAllLinks 0 0;
+  cursor: pointer;
+  color: @color_Lookup_showAllLinks;
+  &:hover {
+    text-decoration: underline;
+    color: @color_Lookup-showAllLinks_hovered;
+  }
+}
+
+.controls-Lookup__showAllLinks_hidden {
   visibility: hidden;
   position: absolute;
 }
@@ -25,4 +35,8 @@
   background: #FFFFFF;
   border: 1px solid #cccccc;
   border-top: none;
+}
+
+.controls-Lookup__collection_hidden {
+  display: none !important;
 }

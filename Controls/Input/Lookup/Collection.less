@@ -1,7 +1,34 @@
+.controls-Lookup__collection {
+  .flex-shrink(0);
+  .align-items(baseline);
+  max-width: 100%;
+  overflow: hidden;
+  display:inline-flex;
+}
+
+/* Необходим :before с line-height, т.к. в поле связи может не быть поля ввода (input),
+   который образует боазовую линию */
+.controls-Lookup__collection:before {
+  content: '\200b';
+  width: 0;
+  display: inline-block;
+  visibility: hidden;
+  line-height: @default-base-line-height;
+}
+
+.controls-Lookup__collection_multiLine {
+  flex-wrap: wrap;
+}
+
+.controls-Lookup__collection_singleLine {
+  .justify-content(flex-end);
+}
+
 .controls-Lookup__item {
 	.inline-flexbox();
 	.align-items(baseline);
 	padding: 0 @spacing_Lookup-item 0 0;
+	box-sizing: border-box;
 }
 
 .controls-Lookup__item-single {
@@ -65,42 +92,10 @@
 	color: @color_Lookup_item-primary;
 }
 
-.controls-Lookup__collection {
-	.flex-shrink(0);
-	.align-items(baseline);
-	max-width: 100%;
-	overflow: hidden;
-	display:inline-flex;
-}
-
-/* Необходим :before с line-height, т.к. в поле связи может не быть поля ввода (input),
-   который образует боазовую линию */
-.controls-Lookup__collection:before {
-	content: '\200b';
-	width: 0;
-	display: inline-block;
-	visibility: hidden;
-	line-height: @default-base-line-height;
-}
-
-.controls-Lookup__collection_multiLine {
-  flex-wrap: wrap;
-}
-
 .controls-Lookup__collectionItem_layout_default {
-  max-width: calc(~"100% - @{spacing_Lookup-item}");
+	max-width: calc(~"100% - @{spacing_Lookup-item}");
 }
 
 .controls-Lookup__collectionItem_layout_twoColumns {
-  width: calc(~"50% - @{spacing_Lookup-item}");
-}
-
-.controls-Lookup__showAllLinks {
-  padding: 0 @spacing_Lookup-showAllLinks 0 0;
-  cursor: pointer;
-  color: @color_Lookup_showAllLinks;
-  &:hover {
-	text-decoration: underline;
-	color: @color_Lookup-showAllLinks_hovered;
-  }
+	width: calc(~"50% - @{spacing_Lookup-item}");
 }

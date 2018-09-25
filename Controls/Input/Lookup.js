@@ -146,6 +146,60 @@ define('Controls/Input/Lookup', [
             index: indexItem,
             itemsCount: self._items.getCount()
          }));
+      },
+
+      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
+         /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
+         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
+
+         return Math.min(minWidthFieldWrapper, 100);
+      },
+
+      alignSelectedCollection: function(self) {
+         var
+            itemsWidth = 0,
+            displayItems = 0,
+            itemsCount = _private.getItems(self).getCount(),
+            additionalWidth = 0, availableWidth, itemWidth,
+            fieldWrapper, afterFieldWrapper;
+
+         if (self._selectedKeys.length) {
+            if (!self._options.readOnly) {
+               fieldWrapper = self._children.inputRender._container;
+               afterFieldWrapper = self._children.showSelector;
+               additionalWidth = _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapper.offsetWidth) +
+                  self._children.showSelector.offsetWidth;
+            }
+
+            availableWidth =  DOMUtil.width(self._children.inputRender._container) - additionalWidth;
+
+            if (itemsCount === 1) {
+               displayItems = itemsCount;
+            } else {
+               /* Учтем ширину кнопки, показывающей все записи */
+               availableWidth -= self._children.showAllLinks.offsetWidth;
+
+               /* Считаем, сколько элементов может отобразиться */
+               for (var i = itemsCount - 1; i >= 0; i--) {
+                  itemWidth = _private.getItemWidth(self, i);
+
+                  if ((itemsWidth + itemWidth) > availableWidth) {
+                     /* Если ни один элемент не влезает, то отобразим только последний выбранный */
+                     if (!itemsWidth) {
+                        displayItems++;
+                     }
+                     break;
+                  }
+                  displayItems++;
+                  itemsWidth += itemWidth;
+               }
+            }
+         }
+
+         self._collectionIsReady = true;
+         self._availableWidthCollection = availableWidth;
+         self._isAllRecordsDisplay = displayItems >= itemsCount;
+         self._displayItemsIndex =  itemsCount - displayItems;
       }
    };
 
@@ -157,8 +211,9 @@ define('Controls/Input/Lookup', [
       _simpleViewModel: null,
       _isEmpty: true,
       _availableWidthCollection: null,
-      _isAllRecordsDisplay: false,
+      _isAllRecordsDisplay: true,
       _collectionIsReady: false,
+      _displayItemsIndex: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -180,7 +235,7 @@ define('Controls/Input/Lookup', [
 
       _afterMount: function() {
          if (this._selectedKeys.length) {
-            this._alignSelectedCollection();
+            _private.alignSelectedCollection(this);
             this._forceUpdate();
          }
       },
@@ -195,6 +250,10 @@ define('Controls/Input/Lookup', [
             keysChanged = true;
             this._selectedKeys = newOptions.selectedKeys.slice();
             _private.keysChanged(this);
+         }
+
+         if (!this._collectionIsReady && !this._isPickerVisible) {
+            _private.alignSelectedCollection(this);
          }
 
          if (newOptions.source !== this._options.source || keysChanged && this._selectedKeys.length) {
@@ -214,16 +273,9 @@ define('Controls/Input/Lookup', [
                this.activate();
             }
          }
-
-         if (!this._collectionIsReady && !this._isPickerVisible) {
-            this._alignSelectedCollection();
-            this._forceUpdate();
-         }
       },
 
-      _togglePicker: function(state) {
-         state = typeof state === 'boolean' ? state : !this._isPickerVisible;
-
+      _togglePicker: function(event, state) {
          if (state) {
             this._isPickerVisible = true;
             this._suggestState = false;
@@ -244,60 +296,6 @@ define('Controls/Input/Lookup', [
          this._forceUpdate();
       },
 
-      _getInputMinWidth: function() {
-         var
-            minWidthFieldWrapper,
-            fieldWrapper = this._children.inputRender._container,
-            afterFieldWrapper = this._children.showSelector;
-
-         /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
-         minWidthFieldWrapper = (fieldWrapper.offsetWidth - afterFieldWrapper.offsetWidth) / 100 * 33;
-         return Math.min(minWidthFieldWrapper, 100);
-      },
-
-      _alignSelectedCollection: function() {
-         var
-            itemsWidth = 0,
-            displayItems = 0,
-            itemsCount = _private.getItems(this).getCount(),
-            additionalWidth = 0, availableWidth, itemWidth;
-
-         if (this._selectedKeys.length) {
-            if (!this._options.readOnly) {
-               additionalWidth = this._getInputMinWidth() + this._children.showSelector.offsetWidth;
-            }
-
-            availableWidth =  DOMUtil.width(this._children.inputRender._container) - additionalWidth;
-
-            if (itemsCount === 1) {
-               displayItems = itemsCount;
-            } else {
-               /* Учтем ширину кнопки, показывающей все записи */
-               availableWidth -= this._children.showAllLinks.offsetWidth;
-
-               /* Считаем, сколько элементов может отобразиться */
-               for (var i = itemsCount - 1; i >= 0; i--) {
-                  itemWidth = _private.getItemWidth(this, i);
-
-                  if ((itemsWidth + itemWidth) > availableWidth) {
-                     /* Если ни один элемент не влезает, то отобразим только последний выбранный */
-                     if (!itemsWidth) {
-                        displayItems++;
-                     }
-                     break;
-                  }
-                  displayItems++;
-                  itemsWidth += itemWidth;
-               }
-            }
-         }
-
-         this._collectionIsReady = true;
-         this._availableWidthCollection = availableWidth;
-         this._isAllRecordsDisplay = displayItems >= itemsCount;
-         this._visibleCollection = _private.getCollectionSlice(this, itemsCount - displayItems);
-      },
-
       _beforeUnmount: function() {
          this._simpleViewModel = null;
          this._selectedKeys = null;
@@ -305,7 +303,7 @@ define('Controls/Input/Lookup', [
 
       _changeValueHandler: function(event, value) {
          _private.notifyValue(this, value);
-         this._togglePicker(false);
+         this._togglePicker(null, false);
       },
 
       _choose: function(event, item) {
@@ -318,20 +316,13 @@ define('Controls/Input/Lookup', [
       },
 
       _crossClick: function(event, item) {
-
-         // item из _visibleCollection, а необходим из _items
-         var
-            items = _private.getItems(this),
-            indexOriginalItem = items.getIndexByValue(this._options.keyProperty, item.getId()),
-            originalItem = items.at(indexOriginalItem);
-
-         _private.removeItem(this, originalItem);
+         _private.removeItem(this, item);
 
          /* move focus to input after remove, because focus will be lost after removing dom element  */
          this._needSetFocusInInput = true;
 
          if (!this._selectedKeys.length) {
-            this._togglePicker(false);
+            this._togglePicker(null, false);
          }
       },
 
@@ -353,7 +344,7 @@ define('Controls/Input/Lookup', [
 
       _deactivated: function() {
          this._suggestState = false;
-         this._togglePicker(false);
+         this._togglePicker(null, false);
       },
 
       _suggestStateChanged: function() {

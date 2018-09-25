@@ -1,13 +1,15 @@
-<div class="controls-Lookup__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-Lookup__collection_multiLine'}}"
+<div class="controls-Lookup__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-Lookup__collection_multiLine' : ' controls-Lookup__collection_singleLine'}}"
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
 
     <ws:for data="index, item in _options.items">
-        <ws:partial template="wml!Controls/Input/Lookup/CollectionItem"
-                    item="{{item}}"
-                    index="{{index}}"
-                    itemsCount="{{_options.items.getCount()}}"
-                    _options="{{_options}}"
-                    _itemClick="{{_itemClick}}"
-                    _crossClick="{{_crossClick}}"/>
+        <ws:if data="{{index >= _options.displayItemsIndex}}">
+            <ws:partial template="wml!Controls/Input/Lookup/CollectionItem"
+                        item="{{item}}"
+                        index="{{index}}"
+                        itemsCount="{{_options.items.getCount()}}"
+                        _options="{{_options}}"
+                        _itemClick="{{_itemClick}}"
+                        _crossClick="{{_crossClick}}"/>
+        </ws:if>
     </ws:for>
 </div>
