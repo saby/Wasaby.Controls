@@ -1,6 +1,6 @@
-<div class="controls-MasterDetail">
+<div class="controls-MasterDetailV">
    <ws:partial
-      attr:class="controls-MasterDetail_master"
+      attr:class="controls-MasterDetailV_master"
       template="{{_options.master}}"
       on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
    <ws:partial
