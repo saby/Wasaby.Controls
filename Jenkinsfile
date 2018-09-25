@@ -626,23 +626,28 @@ node('controls') {
         }
 		
 				
-		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/20180925/*_errors.log'
+		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/*_errors.log'
 		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
 		
-		if ( exist_logs ){
-			sh """7za a log_intest -t7z /home/sbis/Controls/intest/logs/**/*_errors.log """
-			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest.7z', caseSensitive: false
+		if ( exist_logs ){			
+			sh "cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
 		}
 		
 		if ( exist_logs_ps ){
-			sh """7za a log_intest_ps -t7z /home/sbis/Controls/intest-ps/logs/**/*_errors.log """
-			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_intest_ps.7z', caseSensitive: false
+			sh "cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+		}
+		
+		def dir_exist_logs = fileExists '${workspace}/logs_ps'
+		if ( dir_exist_logs ){
+			sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
 		}
 		
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-        }
+	}
+		
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
