@@ -1,7 +1,7 @@
 define('Controls/PropertyGrid', [
    'Core/Control',
    'wml!Controls/PropertyGrid/PropertyGrid',
-   'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate'
+   'tmpl!Controls/PropertyGrid/PropertyGridTemplate'
 ], function(Control, template, pgTemplate) {
    /**
     * Control PropertyGrid

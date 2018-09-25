@@ -2,7 +2,6 @@ define('Controls-demo/Switch/SwitchDemoPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -10,13 +9,12 @@ define('Controls-demo/Switch/SwitchDemoPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config) {
+   function(Control, template, config) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Toggle/Switch',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
