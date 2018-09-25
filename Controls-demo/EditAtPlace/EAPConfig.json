@@ -15,8 +15,11 @@
             "title": "Determines whether buttons 'Save' and 'Cancel' should be displayed."
           },
           "style": {
-            "type": "String",
-            "title": "Edit at place display style."
+            "type": "enum",
+            "title": "Edit at place display style.",
+            "enum": {
+              "withBackground": "Background will be shown while editing."
+            }
           },
           "editObject": {
             "type": "enum",
