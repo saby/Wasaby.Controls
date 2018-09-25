@@ -337,19 +337,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
                if (options.json) {
-                  if (!options.__savedHtmlJson) {
-                     options.__savedHtmlJson = new HtmlJson();
-                  }
-                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
-                  options.text = options.__savedHtmlJson.render();
-
-                  // Костыль для отображения плейсхолдера при пустом json.
-                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
-                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-                  if (options.text === '<span></span>') {
-                     options.text = '';
-                  }
+                  options.text = this._getTextFromJson(options.json);
                }
 
                if (options.singleLine) {
@@ -416,22 +404,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this.isEnabled()) {
                   this._decorateAsSVG(this._options.text);
                }
-            },
-            _initHtmlJson: function() {
-               var self = this;
-               self._htmlJson = self._options.__savedHtmlJson || new HtmlJson();
-               self.subscribe('onTextChange', function(e, text) {
-                  if (text[0] !== '<') {
-                     text = '<p>' + text + '</p>';
-                  }
-                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
-                  var div = document.createElement('div');
-                  div.innerHTML = text;
-                  self._options.json = typeof self._options.json === 'string'
-                     ? JSON.stringify(domToJson(div).slice(1))
-                     : domToJson(div).slice(1);
-                  self._notify('onJsonChange', [self._options.json]);
-               });
             },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
@@ -716,26 +688,48 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
+
             getJson: function() {
                return this._options.json;
             },
             setJson: function(json) {
                this._options.json = json;
-               this.setText(this.getTextFromJson());
+               this.setText(this._getTextFromJson(json));
             },
-            getTextFromJson: function() {
-               if (!this._htmlJson) {
-                  this._initHtmlJson();
+            getTextFromJson: function () {
+               return this._getTextFromJson(this._options.json);
+            },
+            _getTextFromJson: function (json) {
+               var htmlJson = this._htmlJson;
+               if (!htmlJson) {
+                  this._htmlJson = htmlJson = new HtmlJson();
                }
-               this._htmlJson.setJson(typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json);
-
-               // Костыль для отображения плейсхолдера при пустом json.
-               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
+               htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
+               var text = htmlJson.render();
+               // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
                // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
                // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-               var text = this._htmlJson.render();
-               return text === '<span></span>' ? '' : text;
+               var ms = text.match(/^<span(?:\sclass="ws\-basic\-style")?>/i);
+               if (ms) {
+                  text = text.substring(ms[0].length, text.length - 7);
+               }
+               return text;
             },
+            _updateJson: function (e, text) {
+               // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+               // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
+               if (text[0] !== '<') {
+                  text = '<p>' + text + '</p>';
+               }
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               var div = document.createElement('div');
+               div.innerHTML = text;
+               var options = this._options;
+               var json = domToJson(div).slice(1);
+               options.json = typeof options.json === 'string' ? JSON.stringify(json) : json;
+               this._notify('onJsonChange', [options.json]);
+            },
+
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
                if (this._lastActive) {
@@ -3013,7 +3007,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onKeyUpDeleteImage',
                   '_onKeyUpSetLastRng',
                   '_onMouseUpCallback',
-                  '_tinyReadyCallback0'
+                  '_tinyReadyCallback0',
+                  '_updateJson'
                ];
                for (var i = 0; i < methods.length; i++) {
                   this[methods[i]] = this[methods[i]].bind(this);
@@ -3139,6 +3134,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                // Никогда не прокручивать вышележашие скрол-контейнеры !
                editor.on('scrollIntoView', this._onScrollIntoViewCallback);
+
+               if (this._options.json) {
+                  // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+                  this.subscribeTo(this, 'onTextChange', this._updateJson);
+               }
             },
             _onTouchStartCallback1: function(e) {
                this._fromTouch = true;
