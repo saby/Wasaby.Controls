@@ -8,9 +8,10 @@ define('Controls/Container/Suggest/Layout',
       'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
       'Core/core-clone',
+      'Core/detection',
       'css!Controls/Container/Suggest/Layout/Suggest'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone, detection) {
       
       'use strict';
       
@@ -62,7 +63,9 @@ define('Controls/Container/Suggest/Layout',
                   for (var i in bc) {
                      // bc.hasOwnProperty(i) does not make sense,
                      // because it does not work correctly on clientRect object in FireFox (not all versions)
-                     resultObj[i] = bc[i];
+                     if (bc.hasOwnProperty(i) || detection.firefox) {
+                        resultObj[i] = bc[i];
+                     }
                   }
                }
 
