@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/StickyHeader/Model'
+      'Controls/StickyHeader/_StickyHeader/Model'
    ],
    function(Model) {
 
