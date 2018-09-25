@@ -625,16 +625,19 @@ node('controls') {
             """
         }
 		
-				
+		dir(workspace){
+			sh "mkdir ${workspace}/logs_ps"
+		)
+		
 		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/*_errors.log'
 		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
 		
 		if ( exist_logs ){			
-			sh "cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+			sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
 		}
 		
 		if ( exist_logs_ps ){
-			sh "cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+			sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
 		}
 		
 		def dir_exist_logs = fileExists '${workspace}/logs_ps'
