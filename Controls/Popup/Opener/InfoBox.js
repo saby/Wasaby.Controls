@@ -106,7 +106,7 @@ define('Controls/Popup/Opener/InfoBox',
                   float: cfg.float
                },
                className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
-               template: 'wml!Controls/Popup/Opener/InfoBox/resources/template'
+               template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
          close: function(delay) {

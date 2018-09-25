@@ -10,10 +10,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "commitOnDeactivate": {
-            "type": "Boolean",
-            "title": "Determines whether changes will be committed after component loses focus."
-          },
           "toolbarVisibility": {
             "type": "Boolean",
             "title": "Determines whether buttons 'Save' and 'Cancel' should be displayed."

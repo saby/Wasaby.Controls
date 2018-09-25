@@ -22,6 +22,20 @@ define(['Controls/Operations/__MultiSelector'], function(MultiSelector) {
          };
          instance._updateSelection(selection);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
+         selection = {
+            selectedKeys: [null],
+            excludedKeys: [1, 2, 3],
+            count: 1
+         };
+         instance._updateSelection(selection);
+         assert.equal(instance._menuCaption, 'Отмечено: 1');
+         selection = {
+            selectedKeys: [null],
+            excludedKeys: [1, 2, 3, 4],
+            count: 0
+         };
+         instance._updateSelection(selection);
+         assert.equal(instance._menuCaption, 'Отметить');
       });
       it('_getHierarchyMenuItems', function() {
          var instance = new MultiSelector();

@@ -36,7 +36,11 @@ define([
          ];
          bc = new BreadCrumbsView();
          bc.saveOptions({
-            items: data
+            items: data.map(function(item) {
+               return new Model({
+                  rawData: item
+               });
+            })
          });
       });
       afterEach(function() {
@@ -66,6 +70,7 @@ define([
                },
                isDots: true
             };
+            var stopPropagationCalled = false;
             bc._children = {
                menuOpener: {
                   open: function(openerOptions) {
@@ -74,17 +79,14 @@ define([
                   }
                }
             };
-            bc._onItemClick({ target: 123 }, itemData);
+            bc._onItemClick({
+               target: 123,
+               stopPropagation: function() {
+                  stopPropagationCalled = true;
+               }
+            }, itemData);
+            assert.isTrue(stopPropagationCalled);
          });
-      });
-      it('_onHomeClick', function() {
-         bc._notify = function(e, args) {
-            if (e === 'itemClick') {
-               assert.equal(bc._options.items[0], args[0]);
-               assert.isTrue(args[1]);
-            }
-         };
-         bc._onHomeClick();
       });
       it('_onResize', function(done) {
          bc._children = {
@@ -103,9 +105,9 @@ define([
                rawData: data[0]
             })]
          };
-         bc._notify = function(e, item) {
+         bc._notify = function(e, eventArgs) {
             if (e === 'itemClick') {
-               assert.deepEqual(bc._options.items[0], item[0]);
+               assert.deepEqual(bc._options.items[0].getRawData(), eventArgs[0].getRawData());
             }
          };
          bc._children = {

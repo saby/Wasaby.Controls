@@ -1,0 +1,52 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="Диалог редактирования" attr:style="width:900px">
+   <ws:topArea>
+      <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+         <Controls.Button icon="icon-medium icon-Erase icon-error" on:click="_delete()" style="linkMain"
+                          attr:style="margin-right: 15px;"/>
+         <Controls.Button caption="Сохранить" on:click="_update()"/>
+      </div>
+   </ws:topArea>
+   <ws:contentArea>
+      <div>
+         <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}"
+                                        record="{{ _record }}" key="{{ _options.key }}"
+                                        on:updateFailed="_errorHandler()"
+                                        on:createFailed="_errorHandler()"
+                                        on:readFailed="_errorHandler()"
+                                        on:deleteFailed="_errorHandler()"
+                                        on:createSuccessed="_createSuccessedHandler()"
+                                        on:updateSuccessed="_updateSuccessedHandler()"
+                                        on:deleteSuccessed="_deleteSuccessedHandler()">
+            <div class="controls-MyFormController__block">
+               <div class="controls-MyFormController__row controls-MyFormController__title">Название:</div>
+               <div class="controls-MyFormController__row">
+                  <Controls.Input.Text bind:value="_record.name"/>
+               </div>
+            </div>
+
+            <div class="controls-MyFormController__block">
+               <div class="controls-MyFormController__row controls-MyFormController__title">Цена:</div>
+               <div class="controls-MyFormController__row">
+                  <Controls.Input.Number bind:value="_record.price"/>
+               </div>
+            </div>
+
+            <div class="controls-MyFormController__block">
+               <div class="controls-MyFormController__row controls-MyFormController__title">Остаток:</div>
+               <div class="controls-MyFormController__row">
+                  <Controls.Input.Number bind:value="_record.balance"/>
+               </div>
+            </div>
+
+            <div class="controls-MyFormController__block">
+               <div class="controls-MyFormController__row controls-MyFormController__title">Себестоимость:</div>
+               <div class="controls-MyFormController__row">
+                  <Controls.Input.Number bind:value="_record.costPrice"/>
+               </div>
+            </div>
+         </Controls.FormController>
+
+         <Controls.Popup.Opener.Confirmation name="popupOpener" />
+      </div>
+   </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>

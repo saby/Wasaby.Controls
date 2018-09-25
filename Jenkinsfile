@@ -363,6 +363,7 @@ node('controls') {
                 ЧислоСлужебныхРабочихПроцессов=0
                 ЧислоДополнительныхПроцессов=0
                 ЧислоПотоковВРабочихПроцессах=10
+				МаксимальныйРазмерВыборкиСписочныхМетодов=0
 
                 [Presentation Service]
                 WarmUpEnabled=No
@@ -381,6 +382,7 @@ node('controls') {
                 ПосылатьОтказВОбслуживанииПриОтсутствииРабочихПроцессов=Нет
                 МаксимальноеВремяЗапросаВОчереди=60000
                 ЧислоРабочихПроцессов=4
+				МаксимальныйРазмерВыборкиСписочныхМетодов=0
                 [Ядро.Права]
                 Проверять=Нет
                 [Ядро.Асинхронные сообщения]
@@ -622,10 +624,11 @@ node('controls') {
             7za a log_jinnee -t7z ${workspace}/jinnee/logs
             """
         }
+		
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-        }
+	}
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])

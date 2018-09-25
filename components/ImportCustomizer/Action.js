@@ -131,7 +131,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
-          * @param {object} options.providerArgs Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого парсера (опционально)
+          * @param {object} options.providerArgs Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого парсера. Именно здесь обычно располагаются опции hierarchyName и hierarchyField (опционально)
           * @param {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные. Можкт быть как задано явно, так и указано в виде обещания(Deferred) или вызова метода удалённого сервиса
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)

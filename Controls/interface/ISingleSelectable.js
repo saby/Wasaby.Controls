@@ -14,7 +14,6 @@ define('Controls/interface/ISingleSelectable', [
     * @name Controls/interface/ISingleSelectable#selectedKey
     * @cfg {Number|String} Selected item key.
     * @default Undefined
-    * @remark You can pass node's key property to select every item inside that node.
     * @example
     * The following example creates RadioGroup and selects first item. Subsequent changes made to selectedKey will be synchronized through binding mechanism.
     * <pre>
