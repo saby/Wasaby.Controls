@@ -45,6 +45,12 @@ define('Controls/Input/Password',
                value: options.value
             });
 
+            /**
+             * Browsers use autocomplete to the fields with the previously stored name.
+             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+             * To avoid this, we will translate the name of the control to the name of the tag.
+             * https://habr.com/company/mailru/blog/301840/
+             */
             this._inputName = options.name || 'input';
          },
 
