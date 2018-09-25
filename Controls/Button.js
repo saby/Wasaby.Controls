@@ -97,7 +97,7 @@ define('Controls/Button', [
       },
 
       _keyUpHandler: function(e) {
-         if (e.nativeEvent.keyCode === 13) {
+         if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
             this._notify('click');
          }
       },
