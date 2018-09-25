@@ -39,7 +39,7 @@ define('Controls/StickyHeader',
          /**
           * https://caniuse.com/#search=sticky
           */
-         _isNotStickySupport: detection.IEVersion < 16
+         _isNotStickySupport: detection.isIE && detection.IEVersion < 16
       });
 
       return StickyHeader;
