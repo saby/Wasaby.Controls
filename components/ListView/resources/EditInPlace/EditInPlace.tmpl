@@ -15,7 +15,7 @@
                 <ws:if data="{{column.editor}}">
                     <td class="controls-editInPlace__withEditor">
                         <div class="controls-editInPlace__editor {{ (ignoreFirstColumn && index === 0) ? 'controls-editInPlace__editorWithOffset' }}">
-                            <ws:partial template="{{column.editor}}"></ws:partial>
+                            <ws:partial template="{{column.editor}}" column="{{column}}"></ws:partial>
                         </div>
                     </td>
                 </ws:if>
