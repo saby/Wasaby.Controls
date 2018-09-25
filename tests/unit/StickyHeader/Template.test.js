@@ -19,7 +19,8 @@ define(
                   stickyHeader: new Context({shadowVisible: false})
                },
                _options: {},
-               _model: {}
+               _model: {},
+               _getStyle: ctrl._getStyle
             };
          });
 
@@ -35,7 +36,7 @@ define(
          it('On the mobile platform', function() {
             inst._isMobilePlatform = true;
 
-            assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_mobilePlatform" style="top: 0px;">' +
+            assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -2px; padding-top: 2px;">' +
                                              '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                              '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                           '</div>');
