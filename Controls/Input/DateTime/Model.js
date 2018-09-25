@@ -39,7 +39,10 @@ define('Controls/Input/DateTime/Model', [
       constructor: function(options) {
          ModuleClass.superclass.constructor.apply(this, arguments);
          this._stringValueConverter = new StringValueConverter();
-         this._stringValueConverter.update(options);
+         this._stringValueConverter.update({
+            replacer: this._replacer,
+            mask: options.mask
+         });
          this._mask = options.mask;
          this._value = options.value;
          this._lastValue = this._value;
@@ -51,7 +54,10 @@ define('Controls/Input/DateTime/Model', [
        * @param options
        */
       update: function(options) {
-         this._stringValueConverter.update(options);
+         this._stringValueConverter.update({
+            replacer: this._replacer,
+            mask: options.mask
+         });
          this.value = options.value;
       },
 
@@ -90,6 +96,7 @@ define('Controls/Input/DateTime/Model', [
          this._textValue = value;
          this._value = this._stringValueConverter.getValueByString(value, this._lastValue);
          _private.updateLastValue(this);
+         this._notify('valueChanged', [this._value]);
       },
 
       /**

@@ -67,6 +67,7 @@ define('Controls/Input/DateTime', [
 
       _valueChangedHandler: function(e, value) {
          this._model.textValue = value;
+         e.stopImmediatePropagation();
       },
 
       _beforeUnmount: function() {

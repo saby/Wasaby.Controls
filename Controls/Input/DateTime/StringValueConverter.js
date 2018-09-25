@@ -268,7 +268,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
        * @returns {*}
        */
       getStringByValue: function(value) {
-         if (value) {
+         if (dateUtils.isValidDate(value)) {
             return formatDate(value, this._mask);
          }
          return this._mask.replace(/[DMYHms]/g, this._replacer);

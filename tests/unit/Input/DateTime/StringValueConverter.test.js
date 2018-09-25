@@ -37,19 +37,22 @@ define([
       });
 
       describe('.getStringByValue', function() {
-
-         it('should return empty string value if undefined or null value is passed', function() {
-            let converter = new StringValueConverter();
-            converter.update(options);
-            assert.strictEqual(converter.getStringByValue(), '__.__.____');
+         [{
+            date: null,
+            dateStr: '__.__.____'
+         }, {
+            date: new Date('Invalid'),
+            dateStr: '__.__.____'
+         }, {
+            date: new Date(2018, 0, 1),
+            dateStr: '01.01.2018'
+         }].forEach(function(test) {
+            it(`should return "${test.dateStr}" if "${test.date}" is passed`, function() {
+               let converter = new StringValueConverter();
+               converter.update(options);
+               assert.strictEqual(converter.getStringByValue(test.date), test.dateStr);
+            });
          });
-
-         it('should return "01.01.2018" if Date(2018, 0, 1) is passed', function() {
-            let converter = new StringValueConverter();
-            converter.update(options);
-            assert.strictEqual(converter.getStringByValue(new Date(2018, 0, 1)), '01.01.2018');
-         });
-
       });
 
       describe('.getValueByString', function() {

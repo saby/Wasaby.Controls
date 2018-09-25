@@ -1,4 +1,4 @@
-<div attr:class="controls-DateRange">
+<div attr:class="controls-Input-DateRange">
    <Controls.Input.DateTime
       value="{{_rangeModel.startValue}}"
       mask="{{_options.mask}}"
@@ -8,6 +8,7 @@
       on:valueChanged="_proxyEvent('valueChanged')"
       on:inputCompleted="_proxyEvent('inputCompleted')">
    </Controls.Input.DateTime>
+   <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
       value="{{_rangeModel.endValue}}"
       mask="{{_options.mask}}"
@@ -18,7 +19,7 @@
       on:inputCompleted="_proxyEvent('inputCompleted')">
    </Controls.Input.DateTime>
    <Controls.Button
-      attr:class="controls-DateRange__button"
+      attr:class="controls-Input-DateRange__button"
       style="linkMain"
       icon="icon-small icon-Calendar2 icon-primary"
       on:click="_openDialog()"

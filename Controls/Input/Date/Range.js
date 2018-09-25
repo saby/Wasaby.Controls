@@ -5,7 +5,8 @@ define('Controls/Input/Date/Range', [
    'Controls/Date/model/DateRange',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
-   'wml!Controls/Input/Date/Range/Range'
+   'wml!Controls/Input/Date/Range/Range',
+   'css!Controls/Input/Date/Range/Range'
 ], function(
    Control,
    coreMerge,
@@ -36,6 +37,7 @@ define('Controls/Input/Date/Range', [
       _beforeMount: function(options) {
          this._rangeModel = new DateRangeModel();
          this._rangeModel.update(options);
+         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
       },
 
       _beforeUpdate: function(options) {
