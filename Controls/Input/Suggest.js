@@ -4,7 +4,6 @@ define('Controls/Input/Suggest',
       'wml!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel',
-      'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Utils/tmplNotify',
       'css!Controls/Input/Suggest/Suggest'
    ],

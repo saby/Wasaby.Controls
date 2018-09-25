@@ -83,6 +83,17 @@ define('Controls/Input/Text',
             });
          },
 
+         _beforeMount: function(options) {
+            /**
+             * Browsers use autocomplete to the fields with the previously stored name.
+             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+             * To avoid this, we will translate the name of the control to the name of the tag.
+             * https://habr.com/company/mailru/blog/301840/
+             */
+            this._inputName = options.name || 'input';
+         },
+
+
          _beforeUpdate: function(newOptions) {
             this._textViewModel.updateOptions({
                constraint: newOptions.constraint,
@@ -93,7 +104,7 @@ define('Controls/Input/Text',
 
          _afterUpdate: function(oldOptions) {
             if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+               this._children[this._inputName].setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
          },
@@ -111,7 +122,7 @@ define('Controls/Input/Text',
          },
          _notifyHandler: tmplNotify,
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children[this._inputName], text);
          }
       });
 

@@ -20,7 +20,15 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISStorageAdapter',
          },
 
          getItem: function(key, ignoreCache) {
-            return this._storage.getParam(key, ignoreCache);
+            var callArgs = [key];
+            
+            /* Пока вот такой способ проверить, ходим ли мы через сервис параметров, т.к.
+               аргументы вызова разные. */
+            if (requirejs.defined('Core/_ConfigMock') && this._storage instanceof  requirejs('Core/_ConfigMock').Mock) {
+               callArgs.push(ignoreCache);
+            }
+            
+            return this._storage.getParam.apply(this._storage, callArgs);
          },
 
          removeItem: function(key) {

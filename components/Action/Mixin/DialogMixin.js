@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC',
-   'Controls/Utils/isNewEnvironment',
+   'Core/helpers/isNewEnvironment',
    'Controls/Utils/isVDOMTemplate'
 ], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment, isVDOMTemplate) {
    'use strict';
@@ -197,7 +197,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (meta.mode !== 'dialog' && cfg.isStack === true) {
             dependencies.push('Controls/Popup/Opener/Stack/StackController');
             cfg._type = 'stack';
-            cfg._popupComponent = 'floatArea';
+            cfg._popupComponent = cfg._mode;
             cfg.className = (cfg.className || '') + ' controls-Stack';
          } else if (meta.mode !== 'dialog' && cfg.isStack === false && cfg.target) {
             dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
@@ -309,7 +309,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
 
          //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay, .ws-OperationsPanel__wrapper');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay, .ws-OperationsPanel__wrapper, .ws-wait-indicator_global');
          return !!infoBox.length;
       },
 

@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
    "Core/WindowManager",
    "Core/EventBus",
    "Lib/Control/Control",
-   "Controls/Utils/isNewEnvironment",
+   "Core/helpers/isNewEnvironment",
    "Controls/Popup/Opener/Notification/NotificationController"
 ],
 
