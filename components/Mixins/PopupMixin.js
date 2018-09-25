@@ -725,7 +725,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          }
 
          //Если кликнули по инфобоксу - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup:not(.controls-SubmitPopup_popup)');
          return !!infoBox.length;
       },
 
