@@ -23,11 +23,16 @@
 }
 
 .controls-itemActionsV_inside {
-  right: 0;
-  bottom: 0;
   padding: @padding_itemActions_inside;
   height: @height_itemActions_inside;
+}
+
+.controls-itemActionsV_style_default {
   background-color: @default-bg-color-hovered-item;
+}
+
+.controls-itemActionsV_style_master {
+  background-color: @background-color_MasterList_item-selected;
 }
 
 .controls-itemActionsV_outside {
@@ -47,6 +52,16 @@
     border-left: @width_itemActions_outside_bevel solid transparent;
     left: -@width_itemActions_outside_bevel;
   }
+}
+
+.controls-itemActionsV_position_bottomRight {
+  bottom: 0;
+  right: 0;
+}
+
+.controls-itemActionsV_position_topRight {
+  top: 0;
+  right: 0;
 }
 
 .controls-itemActionsV_editing {
@@ -102,13 +117,16 @@
 }
 
 .controls-itemActionsV__action_title {
-  color: @color_Link-text;
-  font-size:@small-text-size;
   min-height: @default-icon-size;
 }
 
+.controls-itemActionsV__action_title_style_default {
+  color: @color_Link-text;
+  font-size:@small-text-size;
+}
+
 .ws-is-no-touch {
-  .controls-itemActionsV__action_title {
+  .controls-itemActionsV__action_title_style_default {
     &:hover {
       color: @color_Link-text_active;
       text-decoration: underline;

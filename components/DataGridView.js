@@ -400,7 +400,9 @@ define('SBIS3.CONTROLS/DataGridView',
     * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 24px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
-    *
+    * @cssModifier controls-DataGridView__withPhoto-S Устанавливает левый отступ первой колонки с учетом расположения в верстке изображения, размера S, равный величине 12px.
+    * @cssModifier controls-DataGridView__withPhoto-M Устанавливает левый отступ первой колонки с учетом расположения в верстке изображения, размера M, равный величине 16px.
+    * @cssModifier controls-DataGridView__withPhoto-L Устанавливает левый отступ первой колонки с учетом расположения в верстке изображения, размера L, равный величине 20px.
     * @control
     * @public
     * @category Lists

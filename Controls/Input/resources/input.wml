@@ -1,6 +1,6 @@
 <ws:if data="{{!readOnly}}">
    <input
-      name="input"
+      name="{{inputName || 'input'}}"
       type="{{ type }}"
       value="{{value}}"
       class="controls-InputRender__field"

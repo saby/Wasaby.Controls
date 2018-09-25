@@ -78,14 +78,12 @@ define('Controls-demo/Popup/PopupPage',
          },
          openStackWithPending: function() {
             this._children.openStackWithPending.open({
-               opener: this._children.stackButton3,
-               isCompoundTemplate: true
+               opener: this._children.stackButton3
             });
          },
          openStackWithFormController: function() {
             this._children.openStackWithFormController.open({
-               opener: this._children.stackButton4,
-               isCompoundTemplate: true
+               opener: this._children.stackButton4
             });
          },
 

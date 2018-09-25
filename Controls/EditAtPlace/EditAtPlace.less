@@ -3,23 +3,19 @@
   display: inline-block;
 }
 .controls-EditAtPlaceV__Toolbar {
-  position: absolute;
-  bottom:0;
-  padding: 4px 0px;
-  right: 0;
+  display: inline-block;
 }
 .controls-EditAtPlaceV__withToolbar {
   box-sizing: border-box;
   min-height: 32px;
-  padding: 4px 64px 4px 0px; // (24+8) * 2
 }
 .controls-EditAtPlaceV_isEditing_style_withBackground {
   background-color: #f3f3f3;
   border-radius: 4px;
-};
+}
 .controls-EditAtPlaceV__Toolbar__Button {
-  margin: 0px 4px;
-};
+  margin-left: 12px;
+}
 
 .controls-EditAtPlaceV__editorWrapper {
   min-width: 0;
@@ -32,6 +28,7 @@
   align-items: center;
   box-sizing: border-box;
   margin: 0 5px;
+  width: 100%;
 }
 
 .controls-EditAtPlaceV__Text_enabled {
@@ -40,6 +37,11 @@
 }
 .controls-EditAtPlaceV__Text_withoutBorder {
   border-bottom: 1px  dashed transparent;
+}
+.controls-EditAtPlaceV__Text_style_accentHeader {
+  font-size: @font-size_InputRender_style_accentHeader;
+  font-weight: @font-weight_InputRender_style_accentHeader;
+  color: @color_InputRender_style_accentHeader;
 }
 .ws-is-no-touch {
   .controls-EditAtPlaceV__Text_enabled:hover {

@@ -8,22 +8,29 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
    ],
    function(Control, template, Memory) {
       'use strict';
-      var k = 0;
       var stringTmpl = Control.extend({
          _template: template,
          _source: null,
          _beforeMount: function(opt) {
-            this._source = [];
-            for (var i in opt.enum) {
-               this._source.push({ id: k, title: i, comment: opt.enum[i] });
-               k++;
-            }
+            this._source = Object.keys(opt.enum).map(function(key, index) {
+               return {
+                  id: index,
+                  value: opt.enum[key],
+                  title: key,
+                  comment: opt.enum[key],
+                  type: (opt.displayType ? 'source' : '')
+               };
+            });
          },
-         _valueChangedHandler: function(event, tmp) {
-            if (!tmp) {
-               this._notify('valueChanged', undefined);
+         _selectedItemHandler: function(event, tmp) {
+            if (this._source[tmp]) {
+               if (this._source[tmp].type === 'source') {
+                  this._notify('valueChanged',  [this._source[tmp].comment]);
+               } else {
+                  this._notify('valueChanged',  [this._source[tmp].title]);
+               }
             } else {
-               this._notify('valueChanged', [tmp]);
+               this._notify('valueChanged', undefined);
             }
          },
          _comboBoxSource: function() {

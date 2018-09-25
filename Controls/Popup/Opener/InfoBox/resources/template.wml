@@ -5,19 +5,19 @@
                  class="controls-InfoBox__closeButton icon-24 icon-Close"
                  on:click="_close()">
          </div>
-         <ws:if data="{{float}}">
+         <ws:if data="{{_options.float}}">
             <div class="controls-InfoBox_floatElement"></div>
          </ws:if>
 
-         <ws:if data="{{template}}">
+         <ws:if data="{{_options.template}}">
             <ws:partial
-               template="{{template}}"
-               scope="{{templateOptions}}"
-               class="{{!float ? 'controls-InfoBox__message_margin'}}">
+               template="{{_options.template}}"
+               scope="{{_options.templateOptions}}"
+               class="{{!_options.float ? 'controls-InfoBox__message_margin'}}">
             </ws:partial>
          </ws:if>
          <ws:else>
-            <div class="{{!float ? 'controls-InfoBox__message_margin'}}">{{message}}</div>
+            <div class="{{!_options.float ? 'controls-InfoBox__message_margin'}}">{{_options.message}}</div>
          </ws:else>
       </div>
    </ws:content>

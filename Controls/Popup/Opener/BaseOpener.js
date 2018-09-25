@@ -8,7 +8,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred',
-      'Controls/Utils/isNewEnvironment'
+      'Core/helpers/isNewEnvironment'
    ],
    function(
       Control,
@@ -255,7 +255,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
                var dialog = action.getDialog();
 
-               if (dialog && !isFormController) {
+               if (dialog && !dialog.isDestroyed() && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
                   var compoundArea = dialog._getTemplateComponent();
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
@@ -265,6 +265,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   }
                } else {
                   action.closeDialog();
+                  action._isExecuting = false;
                   action.execute(newCfg);
                }
                def.callback(action);

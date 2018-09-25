@@ -1,5 +1,5 @@
 <div attr:class="controls-itemActionsV__action controls-itemActionsV__action_padding
-            {{!!action.style ? 'controls-itemActionsV__action_' + action.style}}
+            {{'controls-itemActionsV__action_style_' + (action.style ? action.style : 'default')}}
             {{!!action.iconDone ? ' controls-itemActionsV__action_done'}}
             {{!!action.iconError ? ' controls-itemActionsV__action_error'}}
             {{action.iconStyle ? ' action_icon_style_' + action.iconStyle  : 'action_icon_style_default'}}"
@@ -9,6 +9,7 @@
         <i attr:class="{{action.icon}}"/>
     </ws:if>
     <ws:if data="{{!action.icon && action.title}}">
-        <span attr:class="controls-itemActionsV__action_title">{{action.title}}</span>
+        <span class="controls-itemActionsV__action_title
+         {{'controls-itemActionsV__action_title_style_' + (action.style ? action.style : 'default')}}">{{action.title}}</span>
     </ws:if>
 </div>

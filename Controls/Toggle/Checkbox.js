@@ -6,7 +6,7 @@ define('Controls/Toggle/Checkbox', [
 ], function(Control, template, types) {
 
    /**
-    * Checkbox with support undefined state(options tristate) and tooltip. Tooltip should be used if the icon instead of the caption.
+    * Represents a control that a user can select and clear.
     *
     * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
     *
@@ -18,7 +18,7 @@ define('Controls/Toggle/Checkbox', [
     * @public
     * @author Михайловский Д.С.
     * @category Toggle
-    * @demo Controls-demo/Checkbox/Checkbox
+    * @demo Controls-demo/Checkbox/CheckBoxDemoPG
     *
     * @mixes Controls/Toggle/Checkbox/CheckboxStyles
     */
@@ -29,11 +29,11 @@ define('Controls/Toggle/Checkbox', [
     * @variant True Enable triState.
     * @variant False Disable triState.
     * @default False
-    * @remark TriState is undefined state of checkbox, when checkbox children are checked, but no all.
+    * @remark If the threeState mode is set, then the valuation can be null.
     * @example
     * Checkbox with enabled triState.
     * <pre>
-    *    Boolean variable vlue: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+    *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
     * </pre>
     * <pre>
     *    Control.extend({
@@ -72,17 +72,13 @@ define('Controls/Toggle/Checkbox', [
     * </pre>
     * Checkbox value when triState option is true.
     * <pre>
-    *    <Controls.Toggle.Checkbox triState="{{true}}" value="{{_checkBoxValue}}"/>
-    *
-    *    <Controls.List items="{{items}}" on:itemClick="_updateCheckBox()"/>
+    *    Boolean variable value: <Controls.Toggle.Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
     * </pre>
     * <pre>
     *    Control.extend({
     *       ...
-    *       _updateCheckBox() {
-    *          if (!items.isAllSelected() && !items.isAllNotSelected) {
-    *             this._checkBoxValue= null;
-    *          }
+    *       _updateCheckBox(event, value) {
+    *          _checkBoxValue = value;
     *       }
     *       ...
     *    });

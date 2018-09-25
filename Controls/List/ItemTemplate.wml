@@ -3,7 +3,8 @@
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
     {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
-    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
+    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+    js-controls-SwipeControl__actionsContainer"
      attr:key="{{itemData.item.getId()}}">
     <ws:if data="{{itemData.multiSelectVisibility}}">
         <ws:partial template="{{multiSelectTpl}}"  attr:class="controls-ListView__checkbox js-controls-ListView__notEditable">
@@ -25,7 +26,9 @@
             <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
         </ws:if>
         <ws:else >
-            <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+            <ws:partial template="{{itemActionsTemplate}}"
+                        itemActionsClass="{{itemActionsClass}}"
+                        itemData="{{itemData}}"/>
         </ws:else>
     </ws:if>
 </div>

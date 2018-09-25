@@ -106,7 +106,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self, self._options, self.context.get('isTouch').isTouch);
+            _private.updateActions(self, self._options, self._context.isTouch.isTouch);
          });
       },
 
@@ -160,7 +160,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(this, item, this._options, isEditingItem, this.context.get('isTouch').isTouch);
+         _private.updateItemActions(this, item, this._options, isEditingItem, this._context.isTouch.isTouch);
       }
    });
 
