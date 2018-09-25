@@ -629,15 +629,20 @@ node('controls') {
 			sh "mkdir ${workspace}/logs_ps"
 		}
 		
-		def files_log = fileExists '/home/sbis/Controls/intest/logs'
-		def files_logs_ps = fileExists '/home/sbis/Controls/intest-ps/logs'
-		
-		if ( files_log ){
-			sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+		dir('/home/sbis/Controls/intest/logs'){
+			def files_err = findFiles(glob: '**/*_errors.log')
+			
+			if ( files_err.length > 0 ){
+				sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+			}
 		}
 		
-		if ( files_logs_ps ){
-			sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+		dir('/home/sbis/Controls/intest-ps/logs'){
+			def files_err_ps = findFiles(glob: '**/*_errors.log')
+			
+			if ( files_err_ps.length > 0 ){
+				sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+			}
 		}
 		
 		def dir_exist_logs = fileExists "${workspace}/logs_ps"
