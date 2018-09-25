@@ -6,7 +6,7 @@
             <Controls.Input.Date.RangeLinkLite 
 			   attr:test_name="default_range"/>
          </div>
-         <div class="PageBlock__componentWrap">
+         <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
             <Controls.Input.Date.RangeLinkLite
                showPrevArrow="{{true}}"
                showNextArrow="{{true}}"
