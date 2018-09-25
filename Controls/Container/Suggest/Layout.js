@@ -289,11 +289,15 @@ define('Controls/Container/Suggest/Layout',
             if (!newOptions.suggestState) {
                _private.resetSizesState(this);
             }
-            
+
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
-            
+
+            if (this._options.value !== newOptions.value) {
+               this._searchValue = newOptions.value;
+            }
+
             if (this._emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = newOptions.emptyTemplate;
             }
