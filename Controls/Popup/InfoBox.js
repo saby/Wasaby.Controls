@@ -94,13 +94,6 @@ define('Controls/Popup/InfoBox',
          },
 
          _open: function(event) {
-            /**
-             * On mobile devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
-             */
-            if (detection.isMobilePlatform && this._options.trigger === 'hover') {
-               return;
-            }
-
             var config = _private.getCfg(this, event);
 
             if (this._isNewEnvironment()) {
@@ -138,6 +131,13 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMouseenterHandler: function(event) {
+            /**
+             * On mobile devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
+             */
+            if (detection.isMobilePlatform && this._options.trigger === 'hover') {
+               return;
+            }
+
             var self = this;
 
             clearTimeout(this._closeId);
