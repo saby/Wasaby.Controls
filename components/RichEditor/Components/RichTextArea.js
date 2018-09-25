@@ -4205,8 +4205,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      'LinkDecorator__linkWrap',
                      'LinkDecorator__decoratedLink',
                      'LinkDecorator__wrap',
-                     'LinkDecorator__image',
-                     'ws-basic-style'
+                     'LinkDecorator__image'
                   ],
                   index = classes.length - 1;
 
