@@ -111,9 +111,7 @@ define('Controls/Input/Text',
                maxLength: options.maxLength,
                value: options.value
             });
-         },
 
-         _beforeMount: function(options) {
             /**
              * Browsers use autocomplete to the fields with the previously stored name.
              * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
@@ -122,7 +120,6 @@ define('Controls/Input/Text',
              */
             this._inputName = options.name || 'input';
          },
-
 
          _beforeUpdate: function(newOptions) {
             this._textViewModel.updateOptions({
