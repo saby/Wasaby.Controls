@@ -629,14 +629,19 @@ node('controls') {
 			sh "mkdir ${workspace}/logs_ps"
 		}
 		
-		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/*_errors.log'
-		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
+		def files_log = findFiles glob: '/home/sbis/Controls/intest/logs/**/*_errors.log'
+		def files_logs_ps = findFiles glob: '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
 		
-		sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-
-		sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+		if ( files_log.length > 0 ){
+			sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+		}
 		
-		def dir_exist_logs = fileExists '${workspace}/logs_ps'
+		if ( files_logs_ps.length > 0 ){
+			sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+		}
+		
+		def dir_exist_logs = fileExists "${workspace}/logs_ps"
+		
 		if ( dir_exist_logs ){
 			sh """7za a logs_ps -t7z ${workspace}/logs_ps """
 			archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
