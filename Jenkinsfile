@@ -627,7 +627,7 @@ node('controls') {
 		
 		dir(workspace){
 			sh "mkdir ${workspace}/logs_ps"
-		)
+		}
 		
 		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/*_errors.log'
 		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
