@@ -1,6 +1,6 @@
-<ws:if data="{{_isNotStickySupport}}">
-   <ws:partial template="{{_options.content}}"/>
+<ws:if data="{{_isStickySupport}}">
+   <Controls.StickyHeader._StickyHeader scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <Controls.StickyHeader._StickyHeader scope="{{_options}}"/>
+   <ws:partial template="{{_options.content}}"/>
 </ws:else>

@@ -29,14 +29,14 @@ define(
             });
 
             it('The browser does not support sticky', function() {
-               inst._isNotStickySupport = true;
+               inst._isStickySupport = false;
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div>testing the template</div>');
             });
 
             it('The browser does support sticky', function() {
-               inst._isNotStickySupport = false;
+               inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader" style="top: 0px;">' +
