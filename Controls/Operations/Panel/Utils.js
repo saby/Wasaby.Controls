@@ -49,15 +49,15 @@ define('Controls/Operations/Panel/Utils', [
 
    return {
 
-      fillItemsType: function(self, items, availableWidth) {
+      fillItemsType: function(keyProperty, parentProperty, items, availableWidth) {
          var
             itemsSizes,
             currentWidth,
             visibleItemsKeys = [];
 
          items.each(function(item) {
-            if (!item.get(self._options.parentProperty)) {
-               visibleItemsKeys.push(item.get(self._options.keyProperty));
+            if (!item.get(parentProperty)) {
+               visibleItemsKeys.push(item.get(keyProperty));
             }
          });
          itemsSizes = _private.getItemsSizes(items, visibleItemsKeys);
