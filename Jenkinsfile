@@ -632,13 +632,9 @@ node('controls') {
 		def exist_logs = fileExists '/home/sbis/Controls/intest/logs/**/*_errors.log'
 		def exist_logs_ps = fileExists  '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
 		
-		if ( exist_logs ){			
-			sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-		}
-		
-		if ( exist_logs_ps ){
-			sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-		}
+		sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+
+		sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
 		
 		def dir_exist_logs = fileExists '${workspace}/logs_ps'
 		if ( dir_exist_logs ){
