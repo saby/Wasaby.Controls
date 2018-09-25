@@ -9,7 +9,6 @@ define('Controls/Input/Dropdown',
       'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
-
       /**
        * Input for selection from the list of options.
        *
@@ -60,16 +59,14 @@ define('Controls/Input/Dropdown',
          },
 
          _afterMount: function(options) {
-            /*Updating the text in the header.
-            Since the text is set after loading source, the caption stored old value*/
+            /* Updating the text in the header.
+            Since the text is set after loading source, the caption stored old value */
             if (options.showHeader && options.caption !== this._text) {
                this._forceUpdate();
             }
          },
 
          _selectedItemsChangedHandler: function(event, items) {
-            this._setText(items);
-            this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
@@ -84,9 +81,9 @@ define('Controls/Input/Dropdown',
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }
+            this._notify('textValueChanged', [this._text]);
          }
       });
 
       return DropdownList;
-   }
-);
+   });
