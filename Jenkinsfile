@@ -629,14 +629,14 @@ node('controls') {
 			sh "mkdir ${workspace}/logs_ps"
 		}
 		
-		def files_log = findFiles glob: '/home/sbis/Controls/intest/logs/**/*_errors.log'
-		def files_logs_ps = findFiles glob: '/home/sbis/Controls/intest-ps/logs/**/*_errors.log'
+		def files_log = fileExists '/home/sbis/Controls/intest/logs'
+		def files_logs_ps = fileExists '/home/sbis/Controls/intest-ps/logs'
 		
-		if ( files_log.length > 0 ){
+		if ( files_log ){
 			sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
 		}
 		
-		if ( files_logs_ps.length > 0 ){
+		if ( files_logs_ps ){
 			sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
 		}
 		
