@@ -8,10 +8,17 @@ define('Controls/Application/_Head',
    function(Base, Deferred, template, HeadDataContext) {
       'use strict';
 
-      //Component for <head> html-node
+      // Component for <head> html-node, it contents all css depends
 
       var Page = Base.extend({
          _template: template,
+         _beforeMountLimited: function() {
+            // This component awaits completion of building content of _Wait component
+            // So we don't need timeout of async building in this component
+            // Because we need to build depends list in any case
+            // before returning html to client
+            return this._beforeMount.apply(this, arguments);
+         },
          _beforeMount: function(options, context, receivedState) {
             if (typeof window !== 'undefined') {
                return;
@@ -35,7 +42,7 @@ define('Controls/Application/_Head',
             return Array.isArray(this._options.theme);
          },
          getCssWithTheme: function(value, theme) {
-            return  value.replace('.css', '') + '_' + theme + '.css';
+            return value.replace('.css', '') + '_' + theme + '.css';
          }
       });
       Page.contextTypes = function() {
