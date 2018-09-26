@@ -27,11 +27,9 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
                this._notify('valueChanged', [this._value]);
             }
          },
-         _checkBoxValueChanged: function() {
-            this._valueChangedNotify();
+         _chooseHandler: function(e, selectedItem) {
+            this._notify('valueChanged', [selectedItem.value]);
          }
-
-
       });
 
 

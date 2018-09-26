@@ -26,7 +26,8 @@ define('Controls/PropertyGrid', [
       _template: template,
       _defaultTemplate: pgTemplate,
       _index: '',
-      _valueChangedHandler: function(event, index) {
+      _valueChangedHandler: function(event, index, value) {
+         this._options.scopeObject[index] = value;
          this._notify('itemsChanged', [this._options.scopeObject[index]]);
       },
       _valueChanged: function(event, value) {

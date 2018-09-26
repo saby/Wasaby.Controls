@@ -4,13 +4,14 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
+      'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, MemorySource) {
+   function(Control, template, config, MemorySource, itemTmpl) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
@@ -99,11 +100,23 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                   readOnly: true
                },
                itemTemplate: {
-                  readOnly: true,
-                  value: 'default item template'
+                  readOnly: false,
+                  value: 'Default template',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'Custom template',
+                        value: itemTmpl
+                     },
+                     {
+                        id: '2',
+                        title: 'Default template',
+                        value: null
+                     }
+                  ]
                },
                itemTemplateProperty: {
-                  readOnly: true,
+                  readOnly: false,
                   value: 'default item template property'
                }
             };
@@ -115,7 +128,8 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                keyProperty: 'id',
                placeholder: 'select',
                displayProperty: 'title',
-               name: 'RadioGroup'
+               name: 'RadioGroup',
+               itemTemplate: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
