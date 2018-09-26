@@ -830,10 +830,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   'focusin',
                   'NodeChange',
                   'TypingUndo',
+                  'BeforeAddUndo',
                   'AddUndo',
                   'ClearUndos',
-                  'redo',
                   'undo',
+                  'redo',
                   'beforeunload',
 
                   'scroll',
@@ -2775,6 +2776,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  // Кроме того, при удалении backspace-ом может измениться состояние UndoManager-а без события от него, поэтому уведомим тулбар об изменении
+                  // 1175906187 https://online.sbis.ru/opendoc.html?guid=671a1601-da24-44d8-aa1a-982151222f7e
+                  this._notifyUndoRedoChange();
                }
             },
 
@@ -2936,11 +2940,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.saveToHistory(this.getText());
             },
 
-            _onUNDOMANAGERChange: function() {
-               this._notify('onUndoRedoChange', {
-                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
-                  hasUndo: this._tinyEditor.undoManager.hasUndo()
-               });
+            _notifyUndoRedoChange: function() {
+               var undoManager = this._tinyEditor.undoManager;
+               var evt = {
+                  hasUndo: undoManager.hasUndo(),
+                  hasRedo: undoManager.hasRedo()
+               };
+               var lastEvt = this._lastUndoRedoState;
+               if (!lastEvt || evt.hasUndo !== lastEvt.hasUndo || evt.hasRedo !== lastEvt.hasRedo) {
+                  this._lastUndoRedoState = lastEvt;
+                  this._notify('onUndoRedoChange', evt);
+               }
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
@@ -3004,7 +3014,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onMouseUpCallback2',
                   '_onFocusOutCallback',
                   '_saveBeforeWindowClose',
-                  '_onUNDOMANAGERChange',
+                  '_notifyUndoRedoChange',
                   '_onNodeChangeCallback',
                   '_onFocusChangedCallback',
                   '_onFocusOutCallback1',
@@ -3133,7 +3143,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
-               editor.on('TypingUndo AddUndo ClearUndos redo undo', this._onUNDOMANAGERChange);
+               editor.on('TypingUndo BeforeAddUndo AddUndo ClearUndos undo redo', this._notifyUndoRedoChange);
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ NODE ПОД КУРСОРОМ*/
                editor.on('NodeChange', this._onNodeChangeCallback);
 

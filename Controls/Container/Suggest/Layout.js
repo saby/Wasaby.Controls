@@ -62,8 +62,8 @@ define('Controls/Container/Suggest/Layout',
                } else {
                   for (var i in bc) {
                      // bc.hasOwnProperty(i) does not make sense,
-                     // because it does not work correctly on clientRect object in FireFox (not all versions)
-                     if (bc.hasOwnProperty(i) || detection.firefox) {
+                     // because it does not work correctly on clientRect object in FireFox and IE (not all versions)
+                     if (bc.hasOwnProperty(i) || detection.firefox || detection.isIE) {
                         resultObj[i] = bc[i];
                      }
                   }

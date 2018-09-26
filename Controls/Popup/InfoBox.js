@@ -3,9 +3,10 @@ define('Controls/Popup/InfoBox',
       'Core/Control',
       'wml!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
-      'Controls/Popup/Opener/InfoBox'
+      'Controls/Popup/Opener/InfoBox',
+      'Controls/Application/TouchDetector/TouchContextField'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext) {
 
       'use strict';
 
@@ -130,6 +131,13 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMouseenterHandler: function(event) {
+            /**
+             * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
+             */
+            if (this._context.isTouch.isTouch && this._options.trigger === 'hover') {
+               return;
+            }
+
             var self = this;
 
             clearTimeout(this._closeId);
@@ -176,6 +184,12 @@ define('Controls/Popup/InfoBox',
             this._close();
          }
       });
+      
+      InfoBox.contextTypes = function() {
+         return {
+            isTouch: TouchContext
+         };
+      };
 
       InfoBox.getDefaultOptions = function() {
          return {

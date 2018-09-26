@@ -1,6 +1,6 @@
 <div class="ControlsDemo-EditAtPlace__template">
    <div class="ControlsDemo-EditAtPlace__fieldWrapper">
-      <span class="ControlsDemo-EditAtPlace__title">Регламент:</span>
+      <span>Kind:</span>
       <Controls.EditAtPlace.EditAtPlaceTemplate
          bind:value="editObject.title"
          isEditing="{{isEditing}}"
@@ -11,7 +11,7 @@
       </Controls.EditAtPlace.EditAtPlaceTemplate>
    </div>
    <div class="ControlsDemo-EditAtPlace__fieldWrapper">
-      <span class="ControlsDemo-EditAtPlace__title">Дата создания:</span>
+      <span>Created:</span>
       <Controls.EditAtPlace.EditAtPlaceTemplate
          bind:value="editObject.date"
          isEditing="{{isEditing}}"
