@@ -8,9 +8,10 @@ define('Controls/Container/Suggest/Layout',
       'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
       'Core/core-clone',
+      'Core/detection',
       'css!Controls/Container/Suggest/Layout/Suggest'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone) {
+   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone, detection) {
       
       'use strict';
       
@@ -60,7 +61,9 @@ define('Controls/Container/Suggest/Layout',
                   resultObj = bc.toJSON();
                } else {
                   for (var i in bc) {
-                     if (bc.hasOwnProperty(i)) {
+                     // bc.hasOwnProperty(i) does not make sense,
+                     // because it does not work correctly on clientRect object in FireFox and IE (not all versions)
+                     if (bc.hasOwnProperty(i) || detection.firefox || detection.isIE) {
                         resultObj[i] = bc[i];
                      }
                   }
@@ -286,11 +289,15 @@ define('Controls/Container/Suggest/Layout',
             if (!newOptions.suggestState) {
                _private.resetSizesState(this);
             }
-            
+
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
-            
+
+            if (this._options.value !== newOptions.value) {
+               this._searchValue = newOptions.value;
+            }
+
             if (this._emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = newOptions.emptyTemplate;
             }
