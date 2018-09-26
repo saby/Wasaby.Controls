@@ -340,7 +340,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!options.__savedHtmlJson) {
                      options.__savedHtmlJson = new HtmlJson();
                   }
-                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
+                  var json = typeof options.json === 'string' ? JSON.parse(options.json) : options.json;
+                  if (json.length === 1 && typeof json[0] === 'string') {
+                     json = ['span', { class: 'ws-basic-style' }, json[0]];
+                  }
+                  options.__savedHtmlJson.setJson(json);
                   options.text = options.__savedHtmlJson.render();
 
                   // Костыль для отображения плейсхолдера при пустом json.
@@ -727,7 +731,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this._htmlJson) {
                   this._initHtmlJson();
                }
-               this._htmlJson.setJson(typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json);
+               var json = typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json;
+               if (json.length === 1 && typeof json[0] === 'string') {
+                  json = ['span', { class: 'ws-basic-style' }, json[0]];
+               }
+               this._htmlJson.setJson(json);
 
                // Костыль для отображения плейсхолдера при пустом json.
                // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.

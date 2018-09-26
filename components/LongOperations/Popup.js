@@ -198,6 +198,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                }
             }.bind(this));
 
+            this.getContainer().bind('mousedown', this._popupClickHandler);
+
             //При клике по записи, открываем журнал операции или ссылку, если она есть
             this.subscribeTo(view, 'onItemActivate', function (e, meta) {
                self._longOpList.applyMainAction(meta.item);
@@ -257,6 +259,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   self._longOpList.reload();
                }
             });
+         },
+
+         _popupClickHandler: function(e) {
+            //Клик по попапу не должен переводить на него фокус
+            e.stopPropagation();
+            e.preventDefault();
          },
 
          _introduce: function () {
@@ -651,6 +659,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          destroy: function () {
             this._tabChannel.destroy();
             this._tabChannel = null;
+            this.getContainer().unbind('mousedown', this._popupClickHandler);
 
             var container = this.getContainer();
             [
