@@ -112,7 +112,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             if (this.getItems().getRecordById('style')){
                this._styleBox = this.getItemInstance('style');
                this._pickerOpenHandler = this._pickerOpenHandler.bind(this);
-               this._styleBox.once('onPickerOpen', this._pickerOpenHandler);
+               this.subscribeOnceTo(this._styleBox, 'onPickerOpen', this._pickerOpenHandler);
             }
          },
 
@@ -402,8 +402,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             this._toggleToolbarButton.unbind('click');
             this._toggleToolbarButton.off('mousedown focus', this._blockFocusEvents);
             this._toggleToolbarButton = null;
+            if (this._styleBox._picker) {
+               this._styleBox._picker._container.off('mousedown focus', this._blockFocusEvents);
+            }
+            this.unsubscribeFrom(this._imagePanel, 'onImageChange', this._onImageChange);
+            this.unsubscribeFrom(this._styleBox, 'onPickerOpen', this._pickerOpenHandler);
             if (this.getItems().getRecordById('style') && this._pickerOpenHandler) {
-               this._styleBox.unsubscribe('onPickerOpen', this._pickerOpenHandler);
                this._pickerOpenHandler = null;
             }
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
