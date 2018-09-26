@@ -50,6 +50,7 @@ define(
          describe('_StickyHeader', function() {
             beforeEach(function() {
                ctrl = new _StickyHeader({});
+               inst._getStyle = ctrl._getStyle;
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -65,7 +66,7 @@ define(
             it('On the mobile platform', function() {
                inst._isMobilePlatform = true;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_mobilePlatform" style="top: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -1px; padding-top: 1px;">' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');

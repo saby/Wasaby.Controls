@@ -28,7 +28,7 @@ define('Controls-demo/Popup/Compatible/TestStack', [
             origNotifyVDOM = compoundArea._notifyVDOM;
 
          compoundArea._notifyVDOM = function(evName) {
-            if (evName === 'controlResize') {
+            if (this._onControlResizeElement && evName === 'controlResize') {
                this._onControlResizeElement.text(++this._onControlResizeTimes);
             }
             origNotifyVDOM.apply(compoundArea, arguments);
@@ -95,6 +95,8 @@ define('Controls-demo/Popup/Compatible/TestStack', [
             this._checkLeftPositionInterval = null;
          }
          this._leftPositionTestElement = null;
+
+         TestStack.superclass.destroy.apply(this, arguments);
       }
    });
 

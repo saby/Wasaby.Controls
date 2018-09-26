@@ -66,8 +66,7 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
                emptyText: 'none',
                placeholder: 'select',
                keyProperty: 'id',
-               displayProperty: 'title',
-               selectedKey: 0
+               displayProperty: 'title'
             }
          };
 
