@@ -97,10 +97,28 @@
    text-overflow: clip;
 }
 
+/**
+ * В нативном автодополнении при наведении на одно из значений, оно подставляется в поле ввода.
+ * В этой ситуации нам нужно скрыть наш placeholder. Для этого мы будем смотреть на видимость нативного placeholder.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:placeholder-shown
+ */
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
-   display: inline-flex;
+   display: none;
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
+}
+
+.controls-InputRender__content:placeholder-shown + .controls-InputRender__placeholder {
+   display: inline-flex;
+}
+
+/**
+ * При построении браузер может автоматически подставить значение в поле и placeholder-shown не работает пока
+ * пользователь не начнет работать с полем.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:-webkit-autofill
+ */
+.controls-InputRender__content:-webkit-autofill + .controls-InputRender__placeholder {
+   display: none;
 }
 
 .controls-InputRender__placeholder_simple {
