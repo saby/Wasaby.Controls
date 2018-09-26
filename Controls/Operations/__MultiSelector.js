@@ -45,7 +45,7 @@ define('Controls/Operations/__MultiSelector', [
       _updateSelection: function(selection) {
          if (selection.selectedKeys[0] === null && !selection.excludedKeys.length) {
             this._menuCaption = rk('Отмечено всё');
-         } else if (selection.selectedKeys.length > 0) {
+         } else if (selection.count > 0) {
             this._menuCaption = rk('Отмечено') + ': ' + selection.count;
          } else {
             this._menuCaption = rk('Отметить');

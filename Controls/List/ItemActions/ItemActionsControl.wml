@@ -4,6 +4,7 @@
     <ws:itemActionsTemplate>
         <ws:partial
                 menuIsShown="{{_options.menuIsShown}}"
+                style="{{_options.style}}"
                 template="wml!Controls/List/ItemActions/resources/ItemActionsTemplate"
                 itemActionsPosition="{{_options.itemActionsPosition}}"
                 scope="{{itemActionsTemplate}}"/>

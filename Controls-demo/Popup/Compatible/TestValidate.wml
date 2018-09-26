@@ -1,0 +1,27 @@
+<div style="height: 100%; min-width: 500px; max-width: 700px;">
+    <h1>Open Validate</h1>
+
+    <SBIS3.CONTROLS.EditAtPlace
+        name="EditAtPlaceComponent"
+        attr:class="editAtPlaceComponent controls-TabButton__mainText controls-EditAtPlace__ellipsis"
+        placeholder="Validated EditAtPlace"
+        tabindex="{{2}}">
+        <ws:editorTpl>
+            <SBIS3.CONTROLS.TextBox
+                name="TextBoxComponent"
+                attr:class="textBoxComponent"
+                placeholder="Validated EditAtPlace"
+                tabindex="{{1}}">
+                <ws:validators>
+                    <ws:Array>
+                        <ws:Object
+                            option="text"
+                            errorMessage="This field is required">
+                            <ws:validator type="function">SBIS3.CONTROLS/Utils/ControlsValidators:required</ws:validator>
+                        </ws:Object>
+                    </ws:Array>
+                </ws:validators>
+            </SBIS3.CONTROLS.TextBox>
+        </ws:editorTpl>
+    </SBIS3.CONTROLS.EditAtPlace>
+</div>

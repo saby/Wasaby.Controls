@@ -624,10 +624,12 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                } else {
                   return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
-                  }).addErrback(function (error) {
-                     InformationPopupManager.showMessageDialog({
-                        message: error.message,
-                        status: 'error'
+                  }).addErrback(function(error) {
+                     require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                        InformationPopupManager.showMessageDialog({
+                           message: error.message,
+                           status: 'error'
+                        });
                      });
                      return error;
                   });

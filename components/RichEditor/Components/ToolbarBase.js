@@ -326,15 +326,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
          var fontSizes;
          var fontSize = formats ? formats.fontsize : null;
-         if (fontSize &&
-            (stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
-            fontSizes = constants.FONT_SIZES.slice();
-            fontSizes.push(fontSize);
-            fontSizes.sort();
-            if (stylesPanel) {
-               this._stylesPanel = null;
-               stylesPanel.destroy();
-               stylesPanel = null;
+         if (fontSize) {
+            // Размер шрифта может оказаться не целым (например после вставки из клипборда) - округлить его
+            fontSize = Math.round(fontSize);
+            formats.fontsize = fontSize;
+            if ((stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
+               fontSizes = constants.FONT_SIZES.slice();
+               fontSizes.push(fontSize);
+               fontSizes.sort();
+               if (stylesPanel) {
+                  this._stylesPanel = null;
+                  stylesPanel.destroy();
+                  stylesPanel = null;
+               }
             }
          }
 
