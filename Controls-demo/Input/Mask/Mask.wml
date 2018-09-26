@@ -35,5 +35,6 @@
                                    bind:readOnlyValue="_readOnly"
                                    on:validationErrorsValueChanged="_validationChangedHandler()"
                                    bind:validationErrorsValue="_validationErrorsValue"/>
+      <Controls.Input.Base bind:value="_replacer"/>
    </ws:componentProperty>
 </Controls-demo.Wrapper.Wrapper>

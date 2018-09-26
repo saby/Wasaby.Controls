@@ -1,0 +1,45 @@
+<div class="controls-InputRender
+   controls-{{ _options.inputType }}-InputRender
+   controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
+   controls-{{ _options.inputType }}-InputRender_state_{{ _inputState }}
+   {{ _options.readOnly ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
+   controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
+   controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
+   {{ !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}">
+   <div class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
+
+      <ws:if data="{{_options.beforeFieldWrapper}}">
+         <ws:partial template="{{_options.beforeFieldWrapper}}"/>
+      </ws:if>
+
+      <ws:if data="{{_options.content}}">
+         <div class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
+            <ws:partial
+               template="{{_options.content}}"
+               on:input="_inputHandler()"
+               on:change="_inputCompletedHandler()"
+               attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
+            >
+               <ws:placeholderTemplate>
+                  <ws:if data="{{_isShowPlaceholder()}}">
+                     <ws:partial
+                        attr:tabindex="{{-1}}"
+                        attr:class="{{ _options.multiline ? 'controls-InputRender__placeholder_multiLine' : 'controls-InputRender__placeholder_singleLine'}} {{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
+                        template="wml!Controls/Input/resources/CustomPlaceholder"
+                     />
+                  </ws:if>
+               </ws:placeholderTemplate>
+            </ws:partial>
+         </div>
+      </ws:if>
+      <ws:if data="{{_options.afterFieldWrapper}}">
+         <ws:partial template="{{_options.afterFieldWrapper}}"/>
+      </ws:if>
+   </div>
+   <ws:if data="{{_options.tagStyle}}">
+      <div name="tag" class="controls-Render__tagStyle controls-Render__tagStyle_{{_options.tagStyle}}"
+           on:mouseenter="_notifyHandler('tagHover', _children.tag)"
+           on:click="_notifyHandler('tagClick', _children.tag)">
+      </div>
+   </ws:if>
+</div>

@@ -1,0 +1,30 @@
+.controls-Render__style {
+
+   @variants: info, danger, invalid, primary, success, warning;
+   .for(@variants, {
+      &_@{_item} {
+
+      }
+   });
+}
+
+.controls-Render__fontStyle {
+
+   @variants: default, primary;
+   .for(@variants, {
+      &_@{_item} {
+
+      }
+   });
+}
+
+.controls-Render__tagStyle {
+
+
+   @variants: info, danger, success, primary, warning, secondary;
+   .for(@variants, {
+      &_@{_item} {
+
+      }
+   });
+}

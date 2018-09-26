@@ -1,0 +1,11 @@
+<input
+   autocorrect="off"
+   type="{{type}}"
+   value="{{value}}"
+   name="{{fieldName}}"
+   autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
+   on:keyup="_keyUpHandler()"
+   on:click="_clickHandler()"
+   on:selection="_selectionHandler()"
+/>
+<ws:partial template="{{placeholderTemplate}}" placeholder="{{placeholder}}"/>
