@@ -178,7 +178,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                               self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
                               //Синхронной проверки недостаточно, т.к. тут асинхронщина инстанс может не задестроиться и зависнуть
                               if (self._isNeedToRedrawDialog()) {
-                                 self._dialog.destroy();
+                                 self._reloadTemplate(config);
+                                 return;
                               }
                               self._dialog = new Component(config);
                            });
