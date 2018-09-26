@@ -66,7 +66,7 @@ define(
             it('On the mobile platform', function() {
                inst._isMobilePlatform = true;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -2px; padding-top: 2px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -1px; padding-top: 1px;">' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');
