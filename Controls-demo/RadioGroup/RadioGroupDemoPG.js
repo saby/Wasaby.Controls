@@ -10,13 +10,12 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config, MemorySource) {
+   function(Control, template, config, MemorySource) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Toggle/RadioGroup',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
