@@ -4,6 +4,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
+      'wml!Controls-demo/RadioGroup/resources/itemTemplateWithContent',
       'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -106,18 +107,18 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                      {
                         id: '1',
                         title: 'Custom template',
-                        value: itemTmpl
+                        template: 'wml!Controls-demo/RadioGroup/resources/itemTemplateWithContent'
                      },
                      {
                         id: '2',
                         title: 'Default template',
-                        value: null
+                        template: 'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
                      }
                   ]
                },
                itemTemplateProperty: {
                   readOnly: false,
-                  value: 'default item template property'
+                  value: 'templateTwo'
                }
             };
             this._componentOptions = {
@@ -129,7 +130,8 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                placeholder: 'select',
                displayProperty: 'title',
                name: 'RadioGroup',
-               itemTemplate: null
+               itemTemplate: null,
+               itemTemplateProperty: 'templateTwo'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

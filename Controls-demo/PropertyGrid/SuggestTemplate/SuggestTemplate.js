@@ -12,7 +12,11 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
 
       var sugTmpl = Control.extend({
          _template: template,
+         _viewValue: '',
 
+         _beforeMount: function(options) {
+            this._viewValue = options.value;
+         },
          _getSuggestSource: function() {
             return new Memory({
                idProperty: 'title',
@@ -24,8 +28,11 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
                }
             });
          },
+         _valueChangedHandler: function(event) {
+            event.stopPropagation();
+         },
          _chooseHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
+            this._notify('choose', [value]);
          }
       });
 

@@ -27,8 +27,8 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
                this._notify('valueChanged', [this._value]);
             }
          },
-         _chooseHandler: function(e, selectedItem) {
-            this._notify('valueChanged', [selectedItem.value]);
+         _choseHandler: function(e, selectedItem) {
+            this._notify('valueChanged', [selectedItem.get('template')]);
          }
       });
 
