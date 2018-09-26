@@ -2,7 +2,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
 
