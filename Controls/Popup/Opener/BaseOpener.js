@@ -253,16 +253,13 @@ define('Controls/Popup/Opener/BaseOpener',
                   action = opener._action;
                }
 
-               var dialog = action.getDialog();
-
-               if (dialog && !dialog.isDestroyed() && !isFormController) {
+               var dialog = action.getDialog(),
+                  compoundArea = dialog && dialog._getTemplateComponent();
+               if (compoundArea && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
-                  var compoundArea = dialog._getTemplateComponent();
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  if (compoundArea) {
-                     compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
-                     dialog.setTarget && dialog.setTarget($(newCfg.target));
-                  }
+                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  dialog.setTarget && dialog.setTarget($(newCfg.target));
                } else {
                   action.closeDialog();
                   action._isExecuting = false;
