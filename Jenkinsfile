@@ -623,27 +623,21 @@ node('controls') {
             sh """
             7za a log_jinnee -t7z ${workspace}/jinnee/logs
             """
-        }
-		
-		dir(workspace){
-			sh "mkdir ${workspace}/logs_ps"
-		}
-		
-		dir('/home/sbis/Controls'){
-			def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+			sh "mkdir logs_ps"
 			
-			if ( files_err.length > 0 ){
-				sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-				sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+			dir('/home/sbis/Controls'){
+				def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+				
+				if ( files_err.length > 0 ){
+					sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+					sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}					
+				}
 			}
 		}
-		def dir_exist_logs = fileExists "${workspace}/logs_ps"
-		
-		if ( dir_exist_logs ){
-			sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-			archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-		}
-		
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
