@@ -40,7 +40,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
          var
             result,
             caption,
-            hasMore = cfg._folderHasMore(cfg, key);
+            hasMore = cfg._getFolderHasMore(cfg, key);
 
          if (hasMore) {
             if (typeof hasMore === 'number') {
