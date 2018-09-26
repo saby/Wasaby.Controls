@@ -19,12 +19,10 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
             pagerOptions: cfg._getFolderPagerOptions(cfg, item, key)
          }
       },
-      getFolderPagerOptions = function(cfg, item, key) {
+      getFolderHasMore = function(cfg, key) {
          var
             count,
-            result,
-            hasMore,
-            caption;
+            hasMore;
 
          //Проверяем на pageSize, т.к. опция может быть не задана, а в ответе с бл в параметре hasMore может быть число записей в папке.
          if (typeof cfg._folderHasMore[key] === 'number' && cfg.pageSize) {
@@ -35,6 +33,14 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
          } else if (typeof cfg._folderHasMore[key] === 'object') {
             hasMore = !!cfg._folderHasMore[key].after;
          }
+
+         return hasMore;
+      },
+      getFolderPagerOptions = function(cfg, item, key) {
+         var
+            result,
+            caption,
+            hasMore = cfg._folderHasMore(cfg, key);
 
          if (hasMore) {
             if (typeof hasMore === 'number') {
@@ -75,6 +81,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
             _getFolderFooterOptionsTVM: getFolderFooterOptions,
             _getFolderPagerOptions: getFolderPagerOptions,
             _hasFolderFooters: hasFolderFooters,
+            _getFolderHasMore: getFolderHasMore,
             /**
              * @cfg {String} Устанавливает шаблон футера, который отображается в конце каждого узла иерархии.
              * @remark
@@ -262,7 +269,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
          id = model && model.get(this._options.idProperty);
          nodeType = model && model.get(this._options.nodeProperty);
          //проверяем на true(папка) и false(скрытый узел). Проверять через item.isNode() неверно, т.к. для скрытых узлов вернётся false.
-         return (nodeType === true || nodeType === false) && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
+         return (nodeType === true || nodeType === false) && item.isExpanded() && (this._options.folderFooterTpl || this._options._getFolderHasMore(this._options, id));
       },
       //********************************//
       //        FolderFooter_End        //
