@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
       
                   /* После фильтрации сбросим страницу,
                      т.к. иначе offset будет неверный после фильтрации */
-                  view.setPage(0, true, view._options.task1175962782);
+                  view.setPage(0, true, true);
       
                   var resultFilter = cMerge(
                      filterButton ? filterButton.getFilter() : {},
