@@ -402,11 +402,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             this._toggleToolbarButton.unbind('click');
             this._toggleToolbarButton.off('mousedown focus', this._blockFocusEvents);
             this._toggleToolbarButton = null;
-            if (this._styleBox._picker) {
-               this._styleBox._picker._container.off('mousedown focus', this._blockFocusEvents);
+            if (this._styleBox) {
+               if (this._styleBox._picker) {
+                  this._styleBox._picker._container.off('mousedown focus', this._blockFocusEvents);
+               }
+               this.unsubscribeFrom(this._styleBox, 'onPickerOpen', this._pickerOpenHandler);
             }
             this.unsubscribeFrom(this._imagePanel, 'onImageChange', this._onImageChange);
-            this.unsubscribeFrom(this._styleBox, 'onPickerOpen', this._pickerOpenHandler);
             if (this.getItems().getRecordById('style') && this._pickerOpenHandler) {
                this._pickerOpenHandler = null;
             }

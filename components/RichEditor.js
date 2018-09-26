@@ -144,7 +144,7 @@ define('SBIS3.CONTROLS/RichEditor',
          destroy: function () {
             this.unsubscribeFrom(this._toolbar, 'onExpandedChange', this._onExpandedChange);/*^^^*/
             RichEditor.superclass.destroy.apply(this, arguments);
-            if (!this._toolbar.isDestroyed()) {
+            if (this._toolbar && !this._toolbar.isDestroyed()) {
                this._toolbar.destroy();
             }
             this._toolbar = null;

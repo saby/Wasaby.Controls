@@ -409,11 +409,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          this._unbindEditor();
          this._handlersInstances = null;
          if (this._stylesPanel) {
+            this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
             this._stylesPanel.destroy();
          }
          this._container.on('mousedown focus', this._blockFocusEvents);
          this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
-         this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
 
          RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
          this._itemsContainer = null;
