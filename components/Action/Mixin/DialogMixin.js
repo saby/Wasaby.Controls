@@ -176,6 +176,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         if (isVDOMTemplate(cfgTemplate)) {
                            requirejs(['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'], function (BaseOpener, CompatibleOpener) {
                               self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
+                              //Синхронной проверки недостаточно, т.к. тут асинхронщина инстанс может не задестроиться и зависнуть
+                              if (self._isNeedToRedrawDialog()) {
+                                 self._reloadTemplate(config);
+                                 return;
+                              }
                               self._dialog = new Component(config);
                            });
                         } else {
@@ -216,15 +221,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (isVDOMTemplate(cfgTemplate)) {
             CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
             config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
-            config.componentOptions._initCompoundArea = function() {
-               var dialog = self._dialog;
-               if (dialog._recalcPosition) { //for floatarea
-                  dialog._recalcPosition();
+            config.componentOptions._initCompoundArea = function(coumpoundArea) {
+               var dialog = coumpoundArea && coumpoundArea.getParent();
+               if (dialog) {
+                  dialog._recalcPosition && dialog._recalcPosition(); //for floatarea
+                  dialog._adjustWindowPosition && dialog._adjustWindowPosition(); //for window
+                  dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                }
-               if (dialog._adjustWindowPosition) { //for window
-                  dialog._adjustWindowPosition();
-               }
-               dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
             };
          }
          config._openFromAction = true;
