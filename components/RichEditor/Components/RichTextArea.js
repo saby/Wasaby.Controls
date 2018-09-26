@@ -2942,10 +2942,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             _notifyUndoRedoChange: function() {
                var undoManager = this._tinyEditor.undoManager;
-               this._notify('onUndoRedoChange', {
-                  hasRedo: undoManager.hasRedo(),
-                  hasUndo: undoManager.hasUndo()
-               });
+               var evt = {
+                  hasUndo: undoManager.hasUndo(),
+                  hasRedo: undoManager.hasRedo()
+               };
+               var lastEvt = this._lastUndoRedoState;
+               if (!lastEvt || evt.hasUndo !== lastEvt.hasUndo || evt.hasRedo !== lastEvt.hasRedo) {
+                  this._lastUndoRedoState = lastEvt;
+                  this._notify('onUndoRedoChange', evt);
+               }
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
