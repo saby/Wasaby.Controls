@@ -337,7 +337,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
                if (options.json) {
-                  options.text = this._getTextFromJson(options.json);
+                  options.text = this._getTextFromJson(options.json, true);
                }
 
                if (options.singleLine) {
@@ -694,24 +694,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
             setJson: function(json) {
                this._options.json = json;
-               this.setText(this._getTextFromJson(json));
+               this.setText(this._getTextFromJson(json, true));
             },
             getTextFromJson: function () {
-               return this._getTextFromJson(this._options.json);
+               return this._getTextFromJson(this._options.json, false);
             },
-            _getTextFromJson: function (json) {
+            _getTextFromJson: function (json, withCleaning) {
                var htmlJson = this._htmlJson;
                if (!htmlJson) {
                   this._htmlJson = htmlJson = new HtmlJson();
                }
                htmlJson.setJson(typeof json === 'string' ? JSON.parse(json) : json);
                var text = htmlJson.render();
-               // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
-               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-               var ms = text.match(/^<span(?:\sclass="ws\-basic\-style")?>/i);
-               if (ms) {
-                  text = text.substring(ms[0].length, text.length - 7);
+               if (withCleaning) {
+                  // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
+                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                  var ms = text.match(/^<span(?:\sclass="ws\-basic\-style")?>/i);
+                  if (ms) {
+                     text = text.substring(ms[0].length, text.length - 7);
+                  }
                }
                return text;
             },
