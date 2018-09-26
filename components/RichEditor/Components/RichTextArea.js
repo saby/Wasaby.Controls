@@ -689,16 +689,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._setText(text);
             },
 
+            /**
+             * Получить значение опции "json"
+             * @public
+             * @return {string}
+             */
             getJson: function() {
                return this._options.json;
             },
+
+            /**
+             * Установить значение опции "json" и установвить тект в соответствии с ней
+             * @public
+             * @param {string|Array} json Контент в формате json, строка или массив
+             */
             setJson: function(json) {
                this._options.json = json;
                this.setText(this._getTextFromJson(json, true));
             },
+
+            /**
+             * Сформировать текст по имеющемуся значению опции "json"
+             * @public
+             * @return {string}
+             */
             getTextFromJson: function () {
                return this._getTextFromJson(this._options.json, false);
             },
+
+            /**
+             * Сформировать текст по указанному json-контенту Получить значение опции "json"
+             * @protected
+             * @param {string|Array} json Контент в формате json, строка или массив
+             * @param {boolean} withCleaning Очищать от формального корневого элемента span если он есть
+             * @return {string}
+             */
             _getTextFromJson: function (json, withCleaning) {
                if (typeof json === 'string') {
                   json = JSON.parse(json);
@@ -726,6 +751,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                return text;
             },
+
+            /**
+             * Обработчик события - обновить значение опции "json"
+             * @param {Core/EventObject} e Дескриптор события
+             * @param {string} text Новое значение текста
+             * @protected
+             */
             _updateJson: function (e, text) {
                // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
