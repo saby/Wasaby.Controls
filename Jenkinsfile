@@ -630,7 +630,7 @@ node('controls') {
 		}
 		
 		dir('/home/sbis/Controls'){
-			def files_err = findFiles(glob: '**/*_errors.log')
+			def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
 			
 			if ( files_err.length > 0 ){
 				sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
