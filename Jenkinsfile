@@ -191,7 +191,7 @@ node('controls') {
                     echo " Выкачиваем сборочные скрипты"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
-                        branches: [[name: "rc-${version}"]],
+                        branches: [[name: "3.18.600/feature/dda/another-ps-service"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
