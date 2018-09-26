@@ -108,6 +108,16 @@
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
 }
 
+/**
+ * Из-за того что textarea в Controls.Input.Area не лежит на одном уровне с placeholder, мы не можем управлять видимостью
+ * placeholder через css. На сайте нет браузерного автодополнения в Area, поэтому показываем placeholder всегда.
+ * Придумать решение для Area, потому что теоритически автодополнение в Area может быть.
+ * https://online.sbis.ru/opendoc.html?guid=c069c84a-010e-405e-aa67-3c717583c8de
+ */
+.controls-InputArea .controls-InputRender__placeholder {
+   display: inline-flex;
+}
+
 .controls-InputRender__content:placeholder-shown + .controls-InputRender__placeholder {
    display: inline-flex;
 }
