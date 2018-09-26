@@ -119,6 +119,8 @@ define('Controls/StickyHeader',
              *
              * As a solution, move the header up and increase its size by an offset, using padding.
              * In this way, the content of the header does not change visually, and the free space disappears.
+             *
+             * Shift by 2 pixels. This value is sufficient to solve the problem.
              */
             var offset = this._isMobilePlatform ? 2 : 0;
 
