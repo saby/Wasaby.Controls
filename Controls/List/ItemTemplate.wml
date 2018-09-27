@@ -12,6 +12,10 @@
         </ws:partial>
     </ws:if>
 
+   <ws:if data="{{itemData.isSelected}}">
+      <div class="controls-ListView__itemV_marker"></div>
+   </ws:if>
+
     <ws:if data="{{contentTemplate}}">
         <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
