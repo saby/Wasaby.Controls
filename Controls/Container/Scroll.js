@@ -69,7 +69,7 @@ define('Controls/Container/Scroll',
             calcShadowPosition: function(scrollTop, containerHeight, scrollHeight) {
                var shadowPosition = '';
 
-               if (scrollTop) {
+               if (scrollTop > 0) {
                   shadowPosition += 'top';
                }
                if (scrollHeight - containerHeight - scrollTop) {

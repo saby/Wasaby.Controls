@@ -27,48 +27,137 @@ define('Controls/Button', [
 
    /**
     * @name Controls/Button#style
-    * @cfg {String} Display style of button.
-    * @variant iconButtonBordered Bordered icon button display style. Minimum number size.
-    * @variant iconButtonBorderedAdditional Additional bordered icon button display style. Minimum number size
+    * @cfg {Enum} Button display style.
+    * @variant buttonPrimary Primary contour button display style.
+    * @variant buttonDefault Default contour button display style.
+    * @variant iconButtonBordered Bordered button display style.
     * @variant linkMain First main link display style.
-    * @variant linkMain2 Second main link display style.
-    * @variant linkMain3 Third main link display style.
-    * @variant linkAdditional First additional link display style.
-    * @variant linkAdditional2 Second additional link display style.
-    * @variant linkAdditional3 Third additional link display style.
-    * @variant linkAdditional4 Fourth additional link display style.
-    * @variant linkAdditional5 Fifth additional link display style.
-    * @variant buttonPrimary Primary contour button display style. Minimum number size.
-    * @variant buttonDefault Default contour button display style. Minimum number size. It is default value.
-    * @variant buttonAdd Button add display style. Minimum number size.
+    * @default buttonDefault
+    * @remark
+    * There are additional button styles:
+    * <ul>
+    *     <li>buttonAdd - Button add display style.</li>
+    *     <li>linkMain2 - Second main link display style.</li>
+    *     <li>linkMain3 - Third main link display style.</li>
+    *     <li>linkAdditional - First additional link display style.</li>
+    *     <li>linkAdditional2 - Second additional link display style.</li>
+    *     <li>linkAdditional3 - Third additional link display style.</li>
+    *     <li>linkAdditional4 - Fourth additional link display style.</li>
+    *     <li>linkAdditional5 - Fifth additional link display style.</li>
+    *     <li>iconButtonBorderedAdditional - Additional bordered button display style.</li>
+    * </ul>
+    * Sizes 's' and 'xl' don't supported by styles:
+    * <ul>
+    *     <li>iconButtonBordered,</li>
+    *     <li>iconButtonBorderedAdditional,</li>
+    *     <li>buttonPrimary,</li>
+    *     <li>buttonDefault,</li>
+    *     <li>buttonAdd.</li>
+    * </ul>
+    * @example
+    * Main link button with xl size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="linkMain" size="xl"/>
+    * </pre>
+    * Bordered icon button with default size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="iconButtonBordered"/>
+    * </pre>
+    * Uncorrect button. Primary button doesn't support xl size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="buttonPrimary" size="xl"/>
+    * </pre>
+    * @see Size
     */
 
    /**
     * @name Controls/Button#size
-    * @cfg {String} Size of the button.
-    * @variant s Small button size. Not supported by button styles with label: 'Minimum number size'.
-    * @variant m Medium button size. It is default value.
+    * @cfg {String} Button size. The value is given by common size notations.
+    * @variant s Small button size.
+    * @variant m Medium button size.
     * @variant l Large button size.
-    * @variant xl Extra large button size. Not supported by button styles with label: 'Minimum number size'.
+    * @variant xl Extra large button size.
+    * @default m
+    * @remark
+    * Button size is different for different button styles.
+    * Sizes 's' and 'xl' don't supported by styles:
+    * <ul>
+    *     <li>iconButtonBordered,</li>
+    *     <li>iconButtonBorderedAdditional,</li>
+    *     <li>buttonPrimary,</li>
+    *     <li>buttonDefault,</li>
+    *     <li>buttonAdd.</li>
+    * </ul>
+    * @example
+    * L size of primary button.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="buttonPrimary" size="l"/>
+    * </pre>
+    * M size of primary button.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="buttonPrimary"/>
+    * </pre>
+    * Uncorrect size of primary button.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="buttonPrimary" size="xl"/>
+    * </pre>
+    * @see style
     */
 
    /**
     * @name Controls/Button#caption
-    * @cfg {String} Button text.
+    * @cfg {String} Control caption text.
+    * @default Undefined
+    * @remark You can submit the markup to the caption.
+    * @example
+    * Control has caption 'Dialog'.
+    * <pre>
+    *    <ControlsDirectory.Control caption=”Dialog”/>
+    * </pre>
+    * Control has markup caption.
+    * <pre>
+    *    <ControlsDirectory.Control caption=”captionTemplate”/>
+    * </pre>
+    * <pre>
+    *    <span class='customDialog'>
+    *       Dialog
+    *    </span>
+    * </pre>
     */
 
    /**
     * @name Controls/Button#icon
-    * @cfg {String} Button icon. It is given by css-classes, without color class.
+    * @cfg {String} Button icon.
+    * @default Undefined
+    * @remark Icon is given by css-classes, without color class.
+    * @example
+    * Button with style buttonPrimary and icon Add.
+    * <pre>
+    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    * </pre>
+    * @see iconStyle
     */
 
    /**
     * @name Controls/Button#iconStyle
-    * @cfg {String} Displaying icon style.
-    * @variant default Default icon display style. It is different for different button styles. It is default value.
-    * @variant attention Attention icon display style.
-    * @variant error Error icon display style.
-    * @variant done Done icon display style.
+    * @cfg {Enum} Icon display style.
+    * @variant primary Display style to attract attention.
+    * @variant success The display style of the field with success.
+    * @variant warning The display style of the field with warning.
+    * @variant danger Information field display style.
+    * @variant info Information field display style.
+    * @default Default
+    * @remark Default display style is different for different button styles.
+    * @example
+    * Primary button with default icon style.
+    * <pre>
+    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    * </pre>
+    * Primary button with done icon style.
+    * <pre>
+    *    <Controls.Button icon="icon-small icon-Add" iconStyle="done" style="buttonPrimary"/>
+    * </pre>
+    * @see Icon
     */
    var _private = {
       cssStyleGeneration: function(self, options) {

@@ -240,10 +240,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          var
             stripText, title,
             $tmpDiv = $('<div/>').append(value);
-         $tmpDiv.find('.ws-fre__smile').each(function() {
-            var smileName = $(this).attr('title');
-            $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
-         });
+         var $smiles = $tmpDiv.find('.ws-fre__smile');
+         for (var i = 0; i < $smiles.length; i++) {
+            var $smile = $($smiles[i]);
+            var smileName = $smile.attr('title');
+            $smile.replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
+         }
          stripText = title = escapeHtml($tmpDiv.text());
          stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
          if (!stripText && value) {
@@ -366,29 +368,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             }
 
             var returnDef = new Deferred();
-            requirejs(["SBIS3.CONTROLS/StylesPanelNew"], function(StylesPanel) {
-               if (componentOptions && typeof componentOptions === 'object') {
-                  options = cMerge(options, componentOptions);
-               }
-               var editor = this.getLinkedEditor();
-               if (!editor) {
-                  throw new Error('Не установлена опция linkedEditor');
-               }
-               options = cMerge(options, {
-                  parent: editor,
-                  opener: editor
-               });
-               this._stylesPanel = new StylesPanel(options);
-
-               this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
-
-               returnDef.callback(this._stylesPanel);
-            }.bind(this));
+            if (componentOptions && typeof componentOptions === 'object') {
+               options = cMerge(options, componentOptions);
+            }
+            requirejs(["SBIS3.CONTROLS/StylesPanelNew"], this._onLoadStylesPanelNew.bind(this, returnDef, options));
             return returnDef;
          }
          else {
             return Deferred.success(this._stylesPanel);
          }
+      },
+
+      _onLoadStylesPanelNew: function (promise, options, StylesPanel) {
+         var editor = this.getLinkedEditor();
+         if (!editor) {
+            throw new Error('Не установлена опция linkedEditor');
+         }
+         options = cMerge(options, {
+            parent: editor,
+            opener: editor
+         });
+         this._stylesPanel = new StylesPanel(options);
+
+         this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
+
+         promise.callback(this._stylesPanel);
       },
 
       _onStylesPanelChangeFormat: function () {
@@ -405,14 +409,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          this._unbindEditor();
          this._handlersInstances = null;
          if (this._stylesPanel) {
+            this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
             this._stylesPanel.destroy();
          }
-         this._container.off('mousedown', this._blockFocusEvents);
-         this._container.off('focus', this._blockFocusEvents);
-         this._itemsContainer.off('mousedown', this._blockFocusEvents);
-         this._itemsContainer.off('focus', this._blockFocusEvents);
-
-         this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
+         this._container.on('mousedown focus', this._blockFocusEvents);
+         this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
 
          RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
          this._itemsContainer = null;

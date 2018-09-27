@@ -6,9 +6,10 @@ define('Controls/Input/Dropdown',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
+      'Core/helpers/Object/isEqual',
       'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
+   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
       /**
        * Input for selection from the list of options.
        *
@@ -66,6 +67,12 @@ define('Controls/Input/Dropdown',
             }
          },
 
+         _afterUpdate: function(newOptions) {
+            if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+               this._notify('textValueChanged', [this._text]);
+            }
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
@@ -81,7 +88,6 @@ define('Controls/Input/Dropdown',
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
             }
-            this._notify('textValueChanged', [this._text]);
          }
       });
 

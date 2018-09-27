@@ -8,7 +8,8 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'css!Controls-demo/Wrapper/Wrapper',
+      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate'
    ],
 
    function(Control, Deferred, cMerge, template, myTmpl) {
