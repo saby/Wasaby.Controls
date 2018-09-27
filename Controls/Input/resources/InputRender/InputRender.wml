@@ -42,6 +42,7 @@
                   template="wml!Controls/Input/resources/CustomPlaceholder"
                   placeholder="{{ _options.placeholder }}"
                   attr:tabindex="{{-1}}"
+                  on:click="_clickPlaceholderHandler()"
                />
             </ws:if>
 

@@ -166,6 +166,19 @@ define('Controls/Input/resources/InputRender/InputRender',
             });
          },
 
+         _clickPlaceholderHandler: function() {
+            /**
+             * Placeholder is positioned above the input field. When clicking, the cursor should stand in the input field.
+             * To do this, we ignore placeholder using the pointer-events property with none value.
+             * The property is not supported in ie lower version 11. In ie 11, you sometimes need to switch versions in emulation to work.
+             * Therefore, we ourselves will focus the field on click.
+             * https://caniuse.com/#search=pointer-events
+             */
+            if (cDetection.IEVersion < 12) {
+               this.activate();
+            }
+         },
+
          _selectionHandler: function(e) {
             _private.saveSelection(this, e.target);
          },
