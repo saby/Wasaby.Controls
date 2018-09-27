@@ -13,7 +13,6 @@ define('Controls/BreadCrumbs/Utils', [
 
    var
       ARROW_WIDTH = 0,
-      HOME_WIDTH = 0,
       BREAD_CRUMB_MIN_WIDTH = 0,
       DOTS_WIDTH = 0,
       initialized;
@@ -25,7 +24,6 @@ define('Controls/BreadCrumbs/Utils', [
          }
          if (window) {
             ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
-            HOME_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
             BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
             DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
                itemData: {
@@ -89,21 +87,20 @@ define('Controls/BreadCrumbs/Utils', [
             currentWidth,
             shrinkedItemIndex;
          self._visibleItems = [];
-         availableWidth -= HOME_WIDTH;
 
          currentWidth = itemsSizes.reduce(function(acc, width) {
             return acc + width;
-         }, 0) + HOME_WIDTH;
+         }, 0);
 
          if (currentWidth > availableWidth) {
             if (length > 2) {
-               //Сначала пробуем замылить предпоследний элемент
+               // Сначала пробуем замылить предпоследний элемент
                if (_private.canShrink(itemsSizes[length - 2], currentWidth, availableWidth)) {
                   for (var j = 0; j < length; j++) {
                      self._visibleItems.push(_private.getItemData(j, items, j === length - 2));
                   }
                } else {
-                  //Если замылить не получилось, то добавляем точки
+                  // Если замылить не получилось, то добавляем точки
                   currentWidth += DOTS_WIDTH;
 
                   for (var i = length - 2; i > 0; i--) {
@@ -118,7 +115,7 @@ define('Controls/BreadCrumbs/Utils', [
                      }
                   }
 
-                  //Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
+                  // Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
                   if (i === 0 && currentWidth > availableWidth && itemsSizes[0] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH) {
                      shrinkedItemIndex = 0;
                   }
@@ -158,7 +155,7 @@ define('Controls/BreadCrumbs/Utils', [
 
          return _private.getItemsSizes(items, itemsTemplate, itemTemplate).reduce(function(acc, width) {
             return acc + width;
-         }, 0) + HOME_WIDTH;
+         }, 0);
       },
 
       shouldRedraw: function(currentItems, newItems, oldWidth, availableWidth) {

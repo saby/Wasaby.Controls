@@ -1,0 +1,3 @@
+<div>
+   <ws:partial template="{{_openerTemplate}}"  name="Opener" bind:popupOptions="_options.popupOptions" />
+</div>

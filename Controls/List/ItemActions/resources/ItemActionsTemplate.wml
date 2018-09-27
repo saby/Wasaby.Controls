@@ -1,4 +1,6 @@
 <div attr:class="controls-itemActionsV
+            controls-itemActionsV_style_{{style}}
+            {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
             controls-itemActionsV_{{itemActionsPosition}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
             {{menuIsShown ? 'controls-itemActionsV_invisible'}}
