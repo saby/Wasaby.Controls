@@ -31,10 +31,10 @@ node('controls') {
     gitLabConnection('git'),
     buildDiscarder(
         logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
+            artifactDaysToKeepStr: '5',
+            artifactNumToKeepStr: '5',
+            daysToKeepStr: '5',
+            numToKeepStr: '5')),
         parameters([
             string(
                 defaultValue: 'sdk',
@@ -56,7 +56,7 @@ node('controls') {
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "ff\nchrome\nie\nedge", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
