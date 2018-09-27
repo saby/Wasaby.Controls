@@ -264,10 +264,12 @@ define(
             assert.equal(newConfig.dialogOptions.offset, config.offset);
             let testconfig = {
                horizontalAlign: {
-                  side: 'left'
+                  side: 'left',
+                  offset: 10
                },
                verticalAlign: {
-                  side: 'top'
+                  side: 'top',
+                  offset: 15
                },
                corner: {
                   vertical: 'bottom'
@@ -277,6 +279,8 @@ define(
             let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, testconfig.horizontalAlign.side);
             assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
+            assert.equal(newTestConfig.dialogOptions.offset.x, 10);
+            assert.equal(newTestConfig.dialogOptions.offset.y, 15);
             assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
             testconfig.horizontalAlign = null;
             newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
