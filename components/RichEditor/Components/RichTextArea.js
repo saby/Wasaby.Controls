@@ -743,9 +743,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
                      // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
                      // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-                     var ms = text.match(/^<span(?:\sclass="ws\-basic\-style")?>/i);
-                     if (ms) {
-                        text = text.substring(ms[0].length, text.length - 7);
+                     if (text.search(/^<span>/i) !== -1 && text.search(/<\/span>$/i) !== -1) {
+                        text = text.substring(6, text.length - 7);
                      }
                   }
                }
