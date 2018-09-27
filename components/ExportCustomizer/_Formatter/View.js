@@ -525,24 +525,50 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._updatePreviewStart(!(features && features.isSilent));
             }
          },
-         _updatePreviewClearStop: function () {
+
+         /**
+          * Очистка после завершения процесса обновление изображения предпросмотра
+          *
+          * @protected
+          */
+         _updatePreviewClear: function () {
             this._waitIndicatorEnd();
          },
+
+         /**
+          * Начать процесс обновление изображения предпросмотра
+          *
+          * @protected
+          * @param {boolean} [withWaitIndicator] Показывать индикатор ожидания (опционально)
+          */
          _updatePreviewStart: function (withWaitIndicator) {
             if (withWaitIndicator) {
                this._waitIndicatorStart();
             }
             this._callFormatterGetPreviewUrl().addCallbacks(
                this._updatePreviewStartOnUrl.bind(this),
-               this._updatePreviewClearStop.bind(this)
+               this._updatePreviewClear.bind(this)
             );
          },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при получении url-а изображения
+          *
+          * @protected
+          * @param {string} url Адресс изображения предпросмотра
+          */
          _updatePreviewStartOnUrl: function (url) {
             var cache = new Image();
             cache.onload = cache.onerror = this._updatePreviewStartOnImgGet.bind(this, cache);
-            cache.onerror = this._updatePreviewClearStop.bind(this);
+            cache.onerror = this._updatePreviewClear.bind(this);
             cache.src = url;
          },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при полной загрузке изображения
+          *
+          * @protected
+          */
          _updatePreviewStartOnImgGet: function (cache) {
             var img = this._preview[0];
             img.onload = img.onerror = this._updatePreviewStartOnImgComplete.bind(this);
@@ -551,8 +577,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             img.title = this._options.previewTitle;
             this._preview.removeClass('ws-disabled').addClass('ws-enabled');
          },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при завершении
+          *
+          * @protected
+          */
          _updatePreviewStartOnImgComplete: function () {
-            this._updatePreviewClearStop();
+            this._updatePreviewClear();
             var img = this._preview[0];
             img.onload = img.onerror = null;
          },
@@ -702,6 +734,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._callFormatterMethods(methods);
             }
             else {
+               // Если изменился родительский шаблон - убирать предыдущее изображениесразу
+               // Если шаблон родительский прежний и нет видимых изменений - не показывать индикатор ожиджания
                this._updatePreview({withClear:isConsumerChanged, isSilent:!(isConsumerChanged || isFieldsChanged || !options.primaryUuid)});
             }
             this.setEnabled(hasFields);
@@ -727,7 +761,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @public
           */
          destroy: function () {
-            this._updatePreviewClearStop();
+            this._updatePreviewClear();
             this._exportFormatter.clear();
             View.superclass.destroy.apply(this, arguments);
          }

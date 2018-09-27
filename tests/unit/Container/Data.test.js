@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Container/Data',
-      'WS.Data/Source/Memory'
+      'WS.Data/Source/Memory',
+      'Controls/Container/Data/ContextOptions'
    ],
-   function(Data, Memory) {
+   function(Data, Memory, ContextOptions) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -41,6 +42,7 @@ define(
                idProperty: 'id',
                data: sourceDataEdited
             });
+            data._dataOptionsContext = new ContextOptions();
             data._beforeUpdate({source: newSource, idProperty: 'id'}).addCallback(function(items) {
                assert.deepEqual(data._items.getRawData(), sourceDataEdited);
                done();

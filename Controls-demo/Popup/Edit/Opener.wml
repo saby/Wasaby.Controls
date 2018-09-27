@@ -1,0 +1,38 @@
+<Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+   <div>
+      <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
+
+         <Controls.Button caption="Добавить запись" on:click="_addRecord()"/>
+         Вставить в позицию <Controls.Input.Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}"/>
+
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
+            <Controls.List.Container>
+               <Controls.Grid
+                  attr:class="demo-Grid__control test_grid_2"
+                  leftPadding="S"
+                  rightPadding="M"
+                  rowSpacing="M"
+                  displayProperty="title"
+                  markedKey="{{448390}}"
+                  showRowSeparator="{{true}}"
+                  header="{{gridHeader}}"
+                  itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
+                  itemActions="{{_itemActions}}"
+                  columns="{{gridColumns}}">
+               </Controls.Grid>
+            </Controls.List.Container>
+         </Controls.Container.Scroll>
+      </div>
+
+      <Controls.Toggle.Checkbox bind:value="_cancelEdit" caption="Отменить синхронизацию" / >
+
+      <Controls.Popup.Opener.Edit.Container on:beforeItemEndEdit="_beforeSyncRecord()">
+         <Controls.Popup.Opener.Edit name="EditOpener">
+            <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
+               <ws:templateOptions source="{{_viewSource}}" />
+            </ws:popupOptions>
+         </Controls.Popup.Opener.Edit>
+      </Controls.Popup.Opener.Edit.Container>
+   </div>
+</Controls.Container.Data>
+

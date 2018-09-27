@@ -1,10 +1,11 @@
 define(
    [
       'Controls/Input/Dropdown',
+      'Core/core-clone',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory, RecordSet) => {
+   (Dropdown, Clone, Memory, RecordSet) => {
       describe('Dropdown', () => {
          let items = [
             {
@@ -48,7 +49,7 @@ define(
          });
 
          let config = {
-            selectedKeys: '2',
+            selectedKeys: ['2'],
             displayProperty: 'title',
             keyProperty: 'id',
             source: new Memory({
@@ -65,6 +66,16 @@ define(
          };
          let dropdownList = new Dropdown(config);
 
+         it('_afterUpdate', () => {
+            let ddl = getDropdown(config);
+            ddl._notify = (e, data) => {
+               assert.deepEqual(data[0], 'Запись 8');
+            };
+            let newConfig = Clone(config);
+            newConfig.selectedKeys = ['8'];
+            ddl._beforeUpdate(newConfig);
+         });
+
          it('data load callback', () => {
             let ddl = getDropdown(config);
             ddl._setText([itemsRecords.at(5)]);
@@ -75,15 +86,12 @@ define(
          it('check selectedItemsChanged event', () => {
             let ddl = getDropdown(config);
             ddl._notify = (e, data) => {
-               if (e === 'textValueChanged') {
-                  assert.equal(data[0], 'Запись 6');
-               }
                if (e === 'selectedKeysChanged') {
                   assert.deepEqual(data[0], ['6']);
                }
             };
             ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
          });
-
       });
-   });
+   }
+);

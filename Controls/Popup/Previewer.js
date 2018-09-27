@@ -120,7 +120,10 @@ define('Controls/Popup/Previewer',
             this._close(event);
          },
 
-         _previewerMousedownHandler: function(event) {
+         _previewerClickHandler: function(event) {
+            /**
+             * Cancel the ascent of the click. Thus cancel the parent reaction.
+             */
             event.stopPropagation();
          },
 

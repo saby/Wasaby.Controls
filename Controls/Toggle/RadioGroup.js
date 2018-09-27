@@ -21,7 +21,7 @@ define('Controls/Toggle/RadioGroup', [
     * @public
     * @author Михайловский Д.С.
     * @category Toggle
-    * @demo Controls-demo/RadioGroup/RadioGroupDemo
+    * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *
     * @mixes Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
     * @mixes Controls/Toggle/RadioGroup/RadioGroupStyles
@@ -31,7 +31,7 @@ define('Controls/Toggle/RadioGroup', [
     * @name Controls/Toggle/RadioGroup#direction
     * @cfg {string} Arrangement of elements in the container.
     * @variant horizontal Elements are located one after another.
-    * @variant vertical Elements are located one after another.
+    * @variant vertical Elements are located one under another.
     * @default Horizontal
     * @remark It's only displaying option, it's only regulates the location of the control.
     * @example

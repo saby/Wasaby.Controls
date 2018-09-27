@@ -6,10 +6,10 @@ define('Controls/Input/Dropdown',
       'WS.Data/Utils',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
+      'Core/helpers/Object/isEqual',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils) {
-
+   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
       /**
        * Input for selection from the list of options.
        *
@@ -60,16 +60,20 @@ define('Controls/Input/Dropdown',
          },
 
          _afterMount: function(options) {
-            /*Updating the text in the header.
-            Since the text is set after loading source, the caption stored old value*/
+            /* Updating the text in the header.
+            Since the text is set after loading source, the caption stored old value */
             if (options.showHeader && options.caption !== this._text) {
                this._forceUpdate();
             }
          },
 
+         _afterUpdate: function(newOptions) {
+            if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+               this._notify('textValueChanged', [this._text]);
+            }
+         },
+
          _selectedItemsChangedHandler: function(event, items) {
-            this._setText(items);
-            this._notify('textValueChanged', [this._text]);
             this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
@@ -88,5 +92,4 @@ define('Controls/Input/Dropdown',
       });
 
       return DropdownList;
-   }
-);
+   });

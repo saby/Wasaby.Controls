@@ -85,12 +85,12 @@ define('Controls/FormController', [
          // если рекорд был создан во время beforeMount, уведомим об этом
          if (this._createdInMounting) {
             if (!this._createdInMounting.isError) {
-               this._notify('createSuccessed', [this._createdInMounting.result], { bubbling: true });
+               this._notifyHandler('createSuccessed', [this._createdInMounting.result]);
 
                // зарегистрируем пендинг, перерисуемся
                this._createHandler(this._record);
             } else {
-               this._notify('createFailed', [this._createdInMounting.result], { bubbling: true });
+               this._notifyHandler('createFailed', [this._createdInMounting.result]);
             }
             this._createdInMounting = null;
          }
@@ -98,12 +98,12 @@ define('Controls/FormController', [
          // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
          if (this._readInMounting) {
             if (!this._readInMounting.isError) {
-               this._notify('readSuccessed', [this._readInMounting.result], { bubbling: true });
+               this._notifyHandler('readSuccessed', [this._readInMounting.result]);
 
                // перерисуемся
                this._readHandler(this._record);
             } else {
-               this._notify('readFailed', [this._readInMounting.result], { bubbling: true });
+               this._notifyHandler('readFailed', [this._readInMounting.result]);
             }
             this._readInMounting = null;
          }
@@ -398,6 +398,66 @@ define('Controls/FormController', [
        */
       validate: function() {
          return this._children.validation.submit();
+      },
+
+      _crudHandler: function(event) {
+         var eventName = event.type;
+         var args = Array.prototype.slice.call(arguments, 1);
+         this._notifyHandler(eventName, args);
+      },
+
+      _notifyHandler: function(eventName, args) {
+         this._notify(eventName, args, { bubbling: true });
+         this._notifyToOpener(eventName, args);
+      },
+
+      _notifyToOpener: function(eventName, args) {
+         var handlers = {
+            'updatesuccessed': '_updateSuccessedHandler',
+            'createsuccessed': '_createSuccessedHandler',
+            'readsuccessed': '_readSuccessedHandler',
+            'deletesuccessed': '_deleteSuccessedHandler'
+         };
+         var handlerName = handlers[eventName.toLowerCase()];
+         if (this[handlerName]) {
+            this[handlerName].apply(this, args);
+         }
+      },
+
+      _updateSuccessedHandler: function(record, key) {
+         var data = {
+            formControllerEvent: 'update',
+            record: record,
+            additionalData: {
+               key: key,
+               isNewRecord: this._isNewRecord
+            }
+         };
+         this._notify('sendResult', [data], { bubbling: true });
+      },
+
+      _deleteSuccessedHandler: function(record) {
+         var data = {
+            formControllerEvent: 'delete',
+            record: record
+         };
+         this._notify('sendResult', [data], { bubbling: true });
+      },
+
+      _createSuccessedHandler: function(record) {
+         var data = {
+            formControllerEvent: 'create',
+            record: record
+         };
+         this._notify('sendResult', [data], { bubbling: true });
+      },
+
+      _readSuccessedHandler: function(record) {
+         var data = {
+            formControllerEvent: 'read',
+            record: record
+         };
+         this._notify('sendResult', [data], { bubbling: true });
       }
    });
 

@@ -11,19 +11,17 @@ define('Controls/Input/interface/IInputTag', [
    /**
     * @name Controls/Input/interface/IInputTag#tagStyle
     * @cfg {String} Style of the tag (colored indicator shown at the top right corner of the field).
-    * @default false
-    * @variant primary
+    * @variant secondary
     * @variant success
-    * @variant warning
+    * @variant primary
     * @variant danger
     * @variant info
-    * @remark Tag is used to show some information about the field (e.g. if the field is required). Frequently, Infobox with the tip is shown when you click or hover on the tag (see tagClick, tagHover).
+    * @remark
+    * Tag is used to show some information about the field (e.g. if the field is required). Frequently, Infobox with the tip is shown when you click or hover on the tag (see tagClick, tagHover).
     * @example
     * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text
-    *       tagStyle="danger"
-    *       on:tagClick="tagClickHander()"/>
+    *    <Controls.Input.Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *
@@ -41,7 +39,6 @@ define('Controls/Input/interface/IInputTag', [
     * </pre>
     * @see tagHover
     * @see tagClick
-    * @see Documentaion: Inputs
     */
 
    /**
@@ -51,9 +48,7 @@ define('Controls/Input/interface/IInputTag', [
     * @example
     * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text
-    *       tagStyle="danger"
-    *       on:tagClick="tagClickHander()"/>
+    *    <Controls.Input.Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *
@@ -69,7 +64,6 @@ define('Controls/Input/interface/IInputTag', [
     *       ...
     *    });
     * </pre>
-    * @see Documentation: Inputs
     * @see tagStyle
     * @see tagHover
     */
@@ -81,16 +75,14 @@ define('Controls/Input/interface/IInputTag', [
     * @example
     * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
     * <pre>
-    *    <Controls.Input.Text
-    *       tagStyle="danger"
-    *       on:tagHover="_tagHoverHander()"/>
+    *    <Controls.Input.Text tagStyle="danger" on:tagHover="_tagHoverHandler()"/>
     *    <Controls.Opener.Infobox name="infoboxOpener"/>
     * </pre>
     *
     * <pre>
     *    Control.extend({
     *       ...
-    *       _tagHoverHander(event) {
+    *       _tagHoverHandler(event) {
     *          this._children.infoboxOpener.open({
     *             target: event.target,
     *             text: 'This field is required'
@@ -99,7 +91,6 @@ define('Controls/Input/interface/IInputTag', [
     *       ...
     *    });
     * </pre>
-    * @see Documentation: Inputs
     * @see tagStyle
     * @see tagClick
     */

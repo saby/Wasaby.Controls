@@ -13,13 +13,16 @@ define('Controls-demo/Popup/TestExecutingStack',
 
          _beforeMount: function(options) {
             var def = new Deferred();
-            this._text = 'not updated';
+            this._text = this._options.text;
+            this._textFotTest = 'not updated';
             setTimeout(def.callback.bind(def), 500);
             return def;
          },
 
-         _beforeUpdate: function() {
-            this._text = 'updated after hook';
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.text !== this._options.text) {
+               this._textFotTest = 'updated after hook';
+            }
          }
       });
 

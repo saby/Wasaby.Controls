@@ -50,12 +50,15 @@ define('Controls/EditAtPlace', [
 
    /**
     * Controller for editing of input fields.
+    * <a href="/materials/demo-ws4-edit-at-place">Demo</a>.
     *
-    * @class Controls/List/EditAtPlace
+    * @class Controls/EditAtPlace
     * @extends Core/Control
     * @mixes Controls/interface/IEditAtPlace
     * @author Зайцев А.С.
     * @public
+    *
+    * @demo Controls-demo/EditAtPlace/EditAtPlacePG
     */
 
    var EditAtPlace = Control.extend(/** @lends Controls/List/EditAtPlace.prototype */{

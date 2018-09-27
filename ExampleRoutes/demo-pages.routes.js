@@ -140,6 +140,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: Редактирование по месту в полях ввода
+      '/demo-ws4-edit-at-place': function(req, res) {
+         requirejs('Controls-demo/EditAtPlace/EditAtPlaceWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/EditAtPlace/EditAtPlaceWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Кнопки
       '/demo-ws4-switchers': function(req, res) {
          requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');

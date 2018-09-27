@@ -10,7 +10,7 @@ define('tests/unit/resources/TemplateUtil',
       var _private = {
          regExpSpacesString: /\s+/g,
 
-         regExpAdditionalAttributes: / ?(ws-delegates-tabfocus|ws-creates-context|__config|tabindex|name)=".+?"/g
+         regExpAdditionalAttributes: / ?(ws-delegates-tabfocus|ws-creates-context|__config|tabindex|name|config|hasMarkup)=".+?"/g
       };
 
       return {

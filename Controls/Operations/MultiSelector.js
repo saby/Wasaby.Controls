@@ -25,7 +25,7 @@ define('Controls/Operations/MultiSelector', [
       _updateSelection: function(selection) {
          if (selection.selectedKeys[0] === null && !selection.excludedKeys.length) {
             this._multiSelectStatus = true;
-         } else if (selection.selectedKeys.length > 0) {
+         } else if (selection.count > 0) {
             this._multiSelectStatus = null;
          } else {
             this._multiSelectStatus = false;

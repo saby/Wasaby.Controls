@@ -102,9 +102,24 @@
     "Controls/Popup/*"
   ],
   "exclude": [
-    "Controls/Popup/Compatible/*"
+    "Controls/Popup/Compatible/*",
+    "Controls/Popup/Opener/*"
   ],
   "output": "controls-popup.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/*"
+  ],
+  "exclude": [
+    "Controls/Popup/Opener/Confirmation/*",
+    "Controls/Popup/Opener/Dialog/*",
+    "Controls/Popup/Opener/InfoBox/*",
+    "Controls/Popup/Opener/Notification/*",
+    "Controls/Popup/Opener/Previewer/*",
+    "Controls/Popup/Opener/Stack/*",
+    "Controls/Popup/Opener/Sticky/*"
+  ],
+  "output": "controls-popup-opener.package.js"
 }, {
   "include": [
     "Controls/Popup/Compatible/*"

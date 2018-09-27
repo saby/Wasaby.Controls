@@ -340,7 +340,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (!options.__savedHtmlJson) {
                      options.__savedHtmlJson = new HtmlJson();
                   }
-                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
+                  var json = typeof options.json === 'string' ? JSON.parse(options.json) : options.json;
+                  if (json.length === 1 && typeof json[0] === 'string') {
+                     json = ['span', { class: 'ws-basic-style' }, json[0]];
+                  }
+                  options.__savedHtmlJson.setJson(json);
                   options.text = options.__savedHtmlJson.render();
 
                   // Костыль для отображения плейсхолдера при пустом json.
@@ -727,7 +731,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this._htmlJson) {
                   this._initHtmlJson();
                }
-               this._htmlJson.setJson(typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json);
+               var json = typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json;
+               if (json.length === 1 && typeof json[0] === 'string') {
+                  json = ['span', { class: 'ws-basic-style' }, json[0]];
+               }
+               this._htmlJson.setJson(json);
 
                // Костыль для отображения плейсхолдера при пустом json.
                // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
@@ -822,10 +830,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   'focusin',
                   'NodeChange',
                   'TypingUndo',
+                  'BeforeAddUndo',
                   'AddUndo',
                   'ClearUndos',
-                  'redo',
                   'undo',
+                  'redo',
                   'beforeunload',
 
                   'scroll',
@@ -2767,6 +2776,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  // Кроме того, при удалении backspace-ом может измениться состояние UndoManager-а без события от него, поэтому уведомим тулбар об изменении
+                  // 1175906187 https://online.sbis.ru/opendoc.html?guid=671a1601-da24-44d8-aa1a-982151222f7e
+                  this._notifyUndoRedoChange();
                }
             },
 
@@ -2928,11 +2940,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.saveToHistory(this.getText());
             },
 
-            _onUNDOMANAGERChange: function() {
-               this._notify('onUndoRedoChange', {
-                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
-                  hasUndo: this._tinyEditor.undoManager.hasUndo()
-               });
+            _notifyUndoRedoChange: function() {
+               var undoManager = this._tinyEditor.undoManager;
+               var evt = {
+                  hasUndo: undoManager.hasUndo(),
+                  hasRedo: undoManager.hasRedo()
+               };
+               var lastEvt = this._lastUndoRedoState;
+               if (!lastEvt || evt.hasUndo !== lastEvt.hasUndo || evt.hasRedo !== lastEvt.hasRedo) {
+                  this._lastUndoRedoState = lastEvt;
+                  this._notify('onUndoRedoChange', evt);
+               }
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
@@ -2996,7 +3014,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onMouseUpCallback2',
                   '_onFocusOutCallback',
                   '_saveBeforeWindowClose',
-                  '_onUNDOMANAGERChange',
+                  '_notifyUndoRedoChange',
                   '_onNodeChangeCallback',
                   '_onFocusChangedCallback',
                   '_onFocusOutCallback1',
@@ -3125,7 +3143,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
-               editor.on('TypingUndo AddUndo ClearUndos redo undo', this._onUNDOMANAGERChange);
+               editor.on('TypingUndo BeforeAddUndo AddUndo ClearUndos undo redo', this._notifyUndoRedoChange);
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ NODE ПОД КУРСОРОМ*/
                editor.on('NodeChange', this._onNodeChangeCallback);
 
@@ -4205,7 +4223,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      'LinkDecorator__linkWrap',
                      'LinkDecorator__decoratedLink',
                      'LinkDecorator__wrap',
-                     'LinkDecorator__image'
+                     'LinkDecorator__image',
+                     'ws-basic-style'
                   ],
                   index = classes.length - 1;
 

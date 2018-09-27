@@ -24,11 +24,11 @@ define('Controls/Container/Crud', [
 
          var self = this;
          def.addCallback(function(record) {
-            self._notify('createSuccessed', [record], { bubbling: true });
+            self._notify('createSuccessed', [record]);
             return record;
          });
          def.addErrback(function(e) {
-            self._notify('createFailed', [e], { bubbling: true });
+            self._notify('createFailed', [e]);
             return e;
          });
 
@@ -41,12 +41,12 @@ define('Controls/Container/Crud', [
 
          var self = this;
          def.addCallback(function(record) {
-            self._notify('readSuccessed', [record], { bubbling: true });
+            self._notify('readSuccessed', [record]);
             self._notify('toggleIndicator', [false], { bubbling: true });
             return record;
          });
          def.addErrback(function(e) {
-            self._notify('readFailed', [e], { bubbling: true });
+            self._notify('readFailed', [e]);
             self._notify('toggleIndicator', [false], { bubbling: true });
             return e;
          });
@@ -63,11 +63,11 @@ define('Controls/Container/Crud', [
 
             var self = this;
             def.addCallback(function(key) {
-               self._notify('updateSuccessed', [record, key], { bubbling: true });
+               self._notify('updateSuccessed', [record, key]);
                return key;
             });
             def.addErrback(function(e) {
-               self._notify('updateFailed', [e], { bubbling: true });
+               self._notify('updateFailed', [e]);
                return e;
             });
          } else {
@@ -83,10 +83,10 @@ define('Controls/Container/Crud', [
 
          var self = this;
          def.addCallback(function() {
-            self._notify('deleteSuccessed', [], { bubbling: true });
+            self._notify('deleteSuccessed', [record]);
          });
          def.addErrback(function(e) {
-            self._notify('deleteFailed', [e], { bubbling: true });
+            self._notify('deleteFailed', [e]);
             return e;
          });
 

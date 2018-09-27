@@ -59,7 +59,7 @@ define(
                   template: 'testTmpl'
                };
                let meta = {
-                  mode: 'stack'
+                  mode: 'floatArea'
                };
                var deps = DialogMixin._prepareCfgForNewEnvironment(meta, config);
                assert.equal(config._type, 'stack');
