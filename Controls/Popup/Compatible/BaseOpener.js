@@ -336,7 +336,7 @@ function(cMerge,
          } else {
             newCfg.dialogOptions.direction = 'right';
          }
-         if (cfg.verticalAlign && cfg.horizontalAlign.offset) {
+         if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
             newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
             newCfg.dialogOptions.offset.x = cfg.horizontalAlign.offset;
          }
