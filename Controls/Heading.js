@@ -1,13 +1,13 @@
 define('Controls/Heading', [
    'Core/Control',
-   'wml!Controls/Header/Heading',
+   'wml!Controls/Heading/Heading',
    'WS.Data/Type/descriptor',
-   'css!Controls/Header/Heading'
+   'css!Controls/Heading/Heading'
 ], function(Control, template, types) {
    'use strict';
 
    /**
-    * Header with support different display styles and sizes. Can be used independently or as part of complex headers(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/Header/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/Header/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
+    * Header with support different display styles and sizes. Can be used independently or as part of complex headers(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
@@ -19,7 +19,7 @@ define('Controls/Heading', [
     * @demo Controls-demo/Headers/headerDemo
     *
     * @mixes Controls/interface/ICaption
-    * @mixes Controls/Header/HeadingStyles
+    * @mixes Controls/Heading/HeadingStyles
     */
 
    /**
