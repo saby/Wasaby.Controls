@@ -3,6 +3,7 @@
         keyProperty="{{_options.keyProperty}}"
         parentProperty="{{_options.parentProperty}}"
         additionalProperty="{{_options.additionalProperty}}"
+        attr:title="{{_options.tooltip}}"
         nodeProperty="{{_options.nodeProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
         itemTemplate="{{_options.itemTemplate || _itemTemplate}}"
