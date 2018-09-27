@@ -231,6 +231,15 @@ define('Controls/Application',
             return def;
          },
 
+         themeChangedHandler: function() {
+            var self = this;
+            self.themeChanging = true;
+            setTimeout(function() {
+               self.themeChanging = false;
+               self._forceUpdate();
+            }, 1000);
+         },
+
          _openInfoBoxHandler: function(event, config) {
             this._activeInfobox = event.target;
 

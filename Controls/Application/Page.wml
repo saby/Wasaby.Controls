@@ -1,6 +1,7 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
       attr:component="Controls/Application"
-      attr:class="{{ onServer && !isCompatible ? 'pre-load' : '' }}">
+      attr:class="{{ onServer && !isCompatible ? 'pre-load' : '' }}
+                  {{ themeChanging ? 'theme-changing' : '' }}">
 <Controls.Application._Head
    wsRoot="{{ wsRoot }}"
    linkResolver="{{ linkResolver }}"
@@ -12,7 +13,8 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
-   servicesPath="{{ servicesPath }}">
+   servicesPath="{{ servicesPath }}"
+   on:themeChanged="themeChangedHandler()">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">

@@ -41,6 +41,11 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
+         _beforeUpdate: function(options) {
+            if(this._options.theme !== options.theme) {
+               this._notify('themeChanged');
+            }
+         },
          isArrayHead: function() {
             return Array.isArray(this._options.head);
          },
