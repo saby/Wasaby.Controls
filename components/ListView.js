@@ -83,6 +83,7 @@ define('SBIS3.CONTROLS/ListView',
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
+            tplOptions.showSelectedMarker = cfg.showSelectedMarker;
             tplOptions.itemsHover = cfg.itemsHover;
             tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 

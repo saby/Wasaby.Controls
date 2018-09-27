@@ -280,10 +280,14 @@ define('SBIS3.CONTROLS/DataGridView',
                column = headData.content[1][i];
    
                if (columnTop && headData.countRows > 1) {
-                  if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
-                     columnTop.value = getSortingColumnTpl(columnTop, cfg);
-                  } else if (columnTop.headTemplate) {
-                     columnTop.value = getHeadColumnTpl(columnTop);
+                  if (columnTop.rowspan > 1) {
+                     if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
+                        columnTop.value = getSortingColumnTpl(columnTop, cfg);
+                     } else if (columnTop.headTemplate) {
+                        columnTop.value = getHeadColumnTpl(columnTop);
+                     } else {
+                        columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
+                     }
                   } else {
                      columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
                   }

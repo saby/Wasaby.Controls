@@ -858,10 +858,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   'focusin',
                   'NodeChange',
                   'TypingUndo',
+                  'BeforeAddUndo',
                   'AddUndo',
                   'ClearUndos',
-                  'redo',
                   'undo',
+                  'redo',
                   'beforeunload',
 
                   'scroll',
@@ -2803,6 +2804,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  // Кроме того, при удалении backspace-ом может измениться состояние UndoManager-а без события от него, поэтому уведомим тулбар об изменении
+                  // 1175906187 https://online.sbis.ru/opendoc.html?guid=671a1601-da24-44d8-aa1a-982151222f7e
+                  this._notifyUndoRedoChange();
                }
             },
 
@@ -2964,11 +2968,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.saveToHistory(this.getText());
             },
 
-            _onUNDOMANAGERChange: function() {
-               this._notify('onUndoRedoChange', {
-                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
-                  hasUndo: this._tinyEditor.undoManager.hasUndo()
-               });
+            _notifyUndoRedoChange: function() {
+               var undoManager = this._tinyEditor.undoManager;
+               var evt = {
+                  hasUndo: undoManager.hasUndo(),
+                  hasRedo: undoManager.hasRedo()
+               };
+               var lastEvt = this._lastUndoRedoState;
+               if (!lastEvt || evt.hasUndo !== lastEvt.hasUndo || evt.hasRedo !== lastEvt.hasRedo) {
+                  this._lastUndoRedoState = lastEvt;
+                  this._notify('onUndoRedoChange', evt);
+               }
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
@@ -3032,7 +3042,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onMouseUpCallback2',
                   '_onFocusOutCallback',
                   '_saveBeforeWindowClose',
-                  '_onUNDOMANAGERChange',
+                  '_notifyUndoRedoChange',
                   '_onNodeChangeCallback',
                   '_onFocusChangedCallback',
                   '_onFocusOutCallback1',
@@ -3162,7 +3172,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
-               editor.on('TypingUndo AddUndo ClearUndos redo undo', this._onUNDOMANAGERChange);
+               editor.on('TypingUndo BeforeAddUndo AddUndo ClearUndos undo redo', this._notifyUndoRedoChange);
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ NODE ПОД КУРСОРОМ*/
                editor.on('NodeChange', this._onNodeChangeCallback);
 
@@ -3981,7 +3991,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var editor = this._tinyEditor;
                   var totalHeight = this._container.height();
                   var content, $content;
-                  if (this._options.editorConfig.inline) {
+                  var options = this._options;
+                  if (options.editorConfig.inline) {
                      $content = this._inputControl;
                      content = $content[0];
                   }
@@ -3990,7 +4001,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   if (BROWSER.isIE) {
                      $content = $content || $(content);
-                     $content.css('height', '');
                   }
                   var contentHeight = content.scrollHeight;
                   var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
@@ -3998,29 +4008,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
                      // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
                      this._scrollContainer[0].scrollTop = 0;
-                     if (BROWSER.isIE) {
+                     if (BROWSER.isIE && options.autoHeight) {
                         // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                         // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                        // 1175690075 https://online.sbis.ru/opendoc.html?guid=8012e763-37e5-4b8e-8987-f7b0dd8cbf77
                         var diff = contentHeight - content.clientHeight;
-                        if (isChanged) {
-                           var parent = content.parentNode;
-                           if (editor) {
-                              if (parent.clientHeight < contentHeight) {
-                                 // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
-                                 // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
-                                 // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
-                                 var rect0 = content.getBoundingClientRect();
-                                 var rect1 = editor.selection.getBoundingClientRect();
-                                 if (rect0 && rect1 &&
-                                    rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
-                                    var scrollTop = parent.scrollHeight - parent.offsetHeight;
-                                    if (parent.scrollTop < scrollTop) {
-                                       // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
-                                       parent.scrollTop = scrollTop;
-                                    }
-                                 }
-                              }
-                           }
+                        var parent = content.parentNode;
+                        content.scrollTop = 0;
+                        if (0 < diff && 0 < parent.scrollTop && parent.scrollTop <= diff) {
+                           parent.scrollTop = 0;
                         }
                      }
                   }
