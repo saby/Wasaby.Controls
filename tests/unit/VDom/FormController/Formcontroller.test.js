@@ -145,8 +145,8 @@ define([
       it('initializingWay', () => {
          let FC = new FormController();
 
-         let baseReadRecordBeforeMount = FC._readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = FC._createRecordBeforeMount;
+         let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
+         let baseCreateRecordBeforeMount = FormController._private.createRecordBeforeMount;
          let cfg = {
             record: new Record(),
          };
@@ -154,12 +154,12 @@ define([
          let isReading = false;
          let isCreating = false;
 
-         FC._readRecordBeforeMount = () => {
+         FormController._private.readRecordBeforeMount = () => {
             isReading = true;
             return true;
          };
 
-         FC._createRecordBeforeMount = () => {
+         FormController._private.createRecordBeforeMount = () => {
             isCreating = true;
             return true;
          };
@@ -191,8 +191,8 @@ define([
          assert.equal(isCreating, true);
          assert.equal(beforeMountResult, true);
 
-         FC._readRecordBeforeMount = baseReadRecordBeforeMount;
-         FC._createRecordBeforeMount = baseCreateRecordBeforeMount;
+         FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
+         FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
          FC.destroy();
       });
 
