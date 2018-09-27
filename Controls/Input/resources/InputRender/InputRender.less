@@ -123,6 +123,14 @@
 }
 
 /**
+ * placeholder-shown не поддерживается в IE.
+ * На поле весит аттрибут required и когда значение в поле нет будет применяться псевдоэлемент invalid.
+ */
+.controls-InputRender__content:invalid + .controls-Text__placeholder {
+   display: inline-flex;
+}
+
+/**
  * При построении браузер может автоматически подставить значение в поле и placeholder-shown не работает пока
  * пользователь не начнет работать с полем.
  * https://developer.mozilla.org/en-US/docs/Web/CSS/:-webkit-autofill
