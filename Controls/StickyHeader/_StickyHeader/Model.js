@@ -1,4 +1,4 @@
-define('Controls/StickyHeader/Model',
+define('Controls/StickyHeader/_StickyHeader/Model',
    [
       'Core/IoC',
       'Core/core-simpleExtend'
