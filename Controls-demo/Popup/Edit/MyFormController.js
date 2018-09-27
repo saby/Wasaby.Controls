@@ -24,6 +24,12 @@ define('Controls-demo/Popup/Edit/MyFormController',
             });
          },
 
+         _beforeUpdate: function(opt) {
+            if (opt.record !== this._options.record) {
+               this._record = opt.record;
+            }
+         },
+
          _update: function () {
             return this._children.formControllerInst.update();
          },
