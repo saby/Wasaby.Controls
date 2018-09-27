@@ -337,23 +337,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
                if (options.json) {
-                  if (!options.__savedHtmlJson) {
-                     options.__savedHtmlJson = new HtmlJson();
-                  }
-                  var json = typeof options.json === 'string' ? JSON.parse(options.json) : options.json;
-                  if (json.length === 1 && typeof json[0] === 'string') {
-                     json = ['span', { class: 'ws-basic-style' }, json[0]];
-                  }
-                  options.__savedHtmlJson.setJson(json);
-                  options.text = options.__savedHtmlJson.render();
-
-                  // Костыль для отображения плейсхолдера при пустом json.
-                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
-                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-                  if (options.text === '<span></span>') {
-                     options.text = '';
-                  }
+                  options.text = this._getTextFromJson(options.json, true);
                }
 
                if (options.singleLine) {
@@ -420,22 +404,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this.isEnabled()) {
                   this._decorateAsSVG(this._options.text);
                }
-            },
-            _initHtmlJson: function() {
-               var self = this;
-               self._htmlJson = self._options.__savedHtmlJson || new HtmlJson();
-               self.subscribe('onTextChange', function(e, text) {
-                  if (text[0] !== '<') {
-                     text = '<p>' + text + '</p>';
-                  }
-                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
-                  var div = document.createElement('div');
-                  div.innerHTML = text;
-                  self._options.json = typeof self._options.json === 'string'
-                     ? JSON.stringify(domToJson(div).slice(1))
-                     : domToJson(div).slice(1);
-                  self._notify('onJsonChange', [self._options.json]);
-               });
             },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
@@ -720,30 +688,90 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
+
+            /**
+             * Получить значение опции "json"
+             * @public
+             * @return {string}
+             */
             getJson: function() {
                return this._options.json;
             },
+
+            /**
+             * Установить значение опции "json" и установвить тект в соответствии с ней
+             * @public
+             * @param {string|Array} json Контент в формате json, строка или массив
+             */
             setJson: function(json) {
                this._options.json = json;
-               this.setText(this.getTextFromJson());
+               this.setText(this._getTextFromJson(json, true));
             },
-            getTextFromJson: function() {
-               if (!this._htmlJson) {
-                  this._initHtmlJson();
-               }
-               var json = typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json;
-               if (json.length === 1 && typeof json[0] === 'string') {
-                  json = ['span', { class: 'ws-basic-style' }, json[0]];
-               }
-               this._htmlJson.setJson(json);
 
-               // Костыль для отображения плейсхолдера при пустом json.
-               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
-               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-               var text = this._htmlJson.render();
-               return text === '<span></span>' ? '' : text;
+            /**
+             * Сформировать текст по имеющемуся значению опции "json"
+             * @public
+             * @return {string}
+             */
+            getTextFromJson: function () {
+               return this._getTextFromJson(this._options.json, false);
             },
+
+            /**
+             * Сформировать текст по указанному json-контенту Получить значение опции "json"
+             * @protected
+             * @param {string|Array} json Контент в формате json, строка или массив
+             * @param {boolean} withCleaning Очищать от формального корневого элемента span если он есть
+             * @return {string}
+             */
+            _getTextFromJson: function (json, withCleaning) {
+               if (typeof json === 'string') {
+                  json = JSON.parse(json);
+               }
+               var text;
+               if (json.length === 1 && typeof json[0] === 'string') {
+                  text = json[0];
+               }
+               else {
+                  var htmlJson = this._htmlJson;
+                  if (!htmlJson) {
+                     this._htmlJson = htmlJson = new HtmlJson();
+                  }
+                  htmlJson.setJson(json);
+                  text = htmlJson.render();
+                  if (withCleaning) {
+                     // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
+                     // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                     // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                     if (text.search(/^<span>/i) !== -1 && text.search(/<\/span>$/i) !== -1) {
+                        text = text.substring(6, text.length - 7);
+                     }
+                  }
+               }
+               return text;
+            },
+
+            /**
+             * Обработчик события - обновить значение опции "json"
+             * @param {Core/EventObject} e Дескриптор события
+             * @param {string} text Новое значение текста
+             * @protected
+             */
+            _updateJson: function (e, text) {
+               // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+               // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
+               if (text[0] !== '<') {
+                  text = '<p>' + text + '</p>';
+               }
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               var div = document.createElement('div');
+               div.innerHTML = text;
+               var options = this._options;
+               var json = domToJson(div).slice(1);
+               options.json = typeof options.json === 'string' ? JSON.stringify(json) : json;
+               this._notify('onJsonChange', [options.json]);
+            },
+
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
                if (this._lastActive) {
@@ -3031,7 +3059,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onKeyUpDeleteImage',
                   '_onKeyUpSetLastRng',
                   '_onMouseUpCallback',
-                  '_tinyReadyCallback0'
+                  '_tinyReadyCallback0',
+                  '_updateJson'
                ];
                for (var i = 0; i < methods.length; i++) {
                   this[methods[i]] = this[methods[i]].bind(this);
@@ -3157,6 +3186,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                // Никогда не прокручивать вышележашие скрол-контейнеры !
                editor.on('scrollIntoView', this._onScrollIntoViewCallback);
+
+               if (this._options.json) {
+                  // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+                  this.subscribeTo(this, 'onTextChange', this._updateJson);
+               }
             },
             _onTouchStartCallback1: function(e) {
                this._fromTouch = true;
@@ -3581,7 +3615,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                if (this._dataReview) {
-                  this._updateDataReview(this.getJson() ? this.getTextFromJson() : (this.getText() || ''), !enabled);
+                  this._updateDataReview(options.json ? this._getTextFromJson(options.json, true) : (this.getText() || ''), !enabled);
                   this._dataReview.toggleClass('ws-hidden', enabled);
                }
                container.toggleClass('ws-hidden', !enabled);
@@ -4209,8 +4243,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      'LinkDecorator__linkWrap',
                      'LinkDecorator__decoratedLink',
                      'LinkDecorator__wrap',
-                     'LinkDecorator__image',
-                     'ws-basic-style'
+                     'LinkDecorator__image'
                   ],
                   index = classes.length - 1;
 
