@@ -1,0 +1,26 @@
+<div style="height: 100%; min-width: 500px; max-width: 700px;">
+    <h1>Opened stack</h1>
+    <div>
+        <span>onAfterVisibilityChanged:</span>
+        <span class="onAfterVisibilityChangeTimes">0</span>
+    </div>
+    <div>
+        <SBIS3.CONTROLS.Button attr:class="eventCheckShow" name="eventCheckShow" caption="Show Me"/>
+        <SBIS3.CONTROLS.Button attr:class="eventCheckHide" name="eventCheckHide" caption="Hide Me"/>
+    </div>
+    <div>
+        <SBIS3.CONTROLS.Button attr:class="crashTest" name="crashTest" caption="Crash Test"/>
+    </div>
+    <div>
+        <span>onControlResize:</span>
+        <span class="onControlResizeTimes">0</span>
+    </div>
+    <div>
+        <SBIS3.CONTROLS.Button attr:class="resizeCheckPanel" name="resizeCheckPanel" caption="Resize Panel"/>
+        <SBIS3.CONTROLS.Button attr:class="resizeCheckButton" name="resizeCheckButton" caption="Resize Button"/>
+    </div>
+    <div>
+        <span>Passed the position test:</span>
+        <span class="leftPositionTest"></span>
+    </div>
+</div>

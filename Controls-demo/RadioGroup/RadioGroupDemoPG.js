@@ -2,7 +2,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
 
@@ -11,13 +10,12 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config, MemorySource) {
+   function(Control, template, config, MemorySource) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Toggle/RadioGroup',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {

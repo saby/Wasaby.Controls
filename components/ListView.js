@@ -83,6 +83,7 @@ define('SBIS3.CONTROLS/ListView',
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
+            tplOptions.showSelectedMarker = cfg.showSelectedMarker;
             tplOptions.itemsHover = cfg.itemsHover;
             tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
@@ -3623,7 +3624,7 @@ define('SBIS3.CONTROLS/ListView',
             if (isScrollingUp && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top) || !type && this._loadingIndicator.hasClass('controls-ListView-scrollIndicator__up')) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
-            this._loadingIndicator.css('top', top);
+            this._loadingIndicator.css('top', top >= 0 ? top : 0);
          },
 
 

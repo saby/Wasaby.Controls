@@ -411,7 +411,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                parsers: null,
                /**
-                * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера} (опционально)
+                * @cfg {object} Опции провайдера парсинга (отдельно по каждому парсеру). Состав опций может быть различным для каждого {@link parsers парсера}. Именно здесь обычно располагаются опции hierarchyName и hierarchyField (опционально)
                 */
                providerArgs: null,
                /**
@@ -1160,10 +1160,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                skippedRows: provider.skippedRows,
                columns: Object.keys(columnBindingMapping).map(function (v) { return {index:columnBindingMapping[v], field:v}; })
             };
-            if (provider.separator) {
-               item.separator = provider.separator;
-            }
             item.parserConfig = ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v] || null; return r; }, {});
+            if (provider.separator) {
+               item.parserConfig.dilimiter = provider.separator;
+            }
             if (sheet) {
                item.name = sheet.name;
                item.columnsCount = sheet.sampleRows[0].length;
