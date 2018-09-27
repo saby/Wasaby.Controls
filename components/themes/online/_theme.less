@@ -1,6 +1,10 @@
 @themeName: 'online';
 @import "_theme-min";
 
+.ws-fix-emoji .ws-basic-style {
+   font-family: 'EmojiFont', @default-font-name;
+}
+
 .addButtonMixin(@svgIcon, @size: 12px) {
    .inline-flexbox();
    .justify-content(center);
