@@ -28,11 +28,13 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
                }
             });
          },
-         _valueChangedHandler: function(event) {
-            event.stopPropagation();
+         _valueChangedHandler: function(event, value) {
+            this._notify('valueChanged', [value]);
+            this._viewValue = value;
          },
          _chooseHandler: function(event, value) {
             this._notify('choose', [value]);
+            this._viewValue = value.title;
          }
       });
 
