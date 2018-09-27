@@ -12,7 +12,7 @@ define('Controls/Header/Counter', [
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Header/Counter
+    * @class Controls/Heading/Counter
     * @extends Core/Control
     * @control
     * @public
@@ -24,7 +24,7 @@ define('Controls/Header/Counter', [
     */
 
    /**
-    * @name Controls/Header/Counter#size
+    * @name Controls/Heading/Counter#size
     * @cfg {String} Size of Counter.
     * @variant l Large counter size.
     * @variant m Medium counter size. It is default value.
@@ -32,7 +32,7 @@ define('Controls/Header/Counter', [
     */
 
    /**
-    * @name Controls/Header/Counter#style
+    * @name Controls/Heading/Counter#style
     * @cfg {String} Counter displaying style.
     * @variant primary Primary counter style. It is default value.
     * @variant secondary Secondary counter style.

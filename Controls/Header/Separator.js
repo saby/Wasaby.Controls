@@ -12,7 +12,7 @@ define('Controls/Header/Separator', [
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Header/Separator
+    * @class Controls/Heading/Separator
     * @extends Core/Control
     * @control
     * @public
@@ -25,7 +25,7 @@ define('Controls/Header/Separator', [
     */
 
    /**
-    * @name Controls/Header/Separator#style
+    * @name Controls/Heading/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
     * @variant primary Primary display style.
     * @variant secondary Secondary display style. It is default value.

@@ -10,7 +10,7 @@ define('Controls/Header/BackButton', [
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Header/BackButton
+    * @class Controls/Heading/Back
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
@@ -25,14 +25,14 @@ define('Controls/Header/BackButton', [
     */
 
    /**
-    * @name Controls/Button/Back#style
+    * @name Controls/Heading/Back#style
     * @cfg {String} Back button display style.
     * @variant primary Primary display style.
     * @variant default Default display style. It is the default value.
     */
 
    /**
-    * @name Controls/Button/Back#size
+    * @name Controls/Heading/Back#size
     * @cfg {String} Back button size.
     * @variant s Small button size.
     * @variant m Medium button size. It is the default value.
@@ -40,7 +40,7 @@ define('Controls/Header/BackButton', [
     */
 
    /**
-    * @name Controls/Button#caption
+    * @name Controls/Heading/Back#caption
     * @cfg {String} Caption text.
     */
 

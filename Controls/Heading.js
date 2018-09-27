@@ -12,7 +12,7 @@ define('Controls/Heading', [
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
     *
-    * @class Controls/Header
+    * @class Controls/Heading
     * @extends Core/Control
     * @control
     * @public
@@ -23,7 +23,7 @@ define('Controls/Heading', [
     */
 
    /**
-    * @name Controls/Header#size
+    * @name Controls/Heading#size
     * @cfg {String} Header size.
     * @variant s Small text size.
     * @variant m Medium text size. It is default value.
@@ -32,7 +32,7 @@ define('Controls/Heading', [
     */
 
    /**
-    * @name Controls/Header#style
+    * @name Controls/Heading#style
     * @cfg {String} Header display style.
     * @variant primary Primary display style. It is default value.
     * @variant secondary Secondary display style.
