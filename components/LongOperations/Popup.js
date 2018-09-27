@@ -4,6 +4,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "Core/UserInfo",
       'Core/Deferred',
       'Core/EventBus',
+      'Core/IoC',
       'Lib/Tab/Message',
       'SBIS3.CONTROLS/Action/OpenDialog',
       "SBIS3.CONTROLS/NotificationPopup",
@@ -15,7 +16,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "i18n!SBIS3.CONTROLS/LongOperations/Popup",
       'SBIS3.CONTROLS/LongOperations/Registry'
    ],
-   function (cMerge, UserInfo, Deferred, EventBus, TabMessage, OpenDialogAction, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
+   function (cMerge, UserInfo, Deferred, EventBus, IoC, TabMessage, OpenDialogAction, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl) {
       'use strict';
 
       /**
@@ -98,10 +99,16 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          $constructor: function () {
+            //////////////////////////////////////////////////
+            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOPopup: Создан экземпляр');
+            //////////////////////////////////////////////////
             this._publish('onSizeChange');
          },
 
          init: function () {
+            //////////////////////////////////////////////////
+            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOPopup: Инициализирован экземпляр');
+            //////////////////////////////////////////////////
             LongOperationsPopup.superclass.init.call(this);
 
             this._longOpList = this.getChildControlByName('operationList');
@@ -151,11 +158,20 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                }
             });
 
+            //////////////////////////////////////////////////
+            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOPopup: Будет произведена подписка на события LOList-а');
+            //////////////////////////////////////////////////
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
                self.subscribeTo(self._longOpList, evtType, function (evtName, evt) {
+                  //////////////////////////////////////////////////
+                  IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOPopup: Получено событие "' + evtType + '" от LOList' + (evt ? ': ' + JSON.stringify(evt) : ''));
+                  //////////////////////////////////////////////////
                   self._onOperation(evtType, evt);
                });
             });
+            //////////////////////////////////////////////////
+            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOPopup: Выполнена подписка подписка на события LOList-а');
+            //////////////////////////////////////////////////
 
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
