@@ -33,7 +33,7 @@ def build():
     # themepath = os.path.join('SBIS3.CONTROLS', 'default-theme')
     # if not os.path.exists(themepath):
     #     os.makedirs(themepath)
-    set(map(lambda x: _copy(os.path.join('Controls-theme', 'themes', 'default', x), os.path.join(themepath, x)), os.listdir(os.path.join('Controls-theme', 'themes', 'default'))))
+    # set(map(lambda x: _copy(os.path.join('Controls-theme', 'themes', 'default', x), os.path.join(themepath, x)), os.listdir(os.path.join('Controls-theme', 'themes', 'default'))))
 
 if __name__ == '__main__':
     build()
