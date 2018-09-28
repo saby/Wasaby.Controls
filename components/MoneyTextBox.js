@@ -19,6 +19,13 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
 
+      /**
+       * Метод cDefaultRenders.numeric делает математическое округление.
+       * Чтобы избавиться от него увеличим дробную часть на 1 и после выполнения метода
+       * удалим последний знак.
+       */
+      decimals = parseInt(decimals, 10) + 1;
+
       value = cDefaultRenders.numeric(
           value,
           integers,
@@ -28,6 +35,10 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
           maxLength,
           true
       );
+
+      if (value) {
+         value = value.replace(/(\.\d*)\d/, '$1');
+      }
 
       if(!NumberTextBoxUtil.checkMaxLength(value, maxLength, countMinusInLength)){
          return text;
