@@ -19,7 +19,6 @@
 /cdn
 /node_modules
 /typedef
-/SBIS3.CONTROLS/*
 /themes/**/*.css
 /artifacts/*
 /tests/**/.idea
