@@ -1,4 +1,4 @@
-define('Controls/Header/Separator/SeparatorStyles',
+define('Controls/Heading/Separator/SeparatorStyles',
    [
    ],
    function() {
@@ -6,7 +6,7 @@ define('Controls/Header/Separator/SeparatorStyles',
 
    /**
     *
-    * @mixin Controls/Header/Separator/SeparatorStyles
+    * @mixin Controls/Heading/Separator/SeparatorStyles
     * @public
     *
     * @css @width-HeaderSeparator Header-separator width.
