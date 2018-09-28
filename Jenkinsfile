@@ -593,7 +593,7 @@ node('controls') {
                                     dir("./controls/tests/reg"){
                                         sh """
                                             source /home/sbis/venv_for_test/bin/activate
-                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS http://autotest100:4445/wd/hub --STREAMS_NUMBER 6--JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS http://autotest100:4445/wd/hub --STREAMS_NUMBER 6 --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                             deactivate
                                         """
                                     }
