@@ -12,7 +12,7 @@ define('Controls-demo/Input/Number/Number', [
       _text1: '',
       _tooltip: 'Number',
       _textAlign: 'left',
-      _tagStyle: 'done',
+      _tagStyle: 'primary',
       _integersLength: 5,
       _precision: 2,
       _onlyPositive: true,
