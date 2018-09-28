@@ -196,11 +196,12 @@ function (
             if (!options.filter.hasOwnProperty('ВидДерева')) {
                options.filter['ВидДерева'] = "Только узлы";
             }
-            if (options.pageSize) {
+            if (options.pageSize && !options.infiniteScroll) {
                //todo пейджинг нормально выглядит только с кнопкой еще, догрузка по скроллу не работает, потому что окно может не скролится, а обычный педжинг не отображает корень только на первой странице
                //нужен стандарт на пейджинг в окне перемещения.
                options.infiniteScroll = 'demand';
             }
+            //options.showPaging = true;
             return options;
          },
 
