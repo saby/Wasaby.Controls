@@ -56,9 +56,9 @@ node('controls') {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
-            booleanParam(defaultValue: true, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
             booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
@@ -521,7 +521,7 @@ node('controls') {
                     dir("./controls/tests/int"){
                         sh"""
                             source /home/sbis/venv_for_test/bin/activate
-                            ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS http://autotest100:4445/wd/hub --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
+                            ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
                             deactivate
 
                         """
@@ -577,7 +577,7 @@ node('controls') {
                                     dir("./controls/tests/int"){
                                         sh """
                                         source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS http://autotest100:4445/wd/hub --STREAMS_NUMBER 6 --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                         deactivate
                                         """
                                     }
@@ -593,7 +593,7 @@ node('controls') {
                                     dir("./controls/tests/reg"){
                                         sh """
                                             source /home/sbis/venv_for_test/bin/activate
-                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS http://autotest100:4445/wd/hub --STREAMS_NUMBER 6 --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+                                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                             deactivate
                                         """
                                     }
