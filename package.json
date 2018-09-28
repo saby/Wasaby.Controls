@@ -73,7 +73,6 @@
       "gulp-less": "^3.5.0",
       "gulp-livereload": "^3.8.1",
       "humanize": "0.0.9",
-      "istanbul": "0.4.x",
       "less": "^2.7.3",
       "load-grunt-config": "0.16.0",
       "merge": "1.2.0",

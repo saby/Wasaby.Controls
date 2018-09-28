@@ -120,12 +120,36 @@ define('Controls/Application',
                   : 'ws-is-no-touch';
          },
 
+         /**
+          * Код должен быть вынесен в отдельных контроллер в виде хока в 610.
+          * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
+          */
          _popupCreatedHandler: function() {
-            this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+            this._isPopupShow = true;
+
+            this._changeOverflowClass();
          },
 
          _popupDestroyedHandler: function(event, element, popupItems) {
             if (popupItems.getCount() === 0) {
+               this._isPopupShow = false;
+            }
+
+            this._changeOverflowClass();
+         },
+
+         _suggestStateChangedHandler: function(event, state) {
+            this._isSuggestShow = state;
+
+            this._changeOverflowClass();
+         },
+
+         /*****************************************************/
+
+         _changeOverflowClass: function() {
+            if (this._isPopupShow || this._isSuggestShow) {
+               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+            } else {
                this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
             }
          },

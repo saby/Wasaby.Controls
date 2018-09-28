@@ -35,11 +35,12 @@ define('Controls/BreadCrumbs/Path', [
             self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long';
          }
       },
-      
-      calculateItems: function(self, items) {
+
+      calculateItems: function(self, items, containerWidth) {
          var
             backButtonWidth,
-            availableWidth;
+            availableWidth,
+            homeWidth;
 
          self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
          if (items.length > 1) {
@@ -51,10 +52,11 @@ define('Controls/BreadCrumbs/Path', [
                   size: 'm'
                }
             }));
-            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, self._container.clientWidth);
+            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
 
-            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? self._container.clientWidth / 2 : self._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self,  self._breadCrumbsItems, availableWidth);
+            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
          } else {
             self._visibleItems = [];
             self._breadCrumbsItems = [];
@@ -95,7 +97,7 @@ define('Controls/BreadCrumbs/Path', [
          if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
                FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function() {
-                  _private.calculateItems(this, this._options.items);
+                  _private.calculateItems(this, this._options.items, this._oldWidth);
                   this._forceUpdate();
                }.bind(this));
             }.bind(this));
@@ -103,9 +105,10 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _beforeUpdate: function(newOptions) {
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth)) {
-            this._oldWidth = this._container.clientWidth;
-            _private.calculateItems(this, newOptions.items);
+         var containerWidth = this._container.clientWidth;
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+            this._oldWidth = containerWidth;
+            _private.calculateItems(this, newOptions.items, containerWidth);
          }
       },
 
@@ -118,7 +121,11 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onResize: function() {
-         //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+         // Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
+      },
+
+      _onHomeClick: function() {
+         this._notify('itemClick', [this._options.items[1], true]);
       },
 
       _onArrowClick: function() {
