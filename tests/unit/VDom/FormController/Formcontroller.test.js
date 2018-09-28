@@ -1,8 +1,10 @@
 define([
+   'Controls/FormController',
+   'WS.Data/Entity/Record',
    'Core/helpers/Function/runDelayed',
    'Core/Deferred',
    'require'
-], function(runDelayed, Deferred, require) {
+], function(FormController, Record, runDelayed, Deferred, require) {
    'use strict';
 
    describe('FormController-tests', function() {
@@ -138,6 +140,60 @@ define([
             el.appendChild(testElement);
          }
 
+      });
+
+      it('initializingWay', () => {
+         let FC = new FormController();
+
+         let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
+         let baseCreateRecordBeforeMount = FormController._private.createRecordBeforeMount;
+         let cfg = {
+            record: new Record(),
+         };
+
+         let isReading = false;
+         let isCreating = false;
+
+         FormController._private.readRecordBeforeMount = () => {
+            isReading = true;
+            return true;
+         };
+
+         FormController._private.createRecordBeforeMount = () => {
+            isCreating = true;
+            return true;
+         };
+
+         let beforeMountResult = FC._beforeMount(cfg);
+         assert.equal(isReading, false);
+         assert.equal(isCreating, false);
+         assert.notEqual(beforeMountResult, true);
+
+         cfg.key = '123';
+         beforeMountResult = FC._beforeMount(cfg);
+         assert.equal(isReading, true);
+         assert.equal(isCreating, false);
+         assert.notEqual(beforeMountResult, true);
+
+         cfg = {
+            key: 123
+         };
+         isReading = false;
+         beforeMountResult = FC._beforeMount(cfg);
+         assert.equal(isReading, true);
+         assert.equal(isCreating, false);
+         assert.equal(beforeMountResult, true);
+
+         isReading = false;
+         isCreating = false;
+         beforeMountResult = FC._beforeMount({});
+         assert.equal(isReading, false);
+         assert.equal(isCreating, true);
+         assert.equal(beforeMountResult, true);
+
+         FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
+         FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
+         FC.destroy();
       });
 
       it('FormController - SimpleCase', function(done) {

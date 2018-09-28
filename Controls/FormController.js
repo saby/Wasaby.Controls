@@ -1,11 +1,89 @@
 define('Controls/FormController', [
    'Core/Control',
+   'Core/core-instance',
    'wml!Controls/FormController/FormController',
    'WS.Data/Entity/Model',
    'Core/Deferred',
    'Core/IoC'
-], function(Control, tmpl, Model, Deferred, IoC) {
+], function(Control, cInstance, tmpl, Model, Deferred, IoC) {
    'use strict';
+
+   var _private = {
+      readRecordBeforeMount: function(instance, cfg) {
+         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
+         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
+         var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
+
+         readDef.addCallback(function(record) {
+            instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._record = record;
+
+            // на изменение рекорда регистрируем пендинг
+            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._readInMounting = { isError: false, result: record };
+
+            if (instance._isMount) {
+               _private.readRecordBeforeMountNotify(instance);
+            }
+
+            return record;
+         });
+         readDef.addErrback(function(e) {
+            IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
+            instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._readInMounting = { isError: true, result: e };
+            throw e;
+         });
+
+         return readDef;
+      },
+      readRecordBeforeMountNotify: function(instance) {
+         if (!instance._readInMounting.isError) {
+            instance._notifyHandler('readSuccessed', [instance._readInMounting.result]);
+
+            // перерисуемся
+            instance._readHandler(instance._record);
+         } else {
+            instance._notifyHandler('readFailed', [instance._readInMounting.result]);
+         }
+         instance._readInMounting = null;
+      },
+
+      createRecordBeforeMount: function(instance, cfg) {
+         // если ни рекорда, ни ключа, создаем новый рекорд и используем его
+         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
+         var createDef = cfg.dataSource.create(cfg.initValues);
+         instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+         createDef.addCallback(function(record) {
+            instance._record = record;
+
+            // на изменение рекорда регистрируем пендинг
+            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._createdInMounting = { isError: false, result: record };
+
+            if (instance._isMount) {
+               _private.createRecordBeforeMountNotify(instance);
+            }
+         });
+         createDef.addErrback(function(e) {
+            instance._createdInMounting = { isError: true, result: e };
+            return e;
+         });
+         return createDef;
+      },
+
+      createRecordBeforeMountNotify: function(instance) {
+         if (!instance._createdInMounting.isError) {
+            instance._notifyHandler('createSuccessed', [instance._createdInMounting.result]);
+
+            // зарегистрируем пендинг, перерисуемся
+            instance._createHandler(instance._record);
+         } else {
+            instance._notifyHandler('createFailed', [instance._createdInMounting.result]);
+         }
+         instance._createdInMounting = null;
+      },
+   };
 
    /**
     * @name Controls/FormController#initValues
@@ -23,90 +101,42 @@ define('Controls/FormController', [
     * Also its default value for destroy method.
     */
 
-   var module = Control.extend({
+   var FormController = Control.extend({
       _template: tmpl,
       _record: null,
 
       _beforeMount: function(cfg) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
-         var self = this;
-
-         // если в опции пришел рекорд, используем его
-         if (cfg.record && cfg.record instanceof Model) {
-            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+         // use record
+         if (cInstance.instanceOfModule(cfg.record, 'WS.Data/Entity/Record')) {
             this._record = cfg.record;
 
-            // на изменение рекорда регистрируем пендинг
+            // register a pending to change the record
             this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
-            if (cfg.isNewRecord) {
-               this._isNewRecord = cfg.isNewRecord;
+            this._isNewRecord = !!cfg.isNewRecord;
+
+            // If there is a key - read the record. Not waiting for answer BL
+            if (cfg.key !== undefined && cfg.key !== null) {
+               _private.readRecordBeforeMount(this, cfg);
             }
          } else if (cfg.key !== undefined && cfg.key !== null) {
-            // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
-            // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-            var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
-            readDef.addCallback(function(record) {
-               self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
-               self._record = record;
-
-               // на изменение рекорда регистрируем пендинг
-               self._record.subscribe('onPropertyChange', self._onPropertyChangeHandler);
-               self._readInMounting = { isError: false, result: record };
-               return record;
-            });
-            readDef.addErrback(function(e) {
-               IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
-               self._record && self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
-               self._readInMounting = { isError: true, result: e };
-               throw e;
-            });
-            return readDef;
+            return _private.readRecordBeforeMount(this, cfg);
          } else {
-            // если ни рекорда, ни ключа, создаем новый рекорд и используем его
-            // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
-            self._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-            var createDef = cfg.dataSource.create(cfg.initValues);
-            createDef.addCallback(function(record) {
-               self._record = record;
-
-               // на изменение рекорда регистрируем пендинг
-               self._record.subscribe('onPropertyChange', self._onPropertyChangeHandler);
-               self._createdInMounting = { isError: false, result: record };
-            });
-            createDef.addErrback(function(e) {
-               self._createdInMounting = { isError: true, result: e };
-               return e;
-            });
-            return createDef;
+            return _private.createRecordBeforeMount(this, cfg);
          }
       },
       _afterMount: function() {
          // если рекорд был создан во время beforeMount, уведомим об этом
          if (this._createdInMounting) {
-            if (!this._createdInMounting.isError) {
-               this._notifyHandler('createSuccessed', [this._createdInMounting.result]);
-
-               // зарегистрируем пендинг, перерисуемся
-               this._createHandler(this._record);
-            } else {
-               this._notifyHandler('createFailed', [this._createdInMounting.result]);
-            }
-            this._createdInMounting = null;
+            _private.createRecordBeforeMountNotify(this);
          }
 
          // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
          if (this._readInMounting) {
-            if (!this._readInMounting.isError) {
-               this._notifyHandler('readSuccessed', [this._readInMounting.result]);
-
-               // перерисуемся
-               this._readHandler(this._record);
-            } else {
-               this._notifyHandler('readFailed', [this._readInMounting.result]);
-            }
-            this._readInMounting = null;
+            _private.readRecordBeforeMountNotify(this);
          }
+         this._isMount = true;
       },
       _afterUpdate: function() {
          if (this._wasCreated || this._wasRead || this._wasDestroyed) {
@@ -139,6 +169,7 @@ define('Controls/FormController', [
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
       },
+
       _tryDeleteNewRecord: function() {
          var def;
          if (this._isNewRecord && this._record) {
@@ -413,53 +444,46 @@ define('Controls/FormController', [
 
       _notifyToOpener: function(eventName, args) {
          var handlers = {
-            'updatesuccessed': '_updateSuccessedHandler',
-            'createsuccessed': '_createSuccessedHandler',
-            'readsuccessed': '_readSuccessedHandler',
-            'deletesuccessed': '_deleteSuccessedHandler'
+            'updatesuccessed': '_getUpdateSuccessedData',
+            'createsuccessed': '_getCreateSuccessedData',
+            'readsuccessed': '_getReadSuccessedData',
+            'deletesuccessed': '_getDeleteSuccessedData'
          };
-         var handlerName = handlers[eventName.toLowerCase()];
-         if (this[handlerName]) {
-            this[handlerName].apply(this, args);
+         var resultDataHandlerName = handlers[eventName.toLowerCase()];
+         if (this[resultDataHandlerName]) {
+            var resultData = this[resultDataHandlerName].apply(this, args);
+            this._notify('sendResult', [resultData], { bubbling: true });
          }
       },
 
-      _updateSuccessedHandler: function(record, key) {
-         var data = {
-            formControllerEvent: 'update',
+      _getUpdateSuccessedData: function(record, key) {
+         var additionalData = {
+            key: key,
+            isNewRecord: this._isNewRecord
+         };
+         return this._getResultData('update', record, additionalData);
+      },
+
+      _getDeleteSuccessedData: function(record) {
+         return this._getResultData('delete', record);
+      },
+
+      _getCreateSuccessedData: function(record) {
+         return this._getResultData('create', record);
+      },
+
+      _getReadSuccessedData: function(record) {
+         return this._getResultData('read', record);
+      },
+      _getResultData: function(eventName, record, additionalData) {
+         return {
+            formControllerEvent: eventName,
             record: record,
-            additionalData: {
-               key: key,
-               isNewRecord: this._isNewRecord
-            }
+            additionalData: additionalData || {}
          };
-         this._notify('sendResult', [data], { bubbling: true });
-      },
-
-      _deleteSuccessedHandler: function(record) {
-         var data = {
-            formControllerEvent: 'delete',
-            record: record
-         };
-         this._notify('sendResult', [data], { bubbling: true });
-      },
-
-      _createSuccessedHandler: function(record) {
-         var data = {
-            formControllerEvent: 'create',
-            record: record
-         };
-         this._notify('sendResult', [data], { bubbling: true });
-      },
-
-      _readSuccessedHandler: function(record) {
-         var data = {
-            formControllerEvent: 'read',
-            record: record
-         };
-         this._notify('sendResult', [data], { bubbling: true });
       }
    });
 
-   return module;
+   FormController._private = _private;
+   return FormController;
 });
