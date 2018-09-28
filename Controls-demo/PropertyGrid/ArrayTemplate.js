@@ -17,6 +17,11 @@ define('Controls-demo/PropertyGrid/ArrayTemplate',
             // this._notify('valueChanged', [tmp]);
             this._param = tmp.split('\n'); // массив исключений
             this._notify('valueChanged', [tmp]);
+         },
+
+         _valueChangedSuggestHandler: function(event, value) {
+            this._value = value;
+            this._notify('valueChanged', [value]);
          }
       });
 
