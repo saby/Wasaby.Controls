@@ -190,7 +190,7 @@ define('SBIS3.CONTROLS/History/HistoryList',
             if (this._options.isGlobalUserConfig) {
                this._options.historyId = GLOBAL_KEY_FIX + this._options.historyId;
                this._SBISStorage._storage.setParam = function() {
-                  GLOBAL_CONFIG_FIX.setParam.apply(GLOBAL_CONFIG_FIX, arguments);
+                  return GLOBAL_CONFIG_FIX.setParam.apply(GLOBAL_CONFIG_FIX, arguments);
                };
             }
          },
