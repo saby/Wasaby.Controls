@@ -15,10 +15,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -169,10 +170,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -328,10 +330,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -371,10 +374,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -440,10 +444,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -526,10 +531,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {

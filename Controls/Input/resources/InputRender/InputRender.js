@@ -242,11 +242,12 @@ define('Controls/Input/resources/InputRender/InputRender',
             value: types(String),
             selectOnClick: types(Boolean),
             tagStyle: types(String).oneOf([
+               'secondary',
+               'success',
                'primary',
-               'done',
-               'attention',
-               'error',
-               'info'
+               'danger',
+               'info',
+               'warning'
             ]),
             autocomplete: types(Boolean),
             tooltip: types(String)
