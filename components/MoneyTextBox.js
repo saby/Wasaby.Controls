@@ -37,7 +37,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       );
 
       if (value) {
-         value = value.replace(/(\.\d*)\d/, '$1');
+         value = value.slice(0, -1);
       }
 
       if(!NumberTextBoxUtil.checkMaxLength(value, maxLength, countMinusInLength)){
