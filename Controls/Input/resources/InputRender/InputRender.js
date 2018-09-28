@@ -122,6 +122,16 @@ define('Controls/Input/resources/InputRender/InputRender',
                inputType, splitValue, processedData;
 
             /**
+             * No need to process the input if the value has not changed.
+             * The input event can be triggered when the ie focus goes out, if placeholder is set.
+             * This is done every time the template is redrawn.
+             * https://www.carsonshold.com/2013/12/js-bug-ie-10-and-11-oninput-event-with-placeholder-set/
+             */
+            if (value === newValue) {
+               return;
+            }
+
+            /**
              * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
              * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
              * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
