@@ -15,6 +15,7 @@
                                         on:readFailed="_errorHandler()"
                                         on:deleteFailed="_errorHandler()"
                                         on:createSuccessed="_createSuccessedHandler()"
+                                        on:readSuccessed="_readSuccessedHandler()"
                                         on:updateSuccessed="_updateSuccessedHandler()"
                                         on:deleteSuccessed="_deleteSuccessedHandler()">
             <div class="controls-MyFormController__block">

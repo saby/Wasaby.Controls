@@ -4185,10 +4185,10 @@ define('SBIS3.CONTROLS/ListView',
             this._loadingIndicatorTimer = undefined;
             ajaxLoader.addClass('controls-AjaxLoader__showIndication');
             indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-            if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+            if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].offsetHeight > scrollContainer.offsetHeight) {
                /* Ищем кординату, которая находится по середине отображаемой области грида */
                centerCord =
-                  (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
+                  (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
                /* Располагаем индикатор, учитывая прокрутку */
                indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
             } else {

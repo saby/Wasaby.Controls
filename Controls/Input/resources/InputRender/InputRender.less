@@ -97,10 +97,46 @@
    text-overflow: clip;
 }
 
+/**
+ * В нативном автодополнении при наведении на одно из значений, оно подставляется в поле ввода.
+ * В этой ситуации нам нужно скрыть наш placeholder. Для этого мы будем смотреть на видимость нативного placeholder.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:placeholder-shown
+ */
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
-   display: inline-flex;
+   display: none;
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
+}
+
+/**
+ * Из-за того что textarea в Controls.Input.Area не лежит на одном уровне с placeholder, мы не можем управлять видимостью
+ * placeholder через css. На сайте нет браузерного автодополнения в Area, поэтому показываем placeholder всегда.
+ * Придумать решение для Area, потому что теоритически автодополнение в Area может быть.
+ * https://online.sbis.ru/opendoc.html?guid=c069c84a-010e-405e-aa67-3c717583c8de
+ */
+.controls-InputArea .controls-InputRender__placeholder {
+   display: inline-flex;
+}
+
+.controls-InputRender__content:placeholder-shown + .controls-InputRender__placeholder {
+   display: inline-flex;
+}
+
+/**
+ * placeholder-shown не поддерживается в IE.
+ * На поле весит аттрибут required и когда значение в поле нет будет применяться псевдоэлемент invalid.
+ */
+.controls-InputRender__content:invalid + .controls-InputRender__placeholder {
+   display: inline-flex;
+}
+
+/**
+ * При построении браузер может автоматически подставить значение в поле и placeholder-shown не работает пока
+ * пользователь не начнет работать с полем.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:-webkit-autofill
+ */
+.controls-InputRender__content:-webkit-autofill + .controls-InputRender__placeholder {
+   display: none;
 }
 
 .controls-InputRender__placeholder_simple {

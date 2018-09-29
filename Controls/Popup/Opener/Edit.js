@@ -32,12 +32,17 @@ define('Controls/Popup/Opener/Edit',
             cfg.eventHandlers.onResult = instance._onResult;
 
 
-            if (meta && meta.record) {
+            if (meta.record) {
                cfg.templateOptions.record = meta.record.clone();
                instance._linkedKey = cfg.templateOptions.record.getId();
             } else {
                instance._linkedKey = undefined;
             }
+
+            if (meta.key) {
+               cfg.templateOptions.key = meta.key;
+            }
+
             return cfg;
          },
          processingResult: function(RecordSynchronizer, data, items, editKey) {
@@ -104,7 +109,7 @@ define('Controls/Popup/Opener/Edit',
          },
 
          open: function(meta, popupOptions) {
-            var config = _private.getConfig(this, meta, popupOptions);
+            var config = _private.getConfig(this, meta || {}, popupOptions);
             this._children.Opener.open(config);
          },
 
