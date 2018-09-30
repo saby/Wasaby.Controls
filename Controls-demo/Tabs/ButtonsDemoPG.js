@@ -5,6 +5,7 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
       'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+      'wml!Controls-demo/Tabs/Buttons/resources/tabSpaceTemplateButton',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
@@ -54,12 +55,14 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                   {
                      id: 1,
                      title: 'Title1',
-                     caption: 'Additional caption1'
+                     caption: 'Additional caption1',
+                     align: 'left'
                   },
                   {
                      id: 2,
                      title: 'Title2',
-                     caption: 'Additional caption2'
+                     caption: 'Additional caption2',
+                     align: 'left'
                   },
                   {
                      id: 3,
@@ -75,6 +78,9 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                ]
             });
             this._dataObject = {
+               readOnly: {
+                  readOnly: true
+               },
                source: {
                   type: 'enum',
                   emptyText: false,
@@ -110,6 +116,22 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                      }
                   ]
                },
+               tabSpaceTemplate: {
+                  readOnly: false,
+                  value: 'Not specified',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'With three button',
+                        template: 'wml!Controls-demo/Tabs/Buttons/resources/tabSpaceTemplateButton'
+                     },
+                     {
+                        id: '2',
+                        title: 'Not specified',
+                        template: null
+                     }
+                  ]
+               },
                itemTemplateProperty: {
                   readOnly: false,
                   value: 'templateTwo'
@@ -122,7 +144,8 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                keyProperty: 'id',
                displayProperty: 'title',
                name: 'TabsButtons',
-               itemTemplateProperty: 'templateTwo'
+               itemTemplateProperty: 'templateTwo',
+               tabSpaceTemplate: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
