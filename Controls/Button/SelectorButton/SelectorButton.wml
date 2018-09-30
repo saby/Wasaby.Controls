@@ -1,18 +1,19 @@
 <div class="controls-SelectorButton">
    <ws:if data="{{_selectedItems && _selectedItems.getCount() !== 0}}">
       <ws:if data="{{_selectedItems.getCount() > _options.maxVisibilityItems}}">
-         <div class="controls-SelectorButton__counterItems">
-            <span name="hiddenItems" on:click="_showHiddenItems()"
-                  attr:class="controls-SelectorButton__counterItems">({{_selectedItems.getCount()}})</span>
+         <div class="controls-SelectorButton__counterItems" name="hiddenItems" on:click="_showHiddenItems()">
+            <span attr:class="controls-SelectorButton__counter">({{_selectedItems.getCount()}})</span>
             <span>...</span>
          </div>
       </ws:if>
-      <Controls.Input.Lookup._Collection
+      <Controls.SelectedCollection
               items="{{_selectedItemsVisible}}"
               displayProperty="{{_options.displayProperty}}"
               multiline="{{true}}"
+              clickable="{{true}}"
               on:itemClick="_itemClickHandler()"
-              on:crossClick="_crossClick()"/>
+              on:crossClick="_crossClick()">
+      </Controls.SelectedCollection>
       <ws:if data="{{_options.multiSelect}}">
          <Controls.Button style="linkMain2" size="s" caption="{[+еще]}" on:click="_open()"
                           attr:class="controls-SelectorButton_button-more"/>
