@@ -1,22 +1,21 @@
-define('Controls/Input/Lookup/_Collection',
+define('Controls/SelectedCollection',
    [
       'Core/Control',
-      'wml!Controls/Input/Lookup/Collection/_Collection',
-      'wml!Controls/Input/Lookup/Collection/ItemTemplate',
-      'css!Controls/Input/Lookup/Collection/Collection'
+      'wml!Controls/SelectedCollection/SelectedCollection',
+      'wml!Controls/SelectedCollection/ItemTemplate',
+      'css!Controls/SelectedCollection/SelectedCollection'
    ],
-   
+
    function(Control, template, ItemTemplate) {
-      
       'use strict';
-      
+
       var Collection = Control.extend({
          _template: template,
 
          _itemClick: function(event, item) {
             this._notify('itemClick', [item]);
          },
-         
+
          _crossClick: function(event, index) {
             var
                items = this._options.items,
@@ -25,13 +24,13 @@ define('Controls/Input/Lookup/_Collection',
             this._notify('crossClick', [currentItem]);
          }
       });
-      
+
       Collection.getDefaultOptions = function() {
          return {
             itemTemplate: ItemTemplate,
             itemsLayout: 'default'
          };
       };
-      
+
       return Collection;
    });

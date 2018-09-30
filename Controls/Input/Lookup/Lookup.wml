@@ -1,5 +1,5 @@
 <ws:template name="collection">
-    <Controls.Input.Lookup._Collection
+    <Controls.SelectedCollection
             name="{{name}}"
             itemTemplate="{{_options.itemTemplate}}"
             itemsLayout="{{itemsLayout}}"

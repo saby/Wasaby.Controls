@@ -22,9 +22,9 @@ define('Controls/Button/SelectorButton', [
             return items;
          });
       },
-      getVisibleItems: function(items, maxVisibilityItems) {
+      getVisibleItems: function(items, maxVisibleItems) {
          return new List({
-            items: Chain(items).last(maxVisibilityItems).value()
+            items: Chain(items).last(maxVisibleItems).value()
          });
       },
       getSelectedKeys: function(items, keyProperty) {
@@ -42,13 +42,12 @@ define('Controls/Button/SelectorButton', [
          } else {
             self._selectedItems.assign(items);
          }
-         self._selectedItemsVisible = _private.getVisibleItems(self._selectedItems, self._options.maxVisibilityItems);
+         self._selectedItemsVisible = _private.getVisibleItems(self._selectedItems, self._options.maxVisibleItems);
          self._selectedKeys = _private.getSelectedKeys(items, keyProperty);
       },
       removeItem: function(self, item) {
          self._selectedItems.remove(item);
-         _private.updateValues(self, self._selectedItems, self._options.displayProperty, self._options.keyProperty);
-         _private.notifyChanges(self, self._selectedItems, self._selectedKeys);
+         _private.updateAndNotify(self, self._selectedItems);
       },
       notifyChanges: function(self, items, keys) {
          self._notify('selectedItemsChanged', [items]);
@@ -70,7 +69,7 @@ define('Controls/Button/SelectorButton', [
          this._onResult = this._onResult.bind(this);
          this._resultHiddenItem = this._resultHiddenItem.bind(this);
          if (options.selectedKeys) {
-            this._selectedKeys = options.selectedKeys;
+            this._selectedKeys = options.selectedKeys.slice();
             if (receivedState) {
                _private.updateValues(this, receivedState, options.displayProperty);
             } else if (options.source) {
@@ -82,7 +81,7 @@ define('Controls/Button/SelectorButton', [
 
       _beforeUpdate: function(newOptions) {
          if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-            this._selectedKeys = newOptions.selectedKeys;
+            this._selectedKeys = newOptions.selectedKeys.slice();
             if (newOptions.source) {
                var self = this;
                return _private.loadItems(this, newOptions.source, newOptions.filter, newOptions.selectedKeys,
@@ -114,9 +113,6 @@ define('Controls/Button/SelectorButton', [
       _resultHiddenItem: function(item, eventType) {
          if (eventType === 'crossClick') {
             _private.removeItem(this, item);
-            if (this._selectedItems.getCount() <= this._options.maxVisibilityItems) {
-               this._children.stickyOpener.close();
-            }
          } else if (eventType === 'itemClick') {
             this._itemClickHandler(item);
          }
@@ -143,14 +139,18 @@ define('Controls/Button/SelectorButton', [
       },
 
       _itemClickHandler: function(item) {
-         this._notify('itemClick', [item]);
+         if (!this._options.multiSelect) {
+            this._open();
+         } else {
+            this._notify('itemClick', [item]);
+         }
       }
    });
 
    SelectorButton.getDefaultOptions = function() {
       return {
          style: 'linkMain2',
-         maxVisibilityItems: 7
+         maxVisibleItems: 7
       };
    };
 

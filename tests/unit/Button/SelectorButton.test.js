@@ -37,10 +37,12 @@ define(
 
          let config = {
             source: source,
+            multiSelect: true,
             selectedKeys: ['1', '2', '3'],
             keyProperty: 'id',
             displayProperty: 'title',
-            caption: 'Выберите запись'
+            caption: 'Выберите запись',
+            maxVisibilityItems: 2
          };
 
          let getButton = function(config) {
@@ -54,7 +56,6 @@ define(
             button._beforeMount(config).addCallback(function() {
                assert.deepEqual(button._selectedItems.getCount(), 3);
                assert.deepEqual(button._selectedItems.at(0).getId(), '1');
-               assert.equal(button._text, 'Запись 1, Запись 2, Запись 3');
                done();
             });
          });
@@ -70,7 +71,6 @@ define(
                   id: '3',
                   title: 'Запись 3'
                }]);
-               assert.equal(button._text, 'Запись 3');
                done();
             });
          });
@@ -83,7 +83,6 @@ define(
             assert.deepEqual(button._selectedItems.getCount(), 5);
             assert.deepEqual(button._selectedItems.at(0).getId(), '1');
             assert.deepEqual(button._selectedItems.at(4).getId(), '5');
-            assert.equal(button._text, 'Запись 1, Запись 2, Запись 3, Запись 4, Запись 5');
          });
 
          it('_beforeUpdate', function(done) {
@@ -94,16 +93,17 @@ define(
             button._beforeUpdate(newConfig).addCallback(function() {
                assert.deepEqual(button._selectedItems.getCount(), 2);
                assert.deepEqual(button._selectedItems.at(0).getId(), '2');
-               assert.equal(button._text, 'Запись 2, Запись 4');
                done();
             });
          });
 
-         it('getCaption', function() {
-            let text = SelectorButton._private.getCaption(new RecordSet({
+         it('getVisibleItems', function() {
+            let visibleItems = SelectorButton._private.getVisibleItems(new RecordSet({
                rawData: initItems, idProperty: 'id'
-            }), 'title');
-            assert.equal(text, 'Запись 1, Запись 2, Запись 3, Запись 4, Запись 5');
+            }), 3);
+            assert.equal(visibleItems.getCount(), 3);
+            assert.equal(visibleItems.at(0).get('id'), '3');
+            assert.equal(visibleItems.at(2).get('id'), '5');
          });
 
          it('getSelectedKeys', function() {
@@ -111,6 +111,18 @@ define(
                rawData: initItems, idProperty: 'id'
             }), 'id');
             assert.deepEqual(keys, ['1', '2', '3', '4', '5']);
+         });
+
+         it('notifyChanges', function() {
+            let button = getButton(config);
+            button._notify = (e, data) => {
+               if (e === 'selectedKeysChanged') {
+                  assert.deepEqual(data[0], [1, 2, 3]);
+               } else if (e === 'selectedItemsChanged') {
+                  assert.deepEqual(data[0], ['1', '2', '3']);
+               }
+            };
+            SelectorButton._private.notifyChanges(button, ['1', '2', '3'], [1, 2, 3]);
          });
 
          it('open', function() {
@@ -132,7 +144,6 @@ define(
                rawData: initItems.slice(1, 3), idProperty: 'id'
             }));
             assert.deepEqual(button._selectedItems.getCount(), 2);
-            assert.equal(button._text, 'Запись 2, Запись 3');
          });
 
          it('reset', function() {
@@ -144,10 +155,68 @@ define(
                }
             };
             button._selectedKeys = ['1', '2', '3'];
-            button._text = 'Запись 1, Запись 2, Запись 3';
             button._reset();
             assert.deepEqual(button._selectedItems.length, 0);
-            assert.equal(button._text, '');
+         });
+
+         it('removeItems', function() {
+            let button = getButton(config);
+            button._beforeMount({});
+            button._selectedItems = button._selectedItemsVisible = new List({
+               items: [{ id: '1', title: 'Запись 1' }]
+            });
+            SelectorButton._private.removeItem(button, button._selectedItems.at(0));
+            assert.equal(button._selectedItems.getCount(), 0);
+            assert.equal(button._selectedItemsVisible.getCount(), 0);
+         });
+
+         it('_resultHiddenItem', function() {
+            let button = getButton(config);
+            button._selectedItems = button._selectedItemsVisible = new List({
+               items: [{ id: '1', title: 'Запись 1' }]
+            });
+            button._notify = (e, data) => {
+               if (e === 'itemClick') {
+                  assert.deepEqual(data[0], { id: '1', title: 'Запись 1' });
+               }
+            };
+            button._resultHiddenItem({ id: '1', title: 'Запись 1' }, 'crossClick');
+            button._resultHiddenItem({ id: '1', title: 'Запись 1' }, 'itemClick');
+         });
+
+         it('_crossClick', function() {
+            let button = getButton(config);
+            button._selectedItems = button._selectedItemsVisible = new List({
+               items: [{ id: '1', title: 'Запись 1' }]
+            });
+            button._crossClick('crossClick', { id: '1', title: 'Запись 1' });
+            assert.equal(button._selectedItems.getCount(), 0);
+            assert.equal(button._selectedItemsVisible.getCount(), 0);
+         });
+
+         it('_itemClickHandler singleSelect', function() {
+            let singleConfig = Clone(config);
+            singleConfig.multiSelect = false;
+            let button = getButton(singleConfig);
+            button._children = { 'selectorOpener': { open: setTrue.bind(this, assert) } };
+            button._itemClickHandler([]);
+         });
+
+         it('_itemClickHandler multiSelect', function() {
+            let button = getButton(config);
+            button._notify = (e, data) => {
+               if (e === 'itemClick') {
+                  assert.deepEqual(data[0], []);
+               }
+            };
+            button._itemClickHandler([]);
+         });
+
+         it('_showHiddenItems', function() {
+            let button = getButton(config);
+            button._children = { 'stickyOpener': { open: setTrue.bind(this, assert) } };
+            button._container = { offsetWidth: 400 };
+            button._showHiddenItems();
          });
 
          function setTrue(assert) {
