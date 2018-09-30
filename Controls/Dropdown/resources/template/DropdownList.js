@@ -147,6 +147,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   templateOptions: {
                      items: this._options.items,
                      itemTemplate: this._options.itemTemplate,
+                     itemTemplateProperty: this._options.itemTemplateProperty,
                      keyProperty: this._options.keyProperty,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
@@ -173,13 +174,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
-   
+
          _additionMouseenter: function() {
             if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();
             }
          },
-         
+
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
