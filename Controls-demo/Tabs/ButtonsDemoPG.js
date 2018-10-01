@@ -1,23 +1,23 @@
-define('Controls-demo/RadioGroup/RadioGroupDemoPG',
+define('Controls-demo/Tabs/ButtonsDemoPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
-      'wml!Controls-demo/RadioGroup/resources/itemTemplateWithContent',
-      'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+      'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+      'wml!Controls-demo/Tabs/Buttons/resources/tabSpaceTemplateButton',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, MemorySource, itemTmpl) {
+   function(Control, template, config, MemorySource) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Toggle/RadioGroup',
+         _content: 'Controls/Tabs/Buttons',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -55,17 +55,19 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                   {
                      id: 1,
                      title: 'Title1',
-                     caption: 'Additional caption1'
+                     caption: 'Additional caption1',
+                     align: 'left'
                   },
                   {
                      id: 2,
                      title: 'Title2',
-                     caption: 'Additional caption2'
+                     caption: 'Additional caption2',
+                     align: 'left'
                   },
                   {
                      id: 3,
                      title: 'Title3',
-                     templateTwo: 'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
+                     templateTwo: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
                      caption: 'Additional caption3'
                   },
                   {
@@ -76,6 +78,9 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                ]
             });
             this._dataObject = {
+               readOnly: {
+                  readOnly: true
+               },
                source: {
                   type: 'enum',
                   emptyText: false,
@@ -87,11 +92,6 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                      source1: this._source,
                      source2: this._source2
                   }
-               },
-               direction: {
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
                },
                selectedKey: {
                   precision: 0,
@@ -107,12 +107,28 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                      {
                         id: '1',
                         title: 'Custom template',
-                        template: 'wml!Controls-demo/RadioGroup/resources/itemTemplateWithContent'
+                        template: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate'
                      },
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate'
+                        template: 'wml!Controls/Tabs/Buttons/ItemTemplate'
+                     }
+                  ]
+               },
+               tabSpaceTemplate: {
+                  readOnly: false,
+                  value: 'Not specified',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'With three button',
+                        template: 'wml!Controls-demo/Tabs/Buttons/resources/tabSpaceTemplateButton'
+                     },
+                     {
+                        id: '2',
+                        title: 'Not specified',
+                        template: null
                      }
                   ]
                },
@@ -124,14 +140,12 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
             this._componentOptions = {
                selectedKey: 1,
                readOnly: false,
-               direction: 'horizontal',
                source: this._source,
                keyProperty: 'id',
-               placeholder: 'select',
                displayProperty: 'title',
-               name: 'RadioGroup',
-               itemTemplate: null,
-               itemTemplateProperty: 'templateTwo'
+               name: 'TabsButtons',
+               itemTemplateProperty: 'templateTwo',
+               tabSpaceTemplate: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
