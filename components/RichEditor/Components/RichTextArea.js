@@ -1667,6 +1667,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                }
+               if (selection.isCollapsed() && (command === 'bold' || command === 'italic' || command === 'underline' || command === 'strikethrough') && formatter.match(command)) {
+                  rng = selection.getRng();
+                  var node = rng.commonAncestorContainer;
+                  if (node.nodeType === 3) {
+                     var caret = editor.dom.getParent(node, '#_mce_caret');
+                     // при снятии свойств форматирования bold, italic, underline и strikethrough может возникать ошибка из-за слишком высокого положения каретки, поэтому убрать её совсем
+                     // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
+                     if (caret && caret !== node.parentNode.parentNode) {
+                        var offset = rng.startOffset;
+                        $(caret.childNodes).unwrap();
+                        this._selectNewRng(node, offset);
+                     }
+                  }
+               }
                if (skipUndo) {
                   editor.undoManager.ignore(editor.execCommand.bind(editor, editorCmd || command));
                }
