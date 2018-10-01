@@ -13,6 +13,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
+
          setPopupOptions: function(self, horizontalAlign) {
             var align = horizontalAlign.side || 'right';
             self._popupOptions = {
@@ -31,7 +32,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          },
 
-         getConfig(instance, event, item){
+         getConfig(instance, event, item) {
             return {
                templateOptions: {
                   items: instance._options.items,
@@ -162,6 +163,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
                _private.setPopupOptions(this, context.stickyCfg.horizontalAlign);
             }
          },
+
+
+
+
+
+
 
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {

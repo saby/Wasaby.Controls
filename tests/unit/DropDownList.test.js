@@ -7,7 +7,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       {
          id: 1,
          parent: null,
-         '@parent': false
+         '@parent': false,
+         myTemplate: 'wml!Path/To/CustomTemplate'
       },
       {
          id: 2,
@@ -17,7 +18,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       {
          id: 3,
          parent: 1,
-         '@parent': false
+         '@parent': false,
+         myTemplate: 'wml!Path/To/CustomTemplate'
       },
       {
          id: 4,
@@ -29,7 +31,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          id: 5,
          parent: 1,
          isAdditional: true,
-         '@parent': true
+         '@parent': true,
+         myTemplate: 'wml!Path/To/CustomTemplate'
       }
    ];
 
@@ -42,7 +45,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          displayProperty: 'id',
          keyProperty: 'id',
          nodeProperty: '@parent',
-         parentProperty: 'parent'
+         parentProperty: 'parent',
+         itemTemplateProperty: 'myTemplate'
       };
    };
 
@@ -88,16 +92,16 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             dropDownConfig = getDropDownConfig();
             dropDownConfig.additionalProperty = 'isAdditional';
             dropDownList = getDropDownListWithConfig(dropDownConfig);
-   
+
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
-   
+
             assert.isFalse(dropDownList._hasHierarchy);
 
             dropDownList._expanded = true; //В компоненте значение меняется по биндингу
             dropDownList._toggleExpanded();
             assert.isTrue(dropDownList._hasHierarchy);
-            
+
             /*************************************/
 
             /**** CHANGE ORIENTATION POPUP *******************/
@@ -123,7 +127,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'left'});
 
          });
-         
+
       });
 
       describe('DropdownList::_beforeMount', function() {
@@ -134,6 +138,43 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
 
             dropDownList._beforeMount(dropDownConfig);
             assert.isTrue(dropDownList._popupOptions !== undefined);
+         });
+
+      });
+
+      describe('DropdownList::_private.getConfig', function() {
+         it('check config', function() {
+            var dropDownConfig, dropDownList;
+
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList._beforeMount(dropDownConfig);
+
+            var expectedConfig = {
+               templateOptions: {
+                  items: dropDownList._options.items,
+                  itemTemplate: dropDownList._options.itemTemplate,
+                  itemTemplateProperty: dropDownList._options.itemTemplateProperty,
+                  keyProperty: dropDownList._options.keyProperty,
+                  parentProperty: dropDownList._options.parentProperty,
+                  nodeProperty: dropDownList._options.nodeProperty,
+                  selectedKeys: dropDownList._options.selectedKeys,
+                  rootKey: null,
+                  showHeader: false,
+                  defaultItemTemplate: dropDownList._options.defaultItemTemplate
+               },
+               corner: dropDownList._popupOptions.corner,
+               horizontalAlign: dropDownList._popupOptions.horizontalAlign,
+               target: "MyTarget"
+            };
+
+
+            items.each(function(item) {
+               expectedConfig.templateOptions.rootKey = item.get(dropDownList._options.keyProperty);
+               var inFactConfig = DropdownList._private.getConfig(dropDownList, { target: "MyTarget"}, item);
+               assert.deepEqual(expectedConfig, inFactConfig);
+            });
+
          });
 
       });
