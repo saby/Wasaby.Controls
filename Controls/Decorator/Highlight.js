@@ -47,6 +47,11 @@ define('Controls/Decorator/Highlight',
             return index % 2 === 0;
          },
 
+         /**
+          * Converts words to the text value of a regular expression. It describes a set of these words and their combinations.
+          * @param {Array} words word list.
+          * @returns {String}
+          */
          transform: function(words) {
             var result = '';
             var length = words.length;
@@ -71,10 +76,6 @@ define('Controls/Decorator/Highlight',
 
          /**
           * Get the string to search converted to a regular expression.
-          * Transformation:
-          * highlight = 'W1 W2 ... Wn'; n - the number of worlds;
-          * Wi = 'w1w2...wk'; wi - symbol on the i-th position; k - the number of characters in a word;
-          * highlightRegExp = /(W1(\s(?=W2|W3|...|Wn))?)?...(Wi(\s(?=Wi+1|Wi+2|...|Wn))?)?...(Wn)?/gi
           * @example
           * <pre>
           *    getHighlightRegExp('Hello world') // /(Hello(\s(?=world))?)?(world)?/gi

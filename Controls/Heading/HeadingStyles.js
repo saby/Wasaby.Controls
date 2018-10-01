@@ -1,4 +1,4 @@
-define('Controls/Header/HeadingStyles',
+define('Controls/Heading/HeadingStyles',
    [
    ],
    function() {
@@ -6,7 +6,7 @@ define('Controls/Header/HeadingStyles',
 
    /**
     *
-    * @mixin Controls/Header/HeadingStyles
+    * @mixin Controls/Heading/HeadingStyles
     * @public
     *
     * @css @font-size_Heading__caption_size-s Small text size.
