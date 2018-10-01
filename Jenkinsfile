@@ -427,7 +427,6 @@ node('controls') {
                             ln -s ../WIS-git-temp controls/sbis3-ws
                             ln -s ../ws_data/WS.Data controls/WS.Data
                             ln -s ../ws_data/Data controls/Data
-                            ln -s ../../ws_data/WS.Data controls/components/WS.Data
                             """
                         }
                         dir("./controls"){
