@@ -19,7 +19,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
 
          this._closeSelectorBind = this._closeSelector.bind(this);
          this._source = new Memory({
-            data: lookupData,
+            data: lookupData.names,
             filter: function(item, queryFilter) {
                var selectionFilterFn = function(item, filter) {
                   var

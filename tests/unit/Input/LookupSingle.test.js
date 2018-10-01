@@ -9,14 +9,23 @@ define([
    'Controls/Popup/Opener/Sticky',
    'Controls/Input/Lookup/_Collection'
 ], function(Lookup, Model, List, Memory, Sticky, Collection) {
+
+   function getBaseLookup() {
+      return {
+         _selectedKeys: [],
+         _suggestState: true,
+         _notify: function(){},
+         _forceUpdate: function(){},
+         _options: {
+            keyProperty: 'id'
+         }
+      }
+   }
    
    describe('Controls/Input/Lookup', function() {
-      
       it('keysChanged', function() {
-         var self = {};
-         self._selectedKeys = [];
-         self._suggestState = true;
-         
+         var self = getBaseLookup();
+
          Lookup._private.keysChanged(self);
          
          assert.isTrue(self._isEmpty);
@@ -28,9 +37,7 @@ define([
       });
       
       it('setSelectedKeys', function() {
-         var self = {};
-         self._suggestState = true;
-         self._selectedKeys = {};
+         var self = getBaseLookup();
          
          Lookup._private.setSelectedKeys(self, [1]);
          
@@ -62,19 +69,6 @@ define([
          });
       });
 
-
-      it('removeItem', function() {
-         var self = {};
-         self._selectedKeys = [1];
-         self._notify = function(){};
-         
-         Lookup._private.setSelectedKeys(self, [1]);
-         
-         assert.deepEqual(self._selectedKeys, [1]);
-         assert.isFalse(self._isEmpty);
-         assert.isFalse(self._suggestState);
-      });
-      
       it('getItems', function() {
          var self = {};
          
@@ -85,18 +79,15 @@ define([
       });
       
       it('addItem', function() {
-         var self = {
-            _selectedKeys: [],
-            _options: {
-               keyProperty: 'id'
-            }
-         };
-         var item = new Model({
-            rawData: {
-               id: 1
-            }
-         });
-         var keysChanged = false;
+         var
+            keysChanged = false,
+            self = getBaseLookup(),
+            item = new Model({
+               rawData: {
+                  id: 1
+               }
+            });
+
          self._notify = function(eventName) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
@@ -116,24 +107,20 @@ define([
       });
       
       it('removeItem', function() {
-         var self = {
-            _selectedKeys: [],
-            _options: {
-               keyProperty: 'id'
-            }
-         };
-         var item = new Model({
-            rawData: {
-               id: 1
-            }
-         });
-         var fakeItem = new Model({
-            rawData: {
-               id: 2
-            }
-         });
-         
-         var keysChanged = false;
+         var
+            keysChanged = false,
+            self = getBaseLookup(),
+            item = new Model({
+               rawData: {
+                  id: 1
+               }
+            }),
+            fakeItem = new Model({
+               rawData: {
+                  id: 2
+               }
+            });
+
          self._notify = function(eventName) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;

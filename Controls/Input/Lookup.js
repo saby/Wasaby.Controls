@@ -18,7 +18,7 @@ define('Controls/Input/Lookup', [
    'use strict';
 
    /**
-    * Input for selection from source (single choice).
+    * Input for selection from source.
     *
     * @class Controls/Input/Lookup
     * @mixes Controls/Input/interface/ISearch
@@ -39,13 +39,13 @@ define('Controls/Input/Lookup', [
     */
 
    var _private = {
-      loadItems: function(self, filter, keyProperty, selectedKeys, source) {
+      loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
          var filter = clone(filter || {});
          var resultDef = new Deferred();
 
          filter[keyProperty] = selectedKeys;
 
-         if (!self.sourceController) {
+         if (sourceIsChanged || !self.sourceController) {
             self.sourceController = new SourceController({
                source: source
             });
@@ -127,6 +127,8 @@ define('Controls/Input/Lookup', [
          if (!self._isEmpty) {
             self._suggestState = false;
          }
+
+         self._forceUpdate();
       },
 
       getCollectionSlice: function(self, startIndex) {
@@ -149,7 +151,7 @@ define('Controls/Input/Lookup', [
       },
 
       getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
-         /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
+         /* By the standard, the minimum input field width is 33%, but not more than 100 */
          var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
 
          return Math.min(minWidthFieldWrapper, 100);
@@ -176,15 +178,15 @@ define('Controls/Input/Lookup', [
             if (itemsCount === 1) {
                displayItems = itemsCount;
             } else {
-               /* Учтем ширину кнопки, показывающей все записи */
+               /* Consider the width of the button that shows all the records */
                availableWidth -= self._children.showAllLinks.offsetWidth;
 
-               /* Считаем, сколько элементов может отобразиться */
+               /* Count how many elements can display */
                for (var i = itemsCount - 1; i >= 0; i--) {
                   itemWidth = _private.getItemWidth(self, i);
 
                   if ((itemsWidth + itemWidth) > availableWidth) {
-                     /* Если ни один элемент не влезает, то отобразим только последний выбранный */
+                     /* If no element is inserted, then only the last selected */
                      if (!itemsWidth) {
                         displayItems++;
                      }
@@ -234,30 +236,41 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         if (this._selectedKeys.length) {
+         if (this._selectedKeys.length && !this._options.readOnly) {
             _private.alignSelectedCollection(this);
             this._forceUpdate();
          }
       },
 
       _beforeUpdate: function(newOptions) {
-         var keysChanged = false,
-            self = this;
+         var
+            self = this,
+            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
+            sourceIsChanged = newOptions.source !== this._options.source;
 
          _private.updateModel(this, newOptions.value);
 
-         if (!isEqual(newOptions.selectedKeys, this._selectedKeys)) {
-            keysChanged = true;
-            this._selectedKeys = newOptions.selectedKeys.slice();
-            _private.keysChanged(this);
+         if (keysChanged) {
+            _private.setSelectedKeys(this, newOptions.selectedKeys.slice());
+         } else if (sourceIsChanged) {
+            _private.setSelectedKeys(this, []);
+         } else if (newOptions.keyProperty !== this._options.keyProperty) {
+            this._selectedKeys = [];
+            _private.getItems(this).each(function(item) {
+               self._selectedKeys.push(item.get(newOptions.keyProperty));
+            });
          }
 
-         if (!this._collectionIsReady && !this._isPickerVisible) {
-            _private.alignSelectedCollection(this);
+         if (newOptions.readOnly !== this._options.readOnly ||
+            newOptions.displayProperty !== this._options.displayProperty) {
+
+            this._collectionIsReady = false;
          }
 
-         if (newOptions.source !== this._options.source || keysChanged && this._selectedKeys.length) {
-            _private.loadItems(this, newOptions.filter, newOptions.keyProperty, newOptions.selectedKeys, newOptions.source).addCallback(function(result) {
+
+         if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
+            _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
+               self._collectionIsReady = false;
                self._forceUpdate();
                return result;
             });
@@ -272,6 +285,11 @@ define('Controls/Input/Lookup', [
             if (this._active) {
                this.activate();
             }
+         }
+
+         if (!this._collectionIsReady && !this._isPickerVisible) {
+            _private.alignSelectedCollection(this);
+            this._forceUpdate();
          }
       },
 

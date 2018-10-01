@@ -5,7 +5,7 @@ define('Controls/Utils/DOMUtil', function() {
    'use strict';
 
    /**
-    * Возвращяет внутреннюю ширину элемента(т.е за вычетом бордеров, падингов и полосы прокрутки)
+    * Returns the internal width of the element (that is, after deduction the borders, padding and scroll bars)
     * @param {window.Node} container
     * @return {window.Number}
     **/

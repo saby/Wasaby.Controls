@@ -28,19 +28,23 @@
             </div>
             <div class="control-Lookup-demo-block">
                 <div class="control-Lookup-demo-title">
-                    Lookup bold items
+                    Lookup bold items with link
                 </div>
                 <div>
                     base line test
                     <Controls.Input.Lookup
+                            name="lookup"
                             bind:value="_value2"
                             bind:selectedKeys="_selectedKeys2"
                             source="{{_source}}"
-                            placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:placeholder>
+                            Выберите
+                            <Controls.Input.Lookup.Link caption="имя" on:click="showSelector()"/>
+                        </ws:placeholder>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -108,7 +112,7 @@
         <div class="demo-Lookup-centered">
             <div class="control-Lookup-demo-block">
             <div class="control-Lookup-demo-title">
-                Lookup single select readOnly
+                Lookup multi select readOnly
             </div>
             <div>
                 base line test
@@ -118,6 +122,7 @@
                         source="{{_source}}"
                         placeholder="Введите имя"
                         searchParam="title"
+                        multiSelect="{{true}}"
                         readOnly="{{true}}"
                         keyProperty="id"
                         attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">

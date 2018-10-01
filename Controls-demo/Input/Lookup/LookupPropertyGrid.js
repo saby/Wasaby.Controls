@@ -4,63 +4,79 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid',
       'tmpl!Controls-demo/Input/Lookup/LookupPropertyGrid',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
+      'Controls-demo/Input/Lookup/LookupData',
+      'json!Controls-demo/PropertyGrid/pgtext',
       'Controls/Input/Lookup',
       'css!Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/LookupPropertyGrid'
    ],
-   function(Control, template, Memory, memorySourceFilter) {
-      
+   function(Control, template, Memory, memorySourceFilter, sourceData, config) {
       'use strict';
-      
-      var sourceData = [
-         { id: 1, title: 'Sasha', text: 'test'},
-         { id: 2, title: 'Dmitry', text: 'test'},
-         { id: 3, title: 'Andrey', text: 'test'},
-         { id: 4, title: 'Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст,', text: 'test'},
-         { id: 5, title: 'Aleksey', text: 'test'},
-         { id: 6, title: 'Sasha', text: 'test'},
-         { id: 7, title: 'Ivan', text: 'test'},
-         { id: 8, title: 'Petr', text: 'test'},
-         { id: 9, title: 'Roman', text: 'test'},
-         { id: 10, title: 'Maxim', text: 'test'},
-      ];
-      
-      var sizes = [
-         {size: 'default'},
-         {size: 'm'},
-         {size: 'l'},
-         {size: 'h'},
-      ];
-      
-      var styles = [
-         {style: 'default'},
-         {style: 'bold'},
-         {style: 'accent'},
-         {style: 'primary'},
-      ];
-      
+
       var Lookup = Control.extend({
          _template: template,
-         _value: '',
-         _selectedKeys: [4],
-         _source: new Memory({
-            data: sourceData,
-            idProperty: 'id',
-            filter: memorySourceFilter()
-         }),
-         _readOnly: false,
-         
-         _styleSource: new Memory({
-            data: styles,
-            idProperty: 'style'
-         }),
-         _sizeSource: new Memory({
-            data: sizes,
-            idProperty: 'size'
-         }),
-         
-         _style: 'default',
-         _size: 'default'
+         _content: 'Controls/Input/Lookup',
+         _dataObject: null,
+         _componentOptions: null,
+         _metaData: null,
+         _currentSource: 'names',
+         _suggestTemplate: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
+         _lookupTemplate: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
+
+         _beforeMount: function() {
+            this._componentOptions = {
+               name: 'LookUp',
+               readOnly: false,
+               searchParam: 'title',
+               placeholder: 'Input text',
+               source: new Memory({
+                  data: sourceData[this._currentSource],
+                  idProperty: 'id',
+                  filter: memorySourceFilter()
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title',
+               suggestTemplate: {
+                  templateName: this._suggestTemplate
+               },
+               lookupTemplate: {
+                  templateName: this._lookupTemplate
+               }
+            };
+            this._dataObject = {
+               displayProperty: {
+                  selectedKey: 1,
+                  displayProperty: 'title',
+                  keyProperty: 'id'
+               },
+               keyProperty: {
+                  selectedKey: 2,
+                  displayProperty: 'title',
+                  keyProperty: 'id'
+               },
+               source: {
+                  items: [
+                     {id: '1', title: 'Names'},
+                     {id: '2', title: 'Cars'}
+                  ],
+                  value: 'Names'
+               }
+            };
+            this._metaData = config[this._content].properties['ws-config'].options;
+         },
+
+         _optionsChanged: function(event, options) {
+            var sourceName = options.description.source.value.toLowerCase();
+
+            if (sourceData[sourceName] && sourceName !== this._currentSource) {
+               this._currentSource = sourceName;
+               this._componentOptions.source = new Memory({
+                  data: sourceData[sourceName],
+                  idProperty: 'id',
+                  filter: memorySourceFilter()
+               });
+            }
+         }
       });
       
       return Lookup;

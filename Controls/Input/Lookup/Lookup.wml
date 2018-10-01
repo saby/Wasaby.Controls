@@ -48,7 +48,6 @@
                         displayItemsIndex="{{_options.readOnly ? 0 :_displayItemsIndex}}"
                         displayProperty="{{_options.displayProperty}}"
                         itemTemplate="{{_options.itemTemplate}}"
-                        readOnly="{{_options.readOnly}}"
                         on:itemClick="_itemClick()"
                         on:crossClick="_crossClick()"/>
             </ws:if>
@@ -75,6 +74,7 @@
                         items="{{_items}}"
                         displayProperty="{{_options.displayProperty}}"
                         itemTemplate="{{_options.itemTemplate}}"
+                        readOnly="{{_options.readOnly}}"
                         on:itemClick="_itemClick()"
                         on:crossClick="_crossClick()"/>
             </ws:template>

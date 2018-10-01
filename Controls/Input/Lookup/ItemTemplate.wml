@@ -9,5 +9,5 @@
     <ws:if data="{{!readOnly}}">
         <ws:partial template="{{crossTemplate}}"/>
     </ws:if>
-    <ws:if data="{{!isLastItem}}">,</ws:if>
+    <ws:if data="{{!isLastItem && itemsLayout !== 'twoColumns'}}">,</ws:if>
 </div>
