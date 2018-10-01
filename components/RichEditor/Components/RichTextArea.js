@@ -759,7 +759,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @param json
              * @private
              */
-            _resolveDecoratedLinkInJson(json) {
+            _resolveDecoratedLinkInJson: function(json) {
                if (typeof json === 'string' || !Array.isArray(json)) {
                   return;
                }
