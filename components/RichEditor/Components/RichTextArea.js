@@ -89,6 +89,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          return version;
       };
 
+      var onlyNotSpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
+
       var
          // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
@@ -752,6 +754,39 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Превращение неуместных decoratedlink обратно в тег а. Временное решение для хотфикса.
+             * В задаче https://online.sbis.ru/opendoc.html?guid=d93d7fb0-0eab-4a86-a1c3-74e403b85f0c будет переписано.
+             * @param json
+             * @private
+             */
+            _resolveDecoratedLinkInJson(json) {
+               if (typeof json === 'string' || !Array.isArray(json)) {
+                  return;
+               }
+               for (var i = 0; i < json.length; ++i) {
+                  this._resolveDecoratedLinkInJson(json[i]);
+                  if (json[i][0] !== 'decoratedlink') {
+                     continue;
+                  }
+                  if (i === json.length - 1) {
+                     continue;
+                  }
+                  if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
+                     continue;
+                  }
+                  json[i] = ['a',
+                     {
+                        'class': 'asLink',
+                        href: json[i][1].href,
+                        rel: 'noreferrer',
+                        target: '_blank'
+                     },
+                     json[i][1].href
+                  ];
+               }
+            },
+
+            /**
              * Обработчик события - обновить значение опции "json"
              * @param {Core/EventObject} e Дескриптор события
              * @param {string} text Новое значение текста
@@ -768,6 +803,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                div.innerHTML = text;
                var options = this._options;
                var json = domToJson(div).slice(1);
+               this._resolveDecoratedLinkInJson(json);
                options.json = typeof options.json === 'string' ? JSON.stringify(json) : json;
                this._notify('onJsonChange', [options.json]);
             },
