@@ -1,7 +1,12 @@
 //--------------- constants ---------------
 @width_Grid-cell-checkbox: 24px;
+@width_Grid-selection-marker: 3px;
+@color_Grid-selection-marker: #FF7033;
 //--------------- styles ---------------
 .ws-is-not-full-grid-support {
+  .controls-Grid__row-cell_withSelectionMarker {
+    box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
+  }
   .controls-Grid {
     display: table;
     table-layout: fixed;
