@@ -39,32 +39,26 @@ define('Controls-demo/Filter/Button/PanelVDom',
          sourcePeriod: null,
          sourceState: null,
          _beforeMount: function() {
-            this.sourcePeriod = {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {key: 1, title: 'All time'},
-                     {key: 2, title: 'Today'},
-                     {key: 3, title: 'Past month'},
-                     {key: 4, title: 'Past 6 months'},
-                     {key: 5, title: 'Past year'}
-                  ],
-                  idProperty: 'key'
-               }
-            };
-            this.sourceState = {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {key: 1, title: 'All states'},
-                     {key: 2, title: 'In progress'},
-                     {key: 3, title: 'Done'},
-                     {key: 4, title: 'Not done'},
-                     {key: 5, title: 'Deleted'}
-                  ],
-                  idProperty: 'key'
-               }
-            };
+            this.sourcePeriod = new MemorySource({
+               data: [
+                  {key: 1, title: 'All time'},
+                  {key: 2, title: 'Today'},
+                  {key: 3, title: 'Past month'},
+                  {key: 4, title: 'Past 6 months'},
+                  {key: 5, title: 'Past year'}
+               ],
+               idProperty: 'key'
+            });
+            this.sourceState = new MemorySource({
+               data: [
+                  {key: 1, title: 'All states'},
+                  {key: 2, title: 'In progress'},
+                  {key: 3, title: 'Done'},
+                  {key: 4, title: 'Not done'},
+                  {key: 5, title: 'Deleted'}
+               ],
+               idProperty: 'key'
+            });
             this._itemsSimple = [
                {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: this.sourcePeriod},
                {id: 'state', value: [1], resetValue: [1], source: this.sourceState},
