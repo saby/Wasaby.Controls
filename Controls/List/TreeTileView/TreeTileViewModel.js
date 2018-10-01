@@ -44,8 +44,16 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
          this._tileModel.setTileMode(tileMode);
       },
 
+      getTileMode: function() {
+         return this._tileModel.getTileMode();
+      },
+
       setItemsHeight: function(itemsHeight) {
          this._tileModel.setItemsHeight(itemsHeight);
+      },
+
+      getItemsHeight: function() {
+         return this._tileModel.getItemsHeight();
       },
 
       setHoveredItem: function(itemData) {
@@ -64,14 +72,6 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
       setRoot: function() {
          this._tileModel.setHoveredItem(null);
          TreeTileViewModel.superclass.setRoot.apply(this, arguments);
-      },
-
-      setTargetItem: function(itemData) {
-         this._tileModel.setTargetItem(itemData);
-      },
-
-      getTargetItem: function() {
-         return this._tileModel.getTargetItem();
       },
 
       destroy: function() {

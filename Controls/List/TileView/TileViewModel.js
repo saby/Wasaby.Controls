@@ -48,15 +48,15 @@ define('Controls/List/TileView/TileViewModel', [
          }
       },
 
+      getHoveredItem: function() {
+         return this._hoveredItem;
+      },
+
       setActiveItem: function(activeItem) {
          if (!activeItem) {
             this.setHoveredItem(null);
          }
          TileViewModel.superclass.setActiveItem.apply(this, arguments);
-      },
-
-      getHoveredItem: function() {
-         return this._hoveredItem;
       }
    });
 

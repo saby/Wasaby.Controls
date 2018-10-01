@@ -18,36 +18,58 @@ define('Controls/List/TileView/TileView', [
             rightOffset = containerRect.width - (itemRect.right + additionalWidth / 2),
             bottomOffset = containerRect.height - (itemRect.bottom + additionalHeight / 2);
 
-         if (leftOffset < 0 && rightOffset < 0 || topOffset < 0 && bottomOffset < 0) {
+         if (leftOffset < 0) {
+            rightOffset += leftOffset;
+            leftOffset = 0;
+         } else if (rightOffset < 0) {
+            leftOffset += rightOffset;
+            rightOffset = 0;
+         }
+         if (topOffset < 0) {
+            bottomOffset += topOffset;
+            topOffset = 0;
+         } else if (bottomOffset < 0) {
+            topOffset += bottomOffset;
+            bottomOffset = 0;
+         }
+
+         if (leftOffset < 0 || rightOffset < 0 || topOffset < 0 || bottomOffset < 0) {
             result = null;
          } else {
-            if (leftOffset < 0 && rightOffset < 0) {
-               leftOffset = rightOffset = 0;
-            } else if (leftOffset < 0) {
-               rightOffset += leftOffset;
-               leftOffset = 0;
-            } else if (rightOffset < 0) {
-               leftOffset += rightOffset;
-               rightOffset = 0;
-            }
-            if (topOffset < 0) {
-               topOffset = 0;
-            }
-
             result = {
-               right: rightOffset,
                left: leftOffset,
-               top: topOffset
+               right: rightOffset,
+               top: topOffset,
+               bottom: bottomOffset
             };
          }
          return result;
       },
       onScroll: function(self) {
-         clearTimeout(self._mouseMoveTimeout);
+         _private.clearMouseMoveTimeout(self);
          self._listModel.setHoveredItem(null);
+      },
+      clearMouseMoveTimeout: function(self) {
+         clearTimeout(self._mouseMoveTimeout);
+         self._mouseMoveTimeout = null;
+      },
+      isTouch: function(self) {
+         return self._context.isTouch.isTouch;
+      },
+      getPositionStyle: function(position) {
+         var result = '';
+         if (position) {
+            for (var side in position) {
+               if (position.hasOwnProperty(side)) {
+                  result += side + ': ' + position[side] + 'px; ';
+               }
+            }
+         }
+         return result;
       }
    };
 
+   var ZOOM_DELAY = 250;
 
    var TileView = ListView.extend({
       _template: template,
@@ -80,50 +102,37 @@ define('Controls/List/TileView/TileView', [
                this._listModel.setHoveredItem(null);
             }
          }
-         clearTimeout(this._mouseMoveTimeout);
+         _private.clearMouseMoveTimeout(this);
       },
 
       _onItemMouseMove: function(event, itemData) {
          var self = this;
 
          if (!this._listModel.getHoveredItem()) {
-            if (this._options.hoverMode && !this._context.isTouch.isTouch) {
+            if (this._options.hoverMode && !_private.isTouch(this)) {
                if (this._mouseMoveTimeout) {
-                  clearTimeout(this._mouseMoveTimeout);
+                  _private.clearMouseMoveTimeout(this);
                }
                this._mouseMoveTimeout = setTimeout(function() {
-                  var target = event.target;
+                  var itemRect = event.target.closest('.controls-TileView__item').getBoundingClientRect();
 
                   //If the hover on the checkbox does not increase the element
-                  if (!target.closest('.js-controls-ListView__checkbox')) {
-                     self._setFixedItem(target.closest('.controls-TileView__item'), itemData);
+                  if (!event.target.closest('.js-controls-ListView__checkbox')) {
+                     self._setFixedItem(itemRect, document.body.getBoundingClientRect(), itemData.key);
                   }
-               }, 250);
+               }, ZOOM_DELAY);
             } else {
                this._listModel.setHoveredItem(itemData);
             }
          }
       },
 
-      _setFixedItem: function(itemContainer, itemData) {
-         var
-            style = '',
-            position = _private.getFixedPosition(itemContainer.getBoundingClientRect(), {
-               width: document.body.clientWidth,
-               height: document.body.clientHeight
-            });
-
-         if (position) {
-            for (var side in position) {
-               if (position.hasOwnProperty(side)) {
-                  style += side + ': ' + position[side] + 'px; ';
-               }
-            }
-         }
+      _setFixedItem: function(itemContainerRect, containerRect, key) {
+         var position = _private.getFixedPosition(itemContainerRect, containerRect);
 
          this._listModel.setHoveredItem({
-            key: itemData.key,
-            fixedPosition: style
+            key: key,
+            fixedPosition: _private.getPositionStyle(position)
          });
       },
 
@@ -154,6 +163,8 @@ define('Controls/List/TileView/TileView', [
          isTouch: TouchContextField
       };
    };
+
+   TileView._private = _private;
 
    return TileView;
 });
