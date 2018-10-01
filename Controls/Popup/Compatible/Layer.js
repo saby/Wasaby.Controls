@@ -218,7 +218,7 @@ define('Controls/Popup/Compatible/Layer', [
 
    return {
       isNewEnvironment: function() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
+         return !!(document && document.getElementsByTagName('html')[0].controlNodes);
       },
       load: function(deps, force) {
          if (!this.isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости

@@ -11,7 +11,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'Controls/Input/Dropdown',
       'wml!Controls-demo/Filter/Button/buttonPGTemplate',
       'wml!Controls-demo/Filter/Button/mainBlockPG',
-      'wml!Controls-demo/Filter/Button/ChooseDate'
+      'wml!Controls-demo/Filter/Button/ChooseDate',
+      'wml!Controls-demo/Filter/Button/TextLine'
    ],
 
    function(Control, template, MemorySource, config) {
@@ -57,7 +58,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
                },
                lineSpaceTemplate: {
                   items: [
-                     {id: '1', title: 'Selection a period'}
+                     {id: '1', title: 'Selection a period'},
+                     {id: '2', title: 'Text'}
                   ],
                   value: 'Selection a period'
                }
@@ -84,8 +86,10 @@ define('Controls-demo/Filter/Button/ButtonPG',
             }
             if (options.description.lineSpaceTemplate.value === '') {
                this._componentOptions.lineSpaceTemplate = undefined;
-            } else if (options.description.lineSpaceTemplate.value === 'Selection a period'){
+            } else if (options.description.lineSpaceTemplate.value === 'Selection a period') {
                this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/ChooseDate';
+            } else if (options.description.lineSpaceTemplate.value === 'Text') {
+               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/TextLine';
             }
             
          }

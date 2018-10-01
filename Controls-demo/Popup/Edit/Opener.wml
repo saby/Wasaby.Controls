@@ -25,6 +25,8 @@
       </div>
 
       <Controls.Toggle.Checkbox bind:value="_cancelEdit" caption="Отменить синхронизацию" / >
+      <br />
+      <Controls.Toggle.Checkbox bind:value="_openRecordByNewKey" caption="Открыть запись на редактирование с другим ключом" / >
 
       <Controls.Popup.Opener.Edit.Container on:beforeItemEndEdit="_beforeSyncRecord()">
          <Controls.Popup.Opener.Edit name="EditOpener">

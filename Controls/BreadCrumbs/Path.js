@@ -5,8 +5,8 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'wml!Controls/BreadCrumbs/Path/Path',
-   'wml!Controls/Header/BackButton/Back',
-   'Controls/Header/BackButton',
+   'wml!Controls/Heading/BackButton/Back',
+   'Controls/Heading/BackButton',
    'css!Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
