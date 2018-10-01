@@ -754,26 +754,37 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
-             * Превращение неуместных decoratedlink обратно в тег а. Временное решение для хотфикса.
+             * Временное решение проблемы излишнего декорирования ссылок.
+             * Тег decoratedlink заменяется на соответствующий тег a прямо в json перед отправкой.             *
              * В задаче https://online.sbis.ru/opendoc.html?guid=d93d7fb0-0eab-4a86-a1c3-74e403b85f0c будет переписано.
              * @param json
              * @private
              */
             _resolveDecoratedLinkInJson: function(json) {
                if (typeof json === 'string' || !Array.isArray(json)) {
+                  // Строки и объекты атрибутов не изменяются.
                   return;
                }
                for (var i = 0; i < json.length; ++i) {
+                  // Рекурсивный вызов, чтобы обойти весь json.
                   this._resolveDecoratedLinkInJson(json[i]);
                   if (json[i][0] !== 'decoratedlink') {
                      continue;
                   }
-                  if (i === json.length - 1) {
-                     continue;
+
+                  // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
+                  if (json[0] === 'p') {
+                     if (i === json.length - 1) {
+                        // Если ссылка находится в конце строки, её нужно декорировать.
+                        continue;
+                     }
+                     if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
+                        // Если в строке после ссылки только пробелы, её нужно декорировать.
+                        continue;
+                     }
                   }
-                  if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
-                     continue;
-                  }
+
+                  // Ссылку не нужно было декорировать, заменяем на тег a.
                   json[i] = ['a',
                      {
                         'class': 'asLink',
@@ -798,11 +809,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (text[0] !== '<') {
                   text = '<p>' + text + '</p>';
                }
+
+               // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
                text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
                var json = domToJson(div).slice(1);
+
+               // На декорирование ссылок наложены условия, превратим лишние <decoratedlink> в <a>.
                this._resolveDecoratedLinkInJson(json);
                options.json = typeof options.json === 'string' ? JSON.stringify(json) : json;
                this._notify('onJsonChange', [options.json]);
