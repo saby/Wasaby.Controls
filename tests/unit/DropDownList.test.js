@@ -46,6 +46,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          keyProperty: 'id',
          nodeProperty: '@parent',
          parentProperty: 'parent',
+         typeShadow: 'suggestionsContainer'
          itemTemplateProperty: 'myTemplate'
       };
    };
@@ -114,17 +115,28 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   horizontalAlign: {
                      offset: 0,
                      side: 'right'
+                  },
+                  verticalAlign: {
+                     offset: 0,
+                     side: 'top'
                   }
                }
             };
 
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig, context);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'right'});
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'right' });
+            assert.equal(dropDownList._verticalOrientation, 'top');
+            assert.equal(dropDownList._horizontalOrientation, 'right');
+            assert.equal(dropDownList._typeShadow, 'suggestionsContainer-top');
 
             context.stickyCfg.horizontalAlign.side = 'left';
+            context.stickyCfg.verticalAlign.side = 'bottom';
             dropDownList._beforeUpdate(dropDownConfig, context);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'left'});
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
+            assert.equal(dropDownList._verticalOrientation, 'bottom');
+            assert.equal(dropDownList._horizontalOrientation, 'left');
+            assert.equal(dropDownList._typeShadow, 'suggestionsContainer-bottom');
 
          });
 
