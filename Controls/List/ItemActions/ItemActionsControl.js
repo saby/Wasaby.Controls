@@ -138,12 +138,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       _beforeUpdate: function(newOptions, context) {
+         var args = [this, newOptions, context.isTouch.isTouch];
+         
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(this, newOptions, context.isTouch.isTouch);
+            _private.updateModel.apply(null, args);
          }
 
-         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
-            _private.updateActions(this, newOptions, context.isTouch.isTouch);
+         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions || this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback)) {
+            _private.updateActions.apply(null, args);
          }
       },
 

@@ -1,11 +1,12 @@
 <Controls.Input.Suggest
-        value="{{_options.value}}"
+        value="{{_viewValue}}"
         displayProperty="title"
         searchParam="title"
         autoDropDown="{{true}}"
         source="{{_getSuggestSource()}}"
         minSearchLength="1"
         on:valueChanged="_valueChangedHandler()"
+        on:choose="_chooseHandler()"
         attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}">
    <ws:navigation source="page" view="page">
       <ws:sourceConfig pageSize="{{_options.items.length}}" page="{{0}}" mode="totalCount"/>

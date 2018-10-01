@@ -15,10 +15,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -247,10 +248,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -406,10 +408,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -449,10 +452,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -518,10 +522,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -532,6 +537,53 @@
             "default": "",
             "title": "Имя контрола",
             "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Tabs/Buttons": {
+    "name": "Controls/Tabs/Buttons",
+    "title": "Buttons for tab switching.",
+    "className": "Controls/Tabs/Buttons",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Tabs/Buttons",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "selectedKey": {
+            "type": "Number",
+            "title": "Identifier of selected item."
+          },
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "tabSpaceTemplate": {
+            "type": "function",
+            "title": "Contents of the area near the tabs."
           }
         }
       }
@@ -604,10 +656,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {

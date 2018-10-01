@@ -8,7 +8,7 @@ define('Controls/Toggle/Button', [
    /**
     * Button that switches between different states. It support different display styles, icon display styles and sizes
     *
-    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     * @class Controls/Toggle/Button
     * @mixes Controls/Toggle/interface/ICheckable
