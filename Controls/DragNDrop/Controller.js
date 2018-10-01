@@ -6,7 +6,9 @@ define('Controls/DragNDrop/Controller',
    ],
 
    function(Control, detection, template) {
-      var SHIFT_LIMIT = 4;
+      var
+         SHIFT_LIMIT = 4,
+         IE_MOUSEMOVE_FIX_DELAY = 10;
 
       var _private = {
          getPageXY: function(event) {
@@ -110,7 +112,7 @@ define('Controls/DragNDrop/Controller',
             if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
                this._endDragNDropTimer = setTimeout(function() {
                   self._dragNDropEnded(event);
-               }, 10);
+               }, IE_MOUSEMOVE_FIX_DELAY);
             } else {
                clearTimeout(this._endDragNDropTimer);
                this._endDragNDropTimer = null;
