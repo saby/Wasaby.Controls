@@ -42,7 +42,7 @@ define('Controls/Application/_Head',
             return innerDef;
          },
          _beforeUpdate: function(options) {
-            if(this._options.theme !== options.theme) {
+            if (this._options.theme !== options.theme) {
                this._notify('themeChanged');
             }
          },
