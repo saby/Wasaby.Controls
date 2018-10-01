@@ -716,7 +716,7 @@
   },
   "Controls/Filter/Button": {
     "name": "Controls/Filter/Button",
-    "title": "Control \"ComboBox\"",
+    "title": "Component for data filtering",
     "className": "Controls/Filter/Button",
     "kind": "control",
     "isPublic": true,

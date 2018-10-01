@@ -32,13 +32,23 @@ define('Controls-demo/Filter/Button/ButtonPG',
 
          _beforeMount: function() {
             this._items = [
-               {id: 'kind', value: ['0'], resetValue: ['0'], textValue: 'All'},
-               {id: 'type', value: ['0'], resetValue: ['0'], textValue: ''}
+               {
+                  id: 'kind', value: ['0'], resetValue: ['0'], textValue: 'All'
+               },
+               {
+                  id: 'type', value: ['0'], resetValue: ['0'], textValue: ''
+               }
             ];
             this._itemsKaizen = [
-               {id: 'own', value: ['0'], resetValue: ['0'], textValue: 'All'},
-               {id: 'used', value: ['0'], resetValue: ['0'], textValue: ''},
-               {id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'}
+               {
+                  id: 'own', value: ['0'], resetValue: ['0'], textValue: 'All'
+               },
+               {
+                  id: 'used', value: ['0'], resetValue: ['0'], textValue: ''
+               },
+               {
+                  id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'
+               }
             ];
             this._dataObject = {
                orientation: {
@@ -48,8 +58,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
                },
                items: {
                   items: [
-                     {id: '1', title: 'Filters in discussions'},
-                     {id: '2', title: 'Filters in kaizen'}
+                     { id: '1', title: 'Filters in discussions', items: this._items },
+                     { id: '2', title: 'Filters in kaizen', items: this._itemsKaizen }
                   ],
                   value: 'Filters in discussions'
                },
@@ -58,8 +68,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
                },
                lineSpaceTemplate: {
                   items: [
-                     {id: '1', title: 'Selection a period'},
-                     {id: '2', title: 'Text'}
+                     { id: '1', title: 'Selection a period', template: 'wml!Controls-demo/Filter/Button/ChooseDate' },
+                     { id: '2', title: 'Text', template: 'wml!Controls-demo/Filter/Button/TextLine' }
                   ],
                   value: 'Selection a period'
                }
@@ -73,25 +83,6 @@ define('Controls-demo/Filter/Button/ButtonPG',
                items: this._items
             };
             this._metaData = config[this._content].properties['ws-config'].options;
-         },
-
-         _optionsChanged: function(event, options) {
-            if (this._currentItems !== options.description.items.value) {
-               if (options.description.items.value === 'Filters in kaizen') {
-                  this._componentOptions.items = this._itemsKaizen;
-               } else if (options.description.items.value === 'Filters in discussions') {
-                  this._componentOptions.items = this._items;
-               }
-               this._currentItems = options.description.items.value;
-            }
-            if (options.description.lineSpaceTemplate.value === '') {
-               this._componentOptions.lineSpaceTemplate = undefined;
-            } else if (options.description.lineSpaceTemplate.value === 'Selection a period') {
-               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/ChooseDate';
-            } else if (options.description.lineSpaceTemplate.value === 'Text') {
-               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/TextLine';
-            }
-            
          }
       });
       return FilterButtonPG;
