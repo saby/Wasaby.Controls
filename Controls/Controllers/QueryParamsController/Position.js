@@ -53,6 +53,9 @@ define('Controls/Controllers/QueryParamsController/Position',
             if (this._options.direction === undefined) {
                throw new Error('Option direction is undefined in PositionNavigation');
             }
+            if (this._options.limit === undefined) {
+               throw new Error('Option limit is undefined in PositionNavigation');
+            }
 
             this._more = {
                before: false,
@@ -90,7 +93,8 @@ define('Controls/Controllers/QueryParamsController/Position',
             }
 
             return {
-               filter: additionalFilter
+               filter: additionalFilter,
+               limit: this._options.limit
             };
          },
 
