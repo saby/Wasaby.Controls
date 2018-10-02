@@ -13,7 +13,7 @@ define('Controls-demo/Explorer/Explorer', [
          _viewSource: null,
          _viewColumns: null,
          _itemsHeight: 200,
-         _viewMode: 'tile',
+         _viewMode: 'table',
          _selectedKeys: [],
          _excludedKeys: [],
          _beforeMount: function() {
