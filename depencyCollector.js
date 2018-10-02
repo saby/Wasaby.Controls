@@ -4,7 +4,7 @@ global.define = function(name){
 var fs = require('fs'),
    path = require('path'),
    jsModules = {},
-   baseResources = path.join(__dirname, 'components'),
+   baseResources = path.join(__dirname, 'SBIS3,CONTROLS'),
    demoResources = path.join(__dirname, 'Examples'),
    testResources = path.join(__dirname, 'tests'),
    wsResources = path.join(__dirname, 'sbis3-ws'),
@@ -43,7 +43,7 @@ var contents = {
 };
 contents["modules"] = contents["modules"] = {
    "SbisFile": {path:"tests/sbis3-app-engine/client/SbisFile"},
-   "SBIS3.CONTROLS": {path:"components"},
+   "SBIS3.CONTROLS": {path:"SBIS3.CONTROLS"},
    "View": {path:"sbis3-ws/View"},
    "WSTest": {path:"tests/WSTest"},
    "ControlsSandbox": {path:"pages/sandbox"},
