@@ -1673,7 +1673,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (node.nodeType === 3) {
                      var dom = editor.dom;
                      var caret = dom.getParent(node, '#_mce_caret');
-                     // При снятии свойств форматирования bold, italic, underline и strikethrough может сниматься и другое форматирование из-за слишком высокого положения каретки, поэтому лучше убрать её совсем
+                     // При снятии свойств форматирования bold, italic, underline и strikethrough может сниматься и другое форматирование из-за слишком высокого по дереву элементов положения каретки (контейнера с идентификатором "_mce_caret"), поэтому лучше убрать его совсем
                      // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
                      if (caret && caret !== node.parentNode.parentNode) {
                         var offset = rng.startOffset;
