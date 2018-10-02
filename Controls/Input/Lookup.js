@@ -119,7 +119,7 @@ define('Controls/Input/Lookup', [
          });
       },
 
-      keysChanged: function(self) {
+      keysChangedWithoutUpdate: function(self) {
          self._collectionIsReady = false;
          self._isEmpty = !self._selectedKeys.length;
 
@@ -127,7 +127,10 @@ define('Controls/Input/Lookup', [
          if (!self._isEmpty) {
             self._suggestState = false;
          }
+      },
 
+      keysChanged: function(self) {
+         _private.keysChangedWithoutUpdate(self);
          self._forceUpdate();
       },
 
@@ -221,7 +224,7 @@ define('Controls/Input/Lookup', [
          and we can set focus only in afterUpdate */
       _needSetFocusInInput: false,
 
-      _beforeMount: function(options) {
+      _beforeMount: function(options, context, receivedState) {
          this._onClosePickerBind = this._onClosePicker.bind(this);
          this._simpleViewModel = new BaseViewModel({
             value: options.value
@@ -230,8 +233,13 @@ define('Controls/Input/Lookup', [
          this._selectCallback = this._selectCallback.bind(this);
          
          if (this._selectedKeys.length) {
-            _private.keysChanged(this);
-            return _private.loadItems(this, options.filter, options.keyProperty, options.selectedKeys, options.source);
+            _private.keysChangedWithoutUpdate(this);
+
+            if (receivedState) {
+               this._items = receivedState;
+            } else {
+               return _private.loadItems(this, options.filter, options.keyProperty, options.selectedKeys, options.source);
+            }
          }
       },
 
