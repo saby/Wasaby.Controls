@@ -12,8 +12,10 @@ define('Controls/Application',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'Controls/Application/HeadDataContext',
+      'Controls/Application/LinkResolver',
+      'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
-      'css!Controls/Application/Application'
+      'css!theme?Controls/Application/Application'
    ],
 
    /**
@@ -42,7 +44,9 @@ define('Controls/Application',
       compatibility,
       AppData,
       ScrollContext,
-      HeadDataContext) {
+      HeadDataContext,
+      LinkResolver,
+      ThemesController) {
       'use strict';
 
       var _private,
@@ -62,8 +66,12 @@ define('Controls/Application',
             self.compat = cfg.compat || false;
          },
          calculateBodyClasses: function() {
-            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+
+            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             if (detection.isMobileIOS) {
@@ -111,9 +119,9 @@ define('Controls/Application',
             this._children.touchendDetect.start(ev);
          },
          _touchclass: function() {
-            //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
-            //поэтому сами детектим touch с помощью compatibility
-            return  this._children.touchDetector
+            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+            // поэтому сами детектим touch с помощью compatibility
+            return this._children.touchDetector
                ? this._children.touchDetector.getClass()
                : compatibility.touch
                   ? 'ws-is-touch'
@@ -158,7 +166,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self._scrollData = new ScrollContext({pagingVisible: false});
+            self._scrollData = new ScrollContext({ pagingVisible: false });
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
@@ -173,15 +181,28 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
+            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
+            self.linkResolver = new LinkResolver(context.headData.isDebug, self.buildnumber, self.appRoot,
+               self.resourceRoot);
+
+            // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
+
             context.headData.pushDepComponent(self.application, false);
 
+            if (receivedState.csses && !context.headData.isDebug) {
+               ThemesController.getInstance().initCss({
+                  themedCss: receivedState.csses.themedCss,
+                  simpleCss: receivedState.csses.simpleCss
+               });
+            }
 
             if (receivedState && context.AppData) {
                context.AppData.buildnumber = self.buildnumber;
                context.AppData.wsRoot = self.wsRoot;
+               context.AppData.lite = self.lite;
                context.AppData.appRoot = self.appRoot;
                context.AppData.resourceRoot = self.resourceRoot;
                context.AppData.application = self.application;
@@ -196,6 +217,8 @@ define('Controls/Application',
             def.callback({
                application: self.application,
                buildnumber: self.buildnumber,
+               lite: self.lite,
+               csses: ThemesController.getInstance().getCss(),
                title: self.title,
                appRoot: self.appRoot,
                wsRoot: self.wsRoot,
@@ -206,6 +229,15 @@ define('Controls/Application',
                product: self.product
             });
             return def;
+         },
+
+         themeChangedHandler: function() {
+            var self = this;
+            self.themeChanging = true;
+            setTimeout(function() {
+               self.themeChanging = false;
+               self._forceUpdate();
+            }, 1000);
          },
 
          _openInfoBoxHandler: function(event, config) {
@@ -220,7 +252,6 @@ define('Controls/Application',
                this._children.infoBoxOpener.close();
             }
          },
-
 
          _openPreviewerHandler: function(event, config, type) {
             this._children.previewerOpener.open(config, type);
@@ -244,5 +275,4 @@ define('Controls/Application',
       };
 
       return Page;
-   }
-);
+   });

@@ -15,7 +15,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/EditInPlace',
    'Controls/List/ItemActions/ItemActionsControl',
 
-   'css!Controls/List/BaseControl/BaseControl'
+   'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
    cClone,

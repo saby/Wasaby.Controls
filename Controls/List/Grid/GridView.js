@@ -10,7 +10,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Header',
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
-   'css!Controls/List/Grid/Grid',
+   'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
 

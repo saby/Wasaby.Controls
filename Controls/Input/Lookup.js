@@ -9,7 +9,7 @@ define('Controls/Input/Lookup', [
    'Core/Deferred',
    'Core/core-merge',
    'wml!Controls/Input/resources/input',
-   'css!Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge) {
    
    'use strict';

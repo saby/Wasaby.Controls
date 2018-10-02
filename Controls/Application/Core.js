@@ -7,36 +7,50 @@ define('Controls/Application/Core',
       'wml!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'native-css'
+      'Core/Themes/ThemesController',
+      'native-css',
+      'Core/css-resolve'
    ],
    function(Control,
       template,
       AppData,
-      HeadDataContext) {
-
+      HeadDataContext,
+      ThemesController,
+      nativeCss,
+      cssResolve) {
       'use strict';
+
+      function parseTheme(path) {
+         var splitted = path.split('theme?');
+         var res;
+         if (splitted.length > 1) {
+            res = {
+               name: splitted[1],
+               hasTheme: true
+            };
+         } else {
+            res = {
+               name: path,
+               hasTheme: false
+            };
+         }
+         return res;
+      }
+
 
       var AppCore = Control.extend({
          _template: template,
          ctxData: null,
          constructor: function(cfg) {
-
-            /*var self = this;
-            nativeCss.load = function(path, require, load, conf) {
-               load(null);
-               self.headDataCtx.pushCssLink(cssResolve(path));
-               self.headDataCtx.updateConsumers();
-            };*/
-
             try {
-               /*TODO: set to presentation service*/
+               /* TODO: set to presentation service */
                process.domain.req.compatible = false;
             } catch (e) {
             }
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot, cfg.resourceRoot);
          },
          _getChildContext: function() {
             return {
@@ -51,5 +65,4 @@ define('Controls/Application/Core',
       });
 
       return AppCore;
-   }
-);
+   });
