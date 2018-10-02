@@ -26,6 +26,7 @@
 /SBIS3.CONTROLS/*
 /themes/**/*.css
 /artifacts/*
+/buildTemplate.json
 /tests/int/.idea
 /tests/int/config.ini
 /tests/int/result.db
