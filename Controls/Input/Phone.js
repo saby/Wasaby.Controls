@@ -2,7 +2,7 @@ define('Controls/Input/Phone',
    [
       'Core/Control',
       'Controls/Input/Phone/ViewModel',
-      'wml!Controls/Input/Mask/Mask'
+      'wml!Controls/Input/Phone/Phone'
    ],
    function(Control, ViewModel, template) {
 
@@ -47,10 +47,24 @@ define('Controls/Input/Phone',
             }
          },
 
-         _focusinHandler: function() {
+         _deactivatedHandler: function() {
+            this._firstClickActivateMode = true;
+         },
+
+         _clickHandler: function() {
+            /**
+             * If we first clicked in the field, after deactivation, the user did not select anything
+             * and the mask is not completely filled, then you need to move the cursor to the end.
+             */
+            if (this._firstClickActivateMode) {
+               this._firstClickActivateMode = false;
+            } else {
+               return;
+            }
+
             var input = this._children.input;
 
-            if (!this._viewModel.isFilled()) {
+            if (!this._viewModel.isFilled() && input.selectionStart === input.selectionEnd) {
                var position = this._viewModel.getDisplayValue().length;
 
                input.selectionStart = position;
