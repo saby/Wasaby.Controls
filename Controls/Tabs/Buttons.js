@@ -188,7 +188,7 @@ define('Controls/Tabs/Buttons', [
     * @remark
     * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
@@ -216,7 +216,7 @@ define('Controls/Tabs/Buttons', [
     * @remark
     * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
