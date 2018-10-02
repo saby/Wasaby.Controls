@@ -90,7 +90,36 @@ define([
             controller.destroy();
             done();
          });
+      });
 
+      it('modifyQueryParamsWithNavigation', function () {
+         var controller = new SourceController({
+            source: source,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  mode: 'totalCount'
+               }
+            }
+         });
+         var resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         assert.deepEqual({filter:{}, limit: 10, offset: 0}, resParams, 'Wrong query params in page navigation');
+
+         controller = new SourceController({
+            source: source,
+            navigation: {
+               source: 'position',
+               sourceConfig: {
+                  limit: 10,
+                  field: 'id',
+                  direction: 'after',
+                  position: 2
+               }
+            }
+         });
+         resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}}, resParams, 'Wrong query params in position navigation');
 
       });
 
