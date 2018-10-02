@@ -34,7 +34,7 @@ define('Controls/Container/TreeMultiSelector', [
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
             items: context.dataOptions.items,
-            idProperty: context.dataOptions.keyProperty,
+            keyProperty: context.dataOptions.keyProperty,
             parentProperty: options.parentProperty,
             nodeProperty: options.nodeProperty
          });

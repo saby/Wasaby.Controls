@@ -241,6 +241,10 @@ function(cMerge,
             cfg.isModal = cfg.modal;
          }
 
+         if (cfg._popupComponent === 'dialog') { //у window всегда есть drag
+            cfg.templateOptions.draggable = true;
+         }
+
          if (cfg.hasOwnProperty('draggable')) {
             cfg.templateOptions.draggable = cfg.draggable;
          }
@@ -274,6 +278,8 @@ function(cMerge,
          if (cfg.onResultHandler) { // передаем onResult - колбэк, объявленный на opener'e, в compoundArea.
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
+
+         cfg.isCompoundTemplate = true;
 
          cfg.componentOptions.catchFocus = cfg.hasOwnProperty('catchFocus') ? cfg.catchFocus : true;
 
@@ -324,11 +330,19 @@ function(cMerge,
          if (cfg.verticalAlign && cfg.verticalAlign.side) {
             newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
+         if (cfg.verticalAlign && cfg.verticalAlign.offset) {
+            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
+            newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
+         }
 
          if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
             newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
          } else {
             newCfg.dialogOptions.direction = 'right';
+         }
+         if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
+            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
+            newCfg.dialogOptions.offset.x = cfg.horizontalAlign.offset;
          }
 
 

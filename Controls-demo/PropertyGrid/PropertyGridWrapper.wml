@@ -3,7 +3,7 @@
 
         <Controls.PropertyGrid items="{{_options.description}}"
                                data="{{_options.dataObject}}"
-                               scopeObject="{{_options.componentOpt}}"
+                               scopeObject="{{_exampleControlOptions}}"
                                name="PropertyGrid"
                                templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"
                                on:itemsChanged="_valueChangedHandler()">
@@ -12,7 +12,7 @@
     <div class="controls-demo_event-example__wrapper " >
         <div class="controls-demo_example-wrapper">
             <ws:partial template="{{_options.content}}"
-                        scope="{{_options.componentOpt}}"
+                        scope="{{_exampleControlOptions}}"
                         bind:value="_options.componentOpt.value"
                         bind:selectedKey="_options.componentOpt.selectedKey"
                         attr:class="controls-demo-pg js-Controls_{{_demoName}}_mainField"/>

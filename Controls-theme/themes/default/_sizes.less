@@ -79,7 +79,10 @@
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //DialogTemplate
-@margin_dialogTemplate_head:                   0 48px 0 12px;
+@margin_dialogTemplate_head:                   0 48px 0 0;
+@margin-left_dialogTemplate_caption:           12px;
+@height_dialogTemplate_caption:                44px;
+@line-height_dialogTemplate_caption:           42px;
 @top_dialogTemplate_compatible_close-button:   5px;
 
 // MonthView
@@ -380,6 +383,15 @@
 @height_Suggest-loader:                          16px;
 @spacing_Suggest-loader:                         3px;
 @spacing_Suggest-empty:                          16px;
+
+// DatePicker VDOM
+@margin-left_DatePicker-button:                  7px;
+
+// DateRange VDOM
+@margin-left_DateRange-button:                   @margin-left_DatePicker-button;
+@width_DateRange-dash:                           2px;
+@margin_DateRange-dash:                          0 3px 4px 3px;
+@thickness_DateRange-dash:                       1px;
 
 //Suggest VDOM
 @spacing_Suggest_suggestionsContainer_overInput: 8px;

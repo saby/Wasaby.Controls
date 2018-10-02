@@ -366,12 +366,17 @@ define('SBIS3.CONTROLS/Menu', [
 
                      submenuContainer = mySubmenu.getContainer();
                      if (detection.isMobileIOS) {
+                        var currentHeight = submenuContainer.height();
                         // В документах после открытия меню не перкого уровня оно оказывается под iframe и через
                         // какое то время(через 5-10 секунд) отображается нормально над ним. Пересчет лайаута
                         // решает проблему.
                         submenuContainer.height(0);
                         submenuContainer.height();
                         submenuContainer.height('');
+                        
+                        if (currentHeight) {
+                           submenuContainer.height(currentHeight);
+                        }
                      }
 
                      /* Само меню не должно вызывать перерасчёта у соседних элементов,
