@@ -3,20 +3,21 @@ define('Controls/List/TileView/TileView', [
    'wml!Controls/List/TileView/TileView',
    'wml!Controls/List/TileView/DefaultItemTpl',
    'Controls/Application/TouchDetector/TouchContextField',
+   'Controls/List/TileView/resources/ItemSizeUtils',
    'css!Controls/List/TileView/TileView'
-], function(ListView, template, defaultItemTpl, TouchContextField) {
+], function(ListView, template, defaultItemTpl, TouchContextField, ItemSizeUtils) {
 
    'use strict';
    var _private = {
-      getFixedPosition: function(itemRect, containerRect) {
+      getFixedPosition: function(itemNewSize, itemRect, containerRect) {
          var
             result,
-            additionalWidth = itemRect.width / 2,
-            additionalHeight = itemRect.height / 2,
-            leftOffset = itemRect.left - additionalWidth / 2,
-            topOffset = itemRect.top - additionalHeight / 2,
-            rightOffset = containerRect.width - (itemRect.right + additionalWidth / 2),
-            bottomOffset = containerRect.height - (itemRect.bottom + additionalHeight / 2);
+            additionalWidth = (itemNewSize.width - itemRect.width) / 2,
+            additionalHeight = (itemNewSize.height - itemRect.height) / 2,
+            leftOffset = itemRect.left - additionalWidth,
+            topOffset = itemRect.top - additionalHeight,
+            rightOffset = containerRect.width - (itemRect.right + additionalWidth),
+            bottomOffset = containerRect.height - (itemRect.bottom + additionalHeight);
 
          if (leftOffset < 0) {
             rightOffset += leftOffset;
@@ -69,7 +70,9 @@ define('Controls/List/TileView/TileView', [
       }
    };
 
-   var ZOOM_DELAY = 250;
+   var
+      ZOOM_DELAY = 250,
+      ZOOM_COEFFICIENT = 1.5;
 
    var TileView = ListView.extend({
       _template: template,
@@ -114,11 +117,13 @@ define('Controls/List/TileView/TileView', [
                   _private.clearMouseMoveTimeout(this);
                }
                this._mouseMoveTimeout = setTimeout(function() {
-                  var itemRect = event.target.closest('.controls-TileView__item').getBoundingClientRect();
+                  var
+                     item = event.target.closest('.controls-TileView__item'),
+                     itemSize = ItemSizeUtils.getItemSize(item, ZOOM_COEFFICIENT);
 
                   //If the hover on the checkbox does not increase the element
                   if (!event.target.closest('.js-controls-ListView__checkbox')) {
-                     self._setFixedItem(itemRect, document.body.getBoundingClientRect(), itemData.key);
+                     self._setFixedItem(itemSize, item.getBoundingClientRect(), document.body.getBoundingClientRect(), itemData.key);
                   }
                }, ZOOM_DELAY);
             } else {
@@ -127,8 +132,8 @@ define('Controls/List/TileView/TileView', [
          }
       },
 
-      _setFixedItem: function(itemContainerRect, containerRect, key) {
-         var position = _private.getFixedPosition(itemContainerRect, containerRect);
+      _setFixedItem: function(itemSize, itemContainerRect, containerRect, key) {
+         var position = _private.getFixedPosition(itemSize, itemContainerRect, containerRect);
 
          this._listModel.setHoveredItem({
             key: key,

@@ -4,6 +4,11 @@ define(['Controls/List/TileView/TileView',
 ], function(TileView, TreeTileViewModel, RecordSet) {
    'use strict';
 
+   var hoveredSize = {
+      width: 60,
+      height: 60
+   };
+
    describe('Controls/List/TileView/TileView', function() {
       var
          treeTileViewModel = new TreeTileViewModel({
@@ -39,7 +44,7 @@ define(['Controls/List/TileView/TileView',
       describe('getFixedPosition', function() {
 
          it('not fit left and right', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getFixedPosition(hoveredSize, {
                left: 5,
                right: 45,
                top: 15,
@@ -55,7 +60,7 @@ define(['Controls/List/TileView/TileView',
          });
 
          it('not fit right and bottom', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getFixedPosition(hoveredSize, {
                left: 15,
                right: 55,
                top: 5,
@@ -71,7 +76,7 @@ define(['Controls/List/TileView/TileView',
          });
 
          it('not fit left and top', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getFixedPosition(hoveredSize, {
                left: 5,
                right: 45,
                top: 5,
@@ -92,7 +97,7 @@ define(['Controls/List/TileView/TileView',
          });
 
          it('not fit right and bottom', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getFixedPosition(hoveredSize, {
                left: 25,
                right: 65,
                top: 25,
@@ -113,7 +118,7 @@ define(['Controls/List/TileView/TileView',
          });
 
          it('all fit', function() {
-            var position = TileView._private.getFixedPosition({
+            var position = TileView._private.getFixedPosition(hoveredSize, {
                left: 15,
                right: 55,
                top: 15,
@@ -146,7 +151,7 @@ define(['Controls/List/TileView/TileView',
       it('_setFixedItem', function() {
          var hoveredItem;
 
-         tileView._setFixedItem({
+         tileView._setFixedItem(hoveredSize, {
             left: 15,
             right: 55,
             top: 15,
@@ -162,7 +167,7 @@ define(['Controls/List/TileView/TileView',
          assert.deepEqual(hoveredItem.fixedPosition, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.deepEqual(hoveredItem.key, 'itemKey1');
 
-         tileView._setFixedItem({
+         tileView._setFixedItem(hoveredSize, {
             left: 5,
             right: 45,
             top: 15,
