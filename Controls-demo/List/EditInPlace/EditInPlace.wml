@@ -4,14 +4,13 @@
             name="list"
             readOnly="{{_readOnly}}"
             source="{{_viewSource}}"
-            on:beforeItemEdit="_onItemEdit()"
-            on:beforeItemAdd="_onItemAdd()"
+            on:beforeBeginEdit="_onBeforeBeginEdit()"
             allowEmptySelection="{{false}}"
             keyProperty="id">
         <ws:editingConfig>
             <ws:Object editOnClick="{{_editOnClick}}"
-                       singleEdit="{{_singleEdit}}"
-                       showToolbar="{{_showToolbar}}"
+                       sequentialEditing="{{_sequentialEditing}}"
+                       toolbarVisibility="{{_toolbarVisibility}}"
                        autoAdd="{{_autoAdd}}"/>
         </ws:editingConfig>
         <ws:itemTemplate>
@@ -50,14 +49,14 @@
         <ws:else>
             <ws:partial template="firstList" />
         </ws:else>
-        <Controls.List.AddButton class="test_add_record_1" caption="Add record" on:click="addItem()"/>
+        <Controls.List.AddButton class="test_add_record_1" caption="Add record" on:click="beginAdd()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
                 <Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick" class="demo__editOnClick"/>
-                <Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit" class="demo__singleEdit"/>
+                <Controls.Toggle.Checkbox bind:value="_sequentialEditing" caption="sequentialEditing" class="demo__singleEdit"/>
                 <Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd" class="demo__autoAdd"/>
-                <Controls.Toggle.Checkbox bind:value="_showToolbar" caption="showToolbar" class="demo__showToolbar"/>
+                <Controls.Toggle.Checkbox bind:value="_toolbarVisibility" caption="toolbarVisibility" class="demo__showToolbar"/>
                 <Controls.Toggle.Checkbox bind:value="_handleItemClick" caption="_handleItemClick" class="demo__handleItemClick"/>
                 <Controls.Toggle.Checkbox bind:value="_readOnly" caption="readOnly" class="demo__readOnly"/>
             </div>
@@ -69,7 +68,7 @@
                 class="test_list_2"
                 name="list2"
                 source="{{_viewSource2}}"
-                on:beforeItemAdd="_cancelItemAdd()"
+                on:beforeBeginEdit="_cancelItemAdd()"
                 allowEmptySelection="{{false}}"
                 keyProperty="id">
             <ws:editingConfig>
@@ -91,7 +90,7 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls.List>
-        <Controls.List.AddButton class="test_add_record_2" caption="Add record" on:click="list2.addItem()"/>
+        <Controls.List.AddButton class="test_add_record_2" caption="Add record" on:click="list2.beginAdd()"/>
     </div>
     <div>
         <h3>Editing starts before mounting to DOM</h3>

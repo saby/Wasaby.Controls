@@ -4,12 +4,11 @@
     scope="{{_options}}"
     viewName="{{_viewName}}"
     viewModelConstructor="{{_viewModelConstructor}}"
-    on:markedKeyChanged="_markedKeyChangedHandler()"
-    on:dragStart="_dragStart()"
-    on:dragEnd="_dragEnd()"
-    on:beforeItemAdd="_onBeforeItemAdd()"
-    on:beforeItemEdit="_onBeforeItemEdit()"
-    on:afterItemEdit="_onAfterItemEdit()"
-    on:beforeItemEndEdit="_onBeforeItemEndEdit()"
-    on:afterItemEndEdit="_onAfterItemEndEdit()">
+    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+    on:dragStart="_notifyHandler('dragStart')"
+    on:dragEnd="_notifyHandler('dragEnd')"
+    on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+    on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+    on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+    on:afterEndEdit="_notifyHandler('afterEndEdit')">
 </ws:partial>
