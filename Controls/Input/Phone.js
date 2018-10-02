@@ -33,6 +33,8 @@ define('Controls/Input/Phone',
 
          _viewModel: null,
 
+         _firstClickActivateMode: true,
+
          _beforeMount: function(options) {
             this._viewModel = new ViewModel({
                value: options.value
@@ -56,9 +58,7 @@ define('Controls/Input/Phone',
              * If we first clicked in the field, after deactivation, the user did not select anything
              * and the mask is not completely filled, then you need to move the cursor to the end.
              */
-            if (this._firstClickActivateMode) {
-               this._firstClickActivateMode = false;
-            } else {
+            if (!this._firstClickActivateMode) {
                return;
             }
 
@@ -70,6 +70,8 @@ define('Controls/Input/Phone',
                input.selectionStart = position;
                input.selectionEnd = position;
             }
+
+            this._firstClickActivateMode = false;
          }
       });
 
