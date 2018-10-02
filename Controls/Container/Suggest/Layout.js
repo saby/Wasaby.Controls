@@ -147,6 +147,7 @@ define('Controls/Container/Suggest/Layout',
          _searchDelay: null,
          _dependenciesDeferred: null,
          _showContent: false,
+         
          /**
           * three state flag
           * null - loading is not initiated
