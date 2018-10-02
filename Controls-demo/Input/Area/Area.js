@@ -19,7 +19,7 @@ define('Controls-demo/Input/Area/Area', [
       _readOnly: false,
       _example: '',
       _selectOnClick: false,
-      _tagStyle: 'error',
+      _tagStyle: 'danger',
       _items: null,
       _tooltip: 'Area',
       _newLineKeySource: null,

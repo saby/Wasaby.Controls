@@ -192,6 +192,10 @@ define('Controls/Date/PeriodDialog', [
 
       _dateRangeFixedPeriodClick: function(e, start, end) {
          _private.fixedPeriodClick(this, start, end);
+      },
+
+      _applyClick: function(e) {
+         this._notify('sendResult', [this._rangeModel.startValue, this._rangeModel.endValue], { bubbling: true });
       }
 
    });

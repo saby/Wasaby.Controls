@@ -58,7 +58,7 @@ define("File/Attach/Abstract", ["require", "exports", "tslib", "Core/Deferred", 
      * @public
      * @class
      * @name File/Attach/Abstract
-     * @extends Core/Abstract
+     * @extends WS.Data/Entity/ObservableMixin
      * @author Заляев А.В.
      */
     var Abstract = /** @class */ (function (_super) {
@@ -368,10 +368,14 @@ define("File/Attach/Abstract", ["require", "exports", "tslib", "Core/Deferred", 
 });
 /**
  * @event onProgress
+ * Событие процесса загрузки ресурса
  * @name File/Attach/Abstract#onProgress
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IResource} file
+ * @param {Number} data.totalSize Размер загружаемого ресурса
+ * @param {Number} data.uploadSize Загружено байт
+ * @param {Number} data.uploadPercent Загруженно процент
+ * @param {File/IResource} resource Загружаемый ресурс
  */
 /**
  * @event onWarning

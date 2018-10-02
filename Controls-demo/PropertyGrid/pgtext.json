@@ -15,10 +15,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -247,10 +248,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -373,6 +375,121 @@
       }
     }
   },
+  "Controls/Input/DateTime": {
+    "name": "Controls/Input/DateTime",
+    "title": "Input for entering date or/and time.",
+    "className": "Controls/Input/DateTime",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/DateTime",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "value": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Date/Picker": {
+    "name": "Controls/Input/Date/Picker",
+    "title": "Input for entering date.",
+    "className": "Controls/Input/Date/Picker",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/Picker",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "value": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Date/Range": {
+    "name": "Controls/Input/Date/Range",
+    "title": "Input for entering date range.",
+    "className": "Controls/Input/Date/Range",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/Range",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "startValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "endValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
   "Controls/Input/Mask": {
     "name": "Controls/Input/Mask",
     "title": "Input for entering text with a specified format.",
@@ -406,10 +523,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -449,10 +567,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -518,10 +637,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -532,6 +652,53 @@
             "default": "",
             "title": "Имя контрола",
             "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Tabs/Buttons": {
+    "name": "Controls/Tabs/Buttons",
+    "title": "Buttons for tab switching.",
+    "className": "Controls/Tabs/Buttons",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Tabs/Buttons",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "selectedKey": {
+            "type": "Number",
+            "title": "Identifier of selected item."
+          },
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "tabSpaceTemplate": {
+            "type": "function",
+            "title": "Contents of the area near the tabs."
           }
         }
       }
@@ -604,10 +771,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {

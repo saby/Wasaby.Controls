@@ -117,7 +117,10 @@ define(
             };
             config.offset = 0;
             config.closeByExternalClick = false;
+            delete config.draggable;
+            config._popupComponent = 'dialog';
             BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.templateOptions.draggable, true);
             assert.isFalse(config.closeByExternalClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);

@@ -4,7 +4,6 @@ import Uploader = require("File/Attach/Uploader");
 import {IFileModel as Model} from 'File/Attach/IModel';
 import {IResourceGetter} from 'File/IResourceGetter';
 import {IResourceConstructor, IResource} from 'File/IResource';
-import {IContainer} from 'File/Attach/IContainer';
 // real dependency
 import Abstract = require("Core/Abstract");
 import Deferred = require("Core/Deferred");
@@ -88,7 +87,7 @@ Observable.prototype = ObservableMixin;
  * @public
  * @class
  * @name File/Attach/Abstract
- * @extends Core/Abstract
+ * @extends WS.Data/Entity/ObservableMixin
  * @author Заляев А.В.
  */
 abstract class Abstract extends Observable {
@@ -385,10 +384,14 @@ export = Abstract;
 
 /**
  * @event onProgress
+ * Событие процесса загрузки ресурса
  * @name File/Attach/Abstract#onProgress
  * @param {Core/EventObject} eventObject Дескриптор события.
  * @param {Object} data
- * @param {File/IResource} file
+ * @param {Number} data.totalSize Размер загружаемого ресурса
+ * @param {Number} data.uploadSize Загружено байт
+ * @param {Number} data.uploadPercent Загруженно процент
+ * @param {File/IResource} resource Загружаемый ресурс
  */
 /**
  * @event onWarning

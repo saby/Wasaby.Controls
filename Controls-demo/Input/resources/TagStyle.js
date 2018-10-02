@@ -14,11 +14,12 @@ function(
       _items: null,
       _beforeMount: function() {
          this._items = [
-            { id: '1', title: 'attention' },
-            { id: '2', title: 'done' },
-            { id: '3', title: 'error' },
+            { id: '1', title: 'warning' },
+            { id: '2', title: 'success' },
+            { id: '3', title: 'danger' },
             { id: '4', title: 'primary' },
-            { id: '5', title: 'info' }
+            { id: '5', title: 'info' },
+            { id: '6', title: 'secondary' }
          ];
       },
       _createMemory: function() {
