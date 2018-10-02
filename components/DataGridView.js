@@ -278,18 +278,18 @@ define('SBIS3.CONTROLS/DataGridView',
             for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
                column = headData.content[1][i];
-
+   
                if (columnTop && headData.countRows > 1) {
                   if (columnTop.rowspan > 1) {
                      if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
-                        columnTop.value = getSortingColumnTpl(columnTop, cfg);
+                        columnTop.value = getSortingColumnTpl.call(this, columnTop, cfg);
+                     } else if (columnTop.headTemplate) {
+                        columnTop.value = getHeadColumnTpl.call(this, columnTop);
+                     } else {
+                        columnTop.value = getDefaultHeadColumnTpl.call(this, columnTop.title);
                      }
-                     else if (columnTop.headTemplate){
-                        columnTop.value = getHeadColumnTpl(columnTop);
-                     }
-                  }
-                  else {
-                     columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
+                  } else {
+                     columnTop.value = getDefaultHeadColumnTpl.call(this, columnTop.title);
                   }
                }
 
@@ -297,17 +297,16 @@ define('SBIS3.CONTROLS/DataGridView',
                //лучше прокинуть сам шаблон, чтобы он потом там позвался
                //В футере никогда нет сортировки
                if (column.sorting && !isFoot) {
-                  column.value = getSortingColumnTpl(column, cfg);
-               }
-               else if (column.headTemplate) {
-                  column.value = getHeadColumnTpl(column);
+                  column.value = getSortingColumnTpl.call(this, column, cfg);
+               } else if (column.headTemplate) {
+                  column.value = getHeadColumnTpl.call(this, column);
                } else {
-                  column.value = getDefaultHeadColumnTpl(column.title);
+                  column.value = getDefaultHeadColumnTpl.call(this, column.title);
                }
             }
 
             if (cfg._items && cfg._items.getMetaData().results){
-               prepareResultsData(cfg, headData, cfg._items.getMetaData().results);
+               prepareResultsData.call(this, cfg, headData, cfg._items.getMetaData().results);
                headData.hasResults = true;
             }
 
@@ -334,12 +333,12 @@ define('SBIS3.CONTROLS/DataGridView',
             });
          },
          getHeadColumnTpl = function (column){
-            return TemplateUtil.prepareTemplate(column.headTemplate)({
+            return TemplateUtil.prepareTemplate(column.headTemplate).call(this, {
                column: column
             });
          },
          getDefaultHeadColumnTpl = function(title){
-            return headColumnTpl({title: title});
+            return headColumnTpl.call(this, {title: title});
          },
          prepareResultsData = function (cfg, headData, resultsRecord) {
             var data = [], value, column;
@@ -364,9 +363,9 @@ define('SBIS3.CONTROLS/DataGridView',
                };
                //TODO в рамках совместимости, выпилить как все перейдут на отрисовку колонки через функцию в resultsTpl
                //{{=column.resultTemplate(column.resultTemplateData)}}
-               data.push(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData));
+               //data.push(TemplateUtil.prepareTemplate(column.resultTemplate).call(this, column.resultTemplateData));
             }
-            headData.results = data;
+            //headData.results = data;
             headData.item = resultsRecord;//тоже в рамках совместимости для 230 версии, что с этим делать написано чуть выше
          },
          prepareColGroupData = function (cfg) {
@@ -964,7 +963,7 @@ define('SBIS3.CONTROLS/DataGridView',
                }
             });
          }
-         headData = prepareHeadData(this._options);
+         headData = prepareHeadData.call(this, this._options);
          headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
          headMarkup = this._options.headTpl.call(this, headData);
@@ -1004,6 +1003,7 @@ define('SBIS3.CONTROLS/DataGridView',
 
          if (this._tfoot && this._tfoot.length){
             this._destroyControls(this._tfoot);
+            this._saveConfigFromOption(footData);
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }

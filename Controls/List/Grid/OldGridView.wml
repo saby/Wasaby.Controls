@@ -1,4 +1,4 @@
-<table class="controls-Grid controls-Grid_{{_options.itemActionsPosition}}">
+<table class="controls-Grid">
    <ws:partial template="wml!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
@@ -16,6 +16,7 @@
                   itemActionsTemplate="{{_options.itemActionsTemplate}}"
                   groupTemplate="{{_groupTemplate}}"
                   itemActionsPosition="{{_options.itemActionsPosition}}"
+                  itemOutputWrapper="{{_itemOutputWrapper}}"
                   swipeTemplate="{{_options.swipeTemplate}}"/>
    </tbody>
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">

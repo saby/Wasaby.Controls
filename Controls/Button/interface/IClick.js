@@ -10,6 +10,21 @@ define('Controls/Button/interface/IClick', [
 
    /**
     * @event Controls/Button/interface/IClick#click Occurs when item was clicked.
+    * @remark If button with readOnly set to true then event does not bubble.
+    * @example
+    * Button with style buttonPrimary and icon Send. If user click to button then document send.
+    * <pre>
+    *    <Controls.Button on:click="_clickHandler()" icon="icon-small icon-Send" style="buttonPrimary"/>
+    * </pre>
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _clickHandler(e) {
+    *          this.sendDocument();
+    *       }
+    *       ...
+    *    });
+    * </pre>
     */
 
 });

@@ -33,17 +33,21 @@ define('Controls/BreadCrumbs/View', [
       _itemsTemplate: itemsTemplate,
 
       _beforeMount: function() {
-         //Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
+         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
          this._onResult = this._onResult.bind(this);
       },
 
       _onItemClick: function(e, itemData) {
          if (itemData.isDots) {
-            //Оборачиваю айтемы в рекордсет чисто ради того, чтобы меню могло с ними работать
-            //Нельзя сделать source, т.к. с ним оно не умеет работать
-            //По этой задаче научится: https://online.sbis.ru/opendoc.html?guid=c46567a3-77ab-46b1-a8d2-aa29e0cdf9d0
             var rs = new RecordSet({
-               rawData: this._options.items
+               rawData: this._options.items.map(function(item) {
+                  var newItem = {};
+                  item.each(function(field) {
+                     newItem[field] = item.get(field);
+                  });
+                  return newItem;
+               }),
+               idProperty: this._options.items[0].getIdProperty()
             });
             rs.each(function(item, index) {
                item.set('indentation', index);
@@ -55,13 +59,10 @@ define('Controls/BreadCrumbs/View', [
                   itemTemplate: menuItemTemplate
                }
             });
+            e.stopPropagation();
          } else {
             this._notify('itemClick', [itemData.item]);
          }
-      },
-
-      _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0], true]);
       },
 
       _onResize: function() {
@@ -71,11 +72,8 @@ define('Controls/BreadCrumbs/View', [
       _onResult: function(args) {
          var actionName = args && args.action;
 
-         //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
-         //https://online.sbis.ru/opendoc.html?guid=0ca4b2db-b359-4e7b-aac6-97e061b953bf
          if (actionName === 'itemClick') {
-            var item = args.data && args.data[0] && args.data[0].getRawData();
-            this._notify('itemClick', [item]);
+            this._notify('itemClick', [args.data[0]]);
          }
          this._children.menuOpener.close();
       }

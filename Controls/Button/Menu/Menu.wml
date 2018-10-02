@@ -14,8 +14,6 @@
         caption="{{_options.caption}}"
         popupClassName="{{_options.popupClassName || _offsetClassName}}"
         dropdownClassName="{{_options.dropdownClassName}}"
-        verticalAlign="{{_options.verticalAlign}}"
-        horizontalAlign="{{_options.horizontalAlign}}"
         showHeader="{{_options.showHeader}}"
         filter="{{_filter}}"
         lazyItemsLoad="{{true}}"

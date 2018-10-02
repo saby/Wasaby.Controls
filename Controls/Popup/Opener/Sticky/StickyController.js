@@ -5,11 +5,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Core/core-merge',
       'Core/core-clone',
+      'Core/detection',
       'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
       'css!Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, isElementVisible, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, isElementVisible, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -116,13 +117,27 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             this.prepareConfig(item, container);
          },
 
-         elementUpdated: function(item) {
+         elementUpdated: function(item, container) {
             if (this._isElementVisible(item.popupOptions.target)) {
                item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+
+               // In landscape orientation, the height of the screen is low when the keyboard is opened.
+               // Open Windows are not placed in the workspace and chrome scrollit body.
+               if (cDetection.isMobileAndroid) {
+                  var height = item.position.height || container.clientHeight;
+                  if (height > document.body.clientHeight) {
+                     item.position.height = document.body.clientHeight;
+                     item.position.top = 0;
+                  } else if (item.position.height + item.position.top > document.body.clientHeight) {
+                     // opening the keyboard reduces the height of the body. If popup was positioned at the bottom of
+                     // the window, he did not have time to change his top coordinate => a scroll appeared on the body
+                     var dif = item.position.height + item.position.top - document.body.clientHeight;
+                     item.position.top -= dif;
+                  }
+               }
             } else {
                ManagerController.remove(item.id);
             }
-
          },
 
          elementAfterUpdated: function(item, container) {
