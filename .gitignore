@@ -26,7 +26,6 @@
 /SBIS3.CONTROLS/*
 /themes/**/*.css
 /artifacts/*
-/buildTemplate.json
 /tests/int/.idea
 /tests/int/config.ini
 /tests/int/result.db
@@ -56,3 +55,4 @@
 /tests/**/preprocessor_logs
 /tests/**/screenshots
 /tests/**/__pycache__
+/buildTemplate.json
