@@ -32,7 +32,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          },
 
-         getConfig(instance, event, item) {
+         getConfig: function(instance, event, item) {
             return {
                templateOptions: {
                   items: instance._options.items,
