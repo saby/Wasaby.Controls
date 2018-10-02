@@ -22,8 +22,9 @@
    <div class="panel-demo-item">
       <h4>The template for the block "Selected" is specified using the option "itemTemplate".</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__componentn"
+         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  on:filterChanged="_filterChangedHandler()"
+                                 orientation="right"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_items">
          </Controls.Filter.Button>
@@ -36,6 +37,7 @@
          <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_itemsHistory"
+                                 orientation="right"
                                  historyId="DEMO_HISTORY_ID">
          </Controls.Filter.Button>
       </div>

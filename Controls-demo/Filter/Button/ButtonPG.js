@@ -12,7 +12,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'wml!Controls-demo/Filter/Button/buttonPGTemplate',
       'wml!Controls-demo/Filter/Button/mainBlockPG',
       'wml!Controls-demo/Filter/Button/ChooseDate',
-      'wml!Controls-demo/Filter/Button/TextLine'
+      'wml!Controls-demo/Filter/Button/TextLine',
+      'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo'
    ],
 
    function(Control, template, MemorySource, config) {
@@ -72,6 +73,13 @@ define('Controls-demo/Filter/Button/ButtonPG',
                      { id: '2', title: 'Text', template: 'wml!Controls-demo/Filter/Button/TextLine' }
                   ],
                   value: 'Selection a period'
+               },
+               historyId: {
+                  items: [
+                     { id: '1', title: 'DEMO_HISTORY_ID', value: 'DEMO_HISTORY_ID' },
+                     { id: '2', title: 'Not specified', value: '' }
+                  ],
+                  value: 'Not specified'
                }
             };
             this._componentOptions = {

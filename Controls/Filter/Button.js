@@ -28,7 +28,6 @@ define('Controls/Filter/Button',
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
        * @demo Controls-demo/Filter/Button/ButtonPG
-       * @demo Controls-demo/Filter/Button/PanelVDom
        * @control
        * @public
        * @author Герасимов А.М.
