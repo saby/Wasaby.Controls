@@ -159,7 +159,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   parentProperty: dropDownList._options.parentProperty,
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
-                  rootKey: null,
+                  rootKey: items.at(0).get(dropDownList._options.keyProperty),
                   showHeader: false,
                   defaultItemTemplate: dropDownList._options.defaultItemTemplate
                },
@@ -168,12 +168,9 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                target: "MyTarget"
             };
 
+            var inFactConfig = DropdownList._private.getConfig(dropDownList, { target: "MyTarget"}, items.at(0));
+            assert.deepEqual(expectedConfig, inFactConfig);
 
-            items.each(function(item) {
-               expectedConfig.templateOptions.rootKey = item.get(dropDownList._options.keyProperty);
-               var inFactConfig = DropdownList._private.getConfig(dropDownList, { target: "MyTarget"}, item);
-               assert.deepEqual(expectedConfig, inFactConfig);
-            });
 
          });
 
