@@ -374,8 +374,6 @@ node('controls') {
                 ExtractSystemExtensions=Нет
                 ExtractUserInfo=Нет"""
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
-                __sbis__url = /
-
                 [Ядро.Http]
                 Порт=10020
 
