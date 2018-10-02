@@ -57,6 +57,7 @@
       iconStyle="done"
       size="l"
       attr:class="controls-PeriodDialog__applyButton"
+      on:click="_applyClick()"
    />
 
    <Controls.Button.Close/>
