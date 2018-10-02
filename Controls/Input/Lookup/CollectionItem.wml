@@ -1,4 +1,4 @@
-<ws:partial attr:class="controls-Lookup__collectionItem_layout_{{_options.itemsLayout}}"
+<ws:partial attr:class="controls-Lookup__item controls-Lookup__collectionItem_layout_{{_options.itemsLayout}}"
             template="{{_options.itemTemplate}}"
             item="{{item}}"
             displayProperty="{{_options.displayProperty}}"

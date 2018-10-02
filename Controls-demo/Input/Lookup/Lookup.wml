@@ -57,11 +57,13 @@
             </div>
             <div class="control-Lookup-demo-block">
                 <div class="control-Lookup-demo-title">
-                    Lookup accent items
+                    Lookup accent items with link
+                    <Controls.Button caption="Names" style="linkMain" on:click="showSelector2()"/>
                 </div>
                 <div>
                     base line test
                     <Controls.Input.Lookup
+                            name="lookup2"
                             bind:value="_value3"
                             bind:selectedKeys="_selectedKeys3"
                             source="{{_source}}"

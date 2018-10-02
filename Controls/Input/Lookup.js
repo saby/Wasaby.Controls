@@ -245,7 +245,8 @@ define('Controls/Input/Lookup', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
+            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
+               !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
          _private.updateModel(this, newOptions.value);
@@ -371,17 +372,17 @@ define('Controls/Input/Lookup', [
          }
       },
    
-      _showSelector: function() {
+      showSelector: function(templateOptions) {
          var multiSelect = this._options.multiSelect;
 
-         var templateOptions = {
+         templateOptions = merge(templateOptions || {}, {
             selectedItems: multiSelect ? _private.getItems(this) : null,
             isCompoundTemplate: this._options.isCompoundTemplate,
             multiSelect: multiSelect
-         };
+         }, {clone: true});
          
          this._children.selectorOpener.open({
-            templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions)
+            templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
          });
       },
    

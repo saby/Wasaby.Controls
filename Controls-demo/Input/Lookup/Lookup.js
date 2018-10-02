@@ -41,7 +41,11 @@ define('Controls-demo/Input/Lookup/Lookup',
          },
 
          showSelector: function() {
-            this._children.lookup._showSelector();
+            this._children.lookup.showSelector();
+         },
+
+         showSelector2: function() {
+            this._children.lookup2.showSelector();
          }
       });
 

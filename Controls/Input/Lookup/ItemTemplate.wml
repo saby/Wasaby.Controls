@@ -1,4 +1,4 @@
-<div class="controls-Lookup__item controls-Lookup__item-{{isSingleItem ? 'single' : 'multi'}}">
+<div>
     <ws:partial template="{{contentTemplate}}"
                 item="{{item}}"
                 size="{{size || 'default'}}"
