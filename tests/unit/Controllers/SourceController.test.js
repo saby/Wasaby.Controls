@@ -33,24 +33,6 @@ define([
 
       });
 
-      it('prepareSource', function () {
-         var resSource;
-
-         resSource = SourceController._private.prepareSource(source);
-         assert.equal(source, resSource, 'prepareSource doesn\'t returns initial datasource');
-
-         resSource = SourceController._private.prepareSource({
-            module: 'WS.Data/Source/Memory',
-            options: {
-               data: data,
-               idProperty: 'id'
-            }
-         });
-
-         assert.isTrue(cInstance.instanceOfModule(resSource, 'WS.Data/Source/Memory'), 'prepareSource doesn\'t returns datasource by config');
-         assert.equal('id', resSource.getIdProperty(), 'prepareSource doesn\'t returns datasource by config');
-      });
-
       it('load', function (done) {
          var controller = new SourceController({
             source: source

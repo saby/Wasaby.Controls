@@ -109,7 +109,17 @@ define('Controls-demo/FilterSearch/FilterSearch', [
          this._filterButtonData = [{
             id: 'owner',
             resetValue: '0',
-            value: '0'
+            value: '0',
+            source: new MemorySource({
+               data: [
+                  { id: 0, title: 'По ответственному', lastName: '0' },
+                  { id: 1, title: 'Новиков Д.В.', lastName: 'Новиков Д.В.' },
+                  { id: 2, title: 'Кошелев А.Е.', lastName: 'Кошелев А.Е.' },
+                  { id: 3, title: 'Субботин А.В.', lastName: 'Субботин А.В.' },
+                  { id: 4, title: 'Чеперегин А.С.', lastName: 'Чеперегин А.С.' },
+               ],
+               idProperty: 'id'
+            })
          }];
          this._source = new MemorySource({
             data: memorySourceData,
