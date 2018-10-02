@@ -526,13 +526,17 @@ define('SBIS3.CONTROLS/Image',
                }
             },
             _getSourceUrl: function(options) {
+               var result;
                options = options ? options : this._options;
                if (options.dataSource) {
-                  return prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
+                  result = prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
                      options.dataSource.getBinding().read, options.filter);
-               } else {
-                  return options.defaultImage;
                }
+               if (!result) {
+                  result = options.defaultImage;
+               }
+
+               return result;
             },
             _bindToolbarEvents: function() {
                this._boundEvents = {
