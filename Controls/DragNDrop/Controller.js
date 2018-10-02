@@ -82,6 +82,7 @@ define('Controls/DragNDrop/Controller',
          _startEvent: undefined,
          _documentDragging: false,
          _insideDragging: false,
+         _endDragNDropTimer: null,
 
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
