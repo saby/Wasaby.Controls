@@ -93,8 +93,10 @@ define('Controls/Controllers/SourceController',
 
             if (navigParams.filter) {
                navFilter = navigParams.filter;
-               for (var i in navFilter) if (navFilter.hasOwnProperty(i)) {
-                  resultParams.filter[i] = navFilter[i];
+               for (var i in navFilter) {
+                  if (navFilter.hasOwnProperty(i)) {
+                     resultParams.filter[i] = navFilter[i];
+                  }
                }
             }
 
