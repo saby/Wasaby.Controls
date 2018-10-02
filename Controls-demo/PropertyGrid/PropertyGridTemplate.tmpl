@@ -72,5 +72,13 @@
     </Controls-demo.PropertyGrid.BooleanOrNullTemplate>
 </ws:template>
 
+<ws:template name="DateTime">
+    <Controls-demo.PropertyGrid.DateTimeTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.DateTimeTemplate>
+</ws:template>
+
 
 <ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" />
