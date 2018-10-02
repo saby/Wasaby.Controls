@@ -1,10 +1,11 @@
 define(
    [
       'Controls/Input/Dropdown',
+      'Core/core-clone',
       'WS.Data/Source/Memory',
       'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory, RecordSet) => {
+   (Dropdown, Clone, Memory, RecordSet) => {
       describe('Dropdown', () => {
          let items = [
             {
@@ -64,6 +65,16 @@ define(
             return dropdownList;
          };
          let dropdownList = new Dropdown(config);
+
+         it('_afterUpdate', () => {
+            let ddl = getDropdown(config);
+            ddl._notify = (e, data) => {
+               assert.deepEqual(data[0], 'Запись 8');
+            };
+            let newConfig = Clone(config);
+            newConfig.selectedKeys = ['8'];
+            ddl._beforeUpdate(newConfig);
+         });
 
          it('data load callback', () => {
             let ddl = getDropdown(config);

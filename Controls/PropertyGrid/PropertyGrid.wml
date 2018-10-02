@@ -1,6 +1,6 @@
 <div class="controls-PropertyGrid">
    <ws:for data="index,item in _options.items">
-            <ws:partial template="{{_defaultTemplate ||_options.templateName}}"
+            <ws:partial template="{{_options.templateName}}"
                         item="{{item}}"
                         index="{{index}}"
                         itemsProperty="{{_options.scopeObject}}"

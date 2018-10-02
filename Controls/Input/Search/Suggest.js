@@ -40,11 +40,19 @@ define('Controls/Input/Search/Suggest',
          },
    
          _suggestStateChanged: function(event, value) {
-            this._notify('suggestStateChanged', [value]);
+            /**
+             * Всплытие будет удалено по задаче.
+             * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
+             */
+            this._notify('suggestStateChanged', [value], {bubbling: true});
          },
    
          _deactivated: function() {
-            this._notify('suggestStateChanged', [false]);
+            /**
+             * Всплытие будет удалено по задаче.
+             * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
+             */
+            this._notify('suggestStateChanged', [false], {bubbling: true});
          },
    
          _searchClick: function() {

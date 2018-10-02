@@ -6,10 +6,10 @@ define('Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
-      'Controls/Utils/hasHorizontalScroll',
+      'Controls/Utils/getWidth',
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils) {
 
       'use strict';
 
@@ -77,10 +77,17 @@ define('Controls/Input/resources/InputRender/InputRender',
                return 'default';
             }
          },
-         
+
          getInputValueForTooltip: function(inputType, inputValue) {
             //FIXME будет решаться по ошибке, путём выделения подсказики в HOC https://online.sbis.ru/opendoc.html?guid=6239c863-53dc-4cda-90a1-d2ad96979c80
             return inputType === 'password' ? '' : inputValue;
+         },
+
+         hasHorizontalScroll: function(target, text) {
+            if (!text) {
+               return false;
+            }
+            return getWidthUtils.getWidth(text) > target.clientWidth;
          }
       };
 
@@ -109,8 +116,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             var input = this._children.input.querySelector('.controls-InputRender__field');
             var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
-   
-            this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, hasHorizontalScrollUtil(input));
+
+            this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
          },
 
          _inputHandler: function(e) {
@@ -120,6 +127,16 @@ define('Controls/Input/resources/InputRender/InputRender',
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
                inputType, splitValue, processedData;
+
+            /**
+             * No need to process the input if the value has not changed.
+             * The input event can be triggered when the ie focus goes out, if placeholder is set.
+             * This is done every time the template is redrawn.
+             * https://www.carsonshold.com/2013/12/js-bug-ie-10-and-11-oninput-event-with-placeholder-set/
+             */
+            if (value === newValue) {
+               return;
+            }
 
             /**
              * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
@@ -144,7 +161,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             }
 
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip, hasHorizontalScrollUtil(this._children.input.querySelector('.controls-InputRender__field')));
+            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
+               _private.hasHorizontalScroll(this._children.input.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
@@ -164,6 +182,19 @@ define('Controls/Input/resources/InputRender/InputRender',
             setTimeout(function() {
                _private.saveSelection(self, e.target);
             });
+         },
+
+         _clickPlaceholderHandler: function() {
+            /**
+             * Placeholder is positioned above the input field. When clicking, the cursor should stand in the input field.
+             * To do this, we ignore placeholder using the pointer-events property with none value.
+             * The property is not supported in ie lower version 11. In ie 11, you sometimes need to switch versions in emulation to work.
+             * Therefore, we ourselves will focus the field on click.
+             * https://caniuse.com/#search=pointer-events
+             */
+            if (cDetection.IEVersion < 12) {
+               this.activate();
+            }
          },
 
          _selectionHandler: function(e) {
@@ -242,19 +273,20 @@ define('Controls/Input/resources/InputRender/InputRender',
             value: types(String),
             selectOnClick: types(Boolean),
             tagStyle: types(String).oneOf([
+               'secondary',
+               'success',
                'primary',
-               'done',
-               'attention',
-               'error',
-               'info'
+               'danger',
+               'info',
+               'warning'
             ]),
             autocomplete: types(Boolean),
             tooltip: types(String)
          };
       };
-   
+
       InputRender._private = _private;
-      
+
       return InputRender;
    }
 );

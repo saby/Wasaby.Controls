@@ -643,13 +643,28 @@ node('controls') {
         dir(workspace){
             sh """
             7za a log_jinnee -t7z ${workspace}/jinnee/logs
-            """
-        }
-		
+            """			
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
+			
+			sh "mkdir logs_ps"
+			
+			dir('/home/sbis/Controls'){
+				def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+				
+				if ( files_err.length > 0 ){
+					sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+					sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}					
+				}
+			}
+		}
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
 	}
+		
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])

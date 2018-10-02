@@ -142,7 +142,7 @@ define(
                var pNav = new PositionNavigation({
                   field: 'field',
                   direction: 'both',
-                  position: 1
+                  position: null
                });
                var source = new SbisService({
                   endpoint: 'ОбъектБл',

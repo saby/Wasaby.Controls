@@ -1,7 +1,7 @@
 define('Controls/List/Grid/GridView', [
+   'Core/Deferred',
    'Controls/List/ListView',
-   'wml!Controls/List/Grid/GridView',
-   'wml!Controls/List/Grid/OldGridView',
+   'wml!Controls/List/Grid/GridViewTemplateChooser',
    'wml!Controls/List/Grid/Item',
    'wml!Controls/List/Grid/Column',
    'wml!Controls/List/Grid/HeaderContent',
@@ -11,9 +11,8 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
    'css!Controls/List/Grid/Grid',
-   'css!Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(ListView, GridViewTpl, OldGridViewTpl, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
+], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
 
    'use strict';
 
@@ -52,16 +51,29 @@ define('Controls/List/Grid/GridView', [
          }
       },
       GridView = ListView.extend({
+         _gridTemplateName: null,
          isNotFullGridSupport: cDetection.isNotFullGridSupport,
-         _template: cDetection.isNotFullGridSupport ? OldGridViewTpl : GridViewTpl,
+         _template: GridViewTemplateChooser,
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: DefaultItemTpl,
          _headerContentTemplate: HeaderContentTpl,
          _prepareGridTemplateColumns: _private.prepareGridTemplateColumns,
 
          _beforeMount: function(cfg) {
+            var
+               requireDeferred = new cDeferred(),
+               modules = [];
+            this._gridTemplateName = cDetection.isNotFullGridSupport ? 'wml!Controls/List/Grid/OldGridView' : 'wml!Controls/List/Grid/GridView';
+            modules.push(this._gridTemplateName);
+            if (cDetection.isNotFullGridSupport) {
+               modules.push('css!Controls/List/Grid/OldGrid');
+            }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
+            require(modules, function() {
+               requireDeferred.callback();
+            });
+            return requireDeferred;
          },
 
          _afterMount: function() {

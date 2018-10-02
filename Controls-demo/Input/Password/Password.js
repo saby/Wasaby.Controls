@@ -12,7 +12,7 @@ define('Controls-demo/Input/Password/Password',
          _readOnly: false,
          _tooltip: 'Password',
          passwordValue: '',
-         _tagStyle: 'attention',
+         _tagStyle: 'info',
          _placeholder: 'Password',
          _tagStyleHandler: function() {
             this._children.infoBoxPassword.open({

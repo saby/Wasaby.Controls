@@ -44,13 +44,13 @@ define('Controls/Controllers/QueryParamsController/Position',
             this._options = cfg;
             PositionNavigation.superclass.constructor.apply(this, arguments);
 
-            if (!this._options.field) {
+            if (this._options.field === undefined) {
                throw new Error('Option field is undefined in PositionNavigation');
             }
-            if (!this._options.position) {
+            if (this._options.position === undefined) {
                throw new Error('Option position is undefined in PositionNavigation');
             }
-            if (!this._options.direction) {
+            if (this._options.direction === undefined) {
                throw new Error('Option direction is undefined in PositionNavigation');
             }
 

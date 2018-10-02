@@ -13,13 +13,14 @@ define('Controls-demo/Popup/Edit/Opener',
       'wml!Controls-demo/List/Grid/DemoTasksDescr',
       'wml!Controls-demo/List/Grid/DemoTasksReceived',
    ],
-   function (Control, template, MemorySource, GridData) {
+   function(Control, template, MemorySource, GridData) {
       'use strict';
 
       var EditOpener = Control.extend({
          _template: template,
          _addPosition: 0,
          _cancelEdit: false,
+         _openRecordByNewKey: false,
 
          _beforeMount: function(opt, context) {
             this._viewSource = new MemorySource({
@@ -91,11 +92,20 @@ define('Controls-demo/Popup/Edit/Opener',
             ];
          },
 
-         _itemClick: function (event, record) {
+         _itemClick: function(event, record) {
             var popupOptions = {
                closeByExternalClick: false,
             };
-            this._children.EditOpener.open({record: record}, popupOptions);
+
+            var meta = {
+               record: record,
+            };
+
+            if (this._openRecordByNewKey) {
+               meta.key = '442584';
+            }
+
+            this._children.EditOpener.open(meta, popupOptions);
          },
 
          _addRecord: function() {
@@ -115,5 +125,4 @@ define('Controls-demo/Popup/Edit/Opener',
       });
 
       return EditOpener;
-   }
-);
+   });
