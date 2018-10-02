@@ -1,0 +1,3 @@
+<div>
+   <Core.HtmlJson json="{{ json }}" attr:class="ControlsDemo-HtmlJsonAttributes__someClass" attr:someAttr="someValue" />
+</div>

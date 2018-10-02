@@ -337,19 +337,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
 
                if (options.json) {
-                  if (!options.__savedHtmlJson) {
-                     options.__savedHtmlJson = new HtmlJson();
-                  }
-                  options.__savedHtmlJson.setJson(typeof options.json === 'string' ? JSON.parse(options.json) : options.json);
-                  options.text = options.__savedHtmlJson.render();
-
-                  // Костыль для отображения плейсхолдера при пустом json.
-                  // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
-                  // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-                  // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-                  if (options.text === '<span></span>') {
-                     options.text = '';
-                  }
+                  options.text = this._getTextFromJson(options.json, true);
                }
 
                if (options.singleLine) {
@@ -416,22 +404,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!this.isEnabled()) {
                   this._decorateAsSVG(this._options.text);
                }
-            },
-            _initHtmlJson: function() {
-               var self = this;
-               self._htmlJson = self._options.__savedHtmlJson || new HtmlJson();
-               self.subscribe('onTextChange', function(e, text) {
-                  if (text[0] !== '<') {
-                     text = '<p>' + text + '</p>';
-                  }
-                  text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
-                  var div = document.createElement('div');
-                  div.innerHTML = text;
-                  self._options.json = typeof self._options.json === 'string'
-                     ? JSON.stringify(domToJson(div).slice(1))
-                     : domToJson(div).slice(1);
-                  self._notify('onJsonChange', [self._options.json]);
-               });
             },
             _onInitCallback: function() {
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
@@ -716,26 +688,90 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                this._setText(text);
             },
+
+            /**
+             * Получить значение опции "json"
+             * @public
+             * @return {string}
+             */
             getJson: function() {
                return this._options.json;
             },
+
+            /**
+             * Установить значение опции "json" и установвить тект в соответствии с ней
+             * @public
+             * @param {string|Array} json Контент в формате json, строка или массив
+             */
             setJson: function(json) {
                this._options.json = json;
-               this.setText(this.getTextFromJson());
+               this.setText(this._getTextFromJson(json, true));
             },
-            getTextFromJson: function() {
-               if (!this._htmlJson) {
-                  this._initHtmlJson();
-               }
-               this._htmlJson.setJson(typeof this._options.json === 'string' ? JSON.parse(this._options.json) : this._options.json);
 
-               // Костыль для отображения плейсхолдера при пустом json.
-               // Написан по задаче https://online.sbis.ru/opendoc.html?guid=d60a225a-dd99-4966-9593-69235d4a532e.
-               // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
-               // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
-               var text = this._htmlJson.render();
-               return text === '<span></span>' ? '' : text;
+            /**
+             * Сформировать текст по имеющемуся значению опции "json"
+             * @public
+             * @return {string}
+             */
+            getTextFromJson: function () {
+               return this._getTextFromJson(this._options.json, false);
             },
+
+            /**
+             * Сформировать текст по указанному json-контенту Получить значение опции "json"
+             * @protected
+             * @param {string|Array} json Контент в формате json, строка или массив
+             * @param {boolean} withCleaning Очищать от формального корневого элемента span если он есть
+             * @return {string}
+             */
+            _getTextFromJson: function (json, withCleaning) {
+               if (typeof json === 'string') {
+                  json = JSON.parse(json);
+               }
+               var text;
+               if (json.length === 1 && typeof json[0] === 'string') {
+                  text = json[0];
+               }
+               else {
+                  var htmlJson = this._htmlJson;
+                  if (!htmlJson) {
+                     this._htmlJson = htmlJson = new HtmlJson();
+                  }
+                  htmlJson.setJson(json);
+                  text = htmlJson.render();
+                  if (withCleaning) {
+                     // Пока Core/HtmlJson нуждается в наличии формального корневого элемента span, его нужно убрать
+                     // После решения https://online.sbis.ru/opendoc.html?guid=2d3cf7e7-5c2e-4d10-b835-00f9689077e5
+                     // появится поддержка пустых нод, и после соответствующей доработки Core.HtmlJson костыль можно будет убрать.
+                     if (text.search(/^<span>/i) !== -1 && text.search(/<\/span>$/i) !== -1) {
+                        text = text.substring(6, text.length - 7);
+                     }
+                  }
+               }
+               return text;
+            },
+
+            /**
+             * Обработчик события - обновить значение опции "json"
+             * @param {Core/EventObject} e Дескриптор события
+             * @param {string} text Новое значение текста
+             * @protected
+             */
+            _updateJson: function (e, text) {
+               // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+               // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
+               if (text[0] !== '<') {
+                  text = '<p>' + text + '</p>';
+               }
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               var div = document.createElement('div');
+               div.innerHTML = text;
+               var options = this._options;
+               var json = domToJson(div).slice(1);
+               options.json = typeof options.json === 'string' ? JSON.stringify(json) : json;
+               this._notify('onJsonChange', [options.json]);
+            },
+
             _performByReadyCallback: function() {
                //Активность могла поменяться пока грузится tinymce.js
                if (this._lastActive) {
@@ -822,10 +858,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   'focusin',
                   'NodeChange',
                   'TypingUndo',
+                  'BeforeAddUndo',
                   'AddUndo',
                   'ClearUndos',
-                  'redo',
                   'undo',
+                  'redo',
                   'beforeunload',
 
                   'scroll',
@@ -2767,6 +2804,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      }
                   }
+                  // Кроме того, при удалении backspace-ом может измениться состояние UndoManager-а без события от него, поэтому уведомим тулбар об изменении
+                  // 1175906187 https://online.sbis.ru/opendoc.html?guid=671a1601-da24-44d8-aa1a-982151222f7e
+                  this._notifyUndoRedoChange();
                }
             },
 
@@ -2928,11 +2968,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this.saveToHistory(this.getText());
             },
 
-            _onUNDOMANAGERChange: function() {
-               this._notify('onUndoRedoChange', {
-                  hasRedo: this._tinyEditor.undoManager.hasRedo(),
-                  hasUndo: this._tinyEditor.undoManager.hasUndo()
-               });
+            _notifyUndoRedoChange: function() {
+               var undoManager = this._tinyEditor.undoManager;
+               var evt = {
+                  hasUndo: undoManager.hasUndo(),
+                  hasRedo: undoManager.hasRedo()
+               };
+               var lastEvt = this._lastUndoRedoState;
+               if (!lastEvt || evt.hasUndo !== lastEvt.hasUndo || evt.hasRedo !== lastEvt.hasRedo) {
+                  this._lastUndoRedoState = lastEvt;
+                  this._notify('onUndoRedoChange', evt);
+               }
             },
             _onNodeChangeCallback: function(e) {
                this._notify('onNodeChange', e);
@@ -2996,7 +3042,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onMouseUpCallback2',
                   '_onFocusOutCallback',
                   '_saveBeforeWindowClose',
-                  '_onUNDOMANAGERChange',
+                  '_notifyUndoRedoChange',
                   '_onNodeChangeCallback',
                   '_onFocusChangedCallback',
                   '_onFocusOutCallback1',
@@ -3013,7 +3059,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onKeyUpDeleteImage',
                   '_onKeyUpSetLastRng',
                   '_onMouseUpCallback',
-                  '_tinyReadyCallback0'
+                  '_tinyReadyCallback0',
+                  '_updateJson'
                ];
                for (var i = 0; i < methods.length; i++) {
                   this[methods[i]] = this[methods[i]].bind(this);
@@ -3125,7 +3172,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ UNDOMANAGER*/
-               editor.on('TypingUndo AddUndo ClearUndos redo undo', this._onUNDOMANAGERChange);
+               editor.on('TypingUndo BeforeAddUndo AddUndo ClearUndos undo redo', this._notifyUndoRedoChange);
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ NODE ПОД КУРСОРОМ*/
                editor.on('NodeChange', this._onNodeChangeCallback);
 
@@ -3139,6 +3186,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                // Никогда не прокручивать вышележашие скрол-контейнеры !
                editor.on('scrollIntoView', this._onScrollIntoViewCallback);
+
+               if (this._options.json) {
+                  // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
+                  this.subscribeTo(this, 'onTextChange', this._updateJson);
+               }
             },
             _onTouchStartCallback1: function(e) {
                this._fromTouch = true;
@@ -3563,7 +3615,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                if (this._dataReview) {
-                  this._updateDataReview(this.getJson() ? this.getTextFromJson() : (this.getText() || ''), !enabled);
+                  this._updateDataReview(options.json ? this._getTextFromJson(options.json, true) : (this.getText() || ''), !enabled);
                   this._dataReview.toggleClass('ws-hidden', enabled);
                }
                container.toggleClass('ws-hidden', !enabled);
@@ -3939,7 +3991,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var editor = this._tinyEditor;
                   var totalHeight = this._container.height();
                   var content, $content;
-                  if (this._options.editorConfig.inline) {
+                  var options = this._options;
+                  if (options.editorConfig.inline) {
                      $content = this._inputControl;
                      content = $content[0];
                   }
@@ -3948,7 +4001,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   if (BROWSER.isIE) {
                      $content = $content || $(content);
-                     $content.css('height', '');
                   }
                   var contentHeight = content.scrollHeight;
                   var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
@@ -3956,29 +4008,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
                      // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
                      this._scrollContainer[0].scrollTop = 0;
-                     if (BROWSER.isIE) {
+                     if (BROWSER.isIE && options.autoHeight) {
                         // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                         // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                        // 1175690075 https://online.sbis.ru/opendoc.html?guid=8012e763-37e5-4b8e-8987-f7b0dd8cbf77
                         var diff = contentHeight - content.clientHeight;
-                        if (isChanged) {
-                           var parent = content.parentNode;
-                           if (editor) {
-                              if (parent.clientHeight < contentHeight) {
-                                 // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
-                                 // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
-                                 // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
-                                 var rect0 = content.getBoundingClientRect();
-                                 var rect1 = editor.selection.getBoundingClientRect();
-                                 if (rect0 && rect1 &&
-                                    rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
-                                    var scrollTop = parent.scrollHeight - parent.offsetHeight;
-                                    if (parent.scrollTop < scrollTop) {
-                                       // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
-                                       parent.scrollTop = scrollTop;
-                                    }
-                                 }
-                              }
-                           }
+                        var parent = content.parentNode;
+                        content.scrollTop = 0;
+                        if (0 < diff && 0 < parent.scrollTop && parent.scrollTop <= diff) {
+                           parent.scrollTop = 0;
                         }
                      }
                   }
@@ -4205,8 +4243,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      'LinkDecorator__linkWrap',
                      'LinkDecorator__decoratedLink',
                      'LinkDecorator__wrap',
-                     'LinkDecorator__image',
-                     'ws-basic-style'
+                     'LinkDecorator__image'
                   ],
                   index = classes.length - 1;
 

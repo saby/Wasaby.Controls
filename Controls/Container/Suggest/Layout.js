@@ -62,8 +62,8 @@ define('Controls/Container/Suggest/Layout',
                } else {
                   for (var i in bc) {
                      // bc.hasOwnProperty(i) does not make sense,
-                     // because it does not work correctly on clientRect object in FireFox (not all versions)
-                     if (bc.hasOwnProperty(i) || detection.firefox) {
+                     // because it does not work correctly on clientRect object in FireFox and IE (not all versions)
+                     if (bc.hasOwnProperty(i) || detection.firefox || detection.isIE) {
                         resultObj[i] = bc[i];
                      }
                   }
@@ -289,11 +289,15 @@ define('Controls/Container/Suggest/Layout',
             if (!newOptions.suggestState) {
                _private.resetSizesState(this);
             }
-            
+
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
-            
+
+            if (this._options.value !== newOptions.value) {
+               this._searchValue = newOptions.value;
+            }
+
             if (this._emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = newOptions.emptyTemplate;
             }

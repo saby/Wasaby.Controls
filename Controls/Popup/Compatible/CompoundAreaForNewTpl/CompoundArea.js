@@ -41,12 +41,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
-
-            var innerOptions = this._options.innerComponentOptions;
-            innerOptions._onCloseHandler = this._onCloseHandler;
-            innerOptions._onResultHandler = this._onResultHandler;
-            innerOptions._onResizeHandler = this._onResizeHandler;
-            innerOptions._onRegisterHandler = this._onRegisterHandler;
+            this._modifyInnerOptionsByHandlers();
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
@@ -145,6 +140,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                }
             };
          },
+         _modifyInnerOptionsByHandlers: function() {
+            var innerOptions = this._options.innerComponentOptions;
+            innerOptions._onCloseHandler = this._onCloseHandler;
+            innerOptions._onResultHandler = this._onResultHandler;
+            innerOptions._onResizeHandler = this._onResizeHandler;
+            innerOptions._onRegisterHandler = this._onRegisterHandler;
+         },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
          },
@@ -200,7 +202,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
 
          setInnerComponentOptions: function(newOptions) {
-            if (this._vDomTemplate) { // могут позвать перерисоку до того, как компонент создался
+            // Могут позвать перерисоку до того, как компонент создался
+            // Если компонент еще не создался а его уже перерисовали, то создаться должент с новыми опциями
+            this._options.innerComponentOptions = newOptions;
+            this._modifyInnerOptionsByHandlers();
+
+            if (this._vDomTemplate) {
                this._isNewOptions = true;
 
                newOptions._onCloseHandler = this._onCloseHandler;

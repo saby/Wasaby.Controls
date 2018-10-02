@@ -4,7 +4,7 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
    'WS.Data/Source/Memory',
    'wml!Controls-demo/EditAtPlace/EditAtPlacePG',
    'json!Controls-demo/EditAtPlace/EAPConfig',
-   'wml!Controls-demo/EditAtPlace/resources/tabTemplate',
+   'wml!Controls-demo/EditAtPlace/resources/oneField',
    'wml!Controls-demo/EditAtPlace/resources/twoFields',
    'Controls/EditAtPlace/EditAtPlaceTemplate',
    'css!Controls-demo/EditAtPlace/EditAtPlacePG'
@@ -13,27 +13,20 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
    Record,
    Memory,
    template,
-   config,
-   tabTemplate
+   config
 ) {
    'use strict';
 
    var
       tabsData = [{
          id: '0',
-         title: 'Ошибка в разработку',
-         align: 'left',
-         number: '1175501898',
-         date: '26.06.18',
-         itemTemplate: tabTemplate
+         title: 'Error',
+         date: '26.06.18'
       }],
       tabsData2 = [{
          id: '0',
-         title: 'Задача в разработку',
-         align: 'left',
-         number: '1175835828',
-         date: '29.08.18',
-         itemTemplate: tabTemplate
+         title: 'Task',
+         date: '29.08.18'
       }];
 
    var EditAtPlacePG = Control.extend({
@@ -50,21 +43,11 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
                rawData: tabsData2[0]
             })
          ];
-         this._tabSources = [
-            new Memory({
-               idProperty: 'id',
-               data: tabsData
-            }),
-            new Memory({
-               idProperty: 'id',
-               data: tabsData2
-            })
-         ];
          this._dataObject = {
             editObject: {
                enum: {
-                  'Ошибка в разработку': 'Ошибка в разработку',
-                  'Задача в разработку': 'Задача в разработку'
+                  Error: 'Error',
+                  Task: 'Task'
                },
                keyProperty: 'id',
                displayProperty: 'title',
@@ -72,36 +55,32 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
             },
             content: {
                enum: {
-                  'Редактирование текстовых полей': 'Редактирование текстовых полей',
-                  'Редактирование текстовых полей во вкладках': 'Редактирование текстовых полей во вкладках'
+                  'One field': 'wml!Controls-demo/EditAtPlace/resources/oneField',
+                  'Group of fields': 'wml!Controls-demo/EditAtPlace/resources/twoFields'
                },
                keyProperty: 'id',
                displayProperty: 'title',
                selectedKey: 0
             },
             style: {
-               items: [{
-                  id: 0,
-                  title: 'withBackground'
-               }]
+               emptyText: 'none',
+               placeholder: 'select',
+               keyProperty: 'id',
+               displayProperty: 'title'
             }
          };
 
          this._editWhenFirstRendered = false;
-         this._editObject = 'Ошибка в разработку';
-         this._contentTemplate = 'wml!Controls-demo/EditAtPlace/resources/twoFields';
+         this._editObject = this._records[0];
+         this._contentTemplate = 'wml!Controls-demo/EditAtPlace/resources/oneField';
 
          this._componentOptions = {
             name: 'EditAtPlace',
             style: '',
             toolbarVisibility: false,
             editWhenFirstRendered: false,
-            content: 'wml!Controls-demo/EditAtPlace/resources/twoFields',
-            editObject: this._records[0],
-
-            itemTemplateProperty: 'itemTemplate',
-            keyProperty: 'id',
-            source: this._tabSources[0]
+            content: 'wml!Controls-demo/EditAtPlace/resources/oneField',
+            editObject: this._records[0]
          };
 
          this._metaData = config[this._content].properties['ws-config'].options;
@@ -114,25 +93,18 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
             this._key++;
          }
 
-         if (!(newOptions.componentOpt.editObject instanceof Record) && newOptions.componentOpt.editObject !== this._editObject) {
+         if (newOptions.componentOpt.editObject !== this._editObject) {
             key = Object.keys(this._dataObject.editObject.enum).indexOf(newOptions.componentOpt.editObject);
             this._dataObject.editObject.selectedKey = key;
-            this._editObject = newOptions.componentOpt.editObject;
-            this._componentOptions.editObject = this._records[key];
-            this._componentOptions.source = this._tabSources[key];
+            this._editObject = this._records[key];
+            this._componentOptions.editObject = this._editObject;
          }
 
-         if (!(newOptions.componentOpt.content.indexOf('wml!') === 0) && newOptions.componentOpt.content !== this._contentTemplate) {
+         if (newOptions.componentOpt.content !== this._contentTemplate) {
             key = Object.keys(this._dataObject.content.enum).indexOf(newOptions.componentOpt.content);
             this._dataObject.content.selectedKey = key;
-            this._contentTemplate = newOptions.componentOpt.content;
-            if (this._contentTemplate === 'Редактирование текстовых полей во вкладках') {
-               this._content = 'Controls/Tabs/Buttons';
-            } else {
-               this._content = 'Controls/EditAtPlace';
-               this._componentOptions.content = 'wml!Controls-demo/EditAtPlace/resources/twoFields';
-            }
-            this._key++;
+            this._contentTemplate = this._dataObject.content.enum[newOptions.componentOpt.content];
+            this._componentOptions.content = this._contentTemplate;
          }
       }
    });

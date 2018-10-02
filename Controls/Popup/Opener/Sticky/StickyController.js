@@ -128,6 +128,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   if (height > document.body.clientHeight) {
                      item.position.height = document.body.clientHeight;
                      item.position.top = 0;
+                  } else if (item.position.height + item.position.top > document.body.clientHeight) {
+                     // opening the keyboard reduces the height of the body. If popup was positioned at the bottom of
+                     // the window, he did not have time to change his top coordinate => a scroll appeared on the body
+                     var dif = item.position.height + item.position.top - document.body.clientHeight;
+                     item.position.top -= dif;
                   }
                }
             } else {

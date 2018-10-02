@@ -275,6 +275,8 @@ function(cMerge,
             cfg.componentOptions.onResultHandler = cfg.onResultHandler;
          }
 
+         cfg.isCompoundTemplate = true;
+
          cfg.componentOptions.catchFocus = cfg.hasOwnProperty('catchFocus') ? cfg.catchFocus : true;
 
          if (cfg.onCloseHandler) {
@@ -324,11 +326,19 @@ function(cMerge,
          if (cfg.verticalAlign && cfg.verticalAlign.side) {
             newCfg.dialogOptions.verticalAlign = revertPosition[cfg.verticalAlign.side];
          }
+         if (cfg.verticalAlign && cfg.verticalAlign.offset) {
+            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
+            newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
+         }
 
          if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
             newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
          } else {
             newCfg.dialogOptions.direction = 'right';
+         }
+         if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
+            newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
+            newCfg.dialogOptions.offset.x = cfg.horizontalAlign.offset;
          }
 
 

@@ -1,4 +1,5 @@
 <Controls.Container.Suggest.Layout
+        attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
         on:choose="_choose()"
         on:deactivated="_deactivated()"
         on:suggestStateChanged="_suggestStateChanged()"

@@ -48,12 +48,14 @@ define(
          it('get config', () => {
             let record = dataRS.at(0);
             let meta = {
-               record: record
+               record: record,
+               key: '123'
             };
             var config = Edit._private.getConfig(editOpener, meta);
             assert.equal(editOpener._linkedKey, record.getId());
             assert.notEqual(config.templateOptions.record, record); // by link
-            assert.equal(config.templateOptions.record.getId(), record.getId()); // by link
+            assert.equal(config.templateOptions.key, '123');
+            assert.equal(config.templateOptions.record.getId(), record.getId());
          });
 
          it('onResult', () => {

@@ -10,6 +10,13 @@ define('Controls/Button/interface/IHref', [
 
    /**
     * @name Controls/Button/interface/IHref#href
-    * @cfg {String} Link URL.
+    * @cfg {String} Specifies the linked resource.
+    * @default Undefined
+    * @remark This options is analog of html href. It open resource in new page.
+    * @example
+    * When button pressed, we go to google.com
+    * <pre>
+    *    <Controls.Button href="https://www.google.com/" icon="icon-small icon-Add" style="buttonPrimary"/>
+    * </pre>
     */
 });
