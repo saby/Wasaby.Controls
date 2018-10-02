@@ -458,6 +458,15 @@
 @date-range-choose-month-height:                      round(50px * @multiplier);
 @date-range-choose-year-margin-bottom:                0;
 
+// DatePicker VDOM
+@margin-left_DatePicker-button:            round(16px * @multiplier);
+
+// DateRange VDOM
+@margin-left_DateRange-button:             @margin-left_DatePicker-button;
+@width_DateRange-dash:                     round(14px * @multiplier);
+@margin_DateRange-dash:                    0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@thickness_DateRange-dash:                 2px;;
+
 // DateRangeLinkView
 @font-size_DateLinkView:                   round(32px * @multiplier);
 @font-weight_DateLinkView-value:           normal;
@@ -664,8 +673,8 @@
 @tab-button-large-firstAddText-font-size:       @large-text-size;
 //editAtPlace
 @line-height_editAtPlace_fieldWrapper:          normal;
-@font-size_EditActions-cancelButton:            @default-icon-size-large;
-@font-size_EditActions-okButtonIcon:            @default-icon-size-large;
+@font-size_EditActions-cancelButton:            @default-icon-size-medium;
+@font-size_EditActions-okButtonIcon:            @default-icon-size-medium;
 //image
 @editdialog-template-minwidth:                  round(870px * @multiplier);
 //CloseButton
@@ -685,7 +694,8 @@
 @top-space_stackTemplate_close-button:          round(11px * @multiplier);
 
 //DialogTemplate
-@margin_dialogTemplate_head:                   0 round(94px * @multiplier) 0 round(24px * @multiplier);
+@margin_dialogTemplate_head:                   0 round(94px * @multiplier) 0 0;
+@margin-left_dialogTemplate_caption:           round(24px * @multiplier);
 
 //Search
 @icon-size_Search:                              @default-icon-size-medium;

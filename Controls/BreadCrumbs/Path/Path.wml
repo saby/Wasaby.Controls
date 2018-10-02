@@ -2,7 +2,7 @@
     <div class="controls-BreadCrumbsPath__wrapper">
         <ws:if data="{{_options.items && _options.items.length}}">
             <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
-                <Controls.Header.BackButton attr:class="controls-BreadCrumbsPath__backButton"
+                <Controls.Heading.BackButton attr:class="controls-BreadCrumbsPath__backButton"
                                       caption="{{_backButtonCaption}}"
                                       style="primary"
                                       on:click="_onBackButtonClick()"/>
@@ -10,6 +10,8 @@
                      on:click="_onArrowClick()"></div>
             </div>
             <ws:if data="{{_visibleItems.length}}">
+                <div attr:class="controls-BreadCrumbsView__home icon-Home3 icon-primary"
+                     on:click="_onHomeClick()"></div>
                 <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                            items="{{_breadCrumbsItems}}"
                                            visibleItems="{{_visibleItems}}"

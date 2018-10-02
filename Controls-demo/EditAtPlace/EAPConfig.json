@@ -10,17 +10,16 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "commitOnDeactivate": {
-            "type": "Boolean",
-            "title": "Determines whether changes will be committed after component loses focus."
-          },
           "toolbarVisibility": {
             "type": "Boolean",
             "title": "Determines whether buttons 'Save' and 'Cancel' should be displayed."
           },
           "style": {
-            "type": "String",
-            "title": "Edit at place display style."
+            "type": "enum",
+            "title": "Edit at place display style.",
+            "enum": {
+              "withBackground": "Background will be shown while editing."
+            }
           },
           "editObject": {
             "type": "enum",

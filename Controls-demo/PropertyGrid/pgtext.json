@@ -15,10 +15,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -65,11 +66,89 @@
             "type": "String",
             "title": "Regular expression for input filtration."
           }
+        }
+      }
+    }
+  },
+  "Controls/Button": {
+    "name": "Controls/Button",
+    "title": "Basic button.",
+    "className": "Controls/Button",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Button",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "icon": {
+            "type": "String",
+            "title": "Button icon."
+          },
+          "caption": {
+            "type": "String",
+            "title": "Button text."
+          },
+          "href": {
+            "type": "String",
+            "title": "Link URL."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of button.",
+            "enum": {
+              "iconButtonBordered": "Button display as icon with border.",
+              "linkMain": "Button display as main link style.",
+              "linkMain2": "Button display as first nonaccent link style.",
+              "linkMain3": "Button display as second nonaccent link style.",
+              "linkAdditional": "Button display as third nonaccent link style.",
+              "linkAdditional2": "Button display as first accent link style.",
+              "linkAdditional3": "Button display as second accent link style.",
+              "linkAdditional4": "Button display as third accent link style.",
+              "linkAdditional5": "Button display as fourth accent link style.",
+              "buttonPrimary": "Button display as primary contour button style.",
+              "buttonDefault": "Button display as default contour button style.",
+              "buttonAdd": "Button display as button with icon add style."
+            }
+          },
+          "size": {
+            "type": "enum",
+            "title": "Size of the button.",
+            "enum": {
+              "s": "Button has s size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered.",
+              "m": "Button has m size.",
+              "l": "Button has l size.",
+              "xl": "Button has xl size. Not supported by these button styles: buttonPrimary, buttonDefault, buttonAdd, iconButtonBordered."
+            }
+          },
+          "iconStyle": {
+            "type": "enum",
+            "title": "Displaying icon style.",
+            "enum": {
+              "default": "Icon has default display style in this type of button.",
+              "attention": "Icon has attention display style.",
+              "error": "Icon has error display style.",
+              "done": "Icon has done icon style."
+            }
           }
         }
       }
+    }
   },
-  "Controls/Toggle/Switch": {
+    "Controls/Toggle/Switch": {
     "name": "Controls/Toggle/Switch",
     "title": "Switch control.",
     "className": "Controls/Toggle/Switch",
@@ -169,10 +248,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -295,6 +375,121 @@
       }
     }
   },
+  "Controls/Input/DateTime": {
+    "name": "Controls/Input/DateTime",
+    "title": "Input for entering date or/and time.",
+    "className": "Controls/Input/DateTime",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/DateTime",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "value": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Date/Picker": {
+    "name": "Controls/Input/Date/Picker",
+    "title": "Input for entering date.",
+    "className": "Controls/Input/Date/Picker",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/Picker",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "value": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Date/Range": {
+    "name": "Controls/Input/Date/Range",
+    "title": "Input for entering date range.",
+    "className": "Controls/Input/Date/Range",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/Range",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
+          "startValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "endValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
   "Controls/Input/Mask": {
     "name": "Controls/Input/Mask",
     "title": "Input for entering text with a specified format.",
@@ -328,10 +523,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -371,10 +567,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {
@@ -440,10 +637,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "readOnly": {
@@ -454,6 +652,104 @@
             "default": "",
             "title": "Имя контрола",
             "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Tabs/Buttons": {
+    "name": "Controls/Tabs/Buttons",
+    "title": "Buttons for tab switching.",
+    "className": "Controls/Tabs/Buttons",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Tabs/Buttons",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "selectedKey": {
+            "type": "Number",
+            "title": "Identifier of selected item."
+          },
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "tabSpaceTemplate": {
+            "type": "function",
+            "title": "Contents of the area near the tabs."
+          }
+        }
+      }
+    }
+  },
+  "Controls/Toggle/RadioGroup": {
+    "name": "Controls/Toggle/Radio",
+    "title": "Radio button switch.",
+    "className": "Controls/Toggle/Radio",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/Radio",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "selectedKey": {
+            "type": "Number",
+            "title": "Identifier of selected item."
+          },
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "direction": {
+            "type": "enum",
+            "title": "Direction of RadioGroup.",
+            "enum": {
+              "horizontal": "RadioGroup is a row of RadioButton.",
+              "vertical": "RadioGroup is a column of RadioButton."
+            }
           }
         }
       }
@@ -475,10 +771,11 @@
             "title": "Tag style (colored indicator).",
             "enum": {
               "primary": "primary",
-              "done": "done",
-              "attention": "attention",
-              "error": "error",
-              "info": "info"
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "validationErrors": {

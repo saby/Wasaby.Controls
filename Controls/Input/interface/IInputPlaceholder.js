@@ -1,5 +1,4 @@
-define('Controls/Input/interface/IInputPlaceholder', [
-], function() {
+define('Controls/Input/interface/IInputPlaceholder', [], function() {
 
    /**
     * Interface for input placeholder.
@@ -11,8 +10,8 @@ define('Controls/Input/interface/IInputPlaceholder', [
    /**
     * @name Controls/Input/interface/IInputPlaceholder#placeholder
     * @cfg {String|Function} Field placeholder.
-    * @default None
-    * @remark Renders placeholder in the field when it is empty. We do not use native HTML placeholders and render placeholder as div overlayed on top of the field to allow the use of custom templates.
+    * @remark
+    * Renders placeholder in the field when it is empty. We do not use native HTML placeholders and render placeholder as div overlaid on top of the field to allow the use of custom templates.
     * @example
     * In this example, we create a text field with simple text placeholder.
     * <pre>
@@ -23,10 +22,8 @@ define('Controls/Input/interface/IInputPlaceholder', [
     *    <Controls.Input.Text>
     *        <ws:placeholder>
     *           <span>Enter your name or <Controls.Button caption="choose from the list" on:click="openListHandler()"/></span>
-    *        </ws:placeholer>
-         </Controls.Input.Text>
+    *        </ws:placeholder>
+    *    </Controls.Input.Text>
     * </pre>
-    * @see Documentaion: Inputs
     */
-
 });

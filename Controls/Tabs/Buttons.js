@@ -67,23 +67,182 @@ define('Controls/Tabs/Buttons', [
    };
 
    /**
-     * Buttons for tab switching.
-     *
-     * @class Controls/Tabs/Buttons
-     * @extends Core/Control
-     * @mixes Controls/interface/ISource
-     * @mixes Controls/interface/IItemTemplate
-     * @mixes Controls/interface/ISingleSelectable
-     * @control
-     * @public
-     * @category List
-    * @demo Controls-demo/Tabs/Buttons
-     */
+    * Controls are designed to give users a choice among two or more tabs.
+    *
+    * @class Controls/Tabs/Buttons
+    * @extends Core/Control
+    * @mixes Controls/interface/ISingleSelectable
+    * @control
+    * @public
+    * @category List
+    * @demo Controls-demo/Tabs/ButtonsDemoPG
+    */
 
    /**
-     * @name Controls/Tabs/Buttons#tabSpaceTemplate
-     * @cfg {Content} Contents of the area near the tabs.
-     */
+    * @name Controls/Tabs/Buttons#tabSpaceTemplate
+    * @cfg {Content} Contents of the area near the tabs.
+    * @default undefined
+    * @remark
+    * Tab can be left and right aligned, this is determined by the item property 'align'.
+    * If control has left and right tabs then  TabSpaceTemplate will be between them.
+    * @example
+    * Tabs buttons with space template.
+    * <pre>
+    *    <Controls.Tabs.Buttons
+    *       .....
+    *       tabSpaceTemplate=".../spaceTemplate'"
+    *       .....
+    *    />
+    * </pre>
+    * Bordered icon button with default size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="iconButtonBordered"/>
+    * </pre>
+    * spaceTemplate:
+    * <pre>
+    *    <div class="additionalContent">
+    *       <Controls.Button .../>
+    *       <Controls.Button .../>
+    *       <Controls.Button .../>
+    *    </div>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Tabs/Buttons#style
+    * @cfg {Enum} Tabs buttons display style.
+    * @variant default
+    * @variant additional
+    * @default default
+    * @remark
+    * If the standard theme does not suit you, you can override the variables:
+    * <ul>
+    *     <li>@border-color_Tabs-item_selected_default,</li>
+    *     <li>@text-color_Tabs-item_selected_default,</li>
+    *     <li>@border-color_Tabs-item_selected_additional,</li>
+    *     <li>@text-color_Tabs-item_selected_additional</li>
+    * </ul>
+    * @example
+    * Tabs Buttons with additional style.
+    * <pre>
+    *    <Controls.Tabs.Buttons
+    *       bind:selectedKey='_selectedKey'
+    *       keyProperty="id"
+    *       source="{{_source}}
+    *       style="additional"
+    *       .....
+    *    />
+    * </pre>
+    * Tabs Buttons with default style
+    * <pre>
+    *    <Controls.Tabs.Buttons
+    *       bind:selectedKey='_selectedKey'
+    *       keyProperty="id"
+    *       source="{{_source}}
+    *    />
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Tabs/Buttons#source
+    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @default undefined
+    * @remark
+    * The item can have an property 'align'. It's determine align of item tab.
+    * @example
+    * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
+    * <pre>
+    *    <Controls.Tabs.Buttons
+    *              bind:selectedKey='_selectedKey'
+    *              keyProperty="key"
+    *              source="{{_source}}"
+    *    />
+    * </pre>
+    * <pre>
+    *    _selectedKey: '1',
+    *    _source: new Memory({
+    *        idProperty: 'key',
+    *        data: [
+    *        {
+    *           key: '1',
+    *           title: 'Yaroslavl',
+    *           align: 'left'
+    *        },
+    *        {
+    *           key: '2',
+    *           title: 'Moscow'
+    *        },
+    *        {
+    *           key: '3',
+    *           title: 'St-Petersburg'
+    *        }
+    *        ]
+    *    })
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Tabs/Buttons#itemTemplate
+    * @cfg {Function} Template for item render.
+    * @default Base template 'wml!Controls/Tabs/Buttons/ItemTemplate'
+    * @remark
+    * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
+    * The template is placed in the component using the ws:partial tag with the template attribute.
+    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * <ul>
+    *    <li>displayProperty - defines the display field of the record.</li>
+    * <ul>
+    * @example
+    * Tabs buttons with item template.
+    * <pre>
+    *    <Controls.Tabs.Buttons
+    *                   bind:selectedKey='SelectedKey3'
+    *                   keyProperty="id"
+    *                   style="additional"
+    *                   source="{{_source3}}">
+    *       <ws:itemTemplate>
+    *          <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
+    *                      item="{{itemTemplate.item}}"
+    *                      displayProperty="caption"/>
+    *       </ws:itemTemplate>
+    *    </Controls.Tabs.Buttons>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Tabs/Buttons#itemTemplateProperty
+    * @cfg {String} Name of the item property that contains template for item render.
+    * @default If not set, itemTemplate is used instead.
+    * @remark
+    * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
+    * The template is placed in the component using the ws:partial tag with the template attribute.
+    * By default, the base template 'wml!Controls/Tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * <ul>
+    *    <li>displayProperty - defines the display field of the record.</li>
+    * <ul>
+    * @example
+    * Tabs buttons with item template.
+    * <pre>
+    *    <Controls.Tabs.Buttons itemTemplateProperty="myTemplate"
+    *                           source="{{_source}}
+    *                           ...>
+    *    </Controls.Tabs.Buttons>
+    * </pre>
+    * myTemplate
+    * <pre>
+    *    <div class="controls-Tabs__item_custom">{{item.get(displayProperty || 'title')}}</div>
+    * </pre>
+    * <pre>
+    *    _source: new Memory({
+    *              idProperty: 'id',
+    *              data: [
+    *                     {id: 1, title: 'I agree'},
+    *                     {id: 2, title: 'I not decide'},
+    *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+    *              ]
+    *    })
+    * </pre>
+    */
 
    var TabsButtons = Control.extend({
       _template: TabButtonsTpl,

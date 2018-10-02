@@ -8,14 +8,14 @@
    </ws:if>
    <ws:else>
       <Controls-demo.PropertyGrid.SuggestTemplate.SuggestTemplate
-              value="{{_options.value}}"
+              value="{{_value}}"
               displayProperty="title"
               searchParam="title"
               autoDropDown="{{true}}"
               items="{{_options.items}}"
               caption="{{_options.caption}}"
               minSearchLength="1"
-              on:valueChanged="_valueChangedHandler()"
+              on:valueChanged="_valueChangedSuggestHandler()"
               config="{{_options.config}}"
       />
    </ws:else>

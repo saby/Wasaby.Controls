@@ -163,9 +163,7 @@ define('Controls/Dropdown/Controller',
                   },
                   target: self._container,
                   corner: self._options.corner,
-                  opener: self,
-                  horizontalAlign: self._options.horizontalAlign,
-                  verticalAlign: self._options.verticalAlign
+                  opener: self
                };
                self._children.DropdownOpener.open(config, self);
             }

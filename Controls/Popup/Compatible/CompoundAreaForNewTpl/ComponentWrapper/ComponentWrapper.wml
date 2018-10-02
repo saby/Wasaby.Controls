@@ -3,7 +3,7 @@
          template="{{_options.template}}"
          scope="{{_options}}"
          on:close="_onCloseHandler()"
-         on:resize="_onResizeHandler()"
+         on:controlresize="_onResizeHandler()"
          on:sendresult="_onResultHandler()"
          on:register="_onRegisterHandler()"
          on:unregister="_onRegisterHandler()"

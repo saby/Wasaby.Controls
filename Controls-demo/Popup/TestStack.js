@@ -16,7 +16,7 @@ define('Controls-demo/Popup/TestStack',
          },
 
          _onClick: function(){
-            if( this._options.type === 'sticky' ){
+            if (this._options.type === 'sticky' ){
                this._notify('sendResult', [123], {bubbling: true});
             }
             else{

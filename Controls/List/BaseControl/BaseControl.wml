@@ -86,6 +86,7 @@
                 on:itemActionsClick="_onItemActionsClick()"
                 showToolbar="{{_options.editingConfig.showToolbar}}"
                 name="itemActions"
+                style="{{_options.style}}"
                 listModel="{{_listViewModel}}"
                 menuIsShown="{{_menuIsShown}}"
                 itemActions="{{_options.itemActions}}"
