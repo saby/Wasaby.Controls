@@ -1671,12 +1671,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   rng = selection.getRng();
                   var node = rng.commonAncestorContainer;
                   if (node.nodeType === 3) {
-                     var caret = editor.dom.getParent(node, '#_mce_caret');
-                     // при снятии свойств форматирования bold, italic, underline и strikethrough может возникать ошибка из-за слишком высокого положения каретки, поэтому убрать её совсем
+                     var dom = editor.dom;
+                     var caret = dom.getParent(node, '#_mce_caret');
+                     // При снятии свойств форматирования bold, italic, underline и strikethrough может сниматься и другое форматирование из-за слишком высокого положения каретки, поэтому лучше убрать её совсем
                      // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
                      if (caret && caret !== node.parentNode.parentNode) {
                         var offset = rng.startOffset;
-                        $(caret.childNodes).unwrap();
+                        dom.remove(caret, true);
                         this._selectNewRng(node, offset);
                      }
                   }
