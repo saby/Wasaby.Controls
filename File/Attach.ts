@@ -166,7 +166,7 @@ const DEFAULT: Partial<Options> = {
  * @public
  * @class
  * @name File/Attach
- * @extends Core/Abstract
+ * @extends File/Attach/Abstract
  * @author Заляев А.В.
  */
 class Attach extends Abstract {
