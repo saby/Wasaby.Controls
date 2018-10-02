@@ -67,7 +67,7 @@ define('Controls/Popup/Opener/BaseController',
 
          _elementUpdated: function(item, container) {
             if (this._checkContainer(item, container, 'elementUpdated')) {
-               if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED) {
+               if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED || item.popupState === BaseController.POPUP_STATE_UPDATING) {
                   item.popupState = BaseController.POPUP_STATE_UPDATING;
                   this.elementUpdated.apply(this, arguments);
                   return true;

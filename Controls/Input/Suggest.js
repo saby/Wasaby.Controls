@@ -93,10 +93,12 @@ define('Controls/Input/Suggest',
    
          _searchStart: function() {
             this._searchState = true;
+            this._forceUpdate();
          },
          
          _searchEnd: function() {
             this._searchState = false;
+            this._forceUpdate();
          }
          
          // </editor-fold>
