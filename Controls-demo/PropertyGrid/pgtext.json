@@ -959,15 +959,6 @@
               "column": "display in two columns"
             }
           },
-          "headerStyle": {
-            "default": "primary",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "primary": "primary color",
-              "default": "default color"
-            }
-          },
           "size": {
             "default": "m",
             "title": "Color of title in header of filter panel.",

@@ -39,5 +39,4 @@ define('Controls/Filter/Button/Panel/FilterDropdown', [
    });
 
    return FilterDropdown;
-
 });

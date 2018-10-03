@@ -1,5 +1,20 @@
 .controls-FilterDropdown {
-   display: flex;
+   display: inline-flex;
+   aling-items: center;
+}
+
+.controls-FilterDropdown__text {
+   color: @color_FilterDropdown-text;
+}
+
+.ws-is-no-touch {
+   .controls-FilterDropdown__text:hover {
+      text-decoration: underline;
+   }
+}
+
+.controls-FilterDropdown__text:active {
+   text-decoration: underline;
 }
 
 .controls-FilterDropdown__reset {

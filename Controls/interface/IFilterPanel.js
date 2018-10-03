@@ -32,12 +32,12 @@ define('Controls/interface/IFilterPanel', [
     * @cfg {Object} Caption of filter panel.
     */
 
-   /**
-    * @name Controls/interface/IFilterPanel#headerStyle
-    * @cfg {String} Color of title in header of filter panel.
-    * @variant primary Primary color.
-    * @variant default Default color.
-    */
+   // /**
+   //  * @name Controls/interface/IFilterPanel#headerStyle
+   //  * @cfg {String} Color of title in header of filter panel.
+   //  * @variant primary Primary color.
+   //  * @variant default Default color.
+   //  */
 
    /**
     * @name Controls/interface/IFilterPanel#itemTemplate

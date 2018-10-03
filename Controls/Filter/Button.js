@@ -16,14 +16,13 @@ define('Controls/Filter/Button',
 
       /**
        * Component for data filtering.
-       * Uses property grid for editing filter fields.
+       * More information you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>here</a>.
+       * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
        *
        * The component is used in combination with other components for filters. {@link Controls/Filter/Button/Panel}, {@link Controls/Filter/Fast},
        * {@link Controls/Filter/Controller}, {@link Controls/Filter/Button/Container}
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
-       *
-       * Here you can see a combination with other components<a href="/materials/demo-ws4-filter-search-new">demo</a>.
-       * <a href="/materials/demo-ws4-filter-button">Demo-example</a>.
+       * Here you can see a combination with other components <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
