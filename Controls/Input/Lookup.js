@@ -169,14 +169,17 @@ define('Controls/Input/Lookup', [
             fieldWrapper, afterFieldWrapper;
 
          if (self._selectedKeys.length) {
-            if (!self._options.readOnly && self._options.multiSelect) {
+            if (!self._options.readOnly) {
                fieldWrapper = self._children.inputRender._container;
                afterFieldWrapper = self._children.showSelector;
-               additionalWidth = _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapper.offsetWidth) +
-                  afterFieldWrapper.offsetWidth;
+               additionalWidth = afterFieldWrapper.offsetWidth;
+
+               if (self._options.multiSelect) {
+                  additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapper.offsetWidth);
+               }
             }
 
-            availableWidth =  DOMUtil.width(self._children.inputRender._container) - additionalWidth;
+            availableWidth = DOMUtil.width(self._children.inputRender._container) - additionalWidth;
 
             if (itemsCount === 1) {
                displayItems = itemsCount;
@@ -271,7 +274,8 @@ define('Controls/Input/Lookup', [
          }
 
          if (newOptions.readOnly !== this._options.readOnly ||
-            newOptions.displayProperty !== this._options.displayProperty) {
+            newOptions.displayProperty !== this._options.displayProperty ||
+            newOptions.multiSelect !== this._options.multiSelect) {
 
             this._collectionIsReady = false;
          }
