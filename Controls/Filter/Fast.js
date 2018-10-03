@@ -15,7 +15,6 @@ define('Controls/Filter/Fast',
 
    ],
    function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
-
       'use strict';
 
       /**
@@ -32,7 +31,6 @@ define('Controls/Filter/Fast',
        * @public
        * @author Герасимов А.М.
        */
-
 
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -70,7 +68,7 @@ define('Controls/Filter/Fast',
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
-            } else if (properties.source) {
+            } if (properties.source) {
                return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter);
             }
          },
@@ -82,7 +80,7 @@ define('Controls/Filter/Fast',
                pDef.push(result);
             });
 
-            //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
+            // Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
@@ -100,7 +98,7 @@ define('Controls/Filter/Fast',
          },
 
          selectItem: function(item) {
-            //Получаем ключ выбранного элемента
+            // Получаем ключ выбранного элемента
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
@@ -144,17 +142,15 @@ define('Controls/Filter/Fast',
          },
 
          _beforeUpdate: function(newOptions) {
-            var self = this,
-               resultDef;
-            if (!isEqual(newOptions.items, this._options.items)) {
+            var self = this;
+            if (newOptions.items) {
                _private.prepareItems(this, newOptions.items);
-               resultDef = _private.reload(this);
+               this._setText();
             } else if (!isEqual(newOptions.source, this._options.source)) {
-               resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
+               return _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
                });
             }
-            return resultDef;
          },
 
          _open: function(event, item, index) {
@@ -173,7 +169,7 @@ define('Controls/Filter/Fast',
                target: this._container.children[index]
             };
 
-            //Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem
+            // Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem
             this.lastOpenIndex = index;
             this._children.DropdownOpener.open(config, this);
          },
@@ -204,5 +200,4 @@ define('Controls/Filter/Fast',
 
       Fast._private = _private;
       return Fast;
-   }
-);
+   });
