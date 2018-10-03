@@ -1,5 +1,21 @@
 define('Controls/Input/DateTime', [
-], function() {
+   'Core/Control',
+   'Core/core-merge',
+   'Controls/Calendar/Utils',
+   'Controls/Input/DateTime/Model',
+   'Controls/Input/interface/IDateTimeMask',
+   'Controls/Utils/tmplNotify',
+   'wml!Controls/Input/DateTime/DateTime'
+], function(
+   Control,
+   coreMerge,
+   CalendarControlsUtils,
+   Model,
+   IDateTimeMask,
+   tmplNotify,
+   template
+) {
+   'use strict';
 
    /**
     * Control for entering date and time.
@@ -12,52 +28,60 @@ define('Controls/Input/DateTime', [
     * @class Controls/Input/DateTime
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
+    * @mixes Controls/Input/interface/IDateTimeMask
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
-    * @author Журавлев М.С.
+    * @author Миронов А.Ю.
     * @category Input
     */
 
-   /**
-    * @name Controls/Input/DateTime#mask
-    * @cfg {String} Data format.
-    *
-    * One of the listed mask must be choosen. Allowed mask chars:
-    * <ol>
-    *    <li>D - day.</li>
-    *    <li>M - month.</li>
-    *    <li>Y - year.</li>
-    *    <li>H - hour.</li>
-    *    <li>I - minute.</li>
-    *    <li>S - second.</li>
-    *    <li>U - millisecond.</li>
-    *    <li>".", "-", ":", "/" - delimiters.</li>
-    * </ol>
-    * @variant 'DD.MM.YYYY'
-    * @variant 'DD.MM.YY'
-    * @variant 'DD.MM'
-    * @variant 'YYYY-MM-DD'
-    * @variant 'YY-MM-DD'
-    * @variant 'HH:II:SS.UUU'
-    * @variant 'HH:II:SS'
-    * @variant 'HH:II'
-    * @variant 'DD.MM.YYYY HH:II:SS.UUU'
-    * @variant 'DD.MM.YYYY HH:II:SS'
-    * @variant 'DD.MM.YYYY HH:II'
-    * @variant 'DD.MM.YY HH:II:SS.UUU'
-    * @variant 'DD.MM.YY HH:II:SS'
-    * @variant 'DD.MM.YY HH:II'
-    * @variant 'DD.MM HH:II:SS.UUU'
-    * @variant 'DD.MM HH:II:SS'
-    * @variant 'DD.MM HH:II'
-    * @variant 'YYYY-MM-DD HH:II:SS.UUU'
-    * @variant 'YYYY-MM-DD HH:II:SS'
-    * @variant 'YYYY-MM-DD HH:II'
-    * @variant 'YY-MM-DD HH:II:SS.UUU'
-    * @variant 'YY-MM-DD HH:II:SS'
-    * @variant 'YY-MM-DD HH:II'
-    * @variant 'YYYY'
-    * @variant 'MM/YYYY'
-    */
+   var Component = Control.extend([], {
+      _template: template,
+      _proxyEvent: tmplNotify,
+
+      _formatMaskChars: {
+         'D': '[0-9]',
+         'M': '[0-9]',
+         'Y': '[0-9]',
+         'H': '[0-9]',
+         'm': '[0-9]',
+         's': '[0-9]',
+         'U': '[0-9]'
+      },
+
+      _model: null,
+
+      _beforeMount: function(options) {
+         this._model = new Model(options);
+         CalendarControlsUtils.proxyModelEvents(this, this._model, ['valueChanged']);
+      },
+
+      _beforeUpdate: function(options) {
+         this._model.update(options);
+      },
+
+      _inputCompletedHandler: function(event, value) {
+         this._model.autocomplete(value);
+      },
+
+      _valueChangedHandler: function(e, value) {
+         this._model.textValue = value;
+         e.stopImmediatePropagation();
+      },
+
+      _beforeUnmount: function() {
+         this._model.destroy();
+      }
+   });
+
+   Component.getDefaultOptions = function() {
+      return coreMerge({}, IDateTimeMask.getDefaultOptions());
+   };
+
+   Component.getOptionTypes = function() {
+      return coreMerge({}, IDateTimeMask.getOptionTypes());
+   };
+
+   return Component;
 });

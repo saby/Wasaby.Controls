@@ -241,6 +241,10 @@ function(cMerge,
             cfg.isModal = cfg.modal;
          }
 
+         if (cfg._popupComponent === 'dialog') { //у window всегда есть drag
+            cfg.templateOptions.draggable = true;
+         }
+
          if (cfg.hasOwnProperty('draggable')) {
             cfg.templateOptions.draggable = cfg.draggable;
          }

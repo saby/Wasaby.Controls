@@ -1,31 +1,57 @@
 //colors
+@color1:                #CCC;
+@color2:                #999;
+@color3:                #E4E4E4;
+@color4:                #EAEAEA;
+@color5:                #BDBDBD;
+@color6:                #313E78;
+@color7:                #587AB0;
+
 @color_text_default:      #000;
-@color_text_disabled:     #CCCCCC;
+@color_text_disabled:     @color1;
 
-@color_border:                      #CCC;
-@color_border_disabled:             #e4e4e4;
-@color_border_secondary:            #BDBDBD;
-@color_border_disabled_secondary:   #CCC; //используется только в кнопках
-@color_link:                        #0055BB;
+@background-color_default:     #FFF;
+@background-color_error:        #FADADD;
 
-@color_primaryV:                      #ff7033;
+@color_border:                      @color1;
+@color_border_error:                @color_danger;
+@color_border_disabled:             @color3;
+@color_border_secondary:            @color5;
+
+
+@color_Heading_primary:             #D94700;
+@color_Heading_secondary:           @color6;
+
+@color_warning:                       #FEC63F;
+@color_success:                       #72BE44;
+@color_link:                          #0055BB;
+@color_danger:                        #EF463A;
+@color_primaryV:                      #FF7033;
 @color_active-element:                @color_primaryV;
-@color_active-element_disabled:		  #313E78;
-@color_secondary:                     #587ab0;
-@color_unselected:                    #999;
-@color_additional:                    #999;
+@color_info:                          @color1;
+@color_active-element_disabled:		  @color6;
+@color_secondary:                     @color7;
+@color_unselected:                    @color2;
+@color_additional:                    @color2;
 
 //sizes
-@size_text_default:         14px;
 @thickness_border_default:  1px;
 @height_control_default:    24px;
-
 @line-height_default:       18px;
-@size_Heading_s:            @size_text_default;
-@size_Heading_m:            15px;
-@size_Heading_l:            18px;
-@size_Heading_xl:           20px;
 
+@size_text_s:     12px;
+@size_text_m:     14px;
+@size_text_l:     15px;
+@size_text_xl:    16px;
+@size_text_2xl:   17px;
+@size_text_3xl:   18px;
+@size_text_4xl:   20px;
+@size_text_5xl:   24px;
+
+@size_Heading_s:            @size_text_m;
+@size_Heading_m:            @size_text_l;
+@size_Heading_l:            @size_text_3xl;
+@size_Heading_xl:           @size_text_4xl;
 
 @spacing_default_xxs:      2px;
 @spacing_default_xs:       4px;
@@ -36,4 +62,6 @@
 @spacing_default_xxl:      24px;
 
 
-
+//
+@color_border_input:                @color4;
+@color_border_disabled_secondary:   @color1; //используется только в кнопках

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/NotificationPopup', [
     *
     * @ignoreOptions contextRestriction independentContext modal validateIfHidden
     *
-    * @ignoreMethod activateFirstControl activateLastControl addPendingOperation destroyChild detectNextActiveChildControl disableActiveCtrl
+    * @ignoreMethods activateFirstControl activateLastControl addPendingOperation destroyChild detectNextActiveChildControl disableActiveCtrl
     * @ignoreMethods getAllPendingInfo getImmediateChildControls getNamedGroup getNearestChildControlByName getResizer getToolBarCount
     * @ignoreMethods hasActiveChildControl increaseToolBarCount isAllReady isModal isPage moveToTop setEnabled setSize waitAllPendingOperations
     *
