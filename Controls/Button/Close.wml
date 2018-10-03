@@ -1,12 +1,5 @@
 <span class="controls-Button__close">
     <span class="controls-Button__close__wrapper controls-Button__close_{{_options.style}} controls-Button__close_{{_options.style}}_{{_options.size}}">
-        <ws:if data="{{_options.style === 'light'}}">
-            <span class="controls-Button__close__icon controls-Button__close__icon_light"></span>
-        </ws:if>
-        <ws:else>
-            <svg xmlns="http://www.w3.org/2000/svg" class="controls-Button__close__icon_{{_options.style}}" width="11.25" height="11.25" viewBox="0 0 11.25 11.25">
-                <path xmlns="http://www.w3.org/2000/svg" d="M12.9,11.92l4.53,4.57a0.57,0.57,0,0,1,0,.86,0.38,0.38,0,0,1-.2.16,0.72,0.72,0,0,1-.47,0,0.37,0.37,0,0,1-.2-0.16L12,12.82,7.43,17.35a0.38,0.38,0,0,1-.2.16,0.72,0.72,0,0,1-.47,0,0.37,0.37,0,0,1-.2-0.16,0.57,0.57,0,0,1,0-.86l4.53-4.57L6.57,7.35a0.57,0.57,0,0,1,0-.86,0.57,0.57,0,0,1,.86,0L12,11l4.57-4.53a0.57,0.57,0,0,1,.86,0,0.57,0.57,0,0,1,0,.86Z" transform="translate(-6.38 -6.3)"/>
-            </svg>
-        </ws:else>
+        <span class="controls-Button__close__icon_{{_options.style}}_{{_options.size}}"></span>
     </span>
 </span>
