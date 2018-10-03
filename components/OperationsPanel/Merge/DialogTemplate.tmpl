@@ -5,7 +5,12 @@
                 stickyContainer="{{ true }}">
             <ws:content>
                 <SBIS3.CONTROLS.Tree.DataGridView
-                        class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator"
+                        class="controls-MergeDialogTemplate__treeDataGridView
+                               controls-TreeView__withoutLevelPadding
+                               controls-ListView__withoutMarker
+                               controls-GridView__searchMode
+                               controls-TreeView__withoutExpands
+                               controls-DataGridView__hasSeparator"
                         name="MergeDialogTemplate__treeDataGridView"
                         itemsDragNDrop="{{ false }}"
                         showPaging="{{ false }}"
@@ -18,23 +23,8 @@
                         nodeProperty="{{ nodeProperty }}"
                         idProperty="{{ idProperty }}"
                         itemsActions="{{ [] }}"
+                        columns="{{ _columns }}"
                         hierarchyViewMode="{{ true }}">
-                    <ws:columns>
-                        <ws:Array>
-                            <ws:Object cellTemplate="{{ _cellRadioButtonTpl }}"></ws:Object>
-                            <ws:Object title="{[Наименование]}"
-                                       width="{{ 400 }}"
-                                       field="{{ displayProperty }}"
-                                       className="controls-DataGridView-cell-overflow-ellipsis"
-                                       cellTemplate="{{ titleCellTemplate ? titleCellTemplate : _titleCellTemplate }}"
-                            ></ws:Object>
-                            <ws:Object title="{[Комментарий]}"
-                                       field="Comment"
-                                       className="controls-DataGridView-cell-overflow-ellipsis"
-                                       cellTemplate="{{ _cellCommentTpl }}"
-                            ></ws:Object>
-                        </ws:Array>
-                    </ws:columns>
                     <ws:handlers onSearchPathClick="{{ _onSearchPathClick }}">
                     </ws:handlers>
                 </SBIS3.CONTROLS.Tree.DataGridView>
