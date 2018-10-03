@@ -5,6 +5,7 @@
             itemTemplate="{{_options.itemTemplate}}"
             itemsLayout="{{itemsLayout}}"
             items="{{items}}"
+            readOnly="{{_options.readOnly}}"
             displayItemsIndex="{{displayItemsIndex}}"
             on:itemClick="_itemClick()"
             on:crossClick="_crossClick()"/>
