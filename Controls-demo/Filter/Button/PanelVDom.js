@@ -73,7 +73,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'responsible', value: '', resetValue: ''}
             ];
             this._itemsTemplate = [
-               {id: 'author', value: '', resetValue: '',
+               {id: 'author', value: 'Author: Ivanov A.A.', resetValue: '', textValue: 'Author: Ivanov A.A.',
                   templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/author'},
                { id: 'period', value: [1], textValue: 'Period', resetValue: [1],
                   source: this.sourcePeriod,

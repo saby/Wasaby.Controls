@@ -10,7 +10,6 @@ define('Controls-demo/PropertyGrid/ArrayTemplate',
 
       var arrayTmpl = Control.extend({
          _template: template,
-         _source: null,
          _param: null,
 
          _valueChangedHandler: function(event, tmp) {
@@ -19,9 +18,8 @@ define('Controls-demo/PropertyGrid/ArrayTemplate',
             this._notify('valueChanged', [tmp]);
          },
 
-         _valueChangedSuggestHandler: function(event, value) {
-            this._value = value;
-            this._notify('valueChanged', [value]);
+         _chooseSuggestHandler: function(event, item) {
+            this._notify('valueChanged', [item.get('items')]);
          }
       });
 

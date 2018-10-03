@@ -1,0 +1,10 @@
+<Controls.Filter.Button.Panel.FilterSelect
+        keyProperty="key"
+        bind:textValue="item.textValue">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{1}}" value="Read"/>
+         <ws:Object key="{{2}}" value="Unread"/>
+      </ws:Array>
+   </ws:items>
+</Controls.Filter.Button.Panel.FilterSelect>
