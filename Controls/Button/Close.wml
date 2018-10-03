@@ -1,5 +1,5 @@
 <span class="controls-Button__close">
-    <span class="controls-Button__close__wrapper controls-Button__close_{{_options.style}}">
+    <span class="controls-Button__close__wrapper controls-Button__close_{{_options.style}} controls-Button__close_{{_options.style}}_{{_options.size}}">
         <ws:if data="{{_options.style === 'light'}}">
             <span class="controls-Button__close__icon controls-Button__close__icon_light"></span>
         </ws:if>

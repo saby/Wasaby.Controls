@@ -44,16 +44,25 @@
    background-color: @background-color_CloseButton_primary;
 }
 
-.controls-Button__close_default, .controls-Button__close_primary {
-  width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-  height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-  border: solid @border-color_CloseButton;
-  border-width: @border-width_CloseButton;
-  border-radius: @border-radius_CloseButton;
-  box-shadow: @box-shadow_CloseButton;
+.controls-Button__close_default_m, .controls-Button__close_primary_m {
+  width: @width_CloseButton_m - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+  height: @height_CloseButton_m - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 }
 
-.controls-Button__close_light {
+.controls-Button__close_default_m, .controls-Button__close_primary_m,
+.controls-Button__close_default_l, .controls-Button__close_primary_l {
+   border: solid @border-color_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   box-shadow: @box-shadow_CloseButton;
+}
+
+.controls-Button__close_default_l, .controls-Button__close_primary_l {
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+}
+
+.controls-Button__close_light_m, .controls-Button__close_light_l {
   font-family: @font-family_CloseButton_light;
   width: @width_CloseButton_small;
   height: @height_CloseButton_small;
