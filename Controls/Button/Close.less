@@ -7,9 +7,7 @@
 }
 
 .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
-   font-size: @font-size_CloseButton_default;
-   font-family: @font-family_CloseButton_default;
-   color: @color_CloseButton-icon;
+   fill: @color_CloseButton-icon;
 }
 
 .controls-Button__close__icon_light {
@@ -21,8 +19,10 @@
    text-shadow: @text-shadow_Button;
 }
 
-.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active {
-   color: @color_CloseButton-icon_hover;
+.controls-Button__close__wrapper:active {
+   .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
+      fill: @color_CloseButton-icon_hover;
+   }
 }
 
 .controls-Button__close__icon_light:active {
@@ -65,8 +65,10 @@
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover {
-      color: @color_CloseButton-icon_hover;
+   .controls-Button__close__wrapper:hover {
+      .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
+         fill: @color_CloseButton-icon_hover;
+      }
    }
 
    .controls-Button__close__icon_light:hover {
