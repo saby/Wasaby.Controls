@@ -393,6 +393,9 @@ node('controls') {
                 ЧислоПотоковВРабочихПроцессах=10
                 МаксимальныйРазмерВыборкиСписочныхМетодов=0
 
+                [Управление облаком.Очередь загрузки]
+                Хранилище=test-redis.unix.tensor.ru:6436
+
                 [Presentation Service]
                 WarmUpEnabled=No
                 ExtractLicense=Нет
@@ -406,22 +409,25 @@ node('controls') {
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
                 РазмерКэшаСессий=3
                 Конфигурация=ini-файл
+
                 [Ядро.Сервер приложений]
                 ПосылатьОтказВОбслуживанииПриОтсутствииРабочихПроцессов=Нет
                 МаксимальноеВремяЗапросаВОчереди=60000
                 ЧислоРабочихПроцессов=4
                 МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
                 [Ядро.Права]
                 Проверять=Нет
+
                 [Ядро.Асинхронные сообщения]
                 БрокерыОбмена=amqp://test-rabbitmq.unix.tensor.ru
+
                 [Ядро.Логирование]
                 Уровень=Параноидальный
                 ОграничениеДляВходящегоВызова=1024
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
-                [Управление облаком.Очередь загрузки]
-                Хранилище=test-redis.unix.tensor.ru:6436
+
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
@@ -607,7 +613,7 @@ node('controls') {
                                     dir("./controls/tests/int"){
                                         sh """
                                         source /home/sbis/venv_for_test/bin/activate
-                                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+                                        python start_tests.py --files_to_start test_accordion.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
                                         deactivate
                                         """
                                     }
