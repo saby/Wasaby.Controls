@@ -157,22 +157,24 @@ define([
       });
 
       it('getItemWidth', function() {
-         var lookup = new Lookup();
+         if (typeof window !== 'undefined') {
+            var lookup = new Lookup();
 
-         lookup._children.collection = {
-            _options: Collection.getDefaultOptions()
-         };
+            lookup._children.collection = {
+               _options: Collection.getDefaultOptions()
+            };
 
-         lookup._items = new List({
-            items: [new Model({
-               rawData: {
-                  id: 1,
-                  title: 'Тестовый текст'
-               }
-            })]
-         });
+            lookup._items = new List({
+               items: [new Model({
+                  rawData: {
+                     id: 1,
+                     title: 'Тестовый текст'
+                  }
+               })]
+            });
 
-         assert.isTrue(Lookup._private.getItemWidth(lookup, 0) > 100);
+            assert.isTrue(Lookup._private.getItemWidth(lookup, 0) > 100);
+         }
       });
 
       it('getInputMinWidth', function() {

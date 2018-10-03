@@ -28,23 +28,19 @@
             </div>
             <div class="control-Lookup-demo-block">
                 <div class="control-Lookup-demo-title">
-                    Lookup bold items with link
+                    Lookup bold items
                 </div>
                 <div>
                     base line test
                     <Controls.Input.Lookup
-                            name="lookup"
                             bind:value="_value2"
                             bind:selectedKeys="_selectedKeys2"
                             source="{{_source}}"
+                            placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
-                        <ws:placeholder>
-                            Выберите
-                            <Controls.Input.Lookup.Link caption="имя" on:click="showSelector()"/>
-                        </ws:placeholder>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -107,34 +103,82 @@
                     </Controls.Input.Lookup>
                 </div>
             </div>
+            <div class="control-Lookup-demo-block">
+                <div class="control-Lookup-demo-title">
+                    Lookup items with link
+                </div>
+                <div>
+                    base line test
+                    <Controls.Input.Lookup
+                            name="lookup"
+                            bind:value="_value2"
+                            bind:selectedKeys="_selectedKeys7"
+                            source="{{_source}}"
+                            searchParam="title"
+                            keyProperty="id"
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
+                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:placeholder>
+                            Выберите
+                            <Controls.Input.Lookup.Link caption="имя" on:click="showSelector()"/>
+                        </ws:placeholder>
+                        <ws:navigation source="page" view="page">
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                        </ws:navigation>
+                        <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                    </Controls.Input.Lookup>
+                </div>
+            </div>
         </div>
     </div>
     <div class="demo-Lookup-readonly-col">
         <div class="demo-Lookup-title"><h3>readOnly: true</h3></div>
         <div class="demo-Lookup-centered">
             <div class="control-Lookup-demo-block">
-            <div class="control-Lookup-demo-title">
-                Lookup multi select readOnly
+                <div class="control-Lookup-demo-title">
+                    Lookup select readOnly
+                </div>
+                <div>
+                    base line test
+                    <Controls.Input.Lookup
+                            bind:value="_value1"
+                            bind:selectedKeys="_selectedKeys1"
+                            source="{{_source}}"
+                            placeholder="Введите имя"
+                            searchParam="title"
+                            readOnly="{{true}}"
+                            keyProperty="id"
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
+                        <ws:navigation source="page" view="page">
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                        </ws:navigation>
+                        <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                    </Controls.Input.Lookup>
+                </div>
             </div>
-            <div>
-                base line test
-                <Controls.Input.Lookup
-                        bind:value="_value1"
-                        bind:selectedKeys="_selectedKeys1"
-                        source="{{_source}}"
-                        placeholder="Введите имя"
-                        searchParam="title"
-                        multiSelect="{{true}}"
-                        readOnly="{{true}}"
-                        keyProperty="id"
-                        attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
-                    <ws:navigation source="page" view="page">
-                        <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
-                    </ws:navigation>
-                    <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-                </Controls.Input.Lookup>
+            <div class="control-Lookup-demo-block">
+                <div class="control-Lookup-demo-title">
+                    Lookup multi select readOnly
+                </div>
+                <div>
+                    base line test
+                    <Controls.Input.Lookup
+                            bind:value="_value1"
+                            bind:selectedKeys="_selectedKeys6"
+                            source="{{_source}}"
+                            placeholder="Введите имя"
+                            searchParam="title"
+                            multiSelect="{{true}}"
+                            readOnly="{{true}}"
+                            keyProperty="id"
+                            attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
+                        <ws:navigation source="page" view="page">
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                        </ws:navigation>
+                        <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                    </Controls.Input.Lookup>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </div>

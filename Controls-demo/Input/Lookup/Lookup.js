@@ -25,14 +25,18 @@ define('Controls-demo/Input/Lookup/Lookup',
          _selectedKeys3: null,
          _selectedKeys4: null,
          _selectedKeys5: null,
+         _selectedKeys6: null,
+         _selectedKeys7: null,
          _source: null,
          _beforeMount: function() {
             this._selectedKeys = [4];
-            this._selectedKeys1 = [4, 2, 5 ,3, 8];
-            this._selectedKeys2 = [];
+            this._selectedKeys1 = [4];
+            this._selectedKeys2 = [4];
             this._selectedKeys3 = [4];
             this._selectedKeys4 = [4];
             this._selectedKeys5 = [4];
+            this._selectedKeys6 = [4, 2, 5 ,3, 8];
+            this._selectedKeys7 = [];
             this._source = new Memory({
                data: lookupData.names,
                idProperty: 'id',
