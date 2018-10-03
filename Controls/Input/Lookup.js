@@ -108,9 +108,9 @@ define('Controls/Input/Lookup', [
          }
       },
 
-      setSelectedKeys: function(self, keys) {
+      setSelectedKeys: function(self, keys, options) {
          self._selectedKeys = keys;
-         _private.keysChanged(self);
+         _private.keysChanged(self, options);
       },
 
       updateModel: function(self, value) {
@@ -119,8 +119,8 @@ define('Controls/Input/Lookup', [
          });
       },
 
-      keysChangedWithoutUpdate: function(self) {
-         self._collectionIsReady = false;
+      keysChangedWithoutUpdate: function(self, options) {
+         _private.setStateReadyCollection(self, false, options);
          self._isEmpty = !self._selectedKeys.length;
 
          /* keys changed - need to hide suggest */
@@ -129,8 +129,8 @@ define('Controls/Input/Lookup', [
          }
       },
 
-      keysChanged: function(self) {
-         _private.keysChangedWithoutUpdate(self);
+      keysChanged: function(self, options) {
+         _private.keysChangedWithoutUpdate(self, options);
          self._forceUpdate();
       },
 
@@ -208,6 +208,14 @@ define('Controls/Input/Lookup', [
          self._availableWidthCollection = availableWidth;
          self._isAllRecordsDisplay = displayItems >= itemsCount;
          self._displayItemsIndex =  itemsCount - displayItems;
+      },
+
+      setStateReadyCollection: function(self, state, options) {
+         options = options || self._options;
+
+         if (options.multiSelect) {
+            self._collectionIsReady = state;
+         }
       }
    };
 
@@ -228,6 +236,7 @@ define('Controls/Input/Lookup', [
       _needSetFocusInInput: false,
 
       _beforeMount: function(options, context, receivedState) {
+         this._collectionIsReady = !options.multiSelect;
          this._onClosePickerBind = this._onClosePicker.bind(this);
          this._simpleViewModel = new BaseViewModel({
             value: options.value
@@ -236,7 +245,7 @@ define('Controls/Input/Lookup', [
          this._selectCallback = this._selectCallback.bind(this);
          
          if (this._selectedKeys.length) {
-            _private.keysChangedWithoutUpdate(this);
+            _private.keysChangedWithoutUpdate(this, options);
 
             if (receivedState) {
                this._items = receivedState;
@@ -247,7 +256,7 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         if (this._selectedKeys.length) {
+         if (this._selectedKeys.length && !this._collectionIsReady) {
             _private.alignSelectedCollection(this);
             this._forceUpdate();
          }
@@ -263,9 +272,9 @@ define('Controls/Input/Lookup', [
          _private.updateModel(this, newOptions.value);
 
          if (keysChanged) {
-            _private.setSelectedKeys(this, newOptions.selectedKeys.slice());
+            _private.setSelectedKeys(this, newOptions.selectedKeys.slice(), newOptions);
          } else if (sourceIsChanged) {
-            _private.setSelectedKeys(this, []);
+            _private.setSelectedKeys(this, [], newOptions);
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
             this._selectedKeys = [];
             _private.getItems(this).each(function(item) {
@@ -277,13 +286,13 @@ define('Controls/Input/Lookup', [
             newOptions.displayProperty !== this._options.displayProperty ||
             newOptions.multiSelect !== this._options.multiSelect) {
 
-            this._collectionIsReady = false;
+            _private.setStateReadyCollection(self, false, newOptions);
          }
 
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               self._collectionIsReady = false;
+               _private.setStateReadyCollection(self, false, newOptions);
                self._forceUpdate();
                return result;
             });
@@ -409,6 +418,7 @@ define('Controls/Input/Lookup', [
 
    Lookup.getDefaultOptions = function() {
       return {
+         multiSelect: false,
          selectedKeys: []
       };
    };

@@ -53,8 +53,8 @@
                 </ws:if>
 
                 <ws:partial template="collection"
-                            attr:class="{{_isPickerVisible ? 'controls-Lookup__collection_hidden'}}"
-                            attr:style="max-width:{{_availableWidthCollection}}px;"
+                            attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}{{_isPickerVisible ? ' controls-Lookup__collection_hidden'}}"
+                            attr:style="max-width:{{!_options.readOnly && _options.multiSelect ? _availableWidthCollection}}px;"
                             name="collection"
                             itemsLayout="oneRow"
                             items="{{_collectionIsReady || _options.readOnly ? _items}}"
