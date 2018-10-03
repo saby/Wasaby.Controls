@@ -143,6 +143,20 @@ define('Controls/Filter/Fast',
             return resultDef;
          },
 
+         _beforeUpdate: function(newOptions) {
+            var self = this,
+               resultDef;
+            if (!isEqual(newOptions.items, this._options.items)) {
+               _private.prepareItems(this, newOptions.items);
+               resultDef = _private.reload(this);
+            } else if (!isEqual(newOptions.source, this._options.source)) {
+               resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
+                  return _private.reload(self);
+               });
+            }
+            return resultDef;
+         },
+
          _open: function(event, item, index) {
             var config = {
                templateOptions: {
@@ -185,14 +199,9 @@ define('Controls/Filter/Fast',
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
             this._setText();
-         },
-
-         _beforeUpdate: function(newOptions) {
-            _private.prepareItems(this, newOptions.items);
-            this._setText();
          }
       });
-   
+
       Fast._private = _private;
       return Fast;
    }

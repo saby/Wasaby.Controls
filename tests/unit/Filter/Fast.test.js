@@ -118,6 +118,10 @@ define(
             });
          });
 
+         it('_beforeUpdate without items', function() {
+            fastData._beforeUpdate({});
+         });
+
          it('load config from items', function(done) {
             FastData._private.reload(fastDataItems).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
