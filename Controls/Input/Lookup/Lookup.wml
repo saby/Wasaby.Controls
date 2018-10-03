@@ -1,3 +1,15 @@
+<ws:template name="collection">
+    <Controls.Input.Lookup._Collection
+            name="collection"
+            displayProperty="{{_options.displayProperty}}"
+            itemTemplate="{{_options.itemTemplate}}"
+            itemsLayout="{{itemsLayout}}"
+            items="{{items}}"
+            displayItemsIndex="{{displayItemsIndex}}"
+            on:itemClick="_itemClick()"
+            on:crossClick="_crossClick()"/>
+</ws:template>
+
 <Controls.Container.Suggest.Layout
         name="layout"
         on:choose="_choose()"
@@ -39,17 +51,13 @@
                     </div>
                 </ws:if>
 
-                <Controls.Input.Lookup._Collection
-                        name="collection"
-                        attr:class="{{_isPickerVisible ? 'controls-Lookup__collection_hidden'}}"
-                        attr:style="max-width:{{_availableWidthCollection}}px;"
-                        itemsLayout="oneRow"
-                        items="{{_collectionIsReady || _options.readOnly ? _items}}"
-                        displayItemsIndex="{{_options.readOnly ? 0 :_displayItemsIndex}}"
-                        displayProperty="{{_options.displayProperty}}"
-                        itemTemplate="{{_options.itemTemplate}}"
-                        on:itemClick="_itemClick()"
-                        on:crossClick="_crossClick()"/>
+                <ws:partial template="collection"
+                            attr:class="{{_isPickerVisible ? 'controls-Lookup__collection_hidden'}}"
+                            attr:style="max-width:{{_availableWidthCollection}}px;"
+                            itemsLayout="oneRow"
+                            items="{{_collectionIsReady || _options.readOnly ? _items}}"
+                            displayItemsIndex="{{_options.readOnly ? 0 :_displayItemsIndex}}"
+                />
             </ws:if>
         </ws:beforeFieldWrapper>
 
@@ -68,15 +76,11 @@
     <Controls.Popup.Opener.Sticky name="sticky">
         <ws:popupOptions>
             <ws:template>
-                <Controls.Input.Lookup._Collection
-                        attr:class="controls-Lookup__picker"
-                        itemsLayout="twoColumns"
-                        items="{{_items}}"
-                        displayProperty="{{_options.displayProperty}}"
-                        itemTemplate="{{_options.itemTemplate}}"
-                        readOnly="{{_options.readOnly}}"
-                        on:itemClick="_itemClick()"
-                        on:crossClick="_crossClick()"/>
+                <ws:partial template="collection"
+                            attr:class="controls-Lookup__picker"
+                            itemsLayout="twoColumns"
+                            items="{{_items}}"
+                />
             </ws:template>
             <ws:eventHandlers onClose="{{_onClosePickerBind}}"/>
             <ws:verticalAlign side="bottom"/>
