@@ -143,10 +143,10 @@ define('Controls/Filter/Fast',
 
          _beforeUpdate: function(newOptions) {
             var self = this;
-            if (newOptions.items) {
+            if (!isEqual(newOptions.items, this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               this._setText();
-            } else if (!isEqual(newOptions.source, this._options.source)) {
+               return _private.reload(this);
+            } if (!isEqual(newOptions.source, this._options.source)) {
                return _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
                });
