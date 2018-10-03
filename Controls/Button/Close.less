@@ -6,11 +6,21 @@
    content: "\200b";
 }
 
-.controls-Button__close__icon_default, .controls-Button__close__icon_primary {
-   fill: @color_CloseButton-icon;
+.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
+   font-size: @font-size_CloseButton_default;
 }
 
-.controls-Button__close__icon_light {
+.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l,
+.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
+   font-family: @font-family_CloseButton_default;
+   color: @color_CloseButton-icon;
+}
+
+.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
+   font-size: @font-size_CloseButton_m;
+}
+
+.controls-Button__close__icon_light_l, .controls-Button__close__icon_light_m {
    font-size: @font-size_CloseButton_light;
 }
 
@@ -19,21 +29,20 @@
    text-shadow: @text-shadow_Button;
 }
 
-.controls-Button__close__wrapper:active {
-   .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
-      fill: @color_CloseButton-icon_hover;
-   }
+.controls-Button__close__icon_default_l:active, .controls-Button__close__icon_primary_l:active,
+.controls-Button__close__icon_default_m:active, .controls-Button__close__icon_primary_m:active {
+   color: @color_CloseButton-icon_hover;
 }
 
-.controls-Button__close__icon_light:active {
+.controls-Button__close__icon_light_l:active, .controls-Button__close__icon_light_m:active {
    color: @color_CloseButton-light-icon_hover;
 }
 
 .controls-Button__close__wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
 }
 
 .controls-Button__close_default {
@@ -44,29 +53,29 @@
    background-color: @background-color_CloseButton_primary;
 }
 
-.controls-Button__close_default_m, .controls-Button__close_primary_m {
-  width: @width_CloseButton_m - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-  height: @height_CloseButton_m - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+.controls-Button__close_default_l, .controls-Button__close_primary_l {
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 }
 
-.controls-Button__close_default_m, .controls-Button__close_primary_m,
-.controls-Button__close_default_l, .controls-Button__close_primary_l {
+.controls-Button__close_default_l, .controls-Button__close_primary_l,
+.controls-Button__close_default_m, .controls-Button__close_primary_m {
    border: solid @border-color_CloseButton;
    border-width: @border-width_CloseButton;
    border-radius: @border-radius_CloseButton;
    box-shadow: @box-shadow_CloseButton;
 }
 
-.controls-Button__close_default_l, .controls-Button__close_primary_l {
-   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+.controls-Button__close_default_m, .controls-Button__close_primary_m {
+   width: @width_CloseButton_m - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton_m - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 }
 
-.controls-Button__close_light_m, .controls-Button__close_light_l {
-  font-family: @font-family_CloseButton_light;
-  width: @width_CloseButton_small;
-  height: @height_CloseButton_small;
-  color: @color_CloseButton-light-icon;
+.controls-Button__close_light_l, .controls-Button__close_light_m {
+   font-family: @font-family_CloseButton_light;
+   width: @width_CloseButton_small;
+   height: @height_CloseButton_small;
+   color: @color_CloseButton-light-icon;
 }
 
 .controls-Button__close_default:active, .controls-Button__close_primary:active {
@@ -74,17 +83,17 @@
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__wrapper:hover {
-      .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
-         fill: @color_CloseButton-icon_hover;
-      }
+   .controls-Button__close__icon_default_l:hover, .controls-Button__close__icon_primary_l:hover,
+   .controls-Button__close__icon_default_m:hover, .controls-Button__close__icon_primary_m:hover {
+      color: @color_CloseButton-icon_hover;
    }
 
-   .controls-Button__close__icon_light:hover {
+   .controls-Button__close__icon_light_l:hover, .controls-Button__close__icon_light_m:hover {
       color: @color_CloseButton-light-icon_hover;
    }
 
-   .controls-Button__close_default:hover, .controls-Button__close_primary:hover {
+   .controls-Button__close_default_l:hover, .controls-Button__close_primary_l:hover,
+   .controls-Button__close_default_m:hover, .controls-Button__close_primary_m:hover {
       border-color: @default-border-color-second;
    }
 }
