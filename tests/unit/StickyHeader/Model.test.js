@@ -30,11 +30,11 @@ define(
                model.update([
                   {
                      target: topTarget,
-                     isIntersecting: false
+                     intersectionRatio: 0
                   },
                   {
                      target: bottomTarget,
-                     isIntersecting: false
+                     intersectionRatio: 0
                   }
                ]);
 
@@ -46,11 +46,11 @@ define(
                model.update([
                   {
                      target: topTarget,
-                     isIntersecting: false
+                     intersectionRatio: 0
                   },
                   {
                      target: bottomTarget,
-                     isIntersecting: true
+                     intersectionRatio: 1
                   }
                ]);
 
@@ -62,11 +62,11 @@ define(
                model.update([
                   {
                      target: topTarget,
-                     isIntersecting: true
+                     intersectionRatio: 1
                   },
                   {
                      target: bottomTarget,
-                     isIntersecting: false
+                     intersectionRatio: 0
                   }
                ]);
 
@@ -78,11 +78,11 @@ define(
                model.update([
                   {
                      target: topTarget,
-                     isIntersecting: true
+                     intersectionRatio: 1
                   },
                   {
                      target: bottomTarget,
-                     isIntersecting: true
+                     intersectionRatio: 1
                   }
                ]);
 
