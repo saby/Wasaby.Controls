@@ -354,6 +354,25 @@ node('controls') {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
+            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps2.ini", text: """[Базовая конфигурация]
+                __sbis__url = /another/
+
+                [Ядро.Http]
+                Порт=10030
+
+                [Ядро.Сервер приложений]
+                ЧислоРабочихПроцессов=3
+                ЧислоСлужебныхРабочихПроцессов=0
+                ЧислоДополнительныхПроцессов=0
+                ЧислоПотоковВРабочихПроцессах=10
+				МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
+                [Presentation Service]
+                WarmUpEnabled=No
+                ExtractLicense=Нет
+                ExtractRights=Нет
+                ExtractSystemExtensions=Нет
+                ExtractUserInfo=Нет"""
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
                 [Ядро.Http]
                 Порт=10020
