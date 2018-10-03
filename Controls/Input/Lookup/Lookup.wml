@@ -1,6 +1,6 @@
 <ws:template name="collection">
     <Controls.Input.Lookup._Collection
-            name="collection"
+            name="{{name}}"
             displayProperty="{{_options.displayProperty}}"
             itemTemplate="{{_options.itemTemplate}}"
             itemsLayout="{{itemsLayout}}"
@@ -55,6 +55,7 @@
                 <ws:partial template="collection"
                             attr:class="{{_isPickerVisible ? 'controls-Lookup__collection_hidden'}}"
                             attr:style="max-width:{{_availableWidthCollection}}px;"
+                            name="collection"
                             itemsLayout="oneRow"
                             items="{{_collectionIsReady || _options.readOnly ? _items}}"
                             displayItemsIndex="{{_options.readOnly ? 0 :_displayItemsIndex}}"

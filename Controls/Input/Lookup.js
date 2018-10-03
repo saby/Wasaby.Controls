@@ -169,11 +169,11 @@ define('Controls/Input/Lookup', [
             fieldWrapper, afterFieldWrapper;
 
          if (self._selectedKeys.length) {
-            if (!self._options.readOnly) {
+            if (!self._options.readOnly && self._options.multiSelect) {
                fieldWrapper = self._children.inputRender._container;
                afterFieldWrapper = self._children.showSelector;
                additionalWidth = _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapper.offsetWidth) +
-                  self._children.showSelector.offsetWidth;
+                  afterFieldWrapper.offsetWidth;
             }
 
             availableWidth =  DOMUtil.width(self._children.inputRender._container) - additionalWidth;
@@ -244,7 +244,7 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         if (this._selectedKeys.length && !this._options.readOnly) {
+         if (this._selectedKeys.length) {
             _private.alignSelectedCollection(this);
             this._forceUpdate();
          }
