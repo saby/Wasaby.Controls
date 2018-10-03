@@ -887,6 +887,10 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "items": {
+            "type": "Array",
+            "title": "Properties for editing or showing"
+          },
           "itemTemplate": {
             "type": "function",
             "title": "Template for item render."
@@ -917,7 +921,7 @@
               "column": "display in two columns"
             }
           },
-          "styleHeader": {
+          "headerStyle": {
             "default": "primary",
             "title": "Color of title in header of filter panel.",
             "type": "enum",
