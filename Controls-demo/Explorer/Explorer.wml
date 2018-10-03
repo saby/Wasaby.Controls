@@ -1,12 +1,37 @@
 <div>
    <div>Demo Controls/Explorer</div>
-   <Controls.Explorer
-      attr:class="demo-Explorer"
-      keyProperty="id"
-      displayProperty="title"
-      parentProperty="parent"
-      nodeProperty="parent@"
-      source="{{_viewSource}}"
-      columns="{{_viewColumns}}">
-   </Controls.Explorer>
+   <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
+      <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+         <Controls.Container.TreeMultiSelector bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" parentProperty="parent" nodeProperty="parent@">
+            <Controls.List.Container>
+               <Controls.List.MultiSelector>
+                  <Controls.Explorer
+                     attr:class="demo-Explorer"
+                     keyProperty="id"
+                     displayProperty="title"
+                     parentProperty="parent"
+                     nodeProperty="parent@"
+                     viewMode="{{_viewMode}}"
+                     itemActions="{{_itemActions}}"
+                     itemsHeight="{{_itemsHeight}}"
+                     imageProperty="image"
+                     multiSelectVisibility="visible"
+                     columns="{{_viewColumns}}">
+                     <ws:tileItemTemplate>
+                        <ws:partial
+                           template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+                           folderWidth="{{250}}"
+                           itemWidth="{{250}}"
+                           hasTitle="{{tileItemTemplate.itemData.item.isDocument}}">
+                           <ws:contentTemplate>
+                              <ws:partial template="wml!Controls-demo/Explorer/resources/CustomItemContent"/>
+                           </ws:contentTemplate>
+                        </ws:partial>
+                     </ws:tileItemTemplate>
+                  </Controls.Explorer>
+               </Controls.List.MultiSelector>
+            </Controls.List.Container>
+         </Controls.Container.TreeMultiSelector>
+      </Controls.Container.Data>
+   </Controls.Container.Scroll>
 </div>
