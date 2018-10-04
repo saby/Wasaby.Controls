@@ -96,7 +96,19 @@
     "Controls/List",
     "Controls/Grid"
   ],
+  "exclude": [
+    "Controls/List/Mover",
+    "Controls/List/Remover",
+    "Controls/List/DialogMover/*",
+    "Controls/List/DialogMover"
+  ],
   "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/List/DialogMover/*",
+    "Controls/List/DialogMover"
+  ],
+  "output": "controls-dialogmover.package.js"
 }, {
   "include": [
     "Controls/Popup/*"
