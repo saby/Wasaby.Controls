@@ -170,7 +170,7 @@ node('controls') {
                         },
                         checkout_engine: {
                             echo " Выкачиваем engine"
-                            dir("./controls/tests"){
+                            dir("./controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
                                 doGenerateSubmoduleConfigurations: false,
