@@ -326,6 +326,10 @@ define('SBIS3.CONTROLS/OperationsPanel', [
        * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
        * */
       _checkCapacity: function(){
+         var
+            itemsWidth,
+            containerWidth,
+            container = this.getContainer();
          if (!this._options.hasItemsMenu) {
 
             /*
@@ -333,25 +337,17 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                Если Не влезают операции, и нельзя заюзать механизм с меню,
                то будем скрывать caption на операциях с классом controls-operationsPanel__action-withoutCaption
              */
-            var itemsWidth = this._getItemsContainer().width();
-            var containerWidth = this.getContainer().width();
 
-            if(this._withoutCaptionsMode){
-               if(containerWidth > itemsWidth){
-                  this._toggleWithoutCaptionsMode(false);
-               }
-            }
-            else {
-               if(containerWidth <= itemsWidth){
-                  this._toggleWithoutCaptionsMode(true);
-               }
-            }
+            //Перед расчетом ширини кнопок, сбросим режим withoutCaptionsMode, чтобы вычислить реальную ширину кнопок.
+            container.toggleClass('controls-operationsPanel__mode-withoutCaptions', false);
+            itemsWidth = this._getItemsContainer().width();
+            containerWidth = container.width();
+            container.toggleClass('controls-operationsPanel__mode-withoutCaptions', containerWidth <= itemsWidth);
+
             /*TODO Конец*/
 
             return;
          }
-
-         var container = this.getContainer();
 
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
          var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
@@ -384,11 +380,6 @@ define('SBIS3.CONTROLS/OperationsPanel', [
          if (this._itemsMenu) {
             this._itemsMenu.getContainer().toggleClass('ws-hidden', !isMenuNecessary);
          }
-      },
-
-      _toggleWithoutCaptionsMode: function(f){
-         this._withoutCaptionsMode = f;
-         this.getContainer().toggleClass('controls-operationsPanel__mode-withoutCaptions', f);
       },
 
       redraw: function() {
