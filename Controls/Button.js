@@ -105,27 +105,6 @@ define('Controls/Button', [
     */
 
    /**
-    * @name Controls/Button#caption
-    * @cfg {String} Control caption text.
-    * @default Undefined
-    * @remark You can submit the markup to the caption.
-    * @example
-    * Control has caption 'Dialog'.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”Dialog”/>
-    * </pre>
-    * Control has markup caption.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”captionTemplate”/>
-    * </pre>
-    * <pre>
-    *    <span class='customDialog'>
-    *       Dialog
-    *    </span>
-    * </pre>
-    */
-
-   /**
     * @name Controls/Button#icon
     * @cfg {String} Button icon.
     * @default Undefined

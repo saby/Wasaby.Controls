@@ -12,7 +12,7 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
     * @css @height_CheckBox Checkbox height.
     *
     * @css @color_CheckBox__iconBox Enabled icon box color.
-    * @css @color_CheckBox__iconBox_disabled Disabled icon box color.lf
+    * @css @color_CheckBox__iconBox_disabled Disabled icon box color.
     *
     * @css @color_CheckBox__caption_enabled Enabled text color.
     * @css @color_CheckBox__caption_disabled Disabled text color.
