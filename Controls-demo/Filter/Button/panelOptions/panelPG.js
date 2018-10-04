@@ -21,6 +21,8 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
          _metaData: null,
          _content: 'Controls/Filter/Button/Panel',
          _dataObject: null,
+         _items: null,
+         _itemsSimple: null,
          _componentOptions: null,
          _beforeMount: function() {
             this._items = [
@@ -40,7 +42,21 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                { id: 'document', value: '', resetValue: '', visibility: false },
                { id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false }
             ];
+            this._itemsSimple = [
+               { id: 'period', value: [1], resetValue: [1], myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate' },
+               {id: 'loose', value: true, resetValue: false, textValue: 'Loose'},
+               {id: 'document', value: '', resetValue: ''},
+               {id: 'unread', value: true, resetValue: false, textValue: 'Unread'},
+               {id: 'own', value: [1], resetValue: [1]}
+            ];
             this._dataObject = {
+               items: {
+                  items: [
+                     { id: '1', title: 'Filters with additional params', items: this._items },
+                     { id: '2', title: 'Filters without additional params', items: this._itemsSimple }
+                  ],
+                  value: 'Filters with additional params'
+               },
                historyId: {
                   items: [
                      { id: '1', title: 'DEMO_HISTORY_ID', value: 'DEMO_HISTORY_ID' },
@@ -106,7 +122,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                itemTemplateProperty: '',
                historyId: undefined,
                panelStyle: 'default',
-               styleHeader: 'primary',
+               headerStyle: 'primary',
                title: 'Отбираются',
                readOnly: false
             };
