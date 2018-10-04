@@ -13,7 +13,8 @@
         suggestStyle="overInput"
         suggestState="{{_options.suggestState}}"
         autoDropDown="{{_options.autoDropDown}}"
-        filter="{{_options.filter}}">
+        filter="{{_options.filter}}"
+        layerName="Controls/Container/Suggest/__ContentLayer">
     <Controls.Input.Search
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
