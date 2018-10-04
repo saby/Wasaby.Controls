@@ -98,10 +98,6 @@ define('SBIS3.CONTROLS/Action/MergeAction', [
              */
             titleCellTemplate: undefined,
             /**
-             * @cfg {String} Заголовок диалога
-             */
-            title: rk('Объединение наименований'),
-            /**
              * @cfg {String} Подсказка отображаемая в диалоге
              */
             hint: rk('Выберите наименование, с которым объединятся остальные. Все основные сведения возьмутся с него.\
@@ -164,7 +160,6 @@ define('SBIS3.CONTROLS/Action/MergeAction', [
             idProperty: this._options.dataSource.getIdProperty(),
             testMergeMethodName: this._options.testMergeMethodName,
             titleCellTemplate: this._options.titleCellTemplate,
-            title: this._options.title,
             hint: this._options.hint,
             warning: this._options.warning,
             titleColumnConfig: this._options.titleColumnConfig,
