@@ -2,7 +2,6 @@ define('Controls-demo/Input/Text/TextPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -10,13 +9,12 @@ define('Controls-demo/Input/Text/TextPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config) {
+   function(Control, template, config) {
       'use strict';
       var TextPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Input/Text',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -27,17 +25,15 @@ define('Controls-demo/Input/Text/TextPG',
                tagStyle: {
                   emptyText: 'none',
                   placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
                   selectedKey: 0
                },
 
                constraint: {
-                  source: [
-                     { id: 1, title: '[0-9]', example: 'You can use only digits' },
-                     { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
-                     { id: 3, title: '[a-z]', example: 'You can use only lowercase letters' },
-                     { id: 4, title: '[A-Z]', example: 'You can use only uppercase letters' }
+                  items: [
+                     { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
+                     { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
+                     { id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters' },
+                     { id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters' }
                   ],
                   config: {
                      template: 'custom',
@@ -52,6 +48,7 @@ define('Controls-demo/Input/Text/TextPG',
                tagStyle: 'primary',
                constraint: '',
                trim: false,
+               value: '',
                maxLength: 100,
                selectOnClick: true,
                readOnly: false,

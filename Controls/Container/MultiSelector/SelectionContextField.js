@@ -14,6 +14,14 @@ define('Controls/Container/MultiSelector/SelectionContextField', [
          this.excludedKeys = excludedKeys;
          this.calculatedSelectedKeys = calculatedSelectedKeys;
          this.count = count;
+      },
+
+      updateSelection: function(selectedKeys, excludedKeys, calculatedSelectedKeys, count) {
+         this.selectedKeys = selectedKeys;
+         this.excludedKeys = excludedKeys;
+         this.calculatedSelectedKeys = calculatedSelectedKeys;
+         this.count = count;
+         this.updateConsumers();
       }
    });
 });

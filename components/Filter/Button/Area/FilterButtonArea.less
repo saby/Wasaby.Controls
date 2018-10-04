@@ -238,3 +238,10 @@
 		overflow-y: visible !important;
 	}
 }
+
+//Решение проблем стэка z-index на iPad
+// https://medium.com/@mattcroak718/understanding-the-stacking-context-for-cross-browser-compatibility-2b21db1cf621
+// https://stackoverflow.com/questions/37714009/z-index-problems-on-ipad
+.ws-is-mobile-safari .controls__filterButton__picker {
+	transform: translate3d(0, 0, 0);
+}

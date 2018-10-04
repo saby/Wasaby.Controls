@@ -11,15 +11,14 @@ define('Controls/Input/Password',
    function(Control, tmplNotify, template, BaseViewModel) {
 
       /**
-       *  Component that shows all entered characters as stars. Visibility of entered
-       *  text can be toggled by clicking on 'eye' icon.
+       *  Control that hides all entered characters and shows replacer-symbols in place of them.
+       *  Visibility of entered text can be toggled by clicking on 'eye' icon.
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
        * @class Controls/Input/Password
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/Password/PasswordStyles
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
@@ -45,6 +44,14 @@ define('Controls/Input/Password',
             this._simpleViewModel = new BaseViewModel({
                value: options.value
             });
+
+            /**
+             * Browsers use autocomplete to the fields with the previously stored name.
+             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+             * To avoid this, we will translate the name of the control to the name of the tag.
+             * https://habr.com/company/mailru/blog/301840/
+             */
+            this._inputName = options.name || 'input';
          },
 
          _beforeUpdate: function(newOptions) {

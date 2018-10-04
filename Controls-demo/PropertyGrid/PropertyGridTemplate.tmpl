@@ -1,9 +1,18 @@
 <ws:template name="String">
+   <ws:if data="{{item.items}}">
     <Controls-demo.PropertyGrid.StringTemplate
-           bind:value="itemValue[name]"
+            bind:value="item.value"
             caption="{{name}}"
-           scope="{{item}}">
+            scope="{{item}}">
     </Controls-demo.PropertyGrid.StringTemplate>
+   </ws:if>
+   <ws:else>
+      <Controls-demo.PropertyGrid.StringTemplate
+              bind:value="itemValue[name]"
+              caption="{{name}}"
+              scope="{{item}}">
+      </Controls-demo.PropertyGrid.StringTemplate>
+   </ws:else>
 </ws:template>
 
 <ws:template name="Number">
@@ -37,12 +46,47 @@
             caption="{{name}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
 </ws:template>
+
+<ws:template name="function">
+    <Controls-demo.PropertyGrid.StringOrFunctionTemplate
+            bind:value="item.value"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
+</ws:template>
+
 <ws:template name="Array">
+   <ws:if data="{{item.items}}">
+    <Controls-demo.PropertyGrid.ArrayTemplate
+            bind:value="item.value"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.ArrayTemplate>
+   </ws:if>
+   <ws:else>
     <Controls-demo.PropertyGrid.ArrayTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.ArrayTemplate>
+   </ws:else>
+</ws:template>
+
+<ws:template name="Boolean|null">
+    <Controls-demo.PropertyGrid.BooleanOrNullTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}"
+            triState="{{itemValue.triState}}">
+    </Controls-demo.PropertyGrid.BooleanOrNullTemplate>
+</ws:template>
+
+<ws:template name="DateTime">
+    <Controls-demo.PropertyGrid.DateTimeTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.DateTimeTemplate>
 </ws:template>
 
 

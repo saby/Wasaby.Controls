@@ -17,7 +17,6 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    "Core/Sanitize",
    "Lib/LayoutManager/LayoutManager",
    "Core/core-instance",
-   "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "Core/helpers/Function/forAliveOnly",
    'Core/helpers/String/escapeHtml',
    "SBIS3.CONTROLS/Utils/SourceUtil",
@@ -46,7 +45,6 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    Sanitize,
    LayoutManager,
    cInstance,
-   InformationPopupManager,
    forAliveOnly,
    escapeHtml,
    SourceUtil,
@@ -1103,7 +1101,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            extMarkup = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+            extMarkup = extendedMarkupCalculate(this._getItemsTemplate().call(this, data), this._options);
             markup = extMarkup.markup;
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
@@ -1191,7 +1189,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                dot = calcData.defaultItemTpl;
             }
 
-            markupExt = extendedMarkupCalculate(dot(calcData), this._options);
+            markupExt = extendedMarkupCalculate(dot.call(this, calcData), this._options);
             markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
@@ -1697,19 +1695,31 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
        * Перевычитывает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
        * @param {Number} id Идентификатор модели
        * @param {Object|WS.Data/Entity/Model} meta Мета информация
+       * @param {Boolean} replaceItem Заменять элемент при перезагрузке
        * @returns {*}
        */
-      reloadItem: function(id, meta) {
+      reloadItem: function(id, meta, replaceItem) {
          var
-            self = this,
-            currentItem = this.getItems().getRecordById(id);
-         if (this.getDataSource() && currentItem) {
-            return this.getDataSource().read(id, meta).addCallback(function(newItem) {
-               currentItem.merge(newItem);
-            });
+            currentItem,
+            currentIndex,
+            items = this.getItems();
+
+         if (replaceItem) {
+            currentIndex = items.getIndexByValue(items.getIdProperty(), id);
+            if (this.getDataSource() && currentIndex !== -1) {
+               return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+                  items.replace(newItem, currentIndex);
+               });
+            }
          } else {
-            return Deferred.success();
+            currentItem = items.getRecordById(id);
+            if (this.getDataSource() && currentItem) {
+               return this.getDataSource().read(id, meta).addCallback(function(newItem) {
+                  currentItem.merge(newItem);
+               });
+            }
          }
+         return Deferred.success();
       },
       /**
        * @name SBIS3.CONTROLS/Mixins/ItemsControlMixin#reload
@@ -1849,13 +1859,13 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-               InformationPopupManager.showMessageDialog(
-                 {
-                    message: error.message,
-                    opener: self,
-                    status: 'error'
-                 }
-               );
+               require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                  InformationPopupManager.showMessageDialog({
+                     message: error.message,
+                     opener: self,
+                     status: 'error'
+                  });
+               });
                error.processed = true;
             }
          }

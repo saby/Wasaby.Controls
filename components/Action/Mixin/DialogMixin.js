@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    'WS.Data/Utils',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC',
-   'Controls/Utils/isNewEnvironment',
+   'Core/helpers/isNewEnvironment',
    'Controls/Utils/isVDOMTemplate'
 ], function(cMerge, Deferred, cInstance, Utils, ControlHierarchyManager, IoC, isNewEnvironment, isVDOMTemplate) {
    'use strict';
@@ -184,6 +184,11 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                         if (isVDOMTemplate(cfgTemplate)) {
                            requirejs(['Controls/Popup/Opener/BaseOpener', 'Controls/Popup/Compatible/BaseOpener'], function (BaseOpener, CompatibleOpener) {
                               self._prepareCfgForOldEnvironment(self, BaseOpener, CompatibleOpener, cfgTemplate, config);
+                              //Синхронной проверки недостаточно, т.к. тут асинхронщина инстанс может не задестроиться и зависнуть
+                              if (self._isNeedToRedrawDialog()) {
+                                 self._reloadTemplate(config);
+                                 return;
+                              }
                               self._dialog = new Component(config);
                            });
                         } else {
@@ -205,7 +210,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (meta.mode !== 'dialog' && cfg.isStack === true) {
             dependencies.push('Controls/Popup/Opener/Stack/StackController');
             cfg._type = 'stack';
-            cfg._popupComponent = 'floatArea';
+            cfg._popupComponent = cfg._mode;
             cfg.className = (cfg.className || '') + ' controls-Stack';
          } else if (meta.mode !== 'dialog' && cfg.isStack === false && cfg.target) {
             dependencies.push('Controls/Popup/Opener/Sticky/StickyController');
@@ -224,12 +229,13 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (isVDOMTemplate(cfgTemplate)) {
             CompatibleOpener._prepareConfigForNewTemplate(config, cfgTemplate);
             config.className = (config.className || '') + ' ws-invisible'; //Пока не построился дочерний vdom  шаблон - скрываем панель, иначе будет прыжок
-            config.componentOptions._initCompoundArea = function() {
-               var dialog = self._dialog;
-               if (dialog._recalcPosition) {
-                  dialog._recalcPosition();
+            config.componentOptions._initCompoundArea = function(coumpoundArea) {
+               var dialog = coumpoundArea && coumpoundArea.getParent();
+               if (dialog) {
+                  dialog._recalcPosition && dialog._recalcPosition(); //for floatarea
+                  dialog._adjustWindowPosition && dialog._adjustWindowPosition(); //for window
+                  dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
                }
-               dialog._container.closest('.ws-invisible').removeClass('ws-invisible');
             };
          }
          config._openFromAction = true;
@@ -314,7 +320,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
 
          //Если кликнули по инфобоксу или информационному окну или overlay - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup, .controls-Container__overlay, .ws-OperationsPanel__wrapper, .ws-wait-indicator_global');
          return !!infoBox.length;
       },
 

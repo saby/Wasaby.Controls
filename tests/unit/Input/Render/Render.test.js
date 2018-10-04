@@ -1,6 +1,6 @@
 define(
    [
-      'Core/_Util/Constants',
+      'Core/constants',
       'Controls/Utils/hasHorizontalScroll',
       'Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/InputRender/BaseViewModel'

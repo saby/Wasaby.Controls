@@ -142,7 +142,8 @@ define(
                var pNav = new PositionNavigation({
                   field: 'field',
                   direction: 'both',
-                  position: 1
+                  position: null,
+                  limit: 100
                });
                var source = new SbisService({
                   endpoint: 'ОбъектБл',
@@ -157,7 +158,7 @@ define(
             it('calculate state with first query', function () {
                var pNav = new PositionNavigation({
                   field: 'field',
-                  pageSize: 4,
+                  limit: 100,
                   direction: 'after',
                   position: 1
                });
@@ -175,7 +176,8 @@ define(
                pNav = new PositionNavigation({
                   field: ['field', 'id'],
                   direction: 'both',
-                  position: 1
+                  position: 1,
+                  limit: 100
                });
 
                //first query with direction: both and multiple "field" value
@@ -190,7 +192,8 @@ define(
                var pNav = new PositionNavigation({
                   field: 'field',
                   direction: 'after',
-                  position: 1
+                  position: 1,
+                  limit: 100
                });
 
                //first query with direction: after
@@ -211,7 +214,8 @@ define(
                pNav = new PositionNavigation({
                   field: ['field', 'id'],
                   direction: 'both',
-                  position: 1
+                  position: 1,
+                  limit: 100
                });
 
                //first query with direction: both
@@ -234,35 +238,35 @@ define(
                var params, pNav;
                pNav = new PositionNavigation({
                   field: 'field',
-                  pageSize: 4,
+                  limit: 100,
                   direction: 'after',
                   position: 1
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field>=' : 1}}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field>=' : 1}, limit: 100}, params, 'Wrong query params');
 
 
                pNav = new PositionNavigation({
                   field: ['field', 'id'],
-                  pageSize: 4,
+                  limit: 50,
                   direction: 'before',
                   position: [2, 1]
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field<=' : 2, 'id<=' : 1}, limit: 50}, params, 'Wrong query params');
 
 
                pNav = new PositionNavigation({
                   field: ['field'],
-                  pageSize: 4,
+                  limit: 100,
                   direction: 'both',
                   position: [3]
                });
 
                params = pNav.prepareQueryParams();
-               assert.deepEqual({filter : {'field~' : 3}}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field~' : 3}, limit: 100}, params, 'Wrong query params');
             });
 
             it('prepare query params load to direction', function () {
@@ -270,7 +274,8 @@ define(
                pNav = new PositionNavigation({
                   field: ['field', 'id'],
                   direction: 'both',
-                  position: 1
+                  position: 1,
+                  limit: 100
                });
 
                //first query with direction: both
@@ -279,11 +284,11 @@ define(
 
 
                params = pNav.prepareQueryParams('up');
-               assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}, limit: 100}, params, 'Wrong query params');
 
 
                params = pNav.prepareQueryParams('down');
-               assert.deepEqual({filter : {'field>=' : 2, 'id>=' : 4}}, params, 'Wrong query params');
+               assert.deepEqual({filter : {'field>=' : 2, 'id>=' : 4}, limit: 100}, params, 'Wrong query params');
             });
          })
       });

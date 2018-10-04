@@ -66,7 +66,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   id: '6',
                   showType: 0,
                   title: 'Прикрепить к',
-                  '@parent': true,
+                  '@parent': false,
                   parent: null
                },
                {

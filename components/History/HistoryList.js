@@ -10,11 +10,15 @@ define('SBIS3.CONTROLS/History/HistoryList',
       'WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/Number/randomId',
+      'Core/helpers/Array/isPlainArray',
+      'Core/helpers/Object/isPlainObject',
       'Core/helpers/Object/isEqual',
-      'Core/IoC'
+      'Core/IoC',
+      'Core/AbstractConfigOld',
+      'Core/constants',
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isEqualObject, IoC) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isPlainArray, isPlainObject, isEqualObject, IoC, AbstractConfigOld, constants) {
 
       'use strict';
 
@@ -22,6 +26,34 @@ define('SBIS3.CONTROLS/History/HistoryList',
       var DATA_FIELD = 'data';
       var ID_FIELD = 'id';
       var FORMAT = [ {name: DATA_FIELD, type: 'record'},  {name: ID_FIELD, type: 'string'} ];
+
+      // т.к. запись в ГлобальныеПараметрыКлиента теперь под правами, для записи данных истории отчётов используется другой метод SetFormSettings
+      // с особым префиксом
+      var GLOBAL_KEY_FIX = '__form_settings-';
+      var GLOBAL_CONFIG_FIX = new (AbstractConfigOld.extend({
+         _getObjectName: function() {
+            return 'ГлобальныеПараметрыКлиента';
+         },
+         _isConfigSupport: function() {
+            return constants.isNodePlatform || constants.globalConfigSupport;
+         },
+
+         setParam: function(key, value) {
+            if (value === undefined) {
+               value = null;
+            }
+
+            this._processingParam('update', key, value);
+            if (!this._isConfigSupport()) {
+               return new Deferred().callback(true);
+            }
+            var params = {'Key': key};
+            params['Value'] = value;
+            return this._callMethod('SetFormSettings', params).addCallback(function(res) {
+               return res && res.getScalar();
+            });
+         }
+      }))();
 
       function getEmptyRecordSet() {
          return new RecordSet({format: FORMAT, idProperty: ID_FIELD});
@@ -151,6 +183,15 @@ define('SBIS3.CONTROLS/History/HistoryList',
                },
                emptyValue: getEmptyRecordSet(),
                maxLength: MAX_LENGTH
+            }
+         },
+         
+         $constructor: function() {
+            if (this._options.isGlobalUserConfig) {
+               this._options.historyId = GLOBAL_KEY_FIX + this._options.historyId;
+               this._SBISStorage._storage.setParam = function() {
+                  return GLOBAL_CONFIG_FIX.setParam.apply(GLOBAL_CONFIG_FIX, arguments);
+               };
             }
          },
 

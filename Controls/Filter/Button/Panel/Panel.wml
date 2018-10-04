@@ -1,5 +1,6 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
-                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}">
+                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}
+                                                {{_options.panelStyle === 'column' ? 'controls-FilterPanel__column'}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
 
@@ -18,7 +19,8 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div class="{{_options.panelStyle ? 'controls-FilterPanel__column'}}">
+      <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
+      <div class="{{_options.panelStyle === 'column' ? 'controls-FilterPanel__blockParams-column'}}">
          <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
             <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                    itemTemplate="{{_options.itemTemplate}}"
@@ -38,8 +40,10 @@
          <ws:if data="{{_historyId}}">
             <Controls.Filter.Button.History.List
                     historyId="{{_historyId}}"
+                    attr:class="{{_options.panelStyle === 'column' ? 'controls-HistoryList__column'}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>
       </div>
+      </Controls.Container.Scroll>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>

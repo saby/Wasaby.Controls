@@ -22,13 +22,14 @@ define('Controls/Filter/Button',
        * {@link Controls/Filter/Controller}, {@link Controls/Filter/Button/Container}
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * Here you can see a combination with other components<a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * <a href="/materials/demo-ws4-filter-button">Demo-example</a>.
        *
        * @class Controls/Filter/Button
        * @extends Core/Control
        * @mixes Controls/interface/IFilterButton
-       * @demo Controls-demo/Filter/Button/withOptions/ButtonVDOM
-       * @demo Controls-demo/Filter/Button/PanelVDom
+       * @demo Controls-demo/Filter/Button/ButtonPG
+       * @demo Controls-demo/Filter/Button/panelOptions/panelPG
        * @control
        * @public
        * @author Герасимов А.М.
@@ -159,6 +160,9 @@ define('Controls/Filter/Button',
          _beforeUpdate: function(options) {
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
+            }
+            if (this._options.orientation !== options.orientation) {
+               _private.setPopupOptions(this, options);
             }
          },
 

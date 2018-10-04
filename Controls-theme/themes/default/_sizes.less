@@ -1,3 +1,25 @@
+//MenuButton
+@margin-top_MenuButton_button:             -6px;
+@margin-left_MenuButton_button:            -1px;
+@margin-top_MenuButton_button-medium:     -5px;
+@margin-top_MenuButton_link-default:       -9px;
+@margin-left_MenuButton_link-default:      -13px;
+@margin-left_MenuButton_link_small:        -13px;
+@margin-top_MenuButton_link_medium:         -5px;
+@margin-left_MenuButton_link_medium:       -13px;
+@margin-top_MenuButton_bordered__l-medium:    -3px;
+@margin-left_MenuButton_bordered__l-medium:   -11px;
+@margin-top_MenuButton_bordered__m-small:                -5px;
+@margin-left_MenuButton_bordered__m-small:               -9px;
+@margin-top_MenuButton_link_duplicate_medium:         -7px;
+@margin-left_MenuButton_link_duplicate_medium:        -12px;
+@margin-top_MenuButton_link_duplicate_head_medium:     7px;
+@margin-left_MenuButton_link_duplicate_head_medium:    12px;
+@margin-top_MenuButton_link_duplicate_small:          -10px;
+@margin-left_MenuButton_link_duplicate_small:         -12px;
+@margin-top_MenuButton_link_duplicate_head_small:      10px;
+@margin-left_MenuButton_link_duplicate_head_small:     12px;
+
 //default-sizes
 @icon-size_default:            16px;
 @icon-size_default_medium:     24px;
@@ -57,7 +79,11 @@
 @shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
 
 //DialogTemplate
-@margin_dialogTemplate_head:                   0 48px 0 12px;
+@margin_dialogTemplate_head:                   0 48px 0 0;
+@margin-left_dialogTemplate_caption:           12px;
+@height_dialogTemplate_caption:                44px;
+@line-height_dialogTemplate_caption:           42px;
+@top_dialogTemplate_compatible_close-button:   5px;
 
 // MonthView
 @width_MontView:                  281px;
@@ -260,6 +286,7 @@
 @height_DropdownList-marker:    8px;
 @margin-top_DropdownList:       -8px;
 @margin-top_DropdownList-ff:    -7px;
+@margin-top_DropdownList-head:   -6px;
 @margin-left_DropdownList:      -13px;
 @right_DropdownList-icon:       6px;
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
@@ -269,7 +296,7 @@
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
 @margin-left_MenuButton_button:       -1px;
-@margin-top_MenuButton_link_small:   -8px;
+@margin-top_MenuButton_link_small:         -7px;
 @margin-left_MenuButton_link_small:  -13px;
 @margin-top_MenuButton_link_medium:   @margin-top_MenuButton_button;
 @margin-left_MenuButton_link_medium:  -13px;
@@ -277,7 +304,7 @@
 @margin-left_MenuButton_link_duplicate_medium:  -12px;
 @margin-top_MenuButton_link_duplicate_head_medium:   7px;
 @margin-left_MenuButton_link_duplicate_head_medium:  12px;
-@margin-top_MenuButton_link_duplicate_small:   -9px;
+@margin-top_MenuButton_link_duplicate_small:   -10px;
 @margin-left_MenuButton_link_duplicate_small:  -12px;
 @margin-top_MenuButton_link_duplicate_head_small:   10px;
 @margin-left_MenuButton_link_duplicate_head_small:  12px;
@@ -319,6 +346,24 @@
 @padding_DraggingTemplate-counter:               0 6px;
 @font-size_DraggingTemplate-counter:             14px;
 
+//VDOM List.TileView
+@margin_TileView-item:                             6px;
+@border-width_TileView-item:                       1px;
+@box-shadow-size_TileView-item:                    12px;
+@max-height_TileView-title:                        36px;
+@padding_TileView-title:                           3px 4px;
+@border-width_TileView-title:                      1px;
+@height_TileView-title_visible:                    25px;
+@box-shadow-offset_TileView-itemActions:           -12px;
+@box-shadow-blur_TileView-itemActions:             18px;
+
+//VDOM List.TreeTileView
+@font-size_TreeTileView-title:                   15px;
+@height_TreeTileView-item:                       40px;
+@left_TreeTileView-checkbox:                     4px;
+@margin_TreeTileView-title:                      0 8px 0 4px;
+@margin_TreeTileView-icon:                       0 0 0 4px;
+
 //VDOM Operations.Panel
 @height_OperationsPanel:                              30px;
 @spacing_OperationsPanel__item-between-icon-caption:  6px;
@@ -356,6 +401,15 @@
 @height_Suggest-loader:                          16px;
 @spacing_Suggest-loader:                         3px;
 @spacing_Suggest-empty:                          16px;
+
+// DatePicker VDOM
+@margin-left_DatePicker-button:                  7px;
+
+// DateRange VDOM
+@margin-left_DateRange-button:                   @margin-left_DatePicker-button;
+@width_DateRange-dash:                           2px;
+@margin_DateRange-dash:                          0 3px 4px 3px;
+@thickness_DateRange-dash:                       1px;
 
 //Suggest VDOM
 @spacing_Suggest_suggestionsContainer_overInput: 8px;
@@ -468,6 +522,22 @@
 @height-size_swipe_title:                16px;
 @padding_itemActions_action_swipe:       6px;
 //headers
+@header-h2-text-size:             20px;
+@header-h3-text-size:             18px;
+
+@header-font-weight:              @bold-font-weight;
+
+@back-arrow-width-h2:             10px;
+@back-arrow-height-h2:            14px;
+
+@back-arrow-width-h3:             9px;
+@back-arrow-height-h3:            12px;
+
+@back-arrow-width-h6:             9px;
+@back-arrow-height-h6:            11px;
+//Arrow
+@padding-left_forwardArrow:       10px;
+
 @width-HeaderSeparator:                6px;
 @height-HeaderSeparator:               10px;
 @size-Separator__icon:                 16px;
@@ -532,6 +602,7 @@
 @border-width-IconButton:                1px;
 @border-style-IconButton:                solid;
 @box-shadow-IconButton_activated:        none;
+@icon-size_IconButton-buttonChoose:      @default-icon-size;
 
 //FilterPanel
 @width_FilterPanel_size-m:                                     400px;
@@ -603,6 +674,7 @@
 @width-TreeViewGrid-levelPadding_size_default: @width-TreeViewGrid-levelPadding_size_s;
 @height_TreeGridView-nodeExpander: 16px;
 @width_TreeGridView-nodeExpander: 16px;
+@padding_TreeGridView-nodeFooterHasMore: 6px 0 3px 0;
 @padding_TreeGridView-nodeExpander_size_s: 4px;
 @padding_TreeGridView-nodeExpander_size_m: 4px 10px 4px 4px;;
 @padding_TreeGridView-nodeExpander_size_l: 4px 14px 4px 8px;

@@ -1,12 +1,28 @@
 define('Controls/List/EditInPlace/EditingRow', [
    'Core/Control',
    'wml!Controls/List/EditInPlace/EditingRow'
-], function(Control, template) {
+], function(
+   Control,
+   template
+) {
    var EditingRow = Control.extend({
       _template: template,
 
       _afterMount: function() {
+         var self = this;
          this.activate();
+
+         if (window && window.jQuery) {
+            requirejs(['Lib/LayoutManager/LayoutManager'], function(LayoutManager) {
+               LayoutManager.scrollToElement($(self._container));
+            });
+         } else {
+            requirejs(['cdn!jquery/3.3.1/jquery-min.js'], function() {
+               requirejs(['Lib/LayoutManager/LayoutManager'], function(LayoutManager) {
+                  LayoutManager.scrollToElement($(self._container));
+               });
+            });
+         }
       },
 
       _onClickHandler: function(e) {

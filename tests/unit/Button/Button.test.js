@@ -126,11 +126,13 @@ define(['Controls/Button'], function (Button) {
       describe('constructor() and _beforeUpdate()', function() {
          var optionsCorrect = false;
          function redefinitionCssStyleGeneration() {
+            var original = Button._private.cssStyleGeneration;
             Button._private.cssStyleGeneration = function(self, options) {
                if (options.style === 'test' && options.size === 'size') {
                   optionsCorrect = true;
                }
             };
+            Button._private.cssStyleGeneration.original = original;
          }
 
          it('constructor', function() {
@@ -151,6 +153,10 @@ define(['Controls/Button'], function (Button) {
             };
             Button.prototype._beforeUpdate(opt);
             assert(optionsCorrect);
+         });
+
+         afterEach(function () {
+            Button._private.cssStyleGeneration = Button._private.cssStyleGeneration.original;
          });
       });
       describe('click', function () {

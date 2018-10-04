@@ -4,6 +4,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "Core/CommandDispatcher",
        "Core/constants",
        "Core/IoC",
+       'Core/EventBus',
        "Core/core-instance",
        'Core/helpers/Function/memoize',
        'SBIS3.CONTROLS/Utils/Contains',
@@ -43,6 +44,7 @@ define('SBIS3.CONTROLS/FieldLink',
         CommandDispatcher,
         constants,
         IoC,
+        EventBus,
         cInstance,
         memoize,
         contains,
@@ -661,6 +663,9 @@ define('SBIS3.CONTROLS/FieldLink',
                 в противном случае будут лишние установки фокуса в поле ввода, из-за чего будет мограть саггест на Ipad'e */
              if (active && !wasActive && this._needFocusOnActivated() && this.isEnabled() && constants.browser.isMobilePlatform) {
                 this._getElementToFocus().focus();
+                EventBus.globalChannel().notify('MobileInputFocus');
+             } else {
+                EventBus.globalChannel().notify('MobileInputFocusOut');
              }
           },
 

@@ -1,0 +1,13 @@
+<Controls.Input.Mask
+   value="{{_model.textValue}}"
+   replacer="{{_model._replacer}}"
+   mask="{{_options.mask}}"
+   size="{{ _options.size }}"
+   selectOnClick="{{_options.selectOnClick}}"
+   placeholder="{{_options.placeholder}}"
+   validationErrors="{{_options.validationErrors}}"
+   tooltip="{{_options.tooltip}}"
+   formatMaskChars="{{_formatMaskChars}}"
+   on:valueChanged="_valueChangedHandler()"
+   on:inputCompleted="_inputCompletedHandler()">
+</Controls.Input.Mask>

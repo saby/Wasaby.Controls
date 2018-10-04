@@ -2,92 +2,45 @@ define('Controls/StickyHeader',
    [
       'Core/Control',
       'Core/detection',
-      'Controls/Utils/IntersectionObserver',
       'wml!Controls/StickyHeader/StickyHeader',
 
-      'css!Controls/StickyHeader/StickyHeader'
+      'Controls/StickyHeader/_StickyHeader'
    ],
-   function(Control, detection, IntersectionObserver, template) {
+   function(Control, detection, template) {
 
       'use strict';
 
+      /**
+       * Ensures that content sticks to the top of the parent container when scrolling down.
+       * Occurs at the moment of intersection of the upper part of the content and the parent container.
+       * @remark
+       * Fixing in ie browser below version 16 is not supported.
+       *
+       * @public
+       * @extends Core/Control
+       * @class Controls/StickyHeader
+       */
+
+      /**
+       * @name Controls/StickyHeader#content
+       * @cfg {Function} Sticky header content.
+       */
+
+      /**
+       * @event Controls/StickyHeader#fixed Change the fixation state.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
+       * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
+       */
+
       var StickyHeader = Control.extend({
+
          _template: template,
 
-         _shouldBeFixed: false,
-
-         _isIntersecting: null,
-
-         _isMobile: detection.isMobilePlatform,
-
-         _beforeMount: function() {
-            this._isIntersecting = {
-               top: null,
-               bottom: null
-            };
-            this._observeHandler = this._observeHandler.bind(this);
-         },
-
-         _afterMount: function() {
-            var observer = new IntersectionObserver(this._observeHandler);
-
-            observer.observe(this._children.observationTargetTop);
-            observer.observe(this._children.observationTargetBottom);
-         },
-
-         _observeHandler: function(entries) {
-            var self = this;
-            var entryTop, entryBottom, isIntersectingTop, isIntersectingBottom, shouldBeFixed;
-
-            entries.forEach(function(entry) {
-               if (entry.target === self._children.observationTargetTop) {
-                  entryTop = entry;
-               }
-               if (entry.target === self._children.observationTargetBottom) {
-                  entryBottom = entry;
-               }
-            });
-
-            if (entryTop) {
-               isIntersectingTop = entryTop.isIntersecting;
-               this._isIntersecting.top = entryTop.isIntersecting;
-            } else {
-               isIntersectingTop = this._isIntersecting.top;
-            }
-
-            if (entryBottom) {
-               isIntersectingBottom = entryBottom.isIntersecting;
-               this._isIntersecting.bottom = entryBottom.isIntersecting;
-            } else {
-               isIntersectingBottom = this._isIntersecting.bottom;
-            }
-
-            shouldBeFixed = isIntersectingBottom && !isIntersectingTop;
-
-            if (shouldBeFixed !== this._shouldBeFixed) {
-               this._notify('fixed', [shouldBeFixed, this._container.offsetHeight], {bubbling: true});
-               this._shouldBeFixed = shouldBeFixed;
-               this._forceUpdate();
-            }
-         },
-
-         _listScrollHandler: function(e, eventType, args) {
-            switch (eventType) {
-
-               case 'listTop': this._listTop = true; break;
-
-               case 'scrollMove':
-                  this._listTop = args.position === 'up';
-
-                  break;
-               case 'canScroll':
-                  this._scrolling = true;
-                  break;
-               case 'cantScroll':
-                  this._scrolling = false;
-                  break;
-            }
-         }
+         /**
+          * The position property with sticky value is not supported in ie and edge lower version 16.
+          * https://developer.mozilla.org/ru/docs/Web/CSS/position
+          */
+         _isStickySupport: !detection.isIE || detection.IEVersion > 15
       });
 
       return StickyHeader;

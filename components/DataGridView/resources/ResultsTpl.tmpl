@@ -1,18 +1,32 @@
+<ws:template name="columnTagMSTpl">
+    <ws:if data="{{resultsPosition !== 'top'}}">
+        <td></td>
+    </ws:if>
+    <ws:else>
+        <th></th>
+    </ws:else>
+</ws:template>
+<ws:template name="columnTagTpl">
+    <ws:if data="{{resultsPosition !== 'top'}}">
+        <td><ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" /></td>
+    </ws:if>
+    <ws:else>
+        <th><ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" /></th>
+    </ws:else>
+</ws:template>
 <tr class="controls-DataGridView__results">
     <ws:if data="{{multiselect}}">
-        <td class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-            style="{{(startScrollColumn === 0) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-        </td>
+        <ws:partial template="columnTagMSTpl" class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+                    style="{{(startScrollColumn === 0) ? 'transform:translateX(' + columnsShift + 'px);'}}"/>
     </ws:if>
 
     <ws:for data="index, column in columns">
-        <td class="controls-DataGridView__td
+        <ws:partial template="columnTagTpl"
+            class="controls-DataGridView__td
                   {{index === 0 ? 'controls-DataGridView__firstContentCell'}}
                   {{(index + 1 === columns.length) ? 'controls-DataGridView__lastContentCell'}}
                   {{column.className}}
                   {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
-            <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
-        </td>
+            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}"/>
     </ws:for>
 </tr>

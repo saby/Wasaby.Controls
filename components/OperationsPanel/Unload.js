@@ -82,7 +82,8 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                      saveDataSet: undefined
                   }
                }
-            ]
+            ],
+            task1175926730: false
          },
          _controlsId: {
             'PDF' : {
@@ -264,6 +265,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
              exporter,
              fullFilter,
              methodName,
+            selectedIds,
              curItem = this._getCurrentItem(),
              isExcel = curItem.get('isExcel'),
              pageOrient = this._getPDFPageOrient();
@@ -299,11 +301,24 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                         rawData: fullFilter['Filter']
                      });
                   }
+
+                  //Костыль для возможности использовать новую логику массового выделения в старой выгрузке,
+                  //которая этого не поддерживает. Прикладные программисты сами определяют набор данных для
+                  //выгрузки, а мы берем ключи и продолжаем работу в штатном режиме.
+                  if (this._options.task1175926730) {
+                     selectedIds = [];
+                     cfg.dataSet.forEach(function(item) {
+                        selectedIds.push(String(item.getId()));
+                     });
+                  } else {
+                     selectedIds = this._getView().getSelectedKeys().map(function(key) {
+                        //Приводим ключи к строковому формату, что на БЛ идентификаторы имеют строковый тип
+                        return String(key);
+                     });
+                  }
+
                   filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
-                  //Приводим ключи к строковому формату, что на БЛ идентификаторы имеют строковый тип
-                  filter.set('selectedIds', this._getView().getSelectedKeys().map(function(key) {
-                     return String(key);
-                  }));
+                  filter.set('selectedIds', selectedIds);
                   fullFilter['MethodName'] = methodName;
                   fullFilter['FileName'] = this._getUnloadFileName();
                   fullFilter['Filter'] = filter;

@@ -8,7 +8,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/core-clone',
       'Core/core-merge',
       'Core/Deferred',
-      'Controls/Utils/isNewEnvironment'
+      'Core/helpers/isNewEnvironment'
    ],
    function(
       Control,
@@ -161,8 +161,7 @@ define('Controls/Popup/Opener/BaseOpener',
                //Ещё нужно удалить текущий id из массива всех id
                this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
-               this._action.destroy();
-               this._action = null;
+               this._action.closeDialog();
             }
          },
 
@@ -254,18 +253,16 @@ define('Controls/Popup/Opener/BaseOpener',
                   action = opener._action;
                }
 
-               var dialog = action.getDialog();
-
-               if (dialog && !isFormController) {
+               var dialog = action.getDialog(),
+                  compoundArea = dialog && dialog._getTemplateComponent();
+               if (compoundArea && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
-                  var compoundArea = dialog._getTemplateComponent();
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  if (compoundArea) {
-                     compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
-                     dialog.setTarget && dialog.setTarget($(newCfg.target));
-                  }
+                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  dialog.setTarget && dialog.setTarget($(newCfg.target));
                } else {
                   action.closeDialog();
+                  action._isExecuting = false;
                   action.execute(newCfg);
                }
                def.callback(action);

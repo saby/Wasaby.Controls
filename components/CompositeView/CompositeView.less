@@ -147,7 +147,7 @@
 
          &.controls-CompositeView__listItem:not(.controls-ListView__item-type-node),
          &.controls-CompositeView__listItem:not(.controls-CompositeView__verticalItemActions) {
-            .marker(left top)
+            .marker(@marker-bg-image, left top)
          }
       }
    }
@@ -198,7 +198,7 @@
 
          &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
             z-index: 2;
-            box-shadow: 0 0 5px #587AB0;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
          }
 
          &.controls-CompositeView__tileItem-fixed {

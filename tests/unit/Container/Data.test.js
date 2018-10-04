@@ -2,9 +2,9 @@ define(
    [
       'Controls/Container/Data',
       'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet'
+      'Controls/Container/Data/ContextOptions'
    ],
-   function(Data, Memory, RecordSet) {
+   function(Data, Memory, ContextOptions) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -42,12 +42,50 @@ define(
                idProperty: 'id',
                data: sourceDataEdited
             });
+            data._dataOptionsContext = new ContextOptions();
             data._beforeUpdate({source: newSource, idProperty: 'id'}).addCallback(function(items) {
                assert.deepEqual(data._items.getRawData(), sourceDataEdited);
                done();
             });
          });
 
+         it('update equal source', function(done) {
+            var
+               items,
+               config = {source: source, keyProperty: 'id'},
+               data = getDataWithConfig(config);
 
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new Memory({
+                  idProperty: 'id',
+                  data: sourceDataEdited
+               }), idProperty: 'id'}).addCallback(function() {
+                  assert.isTrue(data._items === items);
+                  done();
+               });
+            });
+         });
+
+         it('update not equal source', function(done) {
+            var
+               items,
+               config = {source: source, keyProperty: 'id'},
+               data = getDataWithConfig(config);
+
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new Memory({
+                  idProperty: 'id',
+                  data: sourceDataEdited,
+                  adapter: 'adapter.sbis'
+               }), idProperty: 'id'}).addCallback(function() {
+                  assert.isFalse(data._items === items);
+                  done();
+               });
+            });
+         });
       });
    });

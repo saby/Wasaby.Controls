@@ -25,7 +25,11 @@ define('Controls/Popup/Compatible/Layer', [
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
       'View/Runner/Text/markupGeneratorCompatible',
-      'Core/nativeExtensions'
+      'Core/nativeExtensions',
+
+      //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
+      //для того чтобы корректно работали стили, которые используют прикладные программисты в старых окнах
+      'css!SBIS3.CONTROLS/themes/online/online'
    ];
    var defaultLicense = {
       defaultLicense: true
@@ -214,7 +218,7 @@ define('Controls/Popup/Compatible/Layer', [
 
    return {
       isNewEnvironment: function() {
-         return !!document.getElementsByTagName('html')[0].controlNodes;
+         return !!(document && document.getElementsByTagName('html')[0].controlNodes);
       },
       load: function(deps, force) {
          if (!this.isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
@@ -318,21 +322,11 @@ define('Controls/Popup/Compatible/Layer', [
                   finishLoad(loadDeferred, result);
                });
             });
-
-            return loadDeferred;
          }
-         var fakeDeferred = new Deferred();
 
-         //Если из колбэка основного дефереда вернули другой деферед, то после того, как основной деферед получит статус
-         //isReady = true, он проигнорирует все колбэки, которые навешены после завершения.
-         if (loadDeferred.isReady()) {
-            fakeDeferred.callback();
-         } else {
-            loadDeferred.addCallback(function() {
-               fakeDeferred.callback();
-            });
-         }
-         return fakeDeferred;
+         // возвращаем свой Deferred на каждый запрос, чтобы никто не мог
+         // испортить результат loadDeferred
+         return loadDeferred.createDependent();
       }
    };
 });

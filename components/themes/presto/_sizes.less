@@ -49,6 +49,8 @@
 @padding_DropdownList-content:  1px 0;
 @top-DropdownList-cross:         ceil(18px * @multiplier);
 @right-DropdownList-cross:       round(16px * @multiplier);
+@size_dropdownList_picker_close_cross_width:   @default-icon-size-medium;
+@size_dropdownList_picker_close_cross_left:    0;
 
 @padding_DropdownList-default:  round(16px * @multiplier);
 @spacing_DropdownList_arrowSubMenu:round(66px * @multiplier);
@@ -277,15 +279,21 @@
 @width_TreeDataGridView-copyArrow:                    round(42px * @multiplier);
 @right_TreeDataGridView-copyArrow:                    0;
 //TreeDataGridView_Padding with photo
-@controls-view-photo-padding-S:                       0 round(4px * @multiplier) 0 round(4px * @multiplier);
-@controls-view-photo-padding-M:                       0 round(16px * @multiplier) 0 round(10px * @multiplier);
-@controls-view-photo-padding-L:                       0 round(22px * @multiplier) 0 round(16px * @multiplier);
-@controls-view-photo-padding-DEFAULT:                 @controls-view-photo-padding-M;
+@controls-view-photo-padding-left-S:                  round(8px * @multiplier);
+@controls-view-photo-padding-left-M:                  round(12px * @multiplier);
+@controls-view-photo-padding-left-L:                  round(16px * @multiplier);
+@controls-view-photo-padding-left-DEFAULT:            @controls-view-photo-padding-S;
+
+@controls-view-photo-padding-S:                       0 round(8px * @multiplier) 0 @controls-view-photo-padding-left-S;
+@controls-view-photo-padding-M:                       0 round(12px * @multiplier) 0 @controls-view-photo-padding-left-M;
+@controls-view-photo-padding-L:                       0 round(16px * @multiplier) 0 @controls-view-photo-padding-left-L;
+@controls-view-photo-padding-DEFAULT:                 @controls-view-photo-padding-S;
 //TreeDataGridView_Level padding with photo
-@tree-view-level-padding-photo-S:                     round(50px * @multiplier);
-@tree-view-level-padding-photo-M:                     round(68px * @multiplier);
-@tree-view-level-padding-photo-L:                     round(80px * @multiplier);
-@tree-view-level-padding-photo:                       @tree-view-level-padding-photo-M;
+@tree-view-level-padding-photo-S:                     round(61px * @multiplier);
+//рулится паддингом, поэтому ширина одинаковая
+@tree-view-level-padding-photo-M:                     @tree-view-level-padding-photo-S;
+@tree-view-level-padding-photo-L:                     @tree-view-level-padding-photo-S;
+@tree-view-level-padding-photo:                       @tree-view-level-padding-photo-S;
 
 //waitIndicator
 @wait-indicator-font-size:                            round(32px * @multiplier);
@@ -429,7 +437,7 @@
 @commands-button-close-button-top:                    round(18px * @multiplier);
 @commands-button-close-button-right:                  round(16px * @multiplier);
 @commands-button-close-button-glyph-top:              0px;
-@commands-button-margin:                              round(-10px * @multiplier) round(-64px * @multiplier) 0 0;
+@commands-button-margin:                              0 round(-64px * @multiplier) 0 0;
 //FilterButton
 @controls-filterButton-header-vertical-spacing:       round(11px * @multiplier);
 @size_FilterButton_icon:                              round(52px * @multiplier);
@@ -449,6 +457,15 @@
 @height_dateRange_choose_year:                        round(100px * @multiplier);
 @date-range-choose-month-height:                      round(50px * @multiplier);
 @date-range-choose-year-margin-bottom:                0;
+
+// DatePicker VDOM
+@margin-left_DatePicker-button:            round(16px * @multiplier);
+
+// DateRange VDOM
+@margin-left_DateRange-button:             @margin-left_DatePicker-button;
+@width_DateRange-dash:                     round(14px * @multiplier);
+@margin_DateRange-dash:                    0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@thickness_DateRange-dash:                 2px;;
 
 // DateRangeLinkView
 @font-size_DateLinkView:                   round(32px * @multiplier);
@@ -656,6 +673,8 @@
 @tab-button-large-firstAddText-font-size:       @large-text-size;
 //editAtPlace
 @line-height_editAtPlace_fieldWrapper:          normal;
+@font-size_EditActions-cancelButton:            @default-icon-size-medium;
+@font-size_EditActions-okButtonIcon:            @default-icon-size-medium;
 //image
 @editdialog-template-minwidth:                  round(870px * @multiplier);
 //CloseButton
@@ -675,7 +694,8 @@
 @top-space_stackTemplate_close-button:          round(11px * @multiplier);
 
 //DialogTemplate
-@margin_dialogTemplate_head:                   0 round(94px * @multiplier) 0 round(24px * @multiplier);
+@margin_dialogTemplate_head:                   0 round(94px * @multiplier) 0 0;
+@margin-left_dialogTemplate_caption:           round(24px * @multiplier);
 
 //Search
 @icon-size_Search:                              @default-icon-size-medium;

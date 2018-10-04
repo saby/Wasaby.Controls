@@ -1,7 +1,7 @@
 define('Controls-demo/PropertyGrid/NumberTemplate',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/NumberTemplate',
+      'wml!Controls-demo/PropertyGrid/NumberTemplate',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {

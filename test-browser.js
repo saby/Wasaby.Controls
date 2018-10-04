@@ -6,11 +6,12 @@
  * node test-browser
  */
 
-var app = require('ws-unit-testing/browser'),
-   config = require('./package.json').config,
-   buildUrl = function(scheme, host, port, path, query) {
-      return scheme + '://' + host + ':' + port + '/' + path + '?' + query;
-   };
+let app = require('ws-unit-testing/browser');
+const config = require('./package.json').config;
+
+function buildUrl (scheme, host, port, path, query) {
+   return scheme + '://' + host + ':' + port + '/' + path + '?' + query;
+}
 
 app.run(
    buildUrl(

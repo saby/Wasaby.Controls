@@ -232,7 +232,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             var fieldIds = options.fieldIds;
             if (fieldIds && fieldIds.length) {
                if (!options.fileUuid) {
-                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false, true]}, {method:'open', args:[useApp, true]}]);
+                  this._callFormatterMethods([{method:'clone', args:[options.primaryUuid, false, true]}, {method:'open', args:[useApp]}]);
                }
                else {
                   this._callFormatterOpen(useApp);
@@ -508,43 +508,85 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * Обновить изображение предпросмотра
           *
           * @protected
-          * @param {boolean} withClear Указывает очистить сразу от предыдущего изображения
+          * @param {object} features Уточняющие параметры (опционально)
+          * @param {boolean} [features.withClear] Очистить сразу от предыдущего изображения (опционально)
+          * @param {boolean} [features.isSilent] Не показывать индикатор ожидания (опционально)
           */
-         _updatePreview: function (withClear) {
+         _updatePreview: function (features) {
             var fieldIds = this._options.fieldIds;
             var has = !!(fieldIds && fieldIds.length);
-            if (!has || withClear) {
+            if (!has || (features && features.withClear)) {
                var img = this._preview[0];
                img.src = '';
                img.title = '';
                this._preview.removeClass('ws-enabled').addClass('ws-disabled');
             }
             if (has) {
-               this._updatePreviewStart();
+               this._updatePreviewStart(!(features && features.isSilent));
             }
          },
-         _updatePreviewClearStop: function () {
+
+         /**
+          * Очистка после завершения процесса обновление изображения предпросмотра
+          *
+          * @protected
+          */
+         _updatePreviewClear: function () {
             this._waitIndicatorEnd();
          },
-         _updatePreviewStart: function () {
-            this._waitIndicatorStart();
-            var options = this._options;
+
+         /**
+          * Начать процесс обновление изображения предпросмотра
+          *
+          * @protected
+          * @param {boolean} [withWaitIndicator] Показывать индикатор ожидания (опционально)
+          */
+         _updatePreviewStart: function (withWaitIndicator) {
+            if (withWaitIndicator) {
+               this._waitIndicatorStart();
+            }
             this._callFormatterGetPreviewUrl().addCallbacks(
-               function (url) {
-                  var cache = new Image();
-                  cache.onload = cache.onerror = function () {
-                     var img = this._preview[0];
-                     img.onload = img.onerror = this._updatePreviewClearStop.bind(this);
-                     img.src = url;
-                     img.width = PREVIEW_SCALE*cache.width;
-                     img.title = options.previewTitle;
-                     this._preview.removeClass('ws-disabled').addClass('ws-enabled');
-                  }.bind(this);
-                  cache.onerror = this._updatePreviewClearStop.bind(this);
-                  cache.src = url;
-               }.bind(this),
-               this._updatePreviewClearStop.bind(this)
+               this._updatePreviewStartOnUrl.bind(this),
+               this._updatePreviewClear.bind(this)
             );
+         },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при получении url-а изображения
+          *
+          * @protected
+          * @param {string} url Адресс изображения предпросмотра
+          */
+         _updatePreviewStartOnUrl: function (url) {
+            var cache = new Image();
+            cache.onload = cache.onerror = this._updatePreviewStartOnImgGet.bind(this, cache);
+            cache.onerror = this._updatePreviewClear.bind(this);
+            cache.src = url;
+         },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при полной загрузке изображения
+          *
+          * @protected
+          */
+         _updatePreviewStartOnImgGet: function (cache) {
+            var img = this._preview[0];
+            img.onload = img.onerror = this._updatePreviewStartOnImgComplete.bind(this);
+            img.src = cache.src;
+            img.width = PREVIEW_SCALE*cache.width;
+            img.title = this._options.previewTitle;
+            this._preview.removeClass('ws-disabled').addClass('ws-enabled');
+         },
+
+         /**
+          * Процесс обновления изображения предпросмотра - обработчие при завершении
+          *
+          * @protected
+          */
+         _updatePreviewStartOnImgComplete: function () {
+            this._updatePreviewClear();
+            var img = this._preview[0];
+            img.onload = img.onerror = null;
          },
 
          /**
@@ -692,7 +734,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                this._callFormatterMethods(methods);
             }
             else {
-               this._updatePreview();
+               // Если изменился родительский шаблон - убирать предыдущее изображениесразу
+               // Если шаблон родительский прежний и нет видимых изменений - не показывать индикатор ожиджания
+               this._updatePreview({withClear:isConsumerChanged, isSilent:!(isConsumerChanged || isFieldsChanged || !options.primaryUuid)});
             }
             this.setEnabled(hasFields);
             this.setVisible(hasFields);
@@ -717,7 +761,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @public
           */
          destroy: function () {
-            this._updatePreviewClearStop();
+            this._updatePreviewClear();
             this._exportFormatter.clear();
             View.superclass.destroy.apply(this, arguments);
          }

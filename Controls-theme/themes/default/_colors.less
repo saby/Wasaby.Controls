@@ -69,6 +69,9 @@
 @border-bottom_stackTemplate_head:         1px solid #F0F0F0;
 @color_stackTemplate_head:                 #313E78;
 
+// DatePicker
+@color_DateRange-dash:                     @default-text-color;
+
 // RangeSelectionController
 @border-color_RangeSelection-selected-startEnd:             #8991A9;
 @background-color_RangeSelection-selected-inner:            #F0F5FB;
@@ -161,8 +164,12 @@
 @color-Dropdown-cross_hovered:                        #313E78;
 
 //ListView
+@color_ListView-GroupBy_text:                @gray-color;
+@color_ListView-GroupBy_text_hovered:        @blue-dark-color;
+@color_ListView-GroupBy_separator:           @default-border-color;
 @color_ListView-marker:                      #ff7033;
 @width_ListView_marker:                      3px;
+@list-view-scroll-spritesheet:               url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
 
 //ToolBar
 @color_Toolbar__text:                        @color_Link-main-text;
@@ -215,6 +222,17 @@
 @background-color_DraggingTemplate-counter:         #0055BB;
 @color_DraggingTemplate-counter:                    #FFFFFF;
 
+//VDOM List.TileView
+@border-color_TileView-item:                       #ccc;
+@background-color_TileView-item:                   #fff;
+@box-shadow-color_TileView-item:                   rgba(0, 0, 0, 0.16);
+@box-shadow-color_TileView-item_hover:             rgba(0, 0, 0, 0.5);
+@background-color_TileView-title:                  #F0F5FB;
+@border-color_TileView-title:                      #E4E4E4;
+@border-color_TileView-item_marked:                #ff7033;
+@border-color_TileView-checkbox:                   #fff;
+
+
 //VDOM Operations.Panel
 @background-color_OperationsPanel:                 #e5ecf5;
 
@@ -266,6 +284,7 @@
 @color-Icon_style_attention:                   #fec63f;
 @color-Icon_style_done:                        #72be44;
 @color-Icon_style_error:                       #ef463a;
+@color-Icon_style_info:                        @icon-color-disabled;
 //Link
 @color_Link-main-text:                         #0055BB;
 @color_Link-main-text_hovered:                 #313E78;
@@ -292,14 +311,15 @@
 @border-color-IconButton_readOnly:                rgba(0, 0, 0, 0.08);
 @border-color-IconButton:                         rgba(0, 0, 0, 0.08);
 @border-color-IconButton_toggled:                 @color_primary;
-@background-color-IconButton:                     none;
-@background-color-IconButton_transparent:         #F8F8F8;
-@background-color-IconButton_hovered:             none;
+@background-color-IconButton:                     #F8F8F8;
+@background-color-IconButton_transparent:         transparent;
+@background-color-IconButton_hovered:             @background-color-IconButton;
 @background-color-IconButton_transparent_hovered: @background-color-IconButton_transparent;
 @color_Button-style-addButton-icon:            #000000;
 @color_Button-icon:                       @color_primary;
 @color_Button-icon_primary:               @color_hover;
 @color_Link-main-icon:                          #587AB0;
+@color-IconButton__shadow:                        rgba(0, 0, 0, 0.05);
 
 //Label
 @color_Label-caption_enabled:            #8991A9;
@@ -350,7 +370,26 @@
 @color_Lookup_showSelector:                    @color_primary;
 @color_Lookup-showSelector_hovered:            @color_Link-text_hovered;
 
+//area-blocks
+@bg_BlockLayout:                         @default-border-color;
+@bg_BlockSeparator:                      @default-border-color;
+@bg_Block_style-1:                       @default-bg-color;
+@bg_Block_style-2:                       #F8F8F8;
+@bg_Block_style-3:                       #FBF9F7;
+@bg_Block_style-4:                       #F7F4F0;
+@bg_Block_style-5:                       #F4F9FD;
+@bg_Block_style-6:                       #F0F5FB;
+@border-color_Block:                     transparent;
+@box-shadow_Block:                       transparent;
+
+//as link
+@color_asLink:                           #313E78;
+@color_asLink_hovered:                   #0055BB;
+@color_asLink_disabled:                  @color_Link-text_disabled;
+@color_asLink_disabled_hovered:          @color_Link-text_disabled;
+
 //headers
+@header-orange:                             #D94700;
 @color-BackButton__caption_style-default:      #D94700;
 @color-BackButton__caption_style-primary:      #313E78;
 @color_Heading__caption_style-primary:          #D94700;
@@ -404,6 +443,7 @@
 
 //FilterPanel
 @color_FilterPanel-caption:                  #313e78;
+@background-color_FilterPanel-column:        #F4F4F4;
 //AdditionalParams
 @color_AdditionalParams-item:                 #313E78;
 //HistoryList

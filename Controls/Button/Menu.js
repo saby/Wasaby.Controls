@@ -67,6 +67,10 @@ define('Controls/Button/Menu',
             this._filter = options.filter;
          },
 
+         _beforeUpdate: function(options) {
+            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+         },
+
          _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }

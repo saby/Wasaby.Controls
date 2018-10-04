@@ -1,16 +1,29 @@
 .controls-CompoundArea__new {
    height: 100%;
 
-   .controls-DialogTemplate, .controls-DialogTemplate {
+   .controls-DialogTemplate {
       box-shadow: none;
+   }
+
+   /* Для совместимости, когда открывают новое меню на старой странице */
+   .controls-DropdownList__content {
+      white-space: nowrap;
+   }
+
+   .controls-DropdownList__popup {
+      border: none;
+      max-height: 100vh;
+   }
+
+   .controls-ConfirmationTemplate {
+      margin: 0;
    }
 }
 
-/* Для совместимости, когда открывают новое меню на старой странице */
-.controls-CompoundArea__new .controls-DropdownList__content {
-   white-space: nowrap;
-}
-.controls-CompoundArea__new .controls-DropdownList__popup {
-   border: none;
+//В старой панели высота контента не должна быть больше высоты экрана
+.controls-DropdownList__subMenu .ws-float-area-nostack-panel-shadow {
    max-height: 100vh;
+   overflow: hidden;
+   box-sizing: border-box;
+   border: none;
 }

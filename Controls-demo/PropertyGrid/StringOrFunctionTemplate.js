@@ -1,7 +1,7 @@
 define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
+      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
       'Core/tmpl/tmplstr',
       'css!Controls-demo/Input/resources/VdomInputs',
    ],
@@ -29,9 +29,10 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
          },
          _checkBoxValueChanged: function() {
             this._valueChangedNotify();
+         },
+         _choseHandler: function(e, selectedItem) {
+            this._notify('valueChanged', [selectedItem.get('template')]);
          }
-
-
       });
 
 

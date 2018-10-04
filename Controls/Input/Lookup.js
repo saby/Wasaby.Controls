@@ -7,9 +7,10 @@ define('Controls/Input/Lookup', [
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'Core/Deferred',
+   'Core/core-merge',
    'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge) {
    
    'use strict';
    
@@ -132,6 +133,7 @@ define('Controls/Input/Lookup', [
             value: options.value
          });
          this._selectedKeys = options.selectedKeys.slice();
+         this._selectCallback = this._selectCallback.bind(this);
          
          if (this._selectedKeys.length) {
             _private.keysChanged(this);
@@ -199,8 +201,24 @@ define('Controls/Input/Lookup', [
          this._suggestState = false;
       },
    
+      _showSelector: function() {
+         var templateOptions = {
+            selectedItems: _private.getItems(this),
+            isCompoundTemplate: this._options.isCompoundTemplate
+         };
+         
+         this._children.selectorOpener.open({
+            templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions)
+         });
+      },
+   
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
+      },
+      
+      _selectCallback: function(result) {
+         _private.getItems(this).assign(result);
+         this._forceUpdate();
       }
    
    });

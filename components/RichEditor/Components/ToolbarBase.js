@@ -90,6 +90,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
       $constructor: function() {
          this._publish('onExpandedChange');
+
+         // Привязать обработчики
+         this._onStylesPanelChangeFormat = this._onStylesPanelChangeFormat.bind(this);
+         this._onGetHistory = this._onGetHistory.bind(this);
+         this._handlersInstances.format = this._formatChangeHandler.bind(this);
+
          this._itemsContainer = this._container.find('[class*="__itemsContainer"]');
          this._container.on('mousedown focus', this._blockFocusEvents);
          this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
@@ -147,7 +153,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       _bindEditor: function() {
          var editor = this._options.linkedEditor;
 
-         this._handlersInstances.format = this._formatChangeHandler.bind(this);
          this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
 
          //Грузим историю сразу, для того чтобы в случае ее отсутствия можно было заблокировать кнопку!
@@ -226,53 +231,58 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       },
 
       _fillHistory: function() {
-         var
-            prepareHistory = function(value) {
-               var
-                  stripText, title,
-                  $tmpDiv = $('<div/>').append(value);
-               $tmpDiv.find('.ws-fre__smile').each(function() {
-                  var smileName = $(this).attr('title');
-                  $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
-               });
-               stripText = title = escapeHtml($tmpDiv.text());
-               stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
-               if (!stripText && value) {
-                  stripText = rk('Контент содержит только html-разметку, без текста.');
-               } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
-                  stripText = stripText.substr(0, 140) + ' ...';
-               }
-               return stripText;
-            };
          if (this.getItems().getRecordById('history')) {
-            this.getLinkedEditor().getHistory().addCallback(function(arrBL) {
-               //Проблема:
-               //          После прихода данных тулбар уже может быть уничтожен
-               //Решение 1:
-               //          Хранить deferred вызова и убивать его в destroy
-               //Решение 2:
-               //          Проверять на isDestroyed
-               if (!this.isDestroyed()) {
-                  var
-                     items = [],
-                     history = this.getItemInstance('history');
-                  for (var i in arrBL) {
-                     if (arrBL.hasOwnProperty(i)) {
-                        items.push({
-                           key: items.length,
-                           title: prepareHistory(arrBL[i]),
-                           value: arrBL[i]
-                        })
-                     }
-                  }
-                  if (!arrBL.length) {
-                     history.setEnabled(false);
-                  }
-                  history.setItems(items);
-               }
-            }.bind(this));
+            this.getLinkedEditor().getHistory().addCallback(this._onGetHistory);
          }
       },
+
+      _prepareHistory: function (value) {
+         var
+            stripText, title,
+            $tmpDiv = $('<div/>').append(value);
+         var $smiles = $tmpDiv.find('.ws-fre__smile');
+         for (var i = 0; i < $smiles.length; i++) {
+            var $smile = $($smiles[i]);
+            var smileName = $smile.attr('title');
+            $smile.replaceWith('[' + (smileName ? smileName : rk('смайл')) + ']');
+         }
+         stripText = title = escapeHtml($tmpDiv.text());
+         stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
+         if (!stripText && value) {
+            stripText = rk('Контент содержит только html-разметку, без текста.');
+         } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
+            stripText = stripText.substr(0, 140) + ' ...';
+         }
+         return stripText;
+      },
+
+      _onGetHistory: function (arrBL) {
+         //Проблема:
+         //          После прихода данных тулбар уже может быть уничтожен
+         //Решение 1:
+         //          Хранить deferred вызова и убивать его в destroy
+         //Решение 2:
+         //          Проверять на isDestroyed
+         if (!this.isDestroyed()) {
+            var
+               items = [],
+               history = this.getItemInstance('history');
+            for (var i in arrBL) {
+               if (arrBL.hasOwnProperty(i)) {
+                  items.push({
+                     key: items.length,
+                     title: this._prepareHistory(arrBL[i]),
+                     value: arrBL[i]
+                  })
+               }
+            }
+            if (!arrBL.length) {
+               history.setEnabled(false);
+            }
+            history.setItems(items);
+         }
+      },
+
       _setText: function(text) {
          if (this._options.linkedEditor) {
             this._options.linkedEditor.setText(text);
@@ -285,10 +295,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       _openStylesPanel: function(button) {
          var editor = this.getLinkedEditor();
          var formats = editor ? editor.getCurrentFormats() : {};
-         this.getStylesPanel(button, formats).addCallback(function(stylesPanel) {
-            stylesPanel.setStylesFromObject(formats);
-            stylesPanel.show();
-         });
+         this.getStylesPanel(button, formats).addCallback(this._onOpenStylesPanel.bind(this, formats));
+      },
+
+      _onOpenStylesPanel: function (formats, stylesPanel) {
+         stylesPanel.setStylesFromObject(formats);
+         stylesPanel.show();
       },
 
       _toggleState: function(state, obj) {
@@ -316,15 +328,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
          var fontSizes;
          var fontSize = formats ? formats.fontsize : null;
-         if (fontSize &&
-            (stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
-            fontSizes = constants.FONT_SIZES.slice();
-            fontSizes.push(fontSize);
-            fontSizes.sort();
-            if (stylesPanel) {
-               this._stylesPanel = null;
-               stylesPanel.destroy();
-               stylesPanel = null;
+         if (fontSize) {
+            // Размер шрифта может оказаться не целым (например после вставки из клипборда) - округлить его
+            fontSize = Math.round(fontSize);
+            formats.fontsize = fontSize;
+            if ((stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
+               fontSizes = constants.FONT_SIZES.slice();
+               fontSizes.push(fontSize);
+               fontSizes.sort();
+               if (stylesPanel) {
+                  this._stylesPanel = null;
+                  stylesPanel.destroy();
+                  stylesPanel = null;
+               }
             }
          }
 
@@ -352,31 +368,35 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             }
 
             var returnDef = new Deferred();
-            requirejs(["SBIS3.CONTROLS/StylesPanelNew"], function(StylesPanel) {
-               if (componentOptions && typeof componentOptions === 'object') {
-                  options = cMerge(options, componentOptions);
-               }
-               var editor = this.getLinkedEditor();
-               if (!editor) {
-                  throw new Error('Не установлена опция linkedEditor');
-               }
-               options = cMerge(options, {
-                  parent: editor,
-                  opener: editor
-               });
-               this._stylesPanel = new StylesPanel(options);
-
-               this.subscribeTo(this._stylesPanel, 'changeFormat', function() {
-                  this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
-               }.bind(this));
-
-               returnDef.callback(this._stylesPanel);
-            }.bind(this));
+            if (componentOptions && typeof componentOptions === 'object') {
+               options = cMerge(options, componentOptions);
+            }
+            requirejs(["SBIS3.CONTROLS/StylesPanelNew"], this._onLoadStylesPanelNew.bind(this, returnDef, options));
             return returnDef;
          }
          else {
             return Deferred.success(this._stylesPanel);
          }
+      },
+
+      _onLoadStylesPanelNew: function (promise, options, StylesPanel) {
+         var editor = this.getLinkedEditor();
+         if (!editor) {
+            throw new Error('Не установлена опция linkedEditor');
+         }
+         options = cMerge(options, {
+            parent: editor,
+            opener: editor
+         });
+         this._stylesPanel = new StylesPanel(options);
+
+         this.subscribeTo(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
+
+         promise.callback(this._stylesPanel);
+      },
+
+      _onStylesPanelChangeFormat: function () {
+         this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
       },
 
       _execCommand: function(name) {
@@ -389,12 +409,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          this._unbindEditor();
          this._handlersInstances = null;
          if (this._stylesPanel) {
+            this.unsubscribeFrom(this._stylesPanel, 'changeFormat', this._onStylesPanelChangeFormat);
             this._stylesPanel.destroy();
          }
-         this._container.off('mousedown', this._blockFocusEvents);
-         this._container.off('focus', this._blockFocusEvents);
-         this._itemsContainer.off('mousedown', this._blockFocusEvents);
-         this._itemsContainer.off('focus', this._blockFocusEvents);
+         this._container.on('mousedown focus', this._blockFocusEvents);
+         this._itemsContainer.on('mousedown focus', this._blockFocusEvents);
 
          RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
          this._itemsContainer = null;

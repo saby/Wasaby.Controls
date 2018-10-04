@@ -16,23 +16,19 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
     */
    var RichTextAreaUtil = /** @lends SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil.prototype */{
       /**
-       * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
+       * Метод для добавления определяющей метки в контент при копировании/вырезке из БТРа
        * @param {object}object - DOM элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
        */
       markRichContentOnCopy: function(target) {
          //поддерживаем форматное копирование не во всех браузерах
-         var browser = constants.browser;
-         if (browser.chrome || browser.firefox || browser.isIE) {
-
+         if (this._isFormatCopySupported()) {
             target.addEventListener('copy', this._markingRichContent, true);
             target.addEventListener('cut', this._markingRichContent, true);
          }
       },
 
       unmarkRichContentOnCopy: function(target) {
-         var browser = constants.browser;
-         if (browser.chrome || browser.firefox || browser.isIE) {
-
+         if (this._isFormatCopySupported()) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             target.removeEventListener('copy', this._markingRichContent, true);
             target.removeEventListener('cut', this._markingRichContent, true);
@@ -40,6 +36,17 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
       },
 
       /*Блок приватных методов*/
+
+      /**
+       * Определить, поддерживается ли для текущего браузера маркирование контента при копировании/вырезке в клипборд из БТРа
+       * @protected
+       * @return {boolean}
+       */
+      _isFormatCopySupported: function () {
+         var browser = constants.browser;
+         return browser.chrome || browser.firefox || browser.isIE || (browser.safari && browser.isMacOSDesktop);
+      },
+
       _markingRichContent: function(e) {
          var event =  e.originalEvent ? e.originalEvent : e;
 

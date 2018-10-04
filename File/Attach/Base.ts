@@ -51,7 +51,7 @@ import {isDestroyed} from "File/Decorator/isDestroyed";
  * @public
  * @class
  * @name File/Attach/Base
- * @extends Core/Abstract
+ * @extends File/Attach/Abstract
  * @author Заляев А.В.
  */
 class Base extends Abstract {

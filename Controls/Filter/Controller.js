@@ -217,7 +217,7 @@ define('Controls/Filter/Controller',
        * @public
        * @author Герасимов Александр
        */
-   
+
       /**
        * @name Controls/Filter/Controller#filterButtonSource
        * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
@@ -259,6 +259,12 @@ define('Controls/Filter/Controller',
             itemsDef.addCallback(function() {
                _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
             });
+
+            this._filterContext = new FilterContextField({
+               filterButtonItems: this._filterButtonItems,
+               fastFilterItems: this._fastFilterItems,
+               historyId: this._options.historyId
+            });
             
             return itemsDef;
          },
@@ -286,6 +292,13 @@ define('Controls/Filter/Controller',
                };
                _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
             }
+            if (this._filterButtonItems) {
+               this._filterContext.filterButtonItems = _private.cloneItems(this._filterButtonItems);
+            }
+            if (this._fastFilterItems) {
+               this._filterContext.fastFilterItems = _private.cloneItems(this._fastFilterItems);
+            }
+            this._filterContext.updateConsumers();
             _private.applyItemsToFilter(this, this._options.filter, items);
             _private.notifyFilterChanged(this);
          },
@@ -297,11 +310,7 @@ define('Controls/Filter/Controller',
          
          _getChildContext: function() {
             return {
-               filterLayoutField: new FilterContextField({
-                  filterButtonItems: this._filterButtonItems,
-                  fastFilterItems: this._fastFilterItems,
-                  historyId: this._options.historyId
-               })
+               filterLayoutField: this._filterContext
             };
          }
       });

@@ -1,7 +1,7 @@
 define('Controls-demo/PropertyGrid/BooleanTemplate',
    [
       'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/BooleanTemplate',
+      'wml!Controls-demo/PropertyGrid/BooleanTemplate',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {

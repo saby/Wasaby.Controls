@@ -82,7 +82,7 @@ define([
          it('isEditing: true', function() {
             var result = false;
             instance.saveOptions({
-               enabled: true
+               readOnly: false
             });
             instance._beforeMount(cfg);
             instance.startEdit = function() {
@@ -94,7 +94,7 @@ define([
          it('isEditing: false', function() {
             var result = false;
             instance.saveOptions({
-               enabled: true
+               readOnly: false
             });
             instance._beforeMount(cfg2);
             instance.startEdit = function() {
@@ -111,9 +111,6 @@ define([
             instance.commitEdit = function() {
                result = true;
             };
-            instance.cancelEdit = function() {
-               result = false;
-            };
          });
          afterEach(function() {
             result = null;
@@ -121,22 +118,11 @@ define([
 
          it('commitOnDeactivate: true, isEditing: true', function() {
             instance.saveOptions({
-               enabled: true,
-               commitOnDeactivate: true
+               readOnly: false
             });
             instance._beforeMount(cfg);
             instance._onDeactivatedHandler();
             assert.isTrue(result);
-         });
-
-         it('commitOnDeactivate: false, isEditing: true', function() {
-            instance.saveOptions({
-               enabled: true,
-               commitOnDeactivate: false
-            });
-            instance._beforeMount(cfg);
-            instance._onDeactivatedHandler();
-            assert.isFalse(result);
          });
       });
 
@@ -174,9 +160,7 @@ define([
             event = {
                target: {
                   closest: function(selector) {
-                     if (selector === '.controls-EditAtPlaceV__editorWrapper') {
-                        return true;
-                     }
+                     return selector === '.controls-EditAtPlaceV__editorWrapper';
                   }
                }
             };

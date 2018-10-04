@@ -282,6 +282,8 @@ define(
                DialogController.prepareConfig = () => {
                   assert.equal(container.style.width, 'auto');
                   assert.equal(container.style.height, 'auto');
+                  assert.equal(container.style.maxWidth, '20px');
+                  assert.equal(container.style.maxHeight, '30px');
                };
                let container = {
                   style: {
@@ -289,9 +291,16 @@ define(
                      height: 10
                   }
                };
-               DialogController._elementUpdated({}, container);
+               DialogController.elementUpdated({
+                  popupOptions: {
+                     maxWidth: 20,
+                     maxHeight: 30
+                  }
+               }, container);
                assert.equal(container.style.width, 10);
                assert.equal(container.style.height, 10);
+               assert.equal(container.style.maxWidth, '');
+               assert.equal(container.style.maxHeight, '');
             });
 
             it('dialog default position', function() {

@@ -2,7 +2,6 @@ define('Controls-demo/Input/Phone/PhonePG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -10,19 +9,18 @@ define('Controls-demo/Input/Phone/PhonePG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config) {
+   function(Control, template, config) {
       'use strict';
-      var PasswordPG = Control.extend({
+      var PhonePG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Input/Phone',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
                value: {
-                  readOnly: false
+                  readOnly: true
                },
                tagStyle: {
                   emptyText: 'none',
@@ -43,5 +41,5 @@ define('Controls-demo/Input/Phone/PhonePG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return PasswordPG;
+      return PhonePG;
    });

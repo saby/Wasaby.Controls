@@ -1,4 +1,4 @@
-<div class="controls-operationsPanelV {{_toolbarSource ? 'controls-operationsPanelV_loaded'}}">
+<div class="controls-operationsPanelV">
    <ws:if data="{{_options.multiSelectorVisibility}}">
       <Controls.Operations.MultiSelector/>
    </ws:if>

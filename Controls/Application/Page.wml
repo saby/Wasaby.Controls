@@ -8,6 +8,7 @@
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}"
+   staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
    servicesPath="{{ servicesPath }}">
@@ -38,7 +39,8 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"
                                  on:cancelPreviewer="_cancelPreviewerHandler()"
-                                 on:closePreviewer="_closePreviewerHandler()">
+                                 on:closePreviewer="_closePreviewerHandler()"
+                                 on:suggestStateChanged="_suggestStateChangedHandler()">
                               <ws:if data="{{isCompatible}}">
                                  <div class="ws-focus-in"></div>
                               </ws:if>

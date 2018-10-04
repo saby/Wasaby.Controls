@@ -1,4 +1,4 @@
 <div class="controls-Suggest__footer">
     <span if="{{(hasMore && hasMore !== true)}}">Ещё {{hasMore}}</span>
-    <span class="controls-Suggest__showAllLink">Показать всё</span>
+    <span class="controls-Suggest__showAllLink">{[Показать все]} </span>
 </div>

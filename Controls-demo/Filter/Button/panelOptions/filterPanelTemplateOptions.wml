@@ -1,5 +1,0 @@
-<Controls.Filter.Button.Panel title="{{title}}"
-                              itemTemplateProperty="{{itemTemplateProperty}}"
-                              itemTemplate="{{itemTemplate}}"
-                              additionalTemplate="{{additionalTemplate}}">
-</Controls.Filter.Button.Panel>

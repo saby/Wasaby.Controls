@@ -2,7 +2,6 @@ define('Controls-demo/Input/Area/AreaPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -10,13 +9,12 @@ define('Controls-demo/Input/Area/AreaPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config) {
+   function(Control, template, config) {
       'use strict';
       var AreaPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Input/Area',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
@@ -28,16 +26,19 @@ define('Controls-demo/Input/Area/AreaPG',
                   emptyText: 'none',
                   placeholder: 'select',
                   keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
+                  displayProperty: 'title'
                },
-
+               newLineKey: {
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title'
+               },
                constraint: {
-                  source: [
-                     { id: 1, title: '[0-9]', example: 'You can use only digits' },
-                     { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
-                     { id: 3, title: '[a-z]', example: 'You can use only lowercase letters' },
-                     { id: 4, title: '[A-Z]', example: 'You can use only uppercase letters' }
+                  items: [
+                     { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
+                     { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
+                     { id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters' },
+                     { id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters' }
                   ],
                   config: {
                      template: 'custom',
@@ -49,7 +50,7 @@ define('Controls-demo/Input/Area/AreaPG',
             this._componentOptions = {
                name: 'Area',
                placeholder: 'Input text',
-               tagStyle: 'primary',
+               tagStyle: undefined,
                constraint: '',
                value: '',
                trim: false,
@@ -60,7 +61,7 @@ define('Controls-demo/Input/Area/AreaPG',
                validationErrors: '',
                minLines: 3,
                maxLines: 6,
-               newLineKey: 'enter'
+               newLineKey: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

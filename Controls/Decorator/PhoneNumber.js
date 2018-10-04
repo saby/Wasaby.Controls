@@ -67,7 +67,7 @@ define('Controls/Decorator/PhoneNumber',
                return phone;
             }
 
-            if (phone.length >= 10 && (~Array.indexOf(['7', '8'], country_code) || phone.length < 11)) {
+            if (phone.length >= 10 && (~['7', '8'].indexOf(country_code) || phone.length < 11)) {
                /*if number is with country code and it's Russian code, then we will look at russian region and city codes*/
                /*if number hasn't got country code, we think it's Russia*/
                var
@@ -88,7 +88,7 @@ define('Controls/Decorator/PhoneNumber',
                 if there is our code from 2 symbols in array, then we indent 2 symbol after region code, else will try to find only first symbol.
                 If have found, then indent only one symbol after region code*/
 
-               m = ~Array.indexOf(codeList, tcode) ? 2 : (~Array.indexOf(codeList, tcode.charAt(0)) ? 1 : 0);
+               m = ~codeList.indexOf(tcode) ? 2 : (~codeList.indexOf(tcode.charAt(0)) ? 1 : 0);
 
                /*the number of symbols in brackets increases by number of symbols in city code (and will be equal to the city code + region code)*/
                b_num += m;

@@ -37,7 +37,8 @@
    <div class="demo-Grid" style="border-top: 12px solid #55AA55;">
       <div class="demo-Grid__container">
          <Controls.Container.Data source="{{_viewSource}}"
-                                  keyProperty="id">
+                                  keyProperty="id"
+								  attr:class="ControlsDemo-Tree__Container">
             <ws:navigation source="page" view="infinity">
                <ws:sourceConfig pageSize="{{3}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
                <ws:viewConfig pagingMode="direct"></ws:viewConfig>

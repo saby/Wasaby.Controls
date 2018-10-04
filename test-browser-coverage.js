@@ -6,11 +6,12 @@
  * node test-browser
  */
 
-var app = require('ws-unit-testing/browser'),
-   config = require('./package.json').config,
-   buildUrl = function(scheme, host, port, path, query) {
-      return scheme + '://' + host + ':' + port + '/' + path + '?' + query;
-   };
+let app = require('ws-unit-testing/browser');
+const config = require('./package.json').config;
+
+function buildUrl(scheme, host, port, path, query) {
+   return scheme + '://' + host + ':' + port + '/' + path + '?' + query;
+}
 
 app.run(
    buildUrl(
@@ -18,7 +19,7 @@ app.run(
       process.env.test_url_host || config.test_url.host,
       process.env.test_url_port || config.test_url.port,
       process.env.test_url_path || config.test_url.path,
-      process.env.test_url_query || "reporter=JSCoverage"
+      process.env.test_url_query || 'reporter=JSCoverage'
    ),
-   process.env.test_report || "artifacts/coverage.json"
+   process.env.test_report || config.jsonCoverageReport
 );

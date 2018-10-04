@@ -44,14 +44,17 @@ define('Controls/Controllers/QueryParamsController/Position',
             this._options = cfg;
             PositionNavigation.superclass.constructor.apply(this, arguments);
 
-            if (!this._options.field) {
+            if (this._options.field === undefined) {
                throw new Error('Option field is undefined in PositionNavigation');
             }
-            if (!this._options.position) {
+            if (this._options.position === undefined) {
                throw new Error('Option position is undefined in PositionNavigation');
             }
-            if (!this._options.direction) {
+            if (this._options.direction === undefined) {
                throw new Error('Option direction is undefined in PositionNavigation');
+            }
+            if (this._options.limit === undefined) {
+               throw new Error('Option limit is undefined in PositionNavigation');
             }
 
             this._more = {
@@ -90,7 +93,8 @@ define('Controls/Controllers/QueryParamsController/Position',
             }
 
             return {
-               filter: additionalFilter
+               filter: additionalFilter,
+               limit: this._options.limit
             };
          },
 
@@ -102,14 +106,14 @@ define('Controls/Controllers/QueryParamsController/Position',
                   navDirection = _private.resolveDirection(loadDirection, this._options.direction);
                   this._more[navDirection] = more;
                } else {
-                  IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+                  IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
                }
             } else {
                if (more instanceof Object) {
                   if (!loadDirection &&  this._options.direction === 'both') {
                      this._more = more;
                   } else {
-                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
                   }
                }
             }

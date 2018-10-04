@@ -26,6 +26,14 @@ define('Controls/Application',
     * @author Зуев Д.В.
     */
 
+   /**
+    * @name Controls/Application#staticDomains
+    * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
+    * for static resources and distribute downloading for several static domains.
+    * There will be another way to propagate this data after this problem:
+    * https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
+    */
+
    function(Base,
       detection,
       template,
@@ -112,12 +120,36 @@ define('Controls/Application',
                   : 'ws-is-no-touch';
          },
 
+         /**
+          * Код должен быть вынесен в отдельных контроллер в виде хока в 610.
+          * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
+          */
          _popupCreatedHandler: function() {
-            this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+            this._isPopupShow = true;
+
+            this._changeOverflowClass();
          },
 
          _popupDestroyedHandler: function(event, element, popupItems) {
             if (popupItems.getCount() === 0) {
+               this._isPopupShow = false;
+            }
+
+            this._changeOverflowClass();
+         },
+
+         _suggestStateChangedHandler: function(event, state) {
+            this._isSuggestShow = state;
+
+            this._changeOverflowClass();
+         },
+
+         /*****************************************************/
+
+         _changeOverflowClass: function() {
+            if (this._isPopupShow || this._isSuggestShow) {
+               this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingAuto';
+            } else {
                this._scrollingClass = 'controls-Scroll_webkitOverflowScrollingTouch';
             }
          },
@@ -137,6 +169,7 @@ define('Controls/Application',
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
+            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
@@ -176,11 +209,16 @@ define('Controls/Application',
          },
 
          _openInfoBoxHandler: function(event, config) {
+            this._activeInfobox = event.target;
+
             this._children.infoBoxOpener.open(config);
          },
 
-         _closeInfoBoxHandler: function() {
-            this._children.infoBoxOpener.close();
+         _closeInfoBoxHandler: function(event) {
+            if (this._activeInfobox === event.target) {
+               this._activeInfobox = null;
+               this._children.infoBoxOpener.close();
+            }
          },
 
 

@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
        */
       var _PREFIX_COLUMN_FIELD = 'c';
       /**
-       * Константа (как бы) префиксов для формирования имён контролов в колонках (для выбора соответсвия колонок полям)
+       * Константа (как бы) префиксов для формирования имён контролов в колонках (для выбора соответствия колонок полям)
        * @type {string}
        * @private
        */
@@ -90,7 +90,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
          $protected: {
             _options: {
                /**
-                * @cfg {string} Заголовок для меню выбора соответсвия в колонках
+                * @cfg {string} Заголовок для меню выбора соответствия в колонках
                 */
                menuTitle: rk('Не используется', 'НастройщикИмпорта'),
                /**
@@ -365,13 +365,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                var prevField; Object.keys(mapping).some(function (v) { if (mapping[v] === columnIndex) { prevField = v; return true; } }.bind(this));
                // Если в этой колонке уже было выбрано поле
                if (prevField) {
-                  // Сбросить предыдущее соответсвие поля колонке
+                  // Сбросить предыдущее соответствие поля колонке
                   delete mapping[prevField];
                   this._changeColumnHighlighting(prevIndex, false);
                }
                // Изменить выделение в меню
                this._changeMenuSelection(menu, selectedField, prevField || _ID_MENU_EMPTY);
-               // Зафиксировать новое соответсвие поля колонке
+               // Зафиксировать новое соответствие поля колонке
                if (notEmpty) {
                   mapping[selectedField] = columnIndex;
                   this._changeColumnHighlighting(columnIndex, true);

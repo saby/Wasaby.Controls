@@ -268,8 +268,8 @@
    margin-top: -(@height / 2 - @padding-top);
 }
 
-.marker(@position: left top) {
-  background-image: url("@{themeName}/img/rowSelect.png");
+.marker(@bg-image, @position: left top) {
+  background-image: @bg-image;
   background-position: @position;
   background-repeat: repeat-y;
   background-size: @background-size_Marker;

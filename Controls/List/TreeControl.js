@@ -5,7 +5,8 @@ define('Controls/List/TreeControl', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil',
+   'Core/Deferred'
 ], function(
    Control,
    TreeControlTpl,
@@ -13,7 +14,8 @@ define('Controls/List/TreeControl', [
    ItemsUtil,
    cClone,
    HierarchyRelation,
-   ArraySimpleValuesUtil
+   ArraySimpleValuesUtil,
+   Deferred
 ) {
    'use strict';
 
@@ -178,10 +180,10 @@ define('Controls/List/TreeControl', [
          this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
-         this._children.baseControl.editItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.editItem(options);
       },
       addItem: function(options) {
-         this._children.baseControl.addItem(options);
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.addItem(options);
       },
 
 
@@ -190,9 +192,7 @@ define('Controls/List/TreeControl', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.cancelEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.cancelEdit();
       },
 
       /**
@@ -200,9 +200,7 @@ define('Controls/List/TreeControl', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         if (!this._options.readOnly) {
-            this._children.baseControl.commitEdit();
-         }
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
       },
       _onCheckBoxClick: function(e, key, status) {
          var
@@ -232,36 +230,6 @@ define('Controls/List/TreeControl', [
             newSelectedKeys = this._options.selectedKeys.slice();
             newSelectedKeys.push(key);
             this._notify('selectedKeysChanged', [newSelectedKeys, [key], []]);
-         }
-      },
-
-      _onAfterItemsRemoveHandler: function(e, keys, result) {
-         this._notify('afterItemsRemove', [keys, result]);
-
-         if (this._options.selectedKeys) {
-            var
-               self = this,
-               newSelectedKeys = this._options.selectedKeys.slice(),
-               diff,
-               parents;
-
-            ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, keys);
-
-            keys.forEach(function(key) {
-               parents = _private.getAllParentsIds(self._hierarchyRelation, key, self._options.items);
-               for (var i = 0; i < parents.length; i++) {
-                  //TODO: проверка на hasMore должна быть тут
-                  if (_private.getSelectedChildrenCount(self._hierarchyRelation, parents[i], newSelectedKeys, self._options.items) === 0) {
-                     newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
-                  } else {
-                     break;
-                  }
-               }
-            });
-
-            diff = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, newSelectedKeys);
-
-            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
          }
       },
 

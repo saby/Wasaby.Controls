@@ -58,6 +58,11 @@ define('SBIS3.CONTROLS/RichEditor',
             _toolbar: undefined
          },
 
+         init: function () {
+            RichEditor.superclass.init.apply(this, arguments);
+            this._onExpandedChange = this._onExpandedChange.bind(this);
+         },
+
          _initToolbar: function() {
             if (this._container.find('.controls-RichEditorToolbar').length) { //если есть конетейнер с тулбаром значит надо лишь установить на него ссылку
                this._toolbar = this.getChildControlByName('RichEditorToolbar');
@@ -75,17 +80,19 @@ define('SBIS3.CONTROLS/RichEditor',
                });
             }
             this._toolbar.setLinkedEditor(this);
-            this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
-               if (!this._options.autoHeight) {
-                  var container = this._richTextAreaContainer;
-                  container.animate(
-                     {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
-                     'fast'
-                  );
-               }
-               this._container[expanded ? 'addClass' : 'removeClass']('controls-RichEditor_toolbarExpanded');
-               this.execCommand('');
-            }.bind(this));
+            this.subscribeTo(this._toolbar, 'onExpandedChange', this._onExpandedChange);
+         },
+
+         _onExpandedChange: function (evtName, expanded) {
+            if (!this._options.autoHeight) {
+               var container = this._richTextAreaContainer;
+               container.animate(
+                  {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
+                  'fast'
+               );
+            }
+            this._container[expanded ? 'addClass' : 'removeClass']('controls-RichEditor_toolbarExpanded');
+            this.execCommand('');
          },
 
          _getToolbar: function() {
@@ -97,13 +104,15 @@ define('SBIS3.CONTROLS/RichEditor',
 
          _setEnabled: function(enabled){
             if (this._options.toolbar && (this._hasToolbar() || enabled)) {
-               this._performByReady(function () {
-                  if (enabled === this.isEnabled()) {
-                     this._getToolbar().setEnabled(enabled);
-                  }
-               }.bind(this));
+               this._performByReady(this._onReadySetEnabled.bind(this, enabled));
             }
             RichEditor.superclass._setEnabled.apply(this, arguments);
+         },
+
+         _onReadySetEnabled: function (enabled) {
+            if (enabled === this.isEnabled()) {
+               this._getToolbar().setEnabled(enabled);
+            }
          },
 
          _hasToolbar: function(){
@@ -130,6 +139,15 @@ define('SBIS3.CONTROLS/RichEditor',
                var toolbarHeight = options.toolbar && options.toolbarVisible ? constants.toolbarHeight : 0;
                this._richTextAreaContainer.css('height',  this._container.height() - toolbarHeight);
             }
+         },
+
+         destroy: function () {
+            this.unsubscribeFrom(this._toolbar, 'onExpandedChange', this._onExpandedChange);/*^^^*/
+            RichEditor.superclass.destroy.apply(this, arguments);
+            if (this._toolbar && !this._toolbar.isDestroyed()) {
+               this._toolbar.destroy();
+            }
+            this._toolbar = null;
          }
       });
 

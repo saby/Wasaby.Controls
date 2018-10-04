@@ -1,0 +1,43 @@
+<div class="demo-Lookup">
+    <div>
+        <div class="demo-Lookup__component">
+            Just text to check baseline
+            <Controls.Input.Lookup
+                    bind:value="_value"
+                    bind:selectedKeys="_selectedKeys"
+                    source="{{_source}}"
+                    placeholder="Введите имя"
+                    searchParam="title"
+                    keyProperty="id"
+                    readOnly="{{_readOnly}}"
+                    attr:class="control-Lookup-demo-Lookup">
+                <ws:navigation source="page" view="page">
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                </ws:navigation>
+                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                <ws:itemTemplate>
+                    <ws:partial template="tmpl!Controls/Input/Lookup/ItemTemplate" style="{{_style}}" size="{{_size}}"/>
+                </ws:itemTemplate>
+            </Controls.Input.Lookup>
+        </div>
+        <div class="demo-Lookup__propertyGrid">
+            <div class="demo-Lookup__propertyGrid-item">
+                <div class="demo-Lookup__propertyGrid-title">itemTemplate size</div>
+                <Controls.Input.ComboBox source="{{_sizeSource}}" keyProperty="size"  bind:selectedKey="_size" displayProperty="size">
+                    <ws:itemTemplate>
+                        <ws:partial template="tmpl!Controls/Dropdown/resources/template/itemTemplate" displayProperty="size"/>
+                    </ws:itemTemplate>
+                </Controls.Input.ComboBox>
+            </div>
+            <div class="demo-Lookup__propertyGrid-item">
+                <div class="demo-Lookup__propertyGrid-title">itemTemplate style</div>
+                <Controls.Input.ComboBox source="{{_styleSource}}" keyProperty="style" bind:selectedKey="_style" displayProperty="style">
+                    <ws:itemTemplate>
+                        <ws:partial template="tmpl!Controls/Dropdown/resources/template/itemTemplate" displayProperty="style"/>
+                    </ws:itemTemplate>
+                </Controls.Input.ComboBox>
+            </div>
+            <Controls.Toggle.Checkbox attr:id="trim" readOnly="{{false}}" bind:value="_readOnly" caption="readOnly"/>
+        </div>
+    </div>
+</div>

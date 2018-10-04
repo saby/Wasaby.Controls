@@ -1,4 +1,12 @@
-define(['Controls/List/TreeControl', 'Core/Deferred'], function(TreeControl, cDeferred) {
+define([
+   'Controls/List/TreeControl',
+   'Core/Deferred',
+   'Core/core-instance'
+], function(
+   TreeControl,
+   Deferred,
+   cInstance
+) {
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function() {
          var
@@ -89,7 +97,7 @@ define(['Controls/List/TreeControl', 'Core/Deferred'], function(TreeControl, cDe
                   1: {
                      load: function() {
                         var
-                           result = new cDeferred();
+                           result = new Deferred();
                         result.callback();
                         return result;
                      },
@@ -131,7 +139,7 @@ define(['Controls/List/TreeControl', 'Core/Deferred'], function(TreeControl, cDe
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
       });
       describe('EditInPlace', function() {
-         it('editItem', function(done) {
+         it('editItem', function() {
             var opt = {
                test: '123'
             };
@@ -141,14 +149,28 @@ define(['Controls/List/TreeControl', 'Core/Deferred'], function(TreeControl, cDe
                baseControl: {
                   editItem: function(options) {
                      assert.equal(opt, options);
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            treeControl.editItem(opt);
+            var result = treeControl.editItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
-         it('addItem', function(done) {
+         it('editItem, readOnly: true', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               treeControl = new TreeControl({});
+            treeControl.saveOptions({ readOnly: true });
+            var result = treeControl.editItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
+         });
+
+         it('addItem', function() {
             var opt = {
                test: '123'
             };
@@ -158,37 +180,72 @@ define(['Controls/List/TreeControl', 'Core/Deferred'], function(TreeControl, cDe
                baseControl: {
                   addItem: function(options) {
                      assert.equal(opt, options);
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            treeControl.addItem(opt);
+            var result = treeControl.addItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
-         it('cancelEdit', function(done) {
+         it('addItem, readOnly: true', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               treeControl = new TreeControl({});
+            treeControl.saveOptions({ readOnly: true });
+            var result = treeControl.addItem(opt);
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
+         });
+         it('cancelEdit', function() {
             var
                treeControl = new TreeControl({});
             treeControl._children = {
                baseControl: {
                   cancelEdit: function() {
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            treeControl.cancelEdit();
+            var result = treeControl.cancelEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
          });
 
-         it('commitEdit', function(done) {
+         it('cancelEdit, readOnly: true', function() {
+            var
+               treeControl = new TreeControl({});
+            treeControl.saveOptions({ readOnly: true });
+            var result = treeControl.cancelEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
+         });
+
+         it('commitEdit', function() {
             var
                treeControl = new TreeControl({});
             treeControl._children = {
                baseControl: {
                   commitEdit: function() {
-                     done();
+                     return Deferred.success();
                   }
                }
             };
-            treeControl.commitEdit();
+            var result = treeControl.commitEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('commitEdit, readOnly: true', function() {
+            var
+               treeControl = new TreeControl({});
+            treeControl.saveOptions({ readOnly: true });
+            var result = treeControl.commitEdit();
+            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+            assert.isFalse(result.isSuccessful());
          });
       });
       it('TreeControl._onNodeRemoved', function() {

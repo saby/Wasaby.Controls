@@ -206,9 +206,17 @@
             top: @DropdownList-picker-close-btn-top;
             cursor: pointer;
             color: @color_dropdownList_picker_close_cross;
-            .icon-size(@size_dropdownList_picker_close_cross, @default-icon-medium-font);
+            font-size: @size_dropdownList_picker_close_cross !important;
+            line-height: @size_dropdownList_picker_close_cross !important;
+            width: @size_dropdownList_picker_close_cross_width;
+            height: @size_dropdownList_picker_close_cross;
+            font-family: @default-icon-medium-font !important;
             &:hover {
                color: @color_dropdownList_picker_close_cross_hover !important;;
+            }
+            &:before {
+               position: relative;
+               left: @size_dropdownList_picker_close_cross_left;
             }
          }
          .controls-DropdownList__item {
@@ -511,6 +519,9 @@
       &:active {
          background: @DropdownList-picker-menu-item-hover;
       }
+   }
+   .controls-DropdownList__picker.controls-FloatArea {
+      -webkit-transform: translate3d(0,0,0); //Решает проблемы с отрисвкой z-index https://stackoverflow.com/questions/18271460/fixed-positioning-z-index-issue-in-mobile-safari
    }
 }
 .ws-is-ie, .ws-is-firefox {

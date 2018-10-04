@@ -14,7 +14,7 @@ define('Controls/Event/Listener',
 
       'use strict';
 
-      var EventCatcherController = Control.extend({
+      var EventListener = Control.extend({
          _template: template,
          _afterMount: function() {
             this._notify('register', [this._options.event, this, this.callback], {bubbling: true});
@@ -27,12 +27,12 @@ define('Controls/Event/Listener',
          }
       });
 
-      EventCatcherController.getOptionTypes = function() {
+      EventListener.getOptionTypes = function() {
          return {
             event: types(String).required()
          };
       };
 
-      return EventCatcherController;
+      return EventListener;
    }
 );

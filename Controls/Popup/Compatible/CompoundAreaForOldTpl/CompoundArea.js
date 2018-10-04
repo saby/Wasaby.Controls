@@ -109,6 +109,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   }, 1000);
                });
             }
+            if (this._options.popupComponent === 'recordFloatArea') {
+               this.subscribeOnBeforeUnload();
+            }
          },
 
          _shouldUpdate: function(popupOptions) {
@@ -165,9 +168,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waitReadyDeferred = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
-               }
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
                   runDelayed(function() {
@@ -208,6 +208,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _callCallbackCreated: function() {
             this._logicParent.callbackCreated && this._logicParent.callbackCreated();
             this._logicParent.waitForPopupCreated = false;
+            var self = this;
+            runDelayed(function() {
+               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
+                  self._childControl.setActive(true);
+               }
+            });
          },
 
          _afterMount: function(cfg) {
@@ -260,6 +266,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
+         
+         _beforeUnmount: function() {
+            this.__parentFromCfg = null;
+            this.__openerFromCfg = null;
+            this._parent = null;
+            this._logicParent = null;
+            if (this._options.popupComponent === 'recordFloatArea') {
+               this.unsubscribeOnBeforeUnload();
+            }
+         },
 
          isOpened: function() {
             return true;
@@ -293,18 +309,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _getCustomHeaderContainer: function() {
-            var child = this._childControl.getContainer().children();
-            var header = [];
+            var customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
 
             // Ищем кастомную шапку только на первом уровне вложенности шаблона.
             // Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
             // На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
-            child.each(function(index, elem) {
-               if (elem.className.indexOf('ws-window-titlebar-custom') > -1) {
-                  header = $(elem);
+            if (customHeader.length) {
+               var nesting = 0;
+               var parent;
+               for (var i = 0; i < customHeader.length; i++) {
+                  parent = customHeader[i];
+
+                  // Ищем класс с кастомным заголовком, с вложенностью не более 5. 5 вычислено эмпирическим путем
+                  // Старая панель так умела
+                  while (parent !== this._childControl._container[0] && nesting < 5) {
+                     parent = parent.parentElement;
+                     nesting++;
+                  }
+                  if (nesting < 5) {
+                     return $(customHeader[i]);
+                  }
                }
-            });
-            return header;
+            }
+
+            return [];
          },
 
          _headerMouseDown: function(event) {
@@ -424,6 +452,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 
@@ -623,6 +652,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _beforeUnloadHandler: function() {
             return DialogRecord.prototype._beforeUnloadHandler.apply(this);
+         },
+         subscribeOnBeforeUnload: function() {
+            DialogRecord.prototype.subscribeOnBeforeUnload.apply(this);
          },
          unsubscribeOnBeforeUnload: function() {
             DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);

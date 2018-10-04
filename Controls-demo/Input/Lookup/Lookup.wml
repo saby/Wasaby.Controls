@@ -15,6 +15,7 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
+                            lookupTemplate="Controls-demo/Selector/FlatListSelector/FlatListSelector"
                             displayProperty="title"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:navigation source="page" view="page">

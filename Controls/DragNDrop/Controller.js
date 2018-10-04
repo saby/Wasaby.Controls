@@ -1,11 +1,14 @@
 define('Controls/DragNDrop/Controller',
    [
       'Core/Control',
+      'Core/detection',
       'wml!Controls/DragNDrop/Controller/Controller'
    ],
 
-   function(Control, template) {
-      var SHIFT_LIMIT = 4;
+   function(Control, detection, template) {
+      var
+         SHIFT_LIMIT = 4,
+         IE_MOUSEMOVE_FIX_DELAY = 10;
 
       var _private = {
          getPageXY: function(event) {
@@ -14,8 +17,8 @@ define('Controls/DragNDrop/Controller',
                pageX = event.touches[0].pageX;
                pageY = event.touches[0].pageY;
             } else if (event.type === 'touchend') {
-               pageX = event.originalEvent.changedTouches[0].pageX;
-               pageY = event.originalEvent.changedTouches[0].pageY;
+               pageX = event.changedTouches[0].pageX;
+               pageY = event.changedTouches[0].pageY;
             } else {
                pageX = event.pageX;
                pageY = event.pageY;
@@ -79,6 +82,7 @@ define('Controls/DragNDrop/Controller',
          _startEvent: undefined,
          _documentDragging: false,
          _insideDragging: false,
+         _endDragNDropTimer: null,
 
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
@@ -89,12 +93,31 @@ define('Controls/DragNDrop/Controller',
          },
 
          _onMouseMove: function(event) {
-            //необходимо проверять нажата ли кнопка при перемещении
-            if (!event.nativeEvent.buttons) {
-               this._dragNDropEnded(event);
+            if (detection.isIE) {
+               this._onMouseMoveIEFix(event);
+            } else {
+               //Check if the button is pressed while moving.
+               if (!event.nativeEvent.buttons) {
+                  this._dragNDropEnded(event);
+               }
             }
 
             _private.onMove(this, event.nativeEvent);
+         },
+
+         _onMouseMoveIEFix: function(event) {
+            var self = this;
+
+            //In IE strange bug, the cause of which could not be found. During redrawing of the table the MouseMove
+            //event at which buttons = 0 shoots. In 10 milliseconds we will check that the button is not pressed.
+            if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
+               this._endDragNDropTimer = setTimeout(function() {
+                  self._dragNDropEnded(event);
+               }, IE_MOUSEMOVE_FIX_DELAY);
+            } else {
+               clearTimeout(this._endDragNDropTimer);
+               this._endDragNDropTimer = null;
+            }
          },
 
          _onTouchMove: function(event) {

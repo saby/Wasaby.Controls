@@ -29,9 +29,6 @@ define('Controls/List/ListView', [
 
             //command to scroll watcher
             self._notify('controlResize', [], {bubbling: true});
-
-            //не использовать удалить по задаче https://online.sbis.ru/opendoc.html?guid=f968dcef-6d9f-431c-9653-5aea20aeaff2
-            self._notify('checkScroll', [], {bubbling: true});
          }
       }
    };
@@ -129,6 +126,14 @@ define('Controls/List/ListView', [
          _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
          },
+
+         //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
+         //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
+         _onItemMouseLeave: function() {},
+
+         _onItemMouseMove: function() {},
+
+         _onItemWheel: function() {},
 
          _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);

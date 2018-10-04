@@ -106,7 +106,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self, self._options, self.context.get('isTouch').isTouch);
+            _private.updateActions(self, self._options, self._context.isTouch.isTouch);
          });
       },
 
@@ -138,12 +138,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       _beforeUpdate: function(newOptions, context) {
+         var args = [this, newOptions, context.isTouch.isTouch];
+         
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(this, newOptions, context.isTouch.isTouch);
+            _private.updateModel.apply(null, args);
          }
 
-         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions)) {
-            _private.updateActions(this, newOptions, context.isTouch.isTouch);
+         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions || this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback)) {
+            _private.updateActions.apply(null, args);
          }
       },
 
@@ -160,7 +162,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(this, item, this._options, isEditingItem, this.context.get('isTouch').isTouch);
+         _private.updateItemActions(this, item, this._options, isEditingItem, this._context.isTouch.isTouch);
       }
    });
 

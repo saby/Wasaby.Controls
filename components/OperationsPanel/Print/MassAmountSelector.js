@@ -4,13 +4,12 @@
 define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
    'Lib/Control/CompoundControl/CompoundControl',
    'tmpl!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Radio/Group',
    'SBIS3.CONTROLS/NumberTextBox',
    'SBIS3.CONTROLS/Button',
    'i18n!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
    'css!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector'
-], function(Control, dotTplFn, InformationPopupManager) {
+], function(Control, dotTplFn) {
 
    var MassAmountSelector = Control.extend({
 
@@ -60,10 +59,13 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
                self._notify('onApply', numericValue);
                this.sendCommand('close', numericValue);
             } else {
-               InformationPopupManager.showMessageDialog({
-                  message: rk('Для завершения обработки команды вам необходимо указать количество записей'),
-                  status: 'error'
+               require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
+                  InformationPopupManager.showMessageDialog({
+                     message: rk('Для завершения обработки команды вам необходимо указать количество записей'),
+                     status: 'error'
+                  });
                });
+
             }
          });
       },
