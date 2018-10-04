@@ -45,6 +45,7 @@ contents["modules"] = contents["modules"] = {
    "SbisFile": {path:"tests/sbis3-app-engine/client/SbisFile"},
    "SBIS3.CONTROLS": {path:"components"},
    "View": {path:"sbis3-ws/View"},
+   "Vdom": {path:"sbis3-ws/Vdom"},
    "WSTest": {path:"tests/WSTest"},
    "ControlsSandbox": {path:"pages/sandbox"},
    "Core": {path:"sbis3-ws/Core"}
