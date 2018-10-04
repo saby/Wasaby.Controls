@@ -10,6 +10,7 @@ import {IFileModel} from "File/Attach/IModel";
  * @name File/Attach/Model
  * @extends WS.Data/Entity/Model
  * @public
+ * @author Заляев А.В.
  */
 let Model: IFileModel = DataModel.extend({
 
