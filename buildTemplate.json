@@ -49,10 +49,6 @@
       "path": "%cd%/node_modules/ws-data/WS.Data"
     },
     {
-      "name": "SBIS3.ENGINE",
-      "path": "%cd%/node_modules/sbis3-engine/client/SBIS3.ENGINE"
-    },
-    {
       "name": "Data",
       "path": "%cd%/node_modules/ws-data/Data"
     },
