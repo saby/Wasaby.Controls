@@ -33,7 +33,7 @@ define('Controls/interface/IFilterPanel', [
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#styleHeader
+    * @name Controls/interface/IFilterPanel#headerStyle
     * @cfg {String} Color of title in header of filter panel.
     * @variant primary Primary color.
     * @variant default Default color.

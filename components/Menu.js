@@ -373,6 +373,13 @@ define('SBIS3.CONTROLS/Menu', [
                         submenuContainer.height(0);
                         submenuContainer.height();
                         submenuContainer.height('');
+
+                        // После хака с высотой зовем позиционирование (проблем описана выше)
+                        setTimeout(function() {
+                           if (!mySubmenu.isDestroyed()) {
+                              mySubmenu.recalcPosition(true);
+                           }
+                        }, 500);
                         
                         if (currentHeight) {
                            submenuContainer.height(currentHeight);
