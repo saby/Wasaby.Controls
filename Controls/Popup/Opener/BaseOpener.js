@@ -282,7 +282,7 @@ define('Controls/Popup/Opener/BaseOpener',
       Base.isVDOMTemplate = function(templateClass) {
          // на VDOM классах есть св-во _template.
          // Если его нет, но есть _stable, значит это функция от tmpl файла
-         return !!templateClass.prototype._template || !!templateClass.stable;
+         return !!(templateClass.prototype && templateClass.prototype._template) || !!templateClass.stable || !!(templateClass[0] && templateClass[0].func);
       };
 
       // TODO Compatible
