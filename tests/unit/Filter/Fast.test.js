@@ -2,21 +2,21 @@ define(
    [
       'Controls/Filter/Fast',
       'WS.Data/Source/Memory',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Core/core-clone'
    ],
-   function(FastData, Memory, SyntheticEvent) {
+   function(FastData, Memory, Clone) {
       describe('FastFilterVDom', function() {
          var items = [
-            [{key: 0, title: 'все страны'},
-               {key: 1, title: 'Россия'},
-               {key: 2, title: 'США'},
-               {key: 3, title: 'Великобритания'}
+            [{ key: 0, title: 'все страны' },
+               { key: 1, title: 'Россия' },
+               { key: 2, title: 'США' },
+               { key: 3, title: 'Великобритания' }
             ],
 
-            [{key: 0, title: 'все жанры'},
-               {key: 1, title: 'фантастика'},
-               {key: 2, title: 'фэнтези'},
-               {key: 3, title: 'мистика'}
+            [{ key: 0, title: 'все жанры' },
+               { key: 1, title: 'фантастика' },
+               { key: 2, title: 'фэнтези' },
+               { key: 3, title: 'мистика' }
             ]
          ];
          var source = [
@@ -62,7 +62,8 @@ define(
                      }
                   }
                }
-            },            {
+            },
+            {
                id: 'fourth',
                value: 'все страны',
                resetValue: 'все страны',
@@ -84,6 +85,12 @@ define(
             idProperty: 'id',
             data: source
          });
+
+         var getFastFilter = function(config) {
+            var fastFilter = new FastData(config);
+            fastFilter.saveOptions(config);
+            return fastFilter;
+         };
 
          var fastData = new FastData(config);
          var isSelected = false,
@@ -109,6 +116,33 @@ define(
             open: setTrue.bind(this, assert)
          };
 
+         it('beforeUpdate new items', function(done) {
+            var newConfigItems = Clone(configWithItems);
+            newConfigItems.items[0].value = 'США';
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+               assert.equal(fastFilter._items.at(0).value, 'США');
+               fastFilter._beforeUpdate(configWithItems);
+               done();
+            });
+            fastFilter._beforeUpdate({});
+         });
+
+         it('beforeUpdate new source', function(done) {
+            var fastFilter = getFastFilter(config),
+               newConfigSource = Clone(config),
+               newSource = Clone(source);
+            newSource[0].value = 'США';
+            newConfigSource.source = new Memory({
+               idProperty: 'id',
+               data: newSource
+            });
+            fastFilter._beforeUpdate(newConfigSource).addCallback(function() {
+               assert.equal(fastFilter._items.at(0).get('value'), 'США');
+               done();
+            });
+         });
+
          it('load config', function(done) {
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
@@ -116,10 +150,6 @@ define(
                   done();
                });
             });
-         });
-
-         it('_beforeUpdate without items', function() {
-            fastData._beforeUpdate({});
          });
 
          it('load config from items', function(done) {
@@ -134,7 +164,7 @@ define(
          it('load config from items with filter', function(done) {
             FastData._private.reload(fastDataItems).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(2), 0).addCallback(function() {
-                  assert.deepEqual(fastData._configs[0]._items.getRawData(), [{key: 0, title: 'все страны'}]);
+                  assert.deepEqual(fastData._configs[0]._items.getRawData(), [{ key: 0, title: 'все страны' }]);
                   done();
                });
             });
@@ -144,10 +174,23 @@ define(
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   var result = FastData._private.getFilter(fastData._items);
-                  assert.deepEqual(result, {'first': fastData._items.at(0).get('value')});
+                  assert.deepEqual(result, { 'first': fastData._items.at(0).get('value') });
                   done();
                });
             });
+         });
+
+         it('notifyChanges', function() {
+            var fastFilter = getFastFilter(config);
+            var itemsChanges = { id: '1', value: '1', resetValue: '2' };
+            fastFilter._notify = function(e, data) {
+               if (e === 'filterChanged') {
+                  assert.deepEqual(data[0], { 1: '1' });
+               } else if (e === 'itemsChanged') {
+                  assert.deepEqual(data[0], [itemsChanges]);
+               }
+            };
+            FastData._private.notifyChanges(fastFilter, [itemsChanges]);
          });
 
          it('on result', function(done) {
@@ -157,7 +200,7 @@ define(
                   isSelected = false;
                   isFilterChanged = false;
                   selectedKey = null;
-                  fastData._onResult({data: [fastData._configs[0]._items.at(2)]});
+                  fastData._onResult({ data: [fastData._configs[0]._items.at(2)] });
                   assert.isTrue(isSelected);
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, selectedKey);
@@ -183,7 +226,7 @@ define(
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
-                  fastData._container = {children: []};
+                  fastData._container = { children: [] };
                   isSelected = false;
                   selectedKey = null;
                   fastData._reset(null, fastData._items.at(0), 0);
@@ -195,10 +238,9 @@ define(
          });
 
          it('open dropdown', function() {
-            var event = {target: {}};
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
-                  fastData._open(new SyntheticEvent(null, event), fastData._items.at(0), 0);
+                  fastData._open('itemClick', fastData._items.at(0), 0);
                });
             });
          });
@@ -206,6 +248,6 @@ define(
          function setTrue(assert) {
             assert.equal(true, true);
          }
-
       });
-   });
+   }
+);

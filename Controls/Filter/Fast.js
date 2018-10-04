@@ -87,6 +87,11 @@ define('Controls/Filter/Fast',
             });
          },
 
+         notifyChanges: function(self, items) {
+            self._notify('filterChanged', [_private.getFilter(items)]);
+            self._notify('itemsChanged', [items]);
+         },
+
          getFilter: function(items) {
             var filter = {};
             Chain(items).each(function(item) {
@@ -108,7 +113,7 @@ define('Controls/Filter/Fast',
          onResult: function(result) {
             var data = result.data;
             _private.selectItem.apply(this, data);
-            this._notify('filterChanged', [_private.getFilter(this._items)]);
+            _private.notifyChanges(this, this._items);
             this._children.DropdownOpener.close();
          }
       };
@@ -142,15 +147,17 @@ define('Controls/Filter/Fast',
          },
 
          _beforeUpdate: function(newOptions) {
-            var self = this;
-            if (!isEqual(newOptions.items, this._options.items)) {
+            var self = this,
+               resultDef;
+            if (newOptions.items && !isEqual(newOptions.items, this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               return _private.reload(this);
-            } if (!isEqual(newOptions.source, this._options.source)) {
-               return _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
+               resultDef = _private.reload(this);
+            } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
+               resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
                });
             }
+            return resultDef;
          },
 
          _open: function(event, item, index) {
@@ -193,7 +200,7 @@ define('Controls/Filter/Fast',
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this._items)]);
+            _private.notifyChanges(this, this._items);
             this._setText();
          }
       });
