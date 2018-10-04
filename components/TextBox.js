@@ -76,6 +76,22 @@ define('SBIS3.CONTROLS/TextBox', [
     * @category Input
     */
 
+   var _private = {
+      prepareInformationIconColor: function(color) {
+         var resColor = color;
+         //поддержка старых цветов, чтоб не ломать старые контроы
+         if (color === 'attention') {
+            resColor = 'warning';
+         }
+         if (color === 'done') {
+            resColor= 'success';
+         }
+         if (color === 'error') {
+            resColor = 'danger';
+         }
+         return resColor;
+      }
+   };
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/TextBox.prototype */ {
       _dotTplFn: dotTplFn,
 
@@ -324,6 +340,7 @@ define('SBIS3.CONTROLS/TextBox', [
                cfg.placeholder = Sanitize(cfg.placeholder);
             }
          }
+         cfg._informationIconColor = _private.prepareInformationIconColor(cfg.informationIconColor);
          return cfg;
       },
 
@@ -379,19 +396,21 @@ define('SBIS3.CONTROLS/TextBox', [
       setInformationIconColor: function(color) {
          if (!color) {
             this._options.informationIconColor = color;
+            this._options._informationIconColor = _private.prepareInformationIconColor(this._options.informationIconColor);
             this._destroyInformationIcon();
             return;
          }
 
          if (!this._informationIcon) {
-            this._createInformationIcon(color);
+            this._createInformationIcon(this._options._informationIconColor);
          }
 
-         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
-         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options.informationIconColor);
+         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options._informationIconColor);
+         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options._informationIconColor);
          this._options.informationIconColor = color;
-         this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
-         this._informationIcon.addClass('controls-InputRender__tagStyle-' + color);
+         this._options._informationIconColor = _private.prepareInformationIconColor(this._options.informationIconColor);
+         this._informationIcon.addClass('controls-TextBox__informationIcon-' + this._options._informationIconColor);
+         this._informationIcon.addClass('controls-InputRender__tagStyle-' + this._options._informationIconColor);
       },
 
       _createInformationIcon: function(color) {
