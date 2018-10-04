@@ -1,7 +1,8 @@
 define('Controls/Date/MonthList/CalendarSource', [
    'Core/Deferred',
-   'WS.Data/Source/Base'
-], function(Deferred, Base) {
+   'WS.Data/Source/Base',
+   'Controls/Utils/Date'
+], function(Deferred, Base, dateUtils) {
    'use strict';
 
    /**
@@ -19,48 +20,71 @@ define('Controls/Date/MonthList/CalendarSource', [
          _dataSetTotalProperty: 'total'
       },
 
+      _$idProperty: 'id',
+
       query: function(query) {
          var
             offset = query.getOffset(),
+            where = query.getWhere(),
             limit = query.getLimit() || 1,
+            executor;
 
-            executor = (function() {
-               var adapter = this.getAdapter().forTable(),
-                  items = [],
-                  months//,
-                  // weeksArray
-               ;
+         executor = (function() {
+            var adapter = this.getAdapter().forTable(),
+               items = [],
+               yearEqual = where['id~'],
+               yearGt = where['id>='],
+               yearLt = where['id<='],
+               year = yearEqual || yearGt || yearLt,
+               months//,
+               // weeksArray
+            ;
 
-               for (var i = 0; i < limit; i++) {
-                  months = [];
+            if (dateUtils.isValidDate(year)) {
+               year = year.getFullYear();
+            } else if (!year) {
+               year = 1900;
+            }
 
-                  // weeksArray = [];
-                  for (var j = 0; j < 12; j++) {
-                     months.push(new Date(offset + i, j, 1));
+            year += offset;
 
-                     // weeksArray.push(CalendarUtils.getWeeksArray(new Date(offset + i, j, 1)));
-                  }
-                  items.push({
-                     id: offset + i,
-                     year: new Date(offset + i, 0),
-                     months: months
+            if (yearLt) {
+               year -= limit;
+            } else if (yearGt) {
+               year += 1;
+            }
 
-                     // weeksArray: weeksArray,
-                  });
+            for (var i = 0; i < limit; i++) {
+               months = [];
+
+               // weeksArray = [];
+               for (var j = 0; j < 12; j++) {
+                  months.push(new Date(year + i, j, 1));
+
+                  // weeksArray.push(CalendarUtils.getWeeksArray(new Date(year + i, j, 1)));
                }
+               items.push({
+                  id: year + i,
+                  year: new Date(year + i, 0),
+                  months: months
 
-               this._each(
-                  items,
-                  function(item) {
-                     adapter.add(item);
-                  }
-               );
-               items = this._prepareQueryResult(
-                  {items: adapter.getData(), total: true}
-               );
+                  // weeksArray: weeksArray,
+               });
+            }
 
-               return items;
-            }).bind(this);
+            this._each(
+               items,
+               function(item) {
+                  adapter.add(item);
+               }
+            );
+            items = this._prepareQueryResult({
+               items: adapter.getData(),
+               total: yearEqual ? { before: true, after: true } : false
+            });
+
+            return items;
+         }).bind(this);
 
          if (this._loadAdditionalDependencies) {
             return this._loadAdditionalDependencies().addCallback(executor);
