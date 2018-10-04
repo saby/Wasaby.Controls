@@ -1,3 +1,5 @@
+@multiplier: 0.75;
+
 //MenuButton
 @margin-top_MenuButton_button:             -6px;
 @margin-left_MenuButton_button:            -1px;
@@ -102,6 +104,7 @@
 
 // EditActions
 @width_EditActions-cancelButton:                       round(58px * @multiplier);
+@height_EditActions-cancelButton:                      round(58px * @multiplier);
 
 // MonthSlider
 @height_MonthSlider:                   300px;
@@ -275,6 +278,7 @@
 @border-radius_Block:             0px;
 
 //DropdownList
+@thickness_DropdownList-group-separator:              1px;
 @right-DropdownList-cross:             5px;
 @top-DropdownList-cross:         ceil(18px * @multiplier);
 @max-height_DropdownList:       400px;
