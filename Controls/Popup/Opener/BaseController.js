@@ -18,6 +18,14 @@ define('Controls/Popup/Opener/BaseController',
          },
          getMargins: function(config) {
             // create fakeDiv for calculate margins
+
+            if (!document) {
+               return {
+                  left: 0,
+                  top: 0
+               };
+            }
+
             var fakeDiv = document.createElement('div');
             fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);

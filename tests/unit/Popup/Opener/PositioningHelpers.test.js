@@ -206,6 +206,24 @@ define(
                assert.equal(itemConfig.popupState, undefined); //ничего не произошло, т.к. не было создания
             });
 
+            it('Sticky updated classes', function() {
+               StickyController._isElementVisible = () => { return true; };
+               let item = {
+                  position: {},
+                  popupOptions : {}
+               };
+               let container = {
+                  offsetWidth: 100,
+                  offsetHeight: 100
+               };
+               StickyController.elementCreated(item, container);
+               assert.equal(typeof item.positionConfig, 'object'); //Конфиг сохранился
+               var classes = item.popupOptions.className;
+
+               StickyController.elementUpdated(item, container);
+               assert.equal(item.popupOptions.className, classes); //Классы не поменялись
+            });
+
             it('Sticky with option locationStrategy=fixed', function() {
                var position = Sticky.getPosition({
                   locationStrategy: 'fixed',
