@@ -27,12 +27,10 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: {
-                     module: 'WS.Data/Source/Memory',
-                     options: {
-                        data: items[0]
-                     }
-                  }
+                  source: new Memory({
+                     data: items[0],
+                     idProperty: 'key'
+                  })
                }
             },
             {
@@ -55,12 +53,10 @@ define(
                   filter: {
                      key: 0
                   },
-                  source: {
-                     module: 'WS.Data/Source/Memory',
-                     options: {
-                        data: items[0]
-                     }
-                  }
+                  source: new Memory({
+                     data: items[0],
+                     idProperty: 'key'
+                  })
                }
             },            {
                id: 'fourth',
@@ -69,12 +65,10 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: {
-                     module: 'WS.Data/Source/Memory',
-                     options: {
-                        data: items[0]
-                     }
-                  }
+                  source: new Memory({
+                     data: items[0],
+                     idProperty: 'key'
+                  })
                }
             }
          ];
