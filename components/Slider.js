@@ -218,18 +218,18 @@ define('SBIS3.CONTROLS/Slider',
             },
 
             _prepareValue: function(value, side) {
-               value = value || value === 0 ? value : side === 'start'? this._options.minValue : this._options.maxValue;
-               if (value > this._options.maxValue) {
-                  value = this._options.maxValue;
+               value = value || value === 0 ? +value : side === 'start'? this._options.minValue : this._options.maxValue;
+               if (value > +this._options.maxValue) {
+                  value = +this._options.maxValue;
                }
-               if (value < this._options.minValue ) {
-                  value = this._options.minValue;
+               if (value < +this._options.minValue ) {
+                  value = +this._options.minValue;
                }
-               if (side === 'start' && value > this._endValue) {
-                  value = this._endValue;
+               if (side === 'start' && value > +this._endValue) {
+                  value = +this._endValue;
                }
-               if (side === 'end' && value < this._startValue) {
-                  value = this._startValue;
+               if (side === 'end' && value < +this._startValue) {
+                  value = +this._startValue;
                }
                value = + value;
                return + value.toFixed(this._options.decimals);

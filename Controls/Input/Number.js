@@ -228,7 +228,8 @@ define('Controls/Input/Number',
 
       NumberInput.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            selectOnClick: false
          };
       };
 

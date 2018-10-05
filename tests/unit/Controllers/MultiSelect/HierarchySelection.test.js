@@ -40,10 +40,7 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
-         allData = new RecordSet({
-            rawData: items,
-            idProperty: 'id'
-         });
+         allData;
 
       /*
          1
@@ -54,10 +51,17 @@ define([
          6 (пустая папка)
          7 (лист)
        */
+      beforeEach(function() {
+         allData = new RecordSet({
+            rawData: items.slice(),
+            idProperty: 'id'
+         });
+      });
       afterEach(function() {
          selectionInstance = null;
          cfg = null;
          selection = null;
+         allData = null;
       });
       it('constructor', function() {
          cfg = {
@@ -372,6 +376,30 @@ define([
                assert.deepEqual([1, 5], selectionInstance.getSelectedKeysForRender());
                assert.equal(2, selectionInstance.getCount());
             });
+         });
+      });
+
+      describe('getSelectedKeysForRender', function() {
+         it('duplicate ids', function() {
+            var itemsWithDuplicateIds = items.slice();
+            itemsWithDuplicateIds.push({
+               'id': 1,
+               'Раздел': null,
+               'Раздел@': true
+            });
+            cfg = {
+               selectedKeys: [1],
+               excludedKeys: [],
+               items: new RecordSet({
+                  rawData: itemsWithDuplicateIds,
+                  idProperty: 'id'
+               })
+            };
+            selectionInstance = new HierarchySelection(cfg);
+            selection = selectionInstance.getSelection();
+            assert.deepEqual([1], selection.selected);
+            assert.deepEqual([], selection.excluded);
+            assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
          });
       });
    });

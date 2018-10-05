@@ -12,6 +12,7 @@
         navigation="{{_options.navigation}}"
         autoDropDown="{{_options.autoDropDown}}"
         emptyTemplate="{{_options.emptyTemplate}}"
+        layerName="Controls/Container/Suggest/__PopupLayer"
         filter="{{_options.filter}}"
         value="{{_options.value}}"
         bind:suggestState="_suggestState">

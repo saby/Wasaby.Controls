@@ -1,7 +1,6 @@
 define('Controls/Input/resources/RenderHelper',
    [],
    function() {
-
       'use strict';
 
       var RenderHelper = {
@@ -30,9 +29,18 @@ define('Controls/Input/resources/RenderHelper',
             }
 
             afterInsertValue = newValue.substring(caretPosition);
-            beforeInsertValue = inputType === 'insert'
-               ? oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength)
-               : newValue.substring(0, caretPosition);
+
+            if (inputType === 'insert') {
+               beforeInsertValue = oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength);
+
+               // AutoComplete completely replaces text, there is no value before the inserted substring
+               if (newValue.indexOf(beforeInsertValue) === -1) {
+                  beforeInsertValue = '';
+               }
+            } else {
+               beforeInsertValue = newValue.substring(0, caretPosition);
+            }
+
             insertValue = newValue.substring(beforeInsertValue.length, newValue.length - afterInsertValue.length);
             deleteValue = oldValue.substring(beforeInsertValue.length, oldValue.length - afterInsertValue.length);
 
@@ -104,5 +112,4 @@ define('Controls/Input/resources/RenderHelper',
       };
 
       return RenderHelper;
-   }
-);
+   });

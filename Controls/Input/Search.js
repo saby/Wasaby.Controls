@@ -91,7 +91,8 @@ define('Controls/Input/Search',
       Search.getDefaultOptions = function getDefaultOptions() {
          return {
             placeholder: rk('Найти') + '...',
-            style: 'default'
+            style: 'default',
+            selectOnClick: false
          };
       };
 
