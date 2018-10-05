@@ -197,7 +197,8 @@ define('Controls/Date/PeriodDialog/MonthsRangeItem', [
             end = this._options.endValue;
 
          if (rangeSelectionUtils.isSelected(itemValue, start, end, this._options.selectionProcessing,
-            this._options.selectionBaseValue, this._options.selectionHoveredValue)) {
+            this._options.selectionBaseValue, this._options.selectionHoveredValue) &&
+            this._selectionViewType === SELECTION_VEIW_TYPES.months) {
             css.push('controls-PeriodDialog-MonthsRange__item-selected');
          } else {
             css.push('controls-PeriodDialog-MonthsRange__item');
