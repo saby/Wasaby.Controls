@@ -80,7 +80,7 @@ define('Controls/Filter/Fast',
                pDef.push(result);
             });
 
-            // Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
+            // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
@@ -103,7 +103,7 @@ define('Controls/Filter/Fast',
          },
 
          selectItem: function(item) {
-            // Получаем ключ выбранного элемента
+            // Get the key of the selected item
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
@@ -176,7 +176,7 @@ define('Controls/Filter/Fast',
                target: this._container.children[index]
             };
 
-            // Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem
+            // Save the index of the last open list. To get the list in method selectItem
             this.lastOpenIndex = index;
             this._children.DropdownOpener.open(config, this);
          },
