@@ -275,33 +275,36 @@ define('SBIS3.CONTROLS/DataGridView',
                headData.isVisible = true;
             }
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[1].length; i++) {
-               columnTop = headData.content[0][i];
-               column = headData.content[1][i];
-   
-               if (columnTop && headData.countRows > 1) {
-                  if (columnTop.rowspan > 1) {
-                     if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
-                        columnTop.value = getSortingColumnTpl.call(this, columnTop, cfg);
-                     } else if (columnTop.headTemplate) {
-                        columnTop.value = getHeadColumnTpl.call(this, columnTop);
+            
+            if (!isFoot) {
+               for (var i = 0; i < headData.content[1].length; i++) {
+                  columnTop = headData.content[0][i];
+                  column = headData.content[1][i];
+      
+                  if (columnTop && headData.countRows > 1) {
+                     if (columnTop.rowspan > 1) {
+                        if (columnTop.sorting) {  //Если колонка на 2 строки, то отрисуем шаблон в ней
+                           columnTop.value = getSortingColumnTpl.call(this, columnTop, cfg);
+                        } else if (columnTop.headTemplate) {
+                           columnTop.value = getHeadColumnTpl.call(this, columnTop);
+                        } else {
+                           columnTop.value = getDefaultHeadColumnTpl.call(this, columnTop.title);
+                        }
                      } else {
                         columnTop.value = getDefaultHeadColumnTpl.call(this, columnTop.title);
                      }
-                  } else {
-                     columnTop.value = getDefaultHeadColumnTpl.call(this, columnTop.title);
                   }
-               }
-
-               //TODO здесь получается верстка, которая отдается в шаблонизатор.
-               //лучше прокинуть сам шаблон, чтобы он потом там позвался
-               //В футере никогда нет сортировки
-               if (column.sorting && !isFoot) {
-                  column.value = getSortingColumnTpl.call(this, column, cfg);
-               } else if (column.headTemplate) {
-                  column.value = getHeadColumnTpl.call(this, column);
-               } else {
-                  column.value = getDefaultHeadColumnTpl.call(this, column.title);
+      
+                  //TODO здесь получается верстка, которая отдается в шаблонизатор.
+                  //лучше прокинуть сам шаблон, чтобы он потом там позвался
+                  //В футере никогда нет сортировки
+                  if (column.sorting && !isFoot) {
+                     column.value = getSortingColumnTpl.call(this, column, cfg);
+                  } else if (column.headTemplate) {
+                     column.value = getHeadColumnTpl.call(this, column);
+                  } else {
+                     column.value = getDefaultHeadColumnTpl.call(this, column.title);
+                  }
                }
             }
 
@@ -1000,8 +1003,8 @@ define('SBIS3.CONTROLS/DataGridView',
       },
 
       _redrawFoot: function(){
-         var footData = prepareHeadData(this._options, true),
-             newTFoot = $(this._options._footTpl(footData));
+         var footData = prepareHeadData.call(this, this._options, true),
+             newTFoot = $(this._options._footTpl.call(this, footData));
 
          if (this._tfoot && this._tfoot.length){
             this._destroyControls(this._tfoot);
