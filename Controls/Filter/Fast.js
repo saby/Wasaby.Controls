@@ -15,7 +15,6 @@ define('Controls/Filter/Fast',
 
    ],
    function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
-
       'use strict';
 
       /**
@@ -32,7 +31,6 @@ define('Controls/Filter/Fast',
        * @public
        * @author Герасимов А.М.
        */
-
 
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -70,7 +68,7 @@ define('Controls/Filter/Fast',
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
-            } else if (properties.source) {
+            } if (properties.source) {
                return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter);
             }
          },
@@ -82,11 +80,16 @@ define('Controls/Filter/Fast',
                pDef.push(result);
             });
 
-            //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
+            // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
             });
+         },
+
+         notifyChanges: function(self, items) {
+            self._notify('filterChanged', [_private.getFilter(items)]);
+            self._notify('itemsChanged', [items]);
          },
 
          getFilter: function(items) {
@@ -100,7 +103,7 @@ define('Controls/Filter/Fast',
          },
 
          selectItem: function(item) {
-            //Получаем ключ выбранного элемента
+            // Get the key of the selected item
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
             this._notify('selectedKeysChanged', [key]);
@@ -110,7 +113,7 @@ define('Controls/Filter/Fast',
          onResult: function(result) {
             var data = result.data;
             _private.selectItem.apply(this, data);
-            this._notify('filterChanged', [_private.getFilter(this._items)]);
+            _private.notifyChanges(this, this._items);
             this._children.DropdownOpener.close();
          }
       };
@@ -143,6 +146,20 @@ define('Controls/Filter/Fast',
             return resultDef;
          },
 
+         _beforeUpdate: function(newOptions) {
+            var self = this,
+               resultDef;
+            if (newOptions.items && !isEqual(newOptions.items, this._options.items)) {
+               _private.prepareItems(this, newOptions.items);
+               resultDef = _private.reload(this);
+            } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
+               resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
+                  return _private.reload(self);
+               });
+            }
+            return resultDef;
+         },
+
          _open: function(event, item, index) {
             var config = {
                templateOptions: {
@@ -159,7 +176,7 @@ define('Controls/Filter/Fast',
                target: this._container.children[index]
             };
 
-            //Сохраняем индекс последнего открытого списка. Чтобы получить список в selectItem
+            // Save the index of the last open list. To get the list in method selectItem
             this.lastOpenIndex = index;
             this._children.DropdownOpener.open(config, this);
          },
@@ -183,17 +200,11 @@ define('Controls/Filter/Fast',
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this._items)]);
-            this._setText();
-         },
-
-         _beforeUpdate: function(newOptions) {
-            _private.prepareItems(this, newOptions.items);
+            _private.notifyChanges(this, this._items);
             this._setText();
          }
       });
-   
+
       Fast._private = _private;
       return Fast;
-   }
-);
+   });
