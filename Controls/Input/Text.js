@@ -157,7 +157,7 @@ define('Controls/Input/Text',
          return {
             value: '',
             trim: false,
-            selectOnClick: true
+            selectOnClick: false
          };
       };
 
