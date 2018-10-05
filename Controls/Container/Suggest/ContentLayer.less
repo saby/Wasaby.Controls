@@ -1,0 +1,16 @@
+.controls-Suggest__suggestionsContainer-inInput {
+	top: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
+	left: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
+	padding-top: @height_InputRender_default + (@spacing_Suggest_suggestionsContainer_overInput * 2);
+	border-width: @default-border-width;
+	.box-shadow(@shadow_suggestionsOverlayContainer);
+	margin-top: -@default-border-width;
+	position: absolute;
+}
+
+.controls-Suggest__close {
+	position: absolute;
+	top: @margin-top_Suggest_close;
+	right: 0;
+	z-index: 1;
+}

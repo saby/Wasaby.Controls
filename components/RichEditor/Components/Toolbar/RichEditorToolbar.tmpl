@@ -1,8 +1,0 @@
-<div class="controls-RichEditorToolbar{{ !expanded ? ' controls-RichEditorToolbar__hide' }}">
-   <div class="controls-RichEditorToolbar__toggleButton" tabindex="-1"></div>
-   <div class="controls-RichEditorToolbar__itemsContainer">
-      <ws:if data="{{ _serverRender }}">
-         <ws:partial template="{{ _itemsTemplate }}" records="{{ _records }}" tplData="{{ _itemData }}" />
-      </ws:if>
-   </div>
-</div>
