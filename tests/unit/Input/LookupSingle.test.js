@@ -347,16 +347,18 @@ define([
       });
 
       it('_togglePicker', function() {
-         var lookup = new Lookup();
+         if (typeof window !== 'undefined') {
+            var lookup = new Lookup();
 
-         lookup._children.sticky = getBaseSticky();
-         lookup._isPickerVisible = false;
-         lookup._suggestState = true;
-         lookup._togglePicker(null, true);
+            lookup._children.sticky = getBaseSticky();
+            lookup._isPickerVisible = false;
+            lookup._suggestState = true;
+            lookup._togglePicker(null, true);
 
-         assert.isTrue(lookup._isPickerVisible);
-         assert.isFalse(lookup._suggestState);
-         assert.isTrue(lookup._children.sticky.isOpen);
+            assert.isTrue(lookup._isPickerVisible);
+            assert.isFalse(lookup._suggestState);
+            assert.isTrue(lookup._children.sticky.isOpen);
+         }
       });
 
       it('_onClosePicker', function() {
