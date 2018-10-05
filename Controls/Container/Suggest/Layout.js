@@ -6,7 +6,7 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Core/moduleStubs',
       'Core/core-clone',
-      'css!theme?Controls/Container/Suggest/Layout/Suggest'
+      'css!theme?Controls/Container/Suggest/Layout/Suggest',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
    function(Control, template, emptyTemplate, types, mStubs, clone) {
