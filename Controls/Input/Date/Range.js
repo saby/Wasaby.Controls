@@ -49,18 +49,12 @@ define('Controls/Input/Date/Range', [
       },
 
       _openDialog: function(event) {
-         var className;
-
-         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeLinkLite__picker-years-only';
-         } else {
-            className = 'controls-DateRangeLinkLite__picker-normal';
-         }
-
          this._children.opener.open({
             opener: this,
             target: this._container,
-            className: className,
+            className: 'controls-PeriodDialog__picker',
+            horizontalAlign: { side: 'right' },
+            corner: { horizontal: 'left' },
             eventHandlers: {
                onResult: this._onResult.bind(this)
             },
@@ -69,16 +63,17 @@ define('Controls/Input/Date/Range', [
                endValue: this._rangeModel.endValue,
                selectionType: this._options.selectionType,
                quantum: this._options.quantum,
+               headerType: 'input'
             }
          });
       },
 
       _onResult: function(startValue, endValue) {
-         this._notify('startValueChanged', [startValue]);
-         this._notify('endValueChanged', [endValue]);
+         this._rangeModel.startValue = startValue;
+         this._rangeModel.endValue = endValue;
          this._children.opener.close();
          this._forceUpdate();
-      },
+      }
    });
 
    Component.getDefaultOptions = function() {

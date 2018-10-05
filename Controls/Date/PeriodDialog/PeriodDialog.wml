@@ -1,8 +1,9 @@
 <div class="controls-PeriodDialog">
    <ws:partial
       template="{{_headerTmpl}}"
-      scope="{{_options}}"
+      _options="{{_options}}"
       _homeButtonVisible="{{_homeButtonVisible}}"
+      _HEADER_TYPES="{{_HEADER_TYPES}}"
       _headerType="{{_headerType}}"
       _rangeModel="{{_rangeModel}}"
       _headerRangeModel="{{_headerRangeModel}}"
@@ -17,7 +18,8 @@
             quantum="{{_yearRangeQuantum}}"
             on:rangeChanged="_yearsRangeChanged()"
             on:selectionChanged="_yearsSelectionChanged()"
-            on:onBeforeSelectionStarted="_yearsSelectionStarted()">
+            on:onBeforeSelectionStarted="_yearsSelectionStarted()"
+            on:selectionEnded="_yearsRangeSelectionEnded()">
 
          <Controls.Date.PeriodDialog.YearsRange
             year="{{_displayedDate}}"
@@ -31,7 +33,8 @@
          quantum="{{_monthRangeQuantum}}"
          bind:selectionProcessing="_monthRangeSelectionProcessing"
          on:rangeChanged="_monthsRangeChanged()"
-         on:selectionChanged="_monthsSelectionChanged()">
+         on:selectionChanged="_monthsSelectionChanged()"
+         on:selectionEnded="_monthsRangeSelectionEnded()">
 
          <Controls.Date.PeriodDialog.MonthsRange
             attr:class="controls-DateRangeBigChoose__months-month-wrapper"
@@ -51,7 +54,8 @@
       quantum="{{_options.quantum}}"
       bind:selectionProcessing="_dateRangeSelectionProcessing"
       on:rangeChanged="_dateRangeChanged()"
-      on:selectionChanged="_dateRangeSelectionChanged()">
+      on:selectionChanged="_dateRangeSelectionChanged()"
+      on:selectionEnded="_dateRangeSelectionEnded()">
 
       <Controls.Date.PeriodDialog.DateRange
          attr:class="controls-DateRangeBigChoose__months-month-wrapper"

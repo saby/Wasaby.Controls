@@ -2,7 +2,6 @@ define('Controls-demo/Input/Date/Picker',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -10,13 +9,12 @@ define('Controls-demo/Input/Date/Picker',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, myTmpl, config) {
+   function(Control, template, config) {
       'use strict';
       var Component = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Input/Date/Picker',
-         _my: myTmpl,
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
