@@ -33,30 +33,24 @@ define('Controls-demo/Layouts/SearchLayout', [
          _navigation: null,
          _fastFilterData: null,
          _beforeMount: function() {
-            this.sourceDropdown = {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {key: 1, title: 'все страны'},
-                     {key: 2, title: 'Россия'},
-                     {key: 3, title: 'США'},
-                     {key: 4, title: 'Великобритания'}
-                  ],
-                  idProperty: 'key'
-               }
-            };
-            this.sourceId = {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {key: 0, title: 'все id'},
-                     {key: 1, title: '1'},
-                     {key: 2, title: '2'},
-                     {key: 3, title: '3'}
-                  ],
-                  idProperty: 'key'
-               }
-            };
+            this.sourceDropdown = new MemorySource({
+               data: [
+                  {key: 1, title: 'все страны'},
+                  {key: 2, title: 'Россия'},
+                  {key: 3, title: 'США'},
+                  {key: 4, title: 'Великобритания'}
+               ],
+               idProperty: 'key'
+            });
+            this.sourceId = new MemorySource({
+               data: [
+                  {key: 0, title: 'все id'},
+                  {key: 1, title: '1'},
+                  {key: 2, title: '2'},
+                  {key: 3, title: '3'}
+               ],
+               idProperty: 'key'
+            });
             this._dataSource = new MemorySource({
                idProperty: 'id',
                data: [
@@ -106,18 +100,16 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'title',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              {id: 0, title: 'По имени'},
-                              {id: 1, title: 'Sasha'},
-                              {id: 2, title: 'Petr'},
-                              {id: 3, title: 'Ivan'},
-                              {id: 3, title: 'Andrey'}
-                           ]
-                        }
-                     }
+                     source: new MemorySource({
+                        data: [
+                           {id: 0, title: 'По имени'},
+                           {id: 1, title: 'Sasha'},
+                           {id: 2, title: 'Petr'},
+                           {id: 3, title: 'Ivan'},
+                           {id: 3, title: 'Andrey'}
+                        ],
+                        idProperty: 'id'
+                     })
                   }
                },
                {
@@ -127,18 +119,16 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'id',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              {id: 0, title: 'По id'},
-                              {id: 1, title: '1'},
-                              {id: 2, title: '2'},
-                              {id: 3, title: '3'},
-                              {id: 4, title: '4'}
-                           ]
-                        }
-                     }
+                     source: new MemorySource({
+                        data: [
+                           {id: 0, title: 'По id'},
+                           {id: 1, title: '1'},
+                           {id: 2, title: '2'},
+                           {id: 3, title: '3'},
+                           {id: 4, title: '4'}
+                        ],
+                        idProperty: 'id'
+                     })
                   }
                },
                {
@@ -148,18 +138,16 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'lastName',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              {id: 1, title: 'aaaa', lastName: 'aaaa'},
-                              {id: 2, title: 'dfsf', lastName: 'dfsf'},
-                              {id: 3, title: 'Такой нет', lastName: 'aaaaa'},
-                              {id: 4, title: 'Lalala', lastName: 'Lalala'},
-                              {id: 0, title: 'По фамилии', lastName: '0'}
-                           ]
-                        }
-                     }
+                     source: new MemorySource({
+                        data: [
+                           {id: 1, title: 'aaaa', lastName: 'aaaa'},
+                           {id: 2, title: 'dfsf', lastName: 'dfsf'},
+                           {id: 3, title: 'Такой нет', lastName: 'aaaaa'},
+                           {id: 4, title: 'Lalala', lastName: 'Lalala'},
+                           {id: 0, title: 'По фамилии', lastName: '0'}
+                        ],
+                        idProperty: 'id'
+                     })
                   }
                }
             ];
