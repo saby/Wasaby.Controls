@@ -1066,9 +1066,6 @@
           "placeholder": {
             "type": "String"
           },
-          "value": {
-            "type": "String"
-          },
           "minSearchLength": {
             "type": "String"
           },

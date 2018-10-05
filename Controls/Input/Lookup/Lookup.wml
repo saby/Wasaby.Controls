@@ -25,7 +25,7 @@
         tooltip="{{_options.tooltip}}"
         bind:suggestState="_suggestState"
         filter="{{_options.filter}}"
-        autoDropDown="{{_options.autoDropDown}}"
+        autoDropDown="{{_autoDropDown}}"
         layerName="Controls/Container/Suggest/__PopupLayer">
     <Controls.Input.resources.InputRender.InputRender
             name="inputRender"
@@ -58,7 +58,7 @@
                             name="collection"
                             itemsLayout="oneRow"
                             items="{{_collectionIsReady || _options.readOnly ? _items}}"
-                            displayItemsIndex="{{_options.readOnly ? 0 :_displayItemsIndex}}"
+                            displayItemsIndex="{{_options.readOnly || !_options.multiSelect ? 0 :_displayItemsIndex}}"
                 />
             </ws:if>
         </ws:beforeFieldWrapper>

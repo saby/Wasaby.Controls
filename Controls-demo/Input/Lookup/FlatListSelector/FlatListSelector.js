@@ -13,6 +13,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
    var FlatListSelector = Control.extend({
       _template: template,
       _keyProperty: 'id',
+      _selectionChanged: false,
 
       _beforeMount: function() {
          var keyProperty = this._keyProperty;
@@ -44,6 +45,10 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
 
       _closeSelector: function() {
          this._children.SelectorController._selectComplete();
+      },
+
+      _selectedKeysChanged: function() {
+         this._selectionChanged = true;
       }
    });
 

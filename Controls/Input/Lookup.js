@@ -121,6 +121,7 @@ define('Controls/Input/Lookup', [
 
       keysChangedWithoutUpdate: function(self, options) {
          _private.setStateReadyCollection(self, false, options);
+         _private.determineAutoDropDown(self, options);
          self._isEmpty = !self._selectedKeys.length;
 
          /* keys changed - need to hide suggest */
@@ -158,6 +159,11 @@ define('Controls/Input/Lookup', [
          var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
 
          return Math.min(minWidthFieldWrapper, 100);
+      },
+
+      determineAutoDropDown: function(self, options) {
+         options = options || self._options;
+         self._autoDropDown = options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
       },
 
       alignSelectedCollection: function(self) {
@@ -213,7 +219,7 @@ define('Controls/Input/Lookup', [
       setStateReadyCollection: function(self, state, options) {
          options = options || self._options;
 
-         if (options.multiSelect) {
+         if (options.multiSelect || self._options.multiSelect) {
             self._collectionIsReady = state;
          }
       }
@@ -230,6 +236,7 @@ define('Controls/Input/Lookup', [
       _isAllRecordsDisplay: true,
       _collectionIsReady: false,
       _displayItemsIndex: null,
+      _autoDropDown: false,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -243,7 +250,8 @@ define('Controls/Input/Lookup', [
          });
          this._selectedKeys = options.selectedKeys.slice();
          this._selectCallback = this._selectCallback.bind(this);
-         
+         _private.determineAutoDropDown(self, options);
+
          if (this._selectedKeys.length) {
             _private.keysChangedWithoutUpdate(this, options);
 
@@ -287,6 +295,7 @@ define('Controls/Input/Lookup', [
             newOptions.multiSelect !== this._options.multiSelect) {
 
             _private.setStateReadyCollection(self, false, newOptions);
+            _private.determineAutoDropDown(self, newOptions);
          }
 
 
