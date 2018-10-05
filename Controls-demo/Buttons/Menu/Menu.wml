@@ -196,7 +196,7 @@
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__bottom"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__bottom-right"
               tooltip="Document">
       </Controls.Button.Menu>
       <h4>The menu opens up and left</h4>
@@ -211,7 +211,7 @@
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__top"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__top-right"
               tooltip="Document">
       </Controls.Button.Menu>
    </div>
