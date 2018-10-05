@@ -35,12 +35,12 @@ define('Controls/Toggle/RadioGroup', [
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
     * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field.
-    * You can change the display of records by setting their values ​​for the following options:
+    * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * </ul>
     * You can redefine content using the contentTemplate option.
-    * You can change the display of records by setting their values ​​for the following options:
+    * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>selected - defines the display field in selected or unselected states.</li>
     *    <li>readOnly - defines the display field in readOnly or non readOnly states.</li>
@@ -72,12 +72,12 @@ define('Controls/Toggle/RadioGroup', [
     * The template is placed in the component using the <ws:partial> tag with the template attribute.
     *
     * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field.
-    * You can change the display of records by setting their values ​​for the following options:
+    * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * </ul>
     * You can redefine content using the contentTemplate option.
-    * You can change the display of records by setting their values ​​for the following options:
+    * You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>selected - defines the display field in selected or unselected states.</li>
     *    <li>readOnly - defines the display field in readOnly or non readOnly states.</li>

@@ -1,17 +1,15 @@
 define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
-      'wml!Controls/Container/Suggest/Layout/Suggest',
+      'wml!Controls/Container/Suggest/Layout',
       'wml!Controls/Container/Suggest/Layout/empty',
       'WS.Data/Type/descriptor',
-      'Controls/Container/Search/SearchContextField',
-      'Controls/Container/Filter/FilterContextField',
       'Core/moduleStubs',
       'Core/core-clone',
-      'Core/detection',
       'css!theme?Controls/Container/Suggest/Layout/Suggest'
+      'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, SearchContextField, FilterContextField, mStubs, clone, detection) {
+   function(Control, template, emptyTemplate, types, mStubs, clone) {
       
       'use strict';
       
@@ -33,8 +31,13 @@ define('Controls/Container/Suggest/Layout',
             }
          },
          
+         setCloseState: function(self) {
+            self._showContent = false;
+            self._loading = null;
+         },
+         
          close: function(self) {
-            this.resetSizesState(self);
+            this.setCloseState(self);
             this.suggestStateNotify(self, false);
          },
          
@@ -50,107 +53,6 @@ define('Controls/Container/Suggest/Layout',
                self._emptyTemplate = result;
                self._forceUpdate();
             });
-         },
-         
-         getSizes: function(self, dropDownContainer) {
-            var boundingClientToJSON = function(bc) {
-               var resultObj = {};
-
-               // firefox bug, clientRect object haven't method toJSON
-               if (bc.toJSON) {
-                  resultObj = bc.toJSON();
-               } else {
-                  for (var i in bc) {
-                     // bc.hasOwnProperty(i) does not make sense,
-                     // because it does not work correctly on clientRect object in FireFox and IE (not all versions)
-                     if (bc.hasOwnProperty(i) || detection.firefox || detection.isIE) {
-                        resultObj[i] = bc[i];
-                     }
-                  }
-               }
-
-               return resultObj;
-            };
-            var suggestBCR = boundingClientToJSON(self._children.suggestionsContainer.getBoundingClientRect());
-            var containerBCR =  boundingClientToJSON(self._container.getBoundingClientRect());
-            var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
-            
-            /* because dropDownContainer can have height smaller, than window height */
-            function fixSizesByDDContainer(size) {
-               size.top -= dropDownContainerBCR.top;
-               size.bottom -= dropDownContainerBCR.top;
-               return size;
-            }
-            
-            return {
-               suggest: fixSizesByDDContainer(suggestBCR),
-               container: fixSizesByDDContainer(containerBCR)
-            };
-         },
-         
-         getDropDownContainerSize: function(container) {
-            container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
-            return container.getBoundingClientRect();
-         },
-   
-         calcOrient: function(self, dropDownContainer) {
-            /* calculate algorithm:
-               - bottom of suggest behind the screen -> change orient, need to revert (-up)
-               - bottom of suggest on screen and suggest reverted -> nothing to do (-up)
-               - bottom of suggest on screen -> default orient (-down)
-             */
-            var sizes = _private.getSizes(self, dropDownContainer),
-               suggestHeight = sizes.suggest.height,
-               containerSize = sizes.container,
-               dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer),
-               needToRevert = suggestHeight + containerSize.bottom > dropDownContainerSize.height,
-               newOrient;
-            
-            if (needToRevert && self._options.suggestStyle !== 'overInput') {
-               if (containerSize.top - suggestHeight > 0) {
-                  newOrient = '-up';
-               } else {
-                  newOrient = '-down';
-               }
-            } else {
-               if (self._orient === '-up') {
-                  newOrient = self._orient;
-               } else {
-                  newOrient = '-down';
-               }
-            }
-            
-            return newOrient;
-         },
-   
-         /**
-          * calculate height of suggestions container by orient and suggestions container sizes
-          * @param self
-          * @param currentOrient orient of suggestions container
-          * @param sizes size of suggestions container and input container
-          * @param dropDownContainer container for dropDown
-          * @returns {string}
-          */
-         calcHeight: function(self, currentOrient, dropDownContainer) {
-            var sizes = _private.getSizes(self, dropDownContainer);
-            var dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
-            var suggestSize = sizes.suggest;
-            var containerSize = sizes.container;
-            var containerOptionToGet = {
-               '-up': 'top',
-               '-down': 'bottom'
-            };
-            var height = self._height;
-            var optionValue = containerSize[containerOptionToGet[currentOrient]];
-            var suggestBottomSideCoord = optionValue + (currentOrient === '-up' ? -suggestSize.height : suggestSize.height);
-            
-            if (suggestBottomSideCoord < 0) {
-               height = suggestSize.height + suggestBottomSideCoord + 'px';
-            } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
-               height = suggestSize.height - (suggestBottomSideCoord - dropDownContainerSize.height) + 'px';
-            }
-            
-            return height;
          },
    
          shouldSearch: function(self, value) {
@@ -208,26 +110,15 @@ define('Controls/Container/Suggest/Layout',
          
          loadDependencies: function(self) {
             if (!self._dependenciesDeferred) {
-               var deps = DEPS.concat([self._options.suggestTemplate.templateName]);
+               var deps = DEPS.concat([self._options.suggestTemplate.templateName, self._options.layerName]);
+               
                if (self._options.footerTemplate !== null) {
                   deps = deps.concat([self._options.footerTemplate.templateName]);
-               }
-               if (self._options.suggestStyle === 'overInput') {
-                  deps.push('Controls/Button/Close');
                }
                
                self._dependenciesDeferred = mStubs.require(deps);
             }
             return self._dependenciesDeferred;
-         },
-         
-         resetSizesState: function(self) {
-            self._orient = null;
-            this.resetHeight(self);
-         },
-         
-         resetHeight: function(self) {
-            self._height = 'auto';
          }
       };
    
@@ -256,10 +147,15 @@ define('Controls/Container/Suggest/Layout',
          _searchResult: null,
          _searchDelay: null,
          _dependenciesDeferred: null,
-         _loading: false,
-   
-         _orient: null,
-         _height: 'auto',
+         _showContent: false,
+         
+         /**
+          * three state flag
+          * null - loading is not initiated
+          * true - loading data now
+          * false - data loading ended
+          */
+         _loading: null,
          
          // <editor-fold desc="LifeCycle">
          
@@ -287,9 +183,9 @@ define('Controls/Container/Suggest/Layout',
          
          _beforeUpdate: function(newOptions) {
             if (!newOptions.suggestState) {
-               _private.resetSizesState(this);
+               _private.setCloseState(this);
             }
-
+   
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
@@ -302,36 +198,12 @@ define('Controls/Container/Suggest/Layout',
                this._emptyTemplate = newOptions.emptyTemplate;
             }
          },
-   
+         
          _afterUpdate: function() {
-            /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
-               2) do not change orientation of suggest, if suggest already showed or data loading now */
-            if (this._options.suggestState && this._children.suggestionsContainer && !this._loading) {
-               var orient = _private.calcOrient(this);
-               var height = _private.calcHeight(this, orient);
-               var orientChanged = this._orient !== orient;
-               var heightChanged = this._height !== height;
-               var needUpdate = orientChanged || heightChanged;
-               
-               if (orientChanged) {
-                  this._orient = orient;
-               }
-               
-               if (heightChanged) {
-                  this._height = height;
-               }
-   
-               if (needUpdate) {
-                  this._forceUpdate();
-               }
+            if (this._options.suggestState && this._loading === false && !this._showContent) {
+               this._showContent = true;
+               this._forceUpdate();
             }
-         },
-   
-         _getChildContext: function() {
-            return {
-               filterLayoutField: new FilterContextField({ filter: this._filter }),
-               searchLayoutField: new SearchContextField(this._searchValue)
-            };
          },
          
          // </editor-fold>
@@ -399,9 +271,10 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _searchEnd: function(result) {
-            this._loading = false;
+            if (this._options.suggestState) {
+               this._loading = false;
+            }
             this._searchDelay = this._options.searchDelay;
-            _private.resetHeight(this);
             _private.precessResultData(this, result);
             if (this._options.searchEndCallback) {
                this._options.searchEndCallback();

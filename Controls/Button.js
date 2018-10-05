@@ -7,7 +7,7 @@ define('Controls/Button', [
    'use strict';
 
    /**
-    * Base button with support different display styles, sizes, icon styles.
+    * This control native button or a elements enhanced with display styling.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *

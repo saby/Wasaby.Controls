@@ -42,9 +42,9 @@ define('Controls/BreadCrumbs/Path', [
             availableWidth,
             homeWidth;
 
-         self._backButtonCaption = ItemsUtil.getPropertyValue(items[0], self._options.displayProperty || 'title');
+         self._backButtonCaption = ItemsUtil.getPropertyValue(items[items.length - 1], self._options.displayProperty || 'title');
          if (items.length > 1) {
-            self._breadCrumbsItems = items.slice(1);
+            self._breadCrumbsItems = items.slice(0, items.length - 1);
             backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                _options: {
                   caption: self._backButtonCaption,
@@ -117,7 +117,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onBackButtonClick: function() {
-         this._notify('itemClick', [this._options.items[0], true]);
+         this._notify('itemClick', [this._options.items[this._options.items.length - 1], true]);
       },
 
       _onResize: function() {
@@ -125,7 +125,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[1], true]);
+         this._notify('itemClick', [this._options.items[0], true]);
       },
 
       _onArrowClick: function() {

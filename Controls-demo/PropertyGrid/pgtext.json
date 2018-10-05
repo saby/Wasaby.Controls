@@ -831,7 +831,7 @@
   },
   "Controls/Filter/Button": {
     "name": "Controls/Filter/Button",
-    "title": "Control \"ComboBox\"",
+    "title": "Component for data filtering",
     "className": "Controls/Filter/Button",
     "kind": "control",
     "isPublic": true,
@@ -860,6 +860,10 @@
               "left" : "The panel opens to the right"
             }
           },
+          "historyId": {
+            "type": "String",
+            "title": "Unique id for save history."
+          },
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
@@ -868,6 +872,83 @@
             "default": "",
             "title": "Имя контрола",
             "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Filter/Button/Panel": {
+    "name": "Controls/Filter/Button/Panel",
+    "className": "Controls/Filter/Button/Panel",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Button/Panel",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "items": {
+            "type": "Array",
+            "title": "Properties for editing or showing"
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render. If not set, itemTemplate is used instead."
+          },
+          "additionalTemplate": {
+            "type": "function",
+            "arrayElementType": "String",
+            "title": "Template for item render in block 'Possible to select'"
+          },
+          "additionalTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render in block Possible to select. If not set, additionalTemplate is used instead."
+          },
+          "historyId": {
+            "type": "String",
+            "title": "Unique id for save history."
+          },
+          "panelStyle": {
+            "default": "default",
+            "title": "Sets the display of the filter panel.",
+            "type": "enum",
+            "enum": {
+              "default": "display in one column",
+              "column": "display in two columns"
+            }
+          },
+          "headerStyle": {
+            "default": "primary",
+            "title": "Color of title in header of filter panel.",
+            "type": "enum",
+            "enum": {
+              "primary": "primary color",
+              "default": "default color"
+            }
+          },
+          "size": {
+            "default": "m",
+            "title": "Color of title in header of filter panel.",
+            "type": "enum",
+            "enum": {
+              "m": "primary color",
+              "l": "default color",
+              "xl": "default color"
+            }
+          },
+          "title": {
+            "default": "Отбираются",
+            "title": "Caption of filter panel.",
+            "type": "String"
+          },
+          "readOnly": {
+            "default": "false",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "type": "Boolean"
           }
         }
       }

@@ -9,7 +9,6 @@ define('Controls/Filter/Button/Panel', [
    'css!theme?Controls/Filter/Button/Panel/Panel'
 
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
-
    /**
     * Control "Filter panel"
     * @class Controls/Filter/Button/Panel
@@ -49,12 +48,15 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
+      resolveHistoryId: function(options, context) {
+         return options.historyId || (context && context.historyId);
+      },
+
       cloneItems: function(items) {
          if (items['[WS.Data/Entity/CloneableMixin]']) {
             return items.clone();
-         } else {
-            return Clone(items);
          }
+         return Clone(items);
       },
 
       getFilter: function(self, items) {
@@ -97,14 +99,20 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
-         this._historyId = options.historyId || (this._contextOptions && this._contextOptions.historyId);
+         this._historyId = _private.resolveHistoryId(options, this._contextOptions);
          this._hasAdditionalParams = options.additionalTemplate && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
-      _beforeUpdate: function(newOptions) {
+      _beforeUpdate: function(newOptions, context) {
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = newOptions.additionalTemplate && _private.hasAdditionalParams(this._items);
+         if (this._options.historyId !== newOptions.historyId) {
+            this._historyId = _private.resolveHistoryId(newOptions, context);
+         }
+         if (!isEqual(this._options.items, newOptions.items)) {
+            _private.resolveItems(this, newOptions, context);
+         }
       },
 
       _valueChangedHandler: function() {
@@ -146,7 +154,8 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'primary',
+         headerStyle: 'primary',
+         panelStyle: 'default',
          size: 'm'
       };
    };
@@ -159,5 +168,4 @@ define('Controls/Filter/Button/Panel', [
 
    FilterPanel._private = _private;
    return FilterPanel;
-
 });

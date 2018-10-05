@@ -167,7 +167,8 @@ define('Controls/Input/Area', [
 
    Area.getDefaultOptions = function() {
       return {
-         newLineKey: 'enter'
+         newLineKey: 'enter',
+         selectOnClick: false
       };
    };
 

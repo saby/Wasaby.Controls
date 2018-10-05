@@ -22,6 +22,7 @@
       "ws": "/",
       "wsModules": {
          "View": "sbis3-ws/View",
+         "Vdom": "sbis3-ws/Vdom",
          "Core": "sbis3-ws/Core"
       },
       "tests": "tests/unit",

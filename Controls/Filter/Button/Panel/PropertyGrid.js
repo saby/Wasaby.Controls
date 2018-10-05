@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel/PropertyGrid', [
    'Core/Control',
-   'tmpl!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid',
+   'wml!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid',
    'WS.Data/Utils',
    'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid'
 ], function(Control, template, Utils) {

@@ -46,6 +46,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             cfg.popupOptions.position = this.prepareCfgContext(popupCfg);
 
+            cfg.positionConfig = popupCfg;
+
+            _private.updateClasses(cfg, popupCfg);
+         },
+
+         updateClasses: function(cfg, popupCfg) {
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             _private.removeOrientationClasses(cfg);
             cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
@@ -91,6 +97,20 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   leftScroll: 0
                };
             }
+
+            if (!document) {
+               return {
+                  width: 0,
+                  height: 0,
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  topScroll: 0,
+                  leftScroll: 0
+               };
+            }
+
             return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          },
 
@@ -119,7 +139,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          elementUpdated: function(item, container) {
             if (this._isElementVisible(item.popupOptions.target)) {
-               item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Sticky__reset-margins';
+               _private.updateClasses(item, item.positionConfig);
 
                // In landscape orientation, the height of the screen is low when the keyboard is opened.
                // Open Windows are not placed in the workspace and chrome scrollit body.

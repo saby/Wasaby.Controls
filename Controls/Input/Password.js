@@ -67,7 +67,8 @@ define('Controls/Input/Password',
 
       PasswordInput.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            selectOnClick: false
          };
       };
 

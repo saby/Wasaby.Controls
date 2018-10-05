@@ -136,9 +136,9 @@ define('Controls/List/EditInPlace', [
             var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
 
             if (editNextRow) {
-               if (index < self._options.listModel.getCount() - 1) {
+               if (index < self._options.listModel.getCount() - 1 && _private.getNext(index, self._options.listModel)) {
                   self.editItem({
-                     item: self._options.listModel.at(index + 1).getContents()
+                     item: _private.getNext(index, self._options.listModel)
                   });
                } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
                   self.addItem();
@@ -146,12 +146,43 @@ define('Controls/List/EditInPlace', [
                   self.commitEdit();
                }
             } else {
-               if (index > 0) {
+               if (index > 0 && _private.getPrevious(index, self._options.listModel)) {
                   self.editItem({
-                     item: self._options.listModel.at(index - 1).getContents()
+                     item: _private.getPrevious(index, self._options.listModel)
                   });
                } else {
                   self.commitEdit();
+               }
+            }
+         },
+
+         getNext: function(index, listModel) {
+            var
+               result,
+               offset = 1,
+               count = listModel.getCount();
+
+            while (index + offset < count) {
+               result = listModel.at(index + offset).getContents();
+               if (result instanceof Record) {
+                  return result;
+               } else {
+                  offset++;
+               }
+            }
+         },
+
+         getPrevious: function(index, listModel) {
+            var
+               result,
+               offset = -1;
+
+            while (index + offset >= 0) {
+               result = listModel.at(index + offset).getContents();
+               if (result instanceof Record) {
+                  return result;
+               } else {
+                  offset--;
                }
             }
          },
