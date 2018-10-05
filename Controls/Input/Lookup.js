@@ -291,7 +291,7 @@ define('Controls/Input/Lookup', [
 
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
-            _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
+            return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                _private.setStateReadyCollection(self, false, newOptions);
                self._forceUpdate();
                return result;
@@ -394,15 +394,23 @@ define('Controls/Input/Lookup', [
       },
    
       showSelector: function(templateOptions) {
-         var multiSelect = this._options.multiSelect;
+         var
+            multiSelect = this._options.multiSelect,
+            selectorOpener = this._children.selectorOpener;
 
          templateOptions = merge(templateOptions || {}, {
             selectedItems: multiSelect ? _private.getItems(this) : null,
-            isCompoundTemplate: this._options.isCompoundTemplate,
-            multiSelect: multiSelect
+            multiSelect: multiSelect,
+            handlers: {
+               onSelectComplete: function(event, result) {
+                  self._selectCallback(result);
+                  selectorOpener.close();
+               }
+            }
          }, {clone: true});
-         
-         this._children.selectorOpener.open({
+
+         selectorOpener.open({
+            isCompoundTemplate: this._options.isCompoundTemplate,
             templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
          });
       },

@@ -6,20 +6,35 @@ define([
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List',
    'WS.Data/Source/Memory',
-   'Controls/Popup/Opener/Sticky',
    'Controls/Input/Lookup/_Collection'
-], function(Lookup, Model, List, Memory, Sticky, Collection) {
+], function(Lookup, Model, List, Memory, Collection) {
 
    function getBaseLookup() {
       return {
          _selectedKeys: [],
          _suggestState: true,
          _notify: function(){},
-         _forceUpdate: function(){},
+         _forceUpdate: function(){
+            this.isUpdate = true;
+         },
+         _children: {
+            sticky: getBaseSticky()
+         },
          _options: {
             keyProperty: 'id'
          }
       }
+   }
+
+   function getBaseSticky() {
+      return {
+         open: function() {
+            this.isOpen = true;
+         },
+         close: function() {
+            this.isOpen = false;
+         }
+      };
    }
    
    describe('Controls/Input/Lookup', function() {
@@ -86,6 +101,11 @@ define([
                rawData: {
                   id: 1
                }
+            }),
+            item2 = new Model({
+               rawData: {
+                  id: 2
+               }
             });
 
          self._notify = function(eventName) {
@@ -104,6 +124,13 @@ define([
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.at(0), item);
+
+         self._options.multiSelect = true;
+         Lookup._private.addItem(self, item2);
+         assert.deepEqual(self._selectedKeys, [1, 2]);
+         assert.isTrue(keysChanged);
+         assert.equal(self._items.at(0), item);
+         assert.equal(self._items.at(1), item2);
       });
       
       it('removeItem', function() {
@@ -136,7 +163,7 @@ define([
          Lookup._private.removeItem(self, fakeItem);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
-   
+
          Lookup._private.removeItem(self, item);
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
@@ -208,6 +235,33 @@ define([
             })
          });
          assert.isTrue(emptyLookup._isEmpty);
+
+         var lookupWithReceivedState = new Lookup();
+         lookupWithReceivedState._beforeMount({
+            selectedKeys: selectedKeys,
+            source: new Memory({
+               data: [ {id: 1} ],
+               idProperty: 'id'
+            })
+         }, null, new List({
+            items: [new Model({
+               rawData: {id: 1},
+               idProperty: 'id'
+            })]
+         }));
+         assert.deepEqual(lookupWithReceivedState._selectedKeys, selectedKeys);
+         assert.notEqual(lookupWithReceivedState._selectedKeys, selectedKeys);
+         assert.isFalse(lookupWithReceivedState._isEmpty);
+      });
+      it('_afterMount', function() {
+         var lookup = new Lookup();
+
+         lookup._selectedKeys = [];
+         lookup._collectionIsReady = true;
+
+         lookup._afterMount();
+         assert.isFalse(!!lookup.isUpdate);
+
       });
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
@@ -219,6 +273,7 @@ define([
                idProperty: 'id'
             })
          });
+
          lookup._beforeUpdate({
             selectedKeys: []
          });
@@ -231,6 +286,38 @@ define([
          });
          assert.isFalse(lookup._isEmpty);
          assert.deepEqual(lookup._selectedKeys, [1]);
+
+         lookup._beforeUpdate({
+            source: new Memory({
+               data: [
+                  {id: 1, title: 'Alex', text: 'Alex'}
+               ],
+               idProperty: 'id'
+            })
+         });
+         assert.isTrue(lookup._isEmpty);
+         assert.deepEqual(lookup._selectedKeys, []);
+
+         lookup._beforeUpdate({
+            selectedKeys: [1, 2],
+            source: new Memory({
+               data: [
+                  {id: 1, title: 'Alex', text: 'Alex'},
+                  {id: 2, title: 'Ilya', text: 'Ilya'},
+                  {id: 3, title: 'Mike', text: 'Mike'}
+               ],
+               idProperty: 'id'
+            }),
+            keyProperty: 'id'
+         }).addCallback(function() {
+            lookup._beforeUpdate({
+               keyProperty: 'title'
+            });
+            assert.isFalse(lookup._isEmpty);
+            assert.deepEqual(lookup._selectedKeys, ['Alex', 'Ilya']);
+         });
+         assert.isFalse(lookup._isEmpty);
+         assert.deepEqual(lookup._selectedKeys, [1, 2]);
       });
    
       it('_beforeUnmount', function() {
@@ -258,14 +345,55 @@ define([
          lookup._afterUpdate();
          assert.isTrue(activated);
       });
+
+      it('_togglePicker', function() {
+         var lookup = new Lookup();
+
+         lookup._children.sticky = getBaseSticky();
+         lookup._isPickerVisible = false;
+         lookup._suggestState = true;
+         lookup._togglePicker(null, true);
+
+         assert.isTrue(lookup._isPickerVisible);
+         assert.isFalse(lookup._suggestState);
+         assert.isTrue(lookup._children.sticky.isOpen);
+      });
+
+      it('_onClosePicker', function() {
+         var lookup = new Lookup();
+
+         lookup._isPickerVisible = true;
+         lookup._forceUpdate = function() {
+            this.isUpdate = true;
+         };
+         lookup._onClosePicker();
+
+         assert.isFalse(lookup._isPickerVisible);
+         assert.isTrue(lookup.isUpdate);
+      });
+
+      it('_changeValueHandler', function() {
+         var
+            newValue = [],
+            lookup = new Lookup();
+
+         lookup._children.sticky = getBaseSticky();
+         lookup._notify = function(event, value) {
+            if (event === 'valueChanged') {
+               newValue = value;
+            }
+         };
+         lookup._changeValueHandler(null, 1);
+         assert.deepEqual(newValue, [1]);
+         assert.isFalse(lookup._children.sticky.isOpen);
+      });
    
       it('_crossClick', function() {
          var
             lookup = new Lookup(),
             idProperty = 'id';
 
-         lookup._children.sticky = new Sticky();
-         lookup._children.sticky._popupIds = [];
+         lookup._children.sticky = getBaseSticky();
          lookup._selectedKeys = [1];
          lookup._items = new List({
             items: [new Model({
@@ -287,6 +415,7 @@ define([
          lookup._crossClick(null, lookup._items.at(0));
          assert.deepEqual(lookup._selectedKeys, []);
          assert.equal(lookup._items.getCount(), 0);
+         assert.equal(lookup._children.sticky.isOpen, false);
       });
 
       it('_setItems', function() {
@@ -342,12 +471,47 @@ define([
    
       it('_deactivated', function() {
          var lookup = new Lookup();
-         lookup._children.sticky = new Sticky();
-         lookup._children.sticky._popupIds = [];
+
+         lookup._children.sticky = getBaseSticky();
          lookup._suggestState = true;
-         
          lookup._deactivated();
          assert.isFalse(lookup._suggestState);
+         assert.equal(lookup._children.sticky.isOpen, false);
+      });
+
+      it('_suggestStateChanged', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._isPickerVisible = false;
+         lookup._suggestStateChanged();
+         assert.isTrue(lookup._suggestState);
+
+         lookup._isPickerVisible = true;
+         lookup._suggestStateChanged();
+         assert.isFalse(lookup._suggestState);
+      });
+
+      it('showSelector', function() {
+         var
+            templateOptions,
+            isShowSelector = false,
+            lookup = new Lookup();
+
+         lookup._options.lookupTemplate = {};
+         lookup._children.selectorOpener = {
+            open: function(config) {
+               isShowSelector = true;
+               templateOptions = config.templateOptions;
+            }
+         };
+
+         lookup.showSelector({
+            selectedTab: 'Employees'
+         });
+
+         assert.isTrue(isShowSelector);
+         assert.equal(templateOptions.selectedTab, 'Employees');
       });
    });
 });
