@@ -31,12 +31,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
-                     action.iconDone = true;
-                  }
-                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
-                     action.iconError = true;
-                  }
                }
                actions.push(action);
             }

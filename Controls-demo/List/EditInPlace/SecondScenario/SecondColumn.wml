@@ -1,0 +1,56 @@
+<ws:partial template="wml!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
+   <ws:contentTemplate>
+      <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
+         <ws:if data="{{itemData.isEditing}}">
+            <Controls.Input.Lookup attr:class="controls-EditingTemplateText__editor"
+                                   bind:value="itemData.item[itemData.column.displayProperty]"
+                                   searchParam="title"
+                                   source="{{itemData.item.source}}"
+                                   bind:selectedKeys="itemData.item.selectedKeys"
+                                   keyProperty="id"
+                                   displayProperty="category"
+                                   selectOnClick="{{ false }}">
+               <ws:itemTemplate>
+                  <ws:partial template="wml!Controls/Input/Lookup/ItemTemplate">
+                     <ws:contentTemplate>
+                        <ws:partial attr:class="ControlsDemo-EipScenarios__categoryNumber" template="wml!Controls/Input/Lookup/Collection/_ContentTemplate" style="bold" size="default" displayProperty="categoryNumber" />
+                        <ws:partial template="wml!Controls/Input/Lookup/Collection/_ContentTemplate" style="default" size="default" displayProperty="category" />
+                     </ws:contentTemplate>
+                  </ws:partial>
+               </ws:itemTemplate>
+            </Controls.Input.Lookup>
+            <Controls.Input.Lookup attr:class="controls-EditingTemplateText__editor"
+                                   bind:value="itemData.item.subdivision"
+                                   searchParam="title"
+                                   source="{{itemData.item.source}}"
+                                   keyProperty="id"
+                                   displayProperty="subdivision"
+                                   selectOnClick="{{ false }}">
+            </Controls.Input.Lookup>
+            <ws:if data="{{ itemData.item.subdivision2 }}">
+               <Controls.Input.Lookup attr:class="controls-EditingTemplateText__editor"
+                                      bind:value="itemData.item.subdivision2"
+                                      searchParam="title"
+                                      source="{{itemData.item.source}}"
+                                      keyProperty="id"
+                                      displayProperty="subdivision2"
+                                      selectOnClick="{{ false }}">
+               </Controls.Input.Lookup>
+            </ws:if>
+         </ws:if>
+         <ws:else>
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+               <span class="controls-addition-color">{{ itemData.item[itemData.column.displayProperty] }}</span>
+            </div>
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+               <span class="controls-addition-color">{{ itemData.item.subdivision }}</span>
+            </div>
+            <ws:if data="{{ itemData.item.subdivision2 }}">
+               <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+                  <span class="controls-addition-color">{{ itemData.item.subdivision2 }}</span>
+               </div>
+            </ws:if>
+         </ws:else>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>
