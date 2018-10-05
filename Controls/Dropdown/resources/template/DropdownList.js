@@ -32,7 +32,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          },
 
-         getConfig: function(instance, event, item) {
+         getSubMenuOptions: function(instance, event, item) {
             return {
                templateOptions: {
                   items: instance._options.items,
@@ -172,7 +172,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
-               var config = _private.getConfig(this, event, item);
+               var config = _private.getSubMenuOptions(this, event, item);
                this._children.subDropdownOpener.open(config, this);
             } else if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();

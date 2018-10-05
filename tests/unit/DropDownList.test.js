@@ -142,8 +142,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
 
       });
 
-      describe('DropdownList::_private.getConfig', function() {
-         it('check config', function() {
+      describe('DropdownList::_private.getSubMenuOptions', function() {
+         it('check assignment subMenu options', function() {
             var dropDownConfig, dropDownList;
 
             dropDownConfig = getDropDownConfig();
@@ -168,7 +168,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                target: "MyTarget"
             };
 
-            var inFactConfig = DropdownList._private.getConfig(dropDownList, { target: "MyTarget"}, items.at(0));
+            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
 
 
