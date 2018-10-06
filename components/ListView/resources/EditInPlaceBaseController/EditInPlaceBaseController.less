@@ -29,7 +29,7 @@
 .generate-padding-class-EIP(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    .controls-ListView__padding-@{val} {
-      .add-editors-style(~"@{controls-view-eip-padding-@{val}}", ~"@{controls-view-padding-@{val}}");
+      .add-editors-style(~"@{controls-view-eip-padding-@{val}}", ~"@{controls-view-eip-padding-@{val}}");
    }
    .generate-padding-class-EIP(@i + 1);
 }

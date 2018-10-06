@@ -1,14 +1,16 @@
 define('Controls/Date/MonthList', [
    'Core/Control',
    'Core/core-merge',
-   'wml!Controls/Date/MonthList/MonthList',
    'Controls/Date/MonthList/CalendarSource',
+   'Controls/Utils/Date',
+   'wml!Controls/Date/MonthList/MonthList',
    'wml!Controls/Date/MonthList/MonthListItem'
 ], function(
    BaseControl,
    coreMerge,
-   template,
-   CalendarSource
+   CalendarSource,
+   dateUtils,
+   template
 ) {
    'use strict';
 
@@ -29,7 +31,7 @@ define('Controls/Date/MonthList', [
    var ModuleComponent = BaseControl.extend({
       _viewSource: null,
       _template: template,
-      _page: 0,
+      _position: 0,
 
       _startValue: null,
       _endValue: null,
@@ -42,7 +44,7 @@ define('Controls/Date/MonthList', [
       },
 
       _beforeMount: function(options) {
-         this._page = 0;//options.month.getFullYear();
+         this._position = options.date.getFullYear();
          this._viewSource = new CalendarSource({
 
             //monthSource: new MonthSource()
@@ -83,6 +85,7 @@ define('Controls/Date/MonthList', [
 
    ModuleComponent.getDefaultOptions = function() {
       return coreMerge({
+         date: dateUtils.getStartOfMonth(),
          itemTemplate: 'wml!Controls/Date/MonthList/MonthListItem'
       }, {});
    };

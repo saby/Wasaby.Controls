@@ -395,6 +395,31 @@
             "type": "DateTime",
             "title": "Field value."
           },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY",
+              "DD.MM": "DD.MM",
+              "YYYY-MM-DD": "YYYY-MM-DD",
+              "YY-MM-DD": "YY-MM-DD",
+              "HH:mm:ss": "HH:mm:ss",
+              "HH:mm": "HH:mm",
+              "DD.MM.YYYY HH:mm:ss": "DD.MM.YYYY HH:mm:ss",
+              "DD.MM.YYYY HH:mm": "DD.MM.YYYY HH:mm",
+              "DD.MM.YY HH:mm:ss": "DD.MM.YY HH:mm:ss",
+              "DD.MM.YY HH:mm": "DD.MM.YY HH:mm",
+              "DD.MM HH:mm:ss": "DD.MM HH:mm:ss",
+              "DD.MM HH:mm": "DD.MM HH:mm",
+              "YYYY-MM-DD HH:mm:ss": "YYYY-MM-DD HH:mm:ss",
+              "YYYY-MM-DD HH:mm": "YYYY-MM-DD HH:mm",
+              "YY-MM-DD HH:mm:ss": "YY-MM-DD HH:mm:ss",
+              "YY-MM-DD HH:mm": "YY-MM-DD HH:mm",
+              "YYYY": "YYYY",
+              "MM/YYYY": "MM/YYYY"
+            }
+          },
           "tooltip": {
             "type": "String",
             "title": "Field tooltip."
@@ -431,6 +456,14 @@
           "value": {
             "type": "DateTime",
             "title": "Field value."
+          },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY"
+            }
           },
           "tooltip": {
             "type": "String",
