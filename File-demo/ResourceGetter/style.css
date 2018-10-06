@@ -1,3 +1,7 @@
+h3{
+   color:black;
+   text-align: center;
+}
 .content {
    display: flex;
    width: 800px;
