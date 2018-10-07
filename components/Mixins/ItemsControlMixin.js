@@ -1101,7 +1101,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            extMarkup = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+            extMarkup = extendedMarkupCalculate(this._getItemsTemplate().call(this, data), this._options);
             markup = extMarkup.markup;
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
@@ -1189,7 +1189,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                dot = calcData.defaultItemTpl;
             }
 
-            markupExt = extendedMarkupCalculate(dot(calcData), this._options);
+            markupExt = extendedMarkupCalculate(dot.call(this, calcData), this._options);
             markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
