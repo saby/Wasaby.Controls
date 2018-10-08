@@ -71,15 +71,7 @@ define('Controls/StickyHeader/_StickyHeader/Model',
          _updateStateIntersection: function(entry) {
             var target = this._getTarget(entry);
 
-            /**
-             * There are two options to determine whether an element intersects with a root or not.
-             * 1. isIntersection;
-             * 2. intersectionRatio === 1;
-             * There is a significant difference in the edge browser. If the element is in the scrollable area in the hidden part,
-             * it is considered that isIntersection equal true but intersectionRatio equal 0.
-             * Use second variant.
-             */
-            this._intersection[target] = entry.intersectionRatio === 1;
+            this._intersection[target] = entry.isIntersecting;
          },
 
          /**

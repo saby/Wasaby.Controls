@@ -57,7 +57,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          getTooltip: function(text, tooltip, hasHorizontalScroll) {
-            return hasHorizontalScroll ? text : tooltip;
+            //In order to hide browser tooltip (something like "Please fill out this field.") title attribute must be
+            //set to space in all browsers except IE. In IE it shouldn't be set at all (or set to empty string).
+            //But this method doesn't work if input is inside <form> element, so if someone wants to use forms they
+            //should specify a tooltip.
+            return hasHorizontalScroll ? text : tooltip ? tooltip : cDetection.isIE ? '' : ' ';
          },
 
          /**

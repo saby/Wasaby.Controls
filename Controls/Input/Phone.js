@@ -77,7 +77,8 @@ define('Controls/Input/Phone',
 
       Phone.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            selectOnClick: false
          };
       };
       
