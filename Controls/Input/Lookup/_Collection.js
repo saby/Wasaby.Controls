@@ -1,11 +1,9 @@
 define('Controls/Input/Lookup/_Collection',
    [
       'Core/Control',
-      'wml!Controls/Input/Lookup/_Collection',
-      'wml!Controls/Input/Lookup/ItemTemplate',
-      'wml!Controls/Input/Lookup/_ContentTemplate',
-      'wml!Controls/Input/Lookup/_CrossTemplate',
-      'css!Controls/Input/Lookup/Collection'
+      'wml!Controls/Input/Lookup/_Collection/_Collection',
+      'wml!Controls/Input/Lookup/_Collection/ItemTemplate',
+      'css!Controls/Input/Lookup/_Collection/Collection'
    ],
    
    function(Control, template, ItemTemplate) {
@@ -20,15 +18,18 @@ define('Controls/Input/Lookup/_Collection',
          },
          
          _crossClick: function(event, index) {
-            this._notify('crossClick', [this._options.items.at(index)]);
+            var
+               items = this._options.items,
+               currentItem = items.at ? items.at(index) : items[index];
+
+            this._notify('crossClick', [currentItem]);
          }
       });
       
       Collection.getDefaultOptions = function() {
          return {
             itemTemplate: ItemTemplate,
-            itemsLayout: 'default',
-            displayItemsIndex: 0
+            itemsLayout: 'default'
          };
       };
       
