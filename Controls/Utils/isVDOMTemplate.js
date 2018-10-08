@@ -6,7 +6,10 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
    'use strict';
 
    /**
-    * Returns information about template
+    * Возвращает информацию о том, является ли компонент наследником Core/Control.
+    * @class Controls/Utils/isVDOMTemplate
+    * @public
+    * @author Крайнов Д.О.
     */
 
    return function isVDOMTemplate(templateClass) {
