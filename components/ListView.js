@@ -5064,7 +5064,16 @@ define('SBIS3.CONTROLS/ListView',
          _isResultObserved: function() {
             return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onRecordSetPropertyChange) > -1;
          },
-         
+   
+         /**
+          * Устанавливает шаблон, который будет отображаться под элементами коллекции.
+          * @param {Function} footerTpl.
+          * @example
+          * <pre>
+          *     ListView.setFooterTpl(myFooterTpl);
+          * </pre>
+          * @see footerTpl
+          */
          setFooterTpl: function(footerTpl) {
             this._options.footerTpl = footerTpl;
             this._redrawFoot();
