@@ -1051,5 +1051,52 @@
         }
       }
     }
+  },
+  "Controls/Input/Lookup": {
+    "name": "Controls/Input/Lookup",
+    "title": "Control \"Lookup\"",
+    "className": "Controls/Input/Lookup",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Lookup",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "placeholder": {
+            "type": "String"
+          },
+          "minSearchLength": {
+            "type": "String"
+          },
+          "autoDropDown": {
+            "type": "Boolean"
+          },
+          "multiSelect": {
+            "type": "Boolean"
+          },
+          "readOnly": {
+            "type": "Boolean"
+          },
+          "source": {
+            "type": "function"
+          },
+          "displayProperty": {
+            "type": "enum",
+            "enum": {
+              "id": "",
+              "title": ""
+            }
+          },
+          "keyProperty": {
+            "type": "enum",
+            "enum": {
+              "id": "",
+              "title": ""
+            }
+          }
+        }
+      }
+    }
   }
 }
