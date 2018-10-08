@@ -13,6 +13,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
+
          setPopupOptions: function(self, horizontalAlign) {
             var align = horizontalAlign.side || 'right';
             self._popupOptions = {
@@ -29,10 +30,32 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   onResult: self.resultHandler
                }
             };
+         },
+
+         getSubMenuOptions: function(instance, event, item) {
+            return {
+               templateOptions: {
+                  items: instance._options.items,
+                  itemTemplate: instance._options.itemTemplate,
+                  itemTemplateProperty: instance._options.itemTemplateProperty,
+                  keyProperty: instance._options.keyProperty,
+                  parentProperty: instance._options.parentProperty,
+                  nodeProperty: instance._options.nodeProperty,
+                  selectedKeys: instance._options.selectedKeys,
+                  rootKey: item.get(instance._options.keyProperty),
+                  showHeader: false,
+                  defaultItemTemplate: instance._options.defaultItemTemplate
+               },
+               corner: instance._popupOptions.corner,
+               horizontalAlign: instance._popupOptions.horizontalAlign,
+               target: event.target
+            };
          }
+
       };
 
       /**
+       *
        * Действие открытия прилипающего окна
        * @class Controls/Popup/Opener/Menu
        * @control
@@ -141,24 +164,15 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
+
+
+
+
+
+
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
-               var config = {
-                  templateOptions: {
-                     items: this._options.items,
-                     itemTemplate: this._options.itemTemplate,
-                     keyProperty: this._options.keyProperty,
-                     parentProperty: this._options.parentProperty,
-                     nodeProperty: this._options.nodeProperty,
-                     selectedKeys: this._options.selectedKeys,
-                     rootKey: item.get(this._options.keyProperty),
-                     showHeader: false,
-                     defaultItemTemplate: this._options.defaultItemTemplate
-                  },
-                  corner: this._popupOptions.corner,
-                  horizontalAlign: this._popupOptions.horizontalAlign,
-                  target: event.target
-               };
+               var config = _private.getSubMenuOptions(this, event, item);
                this._children.subDropdownOpener.open(config, this);
             } else if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();
@@ -173,13 +187,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._children.subDropdownOpener.close();
             }
          },
-   
+
          _additionMouseenter: function() {
             if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();
             }
          },
-         
+
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
