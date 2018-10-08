@@ -250,7 +250,7 @@ define('Controls/Input/Lookup', [
          });
          this._selectedKeys = options.selectedKeys.slice();
          this._selectCallback = this._selectCallback.bind(this);
-         _private.determineAutoDropDown(self, options);
+         _private.determineAutoDropDown(this, options);
 
          if (this._selectedKeys.length) {
             _private.keysChangedWithoutUpdate(this, options);
