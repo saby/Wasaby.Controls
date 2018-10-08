@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
    'Core/Deferred',
    'Core/moduleStubs',
    'Core/SessionStorage',
+   'Core/WindowManager',
    'Core/detection'
-], function(cMerge, Deferred, moduleStubs, SessionStorage, detection) {
+], function(cMerge, Deferred, moduleStubs, SessionStorage, WindowManager, detection) {
 
    var autoTestsConfig = SessionStorage.get('autoTestConfig');
 
@@ -41,6 +42,7 @@ define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
          //Устанавливаем неустановленные опции в дефолтные значения
          cMerge(options, {
             resizable: false,
+            opener: options.opener || WindowManager.getActiveWindow(),
 
             //на vdom не работает опция visible у диалогов. Поэтому сами будем скрывать окно печати стилями.
             className: !needShowReportDialog ? 'controls-PrintDialog__invisible' : '',
