@@ -7,6 +7,13 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
 
    /**
     * Возвращает информацию о том, является ли компонент наследником Core/Control.
+    * @example
+    * <pre>
+    *    var myClass = require('myClass');
+    *    if (Controls / Utils / isVDOMTemplate(myClass)) {
+    *       console.log('myClass is vdom component')
+    *    }
+    * </pre>
     * @class Controls/Utils/isVDOMTemplate
     * @public
     * @author Крайнов Д.О.
