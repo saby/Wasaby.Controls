@@ -59,6 +59,11 @@ define('Controls/Input/DateTime/Model', [
             mask: options.mask
          });
          this.value = options.value;
+         if (this._mask !== options.mask) {
+            this._nextVersion();
+            this._mask = options.mask;
+            this._textValue = this._stringValueConverter.getStringByValue(this._value);
+         }
       },
 
       /**

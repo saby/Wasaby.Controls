@@ -7,8 +7,8 @@
       idProperty="id"
       >
 
-      <ws:navigation source="page" view="infinity">
-         <ws:sourceConfig pageSize="{{1}}" page="{{_page}}"></ws:sourceConfig>
+      <ws:navigation source="position" view="infinity">
+         <ws:sourceConfig limit="{{1}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
       </ws:navigation>
 
       <ws:itemTemplate>

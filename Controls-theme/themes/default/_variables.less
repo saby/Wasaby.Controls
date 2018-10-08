@@ -149,6 +149,9 @@
 @border-color_IconButton_bordered_standard_hovered:      rgba(0, 0, 0, 0.20);
 @border-color_IconButton_bordered:                  rgba(0, 0, 0, 0.12);
 @box-shadow_IconButton:                         0 1px 2px rgba(0,0,0, .15);
+@border-width_IconButton_bordered:              1px;
+@text-shadow_IconButton_bordered:               none;
+@box-shadow_Button_bordered_hovered:            0 1px 2px rgba(0,0,0, .15);
 
 // -------- //
 // Checkbox //
@@ -391,8 +394,20 @@
 //CloseButton
 @font-family_CloseButton_default: @default-icon-font;
 @font-family_CloseButton_light: @default-icon-medium-font;
+@background_EditActions-closeButton:        transparent;
+@background_EditActions-closeButton_active: transparent;
+@background_EditActions-closeButton_hovered:transparent;
 
 //MasterList
 @box-shadow_MasterList_item-selected: -4px 0 8px rgba(0,0,0,.15);
 
 @calendar-day-border-spacing:                   1px;
+
+@height_IconButton_bordered_size-s:                 @icon-medium-size;
+@width_IconButton_bordered_size-s:                  @icon-medium-size;
+@width_EditButton:                              @width_IconButton_bordered_size-s;
+@height_EditButton:                             @height_IconButton_bordered_size-s;
+@width_EditActions-cancelButton:        @width_EditButton;
+@height_EditActions-cancelButton:       @height_EditButton;
+@font-size_EditActions-cancelButton:    22px;
+@margin-right_ListView-itemsToolbar-closeButton:     12px;
