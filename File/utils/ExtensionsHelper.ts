@@ -1,27 +1,16 @@
 /// <amd-module name="File/utils/ExtensionsHelper" />
+
 import MimeTypes = require("json!File/utils/MimeTypes");
 import MediaTypes = require("json!File/utils/MediaTypes");
 
 let isMediaType = (type: string) => {
     return (type == 'audio' || type == 'video' || type == 'image') || false;
 };
-
-/**
- * Класс-улити для работы с типами файлов
- * @class
- * @public
- * @name File/utils/ExtensionsHelper
- */
 class ExtensionsHelper {
     // Исходный набор расширений, нужен для формирования более короткой строки MIME-type
     private rawExtensions: Array<string>;
     // Преобразованный набор, где audio, video, image будут заменены на соответствующие наборы расширений
     private extensions: Array<string> = [];
-
-    /**
-     * @param {Array.<String>} extensions Массив допустимых MIME типов файлов или расширений
-     * @constructor
-     */
     constructor(extensions?: Array<string>) {
         extensions = extensions || [];
         this.rawExtensions = extensions;
@@ -38,7 +27,6 @@ class ExtensionsHelper {
      * Проверяет файл на валидность расширения из заданного набора
      * @param {File} file
      * @returns {Boolean}
-     * @method
      */
     verify(file: File): boolean {
         if (!this.extensions.length) {
@@ -63,11 +51,9 @@ class ExtensionsHelper {
         }
         return false;
     }
-
     /**
      * Формирует строку mime-types
      * @returns {String}
-     * @method
      */
     getMimeString(): string {
         let mediaTypes = [];
@@ -83,8 +69,7 @@ class ExtensionsHelper {
             }
             unregistered.push(ext)
         });
-
-        /*
+        /**
          * Если имеем расширения, для которых не нашли MIME тип в таблице, то
          * такие расширения в итоговой строке надо указать как .расширение
          * Но нельзя в accept комбинировать строку из MIME типов и расширений

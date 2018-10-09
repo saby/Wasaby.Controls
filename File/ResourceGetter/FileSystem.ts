@@ -1,4 +1,5 @@
 /// <amd-module name="File/ResourceGetter/FileSystem" />
+
 import ResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
@@ -126,7 +127,6 @@ let createInput = ({parent, mime, multiSelect}: CreateConfig) => {
  * @class
  * @name File/ResourceGetter/FileSystem
  * @extends File/ResourceGetter/Base
- * @implements File/IResourceGetter
  * @public
  * @author Заляев А.В.
  */

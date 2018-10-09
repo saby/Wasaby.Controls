@@ -5,14 +5,12 @@ interface Info extends FileInfo {
     path?: string;
 }
 /**
- * Класс, реализующий интерфейс работы с ресурсами {@link File/IResource},
- * предназначенный для работы с экземплярами нативнымого интерфейса File | Blob
+ * Класс - обёртка над нативным File/Blob
  * @class
  * @extends File/ResourceAbstract
  * @name File/LocalFile
  * @public
  * @author Заляев А.В.
- * @implements File/IResource
  */
 class LocalFile extends ResourceAbstract {
     /**
@@ -39,7 +37,6 @@ class LocalFile extends ResourceAbstract {
             throw new Error('Argument "name" is required for Blob data');
         }
     }
-
     /**
      * Возвращает файл
      * @return {File | Blob}

@@ -279,13 +279,6 @@ const OPTION = {
      */
 };
 
-/**
- * Класс-подложка, появляющаяся над заданным элементом во вмемя переноса пользователем файлов
- * @class
- * @public
- * @author Заляев А.В.
- * @name File/ResourceGetter/DropArea/Overlay
- */
 export class Overlay {
     private readonly __uid: string;
     constructor(cfg: OverlayConfig) {

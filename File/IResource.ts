@@ -20,9 +20,6 @@ export interface FileInfo {
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
- * @public
- * @interface
- * @author Заляев А.В.
  */
 export type IResource = {
     /**
@@ -60,9 +57,6 @@ export type IResource = {
  * @typedef  File/IResourceConstructor
  * @constructor
  * @see File/IResource
- * @public
- * @interface
- * @author Заляев А.В.
  */
 export type IResourceConstructor = {
     new(...args): IResource;

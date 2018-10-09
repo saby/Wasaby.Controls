@@ -22,7 +22,6 @@ type ErrorParam = {
  * @name File/Error/MaxSize
  * @public
  * @extends File/Error
- * @author Заляев А.В.
  */
 class MaxSizeError extends FileError {
     public maxSize: number;
@@ -32,8 +31,9 @@ class MaxSizeError extends FileError {
             details: params.details || getDetails(params.fileName, params.maxSize),
             fileName: params.fileName
         });
-        // tslint:disable-next-line:max-line-length
-        // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+        /*
+         * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+         */
         Object.setPrototypeOf(this, MaxSizeError.prototype);
         this.maxSize = params.maxSize;
     }

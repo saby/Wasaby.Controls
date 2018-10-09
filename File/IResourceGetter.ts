@@ -3,15 +3,12 @@ import Deferred = require("Core/Deferred")
 import {IResource} from "File/IResource";
 
 /**
- * Интерфейс сущности, позволяющей получать ресерсы - {@link File/IResource}
+ * Интерфейс сущности получения ресурсов
  * @author Заляев А.В.
- * @see File/IResource
  * @see File/LocalFile
  * @see File/LocalFileLink
  * @see File/HttpFileLink
  * @name File/IResourceGetter
- * @public
- * @interface
  */
 export type IResourceGetter = {
     /**
@@ -50,8 +47,6 @@ export type IResourceGetter = {
  * @see File/HttpFileLink
  * @see File/IResourceGetter
  * @name File/IResourceGetterConstructor
- * @public
- * @interface
  */
 export type IResourceGetterConstructor = {
     new (...args): IResourceGetter;
