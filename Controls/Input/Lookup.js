@@ -49,7 +49,7 @@ define('Controls/Input/Lookup', [
 
    var _private = {
       initializeConstants: function() {
-         if (SHOW_ALL_LINKS_WIDTH) {
+         if (!SHOW_ALL_LINKS_WIDTH) {
             SHOW_ALL_LINKS_WIDTH = getWidthUtil.getWidth(showAllLinksTemplate());
             SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
          }
