@@ -11,8 +11,10 @@ define('Controls/Filter/Button/Panel/Dropdown', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/Input/interface/IDropdownEmptyText
+    * @mixes Controls/Input/interface/IInputDropdown
+    * @mixes Controls/interface/IDropdown
     * @mixes Controls/interface/ITextValue
     * @control
     * @public
