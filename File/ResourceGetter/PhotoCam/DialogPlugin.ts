@@ -1,5 +1,4 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/DialogPlugin" />
-
 import Deferred = require("Core/Deferred");
 import axo = require("Core/helpers/axo");
 import toBlob = require("File/utils/b64toBlob");
@@ -61,6 +60,14 @@ let getMedia = (connection, localVideoElement) => {
     return def;
 };
 
+/**
+ * Компонент отвечающий за захват и отображение изображение с камеры в браузере IE
+ * @private
+ * @class
+ * @author Заляев А.В.
+ * @name File/ResourceGetter/PhotoCam/DialogPlugin
+ * @extends File/ResourceGetter/PhotoCam/DialogAbstract
+ */
 let DialogPlugin = DialogAbstract.extend({
     $protected: {
       _options: {

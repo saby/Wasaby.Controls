@@ -25,3 +25,4 @@
 /tests/**/preprocessor_logs
 /tests/**/screenshots
 /tests/**/__pycache__
+/File/**/*.js

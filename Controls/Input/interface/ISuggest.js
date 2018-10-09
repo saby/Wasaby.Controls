@@ -39,6 +39,16 @@ define('Controls/Input/interface/ISuggest', [
     * @name Controls/Input/interface/ISuggest#autoDropDown
     * @cfg {Boolean} show dropDown when the input get focused.
     */
+   
+   /**
+    * @name Controls/Input/interface/ISuggest#displayProperty
+    * @cfg {String} Defines which field from suggest list will be used as text after selecting an option.
+    * @remark
+    * @example
+    * <pre>
+    *    <Controls.Input.Suggest displayProperty="name"/>
+    * </pre>
+    */
 
    /**
     * @event Controls/Input/interface/ISuggest#choose Occurs when user selects item from suggest.
