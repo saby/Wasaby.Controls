@@ -63,7 +63,7 @@ define('Controls/List/Grid/GridView', [
             var
                requireDeferred = new cDeferred(),
                modules = [];
-            this._gridTemplateName = cDetection.isNotFullGridSupport ? 'wml!Controls/List/Grid/OldGridView' : 'wml!Controls/List/Grid/GridView';
+            this._gridTemplateName = cDetection.isNotFullGridSupport ? 'wml!Controls/List/Grid/OldGridView' : 'wml!Controls/List/Grid/NewGridView';
             modules.push(this._gridTemplateName);
             if (cDetection.isNotFullGridSupport) {
                modules.push('css!Controls/List/Grid/OldGrid');

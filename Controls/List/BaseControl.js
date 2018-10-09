@@ -12,8 +12,6 @@ define('Controls/List/BaseControl', [
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
-   'Controls/List/EditInPlace',
-   'Controls/List/ItemActions/ItemActionsControl',
 
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(Control,
@@ -667,7 +665,9 @@ define('Controls/List/BaseControl', [
 
       _onAfterItemEdit: function(e, item, isAdd) {
          this._notify('afterItemEdit', [item, isAdd]);
-         this._children.itemActions.updateItemActions(item, true);
+         if (this._options.itemActions) {
+            this._children.itemActions.updateItemActions(item, true);
+         }
       },
 
       _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
@@ -676,7 +676,9 @@ define('Controls/List/BaseControl', [
 
       _onAfterItemEndEdit: function(e, item, isAdd) {
          this._notify('afterItemEndEdit', [item, isAdd]);
-         this._children.itemActions.updateItemActions(item);
+         if (this._options.itemActions) {
+            this._children.itemActions.updateItemActions(item);
+         }
       },
 
       _closeSwipe: function(event, item) {

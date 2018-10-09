@@ -28,14 +28,18 @@ define([
       describe('.update', function() {
 
          it('should update value fields if value changed', function() {
-            let model = new DateTimeModel(options),
+            let sandbox = sinon.sandbox.create(),
+               model = new DateTimeModel(options),
                newDate = new Date(2019, 1, 2);
 
+            sandbox.stub(model, '_notify');
             model.update(cMerge({ value: newDate }, options, { preferSource: true }));
 
+            sinon.assert.notCalled(model._notify);
             assert.strictEqual(model.value, newDate);
             assert.strictEqual(model._lastValue, newDate);
             assert.strictEqual(model.textValue, '02.02.2019');
+            sandbox.restore();
          });
 
       });
@@ -78,6 +82,17 @@ define([
             // assert.isNone(model.value.getTime());
             assert.strictEqual(model._lastValue.getTime(), options.value.getTime());
             assert.strictEqual(model.textValue, newTextValue);
+         });
+
+         it('should not generate valueChanged event if the text value changed from one invalid date to another', function() {
+            let
+               sandbox = sinon.sandbox.create(),
+               model = new DateTimeModel(options);
+            model.textValue = '02.0 .2019';
+            sandbox.stub(model, '_notify');
+            model.textValue = '02.99.2019';
+            sinon.assert.notCalled(model._notify);
+            sandbox.restore();
          });
 
       });

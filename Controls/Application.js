@@ -67,11 +67,9 @@ define('Controls/Application',
          },
          calculateBodyClasses: function() {
             // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
-            return BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+            // а TouchDetector реагирует на изменение состояния.
+            // Поэтому в Application оставим только класс от TouchDetector
 
-            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             if (detection.isMobileIOS) {
@@ -79,6 +77,21 @@ define('Controls/Application',
             }
 
             return bodyClasses;
+         },
+
+         getPopupConfig: function(config) {
+            var def = new Deferred();
+
+            // Find opener for Infobox
+            if (!config.opener) {
+               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+                  config.opener = DefaultOpenerFinder.find(config.target);
+                  def.callback(config);
+               });
+               return def;
+            }
+
+            return def.callback(config);
          }
       };
       var Page = Base.extend({
@@ -152,7 +165,7 @@ define('Controls/Application',
             this._changeOverflowClass();
          },
 
-         /*****************************************************/
+         /** ************************************************** */
 
          _changeOverflowClass: function() {
             if (this._isPopupShow || this._isSuggestShow) {
@@ -241,9 +254,11 @@ define('Controls/Application',
          },
 
          _openInfoBoxHandler: function(event, config) {
+            var self = this;
             this._activeInfobox = event.target;
-
-            this._children.infoBoxOpener.open(config);
+            _private.getPopupConfig(config).addCallback(function(popupConfig) {
+               self._children.infoBoxOpener.open(popupConfig);
+            });
          },
 
          _closeInfoBoxHandler: function(event) {

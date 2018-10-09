@@ -19,14 +19,16 @@ define('Controls/Input/Lookup/_Collection',
             this._notify('itemClick', [item]);
          },
          
-         _crossClick: function(event, item) {
-            this._notify('crossClick', [item]);
+         _crossClick: function(event, index) {
+            this._notify('crossClick', [this._options.items.at(index)]);
          }
       });
       
       Collection.getDefaultOptions = function() {
          return {
-            itemTemplate: ItemTemplate
+            itemTemplate: ItemTemplate,
+            itemsLayout: 'default',
+            displayItemsIndex: 0
          };
       };
       
