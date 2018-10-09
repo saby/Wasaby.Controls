@@ -27,6 +27,7 @@ define('Controls/Filter/Fast',
        * @extends Core/Control
        * @mixes Controls/interface/IFastFilter
        * @mixes Controls/Filter/Fast/FastStyles
+       * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
        * @author Герасимов А.М.
@@ -106,7 +107,6 @@ define('Controls/Filter/Fast',
             // Get the key of the selected item
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
-            this._notify('selectedKeysChanged', [key]);
             this._setText();
          },
 
@@ -199,7 +199,6 @@ define('Controls/Filter/Fast',
          _reset: function(event, item, index) {
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
-            this._notify('selectedKeysChanged', [newValue]);
             _private.notifyChanges(this, this._items);
             this._setText();
          }

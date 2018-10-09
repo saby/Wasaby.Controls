@@ -1143,5 +1143,45 @@
         }
       }
     }
+  },
+  "Controls/Filter/Fast": {
+    "name": "Controls/Filter/Fast",
+    "title": "Control \"Fast Filter\".",
+    "className": "Controls/Filter/Fast",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Fast",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
+            "title": "Sets the source of data set to use in the mapping"
+          },
+          "items": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterItems.typedef",
+            "title": "Sets a set of initial data to build the mapping."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "default": "Inherited",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "enum": {
+              "true": "User cannot change control's value (or interact with the control if its value is not editable).",
+              "false": "User can change control's value (or interact with the control if its value is not editable).",
+              "inherited": "Value inherited from the parent."
+            }
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          }
+        }
+      }
+    }
   }
 }
