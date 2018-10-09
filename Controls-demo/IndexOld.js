@@ -1,9 +1,9 @@
 /**
  * Created by kraynovdo on 25.01.2018.
  */
-define('Controls-demo/Index', [
+define('Controls-demo/IndexOld', [
    'Core/Control',
-   'wml!Controls-demo/Index'
+   'wml!Controls-demo/IndexOld'
 ], function (BaseControl,
              template
 ) {
@@ -11,10 +11,7 @@ define('Controls-demo/Index', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _template: template,
-         backClickHdl: function(){
-            window.history.back();
-         }
+         _template: template
       });
 
    return ModuleClass;
