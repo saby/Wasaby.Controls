@@ -18,6 +18,14 @@ define('Controls/Popup/Opener/BaseController',
          },
          getMargins: function(config) {
             // create fakeDiv for calculate margins
+
+            if (!document) {
+               return {
+                  left: 0,
+                  top: 0
+               };
+            }
+
             var fakeDiv = document.createElement('div');
             fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);
@@ -67,7 +75,7 @@ define('Controls/Popup/Opener/BaseController',
 
          _elementUpdated: function(item, container) {
             if (this._checkContainer(item, container, 'elementUpdated')) {
-               if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED) {
+               if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED || item.popupState === BaseController.POPUP_STATE_UPDATING) {
                   item.popupState = BaseController.POPUP_STATE_UPDATING;
                   this.elementUpdated.apply(this, arguments);
                   return true;

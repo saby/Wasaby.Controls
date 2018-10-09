@@ -1,7 +1,22 @@
+<ws:template name="collection">
+    <Controls.Input.Lookup._Collection
+            name="{{name}}"
+            displayProperty="{{_options.displayProperty}}"
+            itemTemplate="{{_options.itemTemplate}}"
+            itemsLayout="{{itemsLayout}}"
+            items="{{items}}"
+            readOnly="{{_options.readOnly}}"
+            displayItemsIndex="{{displayItemsIndex}}"
+            on:itemClick="_itemClick()"
+            on:crossClick="_crossClick()"/>
+</ws:template>
+
 <Controls.Container.Suggest.Layout
+        name="layout"
         on:choose="_choose()"
         on:deactivated="_deactivated()"
         suggestTemplate="{{_options.suggestTemplate}}"
+        on:suggestStateChanged="_suggestStateChanged()"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
         searchParam="{{_options.searchParam}}"
@@ -10,8 +25,10 @@
         tooltip="{{_options.tooltip}}"
         bind:suggestState="_suggestState"
         filter="{{_options.filter}}"
-        autoDropDown="{{_options.autoDropDown}}">
+        autoDropDown="{{_autoDropDown}}"
+        layerName="Controls/Container/Suggest/__PopupLayer">
     <Controls.Input.resources.InputRender.InputRender
+            name="inputRender"
             size="{{ _options.size }}"
             viewModel="{{ _simpleViewModel }}"
             trim="{{ _options.trim }}"
@@ -22,24 +39,33 @@
             tagStyle="{{ _options.tagStyle }}"
             placeholder="{{ _isEmpty ? _options.placeholder }}"
             validationErrors="{{ _options.validationErrors }}"
-            content="{{ _isEmpty ? 'wml!Controls/Input/resources/input' }}"
+            content="{{ _isEmpty || _options.multiSelect ? 'wml!Controls/Input/resources/input' }}"
             on:valueChanged="_changeValueHandler()"
             attr:class="controls-Lookup__inputRender">
 
         <ws:beforeFieldWrapper>
             <ws:if data="{{!_isEmpty}}">
-                <Controls.Input.Lookup._Collection
-                        items="{{_items}}"
-                        displayProperty="{{_options.displayProperty}}"
-                        itemTemplate="{{_options.itemTemplate}}"
-                        on:itemClick="_itemClick()"
-                        on:crossClick="_crossClick()"/>
+                <ws:if data="{{!_collectionIsReady || !_isAllRecordsDisplay}}">
+                    <div name="showAllLinks"
+                         class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__showAllLinks_hidden'}}"
+                         on:click="_togglePicker(!_isPickerVisible)">&#133;
+                    </div>
+                </ws:if>
+
+                <ws:partial template="collection"
+                            attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}{{_isPickerVisible ? ' controls-Lookup__collection_hidden'}}"
+                            attr:style="max-width:{{!_options.readOnly && _options.multiSelect ? _availableWidthCollection}}px;"
+                            name="collection"
+                            itemsLayout="oneRow"
+                            items="{{_collectionIsReady || _options.readOnly ? _items}}"
+                            displayItemsIndex="{{_options.readOnly || !_options.multiSelect ? 0 :_displayItemsIndex}}"
+                />
             </ws:if>
         </ws:beforeFieldWrapper>
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <div class="controls-Lookup__showSelector icon-ListView" on:click="_showSelector()"></div>
+                <div name="showSelector" class="controls-Lookup__showSelector icon-ListView" on:click="showSelector()"></div>
                 <Controls.Selector.Opener name="selectorOpener">
                     <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                         <ws:eventHandlers onResult="{{_selectCallback}}"/>
@@ -49,4 +75,18 @@
         </ws:afterFieldWrapper>
 
     </Controls.Input.resources.InputRender.InputRender>
+    <Controls.Popup.Opener.Sticky name="sticky">
+        <ws:popupOptions>
+            <ws:template>
+                <ws:partial template="collection"
+                            attr:class="controls-Lookup__picker"
+                            itemsLayout="twoColumns"
+                            items="{{_items}}"
+                />
+            </ws:template>
+            <ws:eventHandlers onClose="{{_onClosePickerBind}}"/>
+            <ws:verticalAlign side="bottom"/>
+            <ws:corner vertical="bottom"/>
+          </ws:popupOptions>
+    </Controls.Popup.Opener.Sticky>
 </Controls.Container.Suggest.Layout>

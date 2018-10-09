@@ -30,17 +30,14 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'title',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { key: 0, title: 'все страны' },
-                              { key: 1, title: 'Россия' },
-                              { key: 2, title: 'США' },
-                              { key: 3, title: 'Великобритания' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { key: 0, title: 'все страны' },
+                           { key: 1, title: 'Россия' },
+                           { key: 2, title: 'США' },
+                           { key: 3, title: 'Великобритания' }
+                        ]
+                     })
                   }
                },
                {
@@ -50,17 +47,14 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'key',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { key: 0, title: 'все жанры' },
-                              { key: 1, title: 'фантастика' },
-                              { key: 2, title: 'фэнтези' },
-                              { key: 3, title: 'мистика' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { key: 0, title: 'все жанры' },
+                           { key: 1, title: 'фантастика' },
+                           { key: 2, title: 'фэнтези' },
+                           { key: 3, title: 'мистика' }
+                        ]
+                     })
                   }
                },
                {
@@ -70,18 +64,15 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'lastName',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { id: 0, lastName: '0', title: '0' },
-                              { id: 1, lastName: '1', title: '333' },
-                              { id: 2, lastName: '2', title: 'iwfyls' },
-                              { id: 3, lastName: '3', title: 'reset to me' },
-                              { id: 3, lastName: '4', title: 'Oomph!' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { id: 0, lastName: '0', title: '0' },
+                           { id: 1, lastName: '1', title: '333' },
+                           { id: 2, lastName: '2', title: 'iwfyls' },
+                           { id: 3, lastName: '3', title: 'reset to me' },
+                           { id: 3, lastName: '4', title: 'Oomph!' }
+                        ]
+                     })
                   }
                }
             ];
@@ -93,17 +84,14 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'title',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { key: 0, title: 'все страны' },
-                              { key: 1, title: 'Франция' },
-                              { key: 2, title: 'Германия' },
-                              { key: 3, title: 'Канада' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { key: 0, title: 'все страны' },
+                           { key: 1, title: 'Франция' },
+                           { key: 2, title: 'Германия' },
+                           { key: 3, title: 'Канада' }
+                        ]
+                     })
                   }
                },
                {
@@ -114,17 +102,14 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'key',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { key: 0, title: 'все жанры' },
-                              { key: 1, title: 'фантастика' },
-                              { key: 2, title: 'фэнтези' },
-                              { key: 3, title: 'мистика' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { key: 0, title: 'все жанры' },
+                           { key: 1, title: 'фантастика' },
+                           { key: 2, title: 'фэнтези' },
+                           { key: 3, title: 'мистика' }
+                        ]
+                     })
                   }
                },
                {
@@ -134,18 +119,15 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'lastName',
                      displayProperty: 'title',
-                     source: {
-                        module: 'WS.Data/Source/Memory',
-                        options: {
-                           data: [
-                              { id: 0, lastName: '0', title: 'aaaa' },
-                              { id: 1, lastName: '1', title: '333' },
-                              { id: 2, lastName: '2', title: 'iwfyls' },
-                              { id: 3, lastName: '3', title: 'reset to me' },
-                              { id: 3, lastName: '4', title: 'Oomph!' }
-                           ]
-                        }
-                     }
+                     source: new Memory({
+                        data: [
+                           { id: 0, lastName: '0', title: 'aaaa' },
+                           { id: 1, lastName: '1', title: '333' },
+                           { id: 2, lastName: '2', title: 'iwfyls' },
+                           { id: 3, lastName: '3', title: 'reset to me' },
+                           { id: 3, lastName: '4', title: 'Oomph!' }
+                        ]
+                     })
                   }
                }
             ];

@@ -209,23 +209,6 @@ define('Controls/Container/List',
          }
       };
       
-      /**
-       * Container for list components.
-       * Passes props (like filter, source, navigation) to list inside.
-       *
-       * @author Герасимов Александр
-       * @class Controls/Container/List
-       * @mixes Controls/Input/interface/ISearch
-       * @mixes Controls/interface/INavigation
-       * @mixes Controls/interface/IFilter
-       * @public
-       */
-      
-      /**
-       * @name Controls/Container/List#source
-       * @cfg {WS.Data/Source/ISource} source
-       */
-      
       var List = Control.extend({
          
          _template: template,

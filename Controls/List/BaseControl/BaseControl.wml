@@ -76,32 +76,38 @@
     </ws:template>
 
     <ws:template name="clientTemplate">
-        <ws:partial template="serverTemplate" name="serverView" />
-
-        <Controls.List.ItemActions.ItemActionsControl
-                ws:content="serverView"
-                on:commitActionClick="_commitEditActionHandler()"
-                on:cancelActionClick="_cancelEditActionHandler()"
-                on:menuActionsClick="_showActionsMenu()"
-                on:itemActionsClick="_onItemActionsClick()"
-                showToolbar="{{_options.editingConfig.showToolbar}}"
-                name="itemActions"
-                style="{{_options.style}}"
-                listModel="{{_listViewModel}}"
-                menuIsShown="{{_menuIsShown}}"
-                itemActions="{{_options.itemActions}}"
-                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsPosition="{{_options.itemActionsPosition}}">
-        </Controls.List.ItemActions.ItemActionsControl>
-        <Controls.List.Swipe.SwipeControl
-                ws:content="serverView"
-                on:menuActionsClick="_showActionsMenu()"
-                on:closeSwipe="_closeSwipe()"
-                menuIsShown="{{_menuIsShown}}"
-                listModel="{{_listViewModel}}"
-                itemActions="{{_options.itemActions}}"
-                name="swipeControl">
-        </Controls.List.Swipe.SwipeControl>
+       <ws:if data="{{_options.itemActions.length || _options.editingConfig && _options.editingConfig.showToolbar}}">
+          <Controls.Container.Async name="swipeContainer" templateName="Controls/List/Swipe/SwipeControl">
+             <ws:partial template="{{'Controls/List/Swipe/SwipeControl'}}"
+                         on:menuActionsClick="_showActionsMenu()"
+                         on:closeSwipe="_closeSwipe()"
+                         menuIsShown="{{_menuIsShown}}"
+                         listModel="{{_listViewModel}}"
+                         itemActions="{{_options.itemActions}}"
+                         name="swipeControl">
+                <Controls.Container.Async name="itemActionsContainer" templateName="Controls/List/ItemActions/ItemActionsControl">
+                   <ws:partial template="{{'Controls/List/ItemActions/ItemActionsControl'}}"
+                               on:commitActionClick="_commitEditActionHandler()"
+                               on:cancelActionClick="_cancelEditActionHandler()"
+                               on:menuActionsClick="_showActionsMenu()"
+                               on:itemActionsClick="_onItemActionsClick()"
+                               showToolbar="{{_options.editingConfig.showToolbar}}"
+                               name="itemActions"
+                               style="{{_options.style}}"
+                               listModel="{{_listViewModel}}"
+                               menuIsShown="{{_menuIsShown}}"
+                               itemActions="{{_options.itemActions}}"
+                               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                               itemActionsPosition="{{_options.itemActionsPosition}}">
+                      <ws:partial template="serverTemplate" />
+                   </ws:partial>
+                </Controls.Container.Async>
+             </ws:partial>
+          </Controls.Container.Async>
+       </ws:if>
+       <ws:else>
+          <ws:partial template="serverTemplate" />
+       </ws:else>
     </ws:template>
 
     <ws:if data="{{_listViewModel}}">

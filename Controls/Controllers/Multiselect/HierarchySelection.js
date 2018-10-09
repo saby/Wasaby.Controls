@@ -228,7 +228,9 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             }
          });
 
-         return res;
+         return res.filter(function(key, index) {
+            return res.indexOf(key) === index;
+         });
       },
 
       _getParams: function(rootId) {

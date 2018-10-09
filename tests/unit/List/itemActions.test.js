@@ -199,7 +199,6 @@ define([
       it('getDefaultOptions ', function() {
          var defOpts = ItemActionsControl.getDefaultOptions();
          assert.equal(defOpts.itemActionsPosition, 'inside');
-         assert.isTrue(defOpts.itemActionVisibilityCallback());
       });
 
       it('updateItemActions, isTouch: false', function() {

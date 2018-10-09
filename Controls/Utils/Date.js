@@ -101,6 +101,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getStartOfMonth: function(date) {
+         date = date || new Date();
          return new Date(date.getFullYear(), date.getMonth(), 1);
       },
 
