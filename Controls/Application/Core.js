@@ -47,6 +47,7 @@ define('Controls/Application/Core',
                process.domain.req.compatible = false;
             } catch (e) {
             }
+
             // TODO Нужно для совместимости. Убрать после синхронизации с WS.
             cfg.lite = true;
             AppCore.superclass.constructor.apply(this, arguments);
