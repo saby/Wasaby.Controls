@@ -774,12 +774,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
                   if (json[0] === 'p') {
-                     if (i === json.length - 1) {
-                        // Если ссылка находится в конце строки, её нужно декорировать.
+                     var j = i + 1;
+                     if (typeof json[j] === 'string' && !onlyNotSpacesRegExp.test(json[j])) {
+                        // Если после ссылки находится строка только из пробелов, она не существенна
+                        j++;
+                     }
+                     if (typeof json[j] === 'undefined') {
+                        // Ссылку в конце строки нужно декорировать.
                         continue;
                      }
-                     if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
-                        // Если в строке после ссылки только пробелы, её нужно декорировать.
+                     if (Array.isArray(json[j]) && json[j][0] === 'br') {
+                        // Если делать перенос строки с помощью shift + enter, вместо нового тега p
+                        // создаётся тег br внутри текущего тега p. Декорировать тоже нужно
                         continue;
                      }
                   }
