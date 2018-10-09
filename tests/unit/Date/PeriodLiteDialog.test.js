@@ -189,5 +189,29 @@ define([
             });
          });
       });
+
+      describe('_getYearItemCssClasses', function() {
+         [{
+            year: 2018,
+            options: { startValue: new Date(2018, 0, 1), endValue: new Date(2018, 11, 31) },
+            css: 'controls-PeriodLiteDialog__selectedYear'
+         }, {
+            year: 2019,
+            options: { startValue: new Date(2018, 0, 1), endValue: new Date(2018, 11, 31) },
+            css: 'controls-PeriodLiteDialog__vLayoutItem-clickable'
+         }, {
+            year: 2019,
+            options: {},
+            css: 'controls-PeriodLiteDialog__vLayoutItem-clickable'
+         }].forEach(function(test) {
+            it(`should return "${test.css}". options: ${test.options}, year: ${test.year}`, function() {
+               const component = calendarTestUtils.createComponent(PeriodLiteDialog, test.options);
+               assert.include(
+                  component._getYearItemCssClasses(test.year),
+                  test.css
+               );
+            });
+         });
+      });
    });
 });
