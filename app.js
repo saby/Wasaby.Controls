@@ -266,7 +266,7 @@ app.get('/app/*', function(req, res){
    
    process.domain.req = req;
 
-   var tpl = require('tmpl!Controls/Application/Route');
+   var tpl = require('wml!Controls/Application/Route');
    require(req.query.app);
    var html = tpl({
       lite: true,
