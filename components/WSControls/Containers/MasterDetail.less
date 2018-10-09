@@ -2,20 +2,20 @@
 @border-params: 1px solid @border-color;
 @shadow-params: inset -1px 0px @border-color;
 
-.controls-MasterDetail {
+.controls-MasterDetailOld {
   position: relative;
   display: table;
 }
 
-.controls-MasterDetail__masterContainer, .controls-MasterDetail__detailContainer {
+.controls-MasterDetailOld__masterContainer, .controls-MasterDetailOld__detailContainer {
   display: table-cell;
 }
 
-.controls-MasterDetail__detailContainer {
+.controls-MasterDetailOld__detailContainer {
   width: 70%;
 }
 
-.controls-MasterDetail__masterContainer {
+.controls-MasterDetailOld__masterContainer {
   width: 30%;
   -webkit-box-shadow: @shadow-params;
   -moz-box-shadow: @shadow-params;
@@ -24,11 +24,11 @@
 
 // Остаются псевдорамки на предыдущих выбранных записях (исчезают при обнвовлении стилей)
 // в масштабе 150% (https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27)
-.controls-MasterDetail__masterContainer .controls-DataGridView__td {
+.controls-MasterDetailOld__masterContainer .controls-DataGridView__td {
   border: none;
 }
 
-.controls-MasterDetail__masterContainer .controls-ListView__item__selected .controls-DataGridView__td {
+.controls-MasterDetailOld__masterContainer .controls-ListView__item__selected .controls-DataGridView__td {
   border-bottom: @border-params;
   border-top: @border-params;
 
@@ -48,7 +48,7 @@
 
 // Чтобы при ховере оставался справа border
 // Будет удалено в 3.18: https://online.sbis.ru/opendoc.html?guid=dc945545-09fa-4fa6-8dbd-a25673c2832d
-.controls-MasterDetail__masterContainer .controls-ListView__hoveredItem td {
+.controls-MasterDetailOld__masterContainer .controls-ListView__hoveredItem td {
   border: none;
 
   &:last-child {
