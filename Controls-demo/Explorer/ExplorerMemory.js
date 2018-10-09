@@ -18,11 +18,11 @@ define('Controls-demo/Explorer/ExplorerMemory', [
       var
          path = [],
          currentNode = getById(items, currentRoot);
+      path.unshift(getById(items, currentRoot));
       while (currentNode.parent !== null) {
          currentNode = getById(items, currentNode.parent);
          path.unshift(currentNode);
       }
-      path.unshift(getById(items, currentRoot));
       return path;
    }
 

@@ -62,8 +62,8 @@ define('Controls/Application',
             self.compat = cfg.compat || false;
          },
          calculateBodyClasses: function() {
-            //Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
-            //а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
+            // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
+            // а TouchDetector реагирует на изменение состояния. Поэтому в Application оставим только класс от TouchDetector
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             if (detection.isMobileIOS) {
@@ -71,6 +71,21 @@ define('Controls/Application',
             }
 
             return bodyClasses;
+         },
+
+         getPopupConfig: function(config) {
+            var def = new Deferred();
+
+            // Find opener for Infobox
+            if (!config.opener) {
+               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+                  config.opener = DefaultOpenerFinder.find(config.target);
+                  def.callback(config);
+               });
+               return def;
+            }
+
+            return def.callback(config);
          }
       };
       var Page = Base.extend({
@@ -111,9 +126,9 @@ define('Controls/Application',
             this._children.touchendDetect.start(ev);
          },
          _touchclass: function() {
-            //Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
-            //поэтому сами детектим touch с помощью compatibility
-            return  this._children.touchDetector
+            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+            // поэтому сами детектим touch с помощью compatibility
+            return this._children.touchDetector
                ? this._children.touchDetector.getClass()
                : compatibility.touch
                   ? 'ws-is-touch'
@@ -144,7 +159,7 @@ define('Controls/Application',
             this._changeOverflowClass();
          },
 
-         /*****************************************************/
+         /** ************************************************** */
 
          _changeOverflowClass: function() {
             if (this._isPopupShow || this._isSuggestShow) {
@@ -158,7 +173,7 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
-            self._scrollData = new ScrollContext({pagingVisible: false});
+            self._scrollData = new ScrollContext({ pagingVisible: false });
 
             self.onServer = typeof window === 'undefined';
             self.isCompatible = cfg.compat || self.compat;
@@ -209,9 +224,11 @@ define('Controls/Application',
          },
 
          _openInfoBoxHandler: function(event, config) {
+            var self = this;
             this._activeInfobox = event.target;
-
-            this._children.infoBoxOpener.open(config);
+            _private.getPopupConfig(config).addCallback(function(popupConfig) {
+               self._children.infoBoxOpener.open(popupConfig);
+            });
          },
 
          _closeInfoBoxHandler: function(event) {
@@ -244,5 +261,4 @@ define('Controls/Application',
       };
 
       return Page;
-   }
-);
+   });

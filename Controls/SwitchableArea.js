@@ -57,6 +57,4 @@ define('Controls/SwitchableArea',
          }
       });
       return SwitchableArea;
-   }
-);
-
+   });

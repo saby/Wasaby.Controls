@@ -25,6 +25,12 @@ define('Controls/Input/DateTime/Model', [
          if (dateUtils.isValidDate(self._value)) {
             self._lastValue = self._value;
          }
+      },
+      updateValue: function(self, value) {
+         self._nextVersion();
+         self._value = value;
+         _private.updateLastValue(self);
+         self._textValue = self._stringValueConverter.getStringByValue(value);
       }
    };
 
@@ -58,7 +64,10 @@ define('Controls/Input/DateTime/Model', [
             replacer: this._replacer,
             mask: options.mask
          });
-         this.value = options.value;
+         if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value)) {
+            this._mask = options.mask;
+            _private.updateValue(this, options.value);
+         }
       },
 
       /**
@@ -73,10 +82,7 @@ define('Controls/Input/DateTime/Model', [
          if (dateUtils.isDatesEqual(this._value, value)) {
             return;
          }
-         this._nextVersion();
-         this._value = value;
-         _private.updateLastValue(this);
-         this._textValue = this._stringValueConverter.getStringByValue(value);
+         _private.updateValue(this, value);
          this._notify('valueChanged', [value]);
       },
 
@@ -89,14 +95,18 @@ define('Controls/Input/DateTime/Model', [
       },
 
       set textValue(value) {
+         var newValue;
          if (this._textValue === value) {
             return;
          }
          this._nextVersion();
          this._textValue = value;
-         this._value = this._stringValueConverter.getValueByString(value, this._lastValue);
-         _private.updateLastValue(this);
-         this._notify('valueChanged', [this._value]);
+         newValue = this._stringValueConverter.getValueByString(value, this._lastValue);
+         if (!dateUtils.isDatesEqual(this._value, newValue)) {
+            this._value = newValue;
+            _private.updateLastValue(this);
+            this._notify('valueChanged', [this._value]);
+         }
       },
 
       /**

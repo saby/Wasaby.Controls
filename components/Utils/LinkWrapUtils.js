@@ -1,1 +1,0 @@
-define('SBIS3.CONTROLS/Utils/LinkWrapUtils', ['Core/helpers/String/linkWrap'], function (linkWrap) { return linkWrap; });

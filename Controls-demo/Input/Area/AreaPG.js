@@ -35,10 +35,10 @@ define('Controls-demo/Input/Area/AreaPG',
                },
                constraint: {
                   items: [
-                     { id: 1, title: '[0-9]', example: 'You can use only digits' },
-                     { id: 2, title: '[a-zA-Z]', example: 'You can use only letters' },
-                     { id: 3, title: '[a-z]', example: 'You can use only lowercase letters' },
-                     { id: 4, title: '[A-Z]', example: 'You can use only uppercase letters' }
+                     { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
+                     { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
+                     { id: 3, title: '[a-z]', value: '[a-z]', example: 'You can use only lowercase letters' },
+                     { id: 4, title: '[A-Z]', value: '[A-Z]', example: 'You can use only uppercase letters' }
                   ],
                   config: {
                      template: 'custom',

@@ -293,6 +293,19 @@ define(
                });
             });
 
+            it('autocomplete insert', function() {
+               splitInputValue = RenderHelper.getSplitInputValue('123', '456789', 6, {
+                  selectionStart: 3,
+                  selectionEnd: 3
+               }, 'insert');
+
+               assert.deepEqual(splitInputValue, {
+                  before: '',
+                  insert: '456789',
+                  delete: '123',
+                  after: ''
+               });
+            });
          });
       });
    }

@@ -175,7 +175,7 @@ module.exports = function less1by1Task(grunt) {
             taskDone();
          } else {
             buildLessInFolder(
-               rootPath + '\\components\\themes',
+               rootPath + '\\SBIS3.CONTROLS\\themes',
                'ThemesBuild',
                taskDone
             );
@@ -205,7 +205,7 @@ module.exports = function less1by1Task(grunt) {
       'Компилит каждую лесску, ложит cssку рядом. Умеет в темы',
       function() {
          buildLessInFolder(
-            rootPath + '\\components',
+            rootPath + '\\SBIS3.CONTROLS',
             'lessControls',
             this.async()
          );

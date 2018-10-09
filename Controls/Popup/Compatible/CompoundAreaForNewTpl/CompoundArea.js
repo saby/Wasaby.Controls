@@ -25,11 +25,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       var moduleClass = CompoundControl.extend({
          _dotTplFn: template,
          $protected: {
-            _options: {
-               isTMPL: function(template) {
-                  return template.indexOf('wml!') === 0; // Если передали просто tmpl в качестве шаблона - нельзя вызывать createControl
-               }
-            },
             _isVDomTemplateMounted: false
          },
          init: function() {
@@ -55,17 +50,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (self.isDestroyed()) {
                      return;
                   }
-                  if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
-                     self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, $('.vDomWrapper', self.getContainer()));
+                  var wrapper = $('.vDomWrapper', self.getContainer());
+                  if (wrapper.length) {
+                     self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, wrapper);
                      self._afterMountHandler();
                      self._afterUpdateHandler();
                   } else {
-                     // Если нам передали шаблон строкой, то компонент уже построен. Обратимся к нему через DOM.
-                     self._vDomTemplate = $('.vDomWrapper', self.getContainer())[0].controlNodes[0].control;
-                     if (self._options._initCompoundArea) {
-                        self._notifyOnSizeChanged(self, self);
-                        self._options._initCompoundArea(self);
-                     }
+                     self._isVDomTemplateMounted = true;
+                     self.sendCommand('close');
                   }
 
                   def.callback();
@@ -187,6 +179,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          destroy: function() {
             this._container[0].eventProperties = null;
             moduleClass.superclass.destroy.apply(this, arguments);
+            this._isVDomTemplateMounted = true;
             if (this._vDomTemplate) {
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
             }

@@ -8,7 +8,8 @@
               style="buttonPrimary"
               caption="Create"
               source="{{_createMemory(_simpleItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item" />
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Create"/>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -18,7 +19,8 @@
               style="buttonPrimary"
               caption="Download"
               source="{{_createMemory(_iconsItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"/>
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Download"/>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -29,7 +31,8 @@
               caption="Reports"
               itemTemplateProperty="myTemplate"
               source="{{_createMemory(_subParagraphItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item"/>
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Reports"/>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -40,7 +43,8 @@
               itemTemplateProperty="myTemplate"
               style="buttonPrimary"
               source="{{_createMemory(_commentItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add">
          <ws:headConfig caption="Add" menuStyle="titleHead"/>
       </Controls.Button.Menu>
    </div>
@@ -53,7 +57,8 @@
               itemTemplate="wml!Controls-demo/Buttons/Menu/itemTemplateComment"
               style="buttonPrimary"
               source="{{_createMemory(_themesItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item" />
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add topic"/>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -63,7 +68,8 @@
               icon="icon-medium icon-AddButtonNew"
               style="buttonDefault"
               source="{{_createMemory(_simpleAdd)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add">
          <ws:headConfig caption="Add" menuStyle="titleHead"/>
       </Controls.Button.Menu>
    </div>
@@ -76,7 +82,8 @@
               icon="icon-small icon-AddButtonNew"
               style="iconButtonBordered"
               source="{{_createMemory(_iconAdd)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add">
          <ws:headConfig caption="Add"/>
       </Controls.Button.Menu>
       <Controls.Button.Menu
@@ -85,7 +92,8 @@
               style="iconButtonBordered"
               size="l"
               source="{{_createMemory(_iconAddMedium)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add">
          <ws:headConfig caption="Add"/>
       </Controls.Button.Menu>
    </div>
@@ -98,7 +106,8 @@
               style="buttonPrimary"
               parentProperty="parent"
               nodeProperty="@parent"
-              source="{{_createHistoryMemory()}}">
+              source="{{_createHistoryMemory()}}"
+              tooltip="Add">
          <ws:headConfig caption="Add"/>
       </Controls.History.Menu>
    </div>
@@ -110,7 +119,8 @@
               style="linkMain"
               icon="icon-Save icon-small icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item" >
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="All documents to disk" >
          <ws:headConfig menuStyle="duplicateHead"/>
       </Controls.Button.Menu>
       <Controls.Button.Menu
@@ -118,7 +128,8 @@
               style="linkMain"
               icon="icon-Save icon-medium icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item" >
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="All documents to disk">
          <ws:headConfig menuStyle="duplicateHead"/>
       </Controls.Button.Menu>
    </div>
@@ -132,9 +143,25 @@
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createMemory(_hierarchyMultiItems)}}"
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Document">
+      </Controls.Button.Menu>
+   </div>
+
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>Multiple level menu with comments</h4>
+      <Controls.Button.Menu
+              keyProperty="id"
+              style="buttonPrimary"
+              caption="Document"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              itemTemplateProperty="myTemplate"
+              source="{{_createMemory(_hierarchyMultiItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item">
       </Controls.Button.Menu>
    </div>
+
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Grouping in the menu</h4>
@@ -145,7 +172,8 @@
               showHeader="{{false}}"
               source="{{_createMemory(_groupItems)}}"
               itemsGroup="{{_itemsGroup}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Add">
       </Controls.Button.Menu>
    </div>
 
@@ -158,7 +186,8 @@
               icon="icon-small icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
               source="{{_createMemory(_scrollItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Subtask">
       </Controls.Button.Menu>
    <Controls.Button.Menu
               keyProperty="id"
@@ -167,7 +196,8 @@
               icon="icon-medium icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
               source="{{_createMemory(_scrollItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Subtask">
       </Controls.Button.Menu>
    </div>
 
@@ -180,7 +210,8 @@
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Document">
       </Controls.Button.Menu>
       <h4>The menu opens up and left</h4>
    </div>
@@ -194,7 +225,8 @@
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createMemory(_hierarchyMultiItems)}}"
-              attr:class="ControlsDemo-ButtonsMenu__item">
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Document">
       </Controls.Button.Menu>
    </div>
 </div>

@@ -169,9 +169,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    ItemActionsControl.getDefaultOptions = function() {
       return {
          itemActionsPosition: 'inside',
-         itemActionVisibilityCallback: function() {
-            return true;
-         },
          itemActions: []
       };
    };

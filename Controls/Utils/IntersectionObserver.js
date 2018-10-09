@@ -1,6 +1,6 @@
 define('Controls/Utils/IntersectionObserver',
-   [],
-   function() {
+   ['Core/detection'],
+   function(detection) {
 
       'use strict';
 
@@ -22,7 +22,14 @@ define('Controls/Utils/IntersectionObserver',
 
             // Exits early if all IntersectionObserver and IntersectionObserverEntry
             // features are natively supported.
-            if ('IntersectionObserver' in window &&
+
+            //When creating an IntersectionObserver, we do not specify the root option. Without the root option, all
+            //browsers except edge call the handler when the element becomes invisible. Edge works according to
+            //documentation https://developer.mozilla.org/ru/docs/Web/API/Intersection_Observer_API and the handler is
+            //called when the element goes beyond the viewport(document).
+            //Demo example: https://jsfiddle.net/ucjmg8v7/2/
+            if (!detection.isIE12 &&
+               'IntersectionObserver' in window &&
                'IntersectionObserverEntry' in window &&
                'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
 

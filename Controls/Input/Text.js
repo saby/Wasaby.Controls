@@ -75,21 +75,6 @@ define('Controls/Input/Text',
        */
 
       /**
-       * @name Controls/Input/Text#selectOnClick
-       * @cfg {Boolean} Determines whether text is selected when input is clicked.
-       * @variant true - Field's text is selected when user clicks on the field.
-       * @variant false - Field is not selected on click and cursor is added to the click position.
-       * @default false
-       * @remark
-       * This option cab be used if you know that user clicking the field to enter a new value is a more frequent scenario than user wanting to edit the current value. In that case, they will click on the field, text will get selected, and they will be able to start entering new value immediately.
-       * @example
-       * In this example, when the field is clicked, all text in it will be selected.
-       * <pre>
-       *    <Controls.Input.Text selectOnClick={{true}}/>
-       * </pre>
-       */
-
-      /**
        * @name  Controls/Input/Text#constraint
        * @cfg {String} Regular expression for input filtration.
        * @remark
@@ -157,7 +142,7 @@ define('Controls/Input/Text',
          return {
             value: '',
             trim: false,
-            selectOnClick: true
+            selectOnClick: false
          };
       };
 

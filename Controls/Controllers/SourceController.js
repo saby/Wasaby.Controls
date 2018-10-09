@@ -13,16 +13,10 @@ define('Controls/Controllers/SourceController',
    function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred) {
       var _private = {
          prepareSource: function(sourceOpt) {
-            var result = sourceOpt;
-            if (typeof result === 'object' && 'module' in sourceOpt) {
-               var sourceConstructor = requirejs(sourceOpt.module);
-               result = new sourceConstructor(sourceOpt.options || {});
-            }
-            if (!cInstance.instanceOfMixin(result, 'WS.Data/Source/ICrud')) {
+            if (!cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')) {
                IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
-            return result;
-
+            return sourceOpt;
          },
 
          getQueryInstance: function(filter, sorting, offset, limit) {
@@ -80,6 +74,27 @@ define('Controls/Controllers/SourceController',
                cntInstance = new cntCtr(cfg);
             }
             return cntInstance;
+         },
+
+         modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController) {
+            var resultParams, navigParams, navFilter;
+
+            resultParams = cleanParams;
+            navigParams = paramsController.prepareQueryParams(direction);
+
+            resultParams.limit = navigParams.limit;
+            resultParams.offset = navigParams.offset;
+
+            if (navigParams.filter) {
+               navFilter = navigParams.filter;
+               for (var i in navFilter) {
+                  if (navFilter.hasOwnProperty(i)) {
+                     resultParams.filter[i] = navFilter[i];
+                  }
+               }
+            }
+
+            return resultParams;
          }
       };
       var SourceController = cExtend.extend({
@@ -98,32 +113,20 @@ define('Controls/Controllers/SourceController',
          },
 
          load: function(filter, sorting, direction) {
-            var def, queryParams, self;
+            var def, queryParams, self, navFilter;
 
             queryParams = {
-               filter: filter,
+               filter: filter || {},
                sorting: sorting,
                limit: undefined,
                offset: undefined
             };
             this.cancelLoading();
 
-            //модифицируем параметры через навигацию
             if (this._queryParamsController) {
-               var navigParams = this._queryParamsController.prepareQueryParams(direction);
-               queryParams.limit = navigParams.limit;
-               queryParams.offset = navigParams.offset;
-
-               //TODO фильтр и сортировка не забыть приделать
+               queryParams = _private.modifyQueryParamsWithNavigation(queryParams, direction, this._queryParamsController);
             }
 
-            //позволяем модифицировать параметры юзеру
-            /*TODO Событие решили пока убрать, сомнительна вообще его необходимость. Во всяком случае в beforeMount стрелять событием нельзя
-            var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
-            if (userParams) {
-               queryParams = _private.paramsWithUserEvent(queryParams, userParams);
-            }
-            */
             self = this;
             def = _private.callQuery(this._source, this._options.idProperty,
                queryParams.filter,

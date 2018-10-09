@@ -8,22 +8,32 @@ define([
    'Core/Deferred',
    'WS.Data/Source/Memory',
    'Controls/List/ListViewModel'
-], function(EditInPlace, RecordSet, Model, Deferred, Memory, ListViewModel){
+], function(
+   EditInPlace,
+   RecordSet,
+   Model,
+   Deferred,
+   Memory,
+   ListViewModel
+) {
    describe('Controls.List.EditInPlace', function () {
-      var eip, items, newItem, listModel, data;
+      var eip, items, newItem, listModel, listModelWithGroups, data;
       beforeEach(function() {
          data = [
             {
                id: 1,
-               title: 'Первый'
+               title: 'Первый',
+               type: 'goods'
             },
             {
                id: 2,
-               title: 'Второй'
+               title: 'Второй',
+               type: 'goods'
             },
             {
                id: 3,
-               title: 'Третий'
+               title: 'Третий',
+               type: 'services'
             }
          ];
          items = new RecordSet({
@@ -38,9 +48,19 @@ define([
             idProperty: 'id'
          });
          listModel = new ListViewModel({
-            items: items,
+            items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title'
+         });
+         listModelWithGroups = new ListViewModel({
+            items: items.clone(),
+            keyProperty: 'id',
+            displayProperty: 'title',
+            itemsGroup: {
+               method: function(item) {
+                  return item.get('type');
+               }
+            }
          });
          eip = new EditInPlace();
          eip._children = {
@@ -55,8 +75,10 @@ define([
       afterEach(function() {
          eip.destroy();
          listModel.destroy();
+         listModelWithGroups.destroy();
          eip = undefined;
          listModel = undefined;
+         listModelWithGroups = undefined;
          newItem = undefined;
          items = undefined;
       });
@@ -572,6 +594,25 @@ define([
             });
          });
 
+         it('Tab but next item is a group', function(done) {
+            eip.editItem = function(options) {
+               assert.equal(options.item, listModelWithGroups.at(4).getContents());
+               done();
+            };
+            eip.saveOptions({
+               listModel: listModelWithGroups
+            });
+            eip._editingItem = listModelWithGroups.at(2).getContents();
+            eip._setEditingItemData(listModelWithGroups.at(2).getContents(), eip._options.listModel);
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
+               }
+            }, {
+               isTabPressed: true
+            });
+         });
+
          it('Tab on last item', function(done) {
             eip.commitEdit = function() {
                done();
@@ -581,6 +622,32 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
+               }
+            }, {
+               isTabPressed: true
+            });
+         });
+
+         it('Tab on third to last item but next two items are groups', function(done) {
+            eip.commitEdit = function() {
+               done();
+            };
+            eip.editItem = function() {
+               throw new Error('editItem shouldn\'t be called.');
+            };
+            eip.addItem = function() {
+               throw new Error('addItem shouldn\'t be called.');
+            };
+            eip.saveOptions({
+               listModel: listModelWithGroups
+            });
+            listModelWithGroups.toggleGroup('services');
+            listModelWithGroups.toggleGroup('whatever');
+            eip._editingItem = listModelWithGroups.at(2).getContents();
+            eip._setEditingItemData(listModelWithGroups.at(2).getContents(), eip._options.listModel);
             eip._onRowDeactivated({
                stopPropagation: function() {
 
@@ -611,6 +678,35 @@ define([
             });
          });
 
+         it('Tab on third to last item but next two items are groups, autoAdd: true', function(done) {
+            eip.commitEdit = function() {
+               throw new Error('commitEdit shouldn\'t be called.');
+            };
+            eip.editItem = function() {
+               throw new Error('editItem shouldn\'t be called.');
+            };
+            eip.addItem = function() {
+               done();
+            };
+            eip.saveOptions({
+               listModel: listModelWithGroups,
+               editingConfig: {
+                  autoAdd: true
+               }
+            });
+            listModelWithGroups.toggleGroup('services');
+            listModelWithGroups.toggleGroup('whatever');
+            eip._editingItem = listModelWithGroups.at(2).getContents();
+            eip._setEditingItemData(listModelWithGroups.at(2).getContents(), eip._options.listModel);
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
+               }
+            }, {
+               isTabPressed: true
+            });
+         });
+
          it('Shift+Tab', function(done) {
             eip.editItem = function(options) {
                assert.equal(options.item, eip._options.listModel.at(0).getContents());
@@ -631,15 +727,61 @@ define([
             });
          });
 
+         it('Shift+Tab but previous item is a group', function(done) {
+            eip.editItem = function(options) {
+               assert.equal(options.item, listModelWithGroups.at(2).getContents());
+               done();
+            };
+            eip.saveOptions({
+               listModel: listModelWithGroups
+            });
+            eip._editingItem = listModelWithGroups.at(4).getContents();
+            eip._setEditingItemData(listModelWithGroups.at(4).getContents(), eip._options.listModel);
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
+               }
+            }, {
+               isTabPressed: true,
+               isShiftKey: true
+            });
+         });
+
          it('Shift+Tab on first item', function(done) {
             eip.commitEdit = function() {
                done();
+            };
+            eip.editItem = function() {
+               throw new Error('editItem shouldn\'t be called.');
             };
             eip.saveOptions({
                listModel: listModel
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
+            eip._onRowDeactivated({
+               stopPropagation: function() {
+
+               }
+            }, {
+               isTabPressed: true,
+               isShiftKey: true
+            });
+         });
+
+         it('Shift+Tab on third item, but first two items are groups', function(done) {
+            eip.commitEdit = function() {
+               done();
+            };
+            eip.editItem = function() {
+               throw new Error('editItem shouldn\'t be called.');
+            };
+            eip.saveOptions({
+               listModel: listModelWithGroups
+            });
+            listModelWithGroups.toggleGroup('goods');
+            eip._editingItem = listModelWithGroups.at(2).getContents();
+            eip._setEditingItemData(listModelWithGroups.at(2).getContents(), eip._options.listModel);
             eip._onRowDeactivated({
                stopPropagation: function() {
 
