@@ -149,6 +149,21 @@
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>Multiple level menu with comments</h4>
+      <Controls.Button.Menu
+              keyProperty="id"
+              style="buttonPrimary"
+              caption="Document"
+              parentProperty="parent"
+              nodeProperty="@parent"
+              itemTemplateProperty="myTemplate"
+              source="{{_createMemory(_hierarchyMultiItems)}}"
+              attr:class="ControlsDemo-ButtonsMenu__item">
+      </Controls.Button.Menu>
+   </div>
+
+
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Grouping in the menu</h4>
       <Controls.Button.Menu
               keyProperty="id"
