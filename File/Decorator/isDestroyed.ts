@@ -9,8 +9,6 @@ let getMessage = (method: string) => `method "${method}" can not be used after d
 /**
  * Декоратор, проверяющий задестроен ли компонент
  * @name File/Decorator/isDestroyed#isDestroyed
- * @public
- * @author Заляев А.В.
  */
 export let isDestroyed = (
     target,
@@ -30,8 +28,6 @@ export let isDestroyed = (
 /**
  * Декоратор асинхронной функции, проверяющий задестроен ли компонент
  * @name File/Decorator/isDestroyed#isDestroyedAsync
- * @public
- * @author Заляев А.В.
  */
 export let isDestroyedAsync = (
     target,

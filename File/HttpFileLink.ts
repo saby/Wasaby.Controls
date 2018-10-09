@@ -1,15 +1,12 @@
 /// <amd-module name="File/HttpFileLink" />
 import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
-
 /**
- * Класс, реализующий интерфейс работы с ресурсами {@link File/IResource},
- * предназначенный для работы с файлами, находящимися на удалённом сервере
+ * Класс - обёртка над http-ссылкой на файл
  * @class
  * @extends File/ResourceAbstract
  * @name File/HttpFileLink
  * @public
  * @author Заляев А.В.
- * @implements File/IResource
  */
 class HttpFileLink extends ResourceAbstract {
     /**
@@ -26,7 +23,6 @@ class HttpFileLink extends ResourceAbstract {
     ) {
         super();
     }
-
     /**
      * Возвращает ссылку на удалённый ресурс
      * @return {String}

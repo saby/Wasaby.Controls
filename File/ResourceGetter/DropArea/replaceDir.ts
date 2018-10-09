@@ -223,7 +223,6 @@ let getFromFileReader = (files: FileList): Deferred<Array<LocalFile | Error>> =>
 /// endregion FileReader
 
 /**
- * Модуль, отвечающий за чтение файлов из директории
  * Т.к. нету нормальной возможности грузить директории на сервис, но есть возможность получать их через D&D
  * Надо обойти полученный FileList на наличие "непонятных" файлов, у которых нету типа
  * 1) Если таковых нет, то ввозвращаем исходный FileList без изменений
@@ -239,8 +238,6 @@ let getFromFileReader = (files: FileList): Deferred<Array<LocalFile | Error>> =>
  * @param {FileList} files
  * @return {Core/Deferred.<FileList | Array.<File | Error>>}
  * @private
- * @function
- * @author Заляев А.В.
  */
 let replaceDir = ({items, files}: DataTransfer): Deferred<FileList | Resources> => {
     // dnd папки в IE стрельнёт событием, но не даст файлов

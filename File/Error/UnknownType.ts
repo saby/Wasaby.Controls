@@ -8,12 +8,11 @@ type ErrorParam = {
 }
 
 /**
- * Ошибка невозможности определения типа файла
+ * Ошибка, когда не смогли определить тип файла
  * @class
  * @name File/Error/UnknownType
  * @public
  * @extends File/Error
- * @author Заляев А.В.
  */
 class UnknownTypeError extends FileError {
     public maxSize: number;
@@ -22,8 +21,9 @@ class UnknownTypeError extends FileError {
             message: MESSAGE,
             fileName: params.fileName
         });
-        // tslint:disable-next-line:max-line-length
-        // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+        /*
+         * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+         */
         Object.setPrototypeOf(this, UnknownTypeError.prototype);
     }
 }
