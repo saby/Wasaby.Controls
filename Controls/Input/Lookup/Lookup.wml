@@ -6,7 +6,6 @@
             itemsLayout="{{itemsLayout}}"
             items="{{items}}"
             readOnly="{{_options.readOnly}}"
-            displayItemsIndex="{{displayItemsIndex}}"
             on:itemClick="_itemClick()"
             on:crossClick="_crossClick()"/>
 </ws:template>
@@ -57,7 +56,7 @@
                             attr:style="max-width:{{!_options.readOnly && _options.multiSelect ? _availableWidthCollection}}px;"
                             name="collection"
                             itemsLayout="oneRow"
-                            items="{{_visibleItems}}"
+                            items="{{_options.readOnly ? _items : _visibleItems}}"
                 />
             </ws:if>
         </ws:beforeFieldWrapper>

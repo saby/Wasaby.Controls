@@ -158,50 +158,33 @@ define('Controls/Input/Lookup', [
          self._forceUpdate();
       },
 
-      getCollectionSlice: function(self, startIndex) {
-         var newCollection = _private.getItems(self).clone();
-
-         for (; startIndex; startIndex--) {
-            newCollection.removeAt(0);
-         }
-
-         return newCollection;
-      },
-
-      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
-         /* By the standard, the minimum input field width is 33%, but not more than 100 */
-         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
-
-         return Math.min(minWidthFieldWrapper, 100);
-      },
-
       determineAutoDropDown: function(self, options) {
          options = options || self._options;
          return options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
       },
 
-
       defineVisibleCollection: function(self, options) {
          var
             visibleItems = [],
+            isAllRecordsDisplay = true,
             availableWidth, lastSelectedItems;
 
          options = options || self._options;
 
          if (self._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
+            availableWidth = _private.getAvailableWidth(self, options);
+            visibleItems = _private.getVisibleItems(self, lastSelectedItems, availableWidth, options);
+            isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
 
-            if (options.readOnly) {
-               visibleItems = lastSelectedItems;
-            } else {
-               availableWidth = _private.getAvailableWidth(self, options);
-               visibleItems = _private.getVisibleItems(self, lastSelectedItems, availableWidth, options);
+            if (!isAllRecordsDisplay) {
+               availableWidth -= SHOW_ALL_LINKS_WIDTH;
             }
          }
 
          self._visibleItems = visibleItems;
          self._availableWidthCollection = availableWidth;
-         self._isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
+         self._isAllRecordsDisplay = isAllRecordsDisplay;
       },
 
       getVisibleItems: function(self, items, availableWidth, options) {
@@ -243,8 +226,8 @@ define('Controls/Input/Lookup', [
             inputRender = self._children.inputRender,
             fieldWrapper = inputRender._container;
 
-
          options = options || self._options;
+
          if (!options.readOnly) {
             additionalWidth = SHOW_SELECTOR_WIDTH;
 
@@ -254,6 +237,13 @@ define('Controls/Input/Lookup', [
          }
 
          return DOMUtil.width(inputRender._container) - additionalWidth;
+      },
+
+      getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
+         /* By the standard, the minimum input field width is 33%, but not more than 100 */
+         var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 100 * 33;
+
+         return Math.min(minWidthFieldWrapper, 100);
       },
 
       getItemsSizes: function(self, items, options) {
@@ -306,7 +296,6 @@ define('Controls/Input/Lookup', [
       _isEmpty: true,
       _availableWidthCollection: null,
       _isAllRecordsDisplay: true,
-      _displayItemsIndex: null,
       _autoDropDown: false,
 
       /* needed, because input will be created only after VDOM synchronisation,
