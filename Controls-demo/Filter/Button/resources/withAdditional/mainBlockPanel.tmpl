@@ -1,5 +1,5 @@
 <ws:template name="period">
-   <Controls.Filter.Button.Panel.FilterDropdown bind:selectedKeys="item.value"
+   <Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
                             bind:textValue="item.textValue"
                             displayProperty="title"
                             source="{{item.source}}"
@@ -7,7 +7,7 @@
 </ws:template>
 
 <ws:template name="state">
-<Controls.Filter.Button.Panel.FilterDropdown bind:selectedKeys="item.value"
+<Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
                          displayProperty="title"
                          source="{{item.source}}"
@@ -15,7 +15,7 @@
 </ws:template>
 
 <ws:template name="limit">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         keyProperty="key"
         source="{{item.source}}"
         bind:selectedKeys="item.value"/>
@@ -46,7 +46,7 @@
 </ws:template>
 
 <ws:template name="group">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         keyProperty="key"
         showCross="{{true}}"
         source="{{item.source}}"
@@ -55,15 +55,15 @@
 </ws:template>
 
 <ws:template name="unread">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.Filter.Button.Panel.Text bind:value="item.value" caption="{{item.textValue}}"/>
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         keyProperty="key"
         source="{{item.source}}"
         showCross="{{true}}"
@@ -82,7 +82,7 @@
 </ws:template>
 
 <ws:template name="activity">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         keyProperty="key"
         source="{{item.source}}"
         showCross="{{true}}"

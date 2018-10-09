@@ -1,12 +1,12 @@
-define('Controls/Filter/Button/Panel/FilterDropdown', [
+define('Controls/Filter/Button/Panel/Dropdown', [
    'Core/Control',
-   'wml!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown',
-   'css!Controls/Filter/Button/Panel/FilterDropdown/FilterDropdown'
+   'wml!Controls/Filter/Button/Panel/Dropdown/Dropdown',
+   'css!Controls/Filter/Button/Panel/Dropdown/Dropdown'
 ], function(Control, template) {
    /**
     * Input for selection from the list of options with cross.
     *
-    * @class Controls/Filter/Button/Panel/FilterDropdown
+    * @class Controls/Filter/Button/Panel/Dropdown
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate

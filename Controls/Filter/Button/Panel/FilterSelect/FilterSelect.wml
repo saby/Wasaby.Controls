@@ -1,7 +1,0 @@
-<div class="controls-FilterPanelSelect">
-   <ws:for data="index, item in _options.items">
-            <span if="{{index}}" class="controls-FilterPanelSelect__separator"> / </span>
-      <Controls.Filter.Button.Panel.FilterLink caption="{{item.value}}"
-                       on:click="_clickHandler(item)"/>
-   </ws:for>
-</div>

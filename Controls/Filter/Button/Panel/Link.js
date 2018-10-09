@@ -1,18 +1,18 @@
-define('Controls/Filter/Button/Panel/FilterLink', [
+define('Controls/Filter/Button/Panel/Link', [
    'Core/Control',
-   'wml!Controls/Filter/Button/Panel/FilterLink/FilterLink',
-   'css!Controls/Filter/Button/Panel/FilterLink/FilterLink'
+   'wml!Controls/Filter/Button/Panel/Link/Link',
+   'css!Controls/Filter/Button/Panel/Link/Link'
 ], function(Control, template) {
    /**
     * Control filter link
-    * @class Controls/Filter/Button/Panel/FilterLink
+    * @class Controls/Filter/Button/Panel/Link
     * @extends Controls/Control
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/FilterLink#caption
+    * @name Controls/Filter/Button/Panel/Link#caption
     * @cfg {Object} Caption
     */
 

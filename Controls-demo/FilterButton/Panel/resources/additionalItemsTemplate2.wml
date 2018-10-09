@@ -7,16 +7,16 @@
 </ws:template>
 
 <ws:template name="country">
-<Controls.Filter.Button.Panel.FilterSelect
+<Controls.Filter.Button.Panel.Select
         keyProperty="key">
    <ws:items>
       <ws:Array>
-         <ws:Object key="{{2}}" value="Россия"/>
-         <ws:Object key="{{3}}" value="США"/>
-         <ws:Object key="{{4}}" value="UK"/>
+         <ws:Object key="{{2}}" title="Россия"/>
+         <ws:Object key="{{3}}" title="США"/>
+         <ws:Object key="{{4}}" title="UK"/>
       </ws:Array>
    </ws:items>
-</Controls.Filter.Button.Panel.FilterSelect>
+</Controls.Filter.Button.Panel.Select>
 </ws:template>
 
 <ws:template name="genreTip">
