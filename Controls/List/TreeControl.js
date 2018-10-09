@@ -21,15 +21,12 @@ define('Controls/List/TreeControl', [
 
    var _private = {
       clearSourceControllers: function(self) {
-         var
-            listViewModel = self._children.baseControl.getViewModel();
          for (var prop in self._nodesSourceControllers) {
             if (self._nodesSourceControllers.hasOwnProperty(prop)) {
                self._nodesSourceControllers[prop].destroy();
+               delete self._nodesSourceControllers[prop];
             }
          }
-         self._nodesSourceControllers = {};
-         listViewModel.setHasMoreStorage({});
       },
       toggleExpanded: function(self, dispItem) {
          var
@@ -237,9 +234,9 @@ define('Controls/List/TreeControl', [
          this._notify('markedKeyChanged', [key]);
       },
 
-      destroy: function() {
+      _beforeUnmount: function() {
          _private.clearSourceControllers(this);
-         TreeControl.superclass.destroy.apply(this, arguments);
+         TreeControl.superclass._beforeUnmount.apply(this, arguments);
       }
    });
 
