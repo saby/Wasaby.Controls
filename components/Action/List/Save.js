@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Query/Query',
     'SBIS3.CONTROLS/Utils/SelectionUtil'
 ], function (Save, ListMixin, Indicator, Deferred, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, SelectionUtil) {
-    var MAX_RECORDS_COUNT = 20000;
+    var MAX_RECORDS_COUNT = 10000;
 
     /**
      * Класс, описывающий действие сохранения данных.
