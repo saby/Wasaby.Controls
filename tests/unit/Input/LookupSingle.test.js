@@ -38,6 +38,10 @@ define([
    }
    
    describe('Controls/Input/Lookup', function() {
+      /* Заглушка, дабы избежать работы с вертской */
+      var setStateForDrawCollection = Lookup._private.setStateForDrawCollection;
+      Lookup._private.setStateForDrawCollection = function(){};
+
       it('keysChanged', function() {
          var self = getBaseLookup();
 
@@ -169,46 +173,62 @@ define([
          assert.isTrue(keysChanged);
       });
 
-      it('getCollectionSlice', function() {
-         var
-            startIndex = 3,
-            initialCollection = [7, 2, 4, 11, 4 ,5],
-            self = {
-               _items: new List({
-                  items: initialCollection
-               })
-            },
-            newCollection = Lookup._private.getCollectionSlice(self, startIndex);
-
-         assert.equal(newCollection.getCount(), initialCollection.length - startIndex);
-      });
-
-      it('getItemWidth', function() {
-         if (typeof window !== 'undefined') {
-            var lookup = new Lookup();
-
-            lookup._children.collection = {
-               _options: Collection.getDefaultOptions()
-            };
-
-            lookup._items = new List({
-               items: [new Model({
-                  rawData: {
-                     id: 1,
-                     title: 'Тестовый текст'
-                  }
-               })]
-            });
-
-            assert.isTrue(Lookup._private.getItemWidth(lookup, 0) > 100);
-         }
-      });
-
       it('getInputMinWidth', function() {
          assert.equal(Lookup._private.getInputMinWidth(330, 30), 99);
          assert.equal(Lookup._private.getInputMinWidth(530, 30), 100);
       });
-   
+
+      it('setStateForDrawCollection', function() {
+         var lookup = new Lookup();
+
+         lookup._visibleItems = [1, 2, 3];
+         lookup._availableWidthCollection = 100;
+         lookup._isAllRecordsDisplay = false;
+
+         lookup._selectedKeys = [];
+         setStateForDrawCollection(lookup);
+
+         assert.deepEqual(lookup._visibleItems, []);
+         assert.equal(lookup._availableWidthCollection, undefined);
+         assert.isTrue(lookup._isAllRecordsDisplay);
+
+      });
+
+      it('getVisibleItems', function() {
+         var
+            items = [1, 2, 3, 4, 5],
+            itemsSizes = [5, 10, 25, 40, 15];
+
+         assert.deepEqual(Lookup._private.getVisibleItems(items, itemsSizes, 80), [3, 4, 5]);
+         assert.deepEqual(Lookup._private.getVisibleItems(items, itemsSizes, 10), [5]);
+         assert.deepEqual(Lookup._private.getVisibleItems(items, itemsSizes, 999), items);
+      });
+
+      it('getCollectionOptions', function() {
+         var items = [1, 2, 3];
+         assert.deepEqual(Lookup._private.getCollectionOptions(items, {}).items, items);
+      });
+
+      it('getLastSelectedItems', function() {
+         var
+            lookup = new Lookup(),
+            item = new Model({
+               rawData: {id: 1},
+               idProperty: 'id'
+            }),
+            item2 = new Model({
+               rawData: {id: 2},
+               idProperty: 'id'
+            })
+
+         lookup._items = new List({
+            items: [item, item2]
+         });
+
+         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 1), [item2]);
+         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 10), [item, item2]);
+      });
+
       it('_beforeMount', function() {
          var lookup = new Lookup();
          var selectedKeys = [1];
@@ -253,16 +273,7 @@ define([
          assert.notEqual(lookupWithReceivedState._selectedKeys, selectedKeys);
          assert.isFalse(lookupWithReceivedState._isEmpty);
       });
-      it('_afterMount', function() {
-         var lookup = new Lookup();
 
-         lookup._selectedKeys = [];
-         lookup._collectionIsReady = true;
-
-         lookup._afterMount();
-         assert.isFalse(!!lookup.isUpdate);
-
-      });
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
          var selectedKeys = [1];
@@ -299,6 +310,7 @@ define([
          assert.deepEqual(lookup._selectedKeys, []);
 
          lookup._beforeUpdate({
+            multiSelect: true,
             selectedKeys: [1, 2],
             source: new Memory({
                data: [

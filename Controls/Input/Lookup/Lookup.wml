@@ -43,11 +43,8 @@
             attr:class="controls-Lookup__inputRender">
 
         <ws:beforeFieldWrapper>
-            <ws:if data="{{!_initialized || !_isEmpty && !_isAllRecordsDisplay}}">
-                <div name="showAllLinks"
-                     class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__showAllLinks_hidden'}}"
-                     on:click="_togglePicker(!_isPickerVisible)">&#133;
-                </div>
+            <ws:if data="{{!_isEmpty && !_isAllRecordsDisplay}}">
+                <ws:partial template="wml!Controls/Input/Lookup/resources/showAllLinksTemplate" name="showAllLinks" on:click="_togglePicker()"/>
             </ws:if>
 
             <ws:if data="{{!_isEmpty}}">
@@ -62,8 +59,8 @@
         </ws:beforeFieldWrapper>
 
         <ws:afterFieldWrapper>
-            <ws:if data="{{!_initialized || !_options.readOnly}}">
-                <div name="showSelector" class="controls-Lookup__showSelector icon-ListView{{_options.readOnly ? ' controls-Lookup__showSelector_hidden'}}" on:click="showSelector()"></div>
+            <ws:if data="{{!_options.readOnly}}">
+                <ws:partial template="wml!Controls/Input/Lookup/resources/showSelectorTemplate" name="showSelector" on:click="showSelector()"/>
                 <Controls.Selector.Opener name="selectorOpener">
                     <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                         <ws:eventHandlers onResult="{{_selectCallback}}"/>

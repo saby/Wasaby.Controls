@@ -13,9 +13,11 @@ define('Controls/Input/Lookup', [
    'Controls/Utils/DOMUtil',
    'Controls/Input/Lookup/_Collection',
    'wml!Controls/Input/Lookup/_Collection/_Collection',
+   'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
+   'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
    'css!Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, Chain, getWidthUtil, DOMUtil, Collection, itemsTemplate) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, Chain, getWidthUtil, DOMUtil, Collection, itemsTemplate, showAllLinksTemplate, showSelectorTemplate) {
 
    'use strict';
 
@@ -42,15 +44,13 @@ define('Controls/Input/Lookup', [
 
    var
       MAX_VISIBLE_ITEMS = 20,
-      SHOW_ALL_LINKS_WIDTH,
-      SHOW_SELECTOR_WIDTH;
+      SHOW_ALL_LINKS_WIDTH = 0,
+      SHOW_SELECTOR_WIDTH = 0;
 
    var _private = {
-      initializeConstants: function(self) {
-         SHOW_ALL_LINKS_WIDTH = self._children.showAllLinks.offsetWidth;
-         SHOW_SELECTOR_WIDTH = self._children.showSelector.offsetWidth;
-
-         self._initialized = true;
+      initializeConstants: function() {
+         SHOW_ALL_LINKS_WIDTH = getWidthUtil.getWidth(showAllLinksTemplate());
+         SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
       },
 
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -79,7 +79,7 @@ define('Controls/Input/Lookup', [
       },
 
       notifyItemsChanged: function(self, items) {
-         _private.defineVisibleCollection(self);
+         _private.setStateForDrawCollection(self, self._options);
          self._notify('itemsChanged', [items]);
       },
 
@@ -163,18 +163,17 @@ define('Controls/Input/Lookup', [
          return options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
       },
 
-      defineVisibleCollection: function(self, options) {
+      setStateForDrawCollection: function(self, options) {
          var
             visibleItems = [],
             isAllRecordsDisplay = true,
-            availableWidth, lastSelectedItems;
-
-         options = options || self._options;
+            itemsSizes, availableWidth, lastSelectedItems;
 
          if (self._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
+            itemsSizes = _private.getItemsSizes(self, lastSelectedItems, options);
             availableWidth = _private.getAvailableWidth(self, options);
-            visibleItems = _private.getVisibleItems(self, lastSelectedItems, availableWidth, options);
+            visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
 
             if (!isAllRecordsDisplay) {
@@ -187,12 +186,11 @@ define('Controls/Input/Lookup', [
          self._isAllRecordsDisplay = isAllRecordsDisplay;
       },
 
-      getVisibleItems: function(self, items, availableWidth, options) {
+      getVisibleItems: function(items, itemsSizes, availableWidth) {
          var
             visibleItems = [],
             visibleItemsWidth = 0,
             itemsCount = items.length,
-            itemsSizes = _private.getItemsSizes(self, items, options),
             collectionWidth = itemsSizes.reduce(function(currentWidth, itemWidth) {
                return currentWidth + itemWidth;
             }, 0);
@@ -212,7 +210,7 @@ define('Controls/Input/Lookup', [
                   break;
                }
 
-               visibleItems.push(items[currentIndex]);
+               visibleItems.unshift(items[currentIndex]);
                visibleItemsWidth += itemsSizes[currentIndex];
             }
          }
@@ -225,8 +223,6 @@ define('Controls/Input/Lookup', [
             additionalWidth = 0,
             inputRender = self._children.inputRender,
             fieldWrapper = inputRender._container;
-
-         options = options || self._options;
 
          if (!options.readOnly) {
             additionalWidth = SHOW_SELECTOR_WIDTH;
@@ -252,7 +248,7 @@ define('Controls/Input/Lookup', [
             measurer = document.createElement('div');
 
          measurer.innerHTML = itemsTemplate({
-            _options: _private.getCollectionOptions(items, options || self._options)
+            _options: _private.getCollectionOptions(items, options)
          });
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -289,7 +285,6 @@ define('Controls/Input/Lookup', [
    var Lookup = Control.extend({
       _template: template,
 
-      _initialized: false,
       _suggestState: false,
       _selectedKeys: null,
       _simpleViewModel: null,
@@ -323,9 +318,9 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         _private.initializeConstants(this);
+         _private.initializeConstants();
          if (this._selectedKeys.length) {
-            _private.defineVisibleCollection(this);
+            _private.setStateForDrawCollection(this, this._options);
             this._forceUpdate();
          }
       },
@@ -355,7 +350,7 @@ define('Controls/Input/Lookup', [
             newOptions.displayProperty !== this._options.displayProperty ||
             newOptions.multiSelect !== this._options.multiSelect) {
 
-            _private.defineVisibleCollection(self, newOptions);
+            _private.setStateForDrawCollection(self, newOptions);
          }
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
@@ -378,6 +373,7 @@ define('Controls/Input/Lookup', [
       },
 
       _togglePicker: function(event, state) {
+         state = state === undefined ? !this._isPickerVisible : state;
          if (state) {
             this._isPickerVisible = true;
             this._suggestState = false;
