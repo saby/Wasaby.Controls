@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Query/Query',
     'SBIS3.CONTROLS/Utils/SelectionUtil'
 ], function (Save, ListMixin, Indicator, Deferred, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, SelectionUtil) {
+   //На списочных методах есть ограничение в 10000, синхронизируем наше ограничение и ограничение бл.
     var MAX_RECORDS_COUNT = 10000;
 
     /**
