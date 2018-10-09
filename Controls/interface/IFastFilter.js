@@ -34,11 +34,72 @@ define('Controls/interface/IFastFilter', [
    /**
     * @name Controls/interface/IFastFilter#source
     * @cfg {FastFilterSource} Sets the source of data set to use in the mapping. If 'items' is specified, 'source' will be ignored.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Filter.Fast
+    *              bind:selectedKey='_selectedKey'
+    *              source="{{_source}}"
+    *    />
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new MemorySource({
+    *       idProperty: 'id',
+    *       data: [
+    *          {id: 'genre',
+    *           resetValue: '0',
+    *           value: '0',
+    *           properties: {
+    *              keyProperty: 'key',
+    *              displayProperty: 'title',
+    *              source: new MemorySource({
+    *                 idProperty: 'id',
+    *                 data: [
+    *                    { key: '0', title: 'все жанры' },
+    *                    { key: '1', title: 'фантастика' },
+    *                    { key: '2', title: 'фэнтези' },
+    *                    { key: '3', title: 'мистика' }
+    *                ]
+    *              })
+    *           }, ...
+    *       ]
+    *    });
+    * </pre>
     */
 
    /**
     * @name Controls/interface/IFastFilter#items
     * @cfg {FastFilterItems} Sets a set of initial data to build the mapping.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Filter.Fast
+    *              bind:selectedKey='_selectedKey'
+    *              items="{{_items}}"
+    *    />
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = [
+    *       {id: 'genre',
+    *        resetValue: '0',
+    *        value: '0',
+    *        properties: {
+    *           keyProperty: 'key',
+    *           displayProperty: 'title',
+    *           source: new MemorySource({
+    *              idProperty: 'id',
+    *              data: [
+    *                 { key: '0', title: 'все жанры' },
+    *                 { key: '1', title: 'фантастика' },
+    *                 { key: '2', title: 'фэнтези' },
+    *                 { key: '3', title: 'мистика' }
+    *             ]
+    *           })
+    *        }, ...
+    *    ]
+    * </pre>
     */
 
    /**
