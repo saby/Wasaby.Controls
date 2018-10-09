@@ -49,8 +49,10 @@ define('Controls/Input/Lookup', [
 
    var _private = {
       initializeConstants: function() {
-         SHOW_ALL_LINKS_WIDTH = getWidthUtil.getWidth(showAllLinksTemplate());
-         SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
+         if (SHOW_ALL_LINKS_WIDTH) {
+            SHOW_ALL_LINKS_WIDTH = getWidthUtil.getWidth(showAllLinksTemplate());
+            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
+         }
       },
 
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
