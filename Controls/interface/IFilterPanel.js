@@ -1,4 +1,4 @@
-define('Controls/interface/IFilterPanel', [], function () {
+define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * Interface for filter panel
