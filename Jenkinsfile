@@ -48,6 +48,10 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
+                defaultValue: props["navigation"],
+                description: '',
+                name: 'branch_navigation'),
+            string(
                 defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
@@ -103,6 +107,13 @@ node('controls') {
 			branch_engine = params.branch_engine
 		} else {
 			branch_engine = props["engine"]
+		}
+		
+		def branch_navigation
+		if (params.branch_navigation) {
+			branch_navigation = params.branch_navigation
+		} else {
+			branch_navigation = props["navigation"]
 		}
 
         if ("${env.BUILD_NUMBER}" == "1"){
@@ -182,6 +193,23 @@ node('controls') {
                                     userRemoteConfigs: [[
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
+                        },
+                        checkout_navigation: {
+                            echo " Выкачиваем Navigation"
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_navigation]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "navigation"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
                                 ])
                             }
                         }
@@ -382,7 +410,10 @@ node('controls') {
                 ЧислоСлужебныхРабочихПроцессов=0
                 ЧислоДополнительныхПроцессов=0
                 ЧислоПотоковВРабочихПроцессах=10
-				МаксимальныйРазмерВыборкиСписочныхМетодов=0
+                МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
+                [Управление облаком.Очередь загрузки]
+                Хранилище=test-redis.unix.tensor.ru:6436
 
                 [Presentation Service]
                 WarmUpEnabled=No
@@ -397,20 +428,25 @@ node('controls') {
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
                 РазмерКэшаСессий=3
                 Конфигурация=ini-файл
+
                 [Ядро.Сервер приложений]
                 ПосылатьОтказВОбслуживанииПриОтсутствииРабочихПроцессов=Нет
                 МаксимальноеВремяЗапросаВОчереди=60000
                 ЧислоРабочихПроцессов=4
-				МаксимальныйРазмерВыборкиСписочныхМетодов=0
+                МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
                 [Ядро.Права]
                 Проверять=Нет
+
                 [Ядро.Асинхронные сообщения]
                 БрокерыОбмена=amqp://test-rabbitmq.unix.tensor.ru
+
                 [Ядро.Логирование]
                 Уровень=Параноидальный
                 ОграничениеДляВходящегоВызова=1024
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
+
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны

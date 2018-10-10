@@ -34,7 +34,8 @@ define('Controls/Button/Close', [
 
    CloseButton.getDefaultOptions = function() {
       return {
-         style: 'default'
+         style: 'default',
+         size: 'l'
       };
    };
 
