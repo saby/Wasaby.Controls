@@ -26,11 +26,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
       },
       resolveOldLink: function(name) {
          var paths = {
-            'WS': this.wsRoot,
-            'tslib': this.wsRoot + '/lib/Ext/tslib',
-            'Lib': this.wsRoot + '/lib',
-            'Ext': this.wsRoot + '/lib/Ext',
-            'Core': this.wsRoot + '/core'
+            'Core': 'WS.Core/core'
          };
 
          var splitted = name.split('/');
