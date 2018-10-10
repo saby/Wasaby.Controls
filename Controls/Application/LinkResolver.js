@@ -8,8 +8,9 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
    // /**appRoot**/**resourceRoot**/path/to/file.css
 
    var LinkResolver = coreExtend.extend([], {
-      constructor: function(isDebug, buildNumber, appRoot, resourceRoot) {
+      constructor: function(isDebug, buildNumber, wsRoot, appRoot, resourceRoot) {
          this.isDebug = isDebug;
+         this.wsRoot = wsRoot.replace(/\//g, '');
          this.buildNumber = buildNumber || '';
          var fullResourcePath = '';
          if (appRoot) {
@@ -23,8 +24,26 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
       getLinkWithResourceRoot: function(cssName) {
          return this.resourceRoot + cssName;
       },
+      resolveOldLink: function (name) {
+         var paths = {
+            'WS': this.wsRoot,
+            'tslib': this.wsRoot + '/lib/Ext/tslib',
+            'Lib': this.wsRoot + '/lib',
+            'Ext': this.wsRoot + '/lib/Ext',
+            'Core': this.wsRoot + '/core'
+         };
+
+         var splitted = name.split('/');
+         var res = name;
+         if (paths[splitted[0]]) {
+            splitted[0] = paths[splitted[0]];
+            res = splitted.join('/');
+         }
+         return res;
+      },
       resolveLink: function(link, ext) {
          var res = link;
+         res = this.resolveOldLink(res);
          res = this.getLinkWithResourceRoot(res);
          res = this.getLinkWithExt(res, ext);
          return res;

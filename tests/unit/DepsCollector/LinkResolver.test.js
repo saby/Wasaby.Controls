@@ -7,7 +7,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var resourceRoot = '';
          var buildnumber = '';
          var isDebug = false;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
          assert.equal(res, '/Controls/Button.min.js');
       });
@@ -16,7 +16,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var resourceRoot = '';
          var buildnumber = '';
          var isDebug = false;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
          assert.equal(res, '/Controls/Button.min.js');
       });
@@ -25,7 +25,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var resourceRoot = 'resources';
          var buildnumber = '1234';
          var isDebug = false;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
          assert.equal(res, '/resources/Controls/Button.min.v1234.js');
       });
@@ -34,7 +34,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var resourceRoot = '';
          var buildnumber = '123123123';
          var isDebug = true;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
          assert.equal(res, '/consultant/Controls/Button.js');
       });
@@ -43,7 +43,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var resourceRoot = '/resources/';
          var buildnumber = '123123123';
          var isDebug = true;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
          assert.equal(res, '/consultant/resources/Controls/Button.js');
       });
@@ -53,7 +53,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var buildnumber = '123123123';
          var isDebug = true;
          var theme = undefined;
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveCssWithTheme('Controls/Button', theme);
          assert.equal(res, '/consultant/resources/Controls/Button.css');
       });
@@ -63,7 +63,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var buildnumber = '123123123';
          var isDebug = true;
          var theme = 'online';
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveCssWithTheme('Controls/Button', theme);
          assert.equal(res, '/consultant/resources/Controls/Button_online.css');
       });
@@ -73,7 +73,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var buildnumber = '123';
          var isDebug = false;
          var theme = 'online';
-         var rl = new LinkResolver(isDebug, buildnumber, appRoot, resourceRoot);
+         var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveCssWithTheme('Controls/Button', theme);
          assert.equal(res, '/consultant/resources/Controls/Button_online.min.v123.css');
       });
