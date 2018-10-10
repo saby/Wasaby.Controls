@@ -94,15 +94,31 @@
   "include": [
     "Controls/List/*",
     "Controls/List",
-    "Controls/Grid"
+    "Controls/Grid",
+    "Controls/List/ItemActions/Utils/Actions"
   ],
   "exclude": [
+    "Controls/List/interface/*",
+    "Controls/List/resources/utils/CSSGridLayoutUtils",
+    "wml!Controls/List/Grid/OldGridView",
+    "wml!Controls/List/Grid/NewGridView",
+    "Controls/List/ItemActions/*",
+    "Controls/List/Swipe/*",
     "Controls/List/Mover",
     "Controls/List/Remover",
     "Controls/List/DialogMover/*",
     "Controls/List/DialogMover"
   ],
   "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/List/ItemActions/*",
+    "Controls/List/Swipe/*"
+  ],
+  "exclude": [
+    "Controls/List/ItemActions/Utils/Actions"
+  ],
+  "output": "controls-itemactions.package.js"
 }, {
   "include": [
     "Controls/List/DialogMover/*",

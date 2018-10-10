@@ -74,19 +74,7 @@
 <Controls.Input.Dropdown displayProperty="title"
                          bind:selectedKeys="item.selectedKeys"
                          keyProperty="key"
->
-   <ws:source module='WS.Data/Source/Memory'>
-      <ws:options idProperty="key">
-         <ws:data>
-            <ws:Array>
-               <ws:Object key="{{1}}" title='Activity for the last month' ></ws:Object>
-               <ws:Object key="{{2}}" title='Activity for the last quarter' ></ws:Object>
-               <ws:Object key="{{3}}" title='Activity for the last year' ></ws:Object>
-            </ws:Array>
-         </ws:data>
-      </ws:options>
-   </ws:source>
-</Controls.Input.Dropdown>
+                         item="{{item.source}}"/>
 </ws:template>
 
 
