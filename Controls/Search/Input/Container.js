@@ -26,7 +26,17 @@ define('Controls/Search/Input/Container',
          
          _template: template,
          _value: '',
-         
+
+         _beforeMount: function(newOptions) {
+            this._value = newOptions.searchValue;
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (this._options.searchValue !== newOptions.searchValue) {
+               this._value = newOptions.searchValue;
+            }
+         },
+
          _notifySearch: function(value) {
             this._notify('search', [value], {bubbling: true});
          },
@@ -50,6 +60,12 @@ define('Controls/Search/Input/Container',
             }
          }
       });
-      
+
+      SearchContainer.getDefaultOptions = function() {
+         return {
+            searchValue: ''
+         };
+      };
+
       return SearchContainer;
    });

@@ -37,25 +37,8 @@ define('Controls/List', [
 
    var ListControl = Control.extend(/** @lends Controls/List */{
       _template: ListControlTpl,
-
-      _items: null,
-
-      _loader: null,
-      _loadingState: null,
-      _loadingIndicatorState: null,
       _viewName: 'Controls/List/ListView',
       _viewTemplate: 'Controls/List/ListControl',
-
-      //TODO пока спорные параметры
-      _filter: undefined,
-      _sorting: undefined,
-
-      _itemTemplate: null,
-
-      _loadOffset: 100,
-      _topPlaceholderHeight: 0,
-      _bottomPlaceholderHeight: 0,
-
       _viewModelConstructor: null,
 
       _beforeMount: function() {
@@ -144,13 +127,6 @@ define('Controls/List', [
          style: 'default'
       };
    };
-
-   //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
-   /*ListView.getOptionTypes = function getOptionTypes(){
-    return {
-    dataSource: Types(ISource)
-    }
-    };*/
 
    return ListControl;
 });

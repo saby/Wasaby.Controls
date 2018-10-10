@@ -280,11 +280,11 @@
             </div>
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" icon="icon-24 icon-NewTab" style="linkMain" size="m"/>
-                <div class="demo-Button__Label">Get the link</div>
+                <div class="demo-Button__Label">Open in new window</div>
             </div>
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" icon="icon-24 icon-FilterBig" style="linkMain" size="m"/>
-                <div class="demo-Button__Label">Get the link</div>
+                <div class="demo-Button__Label">Filter</div>
             </div>
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Erase" iconStyle="error" style="linkMain" size="m"/>
@@ -292,7 +292,7 @@
             </div>
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" icon="icon-24 icon-CollapseExpand" style="linkMain" size="m"/>
-                <div class="demo-Button__Label">Delete</div>
+                <div class="demo-Button__Label">Open to full window</div>
             </div>
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" icon="icon-24 icon-ArrangeList" style="linkMain" size="m"/>
@@ -336,6 +336,10 @@
             <div attr:class="test_element">
                 <Controls.Button readOnly="{{false}}" iconStyle="error" icon="icon-16 icon-Erase" style="iconButtonBordered" size="m"/>
                 <div class="demo-Button__Label">Delete</div>
+            </div>
+            <div attr:class="test_element">
+                <Controls.Button.Close size="m"/>
+                <div class="demo-Button__Label">Editing close button</div>
             </div>
         </div>
     </div>

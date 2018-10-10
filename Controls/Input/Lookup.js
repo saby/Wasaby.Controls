@@ -404,6 +404,7 @@ define('Controls/Input/Lookup', [
    
       showSelector: function(templateOptions) {
          var
+            self = this,
             multiSelect = this._options.multiSelect,
             selectorOpener = this._children.selectorOpener;
 

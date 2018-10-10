@@ -62,17 +62,19 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
                itemsChanged = true;
             }
          };
-         
+
+         controller._searchContext = { updateConsumers: function() {} };
+
          Search._private.searchCallback(controller, {});
          
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
-         assert.isTrue(controller._searchMode);
+         assert.isTrue(controller._viewMode === 'search');
       });
    
       it('_private.abortCallback', function() {
          var controller = getSearchController();
-         controller._searchMode = true;
+         controller._viewMode = 'search';
          var filterChanged = false;
    
          controller._notify = function(eventName) {
@@ -80,11 +82,13 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
                filterChanged = true;
             }
          };
-   
+
+         controller._searchContext = { updateConsumers: function() {} };
+
          Search._private.abortCallback(controller);
    
          assert.isTrue(filterChanged);
-         assert.isFalse(controller._searchMode);
+         assert.isFalse(controller._viewMode === 'search');
       });
    
       it('_private.needUpdateSearchController', function() {
