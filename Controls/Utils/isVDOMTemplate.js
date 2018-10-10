@@ -6,24 +6,24 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
    'use strict';
 
    /**
-    * Модуль возвращает функцию, которая проверяет, совместим ли класс компонента с веб-фреймворком WaSaby.
+    * The module returns a function that checks whether the component class is compatible with the WaSaby.
     *
-    * <h2>Аргумент функции</h2>
+    * <h2>Function argument</h2>
     *
-    * Прототип класса компонента.
+    * The prototype of the component class.
     *
-    * <h2>Критерий проверки</h2>
+    * <h2>Verification criterion</h2>
     *
-    * Класс наследуется от класса Core/Control.
+    * The class is inherited from the class Core/Control.
     *
-    * <h2>Возвращает</h2>
+    * <h2>Returns</h2>
     *
     * <ul>
-    *     <li><b>true</b> - класс совместим с Wasaby (наследуется от Core/Control)</li>
-    *     <li><b>false</b> {Function} -  класс не совместим с Wasaby</li>
+    *     <li><b>true</b> - the class compatible with Wasaby (inherited from Core/Control)</li>
+    *     <li><b>false</b> {Function} -  class is not compatible with Wasaby</li>
     * </ul>
     *
-    * <h2>Пример использования</h2>
+    * <h2>Usage example</h2>
     * <pre>
     * require(
     * ['Controls/Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'],
@@ -32,7 +32,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     *   // true
     *   isVDOMTemplate(VDOMButton);
     *
-    *   // false.
+    *   // false
     *   isVDOMTemplate(WS3Button);
     *  });
     * </pre>
