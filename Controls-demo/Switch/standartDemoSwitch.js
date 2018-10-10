@@ -37,8 +37,6 @@ define('Controls-demo/Switch/standartDemoSwitch', [
             ]
          });
          this._sourceAdditional = new MemorySource({
-            idProperty: 'id',
-            displayProperty: 'caption',
             data: [
                {
                   id: '1',
