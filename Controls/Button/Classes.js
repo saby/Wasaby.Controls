@@ -62,7 +62,46 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
       buttonAdd: {
          style: 'primary-add',
          type: 'button'
-      }
+      },
+
+      primary: {
+         style: 'primaryNew',
+         type: 'primaryNew'
+      },
+
+      secondary: {
+         style: 'secondary',
+         type: 'secondary'
+      },
+
+      danger: {
+         style: 'danger',
+         type: 'danger'
+      },
+
+      success: {
+         style: 'success',
+         type: 'success'
+      },
+
+      info: {
+         style: 'info',
+         type: 'info'
+      },
+
+      warning: {
+         style: 'warning',
+         type: 'warning'
+      },
+      toolbarButton: {
+         style: 'toolbarButton',
+         type: 'toolbarButton'
+      },
+      toolbarButtonTransparent: {
+         style: 'toolbarButton',
+         type: 'toolbarButton',
+         transparent: true
+      },
    };
    var Classes = {
 
