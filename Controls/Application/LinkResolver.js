@@ -24,7 +24,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
       getLinkWithResourceRoot: function(cssName) {
          return this.resourceRoot + cssName;
       },
-      resolveOldLink: function (name) {
+      resolveOldLink: function(name) {
          var paths = {
             'WS': this.wsRoot,
             'tslib': this.wsRoot + '/lib/Ext/tslib',
