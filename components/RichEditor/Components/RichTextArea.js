@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          return version;
       };
 
-      var onlyNotSpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
+      var notOnlySpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
 
       var
          // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
@@ -775,11 +775,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
                   if (json[0] === 'p') {
                      var j = i + 1;
-                     if (typeof json[j] === 'string' && !onlyNotSpacesRegExp.test(json[j])) {
+                     if (typeof json[j] === 'string' && !notOnlySpacesRegExp.test(json[j])) {
                         // Если после ссылки находится строка только из пробелов, она не существенна
                         j++;
                      }
-                     if (typeof json[j] === 'undefined') {
+                     if (j === json.length) {
                         // Ссылку в конце строки нужно декорировать.
                         continue;
                      }
