@@ -8,7 +8,6 @@
          <ws:if data="{{_options.float}}">
             <div class="controls-InfoBox_floatElement"></div>
          </ws:if>
-
          <ws:if data="{{_options.template}}">
             <ws:partial
                template="{{_options.template}}"
