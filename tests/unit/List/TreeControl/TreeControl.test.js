@@ -57,6 +57,7 @@ define([
             }
          };
          treeControl._beforeUpdate({ root: 'testRoot' });
+         treeControl._afterUpdate({ root: '' });
          assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
          assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
       });
