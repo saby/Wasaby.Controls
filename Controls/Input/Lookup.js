@@ -69,7 +69,6 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
-               _private.setStateForDrawCollection(self, self._options);
                _private.notifyItemsChanged(self, result);
                return result;
             })
@@ -120,7 +119,6 @@ define('Controls/Input/Lookup', [
                _private.getItems(self).assign([item]);
             }
 
-            _private.setStateForDrawCollection(self, self._options);
             _private.notifyChanges(self, self._selectedKeys);
          }
       },
@@ -135,7 +133,6 @@ define('Controls/Input/Lookup', [
             selectedKeys.splice(indexItem, 1);
             _private.setSelectedKeys(self, selectedKeys, self._options);
             _private.getItems(self).remove(item);
-            _private.setStateForDrawCollection(self, self._options);
             _private.notifyChanges(self, self._selectedKeys);
          }
       },
@@ -179,7 +176,7 @@ define('Controls/Input/Lookup', [
          if (self._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
             itemsSizes = _private.getItemsSizes(self, lastSelectedItems, options);
-            availableWidth = _private.getAvailableWidth(self, options);
+            availableWidth = _private.getAvailableCollectionWidth(self, options.readOnly, options.multiSelect);
             visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
 
@@ -225,16 +222,16 @@ define('Controls/Input/Lookup', [
          return visibleItems;
       },
 
-      getAvailableWidth: function(self, options) {
+      getAvailableCollectionWidth: function(self, readOnly, multiSelect) {
          var
             additionalWidth = 0,
             inputRender = self._children.inputRender,
             fieldWrapper = inputRender._container;
 
-         if (!options.readOnly) {
+         if (!readOnly) {
             additionalWidth = SHOW_SELECTOR_WIDTH;
 
-            if (options.multiSelect) {
+            if (multiSelect) {
                additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, SHOW_SELECTOR_WIDTH);
             }
          }
@@ -269,10 +266,12 @@ define('Controls/Input/Lookup', [
       },
 
       getCollectionOptions: function(items, options) {
-         return merge(Collection.getDefaultOptions(), {
+         return merge({
             items: items,
-            displayProperty: options.displayProperty,
+            itemTemplate: options.itemTemplate,
             readOnly: options.readOnly
+         }, Collection.getDefaultOptions(), {
+            preferSource: true
          });
       },
 
@@ -327,7 +326,6 @@ define('Controls/Input/Lookup', [
       _afterMount: function() {
          _private.initializeConstants();
          if (this._selectedKeys.length) {
-            _private.setStateForDrawCollection(this, this._options);
             this._forceUpdate();
          }
       },
@@ -340,6 +338,7 @@ define('Controls/Input/Lookup', [
             sourceIsChanged = newOptions.source !== this._options.source;
 
          _private.updateModel(this, newOptions.value);
+         _private.setStateForDrawCollection(this, newOptions);
          this._autoDropDown = _private.determineAutoDropDown(self, newOptions);
 
          if (keysChanged) {
@@ -351,13 +350,6 @@ define('Controls/Input/Lookup', [
             _private.getItems(this).each(function(item) {
                self._selectedKeys.push(item.get(newOptions.keyProperty));
             });
-         }
-
-         if (newOptions.readOnly !== this._options.readOnly ||
-            newOptions.displayProperty !== this._options.displayProperty ||
-            newOptions.multiSelect !== this._options.multiSelect) {
-
-            _private.setStateForDrawCollection(self, newOptions);
          }
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
@@ -444,7 +436,6 @@ define('Controls/Input/Lookup', [
 
          _private.setSelectedKeys(this, selectedKeys, this._options);
          _private.getItems(this).assign(items);
-         _private.setStateForDrawCollection(self, self._options);
          _private.notifyChanges(this, this._selectedKeys);
       },
 
