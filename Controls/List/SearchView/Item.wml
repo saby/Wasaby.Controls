@@ -1,0 +1,16 @@
+<ws:if data="{{itemData.item.getId}}">
+   <ws:partial template="wml!Controls/List/Grid/Item"
+               itemData="{{itemData}}"
+               multiSelectTpl="{{multiSelectTpl}}"/>
+</ws:if>
+<ws:else>
+   <ws:partial template="wml!Controls/List/TreeGridView/Item"
+               itemData="{{itemData}}"
+               multiSelectTpl="{{multiSelectTpl}}"
+               colspan="{{true}}"
+               on:click="_onSearchItemClick(itemData.dispItem)">
+      <ws:colspanTemplate>
+         <Controls.BreadCrumbs items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()"/>
+      </ws:colspanTemplate>
+   </ws:partial>
+</ws:else>
