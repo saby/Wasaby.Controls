@@ -160,7 +160,7 @@ define('Controls/List/TreeControl', [
       },
       _beforeUpdate: function(newOptions) {
          TreeControl.superclass._beforeUpdate.apply(this, arguments);
-         if (this._root !== newOptions.root) {
+         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
             this._updatedRoot = true;
          }

@@ -21,16 +21,16 @@ define('Controls/Explorer', [
          hiddenNode: false,
          leaf: null
       },
-      DEFAULT_VIEW_MODE = 'tree',
+      DEFAULT_VIEW_MODE = 'table',
       VIEW_NAMES = {
          search: 'Controls/List/SearchView',
          tile: 'Controls/List/TreeTileView/TreeTileView',
-         tree: 'Controls/List/TreeGridView/TreeGridView'
+         table: 'Controls/List/TreeGridView/TreeGridView'
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
          tile: TreeTileViewModel,
-         tree: TreeGridViewModel
+         table: TreeGridViewModel
       },
       _private = {
          setRoot: function(self, root) {
