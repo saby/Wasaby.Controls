@@ -12,7 +12,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'wml!Controls-demo/Filter/Button/buttonPGTemplate',
       'wml!Controls-demo/Filter/Button/mainBlockPG',
       'wml!Controls-demo/Filter/Button/ChooseDate',
-      'wml!Controls-demo/Filter/Button/TextLine'
+      'wml!Controls-demo/Filter/Button/TextLine',
+      'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo'
    ],
 
    function(Control, template, MemorySource, config) {
@@ -32,13 +33,68 @@ define('Controls-demo/Filter/Button/ButtonPG',
 
          _beforeMount: function() {
             this._items = [
-               {id: 'kind', value: ['0'], resetValue: ['0'], textValue: 'All'},
-               {id: 'type', value: ['0'], resetValue: ['0'], textValue: ''}
+               {
+                  id: 'kind',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: 'All',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All topics' },
+                        { key: '1', title: 'Unread' },
+                        { key: '2', title: 'My topics' },
+                        { key: '3', title: 'Favourites' },
+                        { key: '4', title: 'Without comments' }
+                     ]
+                  })
+               },
+               {
+                  id: 'type',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: '',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All types' },
+                        { key: '1', title: 'Discussions' },
+                        { key: '2', title: 'Suggestions' }
+                     ]
+                  })
+               }
             ];
             this._itemsKaizen = [
-               {id: 'own', value: ['0'], resetValue: ['0'], textValue: 'All'},
-               {id: 'used', value: ['0'], resetValue: ['0'], textValue: ''},
-               {id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'}
+               {
+                  id: 'own',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: 'All',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All' },
+                        { key: '1', title: 'My' }
+                     ]
+                  })
+               },
+               {
+                  id: 'used',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: '',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'Used' },
+                        { key: '1', title: 'In archive' },
+                        { key: '2', title: 'All states' }
+                     ]
+                  })
+               },
+               {
+                  id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'
+               }
             ];
             this._dataObject = {
                orientation: {
@@ -48,8 +104,8 @@ define('Controls-demo/Filter/Button/ButtonPG',
                },
                items: {
                   items: [
-                     {id: '1', title: 'Filters in discussions'},
-                     {id: '2', title: 'Filters in kaizen'}
+                     { id: '1', title: 'Filters in discussions', items: this._items },
+                     { id: '2', title: 'Filters in kaizen', items: this._itemsKaizen }
                   ],
                   value: 'Filters in discussions'
                },
@@ -58,10 +114,17 @@ define('Controls-demo/Filter/Button/ButtonPG',
                },
                lineSpaceTemplate: {
                   items: [
-                     {id: '1', title: 'Selection a period'},
-                     {id: '2', title: 'Text'}
+                     { id: '1', title: 'Selection a period', template: 'wml!Controls-demo/Filter/Button/ChooseDate' },
+                     { id: '2', title: 'Text', template: 'wml!Controls-demo/Filter/Button/TextLine' }
                   ],
                   value: 'Selection a period'
+               },
+               historyId: {
+                  items: [
+                     { id: '1', title: 'DEMO_HISTORY_ID', value: 'DEMO_HISTORY_ID' },
+                     { id: '2', title: 'Not specified', value: '' }
+                  ],
+                  value: 'Not specified'
                }
             };
             this._componentOptions = {
@@ -73,25 +136,6 @@ define('Controls-demo/Filter/Button/ButtonPG',
                items: this._items
             };
             this._metaData = config[this._content].properties['ws-config'].options;
-         },
-
-         _optionsChanged: function(event, options) {
-            if (this._currentItems !== options.description.items.value) {
-               if (options.description.items.value === 'Filters in kaizen') {
-                  this._componentOptions.items = this._itemsKaizen;
-               } else if (options.description.items.value === 'Filters in discussions') {
-                  this._componentOptions.items = this._items;
-               }
-               this._currentItems = options.description.items.value;
-            }
-            if (options.description.lineSpaceTemplate.value === '') {
-               this._componentOptions.lineSpaceTemplate = undefined;
-            } else if (options.description.lineSpaceTemplate.value === 'Selection a period') {
-               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/ChooseDate';
-            } else if (options.description.lineSpaceTemplate.value === 'Text') {
-               this._componentOptions.lineSpaceTemplate = 'wml!Controls-demo/Filter/Button/TextLine';
-            }
-            
          }
       });
       return FilterButtonPG;

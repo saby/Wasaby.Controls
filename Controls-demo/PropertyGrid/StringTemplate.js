@@ -12,6 +12,14 @@ define('Controls-demo/PropertyGrid/StringTemplate',
          _template: template,
          _valueChangedHandler: function(event, tmp) {
             this._notify('valueChanged', [tmp]);
+         },
+
+         _valueChangedSuggest: function(event, value) {
+            this._notify('valueChanged', [value]);
+         },
+
+         _chooseChangedHandler: function(event, item) {
+            this._notify('valueChanged', [item.get('value')]);
          }
       });
 

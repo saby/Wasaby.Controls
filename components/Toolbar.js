@@ -130,7 +130,8 @@ define('SBIS3.CONTROLS/Toolbar', [
          hasVisibleItems = function(items) {
             var hasVisibleItems = false;
             for (var i = 0; i < items.length; i++) {
-               hasVisibleItems = hasVisibleItems || items[i].visible !== false
+               // Проверяем, есть ли видимые родители, visible !== false, т.к. необязательный параметр
+               hasVisibleItems = hasVisibleItems || !items[i].parent && items[i].visible !== false
             }
             return hasVisibleItems;
          },

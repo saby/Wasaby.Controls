@@ -71,11 +71,10 @@
 </ws:template>
 
 <ws:template name="activity">
-<Controls.Input.Dropdown source="{{item.source}}"
-                         displayProperty="title"
+<Controls.Input.Dropdown displayProperty="title"
                          bind:selectedKeys="item.selectedKeys"
                          keyProperty="key"
-/>
+                         item="{{item.source}}"/>
 </ws:template>
 
 

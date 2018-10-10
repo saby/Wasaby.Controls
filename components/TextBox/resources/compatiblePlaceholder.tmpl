@@ -1,5 +1,3 @@
 <div class="controls-Text__placeholder controls-InputRender__placeholder controls-InputRender__placeholder_singleLine controls-TextBox__placeholder{{ _isSimplePlaceholder ? ' controls-InputRender__placeholder_simple' }}">
-	<span class="controls-InputRender__placeholder__overflow controls-TextBox__placeholder__overflow">
-		<ws:partial template="{{ placeholder }}"/>
-	</span>
+	<span class="controls-InputRender__placeholder__overflow controls-TextBox__placeholder__overflow"><ws:if data="{{ _isSimplePlaceholder }}">{{placeholder}}</ws:if><ws:else><ws:partial template="{{ placeholder }}"/></ws:else></span>
 </div>

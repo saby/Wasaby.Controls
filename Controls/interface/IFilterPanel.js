@@ -22,7 +22,7 @@ define('Controls/interface/IFilterPanel', [
 
    /**
     * @name Controls/interface/IFilterPanel#panelStyle
-    * @cfg (String) Sets the display of the filter panel.
+    * @cfg {String} Sets the display of the filter panel.
     * @variant default one column panel
     * @variant column two or more column panel
     */
@@ -33,10 +33,10 @@ define('Controls/interface/IFilterPanel', [
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#styleHeader
+    * @name Controls/interface/IFilterPanel#headerStyle
     * @cfg {String} Color of title in header of filter panel.
-    * @variant primary Blue color.
-    * @variant default Orange color.
+    * @variant primary Primary color.
+    * @variant default Default color.
     */
 
    /**
