@@ -849,6 +849,11 @@
             "type": "Boolean",
             "title": "Determines whether trailing zeros are shown in the fractional part."
           },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
