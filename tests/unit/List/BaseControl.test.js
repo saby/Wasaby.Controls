@@ -1597,6 +1597,9 @@ define([
                      callBackCount++;
                      assert.isFalse(args.target);
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'WS.Data/Collection/RecordSet'));
+                     assert.equal(args.templateOptions.keyProperty, 'id');
+                     assert.equal(args.templateOptions.parentProperty, 'parent');
+                     assert.equal(args.templateOptions.nodeProperty, 'parent@');
                   }
                }
             };

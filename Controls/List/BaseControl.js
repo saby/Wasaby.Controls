@@ -329,7 +329,12 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.open({
                opener: self._children.listView,
                target: !context ? childEvent.target : false,
-               templateOptions: {items: rs},
+               templateOptions: {
+                  items: rs,
+                  keyProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'parent@'
+               },
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
