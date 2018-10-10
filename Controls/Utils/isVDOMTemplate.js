@@ -6,7 +6,10 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
    'use strict';
 
    /**
-    * Возвращает информацию о том, является ли компонент наследником Core/Control.
+    * Модуль возвращает функцию, которая проверяет, совместим ли класс компонента с веб-фреймворком WaSaby.
+    * Аргумент функции - прототип класса компонента.
+    * Критерий проверки: класс наследуется от класса Core/Control.
+    * Возвращает: true - класс совместим с Wasaby (наследуется от Core/Control), иначе - false.
     * @example
     * <pre>
     *    var myClass = require('myClass');
@@ -16,7 +19,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * </pre>
     * @class Controls/Utils/isVDOMTemplate
     * @public
-    * @author Крайнов Д.О.
+    * @author Красильников А.С.
     */
 
    return function isVDOMTemplate(templateClass) {
