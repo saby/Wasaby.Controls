@@ -45,12 +45,12 @@ define([
       it('keysChanged', function() {
          var self = getBaseLookup();
 
-         Lookup._private.keysChanged(self);
+         Lookup._private.keysChanged(self, {});
          
          assert.isTrue(self._isEmpty);
          
          self._selectedKeys = [1];
-         Lookup._private.keysChanged(self);
+         Lookup._private.keysChanged(self, {});
          assert.isFalse(self._isEmpty);
          assert.isFalse(self._suggestState);
       });
@@ -58,7 +58,7 @@ define([
       it('setSelectedKeys', function() {
          var self = getBaseLookup();
          
-         Lookup._private.setSelectedKeys(self, [1]);
+         Lookup._private.setSelectedKeys(self, [1], {});
          
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(self._isEmpty);
@@ -171,6 +171,15 @@ define([
          Lookup._private.removeItem(self, item);
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
+      });
+
+      it('getAdditionalCollectionWidth', function() {
+         var fieldWrapper = {
+            offsetWidth: 100
+         };
+
+         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, false, false), 0);
+         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, false, true), 33);
       });
 
       it('getInputMinWidth', function() {

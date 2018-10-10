@@ -176,7 +176,7 @@ define('Controls/Input/Lookup', [
          if (self._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
             itemsSizes = _private.getItemsSizes(self, lastSelectedItems, options);
-            availableWidth = _private.getAvailableCollectionWidth(self, options.readOnly, options.multiSelect);
+            availableWidth = _private.getAvailableCollectionWidth(self._children.inputRender._container, options.readOnly, options.multiSelect);
             visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
 
@@ -222,11 +222,12 @@ define('Controls/Input/Lookup', [
          return visibleItems;
       },
 
-      getAvailableCollectionWidth: function(self, readOnly, multiSelect) {
-         var
-            additionalWidth = 0,
-            inputRender = self._children.inputRender,
-            fieldWrapper = inputRender._container;
+      getAvailableCollectionWidth: function(fieldWrapper, readOnly, multiSelect) {
+         return DOMUtil.width(fieldWrapper) - _private.getAdditionalCollectionWidth(fieldWrapper, readOnly, multiSelect);
+      },
+
+      getAdditionalCollectionWidth: function(fieldWrapper, readOnly, multiSelect) {
+         var additionalWidth = 0;
 
          if (!readOnly) {
             additionalWidth = SHOW_SELECTOR_WIDTH;
@@ -236,7 +237,7 @@ define('Controls/Input/Lookup', [
             }
          }
 
-         return DOMUtil.width(inputRender._container) - additionalWidth;
+         return additionalWidth;
       },
 
       getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
