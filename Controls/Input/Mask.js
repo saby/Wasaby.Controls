@@ -208,7 +208,8 @@ define('Controls/Input/Mask',
                'l': '[а-яa-zё]',
                'd': '[0-9]',
                'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-            }
+            },
+            selectOnClick: false
          };
       };
 

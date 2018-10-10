@@ -20,11 +20,6 @@
       <ws:popupOptions
          template="Controls/Date/PeriodDialog"
          closeByExternalClick="{{true}}"
-      >
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:verticalAlign side="bottom"/>
-         <ws:horizontalAlign side="center"/>
-         <ws:corner vertical="top" horizontal="center"/>
-      </ws:popupOptions>
+      />
    </Controls.Popup.Opener.Sticky>
 </div>

@@ -10,7 +10,7 @@ define('Controls/interface/ICaption', [
 
    /**
     * @name Controls/interface/ICaption#caption
-    * @cfg {String} Component caption text.
+    * @cfg {String} Control caption text.
     * @default Undefined
     * @remark You can submit the markup to the caption.
     * @example

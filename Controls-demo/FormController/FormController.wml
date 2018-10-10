@@ -47,9 +47,10 @@
                   </ws:content>
                </Controls.Validate.Controller>
             </div>
-
-            <Controls.Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()"/>
-
+			
+			<div attr:class="form-content__submit">
+				<Controls.Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()" />
+			</div>
             <div class="form-result">
                <div if="{{ _recordAsText }}">
                   Record is {{ _recordAsText }}

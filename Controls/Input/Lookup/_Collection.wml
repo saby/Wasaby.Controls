@@ -1,17 +1,15 @@
-<div class="controls-Lookup__collection">
+<div class="controls-Lookup__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-Lookup__collection_multiLine' : ' controls-Lookup__collection_singleLine'}}"
+     attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
+
     <ws:for data="index, item in _options.items">
-        <ws:partial template="{{_options.itemTemplate}}"
-                    item="{{item}}"
-                    displayProperty="{{_options.displayProperty}}"
-                    isSingleItem="{{_options.items.getCount() === 1}}"
-                    isLastItem="{{_options.items.getCount() === index + 1}}"
-                    readyOnly="{{_options.readOnly}}">
-            <ws:contentTemplate>
-                <ws:partial template="wml!Controls/Input/Lookup/_ContentTemplate" on:click="_itemClick(item)"/>
-            </ws:contentTemplate>
-            <ws:crossTemplate>
-                <ws:partial template="wml!Controls/Input/Lookup/_CrossTemplate" on:click="_crossClick(item)"/>
-            </ws:crossTemplate>
-        </ws:partial>
+        <ws:if data="{{index >= _options.displayItemsIndex}}">
+            <ws:partial template="wml!Controls/Input/Lookup/CollectionItem"
+                        item="{{item}}"
+                        index="{{index}}"
+                        itemsCount="{{_options.items.getCount()}}"
+                        _options="{{_options}}"
+                        _itemClick="{{_itemClick}}"
+                        _crossClick="{{_crossClick}}"/>
+        </ws:if>
     </ws:for>
 </div>

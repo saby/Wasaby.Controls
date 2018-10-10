@@ -1,21 +1,19 @@
 <div attr:class="controls-Input-DateRange">
    <Controls.Input.DateTime
-      value="{{_rangeModel.startValue}}"
+      bind:value="_rangeModel.startValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
-      on:valueChanged="_proxyEvent('valueChanged')"
       on:inputCompleted="_proxyEvent('inputCompleted')">
    </Controls.Input.DateTime>
    <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
-      value="{{_rangeModel.endValue}}"
+      bind:value="_rangeModel.endValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
-      on:valueChanged="_proxyEvent('valueChanged')"
       on:inputCompleted="_proxyEvent('inputCompleted')">
    </Controls.Input.DateTime>
    <Controls.Button
@@ -28,11 +26,6 @@
       <ws:popupOptions
          template="Controls/Date/PeriodDialog"
          closeByExternalClick="{{true}}"
-      >
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-         <ws:verticalAlign side="bottom"/>
-         <ws:horizontalAlign side="center"/>
-         <ws:corner vertical="top" horizontal="center"/>
-      </ws:popupOptions>
+      />
    </Controls.Popup.Opener.Sticky>
 </div>

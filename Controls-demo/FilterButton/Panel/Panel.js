@@ -32,18 +32,15 @@ define('Controls-demo/FilterButton/Panel/Panel',
             this._text += 'Стреляет filterChanged\n';
          },
          _beforeMount: function() {
-            this.sourceDropdown = {
-               module: 'WS.Data/Source/Memory',
-               options: {
-                  data: [
-                     {key: 1, title: 'все страны'},
-                     {key: 2, title: 'Россия'},
-                     {key: 3, title: 'США'},
-                     {key: 4, title: 'Великобритания'}
-                  ],
-                  idProperty: 'key'
-               }
-            };
+            this.sourceDropdown = new MemorySource({
+               data: [
+                  {key: 1, title: 'все страны'},
+                  {key: 2, title: 'Россия'},
+                  {key: 3, title: 'США'},
+                  {key: 4, title: 'Великобритания'}
+               ],
+               idProperty: 'key'
+            });
          },
 
       });

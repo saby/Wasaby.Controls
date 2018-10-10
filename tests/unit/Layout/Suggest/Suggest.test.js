@@ -174,38 +174,6 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.deepEqual(self._filter, resultFilter);
       });
    
-      it('Suggest::_private.calcOrient', function() {
-         var self = getComponentObject();
-         var suggestHeight = 200;
-   
-         self._children = {
-            suggestionsContainer: getContainer({
-               top: 0,
-               bottom: 0,
-               get height() {
-                 return suggestHeight;
-               }
-            })
-         };
-         self._container = getContainer({
-            bottom: 324,
-            top: 300
-         });
-         
-         self._orient = null;
-         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
-         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-up');
-         
-         self._orient = null;
-         self._options.suggestStyle = 'overInput';
-         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(900)), '-down');
-         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(400)), '-down');
-         
-         /* a special case, when suggest must opened down */
-         suggestHeight = 400;
-         assert.equal(Suggest._private.calcOrient(self, getDropDownContainer(500)), '-down');
-      });
-   
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
          self._loading = true;
@@ -216,32 +184,6 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          Suggest._private.searchErrback(self);
          
          assert.isFalse(self._loading);
-      });
-   
-      it('Suggest::_private.calcHeight', function() {
-         var self = getComponentObject();
-         var suggestHeight = 200;
-   
-         self._children = {
-            suggestionsContainer: getContainer({
-               top: 0,
-               bottom: 0,
-               get height() {
-                  return suggestHeight;
-               }
-            })
-         };
-         self._container = getContainer({
-            bottom: 324,
-            top: 300
-         });
-         self._height = 'auto';
-         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(900)), 'auto');
-         assert.equal(Suggest._private.calcHeight(self, '-down', getDropDownContainer(400)), '76px');
-   
-         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(900)), 'auto');
-         suggestHeight = 400;
-         assert.equal(Suggest._private.calcHeight(self, '-up', getDropDownContainer(400)), '300px');
       });
    
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
@@ -373,10 +315,11 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
       it('Suggest::_beforeUpdate', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._orient = 'down';
-   
+         suggestComponent._loading = true;
+         suggestComponent._showContent = true;
          suggestComponent._beforeUpdate({suggestState: false});
-         assert.equal(suggestComponent._orient, null);
+         assert.isFalse(suggestComponent._showContent, null);
+         assert.equal(suggestComponent._loading, null);
       });
       
    });

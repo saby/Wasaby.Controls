@@ -7,7 +7,7 @@ define('Controls/Button', [
    'use strict';
 
    /**
-    * Base button with support different display styles, sizes, icon styles.
+    * This control native button or a elements enhanced with display styling.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
@@ -102,27 +102,6 @@ define('Controls/Button', [
     *    <Controls.Button caption="Send document" style="buttonPrimary" size="xl"/>
     * </pre>
     * @see style
-    */
-
-   /**
-    * @name Controls/Button#caption
-    * @cfg {String} Control caption text.
-    * @default Undefined
-    * @remark You can submit the markup to the caption.
-    * @example
-    * Control has caption 'Dialog'.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”Dialog”/>
-    * </pre>
-    * Control has markup caption.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”captionTemplate”/>
-    * </pre>
-    * <pre>
-    *    <span class='customDialog'>
-    *       Dialog
-    *    </span>
-    * </pre>
     */
 
    /**
