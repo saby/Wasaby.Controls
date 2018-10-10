@@ -15,7 +15,7 @@
                             placeholder="Введите имя"
                             searchParam="title"
                             keyProperty="id"
-                            displayProperty="title"
+                            displayProperty="notTitle"
                             multiSelect="{{true}}"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
@@ -23,6 +23,9 @@
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                        <ws:itemTemplate>
+                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" displayProperty="title"></ws:partial>
+                        </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>
             </div>

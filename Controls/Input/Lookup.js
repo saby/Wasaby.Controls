@@ -69,6 +69,7 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
+               _private.setStateForDrawCollection(self, self._options);
                _private.notifyItemsChanged(self, result);
                return result;
             })
@@ -80,14 +81,17 @@ define('Controls/Input/Lookup', [
          return resultDef;
       },
 
+      notifyChanges: function(self, selectedKeys) {
+         _private.notifySelectedKeys(self, selectedKeys);
+         _private.notifyItemsChanged(self, _private.getItems(self));
+      },
+
       notifyItemsChanged: function(self, items) {
-         _private.setStateForDrawCollection(self, self._options);
          self._notify('itemsChanged', [items]);
       },
 
       notifySelectedKeys: function(self, selectedKeys) {
          self._notify('selectedKeysChanged', [selectedKeys]);
-         _private.notifyItemsChanged(self, _private.getItems(self));
       },
 
       notifyValue: function(self, value) {
@@ -109,28 +113,30 @@ define('Controls/Input/Lookup', [
          if (self._selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
                selectedKeys.push(key);
-               _private.setSelectedKeys(self, selectedKeys);
+               _private.setSelectedKeys(self, selectedKeys, self._options);
                _private.getItems(self).append([item]);
             } else {
-               _private.setSelectedKeys(self, [key]);
+               _private.setSelectedKeys(self, [key], self._options);
                _private.getItems(self).assign([item]);
             }
 
-            _private.notifySelectedKeys(self, self._selectedKeys);
+            _private.setStateForDrawCollection(self, self._options);
+            _private.notifyChanges(self, self._selectedKeys);
          }
       },
 
       removeItem: function(self, item) {
          var
-            selectedKeys = self._selectedKeys,
+            selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty),
             indexItem = self._selectedKeys.indexOf(key);
 
          if (indexItem !== -1) {
             selectedKeys.splice(indexItem, 1);
-            _private.setSelectedKeys(self, selectedKeys);
+            _private.setSelectedKeys(self, selectedKeys, self._options);
             _private.getItems(self).remove(item);
-            _private.notifySelectedKeys(self, self._selectedKeys);
+            _private.setStateForDrawCollection(self, self._options);
+            _private.notifyChanges(self, self._selectedKeys);
          }
       },
 
@@ -161,7 +167,6 @@ define('Controls/Input/Lookup', [
       },
 
       determineAutoDropDown: function(self, options) {
-         options = options || self._options;
          return options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
       },
 
@@ -276,7 +281,7 @@ define('Controls/Input/Lookup', [
             lastSelectedItems = Chain(_private.getItems(self)).toArray(),
             selectedItemsCount = lastSelectedItems.length;
 
-         if (!isNaN(itemsCount) && selectedItemsCount > itemsCount) {
+         if (selectedItemsCount > itemsCount) {
             lastSelectedItems = lastSelectedItems.slice(selectedItemsCount - itemsCount);
          }
 
@@ -437,9 +442,10 @@ define('Controls/Input/Lookup', [
             });
          }
 
-         _private.setSelectedKeys(this, selectedKeys);
+         _private.setSelectedKeys(this, selectedKeys, this._options);
          _private.getItems(this).assign(items);
-         _private.notifySelectedKeys(this, this._selectedKeys);
+         _private.setStateForDrawCollection(self, self._options);
+         _private.notifyChanges(this, this._selectedKeys);
       },
 
       _deactivated: function() {
