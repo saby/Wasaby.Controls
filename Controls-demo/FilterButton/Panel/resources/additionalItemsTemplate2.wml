@@ -1,9 +1,9 @@
 <ws:template name="genreKey">
-   <Controls.Button style="linkMain" caption="genreKey"/>
+   <Controls.Filter.Button.Panel.Link style="linkMain" caption="genreKey"/>
 </ws:template>
 
 <ws:template name="FIO">
-<Controls.Button style="linkMain" caption="FIO"/>
+<Controls.Filter.Button.Panel.Link style="linkMain" caption="FIO"/>
 </ws:template>
 
 <ws:template name="country">
@@ -20,7 +20,7 @@
 </ws:template>
 
 <ws:template name="genreTip">
-<Controls.Button style="linkMain" caption="Test1"/>
+<Controls.Filter.Button.Panel.Link style="linkMain" caption="Test1"/>
 </ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

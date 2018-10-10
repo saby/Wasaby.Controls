@@ -1,9 +1,9 @@
 <ws:template name="FIO">
-   <Controls.Button style="linkMain" caption="FIO"/>
+   <Controls.Filter.Button.Panel.Link  caption="FIO"/>
 </ws:template>
 
 <ws:template name="firstName">
-   <Controls.Button style="linkMain" caption="firstName"/>
+   <Controls.Filter.Button.Panel.Link  caption="firstName"/>
 </ws:template>
 
 <ws:template name="Test1">
@@ -20,11 +20,11 @@
 </ws:template>
 
 <ws:template name="checked">
-   <Controls.Button style="linkMain" caption="checked"/>
+   <Controls.Filter.Button.Panel.Link  caption="checked"/>
 </ws:template>
 
 <ws:template name="id">
-   <Controls.Input.Dropdown
+   <Controls.Filter.Button.Panel.Dropdown
            source="{{item.source}}"
            displayProperty="title"
            keyProperty="key"
@@ -32,27 +32,27 @@
 </ws:template>
 
 <ws:template name="Test2">
-   <Controls.Button style="linkMain" caption="Test2"/>
+   <Controls.Filter.Button.Panel.Link  caption="Test2"/>
 </ws:template>
 
 <ws:template name="Test3">
-   <Controls.Button style="linkMain" caption="Test3"/>
+   <Controls.Filter.Button.Panel.Link  caption="Test3"/>
 </ws:template>
 
 <ws:template name="Test4">
-   <Controls.Button style="linkMain" caption="Test4"/>
+   <Controls.Filter.Button.Panel.Link  caption="Test4"/>
 </ws:template>
 
 <ws:template name="Test5">
-   <Controls.Button style="linkMain" caption="FilterText"/>
+   <Controls.Filter.Button.Panel.Link  caption="FilterText"/>
 </ws:template>
 
 <ws:template name="Test6">
-   <Controls.Button style="linkMain" caption="Test6"/>
+   <Controls.Filter.Button.Panel.Link  caption="Test6"/>
 </ws:template>
 
 <ws:template name="Test7">
-   <Controls.Button style="linkMain" caption="Test7"/>
+   <Controls.Filter.Button.Panel.Link  caption="Test7"/>
 </ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>
