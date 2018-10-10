@@ -151,7 +151,7 @@ define('Controls/Input/Lookup', [
          });
       },
 
-      keysChangedWithoutUpdate: function(self, options) {
+      setStateOnKeysChanged: function(self, options) {
          self._autoDropDown = _private.determineAutoDropDown(self, options);
          self._isEmpty = !self._selectedKeys.length;
 
@@ -162,7 +162,7 @@ define('Controls/Input/Lookup', [
       },
 
       keysChanged: function(self, options) {
-         _private.keysChangedWithoutUpdate(self, options);
+         _private.setStateOnKeysChanged(self, options);
          self._forceUpdate();
       },
 
@@ -314,7 +314,7 @@ define('Controls/Input/Lookup', [
          this._autoDropDown = _private.determineAutoDropDown(this, options);
 
          if (this._selectedKeys.length) {
-            _private.keysChangedWithoutUpdate(this, options);
+            _private.setStateOnKeysChanged(this, options);
 
             if (receivedState) {
                this._items = receivedState;

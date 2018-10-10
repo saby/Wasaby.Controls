@@ -1,7 +1,6 @@
 <ws:template name="collection">
     <Controls.Input.Lookup._Collection
             name="{{name}}"
-            displayProperty="{{_options.displayProperty}}"
             itemTemplate="{{_options.itemTemplate}}"
             itemsLayout="{{itemsLayout}}"
             items="{{items}}"
