@@ -47,7 +47,7 @@ node('controls') {
                 defaultValue: props["engine"],
                 description: '',
                 name: 'branch_engine'),
-			string(
+            string(
                 defaultValue: props["navigation"],
                 description: '',
                 name: 'branch_navigation'),
@@ -196,7 +196,7 @@ node('controls') {
                                 ])
                             }
                         },
-						checkout_navigation: {
+                        checkout_navigation: {
                             echo " Выкачиваем Navigation"
                             dir("./controls/tests"){
                                 checkout([$class: 'GitSCM',
@@ -204,7 +204,7 @@ node('controls') {
                                 doGenerateSubmoduleConfigurations: false,
                                 extensions: [[
                                     $class: 'RelativeTargetDirectory',
-                                    relativeTargetDir: "NAVIGATION"
+                                    relativeTargetDir: "navigation"
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
