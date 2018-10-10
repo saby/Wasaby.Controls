@@ -18,5 +18,5 @@
       "css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
       "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel"
    ],
-   "output": "SBIS3.CONTROLS/RichEditor/Components/RichTextArea"
+   "output": "sbis3controls-richeditor-richtextarea.package.js"
 }]

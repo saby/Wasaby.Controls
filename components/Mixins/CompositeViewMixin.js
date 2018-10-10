@@ -497,6 +497,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (mode === 'table') {
             this._updateAjaxLoaderPosition();
          }
+         this._updateHeadAfterInit();
          this._notify('onViewModeChanged');
       },
       /**

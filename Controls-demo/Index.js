@@ -11,7 +11,10 @@ define('Controls-demo/Index', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _template: template
+         _template: template,
+         backClickHdl: function(){
+            window.history.back();
+         }
       });
 
    return ModuleClass;

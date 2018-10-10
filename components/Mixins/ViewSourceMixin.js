@@ -14,12 +14,12 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
      * @author Крайнов Д.О.
      * @public
      */
-    
+
    var _private = {
       getHistoryFilter: function(self, id, needLoad) {
          var historyDef = new Deferred();
          var filter;
-         
+
          if (needLoad) {
             var historyController = new HistoryController({historyId: id});
             historyController.getHistory(true).addCallback(function(history){
@@ -48,13 +48,13 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
          } else {
             historyDef.callback({});
          }
-         
-         
+
+
          return historyDef;
       }
    };
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS/Mixins/ViewSourceMixin.prototype  */{
-      $consturctor: function() {
+      $constructor: function() {
          this.__cancelQueryDef = this.__cancelQueryDef.bind(this);
       },
       /**
@@ -85,11 +85,11 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
 
          /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
          historyDef = _private.getHistoryFilter(this, historyId, applyFilterOnLoad);
-   
+
          historyDef.addCallback(function(historyFilter) {
             /* Подготавливаем фильтр */
             queryFilter = cMerge(filter || {}, historyFilter);
-   
+
             queryDef = Query(source, [
                queryFilter,
                sorting,
@@ -98,14 +98,14 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
             ]).addErrback(function(e) {
                return e;
             });
-   
+
             self._queryDef = queryDef;
-            
+
             self.once('onDestroy', self.__cancelQueryDef);
-            
+
             return queryFilter;
          });
-   
+
          var resultDef = new Deferred();
 
          /* По готовности компонента установим данные */
@@ -130,13 +130,13 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                   .addCallback(function(dataSet) {
                      var idProperty = view.getProperty('idProperty'),
                         recordSet;
-         
+
                      if (idProperty && idProperty !== dataSet.getIdProperty()) {
                         dataSet.setIdProperty(idProperty);
                      }
-         
+
                      recordSet = dataSet.getAll();
-         
+
                      /* Пока выполнялся запрос - view уже мог успеть уничтожиться или могли загружаться новые данные.
                       В таком случае не трогаем view. */
                      if (!view.isDestroyed() && !view.isLoading() && !view.getItems()) { /* Не устанавливаем данные, если они загружаются или уже есть */
@@ -145,9 +145,9 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
                         view._notify('onDataLoad', recordSet);
                         view.setItems(recordSet);
                      }
-         
+
                      resultDef.callback(recordSet);
-         
+
                      return recordSet;
                   })
                   .addBoth(function(res) {
@@ -159,7 +159,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
          });
          return resultDef;
       },
-      
+
       __cancelQueryDef: function() {
          if (!this._queryDef.isReady()) {
             this._queryDef.cancel();

@@ -189,6 +189,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                                  self._reloadTemplate(config);
                                  return;
                               }
+                              config.className = (config.className || "") + " controls-conpoundAreaNew__floatArea";
                               self._dialog = new Component(config);
                            });
                         } else {
