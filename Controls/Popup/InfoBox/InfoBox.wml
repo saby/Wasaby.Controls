@@ -15,7 +15,7 @@
       <ws:partial template="{{_options.content}}"
                   on:mouseenter="_contentMouseenterHandler()"
                   on:touchstart="_contentMouseenterHandler()"
-                  on:mousedown="_contentMousedownHandler()"/>
+                  on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:else>
    <ws:if data="{{!_isNewEnvironment()}}">
       <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
