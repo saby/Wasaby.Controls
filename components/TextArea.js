@@ -77,7 +77,6 @@ define('SBIS3.CONTROLS/TextArea', [
          _myResize: false, //флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
          //флаг что была инициализирован плагин автовысоты. Меняется отображение и поведение текстареи
          _autoHeightInitialized: false,
-         
          _options: {
             _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
@@ -325,6 +324,7 @@ define('SBIS3.CONTROLS/TextArea', [
          if (this._disabledWrapper && !this.isEnabled()) {
             var
                newText = escapeHtml(this.getText());
+            newText = newText.replace(/\n/g,'<br>');
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
          }
       },
