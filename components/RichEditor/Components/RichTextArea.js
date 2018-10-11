@@ -2493,7 +2493,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   //             b)Вставка текста
                   //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
                   var editor = this._tinyEditor;
-                  e.content = editor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
+                  var func = editor.plugins.paste.clipboard.prepareTextBeforePaste;
+                  // Этот метод в старой версии tinymce, используемой в MSIE10, имеет только один аргуметн
+                  // 1176026572 https://online.sbis.ru/opendoc.html?guid=b54dd9c9-3cd0-4f1f-98f8-9195373c82ee
+                  e.content = func.length === 1 ? func(this._clipboardText) : func(editor, this._clipboardText);
                }
             },
             _onPasteCallback: function(e) {
