@@ -1589,12 +1589,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   else {
                      var dom = editor.dom;
                      var node = rng.commonAncestorContainer;
-                     if (!dom.isBlock(node)) {
+                     if (!dom.isBlock(node) && !isAlreadyApplied) {
                         // Если элемент не является блочным элементом - поднять рэнж выше по дереву
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
                         var body = editor.getBody();
                         var isChanged;
-                        var _hasBlockSibling = function(bode) {
+                        var _hasBlockSibling = function(node) {
                            return Array.prototype.some.call(node.parentNode.childNodes, function(v) {
                               return v.nodeName === 'IMG' || dom.isBlock(v);
                            });
@@ -1603,6 +1603,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {
                         }
                         if (isChanged) {
+                           var bookmark = selection.getBookmark();
+                           afterProcess.push(function () {
+                              // Нужно восстанавить последнее выделение после применения команды.
+                              // Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
+                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения пораждают
+                              // мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
+                              // несфокусирпованном состоянии
+                              // 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
+                              var root = editor.getBody();
+                              selection.select(root);
+                              selection.collapse(true);
+                              root.blur();
+                              setTimeout(function () {
+                                 selection.moveToBookmark(bookmark);
+                                 root.focus();
+                              }, 100);
+                           });
                            selection.select(node, true);
                            rng = selection.getRng();
                         }
@@ -1667,6 +1684,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            for (var i = 0; i < formatIds.length; i++) {
                               formatter.remove(formatIds[i]);
                            }
+                           //////////////////////////////////////////////////
+                           console.log('DBG: RTE.execCommand/afterProcess: (2) formatIds=', formatIds, ';');
+                           //////////////////////////////////////////////////
                         });
                      }
                   }
