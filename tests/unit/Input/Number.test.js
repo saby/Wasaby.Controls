@@ -3,7 +3,6 @@ define(
       'Controls/Input/Number'
    ],
    function(Number) {
-
       'use strict';
 
       describe('Controls.Input.Number', function() {
@@ -97,6 +96,14 @@ define(
             }, {});
 
             assert.equal(res, '0');
+         });
+         it('_beforeMount( value null)', function() {
+            var config = {
+               value: null
+            };
+            let num = new Number(config);
+            num._beforeMount(config);
+            assert.equal(num._numberViewModel.getDisplayValue(), '');
          });
       });
    }
