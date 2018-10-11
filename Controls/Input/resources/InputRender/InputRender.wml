@@ -35,6 +35,7 @@
                attr:required="true"
                value="{{ _options.viewModel.getDisplayValue() }}"
                readOnly="{{ _options.readOnly }}"
+               attr:title="{{_tooltip}}"
                autocomplete="{{_options.autocomplete}}"
             />
 
