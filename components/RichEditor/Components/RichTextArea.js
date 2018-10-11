@@ -1560,7 +1560,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._ensureHasMinContent();
                var rng;
                var isAlreadyApplied;
-               var afterProcess;
+               var afterProcess = [];
                var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
@@ -1587,11 +1587,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $listNode.wrap('<div>');
                      selection.select(listNode.parentNode, false);
                      $listNode.attr('contenteditable', 'false');
-                     afterProcess = function() {
+                     afterProcess.push(function () {
                         $listNode.unwrap();
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
-                     };
+                     });
                   }
                   else {
                      var dom = editor.dom;
@@ -1629,13 +1629,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  $video.before('<span ' + attr + '>temporary</span>').remove();
                               }.bind(this));
                               skipUndo = true;
-                              afterProcess = function () {
+                              afterProcess.push(function () {
                                  undoManager.ignore(function () {
                                     var $video = $(editor.getBody()).find('[' + attr + ']');
                                     $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
                                  }.bind(this));
                                  undoManager.add();
-                              }.bind(this);
+                              }.bind(this));
                            }
                         }
                      }
@@ -1668,11 +1668,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (['aligncenter', 'alignright'].some(function(v) {
                            return formatter.match(v);
                         })) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var list = editor.dom.getParent(selection.getRng().commonAncestorContainer, 'ol,ul');
                            $(list).css('list-style-position', 'inside');
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                   else {
@@ -1684,14 +1684,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      });
                      if (align) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var isCollapsed = selection.isCollapsed();
                            formatter.apply(align);
                            if (isCollapsed) {
                               selection.collapse(false);
                            }
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                }
@@ -1713,9 +1713,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      command === 'alignright' ? 'inside' : '');
                   }
                   if (selection.isCollapsed()) {
-                     afterProcess = function() {
+                     afterProcess.push(function () {
                         selection.collapse(false);
-                     };
+                     });
                   }
                }
                if (skipUndo) {
@@ -1724,8 +1724,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                else {
                   editor.execCommand(editorCmd || command);
                }
-               if (afterProcess) {
-                  afterProcess();
+               if (afterProcess.length) {
+                  for (var i = 0; i < afterProcess.length; i++) {
+                     afterProcess[i]();
+                  }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
                if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
