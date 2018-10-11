@@ -22,6 +22,10 @@ define('Controls/Filter/Button/Panel', [
     * @public
     * @author Герасимов А.М.
     *
+    * @cssModifier controls-PanelFilter__width-m Medium panel width.
+    * @cssModifier controls-PanelFilter__width-l Large panel width.
+    * @cssModifier controls-PanelFilter__width-xl Extra large panel width.
+    *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
     * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
@@ -131,7 +135,7 @@ define('Controls/Filter/Button/Panel', [
 
       _applyHistoryFilter: function(event, items) {
          var filter = _private.getFilter(this, items);
-         filter['$_history' ] = true;
+         filter['$_history'] = true;
          this._applyFilter(event, items);
       },
 
