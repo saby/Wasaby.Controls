@@ -17,6 +17,7 @@ define("File/Error/Extension", ["require", "exports", "tslib", "File/Error", "Co
      * @name File/Error/Extension
      * @public
      * @extends File/Error
+     * @author Заляев А.В.
      */
     var ExtensionsError = /** @class */ (function (_super) {
         tslib_1.__extends(ExtensionsError, _super);
