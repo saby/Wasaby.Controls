@@ -56,7 +56,19 @@ define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
       },
 
       isKeyboardVisible: function(){
-         return this._keyboardVisible;
+         var isVisible = this._keyboardVisible;
+
+         // Отдельно проверяем, есть ли фокус в полях ввода, т.к. клавиатура показана только в этом случае.
+         // Можно обкатать механизм на этих правках и впоследствии избавиться от нотифая глобального события в полях ввода.
+         // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
+         // Куда пришел фокус, если это input/textarea (и возможно еще div с contenteditable), то через emitter/listener сообщать
+         // об этом дочерним компонентам.
+         if (!isVisible) {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+               isVisible = true;
+            }
+         }
+         return isVisible;
       }
    };
 
