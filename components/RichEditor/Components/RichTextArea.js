@@ -1667,17 +1667,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      };
                   }
                }
-               if (selection.isCollapsed() && (command === 'bold' || command === 'italic' || command === 'underline' || command === 'strikethrough') && formatter.match(command)) {
+               if (selection.isCollapsed() && ['bold', 'italic', 'underline', 'strikethrough'].indexOf(command) !== -1 && formatter.match(command)) {
                   rng = selection.getRng();
                   var node = rng.commonAncestorContainer;
                   if (node.nodeType === 3) {
-                     var dom = editor.dom;
-                     var caret = dom.getParent(node, '#_mce_caret');
-                     // При снятии свойств форматирования bold, italic, underline и strikethrough может сниматься и другое форматирование из-за слишком высокого по дереву элементов положения каретки (контейнера с идентификатором "_mce_caret"), поэтому лучше убрать его совсем
+                     var offset = rng.startOffset;
+                     // При снятии свойств форматирования bold, italic, underline и strikethrough, так как они реализуются последовательным
+                     // оборачиванием контента форматирующими элементами (то есть последовательность их применения имеет значение), может сниматься
+                     // смежное форматирование из-за слишком высокого по дереву элементов положения контейнера зоны ввода (элемент с идентификатором
+                     // "_mce_caret"), поэтому лучше убрать его совсем
+                     // При использовании метода applyFormats (обрабатывающего вызов из стилевой панели) подобная ситуация не возникает, так как там
+                     // всегда обрабатывается полный набор свойств форматирования и вопрос о последовательности их установки не возникает в принципе
                      // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
-                     if (caret && caret !== node.parentNode.parentNode) {
-                        var offset = rng.startOffset;
-                        dom.remove(caret, true);
+                     if (this._removeAscendingCarretContainer(node)) {
                         this._selectNewRng(node, offset);
                      }
                   }
@@ -1695,6 +1697,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
                   this._getTinyEditorValue() == '') {
                   selection.select(editor.getBody(), true);
+               }
+            },
+
+            /**
+             * Удалить служебный контейнер зоны ввода, вышележащий от указанного dom-узла
+             * @param {DOMNode} node dom-узел
+             * @return {boolean}
+             */
+            _removeAscendingCarretContainer: function (node) {
+               var editor = this._tinyEditor;
+               var dom = editor.dom;
+               var caret = dom.getParent(node, '#_mce_caret');
+               if (caret) {
+                  dom.remove(caret, true);
+                  return true;
                }
             },
 
