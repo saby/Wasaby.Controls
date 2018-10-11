@@ -25,15 +25,12 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          return this.resourceRoot + cssName;
       },
       resolveOldLink: function(name) {
-         var paths = {
-            'Core': 'WS.Core/core'
-         };
-
-         var splitted = name.split('/');
-         var res = name;
-         if (paths[splitted[0]]) {
-            splitted[0] = paths[splitted[0]];
-            res = splitted.join('/');
+         var res = require.toUrl(name);
+         if(~res.indexOf(this.resourceRoot)) {
+            res = res.split(this.resourceRoot)[1];
+         }
+         if(res.indexOf('/') === 0) {
+            res = res.slice(1, res.length);
          }
          return res;
       },
