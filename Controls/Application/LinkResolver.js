@@ -21,10 +21,10 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC'], fu
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
 
-         if(require.toUrl) {
+         if (require.toUrl) {
             this.rq = require;
-         } else if(typeof requirejs !== 'undefined') {
-            if(requirejs.toUrl) {
+         } else if (typeof requirejs !== 'undefined') {
+            if (requirejs.toUrl) {
                this.rq = requirejs;
             }
          } else {
