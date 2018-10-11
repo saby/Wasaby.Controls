@@ -1,0 +1,6 @@
+<span attr:class="controls-FilterLink"
+      on:click="_clickHandler()">
+    <span attr:class="controls-FilterLink__text">
+       {{_options.caption}}
+    </span>
+</span>
