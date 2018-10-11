@@ -2,6 +2,12 @@
 import DriverInterface = require('File/Driver/Interface');
 import detection = require('Core/detection');
 
+/**
+ * @public
+ * @class File/Driver/Blob
+ * @author Ибрагимов А.А
+ * @description Файловый драйвер для скачивания Blob файлов
+ */
 class Blob implements DriverInterface {
    private name: string = 'noname';
 

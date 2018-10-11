@@ -8,6 +8,11 @@ define("File/utils/b64toBlob", ["require", "exports"], function (require, export
      * @param {String} contentType MIME-type
      * @param {Number} [sliceSize]
      * @return {File}
+     *
+     * @name File/utils/b64toBlob
+     * @function
+     * @public
+     * @author Заляев А.В.
      */
     b64toBlob = function (data, contentType, sliceSize) {
         sliceSize = sliceSize || 512;

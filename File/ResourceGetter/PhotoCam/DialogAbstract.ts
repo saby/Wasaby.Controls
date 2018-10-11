@@ -1,8 +1,6 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/DialogAbstract" />
-
 /// <amd-dependency path="SBIS3.CONTROLS/Button" />
 /// <amd-dependency path="css!File/ResourceGetter/PhotoCam/Dialog" />
-
 import CompoundControl = require("SBIS3.CONTROLS/CompoundControl");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
@@ -13,6 +11,13 @@ import IResource = require("File/IResource");
 
 const BEFORE_SHOW_DELAY = 300;
 
+/**
+ * Абстрактный компонент отвечающий за захват и отображение изображение с камеры
+ * @private
+ * @class
+ * @author Заляев А.В.
+ * @name File/ResourceGetter/PhotoCam/DialogAbstract
+ */
 let DialogAbstract = CompoundControl.extend({
     _dotTplFn: tmpl,
     $protected: {
@@ -32,7 +37,8 @@ let DialogAbstract = CompoundControl.extend({
         if (!(def instanceof Deferred)) {
             throw new Error('Param "resultDeferred" is not a Deferred');
         }
-        /**
+
+        /*
          * Логику показа окна делаем через задержку, а не в обработке колбека получения камеры, т.к.
          * а) пользователь не успел разрешить/запретить доступ к камере
          * б) в ie ещё не успели подтянутся файлы для работы с мультимедиа через activeX
@@ -92,6 +98,7 @@ let DialogAbstract = CompoundControl.extend({
             delay: 0
         }, initDef);
     },
+
     /**
      *
      * @return {Core/Deferred.<Array.<Blob>>}
@@ -105,6 +112,7 @@ let DialogAbstract = CompoundControl.extend({
             return [this._prepareFile(blob)];
         });
     },
+
     /**
      * Возвращает {@link File/IResource} по переданному параметру
      * @param {File | Blob | string} image
@@ -132,6 +140,7 @@ let DialogAbstract = CompoundControl.extend({
     _initUserMedia(): Deferred {
         throw new Error("abstract method");
     },
+
     /**
      *  Завершение работы с медиа контентом
      * @protected
@@ -140,6 +149,7 @@ let DialogAbstract = CompoundControl.extend({
     _destroyMedia() {
         throw new Error("abstract method");
     },
+
     /**
      * Получение текущего изображения из медиа контента
      * @return {Core/Deferred.<Blob | File | String>}
@@ -152,6 +162,7 @@ let DialogAbstract = CompoundControl.extend({
 });
 
 DialogAbstract.ERRORS = {
+    // tslint:disable-next-line:max-line-length
     permissionDenied: rk('К сожалению, вы запретили доступ к устройствам мультимедиа, что не позволяет вам использовать веб-камеру.'),
     NO_CAMERA: rk('К сожалению, к вашему компьютеру не подключена камера.'),
     NO_MEDIA: rk('Не удалось получить доступ к устройствам мультимедиа.')

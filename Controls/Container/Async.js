@@ -56,9 +56,21 @@ define('Controls/Container/Async',
          },
 
          _beforeUpdate: function(options) {
-            var res = this.optionsForComponent.resolvedTemplate;
-            this.optionsForComponent = options.templateOptions || {};
-            this.optionsForComponent.resolvedTemplate = res;
+            var self = this;
+            if (!requireHelper.defined(options.templateName)) {
+               var def = new Deferred();
+               require([options.templateName], function(tpl) {
+                  self.optionsForComponent = options.templateOptions || {};
+                  self.optionsForComponent.resolvedTemplate = tpl;
+                  def.callback();
+               }, function() {
+                  def.errback('Error loading ' + options.templateName);
+               });
+
+               return;
+            }
+            self.optionsForComponent = options.templateOptions || {};
+            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
          }
       });
       Async.contextTypes = function() {

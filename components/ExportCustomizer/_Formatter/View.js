@@ -65,14 +65,14 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
        * @private
        * @type {number}
        */
-      var PREVIEW_SCALE = 0.4;
+      var PREVIEW_SCALE = 0.8;
 
       /**
        * Размер запрашиваемого изображения предпросмотра
        * @private
        * @type {number}
        */
-      var PREVIEW_WIDTH = 1920;
+      var PREVIEW_WIDTH = 1000;
 
       /**
        * Размер запрашиваемого изображения предпросмотра

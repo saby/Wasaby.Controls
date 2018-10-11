@@ -1,6 +1,7 @@
 define('Controls-demo/Filter/Button/panelOptions/panelPG',
    [
       'Core/Control',
+      'WS.Data/Source/Memory',
       'wml!Controls-demo/Filter/Button/panelOptions/panelPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -14,9 +15,9 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       'wml!Controls-demo/Filter/Button/ChooseDate'
    ],
 
-   function(Control, template, config) {
+   function(Control, MemorySource, template, config) {
       'use strict';
-      var TextPG = Control.extend({
+      var panelPG = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/Filter/Button/Panel',
@@ -26,41 +27,145 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._items = [
-               { id: 'period', value: [1], resetValue: [1], myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate' },
-               { id: 'state', value: [1], resetValue: [1] },
-               { id: 'limit', value: [1], resetValue: '', textValue: 'Due date', visibility: false },
-               { id: 'sender', value: '', resetValue: '', visibility: false },
-               { id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''},
-               { id: 'responsible', value: '', resetValue: '', visibility: false },
-               { id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false },
-               { id: 'operation', value: '', resetValue: '', visibility: false },
-               { id: 'group', value: [1], resetValue: '', visibility: false },
-               { id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false, myTemplate: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/unread'  },
-               { id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false },
-               { id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false },
-               { id: 'our organisation', value: '', resetValue: '', visibility: false },
-               { id: 'document', value: '', resetValue: '', visibility: false },
-               { id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false }
+               {
+                  id: 'period',
+                  value: [1],
+                  resetValue: [1],
+                  myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'All time' },
+                        { key: 2, title: 'Today' },
+                        { key: 3, title: 'Past month' },
+                        { key: 4, title: 'Past 6 month' },
+                        { key: 5, title: 'Past year' }
+                     ]
+                  })
+               },
+               {
+                  id: 'state',
+                  value: [1],
+                  resetValue: [1],
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'All state' },
+                        { key: 2, title: 'In progress' },
+                        { key: 3, title: 'Done' },
+                        { key: 4, title: 'Not done' },
+                        { key: 5, title: 'Deleted' }
+                     ]
+                  })
+               },
+               {
+                  id: 'limit',
+                  value: [1],
+                  resetValue: [1],
+                  textValue: 'Due date',
+                  visibility: false,
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'Due date' },
+                        { key: 2, title: 'Overdue' }
+                     ]
+                  })
+               },
+               {
+                  id: 'sender', value: '', resetValue: '', visibility: false
+               },
+               {
+                  id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''
+               },
+               {
+                  id: 'responsible', value: '', resetValue: '', visibility: false
+               },
+               {
+                  id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false
+               },
+               {
+                  id: 'operation', value: '', resetValue: '', visibility: false
+               },
+               {
+                  id: 'group',
+                  value: [1],
+                  resetValue: [1],
+                  visibility: false,
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'My' },
+                        { key: 2, title: 'My department' }
+                     ]
+                  })
+               },
+               {
+                  id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false, myTemplate: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/unread'
+               },
+               {
+                  id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false
+               },
+               {
+                  id: 'own',
+                  value: [2],
+                  resetValue: [2],
+                  textValue: 'On department',
+                  visibility: false,
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'On me' },
+                        { key: 2, title: 'On department' }
+                     ]
+                  })
+               },
+               {
+                  id: 'our organisation', value: '', resetValue: '', visibility: false
+               },
+               {
+                  id: 'document', value: '', resetValue: '', visibility: false
+               }
             ];
             this._itemsSimple = [
-               { id: 'period', value: [1], resetValue: [1], myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate' },
-               {id: 'loose', value: true, resetValue: false, textValue: 'Loose'},
-               {id: 'document', value: '', resetValue: ''},
-               {id: 'unread', value: true, resetValue: false, textValue: 'Unread'},
-               {id: 'own', value: [1], resetValue: [1]}
+               {
+                  id: 'period',
+                  value: [1],
+                  resetValue: [1],
+                  myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate'
+               },
+               {
+                  id: 'loose', value: true, resetValue: false, textValue: 'Loose'
+               },
+               { id: 'document', value: '', resetValue: '' },
+               {
+                  id: 'unread', value: true, resetValue: false, textValue: 'Unread'
+               },
+               {
+                  id: 'own',
+                  value: [1],
+                  resetValue: [1],
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'On me' },
+                        { key: 2, title: 'On department' }
+                     ]
+                  })
+               }
             ];
             this._dataObject = {
                items: {
                   items: [
-                     { id: '1', title: 'Filters with additional params', items: this._items },
-                     { id: '2', title: 'Filters without additional params', items: this._itemsSimple }
+                     { id: 1, title: 'Filters with additional params', items: this._items },
+                     { id: 2, title: 'Filters without additional params', items: this._itemsSimple }
                   ],
                   value: 'Filters with additional params'
                },
                historyId: {
                   items: [
-                     { id: '1', title: 'DEMO_HISTORY_ID', value: 'DEMO_HISTORY_ID' },
-                     { id: '2', title: 'Not specified', value: '' }
+                     { id: 1, title: 'DEMO_HISTORY_ID', value: 'DEMO_HISTORY_ID' },
+                     { id: 2, title: 'Not specified', value: '' }
                   ],
                   value: 'Not specified'
                },
@@ -81,27 +186,27 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                },
                additionalTemplateProperty: {
                   items: [
-                     {id: '1', title: 'template Unread from additionalTemplateProperty', value: 'myTemplate'},
-                     {id: '2', title: 'Not specified', value: ''}
+                     { id: 1, title: 'template Unread from additionalTemplateProperty', value: 'myTemplate' },
+                     { id: 2, title: 'Not specified', value: '' }
                   ],
                   value: 'Not specified'
                },
                itemTemplateProperty: {
                   items: [
-                     {id: '1', title: 'first filter from itemTemplateProperty', value: 'myItemTemplate'},
-                     {id: '2', title: 'Not specified', value: ''}
+                     { id: 1, title: 'first filter from itemTemplateProperty', value: 'myItemTemplate' },
+                     { id: 2, title: 'Not specified', value: '' }
                   ],
                   value: 'Not specified'
                },
                itemTemplate: {
                   items: [
                      {
-                        id: '1',
+                        id: 1,
                         title: 'Not specified',
                         template: undefined
                      },
                      {
-                        id: '2',
+                        id: 2,
                         title: 'custom template',
                         template: { templateName: 'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel' }
                      }
@@ -129,5 +234,5 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      return TextPG;
+      return panelPG;
    });

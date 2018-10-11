@@ -6,6 +6,7 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
      * @name File/Attach/Model
      * @extends WS.Data/Entity/Model
      * @public
+     * @author Заляев А.В.
      */
     var Model = DataModel.extend({
         /**

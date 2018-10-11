@@ -497,6 +497,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          if (mode === 'table') {
             this._updateAjaxLoaderPosition();
          }
+         this._updateHeadAfterInit();
          this._notify('onViewModeChanged');
       },
       /**
@@ -748,7 +749,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                //2. Если это удаление
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action == 'rm') {
+               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action === 'rm' || action === 'a') {
                   parentFnc.apply(this, args);
                }
                else {
