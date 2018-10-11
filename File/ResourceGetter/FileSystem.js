@@ -1,4 +1,3 @@
-/// <amd-module name="File/ResourceGetter/FileSystem" />
 define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter", "File/Decorator/isDestroyed"], function (require, exports, tslib_1, ResourceGetterBase, Deferred, ExtensionsHelper, filter, isDestroyed_1) {
     "use strict";
     var SEC = 1000;
@@ -106,6 +105,7 @@ define("File/ResourceGetter/FileSystem", ["require", "exports", "tslib", "File/R
      * @class
      * @name File/ResourceGetter/FileSystem
      * @extends File/ResourceGetter/Base
+     * @implements File/IResourceGetter
      * @public
      * @author Заляев А.В.
      */

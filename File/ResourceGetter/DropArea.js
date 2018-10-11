@@ -1,4 +1,3 @@
-/// <amd-module name="File/ResourceGetter/DropArea" />
 define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper", "File/utils/filter", "File/ResourceGetter/DropArea/replaceDir", "File/ResourceGetter/DropArea/Overlay", "File/Decorator/isDestroyed"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper, filter, replaceDir, Overlay_1, isDestroyed_1) {
     "use strict";
     var OPTION = {
@@ -53,13 +52,14 @@ define("File/ResourceGetter/DropArea", ["require", "exports", "tslib", "File/Res
          */
     };
     /**
-     * Класс реализующий интерфейс IResourceGetter, позволяющий получать ресурсы через DragAndDrop
+     * Класс реализующий интерфейс {@link File/IResourceGetter}, позволяющий получать ресурсы через DragAndDrop
      * @class
      * @name File/ResourceGetter/DropArea
      * @extends File/IResourceGetter
      * @public
      * @author Заляев А.В.
      * @demo File-demo/ResourceGetter/DropArea
+     * @implements File/IResourceGetter
      */
     var DropArea = /** @class */ (function (_super) {
         tslib_1.__extends(DropArea, _super);

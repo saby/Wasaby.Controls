@@ -20,11 +20,12 @@ type ErrorParam = {
     details?: string;
 }
 /**
- * Ошибка файла
+ * Базовый класс ошибки, возникающий при работе с ресурсами
  * @class
  * @name File/Error
  * @public
  * @extends Error
+ * @author Заляев А.В.
  */
 class FileError {
     public name = 'FileError';
@@ -32,6 +33,14 @@ class FileError {
     public fileName: string;
     public details: string;
     public stack: string;
+    /**
+     *
+     * @params {String} message Текст ошибки
+     * @params {String} fileName Имя файла, вызвавшего ошибку
+     * @params {String} details Детальное описание ошибки.
+     * @constructor
+     * @name File/Error
+     */
     constructor({
         message,
         fileName,

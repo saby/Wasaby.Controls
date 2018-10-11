@@ -7,6 +7,7 @@ define("File/Error/UploadFolder", ["require", "exports", "tslib", "File/Error"],
      * @name File/Error/UploadFolder
      * @public
      * @extends File/Error
+     * @author Заляев А.В.
      */
     var UploadFolderError = /** @class */ (function (_super) {
         tslib_1.__extends(UploadFolderError, _super);

@@ -1,5 +1,11 @@
 define("File/Driver/Blob", ["require", "exports", "Core/detection"], function (require, exports, detection) {
     "use strict";
+    /**
+     * @public
+     * @class File/Driver/Blob
+     * @author Ибрагимов А.А
+     * @description Файловый драйвер для скачивания Blob файлов
+     */
     var Blob = /** @class */ (function () {
         function Blob(blob) {
             this.blob = blob;
