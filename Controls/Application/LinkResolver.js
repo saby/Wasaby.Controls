@@ -26,10 +26,10 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
       },
       resolveOldLink: function(name) {
          var res = require.toUrl(name);
-         if(~res.indexOf(this.resourceRoot)) {
+         if (~res.indexOf(this.resourceRoot)) {
             res = res.split(this.resourceRoot)[1];
          }
-         if(res.indexOf('/') === 0) {
+         if (res.indexOf('/') === 0) {
             res = res.slice(1, res.length);
          }
          return res;
