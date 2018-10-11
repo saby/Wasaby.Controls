@@ -125,6 +125,11 @@ function(cMerge,
             destrFunc = function() {
                destroyDef.callback();
                destroyDef = null;
+
+               // CompoundArea должна отписаться от этого обработчика после onDestroy, на случай
+               // если кто-то кеширует конфигурацию панели, иначе этот обработчик будет добавлен дважды,
+               // что приведет к ошибке при закрытии/уничтожении панели
+               this.unsubscribe('onDestroy', destrFunc);
             };
 
          if (cfg.context) {
