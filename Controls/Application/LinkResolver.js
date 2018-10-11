@@ -35,18 +35,20 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          return res;
       },
       resolveLink: function(link, ext) {
-         var res = link;
-         res = this.resolveOldLink(res);
-         res = this.getLinkWithResourceRoot(res);
-         res = this.getLinkWithExt(res, ext);
-         return res;
+         // var res = link;
+         // res = this.resolveOldLink(res);
+         // res = this.getLinkWithResourceRoot(res);
+         // res = this.getLinkWithExt(res, ext);
+         // return res;
+         return require.toUrl(link + '.' + ext);
       },
       resolveCssWithTheme: function(link, theme) {
-         var res = link;
-         res = this.getLinkWithResourceRoot(res);
-         res = this.getLinkWithTheme(res, theme);
-         res = this.getLinkWithExt(res, 'css');
-         return res;
+         // var res = link;
+         // res = this.getLinkWithResourceRoot(res);
+         // res = this.getLinkWithTheme(res, theme);
+         // res = this.getLinkWithExt(res, 'css');
+         // return res;
+         return require.toUrl(link + '_' + theme + '.css');
       },
       getLinkWithTheme: function(cssName, theme) {
          if (!theme) {
