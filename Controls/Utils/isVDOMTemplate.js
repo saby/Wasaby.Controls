@@ -19,8 +19,8 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * <h2>Returns</h2>
     *
     * <ul>
-    *     <li><b>true</b> - the class compatible with Wasaby (inherited from Core/Control)</li>
-    *     <li><b>false</b> {Function} -  class is not compatible with Wasaby</li>
+    *     <li><b>true</b> - the class is inherited from Core/Control</li>
+    *     <li><b>false</b> - class is not inherited from Core/Control</li>
     * </ul>
     *
     * <h2>Usage example</h2>
