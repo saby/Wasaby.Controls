@@ -49,7 +49,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="bold"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="bold"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>
@@ -76,7 +76,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="accent" size="l"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="accent" size="l"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>
@@ -101,7 +101,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="primary" size="l"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="primary" size="l"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>

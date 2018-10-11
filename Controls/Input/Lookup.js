@@ -12,7 +12,7 @@ define('Controls/Input/Lookup', [
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
    'Controls/Input/Lookup/_Collection',
-   'wml!Controls/Input/Lookup/_Collection/_Collection',
+   'wml!Controls/Input/Lookup/Collection/_Collection',
    'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
@@ -112,10 +112,10 @@ define('Controls/Input/Lookup', [
          if (self._selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
                selectedKeys.push(key);
-               _private.setSelectedKeys(self, selectedKeys, self._options);
+               _private.setSelectedKeys(self, selectedKeys);
                _private.getItems(self).append([item]);
             } else {
-               _private.setSelectedKeys(self, [key], self._options);
+               _private.setSelectedKeys(self, [key]);
                _private.getItems(self).assign([item]);
             }
 
@@ -131,15 +131,15 @@ define('Controls/Input/Lookup', [
 
          if (indexItem !== -1) {
             selectedKeys.splice(indexItem, 1);
-            _private.setSelectedKeys(self, selectedKeys, self._options);
+            _private.setSelectedKeys(self, selectedKeys);
             _private.getItems(self).remove(item);
             _private.notifyChanges(self, self._selectedKeys);
          }
       },
 
-      setSelectedKeys: function(self, keys, options) {
+      setSelectedKeys: function(self, keys) {
          self._selectedKeys = keys;
-         _private.keysChanged(self, options);
+         _private.keysChanged(self);
       },
 
       updateModel: function(self, value) {
@@ -148,8 +148,7 @@ define('Controls/Input/Lookup', [
          });
       },
 
-      setStateOnKeysChanged: function(self, options) {
-         self._autoDropDown = _private.determineAutoDropDown(self, options);
+      setStateOnKeysChanged: function(self) {
          self._isEmpty = !self._selectedKeys.length;
 
          /* keys changed - need to hide suggest */
@@ -158,16 +157,12 @@ define('Controls/Input/Lookup', [
          }
       },
 
-      keysChanged: function(self, options) {
-         _private.setStateOnKeysChanged(self, options);
+      keysChanged: function(self) {
+         _private.setStateOnKeysChanged(self);
          self._forceUpdate();
       },
 
-      determineAutoDropDown: function(self, options) {
-         return options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
-      },
-
-      setStateForDrawCollection: function(self, options) {
+      setStateForDrawCollection: function(self, itemTemplate, multiSelect, readOnly) {
          var
             visibleItems = [],
             isAllRecordsDisplay = true,
@@ -175,8 +170,8 @@ define('Controls/Input/Lookup', [
 
          if (self._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
-            itemsSizes = _private.getItemsSizes(self, lastSelectedItems, options);
-            availableWidth = _private.getAvailableCollectionWidth(self._children.inputRender._container, options.readOnly, options.multiSelect);
+            itemsSizes = _private.getItemsSizes(self, lastSelectedItems, itemTemplate, readOnly);
+            availableWidth = _private.getAvailableCollectionWidth(self._children.inputRender._container, readOnly, multiSelect);
             visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
 
@@ -247,13 +242,13 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      getItemsSizes: function(self, items, options) {
+      getItemsSizes: function(self, items, itemTemplate, readOnly) {
          var
             itemsSizes = [],
             measurer = document.createElement('div');
 
          measurer.innerHTML = itemsTemplate({
-            _options: _private.getCollectionOptions(items, options)
+            _options: _private.getCollectionOptions(items, itemTemplate, readOnly)
          });
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -266,11 +261,11 @@ define('Controls/Input/Lookup', [
          return itemsSizes;
       },
 
-      getCollectionOptions: function(items, options) {
+      getCollectionOptions: function(items, itemTemplate, readOnly) {
          return merge({
             items: items,
-            itemTemplate: options.itemTemplate,
-            readOnly: options.readOnly
+            itemTemplate: itemTemplate,
+            readOnly: readOnly
          }, Collection.getDefaultOptions(), {
             preferSource: true
          });
@@ -311,10 +306,9 @@ define('Controls/Input/Lookup', [
          });
          this._selectedKeys = options.selectedKeys.slice();
          this._selectCallback = this._selectCallback.bind(this);
-         this._autoDropDown = _private.determineAutoDropDown(this, options);
 
          if (this._selectedKeys.length) {
-            _private.setStateOnKeysChanged(this, options);
+            _private.setStateOnKeysChanged(this);
 
             if (receivedState) {
                this._items = receivedState;
@@ -339,13 +333,12 @@ define('Controls/Input/Lookup', [
             sourceIsChanged = newOptions.source !== this._options.source;
 
          _private.updateModel(this, newOptions.value);
-         _private.setStateForDrawCollection(this, newOptions);
-         this._autoDropDown = _private.determineAutoDropDown(self, newOptions);
+         _private.setStateForDrawCollection(this, newOptions.itemTemplate, newOptions.multiSelect, newOptions.readOnly);
 
          if (keysChanged) {
-            _private.setSelectedKeys(this, newOptions.selectedKeys.slice(), newOptions);
+            _private.setSelectedKeys(this, newOptions.selectedKeys.slice());
          } else if (sourceIsChanged) {
-            _private.setSelectedKeys(this, [], newOptions);
+            _private.setSelectedKeys(this, []);
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
             this._selectedKeys = [];
             _private.getItems(this).each(function(item) {
@@ -435,7 +428,7 @@ define('Controls/Input/Lookup', [
             });
          }
 
-         _private.setSelectedKeys(this, selectedKeys, this._options);
+         _private.setSelectedKeys(this, selectedKeys);
          _private.getItems(this).assign(items);
          _private.notifyChanges(this, this._selectedKeys);
       },
@@ -449,6 +442,10 @@ define('Controls/Input/Lookup', [
          if (this._isPickerVisible || this._options.readOnly) {
             this._suggestState = false;
          }
+      },
+
+      _determineAutoDropDown: function() {
+         return this._options.autoDropDown && (!this._selectedKeys.length || this._options.multiSelect);
       },
 
       showSelector: function(templateOptions) {

@@ -45,12 +45,12 @@ define([
       it('keysChanged', function() {
          var self = getBaseLookup();
 
-         Lookup._private.keysChanged(self, {});
+         Lookup._private.keysChanged(self);
          
          assert.isTrue(self._isEmpty);
          
          self._selectedKeys = [1];
-         Lookup._private.keysChanged(self, {});
+         Lookup._private.keysChanged(self);
          assert.isFalse(self._isEmpty);
          assert.isFalse(self._suggestState);
       });
@@ -58,7 +58,7 @@ define([
       it('setSelectedKeys', function() {
          var self = getBaseLookup();
          
-         Lookup._private.setSelectedKeys(self, [1], {});
+         Lookup._private.setSelectedKeys(self, [1]);
          
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(self._isEmpty);
@@ -513,6 +513,21 @@ define([
          lookup._isPickerVisible = true;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
+      });
+
+      it('_determineAutoDropDown', function() {
+         var lookup = new Lookup();
+
+         lookup._options.autoDropDown = true;
+         lookup._selectedKeys = [];
+         lookup._options.multiSelect = false;
+         assert.isTrue(lookup._determineAutoDropDown());
+
+         lookup._selectedKeys = [1];
+         assert.isFalse(lookup._determineAutoDropDown());
+
+         lookup._options.multiSelect = true;
+         assert.isTrue(lookup._determineAutoDropDown());
       });
 
       it('showSelector', function() {

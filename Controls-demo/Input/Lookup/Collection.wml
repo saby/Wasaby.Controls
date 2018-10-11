@@ -10,7 +10,7 @@
         <div style="width: 50px" >
             <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" />
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" />
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
@@ -26,7 +26,7 @@
         <div>
             <Controls.Input.Lookup._Collection items="{{_sourceMulti}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" readOnly="{{true}}"/>
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" readOnly="{{true}}"/>
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
@@ -36,7 +36,7 @@
         <div>
             <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="bold"/>
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="bold"/>
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
@@ -46,7 +46,7 @@
         <div>
             <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_clickable">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="bold" clickable="{{true}}"/>
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="bold" clickable="{{true}}"/>
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
@@ -56,7 +56,7 @@
         <div>
             <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="accent" size="l"/>
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="accent" size="l"/>
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
@@ -66,7 +66,7 @@
         <div>
             <Controls.Input.Lookup._Collection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/_Collection/ItemTemplate" style="primary" size="l"/>
+                    <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="primary" size="l"/>
                 </ws:itemTemplate>
             </Controls.Input.Lookup._Collection>
         </div>
