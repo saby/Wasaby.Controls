@@ -395,6 +395,31 @@
             "type": "DateTime",
             "title": "Field value."
           },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY",
+              "DD.MM": "DD.MM",
+              "YYYY-MM-DD": "YYYY-MM-DD",
+              "YY-MM-DD": "YY-MM-DD",
+              "HH:mm:ss": "HH:mm:ss",
+              "HH:mm": "HH:mm",
+              "DD.MM.YYYY HH:mm:ss": "DD.MM.YYYY HH:mm:ss",
+              "DD.MM.YYYY HH:mm": "DD.MM.YYYY HH:mm",
+              "DD.MM.YY HH:mm:ss": "DD.MM.YY HH:mm:ss",
+              "DD.MM.YY HH:mm": "DD.MM.YY HH:mm",
+              "DD.MM HH:mm:ss": "DD.MM HH:mm:ss",
+              "DD.MM HH:mm": "DD.MM HH:mm",
+              "YYYY-MM-DD HH:mm:ss": "YYYY-MM-DD HH:mm:ss",
+              "YYYY-MM-DD HH:mm": "YYYY-MM-DD HH:mm",
+              "YY-MM-DD HH:mm:ss": "YY-MM-DD HH:mm:ss",
+              "YY-MM-DD HH:mm": "YY-MM-DD HH:mm",
+              "YYYY": "YYYY",
+              "MM/YYYY": "MM/YYYY"
+            }
+          },
           "tooltip": {
             "type": "String",
             "title": "Field tooltip."
@@ -431,6 +456,14 @@
           "value": {
             "type": "DateTime",
             "title": "Field value."
+          },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY"
+            }
           },
           "tooltip": {
             "type": "String",
@@ -816,6 +849,11 @@
             "type": "Boolean",
             "title": "Determines whether trailing zeros are shown in the fractional part."
           },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
@@ -921,15 +959,6 @@
               "column": "display in two columns"
             }
           },
-          "headerStyle": {
-            "default": "primary",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "primary": "primary color",
-              "default": "default color"
-            }
-          },
           "size": {
             "default": "m",
             "title": "Color of title in header of filter panel.",
@@ -949,6 +978,203 @@
             "default": "false",
             "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
             "type": "Boolean"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Toggle/Button": {
+    "name": "Controls/Toggle/Button",
+    "title": "Button that switches between different states",
+    "className": "Controls/Toggle/Button",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/Button",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "value": {
+            "type": "Boolean",
+            "title": "Current state."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "iconStyle": {
+            "type": "enum",
+            "title": "Displaying icon style.",
+            "enum": {
+              "default": "Default icon display style.  It is different for different toggle button styles. It is default value.",
+              "attention": "Attention icon display style.",
+              "error": "Error icon display style.",
+              "done": "Done icon display style."
+            }
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of button.",
+            "enum": {
+              "iconButtonBordered": "Bordered icon toggle button display style.",
+              "linkMain": "Main link toggle button display style. It is default value.",
+              "buttonLinkMain": "Main link button display style.",
+              "buttonLinkAdditional": "Additional link button display style."
+            }
+          },
+          "size": {
+            "type": "enum",
+            "title": "Size of the button.",
+            "enum": {
+              "s": "Small button size.",
+              "m": "Medium button size.",
+              "l": "Large button size. It is default value."
+            }
+          },
+          "icons": {
+            "type": "Array",
+            "title": "Set of icons"
+          },
+          "captions": {
+            "type": "Array",
+            "title": "Set of captions"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Lookup": {
+    "name": "Controls/Input/Lookup",
+    "title": "Control \"Lookup\"",
+    "className": "Controls/Input/Lookup",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Lookup",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "placeholder": {
+            "type": "String"
+          },
+          "minSearchLength": {
+            "type": "String"
+          },
+          "autoDropDown": {
+            "type": "Boolean"
+          },
+          "multiSelect": {
+            "type": "Boolean"
+          },
+          "readOnly": {
+            "type": "Boolean"
+          },
+          "source": {
+            "type": "function"
+          },
+          "displayProperty": {
+            "type": "enum",
+            "enum": {
+              "id": "",
+              "title": ""
+            }
+          },
+          "keyProperty": {
+            "type": "enum",
+            "enum": {
+              "id": "",
+              "title": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Toggle/DoubleSwitch": {
+    "name": "Controls/Toggle/DoubleSwitch",
+    "title": "Switch with two captions and with support two orientation.",
+    "className": "Controls/Toggle/DoubleSwitch",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/DoubleSwitch",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "value": {
+            "type": "Boolean",
+            "title": "Current state."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "captions": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "Array of two captions"
+          },
+          "orientation": {
+            "type": "enum",
+            "title": "Double switch orientation in space.",
+            "enum": {
+              "horizontal": "Horizontal orientation. It is default value.",
+              "vertical": "Vertical orientation."
+            }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Filter/Fast": {
+    "name": "Controls/Filter/Fast",
+    "title": "Control \"Fast Filter\".",
+    "className": "Controls/Filter/Fast",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Fast",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
+            "title": "Sets the source of data set to use in the mapping"
+          },
+          "items": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterItems.typedef",
+            "title": "Sets a set of initial data to build the mapping."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "default": "Inherited",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "enum": {
+              "true": "User cannot change control's value (or interact with the control if its value is not editable).",
+              "false": "User can change control's value (or interact with the control if its value is not editable).",
+              "inherited": "Value inherited from the parent."
+            }
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
           }
         }
       }

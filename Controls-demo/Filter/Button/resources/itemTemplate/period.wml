@@ -1,4 +1,4 @@
-<Controls.Input.Dropdown bind:selectedKeys="item.value"
+<Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
                          bind:textValue="item.textValue"
                          displayProperty="title"
                          keyProperty="key"

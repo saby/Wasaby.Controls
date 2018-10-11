@@ -10,9 +10,9 @@ define('Controls/Input/Suggest',
    function(Control, template, types, BaseViewModel, tmplNotify) {
       
       /**
-       * Input that suggests options as you are typing. Options are available for selection through the drop-down list.
-       * Once selected, the selected value is displayed in the field. The field can be cleared by clicking on the appropriate icon.
-       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
+       *
+       * Here you can see the <a href="/materials/demo-ws4-input">demo examples</a>.
        *
        * @class Controls/Input/Suggest
        * @extends Core/Control
@@ -23,6 +23,7 @@ define('Controls/Input/Suggest',
        * @mixes Controls/interface/INavigation
        * @mixes Controls/Input/Suggest/SuggestStyles
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/Input/interface/IInputBase
        * @control
        * @public
        * @category Input

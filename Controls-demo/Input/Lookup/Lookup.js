@@ -4,11 +4,12 @@ define('Controls-demo/Input/Lookup/Lookup',
       'wml!Controls-demo/Input/Lookup/Lookup',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
+      'Controls-demo/Input/Lookup/LookupData',
       'Controls/Input/Lookup',
       'css!Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/Lookup'
    ],
-   function(Control, template, Memory, memorySourceFilter) {
+   function(Control, template, Memory, memorySourceFilter, lookupData) {
       'use strict';
       var Lookup = Control.extend({
          _template: template,
@@ -24,6 +25,8 @@ define('Controls-demo/Input/Lookup/Lookup',
          _selectedKeys3: null,
          _selectedKeys4: null,
          _selectedKeys5: null,
+         _selectedKeys6: null,
+         _selectedKeys7: null,
          _source: null,
          _beforeMount: function() {
             this._selectedKeys = [4];
@@ -32,22 +35,21 @@ define('Controls-demo/Input/Lookup/Lookup',
             this._selectedKeys3 = [4];
             this._selectedKeys4 = [4];
             this._selectedKeys5 = [4];
+            this._selectedKeys6 = [4, 2, 5 ,3, 8];
+            this._selectedKeys7 = [];
             this._source = new Memory({
-               data: [
-                  { id: 1, title: 'Sasha', text: 'test'},
-                  { id: 2, title: 'Dmitry', text: 'test'},
-                  { id: 3, title: 'Andrey', text: 'test'},
-                  { id: 4, title: 'Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст, Sasha длинный очень текст,', text: 'test'},
-                  { id: 5, title: 'Aleksey', text: 'test'},
-                  { id: 6, title: 'Sasha', text: 'test'},
-                  { id: 7, title: 'Ivan', text: 'test'},
-                  { id: 8, title: 'Petr', text: 'test'},
-                  { id: 9, title: 'Roman', text: 'test'},
-                  { id: 10, title: 'Maxim', text: 'test'},
-               ],
+               data: lookupData.names,
                idProperty: 'id',
                filter: memorySourceFilter()
             });
+         },
+
+         showSelector: function() {
+            this._children.lookup.showSelector();
+         },
+
+         showSelector2: function() {
+            this._children.lookup2.showSelector();
          }
       });
 

@@ -270,6 +270,18 @@ define('Controls/Date/PeriodLiteDialog', [
             css.push('controls-PeriodLiteDialog__year-medium');
          }
          return css.join(' ');
+      },
+
+      _getYearItemCssClasses: function(year) {
+         var css = [],
+            date = this._options.startValue;
+         if (!dateUtils.isValidDate(date) || (year !== date.getFullYear())) {
+            css.push('controls-PeriodLiteDialog__vLayoutItem-clickable');
+         }
+         if (dateUtils.isValidDate(date) && (year === date.getFullYear())) {
+            css.push('controls-PeriodLiteDialog__selectedYear');
+         }
+         return css.join(' ');
       }
 
    });

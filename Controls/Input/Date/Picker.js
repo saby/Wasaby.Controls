@@ -1,8 +1,6 @@
 define('Controls/Input/Date/Picker', [
    'Core/Control',
    'Core/core-merge',
-   'Controls/Calendar/Utils',
-   'Controls/Input/DateTime/Model',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Picker/Picker',
@@ -10,8 +8,6 @@ define('Controls/Input/Date/Picker', [
 ], function(
    Control,
    coreMerge,
-   CalendarControlsUtils,
-   Model,
    IDateTimeMask,
    tmplNotify,
    template
@@ -43,25 +39,21 @@ define('Controls/Input/Date/Picker', [
       // },
 
       _openDialog: function(event) {
-         var className;
-
-         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeLinkLite__picker-years-only';
-         } else {
-            className = 'controls-DateRangeLinkLite__picker-normal';
-         }
-
          this._children.opener.open({
             opener: this,
             target: this._container,
-            className: className,
+            className: 'controls-PeriodDialog__picker-withoutModeBtn',
+            horizontalAlign: { side: 'right' },
+            corner: { horizontal: 'left' },
             eventHandlers: {
                onResult: this._onResult.bind(this)
             },
             templateOptions: {
                startValue: this._options.value,
                endValue: this._options.value,
-               selectionType: 'single'
+               mask: this._options.mask,
+               selectionType: 'single',
+               headerType: 'input'
             }
          });
       },

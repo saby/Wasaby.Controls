@@ -2,15 +2,14 @@
    <div>From source:</div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
-      <Controls.Filter.Fast bind:selectedKeys="_selectedKeys3"
-                                source="{{_getDefaultMemory()}}"/>
+      <Controls.Filter.Fast bind:selectedKeys="_selectedKeys"
+                                source="{{dataSourceDemoSource}}"/>
    </div>
    <hr/><br/>
    <div>From items: </div>
    <div class="row-filter-inline">
       <Controls.Filter.Button/>
       <Controls.Filter.Fast bind:selectedKeys="_selectedKeysItems"
-                                source="{{_getDefaultMemory()}}"
                                 items="{{dataSourceDemoItems}}"/>
    </div>
 </div>
