@@ -2467,11 +2467,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
 
-               var options = this._options;
+               var pasteAsText = this._options.editorConfig.paste_as_text;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
-               if (!this._mouseIsPressed && options.editorConfig.paste_as_text) {
+               if (pasteAsText && (!this._mouseIsPressed || !asRichContent)) {
                   e.content = this._sanitizeClasses(e.content, false);
                }
                this._mouseIsPressed = false;
@@ -2481,7 +2481,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
+               if (!asRichContent && pasteAsText && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
