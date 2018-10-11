@@ -1,9 +1,12 @@
 /// <amd-module name="File/Error/MaxSize" />
 import FileError = require('File/Error');
+import format = require('Core/helpers/String/format');
+import 'i18n!File/Error/MaxSize';
 
 const MESSAGE = rk('Размер выбранного файла превышает максимально допустимый');
+const DETAILS = rk('Файл $fileName$s$ превышает допустимый размер $size$d$МБ');
 
-let getDetails = (fileName, size) => rk(`Файл ${fileName} превышает допустимый размер ${size}МБ`);
+let getDetails = (fileName, size) => format({fileName, size}, DETAILS);
 /**
  * @cfg {String} Максимально допустимый размер файла
  * @name File/Error/MaxSize#maxSize
