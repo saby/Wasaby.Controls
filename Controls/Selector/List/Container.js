@@ -2,10 +2,11 @@ define('Controls/Selector/List/Container',
    [
       'Core/Control',
       'tmpl!Controls/Selector/List/Container',
-      'Controls/Utils/Toolbar'
+      'Controls/Utils/Toolbar',
+      'Controls/Container/MultiSelector/SelectionContextField',
    ],
    
-   function(Control, template, Toolbar) {
+   function(Control, template, Toolbar, SelectionContextField) {
       
       'use strict';
    
@@ -135,7 +136,7 @@ define('Controls/Selector/List/Container',
          
          _itemClick: function(event, item) {
             if (!this._ignoreItemClickEvent && !item.get(this._options.nodeProperty)) {
-               _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this._selectedKeys);
+               _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this.context.get('selection').selectedKeys);
             }
             this._ignoreItemClickEvent = false;
          },
@@ -146,7 +147,7 @@ define('Controls/Selector/List/Container',
    
          _itemActionsClick: function(event, action, item) {
             if (action.id === 'selector.action') {
-               var itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this._selectedKeys, this._options.multiSelect);
+               var itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this.context.get('selection').selectedKeys, this._options.multiSelect);
                _private.selectItem(this, itemClickResult);
             }
          }
@@ -154,6 +155,12 @@ define('Controls/Selector/List/Container',
       });
    
       Container._private = _private;
+   
+      Container.contextTypes = function() {
+         return {
+            selection: SelectionContextField
+         };
+      };
    
       Container.getDefaultOptions = function getDefaultOptions() {
          return {
