@@ -55,8 +55,7 @@
             <div  class="controls-PeriodLiteDialog-item-years
                            controls-PeriodLiteDialog__vLayoutItem
                            controls-PeriodLiteDialog__vLayoutItem-caption
-                           {{_year - value !== _options.startValue.getFullYear() ? 'controls-PeriodLiteDialog__vLayoutItem-clickable'}}
-                           {{_year - value === _options.startValue.getFullYear() ? ' controls-PeriodLiteDialog__selectedYear'}}"
+                           {{_getYearItemCssClasses(_year - value)}}"
                on:click="_onYearClick(_year - value)">
                {{ _year - value }}
             </div>
