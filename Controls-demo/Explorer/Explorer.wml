@@ -1,5 +1,6 @@
 <div>
    <div>Demo Controls/Explorer</div>
+   <Controls.Button on:click="toggleViewMode()" caption="toggleViewMode"/>
    <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.TreeMultiSelector bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" parentProperty="parent" nodeProperty="parent@">
