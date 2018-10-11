@@ -93,15 +93,22 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          style: 'warning',
          type: 'warning'
       },
+
+      default: {
+         style: 'defaultNew',
+         type: 'defaultNew'
+      },
+
       toolbarButton: {
          style: 'toolbarButton',
          type: 'toolbarButton'
       },
+
       toolbarButtonTransparent: {
          style: 'toolbarButton',
          type: 'toolbarButton',
          transparent: true
-      },
+      }
    };
    var Classes = {
 
