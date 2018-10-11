@@ -49,12 +49,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
 
-               require([this._options.innerComponentOptions.template], function() {
+               require([this._options.innerComponentOptions._template], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
                   }
-                  if (!self._options.isTMPL(self._options.innerComponentOptions.template)) {
+                  if (!self._options.isTMPL(self._options.innerComponentOptions._template)) {
                      var wrapper = $('.vDomWrapper', self.getContainer());
                      if (wrapper.length) {
                         self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, wrapper);
