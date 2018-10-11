@@ -17,7 +17,7 @@ define('Controls/Button/interface/IIcon', [
     * @example
     * Button with style buttonPrimary and icon Add.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    *    <Controls.Button icon="icon-small icon-Add" style="primary" viewMode="button"/>
     * </pre>
     * @see iconStyle
     */
