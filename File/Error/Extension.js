@@ -33,10 +33,6 @@ define("File/Error/Extension", ["require", "exports", "tslib", "File/Error"], fu
                 details: getDetails(params.extensions),
                 fileName: params.fileName
             }) || this;
-            /*
-             * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
-             */
-            Object.setPrototypeOf(_this, ExtensionsError.prototype);
             _this.extensions = params.extensions;
             return _this;
         }
