@@ -1571,13 +1571,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
-                  // Перед применением цитаты сбрасываем вначале прикладные стили
-                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
-                  for (var format in this._options.customFormats) {
-                     if (this._options.customFormats.hasOwnProperty(format)) {
-                        this._tinyEditor.formatter.remove(format);
-                     }
-                  }
                   // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                   // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                   var listNode = rng.commonAncestorContainer;
@@ -1660,6 +1653,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         newNode.innerHTML = '<br data-mce-bogus="1" />';
                         node.parentNode.insertBefore(newNode, node.nextSibling);
                         selection.select(newNode, true);
+                     }
+                  }
+               }
+               if (isA.blockquote && !isAlreadyApplied) {
+                  // При применением цитаты сбрасываем прикладные стили
+                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
+                  var customFormats = this._options.customFormats;
+                  if (customFormats) {
+                     var formatIds = Object.keys(customFormats);
+                     if (formatIds.length) {
+                        afterProcess.unshift(function () {
+                           for (var i = 0; i < formatIds.length; i++) {
+                              formatter.remove(formatIds[i]);
+                           }
+                        });
                      }
                   }
                }
