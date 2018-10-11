@@ -187,22 +187,6 @@ define([
          assert.equal(Lookup._private.getInputMinWidth(530, 30), 100);
       });
 
-      it('setStateForDrawCollection', function() {
-         var lookup = new Lookup();
-
-         lookup._visibleItems = [1, 2, 3];
-         lookup._availableWidthCollection = 100;
-         lookup._isAllRecordsDisplay = false;
-
-         lookup._selectedKeys = [];
-         setStateForDrawCollection(lookup);
-
-         assert.deepEqual(lookup._visibleItems, []);
-         assert.equal(lookup._availableWidthCollection, undefined);
-         assert.isTrue(lookup._isAllRecordsDisplay);
-
-      });
-
       it('getVisibleItems', function() {
          var
             items = [1, 2, 3, 4, 5],

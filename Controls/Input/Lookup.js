@@ -162,29 +162,6 @@ define('Controls/Input/Lookup', [
          self._forceUpdate();
       },
 
-      setStateForDrawCollection: function(self, itemTemplate, multiSelect, readOnly) {
-         var
-            visibleItems = [],
-            isAllRecordsDisplay = true,
-            itemsSizes, availableWidth, lastSelectedItems;
-
-         if (self._selectedKeys.length) {
-            lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
-            itemsSizes = _private.getItemsSizes(self, lastSelectedItems, itemTemplate, readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(self._children.inputRender._container, readOnly, multiSelect);
-            visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
-            isAllRecordsDisplay = _private.getItems(self).getCount() === visibleItems.length;
-
-            if (!isAllRecordsDisplay) {
-               availableWidth -= SHOW_ALL_LINKS_WIDTH;
-            }
-         }
-
-         self._visibleItems = visibleItems;
-         self._availableWidthCollection = availableWidth;
-         self._isAllRecordsDisplay = isAllRecordsDisplay;
-      },
-
       getVisibleItems: function(items, itemsSizes, availableWidth) {
          var
             visibleItems = [],
@@ -328,23 +305,27 @@ define('Controls/Input/Lookup', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
+            newSelectedKeys,
+            visibleItems = [],
+            isAllRecordsDisplay = true,
+            itemsSizes, availableWidth, lastSelectedItems,
             keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
-         _private.updateModel(this, newOptions.value);
-         _private.setStateForDrawCollection(this, newOptions.itemTemplate, newOptions.multiSelect, newOptions.readOnly);
-
          if (keysChanged) {
-            _private.setSelectedKeys(this, newOptions.selectedKeys.slice());
+            newSelectedKeys = newOptions.selectedKeys.slice();
          } else if (sourceIsChanged) {
-            _private.setSelectedKeys(this, []);
+            newSelectedKeys = [];
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
-            this._selectedKeys = [];
+            newSelectedKeys = [];
             _private.getItems(this).each(function(item) {
-               self._selectedKeys.push(item.get(newOptions.keyProperty));
+               newSelectedKeys.push(item.get(newOptions.keyProperty));
             });
          }
+
+         _private.updateModel(this, newOptions.value);
+         newSelectedKeys && _private.setSelectedKeys(this, newSelectedKeys);
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
@@ -352,6 +333,22 @@ define('Controls/Input/Lookup', [
                return result;
             });
          }
+
+         if (this._selectedKeys.length) {
+            lastSelectedItems = _private.getLastSelectedItems(this, MAX_VISIBLE_ITEMS);
+            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly);
+            availableWidth = _private.getAvailableCollectionWidth(this._children.inputRender._container, newOptions.readOnly, newOptions.multiSelect);
+            visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
+            isAllRecordsDisplay = _private.getItems(this).getCount() === visibleItems.length;
+
+            if (!isAllRecordsDisplay) {
+               availableWidth -= SHOW_ALL_LINKS_WIDTH;
+            }
+         }
+
+         this._visibleItems = visibleItems;
+         this._availableWidthCollection = availableWidth;
+         this._isAllRecordsDisplay = isAllRecordsDisplay;
       },
 
       _afterUpdate: function() {
