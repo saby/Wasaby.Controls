@@ -1,5 +1,7 @@
 <ws:template name="owner">
-    <Controls.Input.Dropdown bind:selectedKeys="item.value" keyProperty='lastName' displayProperty='title'>
+    <Controls.Filter.Button.Panel.Dropdown bind:selectedKeys="item.value"
+                             keyProperty='lastName'
+                             displayProperty='title'>
         <ws:source module='WS.Data/Source/Memory'>
             <ws:options>
                 <ws:data>
@@ -13,7 +15,7 @@
                 </ws:data>
             </ws:options>
         </ws:source>
-    </Controls.Input.Dropdown>
+    </Controls.Filter.Button.Panel.Dropdown>
 </ws:template>
 
 
