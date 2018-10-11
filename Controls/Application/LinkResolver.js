@@ -1,4 +1,4 @@
-define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreExtend) {
+define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC'], function(coreExtend, IoC) {
    'use strict';
 
    // css link should look like:
@@ -20,6 +20,16 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
             fullResourcePath += '/' + resourceRoot + '/';
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
+
+         if(require.toUrl) {
+            this.rq = require;
+         } else if(typeof requirejs !== 'undefined') {
+            if(requirejs.toUrl) {
+               this.rq = requirejs;
+            }
+         } else {
+            IoC.resolve('ILogger').error('Need require.toUrl() to resolve path to module');
+         }
       },
       getLinkWithResourceRoot: function(cssName) {
          return this.resourceRoot + cssName;
@@ -40,7 +50,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          // res = this.getLinkWithResourceRoot(res);
          // res = this.getLinkWithExt(res, ext);
          // return res;
-         return require.toUrl(link + '.' + ext);
+         return this.rq.toUrl(link + '.' + ext);
       },
       resolveCssWithTheme: function(link, theme) {
          // var res = link;
@@ -48,7 +58,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          // res = this.getLinkWithTheme(res, theme);
          // res = this.getLinkWithExt(res, 'css');
          // return res;
-         return require.toUrl(link + '_' + theme + '.css');
+         return this.rq.toUrl(link + '_' + theme + '.css');
       },
       getLinkWithTheme: function(cssName, theme) {
          if (!theme) {
