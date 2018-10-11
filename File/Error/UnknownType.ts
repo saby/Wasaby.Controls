@@ -8,11 +8,12 @@ type ErrorParam = {
 }
 
 /**
- * Ошибка, когда не смогли определить тип файла
+ * Ошибка невозможности определения типа файла
  * @class
  * @name File/Error/UnknownType
  * @public
  * @extends File/Error
+ * @author Заляев А.В.
  */
 class UnknownTypeError extends FileError {
     public maxSize: number;

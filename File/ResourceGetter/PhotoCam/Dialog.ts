@@ -1,5 +1,4 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/Dialog" />
-
 import DialogAbstract = require("File/ResourceGetter/PhotoCam/DialogAbstract");
 import Deferred = require("Core/Deferred");
 
@@ -45,6 +44,7 @@ let getMedia = (constraints: MediaStreamConstraints): Deferred<MediaStream> => {
     navigator.getUserMedia(constraints, callback, errback);
     return def;
 };
+
 /**
  * Завершает работу MediaStream.
  * @param {MediaStream} [stream] Закрываемый стрим. Если не передан, то закрываем последний открытый
@@ -60,6 +60,7 @@ let stopStream = (stream?: MediaStream) => {
         stream.getTracks()[0].stop();
     }
 };
+
 let processStreamError = (error) => {
     if ((error.name === "PermissionDismissedError") ||
         (error.name === "PermissionDeniedError") ||
@@ -73,6 +74,14 @@ let processStreamError = (error) => {
     return DialogAbstract.ERRORS.NO_MEDIA;
 };
 
+/**
+ * Компонент отвечающий за захват и отображение изображение с камеры
+ * @private
+ * @class
+ * @author Заляев А.В.
+ * @name File/ResourceGetter/PhotoCam/Dialog
+ * @extends File/ResourceGetter/PhotoCam/DialogAbstract
+ */
 let Dialog = DialogAbstract.extend({
     $protected: {
       _options: {

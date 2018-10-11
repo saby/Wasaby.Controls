@@ -25,6 +25,7 @@ type ErrorParam = {
  * @name File/Error/MaxSize
  * @public
  * @extends File/Error
+ * @author Заляев А.В.
  */
 class MaxSizeError extends FileError {
     public maxSize: number;

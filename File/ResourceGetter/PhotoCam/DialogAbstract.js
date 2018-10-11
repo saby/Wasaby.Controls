@@ -1,7 +1,13 @@
-/// <amd-module name="File/ResourceGetter/PhotoCam/DialogAbstract" />
 define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SBIS3.CONTROLS/CompoundControl", "Core/Deferred", "File/LocalFile", "File/LocalFileLink", "tmpl!File/ResourceGetter/PhotoCam/Dialog", "SBIS3.CONTROLS/WaitIndicator", "SBIS3.CONTROLS/Button", "css!File/ResourceGetter/PhotoCam/Dialog"], function (require, exports, CompoundControl, Deferred, LocalFile, LocalFileLink, tmpl, WaitIndicator) {
     "use strict";
     var BEFORE_SHOW_DELAY = 300;
+    /**
+     * Абстрактный компонент отвечающий за захват и отображение изображение с камеры
+     * @private
+     * @class
+     * @author Заляев А.В.
+     * @name File/ResourceGetter/PhotoCam/DialogAbstract
+     */
     var DialogAbstract = CompoundControl.extend({
         _dotTplFn: tmpl,
         $protected: {
@@ -22,7 +28,7 @@ define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SB
             if (!(def instanceof Deferred)) {
                 throw new Error('Param "resultDeferred" is not a Deferred');
             }
-            /**
+            /*
              * Логику показа окна делаем через задержку, а не в обработке колбека получения камеры, т.к.
              * а) пользователь не успел разрешить/запретить доступ к камере
              * б) в ie ещё не успели подтянутся файлы для работы с мультимедиа через activeX
@@ -138,6 +144,7 @@ define("File/ResourceGetter/PhotoCam/DialogAbstract", ["require", "exports", "SB
         }
     });
     DialogAbstract.ERRORS = {
+        // tslint:disable-next-line:max-line-length
         permissionDenied: rk('К сожалению, вы запретили доступ к устройствам мультимедиа, что не позволяет вам использовать веб-камеру.'),
         NO_CAMERA: rk('К сожалению, к вашему компьютеру не подключена камера.'),
         NO_MEDIA: rk('Не удалось получить доступ к устройствам мультимедиа.')

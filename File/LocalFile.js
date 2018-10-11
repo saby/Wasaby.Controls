@@ -1,12 +1,14 @@
 define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
     /**
-     * Класс - обёртка над нативным File/Blob
+     * Класс, реализующий интерфейс работы с ресурсами {@link File/IResource},
+     * предназначенный для работы с экземплярами нативнымого интерфейса File | Blob
      * @class
      * @extends File/ResourceAbstract
      * @name File/LocalFile
      * @public
      * @author Заляев А.В.
+     * @implements File/IResource
      */
     var LocalFile = /** @class */ (function (_super) {
         tslib_1.__extends(LocalFile, _super);

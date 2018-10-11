@@ -28,10 +28,11 @@ define("File/ResourceGetter/PhotoCam", ["require", "exports", "tslib", "File/Res
         }
     };
     /**
-     * Класс, для получения фотографии с камеры, реализующий интерфейс IResourceGetter
+     * Класс, для получения фотографии с камеры, реализующий интерфейс {@link File/IResourceGetter}
      * @class
      * @name File/ResourceGetter/PhotoCam
      * @extends File/ResourceGetter/Base
+     * @implements File/IResourceGetter
      * @public
      * @author Заляев А.В.
      */
