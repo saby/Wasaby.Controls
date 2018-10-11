@@ -1684,9 +1684,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            for (var i = 0; i < formatIds.length; i++) {
                               formatter.remove(formatIds[i]);
                            }
-                           //////////////////////////////////////////////////
-                           console.log('DBG: RTE.execCommand/afterProcess: (2) formatIds=', formatIds, ';');
-                           //////////////////////////////////////////////////
                         });
                      }
                   }
