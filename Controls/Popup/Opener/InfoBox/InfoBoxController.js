@@ -59,21 +59,9 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
 
          // Возвращаем конфигурацию подготовленную для StickyStrategy
          prepareConfig: function(position, target) {
-            var side;
-            var alignSide;
-            var topOrBottomSide;
-
-            //todo: Опции инфобокса для позиционирования задаются по-своему, хотя в итоге используют api stickyController'a
-            //нужно разбираться с api https://online.sbis.ru/opendoc.html?guid=af39185a-4b79-4bb1-aaf4-b28011748483
-            if (typeof position === 'object') {
-               side = position.corner.vertical === 'top' ? 't' : 'b';
-               alignSide = position.horizontalAlign.side === 'right' ? 'l' : 'r';
-            } else {
-               side = position[0];
-               alignSide = position[1];
-            }
-            topOrBottomSide = side === 't' || side === 'b';
-
+            var side = position[0];
+            var alignSide = position[1];
+            var topOrBottomSide = side === 't' || side === 'b';
 
             return {
                verticalAlign: {
@@ -120,8 +108,8 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             return InfoBoxController.superclass.elementCreated.apply(this, arguments);
          },
 
-         elementUpdated: function(item, container) {
-            this.prepareConfig(item, container);
+         elementUpdated: function() {
+            ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
          },
 
          elementDestroyed: function(item, container, id) {
