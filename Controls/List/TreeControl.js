@@ -2,7 +2,6 @@ define('Controls/List/TreeControl', [
    'Core/Control',
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
-   'Controls/List/resources/utils/ItemsUtil',
    'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'Controls/Utils/ArraySimpleValuesUtil',
@@ -11,7 +10,6 @@ define('Controls/List/TreeControl', [
    Control,
    TreeControlTpl,
    SourceController,
-   ItemsUtil,
    cClone,
    HierarchyRelation,
    ArraySimpleValuesUtil,
@@ -133,9 +131,14 @@ define('Controls/List/TreeControl', [
    var TreeControl = Control.extend(/** @lends Controls/List/TreeControl */{
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
+      _root: null,
+      _updatedRoot: false,
       _nodesSourceControllers: null,
-      constructor: function() {
+      constructor: function(cfg) {
          this._nodesSourceControllers = {};
+         if (typeof cfg.root !== 'undefined') {
+            this._root = cfg.root;
+         }
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _beforeMount: function(cfg) {
@@ -156,15 +159,23 @@ define('Controls/List/TreeControl', [
          _private.onNodeRemoved(this, nodeId);
       },
       _beforeUpdate: function(newOptions) {
+         TreeControl.superclass._beforeUpdate.apply(this, arguments);
+         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
+            this._root = newOptions.root;
+            this._updatedRoot = true;
+         }
+      },
+      _afterUpdate: function(oldOptions) {
          var
             filter;
-         if (this._options.root !== newOptions.root) {
+         TreeControl.superclass._afterUpdate.apply(this, arguments);
+         if (this._updatedRoot) {
+            this._updatedRoot = false;
             filter = cClone(this._options.filter || {});
-            filter[this._options.parentProperty] = newOptions.root;
+            filter[this._options.parentProperty] = this._root;
             this.reload(filter);
-            this._children.baseControl.getViewModel().setRoot(newOptions.root);
+            this._children.baseControl.getViewModel().setRoot(this._root);
          }
-         TreeControl.superclass._beforeUpdate.apply(this, arguments);
       },
       _onNodeExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);

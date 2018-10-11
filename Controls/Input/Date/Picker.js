@@ -1,8 +1,6 @@
 define('Controls/Input/Date/Picker', [
    'Core/Control',
    'Core/core-merge',
-   'Controls/Calendar/Utils',
-   'Controls/Input/DateTime/Model',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Picker/Picker',
@@ -10,8 +8,6 @@ define('Controls/Input/Date/Picker', [
 ], function(
    Control,
    coreMerge,
-   CalendarControlsUtils,
-   Model,
    IDateTimeMask,
    tmplNotify,
    template

@@ -45,7 +45,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
 
-               require([this._options.innerComponentOptions.template], function() {
+               require([this._options.innerComponentOptions._template], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;

@@ -57,42 +57,30 @@ define([
       });
 
 
-      describe('current date 2017-01-01', function () {
+      describe('current date 2017-01-01', function() {
          // this.timeout(1500000);
-         let oldDate = Date;
+         let cYear = (new Date()).getFullYear();
 
-         let fakeDate = function (fake) {
-            return new oldDate('2017-01-01');
-         };
+         describe('._getDefaultYear', function() {
+            let
+               yearsOnlyConfig = { showYears: true, showHalfyears: false, showQuarters: false, showMonths:false };
 
-         beforeEach(function () {
-            Date = fakeDate;
-         });
+            [
+               [{ startValue: new Date(2000, 0) }, 2000],
+               [{ startValue: new Date(2016, 0) }, 2016],
+               [{ startValue: new Date(2017, 0) }, 2017],
+               [{ startValue: new Date(2018, 0) }, 2018],
+               [{ startValue: new Date(2030, 0) }, 2030],
 
-         afterEach(function () {
-            Date = oldDate;
-         });
-
-         describe('._getDefaultYear', function () {
-            let yearsOnlyConfig = {showYears: true, showHalfyears: false, showQuarters: false, showMonths:false},
-               tests = [
-               [{startValue: new Date(2000, 0)}, 2000],
-               [{startValue: new Date(2016, 0)}, 2016],
-               [{startValue: new Date(2017, 0)}, 2017],
-               [{startValue: new Date(2018, 0)}, 2018],
-               [{startValue: new Date(2030, 0)}, 2030],
-
-               [Object.assign({startValue: new Date(2000, 0)}, yearsOnlyConfig), 2004],
-               [Object.assign({startValue: new Date(2012, 0)}, yearsOnlyConfig), 2016],
-               [Object.assign({startValue: new Date(2013, 0)}, yearsOnlyConfig), 2017],
-               [Object.assign({startValue: new Date(2014, 0)}, yearsOnlyConfig), 2017],
-               [Object.assign({startValue: new Date(2016, 0)}, yearsOnlyConfig), 2017],
-               [Object.assign({startValue: new Date(2017, 0)}, yearsOnlyConfig), 2017],
-               [Object.assign({startValue: new Date(2018, 0)}, yearsOnlyConfig), 2018],
-               [Object.assign({startValue: new Date(2030, 0)}, yearsOnlyConfig), 2030]
-
-            ];
-            tests.forEach(function (test, index) {
+               [Object.assign({ startValue: new Date(2000, 0) }, yearsOnlyConfig), 2004],
+               [Object.assign({ startValue: new Date(cYear - 4, 0) }, yearsOnlyConfig), cYear],
+               [Object.assign({ startValue: new Date(cYear - 3, 0) }, yearsOnlyConfig), cYear],
+               [Object.assign({ startValue: new Date(cYear - 2, 0) }, yearsOnlyConfig), cYear],
+               [Object.assign({ startValue: new Date(cYear - 1, 0) }, yearsOnlyConfig), cYear],
+               [Object.assign({ startValue: new Date(cYear, 0) }, yearsOnlyConfig), cYear],
+               [Object.assign({ startValue: new Date(cYear + 1, 0) }, yearsOnlyConfig), cYear + 1],
+               [Object.assign({ startValue: new Date(cYear + 10, 0) }, yearsOnlyConfig), cYear + 10]
+            ].forEach(function (test, index) {
                it('should return "' + test[1] + '" for options ' + test[0].startValue, function () {
                   assert.strictEqual(DateRangeChoose.prototype._getDefaultYear(test[0]), test[1]);
                });

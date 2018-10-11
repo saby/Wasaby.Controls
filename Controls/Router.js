@@ -1,9 +1,8 @@
 define('Controls/Router', [
    'Core/Control',
    'wml!Controls/Router/Router',
-   'Core/vdom/Synchronizer/resources/DOMEnvironment',
    'Controls/Router/RouterHelper'
-], function(Control, tmpl, DOMEnvironment, RouterHelper) {
+], function(Control, tmpl, RouterHelper) {
    'use strict';
 
    var module = Control.extend({

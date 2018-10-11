@@ -11,9 +11,13 @@ define('Controls/Filter/Button/Panel', [
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
    /**
     * Control "Filter panel"
+    * Component for displaying a filter panel template. Displays each filters by specified templates.
+    * It consists of three blocks: Selected, Possible to selected, Previously selected.
+    *
     * @class Controls/Filter/Button/Panel
     * @extends Core/Control
     * @mixes Controls/interface/IFilterPanel
+    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
     * @control
     * @public
     * @author Герасимов А.М.
@@ -29,7 +33,9 @@ define('Controls/Filter/Button/Panel', [
     */
 
    /**
-    * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
+    * @event Controls/Filter/Button/Panel#sendResult Happens when clicking the button "Select".
+    * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
+    * @param {Object} items items
     */
 
    'use strict';
