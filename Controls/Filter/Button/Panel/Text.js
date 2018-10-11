@@ -1,7 +1,7 @@
-define('Controls/Filter/Button/Panel/FilterText', [
+define('Controls/Filter/Button/Panel/Text', [
    'Core/Control',
-   'wml!Controls/Filter/Button/Panel/FilterText/FilterText',
-   'css!theme?Controls/Filter/Button/Panel/FilterText/FilterText'
+   'wml!Controls/Filter/Button/Panel/Text/Text',
+   'css!theme?Controls/Filter/Button/Panel/Text/Text'
 ], function(Control, template) {
 
    /**
@@ -16,10 +16,6 @@ define('Controls/Filter/Button/Panel/FilterText', [
    /**
     * @name Controls/Filter/Button/Panel/FilterText#caption
     * @cfg {Object} Caption
-    */
-
-   /**
-    * @event Controls/Filter/Panel#valueChanged Happens when clicking on the close button
     */
 
    'use strict';

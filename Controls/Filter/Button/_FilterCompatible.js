@@ -11,13 +11,6 @@ define('Controls/Filter/Button/_FilterCompatible',
    
    function(extend, stringTransformer, OldPanelOpener, converterFilterStructure) {
       
-      /**
-       * @class Controls/Filter/Button/_FilterCompatible
-       * @control
-       * @public
-       * @author Герасимов А.М.
-       */
-      
       'use strict';
       
       var _private = {

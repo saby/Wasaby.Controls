@@ -15,7 +15,7 @@
 </ws:template>
 
 <ws:template name="limit">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
@@ -44,7 +44,7 @@
 </ws:template>
 
 <ws:template name="group">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"
@@ -52,15 +52,15 @@
 </ws:template>
 
 <ws:template name="unread">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Unread"/>
+<Controls.Filter.Button.Panel.Text bind:value="item.value"  caption="Unread"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.Filter.Button.Panel.FilterText bind:value="item.value"  caption="Loose"/>
+<Controls.Filter.Button.Panel.Text bind:value="item.value"  caption="Loose"/>
 </ws:template>
 
 <ws:template name="own">
-<Controls.Filter.Button.Panel.FilterDropdown
+<Controls.Filter.Button.Panel.Dropdown
         source="{{item.source}}"
         keyProperty="key"
         bind:textValue="item.textValue"

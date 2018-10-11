@@ -85,14 +85,6 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
             Utils.getItemPropertyValue(item, 'visibility');
       },
 
-      _clickItemHandler: function(event, index) {
-         if (!this._options.items[index].source) {
-            this._options.items[index].visibility = true;
-            this._notify('valueChanged');
-            _private.onResize(this);
-         }
-      },
-
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
          this._options.items[index].visibility = true;
