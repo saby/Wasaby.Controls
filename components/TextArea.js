@@ -324,6 +324,7 @@ define('SBIS3.CONTROLS/TextArea', [
          if (this._disabledWrapper && !this.isEnabled()) {
             var
                newText = escapeHtml(this.getText());
+            //для учёта символа переноса строки в тексте
             newText = newText.replace(/\n/g,'<br>');
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
          }
