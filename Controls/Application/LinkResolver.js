@@ -27,7 +27,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
          this.isDebug = isDebug;
          this.buildNumber = buildNumber || '';
 
-         this.wsRootFolder = 'WS.Core';
+         this.wsRootFolder = wsRoot.replace(resourceRoot, '');
 
          var fullResourcePath = '';
          if (appRoot) {
