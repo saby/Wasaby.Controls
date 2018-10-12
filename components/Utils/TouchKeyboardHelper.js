@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
          // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
          // Куда пришел фокус, если это input/textarea (и возможно еще div с contenteditable), то через emitter/listener сообщать
          // об этом дочерним компонентам.
-         if (!isVisible) {
+         if (!isVisible && document.activeElement) {
             if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
                isVisible = true;
             }

@@ -164,7 +164,7 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
                 }
             }
         },
-        dragleave: function () {
+        dragleave: function ( /*event: HTMLDragEvent*/) {
             /**
              * Под win-10 в IE/Edge в event.relatedTarget постоянно лежит null
              * Хоть и поддержка свойства как бы есть
@@ -176,11 +176,11 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
              */
             dragEndTimeout = setTimeout(dragEnd, DRAG_END_TIMEOUT);
         },
-        drop: function () {
+        drop: function ( /*event: HTMLDragEvent*/) {
             // Если бросили файл в произвольную область - просто убераем наши обёртки
             dragEnd();
         },
-        dragover: function () {
+        dragover: function ( /*event: HTMLDragEvent*/) {
             clearTimeout(dragEndTimeout);
         }
     };
@@ -225,6 +225,13 @@ define("File/ResourceGetter/DropArea/Overlay", ["require", "exports", "Core/help
          * @name File/ResourceGetter/DropArea/Overlay#innerClass
          */
     };
+    /**
+     * Класс-подложка, появляющаяся над заданным элементом во вмемя переноса пользователем файлов
+     * @class
+     * @public
+     * @author Заляев А.В.
+     * @name File/ResourceGetter/DropArea/Overlay
+     */
     var Overlay = /** @class */ (function () {
         function Overlay(cfg) {
             this.__uid = createGUID();

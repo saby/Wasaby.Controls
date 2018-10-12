@@ -8,12 +8,16 @@ define('Controls/Input/Lookup', [
    'Core/core-clone',
    'Core/Deferred',
    'Core/core-merge',
-   'wml!Controls/Input/Lookup/CollectionItem',
+   'WS.Data/Chain',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
+   'Controls/Input/Lookup/_Collection',
+   'wml!Controls/Input/Lookup/Collection/_Collection',
+   'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
+   'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Input/Lookup/Lookup'
-], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, collectionItem, getWidthUtil, DOMUtil) {
+], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, Chain, getWidthUtil, DOMUtil, Collection, itemsTemplate, showAllLinksTemplate, showSelectorTemplate) {
 
    'use strict';
 
@@ -38,7 +42,19 @@ define('Controls/Input/Lookup', [
     * @category Input
     */
 
+   var
+      MAX_VISIBLE_ITEMS = 20,
+      SHOW_ALL_LINKS_WIDTH = 0,
+      SHOW_SELECTOR_WIDTH = 0;
+
    var _private = {
+      initializeConstants: function() {
+         if (!SHOW_ALL_LINKS_WIDTH) {
+            SHOW_ALL_LINKS_WIDTH = getWidthUtil.getWidth(showAllLinksTemplate());
+            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
+         }
+      },
+
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
          var filter = clone(filter || {});
          var resultDef = new Deferred();
@@ -53,6 +69,7 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
+               _private.notifyItemsChanged(self, result);
                return result;
             })
             .addErrback(function(result) {
@@ -61,6 +78,15 @@ define('Controls/Input/Lookup', [
             });
 
          return resultDef;
+      },
+
+      notifyChanges: function(self, selectedKeys) {
+         _private.notifySelectedKeys(self, selectedKeys);
+         _private.notifyItemsChanged(self, _private.getItems(self));
+      },
+
+      notifyItemsChanged: function(self, items) {
+         self._notify('itemsChanged', [items]);
       },
 
       notifySelectedKeys: function(self, selectedKeys) {
@@ -79,38 +105,41 @@ define('Controls/Input/Lookup', [
       },
 
       addItem: function(self, item) {
-         var key = item.get(self._options.keyProperty);
+         var
+            selectedKeys = self._selectedKeys,
+            key = item.get(self._options.keyProperty);
 
          if (self._selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
-               self._selectedKeys.push(key);
-               _private.keysChanged(self);
+               selectedKeys.push(key);
+               _private.setSelectedKeys(self, selectedKeys);
                _private.getItems(self).append([item]);
             } else {
                _private.setSelectedKeys(self, [key]);
                _private.getItems(self).assign([item]);
             }
 
-            _private.notifySelectedKeys(self, self._selectedKeys);
+            _private.notifyChanges(self, self._selectedKeys);
          }
       },
 
       removeItem: function(self, item) {
          var
+            selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty),
             indexItem = self._selectedKeys.indexOf(key);
 
          if (indexItem !== -1) {
-            self._selectedKeys.splice(indexItem, 1);
-            _private.keysChanged(self);
+            selectedKeys.splice(indexItem, 1);
+            _private.setSelectedKeys(self, selectedKeys);
             _private.getItems(self).remove(item);
-            _private.notifySelectedKeys(self, self._selectedKeys);
+            _private.notifyChanges(self, self._selectedKeys);
          }
       },
 
-      setSelectedKeys: function(self, keys, options) {
+      setSelectedKeys: function(self, keys) {
          self._selectedKeys = keys;
-         _private.keysChanged(self, options);
+         _private.keysChanged(self);
       },
 
       updateModel: function(self, value) {
@@ -119,9 +148,7 @@ define('Controls/Input/Lookup', [
          });
       },
 
-      keysChangedWithoutUpdate: function(self, options) {
-         _private.setStateReadyCollection(self, false, options);
-         _private.determineAutoDropDown(self, options);
+      setStateOnKeysChanged: function(self) {
          self._isEmpty = !self._selectedKeys.length;
 
          /* keys changed - need to hide suggest */
@@ -130,28 +157,59 @@ define('Controls/Input/Lookup', [
          }
       },
 
-      keysChanged: function(self, options) {
-         _private.keysChangedWithoutUpdate(self, options);
+      keysChanged: function(self) {
+         _private.setStateOnKeysChanged(self);
          self._forceUpdate();
       },
 
-      getCollectionSlice: function(self, startIndex) {
-         var newCollection = _private.getItems(self).clone();
+      getVisibleItems: function(items, itemsSizes, availableWidth) {
+         var
+            visibleItems = [],
+            visibleItemsWidth = 0,
+            itemsCount = items.length,
+            collectionWidth = itemsSizes.reduce(function(currentWidth, itemWidth) {
+               return currentWidth + itemWidth;
+            }, 0);
 
-         for (; startIndex; startIndex--) {
-            newCollection.removeAt(0);
+         if (collectionWidth <= availableWidth) {
+            visibleItems = items;
+         } else {
+            /* Consider the width of the button that shows all the records */
+            visibleItemsWidth = SHOW_ALL_LINKS_WIDTH;
+
+            for (var currentIndex = itemsCount - 1; currentIndex >= 0; currentIndex--) {
+               if ((visibleItemsWidth + itemsSizes[currentIndex]) > availableWidth) {
+                  /* If no element is inserted, then only the last selected */
+                  if (!visibleItems.length) {
+                     visibleItems.push(items[currentIndex]);
+                  }
+                  break;
+               }
+
+               visibleItems.unshift(items[currentIndex]);
+               visibleItemsWidth += itemsSizes[currentIndex];
+            }
          }
 
-         return newCollection;
+         return visibleItems;
       },
 
-      getItemWidth: function(self, indexItem) {
-         return getWidthUtil.getWidth(collectionItem({
-            _options: self._children.collection._options,
-            item: self._items.at(indexItem),
-            index: indexItem,
-            itemsCount: self._items.getCount()
-         }));
+      getAvailableCollectionWidth: function(fieldWrapper, readOnly, multiSelect) {
+         return DOMUtil.width(fieldWrapper) - _private.getAdditionalCollectionWidth(fieldWrapper, readOnly, multiSelect);
+      },
+
+      getAdditionalCollectionWidth: function(fieldWrapper, readOnly, multiSelect) {
+         var additionalWidth = 0;
+
+         if (!readOnly) {
+            additionalWidth = SHOW_SELECTOR_WIDTH;
+
+            if (multiSelect) {
+               additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, SHOW_SELECTOR_WIDTH);
+            }
+         }
+
+         return additionalWidth;
       },
 
       getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth) {
@@ -161,67 +219,45 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      determineAutoDropDown: function(self, options) {
-         options = options || self._options;
-         self._autoDropDown = options.autoDropDown && (!self._selectedKeys.length || options.multiSelect);
-      },
-
-      alignSelectedCollection: function(self) {
+      getItemsSizes: function(self, items, itemTemplate, readOnly) {
          var
-            itemsWidth = 0,
-            displayItems = 0,
-            itemsCount = _private.getItems(self).getCount(),
-            additionalWidth = 0, availableWidth, itemWidth,
-            fieldWrapper, afterFieldWrapper;
+            itemsSizes = [],
+            measurer = document.createElement('div');
 
-         if (self._selectedKeys.length) {
-            if (!self._options.readOnly) {
-               fieldWrapper = self._children.inputRender._container;
-               afterFieldWrapper = self._children.showSelector;
-               additionalWidth = afterFieldWrapper.offsetWidth;
+         measurer.innerHTML = itemsTemplate({
+            _options: _private.getCollectionOptions(items, itemTemplate, readOnly)
+         });
 
-               if (self._options.multiSelect) {
-                  additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapper.offsetWidth);
-               }
-            }
+         measurer.classList.add('controls-Lookup-collection__measurer');
+         document.body.appendChild(measurer);
+         [].forEach.call(measurer.getElementsByClassName('controls-Lookup__item'), function(item) {
+            itemsSizes.push(item.clientWidth);
+         });
+         document.body.removeChild(measurer);
 
-            availableWidth = DOMUtil.width(self._children.inputRender._container) - additionalWidth;
-
-            if (itemsCount === 1) {
-               displayItems = itemsCount;
-            } else {
-               /* Consider the width of the button that shows all the records */
-               availableWidth -= self._children.showAllLinks.offsetWidth;
-
-               /* Count how many elements can display */
-               for (var i = itemsCount - 1; i >= 0; i--) {
-                  itemWidth = _private.getItemWidth(self, i);
-
-                  if ((itemsWidth + itemWidth) > availableWidth) {
-                     /* If no element is inserted, then only the last selected */
-                     if (!itemsWidth) {
-                        displayItems++;
-                     }
-                     break;
-                  }
-                  displayItems++;
-                  itemsWidth += itemWidth;
-               }
-            }
-         }
-
-         self._collectionIsReady = true;
-         self._availableWidthCollection = availableWidth;
-         self._isAllRecordsDisplay = displayItems >= itemsCount;
-         self._displayItemsIndex =  itemsCount - displayItems;
+         return itemsSizes;
       },
 
-      setStateReadyCollection: function(self, state, options) {
-         options = options || self._options;
+      getCollectionOptions: function(items, itemTemplate, readOnly) {
+         return merge({
+            items: items,
+            itemTemplate: itemTemplate,
+            readOnly: readOnly
+         }, Collection.getDefaultOptions(), {
+            preferSource: true
+         });
+      },
 
-         if (options.multiSelect || self._options.multiSelect) {
-            self._collectionIsReady = state;
+      getLastSelectedItems: function(self, itemsCount) {
+         var
+            lastSelectedItems = Chain(_private.getItems(self)).toArray(),
+            selectedItemsCount = lastSelectedItems.length;
+
+         if (selectedItemsCount > itemsCount) {
+            lastSelectedItems = lastSelectedItems.slice(selectedItemsCount - itemsCount);
          }
+
+         return lastSelectedItems;
       }
    };
 
@@ -234,8 +270,6 @@ define('Controls/Input/Lookup', [
       _isEmpty: true,
       _availableWidthCollection: null,
       _isAllRecordsDisplay: true,
-      _collectionIsReady: false,
-      _displayItemsIndex: null,
       _autoDropDown: false,
 
       /* needed, because input will be created only after VDOM synchronisation,
@@ -243,17 +277,15 @@ define('Controls/Input/Lookup', [
       _needSetFocusInInput: false,
 
       _beforeMount: function(options, context, receivedState) {
-         this._collectionIsReady = !options.multiSelect;
          this._onClosePickerBind = this._onClosePicker.bind(this);
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
          this._selectedKeys = options.selectedKeys.slice();
          this._selectCallback = this._selectCallback.bind(this);
-         _private.determineAutoDropDown(this, options);
 
          if (this._selectedKeys.length) {
-            _private.keysChangedWithoutUpdate(this, options);
+            _private.setStateOnKeysChanged(this);
 
             if (receivedState) {
                this._items = receivedState;
@@ -264,8 +296,8 @@ define('Controls/Input/Lookup', [
       },
 
       _afterMount: function() {
-         if (this._selectedKeys.length && !this._collectionIsReady) {
-            _private.alignSelectedCollection(this);
+         _private.initializeConstants();
+         if (this._selectedKeys.length) {
             this._forceUpdate();
          }
       },
@@ -273,39 +305,50 @@ define('Controls/Input/Lookup', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
+            newSelectedKeys,
+            visibleItems = [],
+            isAllRecordsDisplay = true,
+            itemsSizes, availableWidth, lastSelectedItems,
             keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
-         _private.updateModel(this, newOptions.value);
-
          if (keysChanged) {
-            _private.setSelectedKeys(this, newOptions.selectedKeys.slice(), newOptions);
+            newSelectedKeys = newOptions.selectedKeys.slice();
          } else if (sourceIsChanged) {
-            _private.setSelectedKeys(this, [], newOptions);
+            newSelectedKeys = [];
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
-            this._selectedKeys = [];
+            newSelectedKeys = [];
             _private.getItems(this).each(function(item) {
-               self._selectedKeys.push(item.get(newOptions.keyProperty));
+               newSelectedKeys.push(item.get(newOptions.keyProperty));
             });
          }
 
-         if (newOptions.readOnly !== this._options.readOnly ||
-            newOptions.displayProperty !== this._options.displayProperty ||
-            newOptions.multiSelect !== this._options.multiSelect) {
-
-            _private.setStateReadyCollection(self, false, newOptions);
-            _private.determineAutoDropDown(self, newOptions);
-         }
-
+         _private.updateModel(this, newOptions.value);
+         newSelectedKeys && _private.setSelectedKeys(this, newSelectedKeys);
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               _private.setStateReadyCollection(self, false, newOptions);
                self._forceUpdate();
                return result;
             });
          }
+
+         if (this._selectedKeys.length) {
+            lastSelectedItems = _private.getLastSelectedItems(this, MAX_VISIBLE_ITEMS);
+            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly);
+            availableWidth = _private.getAvailableCollectionWidth(this._children.inputRender._container, newOptions.readOnly, newOptions.multiSelect);
+            visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
+            isAllRecordsDisplay = _private.getItems(this).getCount() === visibleItems.length;
+
+            if (!isAllRecordsDisplay) {
+               availableWidth -= SHOW_ALL_LINKS_WIDTH;
+            }
+         }
+
+         this._visibleItems = visibleItems;
+         this._availableWidthCollection = availableWidth;
+         this._isAllRecordsDisplay = isAllRecordsDisplay;
       },
 
       _afterUpdate: function() {
@@ -317,14 +360,10 @@ define('Controls/Input/Lookup', [
                this.activate();
             }
          }
-
-         if (!this._collectionIsReady && !this._isPickerVisible) {
-            _private.alignSelectedCollection(this);
-            this._forceUpdate();
-         }
       },
 
       _togglePicker: function(event, state) {
+         state = state === undefined ? !this._isPickerVisible : state;
          if (state) {
             this._isPickerVisible = true;
             this._suggestState = false;
@@ -388,7 +427,7 @@ define('Controls/Input/Lookup', [
 
          _private.setSelectedKeys(this, selectedKeys);
          _private.getItems(this).assign(items);
-         _private.notifySelectedKeys(this, this._selectedKeys);
+         _private.notifyChanges(this, this._selectedKeys);
       },
 
       _deactivated: function() {
@@ -401,7 +440,11 @@ define('Controls/Input/Lookup', [
             this._suggestState = false;
          }
       },
-   
+
+      _determineAutoDropDown: function() {
+         return this._options.autoDropDown && (!this._selectedKeys.length || this._options.multiSelect);
+      },
+
       showSelector: function(templateOptions) {
          var
             self = this,
@@ -424,11 +467,11 @@ define('Controls/Input/Lookup', [
             templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
          });
       },
-   
+
       _itemClick: function(event, item) {
          this._notify('itemClick', [item]);
       },
-      
+
       _selectCallback: function(result) {
          this._setItems(result);
       }
@@ -436,6 +479,7 @@ define('Controls/Input/Lookup', [
 
    Lookup.getDefaultOptions = function() {
       return {
+         displayProperty: 'title',
          multiSelect: false,
          selectedKeys: []
       };

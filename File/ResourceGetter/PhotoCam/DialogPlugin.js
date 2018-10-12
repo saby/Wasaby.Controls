@@ -51,6 +51,14 @@ define("File/ResourceGetter/PhotoCam/DialogPlugin", ["require", "exports", "Core
         }, SEC);
         return def;
     };
+    /**
+     * Компонент отвечающий за захват и отображение изображение с камеры в браузере IE
+     * @private
+     * @class
+     * @author Заляев А.В.
+     * @name File/ResourceGetter/PhotoCam/DialogPlugin
+     * @extends File/ResourceGetter/PhotoCam/DialogAbstract
+     */
     var DialogPlugin = DialogAbstract.extend({
         $protected: {
             _options: {

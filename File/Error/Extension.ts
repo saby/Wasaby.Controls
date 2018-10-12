@@ -31,6 +31,7 @@ type ErrorParam = {
  * @name File/Error/Extension
  * @public
  * @extends File/Error
+ * @author Заляев А.В.
  */
 class ExtensionsError extends FileError {
     public extensions: string;

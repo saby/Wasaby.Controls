@@ -105,16 +105,11 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             }
             this._openedPopupId = id;
 
-            // todo: Опции инфобокса для позиционирования задаются по-своему, хотя в итоге используют api stickyController'a
-            // нужно разбираться с api https://online.sbis.ru/opendoc.html?guid=af39185a-4b79-4bb1-aaf4-b28011748483
-            cfg.infoboxPosition = cfg.popupOptions.position;
-
             return InfoBoxController.superclass.elementCreated.apply(this, arguments);
          },
 
-         elementUpdated: function(item, container) {
-            item.infoboxPosition = item.popupOptions.position;
-            this.prepareConfig(item, container);
+         elementUpdated: function() {
+            ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
          },
 
          elementDestroyed: function(item, container, id) {
@@ -137,7 +132,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          },
 
          prepareConfig: function(cfg, sizes) {
-            cMerge(cfg.popupOptions, _private.prepareConfig(cfg.infoboxPosition, cfg.popupOptions.target));
+            cMerge(cfg.popupOptions, _private.prepareConfig(cfg.popupOptions.position, cfg.popupOptions.target));
             return InfoBoxController.superclass.prepareConfig.apply(this, arguments);
          }
       });

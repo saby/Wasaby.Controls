@@ -13,6 +13,7 @@ type ErrorParam = {
  * @name File/Error/UploadFolder
  * @public
  * @extends File/Error
+ * @author Заляев А.В.
  */
 class UploadFolderError extends FileError {
     public maxSize: number;

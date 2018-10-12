@@ -9,6 +9,7 @@ define("File/Error/MaxSize", ["require", "exports", "tslib", "File/Error", "Core
      * @name File/Error/MaxSize
      * @public
      * @extends File/Error
+     * @author Заляев А.В.
      */
     var MaxSizeError = /** @class */ (function (_super) {
         tslib_1.__extends(MaxSizeError, _super);

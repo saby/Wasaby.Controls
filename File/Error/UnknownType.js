@@ -2,11 +2,12 @@ define("File/Error/UnknownType", ["require", "exports", "tslib", "File/Error"], 
     "use strict";
     var MESSAGE = rk('Неизвестный тип файла');
     /**
-     * Ошибка, когда не смогли определить тип файла
+     * Ошибка невозможности определения типа файла
      * @class
      * @name File/Error/UnknownType
      * @public
      * @extends File/Error
+     * @author Заляев А.В.
      */
     var UnknownTypeError = /** @class */ (function (_super) {
         tslib_1.__extends(UnknownTypeError, _super);
