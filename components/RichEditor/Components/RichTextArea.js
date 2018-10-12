@@ -3535,7 +3535,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var promise = (new Deferred()).addCallback(function(size) {
                   return {
                      preview: size ? ((urlOrigin || '') + '/previewer' + '/r/' + size + '/' + size + url) : '',
-                     original: url
+                     original: (urlOrigin || '') + url
                   };
                });
                if (0 < width) {
