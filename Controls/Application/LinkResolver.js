@@ -9,7 +9,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
 
    function joinPaths(arr) {
       var arrRes = [];
-      for(var i = 0; i < arr.length; i++) {
+      for (var i = 0; i < arr.length; i++) {
          arrRes.push(cropSlash(arr[i]));
       }
       return arrRes.join('/');
@@ -79,7 +79,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
       },
       getLinkWithResourceRoot: function(link) {
          var res = joinPaths([this.resourceRoot, link]);
-         if(res.indexOf('/') !== 0) {
+         if (res.indexOf('/') !== 0) {
             res = '/' + res;
          }
          return res;
@@ -87,14 +87,14 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
       resolveOldLink: function(name) {
          var res = name;
          var replaceKey = '';
-         for(var key in this.paths) {
-            if(name.indexOf(key) === 0) {
-               if(key.length > replaceKey) {
+         for (var key in this.paths) {
+            if (name.indexOf(key) === 0) {
+               if (key.length > replaceKey) {
                   replaceKey = key;
                }
             }
          }
-         if(replaceKey.length) {
+         if (replaceKey.length) {
             res = res.replace(replaceKey, this.paths[replaceKey]);
          }
          return res;
