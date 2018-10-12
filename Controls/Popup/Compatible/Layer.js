@@ -27,10 +27,6 @@ define('Controls/Popup/Compatible/Layer', [
       'View/Runner/Text/markupGeneratorCompatible',
       'Core/nativeExtensions',
 
-      //Подключаем валидацию вшених ссылок
-      //TODO Убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=2e491274-6cb3-4c18-8960-6a02ffc0432f
-      'SBIS3.ENGINE/Controls/Validator/Link',
-
       //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
       //для того чтобы корректно работали стили, которые используют прикладные программисты в старых окнах
       'css!SBIS3.CONTROLS/themes/online/online'
