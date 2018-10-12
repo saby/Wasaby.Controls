@@ -3,15 +3,15 @@ define([
 ], function(ListSwipe) {
    describe('Controls.List.Swipe.List', function() {
       it('needShowTitle', function() {
-         assert.equal(ListSwipe.needShowTitle(false, 3), true);
-         assert.equal(ListSwipe.needShowTitle(false, 4), true);
-         assert.equal(ListSwipe.needShowTitle(false, 7), true);
-         assert.equal(ListSwipe.needShowTitle(false, 8), true);
-         assert.equal(ListSwipe.needShowTitle(false, 11), true);
-         assert.equal(ListSwipe.needShowTitle(false, 12), true);
-         assert.equal(ListSwipe.needShowTitle({ title: true }, 5), true);
-         assert.equal(ListSwipe.needShowTitle({ title: true, icon: true }, 9), false);
-         assert.equal(ListSwipe.needShowTitle({ title: true, icon: true }, 10), false);
+         assert.isTrue(ListSwipe.needShowTitle(false, 3));
+         assert.isTrue(ListSwipe.needShowTitle(false, 4));
+         assert.isTrue(ListSwipe.needShowTitle(false, 7));
+         assert.isTrue(ListSwipe.needShowTitle(false, 8));
+         assert.isTrue(ListSwipe.needShowTitle(false, 11));
+         assert.isTrue(ListSwipe.needShowTitle(false, 12));
+         assert.isTrue(ListSwipe.needShowTitle({ title: true }, 5));
+         assert.isFalse(ListSwipe.needShowTitle({ title: true, icon: true }, 9));
+         assert.isFalse(ListSwipe.needShowTitle({ title: true, icon: true }, 10));
       });
       it('needShowIcon', function() {
          assert.isTrue(ListSwipe.needShowIcon({ icon: 'icon-16 icon-Alert icon-primary' }, 'row', true));

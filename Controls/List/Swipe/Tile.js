@@ -16,7 +16,7 @@ define('Controls/List/Swipe/Tile', [
             visibleItems = [],
             sum = 0,
             actionsWithIcons = itemActions.all.filter(function(item) {
-               return item.icon;
+               return item.icon !== undefined;
             });
 
          for (i = 0; i <= actionsWithIcons.length - 1; i++) {
@@ -45,16 +45,16 @@ define('Controls/List/Swipe/Tile', [
          };
       },
 
-      needShowSeparator: function(visibleItemsCount, action, itemActions) {
+      needShowSeparator: function(action, itemActions) {
          var actionIndex = itemActions.all.indexOf(action) + 1;
 
-         return !action.isMenu && actionIndex !== visibleItemsCount;
+         return !action.isMenu && actionIndex !== itemActions.showedFirst.length;
       }
    };
 
    var Tile = {
-      needShowSeparator: function(action, itemActions, type) {
-         return _private.needShowSeparator(itemActions.showedFirst.length, action, itemActions, type);
+      needShowSeparator: function(action, itemActions) {
+         return _private.needShowSeparator(action, itemActions);
       },
 
       needShowIcon: function() {
@@ -77,8 +77,6 @@ define('Controls/List/Swipe/Tile', [
          };
       }
    };
-
-   Tile._private = _private;
 
    return Tile;
 });
