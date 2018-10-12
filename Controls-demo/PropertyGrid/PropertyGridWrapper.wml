@@ -16,7 +16,7 @@
                         bind:value="_options.componentOpt.value"
                         bind:selectedKey="_options.componentOpt.selectedKey"
                         attr:class="js-Controls_{{_demoName}}_mainField
-                        {{_options.componentClass ? _options.componentClass : controls-demo-pg}}"/>
+                        {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
         </div>
         <div class="controls-demo_event-wrapper">
 
