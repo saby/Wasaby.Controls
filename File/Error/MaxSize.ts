@@ -1,9 +1,12 @@
 /// <amd-module name="File/Error/MaxSize" />
 import FileError = require('File/Error');
+import format = require('Core/helpers/String/format');
+import 'i18n!File/Error/MaxSize';
 
 const MESSAGE = rk('Размер выбранного файла превышает максимально допустимый');
+const DETAILS = rk('Файл $fileName$s$ превышает допустимый размер $size$d$МБ');
 
-let getDetails = (fileName, size) => rk(`Файл ${fileName} превышает допустимый размер ${size}МБ`);
+let getDetails = (fileName, size) => format({fileName, size}, DETAILS);
 /**
  * @cfg {String} Максимально допустимый размер файла
  * @name File/Error/MaxSize#maxSize
@@ -32,9 +35,6 @@ class MaxSizeError extends FileError {
             details: params.details || getDetails(params.fileName, params.maxSize),
             fileName: params.fileName
         });
-        // tslint:disable-next-line:max-line-length
-        // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
-        Object.setPrototypeOf(this, MaxSizeError.prototype);
         this.maxSize = params.maxSize;
     }
 }

@@ -38,7 +38,6 @@ class ExtensionsHelper {
      * Проверяет файл на валидность расширения из заданного набора
      * @param {File} file
      * @returns {Boolean}
-     * @method
      */
     verify(file: File): boolean {
         if (!this.extensions.length) {
@@ -63,11 +62,9 @@ class ExtensionsHelper {
         }
         return false;
     }
-
     /**
      * Формирует строку mime-types
      * @returns {String}
-     * @method
      */
     getMimeString(): string {
         let mediaTypes = [];
@@ -83,8 +80,7 @@ class ExtensionsHelper {
             }
             unregistered.push(ext)
         });
-
-        /*
+        /**
          * Если имеем расширения, для которых не нашли MIME тип в таблице, то
          * такие расширения в итоговой строке надо указать как .расширение
          * Но нельзя в accept комбинировать строку из MIME типов и расширений

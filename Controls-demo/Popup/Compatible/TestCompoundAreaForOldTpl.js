@@ -4,10 +4,11 @@ define('Controls-demo/Popup/Compatible/TestCompoundAreaForOldTpl', [
 ], function(Control, template) {
    var _private = {
       getExistingDialog: function() {
-         var element = $('.controls-CompoundArea.controls-Popup__template');
-         if (element && element.length) {
-            return element[0].controlNodes[0].control;
+         var element = document.querySelector('.controls-CompoundArea.controls-Popup__template');
+         if (element) {
+            return element.controlNodes[0].control;
          }
+         return null;
       }
    };
 

@@ -34,18 +34,63 @@ define('Controls-demo/Filter/Button/ButtonPG',
          _beforeMount: function() {
             this._items = [
                {
-                  id: 'kind', value: ['0'], resetValue: ['0'], textValue: 'All'
+                  id: 'kind',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: 'All',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All topics' },
+                        { key: '1', title: 'Unread' },
+                        { key: '2', title: 'My topics' },
+                        { key: '3', title: 'Favourites' },
+                        { key: '4', title: 'Without comments' }
+                     ]
+                  })
                },
                {
-                  id: 'type', value: ['0'], resetValue: ['0'], textValue: ''
+                  id: 'type',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: '',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All types' },
+                        { key: '1', title: 'Discussions' },
+                        { key: '2', title: 'Suggestions' }
+                     ]
+                  })
                }
             ];
             this._itemsKaizen = [
                {
-                  id: 'own', value: ['0'], resetValue: ['0'], textValue: 'All'
+                  id: 'own',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: 'All',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All' },
+                        { key: '1', title: 'My' }
+                     ]
+                  })
                },
                {
-                  id: 'used', value: ['0'], resetValue: ['0'], textValue: ''
+                  id: 'used',
+                  value: ['0'],
+                  resetValue: ['0'],
+                  textValue: '',
+                  source: new MemorySource({
+                     idProperty: 'key',
+                     data: [
+                        { key: '0', title: 'All states' },
+                        { key: '1', title: 'In archive' },
+                        { key: '2', title: 'Used' }
+                     ]
+                  })
                },
                {
                   id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'

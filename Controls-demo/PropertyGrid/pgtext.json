@@ -849,6 +849,11 @@
             "type": "Boolean",
             "title": "Determines whether trailing zeros are shown in the fractional part."
           },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
@@ -952,15 +957,6 @@
             "enum": {
               "default": "display in one column",
               "column": "display in two columns"
-            }
-          },
-          "headerStyle": {
-            "default": "primary",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "primary": "primary color",
-              "default": "default color"
             }
           },
           "size": {
@@ -1094,6 +1090,91 @@
               "id": "",
               "title": ""
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Toggle/DoubleSwitch": {
+    "name": "Controls/Toggle/DoubleSwitch",
+    "title": "Switch with two captions and with support two orientation.",
+    "className": "Controls/Toggle/DoubleSwitch",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toggle/DoubleSwitch",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "value": {
+            "type": "Boolean",
+            "title": "Current state."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "captions": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "Array of two captions"
+          },
+          "orientation": {
+            "type": "enum",
+            "title": "Double switch orientation in space.",
+            "enum": {
+              "horizontal": "Horizontal orientation. It is default value.",
+              "vertical": "Vertical orientation."
+            }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Filter/Fast": {
+    "name": "Controls/Filter/Fast",
+    "title": "Control \"Fast Filter\".",
+    "className": "Controls/Filter/Fast",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Fast",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
+            "title": "Sets the source of data set to use in the mapping"
+          },
+          "items": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterItems.typedef",
+            "title": "Sets a set of initial data to build the mapping."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "default": "Inherited",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "enum": {
+              "true": "User cannot change control's value (or interact with the control if its value is not editable).",
+              "false": "User can change control's value (or interact with the control if its value is not editable).",
+              "inherited": "Value inherited from the parent."
+            }
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
           }
         }
       }

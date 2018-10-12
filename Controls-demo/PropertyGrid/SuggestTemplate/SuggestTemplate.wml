@@ -3,7 +3,7 @@
         displayProperty="title"
         searchParam="title"
         autoDropDown="{{true}}"
-        source="{{_getSuggestSource()}}"
+        source="{{_source}}"
         minSearchLength="1"
         on:valueChanged="_valueChangedHandler()"
         on:choose="_chooseHandler()"

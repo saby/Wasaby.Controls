@@ -14,13 +14,18 @@
    background-color: @background-color_FilterPanel-column;
 }
 
-.controls-FilterPanel__blockParams-column {
+.controls-FilterPanel__content-column {
    display: flex;
    flex-direction: row;
+   width: 50%;
 }
 
 .controls-FilterPanel__blockParams {
    margin-bottom: @spacing-bottom_FilterPanel;
+}
+
+.controls-FilterPanel__blockParams-column {
+   width: 50%;
 }
 
 .controls-FilterPanel__header {
@@ -78,4 +83,12 @@
 .controls-HistoryList__column {
    width: 50%;
    box-sizing: border-box;
+   margin-bottom: @margin_FilterPanel-history;
+   padding: @padding_FilterPanel-history-column;
+   border-left: @border-width_FilterPanel-column solid @border-color_FilterPanel-column;
+}
+
+.controls-HistoryList__default {
+   padding: @padding_FilterPanel-history-default;
+   background-color: @background-color_HistoryList;
 }

@@ -1,4 +1,5 @@
 /// <amd-module name="File/ResourceGetter/PhotoCam/DialogPlugin" />
+
 import Deferred = require("Core/Deferred");
 import axo = require("Core/helpers/axo");
 import toBlob = require("File/utils/b64toBlob");
