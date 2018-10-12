@@ -135,23 +135,22 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate'
                },
                {
-                  id: 'loose', value: true, resetValue: false, textValue: 'Loose'
-               },
-               { id: 'document', value: '', resetValue: '' },
-               {
-                  id: 'unread', value: true, resetValue: false, textValue: 'Unread'
-               },
-               {
-                  id: 'own',
+                  id: 'state',
                   value: [1],
                   resetValue: [1],
                   source: new MemorySource({
                      idProperty: 'key',
                      data: [
-                        { key: 1, title: 'On me' },
-                        { key: 2, title: 'On department' }
+                        { key: 1, title: 'All state' },
+                        { key: 2, title: 'In progress' },
+                        { key: 3, title: 'Done' },
+                        { key: 4, title: 'Not done' },
+                        { key: 5, title: 'Deleted' }
                      ]
                   })
+               },
+               {
+                  id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''
                }
             ];
             this._dataObject = {
