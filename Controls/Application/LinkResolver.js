@@ -1,4 +1,4 @@
-define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC'], function(coreExtend, IoC) {
+define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', ''], function(coreExtend, IoC) {
    'use strict';
 
    // css link should look like:
@@ -7,11 +7,28 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC'], fu
    // and if it's debug mode
    // /**appRoot**/**resourceRoot**/path/to/file.css
 
+   function joinPaths(arr) {
+      var arrRes = [];
+      for(var i = 0; i < arr.length; i++) {
+         arrRes.push(cropSlash(arr[i]));
+      }
+      return arrRes.join('/');
+   }
+
+   function cropSlash(str) {
+      var res = str;
+      res = res.replace(/\/+$/, '');
+      res = res.replace(/^\/+/, '');
+      return res;
+   }
+
    var LinkResolver = coreExtend.extend([], {
       constructor: function(isDebug, buildNumber, wsRoot, appRoot, resourceRoot) {
          this.isDebug = isDebug;
-         this.wsRoot = wsRoot.replace(/\//g, '');
          this.buildNumber = buildNumber || '';
+
+         this.wsRootFolder = 'WS.Core';
+
          var fullResourcePath = '';
          if (appRoot) {
             fullResourcePath += '/' + appRoot + '/';
@@ -20,45 +37,81 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC'], fu
             fullResourcePath += '/' + resourceRoot + '/';
          }
          this.resourceRoot = ('/' + fullResourcePath).replace(/[\/]+/g, '/');
-
-         if (require.toUrl) {
-            this.rq = require;
-         } else if (typeof requirejs !== 'undefined') {
-            if (requirejs.toUrl) {
-               this.rq = requirejs;
-            }
-         } else {
-            IoC.resolve('ILogger').error('Need require.toUrl() to resolve path to module');
-         }
+         this.initPaths();
       },
-      getLinkWithResourceRoot: function(cssName) {
-         return this.resourceRoot + cssName;
+      initPaths: function() {
+         // Костыль. Заменяем имена для модулей, у которых имя модуля не совпадает с физическим путем
+         this.paths = {
+            'tslib': joinPaths([this.wsRootFolder, 'lib/Ext/tslib']),
+            'Resources': this.resourceRoot || '.',
+            'Core': joinPaths([this.wsRootFolder, 'core']),
+            'css': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/css']),
+            'native-css': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/native-css']),
+            'normalize': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/normalize']),
+            'html': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/html']),
+            'tmpl': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/tmpl']),
+            'wml': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/wml']),
+            'text': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/text']),
+            'is': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/is']),
+            'is-api': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/is-api']),
+            'i18n': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/i18n']),
+            'json': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/json']),
+            'order': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/order']),
+            'template': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/template']),
+            'cdn': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/cdn']),
+            'datasource': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/datasource']),
+            'xml': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/xml']),
+            'preload': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/preload']),
+            'browser': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/browser']),
+            'optional': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/optional']),
+            'remote': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/remote']),
+
+            'Core/i18n': joinPaths([this.wsRootFolder, 'core', 'i18n']),
+            'Core/Util': joinPaths([this.resourceRoot, 'Core/Util']),
+            'Core/_Util': joinPaths([this.resourceRoot, 'Core/_Util']),
+            'Core/I18n': joinPaths([this.resourceRoot, 'Core/I18n']),
+            'Core/Debug': joinPaths([this.resourceRoot, 'Core/Debug']),
+            'Core/_Debug': joinPaths([this.resourceRoot, 'Core/_Debug']),
+            'Core/Entity': joinPaths([this.resourceRoot, 'Core/Entity']),
+            'Core/_Entity': joinPaths([this.resourceRoot, 'Core/_Entity']),
+            'Core/ApplyContents': joinPaths([this.resourceRoot, 'Core/ApplyContents'])
+         };
+      },
+      getLinkWithResourceRoot: function(link) {
+         var res = joinPaths([this.resourceRoot, link]);
+         if(res.indexOf('/') !== 0) {
+            res = '/' + res;
+         }
+         return res;
       },
       resolveOldLink: function(name) {
-         var res = require.toUrl(name);
-         if (~res.indexOf(this.resourceRoot)) {
-            res = res.split(this.resourceRoot)[1];
+         var res = name;
+         var replaceKey = '';
+         for(var key in this.paths) {
+            if(name.indexOf(key) === 0) {
+               if(key.length > replaceKey) {
+                  replaceKey = key;
+               }
+            }
          }
-         if (res.indexOf('/') === 0) {
-            res = res.slice(1, res.length);
+         if(replaceKey.length) {
+            res = res.replace(replaceKey, this.paths[replaceKey]);
          }
          return res;
       },
       resolveLink: function(link, ext) {
-         // var res = link;
-         // res = this.resolveOldLink(res);
-         // res = this.getLinkWithResourceRoot(res);
-         // res = this.getLinkWithExt(res, ext);
-         // return res;
-         return this.rq.toUrl(link + '.' + ext);
+         var res = link;
+         res = this.resolveOldLink(res);
+         res = this.getLinkWithResourceRoot(res);
+         res = this.getLinkWithExt(res, ext);
+         return res;
       },
       resolveCssWithTheme: function(link, theme) {
-         // var res = link;
-         // res = this.getLinkWithResourceRoot(res);
-         // res = this.getLinkWithTheme(res, theme);
-         // res = this.getLinkWithExt(res, 'css');
-         // return res;
-         return this.rq.toUrl(link + '_' + theme + '.css');
+         var res = link;
+         res = this.getLinkWithResourceRoot(res);
+         res = this.getLinkWithTheme(res, theme);
+         res = this.getLinkWithExt(res, 'css');
+         return res;
       },
       getLinkWithTheme: function(cssName, theme) {
          if (!theme) {
