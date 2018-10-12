@@ -1,1 +1,3 @@
-<Controls.Filter.Button.Panel itemTemplateProperty="templateItem" />
+<Controls.Filter.Button.Panel
+        attr:class="controls-PanelFilter__width-m"
+        itemTemplateProperty="templateItem" />
