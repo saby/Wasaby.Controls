@@ -136,6 +136,41 @@
   "output": "controls-popup.package.js"
 }, {
   "include": [
+    "Controls/Popup/Opener/Sticky/*"
+  ],
+  "output": "controls-popup-opener-sticky.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/Stack/*"
+  ],
+  "output": "controls-popup-opener-stack.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/Previewer/*"
+  ],
+  "output": "controls-popup-opener-previewer.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/Notification/*"
+  ],
+  "output": "controls-popup-opener-notification.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/Dialog/*"
+  ],
+  "output": "controls-popup-opener-dialog.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/InfoBox/*"
+  ],
+  "output": "controls-popup-opener-infobox.package.js"
+}, {
+  "include": [
+    "Controls/Popup/Opener/Confirmation/*"
+  ],
+  "output": "controls-popup-opener-confirmation.package.js"
+}, {
+  "include": [
     "Controls/Popup/Opener/*"
   ],
   "exclude": [

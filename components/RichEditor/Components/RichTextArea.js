@@ -89,8 +89,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          return version;
       };
 
-      var onlyNotSpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
-
       var
          // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
@@ -774,12 +772,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
                   if (json[0] === 'p') {
-                     if (i === json.length - 1) {
-                        // Если ссылка находится в конце строки, её нужно декорировать.
+                     var j = i + 1;
+                     if (typeof json[j] === 'string' && !/[^ \u00a0]/.test(json[j])) {
+                        // Если после ссылки находится строка только из пробелов, она не существенна
+                        j++;
+                     }
+                     if (j === json.length) {
+                        // Ссылку в конце строки нужно декорировать.
                         continue;
                      }
-                     if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
-                        // Если в строке после ссылки только пробелы, её нужно декорировать.
+                     if (Array.isArray(json[j]) && json[j][0] === 'br') {
+                        // Если делать перенос строки с помощью shift + enter, вместо нового тега p
+                        // создаётся тег br внутри текущего тега p. Декорировать тоже нужно
                         continue;
                      }
                   }
@@ -811,7 +815,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService || 'd');
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
@@ -2467,11 +2471,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
 
-               var options = this._options;
+               var pasteAsText = this._options.editorConfig.paste_as_text;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
-               if (!this._mouseIsPressed && options.editorConfig.paste_as_text) {
+               if (pasteAsText && (!this._mouseIsPressed || !asRichContent)) {
                   e.content = this._sanitizeClasses(e.content, false);
                }
                this._mouseIsPressed = false;
@@ -2481,7 +2485,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
+               if (!asRichContent && pasteAsText && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
@@ -2493,7 +2497,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   //             b)Вставка текста
                   //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
                   var editor = this._tinyEditor;
-                  e.content = editor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
+                  var func = editor.plugins.paste.clipboard.prepareTextBeforePaste;
+                  // Этот метод в старой версии tinymce, используемой в MSIE10, имеет только один аргуметн
+                  // 1176026572 https://online.sbis.ru/opendoc.html?guid=b54dd9c9-3cd0-4f1f-98f8-9195373c82ee
+                  e.content = func.length === 1 ? func(this._clipboardText) : func(editor, this._clipboardText);
                }
             },
             _onPasteCallback: function(e) {

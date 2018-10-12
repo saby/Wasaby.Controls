@@ -50,10 +50,18 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          showNotification: function(inst, notHide){
             notHide = !!notHide;
 
-            // Всплывающие уведомления не должны принимать фокус при клике на них
-            inst.getContainer().get(0).addEventListener('mousedown', function(event) {
-               event.preventDefault();
-            });
+            // Видеосвязь использует в качестве окна compoundControl (SBIS.VideoCall/GlobalInformer/Notification.js),
+            // который к системе окон отношения не имеет, т.е. мы в менеджере даже не можем понять, что открылся именно попап и на него ушел фокус.
+            // Как временное решение - убрать preventDefault для таких случаев, чтобы окно могло принимать на себя фокус
+            // и пользователь мог взаимодействовать с контентом.
+            // В будущем должно открываться окно, а не простой compoundControl, тогда мы сможем понимать переходы фокусов
+            // между окнами и закрывать/не закрывать попапы когда нужно на своей стороне.
+            if (inst._options.ignorePreventDefault !== true) {
+               // Всплывающие уведомления не должны принимать фокус при клике на них
+               inst.getContainer().get(0).addEventListener('mousedown', function(event) {
+                  event.preventDefault();
+               });
+            }
 
             if(this._getItemIndexById(inst.getId()) === -1){
                this._appendNotification(inst, notHide);
