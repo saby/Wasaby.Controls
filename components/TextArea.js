@@ -207,11 +207,6 @@ define('SBIS3.CONTROLS/TextArea', [
 
       init :function(){
          TextArea.superclass.init.call(this);
-         var self = this;
-
-         if (this._options.maxLength) {
-            this.setMaxLength(this._options.maxLength);
-         }
 
          if (this._options.maxLinesCount != this._options.minLinesCount) {
 
@@ -409,16 +404,6 @@ define('SBIS3.CONTROLS/TextArea', [
             this._autoSizeRecalc();
          }
       },
-
-      setMaxLength: function(num) {
-         TextArea.superclass.setMaxLength.call(this, num);
-         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
-         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
-         //Поэтому для IE просто не будем навешивать аттрибут maxLength
-         this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
-      },
-
-
 
       _onResizeHandler : function(){
          this._autoSizeRecalc();
