@@ -1564,7 +1564,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._ensureHasMinContent();
                var rng;
                var isAlreadyApplied;
-               var afterProcess;
+               var afterProcess = [];
                var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
@@ -1575,13 +1575,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
-                  // Перед применением цитаты сбрасываем вначале прикладные стили
-                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
-                  for (var format in this._options.customFormats) {
-                     if (this._options.customFormats.hasOwnProperty(format)) {
-                        this._tinyEditor.formatter.remove(format);
-                     }
-                  }
                   // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                   // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                   var listNode = rng.commonAncestorContainer;
@@ -1591,21 +1584,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $listNode.wrap('<div>');
                      selection.select(listNode.parentNode, false);
                      $listNode.attr('contenteditable', 'false');
-                     afterProcess = function() {
+                     afterProcess.push(function () {
                         $listNode.unwrap();
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
-                     };
+                     });
                   }
                   else {
                      var dom = editor.dom;
                      var node = rng.commonAncestorContainer;
-                     if (!dom.isBlock(node)) {
+                     if (!dom.isBlock(node) && !isAlreadyApplied) {
                         // Если элемент не является блочным элементом - поднять рэнж выше по дереву
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
                         var body = editor.getBody();
                         var isChanged;
-                        var _hasBlockSibling = function(bode) {
+                        var _hasBlockSibling = function(node) {
                            return Array.prototype.some.call(node.parentNode.childNodes, function(v) {
                               return v.nodeName === 'IMG' || dom.isBlock(v);
                            });
@@ -1614,6 +1607,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {
                         }
                         if (isChanged) {
+                           var bookmark = selection.getBookmark();
+                           afterProcess.push(function () {
+                              // Нужно восстанавить последнее выделение после применения команды.
+                              // Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
+                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения пораждают
+                              // мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
+                              // несфокусирпованном состоянии
+                              // 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
+                              var root = editor.getBody();
+                              selection.select(root);
+                              selection.collapse(true);
+                              root.blur();
+                              setTimeout(function () {
+                                 selection.moveToBookmark(bookmark);
+                                 root.focus();
+                              }, 100);
+                           });
                            selection.select(node, true);
                            rng = selection.getRng();
                         }
@@ -1633,13 +1643,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  $video.before('<span ' + attr + '>temporary</span>').remove();
                               }.bind(this));
                               skipUndo = true;
-                              afterProcess = function () {
+                              afterProcess.push(function () {
                                  undoManager.ignore(function () {
                                     var $video = $(editor.getBody()).find('[' + attr + ']');
                                     $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
                                  }.bind(this));
                                  undoManager.add();
-                              }.bind(this);
+                              }.bind(this));
                            }
                         }
                      }
@@ -1667,16 +1677,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
+               if (isA.blockquote && !isAlreadyApplied) {
+                  // При применением цитаты сбрасываем прикладные стили
+                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
+                  var customFormats = this._options.customFormats;
+                  if (customFormats) {
+                     var formatIds = Object.keys(customFormats);
+                     if (formatIds.length) {
+                        afterProcess.unshift(function () {
+                           for (var i = 0; i < formatIds.length; i++) {
+                              formatter.remove(formatIds[i]);
+                           }
+                        });
+                     }
+                  }
+               }
                if (isA.list) {
                   if (!isAlreadyApplied) {
                      if (['aligncenter', 'alignright'].some(function(v) {
                            return formatter.match(v);
                         })) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var list = editor.dom.getParent(selection.getRng().commonAncestorContainer, 'ol,ul');
                            $(list).css('list-style-position', 'inside');
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                   else {
@@ -1688,14 +1713,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      });
                      if (align) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var isCollapsed = selection.isCollapsed();
                            formatter.apply(align);
                            if (isCollapsed) {
                               selection.collapse(false);
                            }
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                }
@@ -1717,9 +1742,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      command === 'alignright' ? 'inside' : '');
                   }
                   if (selection.isCollapsed()) {
-                     afterProcess = function() {
+                     afterProcess.push(function () {
                         selection.collapse(false);
-                     };
+                     });
                   }
                }
                if (skipUndo) {
@@ -1728,8 +1753,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                else {
                   editor.execCommand(editorCmd || command);
                }
-               if (afterProcess) {
-                  afterProcess();
+               if (afterProcess.length) {
+                  for (var i = 0; i < afterProcess.length; i++) {
+                     afterProcess[i]();
+                  }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
                if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
