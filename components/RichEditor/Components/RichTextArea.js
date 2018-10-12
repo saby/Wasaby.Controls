@@ -89,8 +89,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          return version;
       };
 
-      var notOnlySpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
-
       var
          // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
@@ -775,7 +773,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
                   if (json[0] === 'p') {
                      var j = i + 1;
-                     if (typeof json[j] === 'string' && !notOnlySpacesRegExp.test(json[j])) {
+                     if (typeof json[j] === 'string' && !/[^ \u00a0]/.test(json[j])) {
                         // Если после ссылки находится строка только из пробелов, она не существенна
                         j++;
                      }
@@ -817,7 +815,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService || 'd');
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
