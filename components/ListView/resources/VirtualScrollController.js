@@ -292,7 +292,7 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
          },
 
          _getItemHeight: function(item){
-            var itemHeight = $('[data-hash="' + item.getHash() + '"]', this._options.viewContainer).height();
+            var itemHeight = document.querySelector('[data-hash="' + item.getHash() + '"]', this._options.viewContainer).offsetHeight;
             // Если записи нет в видимой области, не получится посчитать ее высоту.
             if (!itemHeight) {
                return this._getAverageItemHeight();
