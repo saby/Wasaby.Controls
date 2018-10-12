@@ -959,16 +959,6 @@
               "column": "display in two columns"
             }
           },
-          "size": {
-            "default": "m",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "m": "primary color",
-              "l": "default color",
-              "xl": "default color"
-            }
-          },
           "title": {
             "default": "Отбираются",
             "title": "Caption of filter panel.",
