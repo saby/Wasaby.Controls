@@ -488,7 +488,9 @@
       "SBIS3.CONTROLS/FloatArea/*"
     ],
     "exclude": [
-      "css!SBIS3.CONTROLS*"
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/FloatArea/FloatAreaSelector"
+
     ],
     "output": "sbis3controls-floatarea.package.js"
   },
