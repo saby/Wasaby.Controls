@@ -28,7 +28,7 @@ define('Controls-demo/Switch/DoubleSwitchPG',
             ];
             this._dataObject = {
                value: {
-                  readOnly: true
+                  readOnly: false
                },
                orientation: {
                   keyProperty: 'id',
