@@ -277,6 +277,12 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             container.appendTo('body');
          }
 
+         this._mouseEnterHandler = this._mouseEnterHandler.bind(this);
+
+         if (isNewEnvironment()) {
+            container.bind('mouseenter', this._mouseEnterHandler);
+         }
+
          this._saveDefault();
          this._resetToDefault();
 
@@ -286,6 +292,13 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
+      },
+
+      _mouseEnterHandler: function() {
+         // на vdom динамически меняется zindex попапов.
+         // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
+         cWindowManager.releaseZIndex(this._zIndex);
+         this._container.css('z-index', this._getZIndex());
       },
 
       _findParentContainer: function() {
@@ -1376,6 +1389,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
             if(ControlHierarchyManager.getTopWindow() === this) {
                ControlHierarchyManager.setTopWindow(null);
+            }
+
+            if (isNewEnvironment()) {
+               this.getContainer().unbind('mouseenter', this._mouseEnterHandler);
             }
 
             this._unsubscribeTargetMove();
