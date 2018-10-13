@@ -67,14 +67,14 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
             'remote': joinPaths([this.wsRootFolder, 'ext/requirejs/plugins/remote']),
 
             'Core/i18n': joinPaths([this.wsRootFolder, 'core', 'i18n']),
-            'Core/Util': joinPaths([this.resourceRoot, 'Core/Util']),
-            'Core/_Util': joinPaths([this.resourceRoot, 'Core/_Util']),
-            'Core/I18n': joinPaths([this.resourceRoot, 'Core/I18n']),
-            'Core/Debug': joinPaths([this.resourceRoot, 'Core/Debug']),
-            'Core/_Debug': joinPaths([this.resourceRoot, 'Core/_Debug']),
-            'Core/Entity': joinPaths([this.resourceRoot, 'Core/Entity']),
-            'Core/_Entity': joinPaths([this.resourceRoot, 'Core/_Entity']),
-            'Core/ApplyContents': joinPaths([this.resourceRoot, 'Core/ApplyContents'])
+            'Core/Util': 'Core/Util',
+            'Core/_Util': 'Core/_Util',
+            'Core/I18n': 'Core/I18n',
+            'Core/Debug': 'Core/Debug',
+            'Core/_Debug': 'Core/_Debug',
+            'Core/Entity': 'Core/Entity',
+            'Core/_Entity': 'Core/_Entity',
+            'Core/ApplyContents': 'Core/ApplyContents'
          };
       },
       getLinkWithResourceRoot: function(link) {
@@ -89,7 +89,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
          var replaceKey = '';
          for (var key in this.paths) {
             if (name.indexOf(key) === 0) {
-               if (key.length > replaceKey) {
+               if (key.length > replaceKey.length) {
                   replaceKey = key;
                }
             }
