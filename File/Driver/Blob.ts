@@ -1,13 +1,13 @@
 /// <amd-module name='File/Driver/Blob' />
+import Interface = require('File/Driver/Interface');
 import detection = require('Core/detection');
-import { FileDriver, FileParams } from 'File/Driver/Interface';
 
-class BlobDriver implements FileDriver {
+class BlobDriver implements Interface.FileDriver {
     private name: string = 'no_name_blob';
 
     constructor(private promiseBlob: Promise<Blob>) { }
 
-    public download(fileParams?: FileParams): Promise<void | Error> {
+    public download(fileParams?: Interface.FileParams): Promise<void | Error> {
         return this.promiseBlob.then(blob => this._downloadBlob(blob, fileParams));
     }
 

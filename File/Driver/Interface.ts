@@ -1,4 +1,5 @@
 /// <amd-module name='File/Driver/Interface' />
+
 export interface FileDriver {
     /**
      * Начинает загрузку файла

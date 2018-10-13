@@ -1,12 +1,12 @@
 /// <amd-module name='File/Downloader' />
-import { FileParams } from 'File/Driver/Interface';
+import Interface = require('File/Driver/Interface');
 /**
  * Инициализирует загрузку файла
  * @param {string} entity URL документа, либо Base64-строка
  * @param {FileParams} [fileParams] name - имя файла, contentType - тип файла
  * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
  */
-function Downloader(entity: string, fileParams?: FileParams, driverName?: DRIVERS_NAMES): Promise<void> {
+function Downloader(entity: string, fileParams?: Interface.FileParams, driverName?: DRIVERS_NAMES): Promise<void> {
     if (!entity) {
         throw new Error("Некорректный аргумент entity: " + typeof entity);
     }
@@ -82,7 +82,7 @@ export = Downloader;
  * 
  * 
  *    // Скачивание документа по URL
- *    Downloader("https://bad_url").then(res => decodeResponse).catch(console.error); 
+ *    Downloader("https://bad_url").then(parseResponse).catch(console.error); 
  * });
  * </pre>
  *  @see File/Driver/Base64

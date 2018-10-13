@@ -2,16 +2,16 @@
 import detection = require('Core/detection');
 import FetchAPI = require('Transport/fetch');
 import BlobDriver = require('File/Driver/Blob');
-import { FileDriver, FileParams } from 'File/Driver/Interface';
+import Interface = require('File/Driver/Interface');
 
-class URLDriver implements FileDriver /** @lends File/Driver/URL */ {
+class URLDriver implements Interface.FileDriver /** @lends File/Driver/URL */ {
 
     /** 
      * @param {Strign} url URL файла  
      */
     constructor(private url: string) { }
 
-    public download(fileParams?: FileParams): Promise<Response | Error> {
+    public download(fileParams?: Interface.FileParams): Promise<Response | Error> {
         if (detection.isMobilePlatform) {
             window.open(this.url, '_self');
             return;

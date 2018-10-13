@@ -1,9 +1,9 @@
 /// <amd-module name='File/Driver/Base64' />
 import base64toblob = require('File/utils/b64toBlob');
 import BlobDriver = require('File/Driver/Blob');
-import { FileDriver, FileParams } from 'File/Driver/Interface';
+import Interface = require('File/Driver/Interface');
 
-class Base64Driver implements FileDriver /** @lends File/Driver/Base64*/{
+class Base64Driver implements Interface.FileDriver /** @lends File/Driver/Base64*/{
     private base64Data: string;
     private contentType: string;
 
@@ -24,7 +24,7 @@ class Base64Driver implements FileDriver /** @lends File/Driver/Base64*/{
      * @param {FileParams} fileParams Параметры загрузки
      * @returns {Promise<void | Error>} Promise<void | Error>
      */
-    public download(fileParams?: FileParams): Promise<void | Error> {
+    public download(fileParams?: Interface.FileParams): Promise<void | Error> {
         const type = (fileParams && fileParams['contentType']) ? fileParams['contentType'] : this.contentType;
         let blob: Blob;
         try {
