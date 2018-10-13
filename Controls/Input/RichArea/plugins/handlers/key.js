@@ -2,7 +2,6 @@ define('Controls/Input/RichArea/plugins/handlers/key', [
    'Controls/Input/RichArea/plugins/text',
    'Controls/Input/RichArea/plugins/editor'
 ], function(textPlugin, editorPlugin) {
-
    /**
     * Модуль содержащий обработчики ввода в БТР
     */

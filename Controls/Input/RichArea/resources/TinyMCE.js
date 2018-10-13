@@ -15,7 +15,6 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
    'i18n!SBIS3.CONTROLS/RichEditor',
    'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control, template, constantsPlugin, contentPlugin, configPlugin, textPlugin, placeholderPlugin, handlersPlugin, eventsPlugin, moduleStubs, cClone) {
-
    var _private = {
       tinyInit: function(self) {
          self._editorConfig.target = self._children.mceContainer;
@@ -40,7 +39,7 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
          this._placeHolderActive = placeholderPlugin.isPlaceholderActive(this._value);
          this._editorConfig = cClone(configPlugin.editorConfig);
 
-         //Save context for callbacks
+         // Save context for callbacks
          handlersPlugin.saveContext(this);
 
          this._sanitizeClasses = textPlugin.sanitizeClasses.bind(this);

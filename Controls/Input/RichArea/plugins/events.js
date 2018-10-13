@@ -1,10 +1,10 @@
 define('Controls/Input/RichArea/plugins/events', [], function() {
-
    /**
     * Модуль для добавления/удаления обработчиков в БТРе
     */
 
    var EventPlugin = {
+
       /**
        * Function bind events to editor
        * @param self
@@ -12,13 +12,14 @@ define('Controls/Input/RichArea/plugins/events', [], function() {
       bindEvents: function(self) {
          var editor = self._editor;
 
-         //Subscribe for paste events
+         // Subscribe for paste events
          editor.on('onBeforePaste', self._handlers.beforePasteCallback);
 
-         //Subscribe for key events
+         // Subscribe for key events
          editor.on('input', self._handlers.inputHandler);
          editor.on('keyup', self._handlers.inputHandler);
       },
+
       /**
        * Function remove events from editor
        * @param self

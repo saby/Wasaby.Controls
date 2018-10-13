@@ -1,10 +1,10 @@
 define('Controls/Input/RichArea/plugins/placeholder', [], function() {
-
    /**
     * Модуль-хэлпер для плэйсхолдера
     */
 
    var PlaceholderPlugin = {
+
       /**
        * Function checks placeholder is required or not
        * @param text
@@ -16,9 +16,8 @@ define('Controls/Input/RichArea/plugins/placeholder', [], function() {
                value.indexOf('<p><br>&nbsp;') < 0 &&
                value.indexOf('<blockquote>') < 0)) {
             return true;
-         } else {
-            return false;
          }
+         return false;
       }
    };
 

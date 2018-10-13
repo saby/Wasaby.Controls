@@ -2,7 +2,6 @@ define('Controls/Input/RichArea/plugins/handlers', [
    'Controls/Input/RichArea/plugins/handlers/key',
    'Controls/Input/RichArea/plugins/handlers/paste'
 ], function() {
-
    /**
     * Модуль для привязки обработчиков всех типов(вставки, работы с текстом и прочими) к БТР
     */

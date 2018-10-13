@@ -1,7 +1,6 @@
 define('Controls/Input/RichArea/plugins/config', [
    'Controls/Input/RichArea/plugins/constants'
 ], function(constantsPlugin) {
-
    /**
     * Модуль, содержащий базовую конфигурацию БТРа
     */
@@ -23,13 +22,13 @@ define('Controls/Input/RichArea/plugins/config', [
          body_class: 'ws-basic-style',
          invalid_elements: 'script',
          paste_data_images: false,
-         paste_convert_word_fake_lists: false, //TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
+         paste_convert_word_fake_lists: false, // TODO: убрать когда починят https://github.com/tinymce/tinymce/issues/2933
          statusbar: false,
          toolbar: false,
          menubar: false,
          browser_spellcheck: true,
          smart_paste: true,
-         noneditable_noneditable_class: "controls-RichEditor__noneditable",
+         noneditable_noneditable_class: 'controls-RichEditor__noneditable',
          object_resizing: false,
          inline_boundaries: false
       }

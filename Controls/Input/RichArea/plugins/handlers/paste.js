@@ -1,7 +1,6 @@
 define('Controls/Input/RichArea/plugins/handlers/paste', [
    'Controls/Input/RichArea/plugins/youtube',
 ], function(youtubePlugin) {
-
    /**
     * Модуль содержащий обработчики вставки в БТР
     */
