@@ -1,10 +1,11 @@
 define('Controls/Input/Phone',
    [
       'Core/Control',
+      'Controls/Utils/tmplNotify',
       'Controls/Input/Phone/ViewModel',
       'wml!Controls/Input/Phone/Phone'
    ],
-   function(Control, ViewModel, template) {
+   function(Control,tmplNotify, ViewModel, template) {
 
       'use strict';
 
@@ -34,6 +35,7 @@ define('Controls/Input/Phone',
          _viewModel: null,
 
          _firstClickActivateMode: true,
+         _notifyHandler: tmplNotify,
 
          _beforeMount: function(options) {
             this._viewModel = new ViewModel({
@@ -81,7 +83,7 @@ define('Controls/Input/Phone',
             selectOnClick: false
          };
       };
-      
+
       return Phone;
    }
 );
