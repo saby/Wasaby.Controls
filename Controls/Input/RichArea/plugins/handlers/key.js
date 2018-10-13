@@ -1,14 +1,14 @@
 define('Controls/Input/RichArea/plugins/handlers/key', [
    'Controls/Input/RichArea/plugins/text',
    'Controls/Input/RichArea/plugins/editor'
-], function (textPlugin, editorPlugin) {
+], function(textPlugin, editorPlugin) {
 
    /**
     * Модуль содержащий обработчики ввода в БТР
     */
 
    var KeyHandlersPlugin = {
-      inputHandler: function () {
+      inputHandler: function() {
          var newValue = textPlugin.trimText(editorPlugin.getEditorValue(this));
 
          if (this._value !== newValue) {

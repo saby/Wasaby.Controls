@@ -22,7 +22,7 @@ define('Controls/Input/RichArea/plugins/content', [
        * @param {String} text
        * @returns {String}
        */
-      prepareContent: function (text) {
+      prepareContent: function(text) {
          return RichUtil.unDecorateLinks(text);
       }
    };

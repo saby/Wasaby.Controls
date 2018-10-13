@@ -1,4 +1,4 @@
-define('Controls/Input/RichArea/plugins/placeholder', [], function () {
+define('Controls/Input/RichArea/plugins/placeholder', [], function() {
 
    /**
     * Модуль-хэлпер для плэйсхолдера

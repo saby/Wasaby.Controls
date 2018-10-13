@@ -1,4 +1,4 @@
-define('Controls/Input/RichArea/plugins/events', [], function( ) {
+define('Controls/Input/RichArea/plugins/events', [], function() {
 
    /**
     * Модуль для добавления/удаления обработчиков в БТРе
@@ -26,9 +26,9 @@ define('Controls/Input/RichArea/plugins/events', [], function( ) {
       offEvents: function(self) {
          var
             tinyEvents = [
-            'onBeforePaste',
-            'input',
-            'keyup'],
+               'onBeforePaste',
+               'input',
+               'keyup'],
             editor = self._editor;
 
          tinyEvents.forEach(function(eventName) {

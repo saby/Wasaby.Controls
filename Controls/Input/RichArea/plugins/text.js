@@ -1,14 +1,14 @@
 define('Controls/Input/RichArea/plugins/text', [
    'Core/Sanitize',
    'Core/core-merge'
-], function (Sanitize, cMerge) {
+], function(Sanitize, cMerge) {
 
    /**
     * Модуль для обработки текста в БТРе
     */
 
    var TextPlugin = {
-      trimText: function (text) {
+      trimText: function(text) {
          if (!text) {
             return '';
          }

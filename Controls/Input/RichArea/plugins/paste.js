@@ -1,5 +1,4 @@
-define('Controls/Input/RichArea/plugins/paste', [
-], function() {
+define('Controls/Input/RichArea/plugins/paste', [], function() {
 
    /**
     * Модуль для работы со вставкой в БТР
