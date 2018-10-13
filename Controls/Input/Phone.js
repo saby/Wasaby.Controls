@@ -5,7 +5,7 @@ define('Controls/Input/Phone',
       'Controls/Input/Phone/ViewModel',
       'wml!Controls/Input/Phone/Phone'
    ],
-   function(Control,tmplNotify, ViewModel, template) {
+   function(Control, tmplNotify, ViewModel, template) {
 
       'use strict';
 
