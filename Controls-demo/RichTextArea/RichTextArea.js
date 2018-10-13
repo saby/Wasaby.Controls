@@ -8,7 +8,7 @@ define('Controls-demo/RichTextArea/RichTextArea', [
    var RichEdtior = Control.extend({
          _template: template,
          value123: 'example123',
-         codeMode: false,
+         sourceMode: false,
          readOnly: false,
 
          buttonCaption: 'Заблокировать',
@@ -22,12 +22,12 @@ define('Controls-demo/RichTextArea/RichTextArea', [
             this.readOnly = !this.readOnly;
          },
          _updateMode: function() {
-            if (!this.codeMode) {
+            if (!this.sourceMode) {
                this.buttonCaption2 = 'Режим редактора';
             } else {
                this.buttonCaption2 = 'Режим кода';
             }
-            this.codeMode = !this.codeMode;
+            this.sourceMode = !this.sourceMode;
          },
          changeText: function(event, value) {
             this.value123 = value;
