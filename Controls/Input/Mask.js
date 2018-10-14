@@ -11,7 +11,6 @@ define('Controls/Input/Mask',
       'wml!Controls/Input/resources/input'
    ],
    function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
-
       'use strict';
 
       /**
@@ -118,9 +117,8 @@ define('Controls/Input/Mask',
                   position = value.indexOf(replacer);
 
                   return position === -1 ? value.length : position;
-               } else {
-                  return value.length;
                }
+               return value.length;
             },
 
             /**
@@ -180,10 +178,10 @@ define('Controls/Input/Mask',
                      formatMaskChars: newOptions.formatMaskChars
                   });
                }
-               if(!(newOptions.mask === this._options.mask &&
+               if (!(newOptions.mask === this._options.mask &&
                   newOptions.replacer === this._options.replacer)) {
                   this._viewModel.updateOptions({
-                     value: newOptions.replacer || newOptions.mask ? newOptions.mask.replace(/./g, function (s) {
+                     value: newOptions.replacer || newOptions.mask ? newOptions.mask.replace(/./g, function(s) {
                         if (/[Lldx]/.test(s)) {
                            return newOptions.replacer;
                         }
