@@ -167,16 +167,28 @@ define('Controls/Input/Mask',
                   formatMaskChars: options.formatMaskChars
                });
             },
-
             _beforeUpdate: function(newOptions) {
-               if (!(
-                  newOptions.value === this._options.value &&
+               if (!(newOptions.value === this._options.value &&
                   newOptions.mask === this._options.mask &&
                   newOptions.replacer === this._options.replacer &&
                   isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
                ) {
                   this._viewModel.updateOptions({
                      value: newOptions.value,
+                     mask: newOptions.mask,
+                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
+                     formatMaskChars: newOptions.formatMaskChars
+                  });
+               }
+               if(!(newOptions.mask === this._options.mask &&
+                  newOptions.replacer === this._options.replacer)) {
+                  this._viewModel.updateOptions({
+                     value: newOptions.replacer || newOptions.mask ? newOptions.mask.replace(/./g, function (s) {
+                        if (/[Lldx]/.test(s)) {
+                           return newOptions.replacer;
+                        }
+                        return s;
+                     }) : this._options.value,
                      mask: newOptions.mask,
                      replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
                      formatMaskChars: newOptions.formatMaskChars

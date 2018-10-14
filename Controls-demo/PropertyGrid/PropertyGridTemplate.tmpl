@@ -91,5 +91,12 @@
     </Controls-demo.PropertyGrid.DateTimeTemplate>
 </ws:template>
 
+<ws:template name="Object">
+   <Controls-demo.PropertyGrid.ObjectTemplate
+      bind:value="item.value"
+      scope="{{item}}"
+      caption="{{name}}">
+   </Controls-demo.PropertyGrid.ObjectTemplate>
+</ws:template>
 
 <ws:partial template="{{item.type}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" />
