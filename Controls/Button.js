@@ -2,8 +2,9 @@ define('Controls/Button', [
    'Core/Control',
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
+   'SBIS3.CONTROLS/Utils/Sanitize',
    'css!Controls/Button/Button'
-], function(Control, Classes, template) {
+], function(Control, Classes, template, sanitize) {
    'use strict';
 
    /**
@@ -79,7 +80,7 @@ define('Controls/Button', [
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
-         self._caption = options.caption;
+         self._caption = sanitize(options.caption);
          self._icon = options.icon;
          self._isTransparent = !!currentButtonClass.transparent;
       }
