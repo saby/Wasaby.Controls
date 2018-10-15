@@ -53,6 +53,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       });
    }
 
+   // на vdom динамически меняется zindex попапов.
+   // По заданному интервалу синхронизируем zindex popupMixin и vdomPopup
+   var VDOM_POPUP_RECAL_ZINDEX_INTERVAL = 1000;
+
    /**
     * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
@@ -277,10 +281,16 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             container.appendTo('body');
          }
 
-         this._mouseEnterHandler = this._mouseEnterHandler.bind(this);
-
          if (isNewEnvironment()) {
-            container.bind('mouseenter', this._mouseEnterHandler);
+            this._vdomZindexInterval = setInterval(function() {
+               if (self.isVisible()) {
+                  // на vdom динамически меняется zindex попапов.
+                  // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
+                  cWindowManager.releaseZIndex(self._zIndex);
+                  self._container.css('z-index', self._getZIndex());
+                  ModalOverlay.adjust(self.isModal() ? self._zIndex : null);
+               }
+            }, VDOM_POPUP_RECAL_ZINDEX_INTERVAL);
          }
 
          this._saveDefault();
@@ -292,13 +302,6 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
          }
-      },
-
-      _mouseEnterHandler: function() {
-         // на vdom динамически меняется zindex попапов.
-         // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
-         cWindowManager.releaseZIndex(this._zIndex);
-         this._container.css('z-index', this._getZIndex());
       },
 
       _findParentContainer: function() {
@@ -1392,7 +1395,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
 
             if (isNewEnvironment()) {
-               this.getContainer().unbind('mouseenter', this._mouseEnterHandler);
+               clearInterval(this._vdomZindexInterval);
             }
 
             this._unsubscribeTargetMove();
