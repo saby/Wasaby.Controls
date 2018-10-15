@@ -11,10 +11,10 @@ class URLDriver implements Interface.FileDriver /** @lends File/Driver/URL */ {
      */
     constructor(private url: string) { }
 
-    public download(fileParams?: Interface.FileParams): Promise<Response | Error> {
+    public download(fileParams?: Interface.FileParams): Promise<Response | void | Error> {
         if (detection.isMobilePlatform) {
             window.open(this.url, '_self');
-            return;
+            return Promise.resolve();
         }
         return FetchAPI({ url: this.url }).then((res: Response) => {
             new BlobDriver(res.blob()).download(fileParams);

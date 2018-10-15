@@ -6,7 +6,7 @@ import Interface = require('File/Driver/Interface');
  * @param {FileParams} [fileParams] name - имя файла, contentType - тип файла
  * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
  */
-function Downloader(entity: string, fileParams?: Interface.FileParams, driverName?: DRIVERS_NAMES): Promise<void> {
+function Downloader(entity: string, fileParams?: Interface.FileParams, driverName?: DRIVERS_NAMES): Promise<Response| void | Error> {
     if (!entity) {
         throw new Error("Некорректный аргумент entity: " + typeof entity);
     }
@@ -64,7 +64,7 @@ export = Downloader;
  * <p> Возвращаемое значение:
  * <ul>
  *      <li> В случае скачивания Base64 строки возвращает Promise<void | Error> </li>
- *      <li> В случае скачивания URL адреса возвращает Promise<Response | Error> </li>
+ *      <li> В случае скачивания URL адреса возвращает Promise<Response| void | Error> </li>
  * </ul>     
  * </p>
  * <b>Пример использования</b>
