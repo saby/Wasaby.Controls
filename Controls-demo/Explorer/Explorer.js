@@ -63,14 +63,6 @@ define('Controls-demo/Explorer/Explorer', [
                },
                {
                   id: 5,
-                  title: 'прочитано',
-                  showType: 2,
-                  handler: function() {
-                     console.log('action read Click');
-                  }
-               },
-               {
-                  id: 6,
                   icon: 'icon-PhoneNull',
                   title: 'phone',
                   showType: 2,
@@ -79,7 +71,7 @@ define('Controls-demo/Explorer/Explorer', [
                   }
                },
                {
-                  id: 7,
+                  id: 6,
                   icon: 'icon-EmptyMessage',
                   title: 'message',
                   showType: 2,
@@ -88,7 +80,7 @@ define('Controls-demo/Explorer/Explorer', [
                   }
                },
                {
-                  id: 8,
+                  id: 7,
                   icon: 'icon-Profile',
                   title: 'profile',
                   showType: 0,
@@ -97,7 +89,7 @@ define('Controls-demo/Explorer/Explorer', [
                   }
                },
                {
-                  id: 9,
+                  id: 8,
                   icon: 'icon-Erase',
                   iconStyle: 'error',
                   title: 'delete pls',
