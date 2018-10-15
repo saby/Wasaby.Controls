@@ -714,8 +714,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @return {string}
              */
             getTextFromJson: function () {
-               var json = this._options.json;
-               return json ? this._getTextFromJson(json, false) : '';
+               return this._getTextFromJson(this._options.json, false);
             },
 
             /**
