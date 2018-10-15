@@ -1,29 +1,10 @@
 define('Controls/List/Swipe/List', [
-
+   'Controls/List/Swipe/Constants'
 ], function(
-
+   swipeConstants
 ) {
    'use strict';
 
-   var ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size',
-      SMALL_ICON_SIZE = 24,
-      BIG_ICON_SIZE = 32,
-      TITLE_HEIGHT = 16,
-      VERTICAL_MARGIN = 12,
-      ROW_FIRST_TYPE_THRESHOLD = 38,
-      ROW_SECOND_TYPE_THRESHOLD = 46,
-      ROW_THIRD_TYPE_THRESHOLD = 54,
-      ROW_FOURTH_TYPE_THRESHOLD = 73,
-      COLUMN_FIRST_TYPE_THRESHOLD = 24,
-      COLUMN_SECOND_TYPE_THRESHOLD = 32,
-      COLUMN_THIRD_TYPE_THRESHOLD = 40,
-      COLUMN_FOURTH_TYPE_THRESHOLD = 48,
-      SEPARATOR_WIDTH = 1,
-      TWO_COLUMN_MENU_TYPE = 13,
-      ROW_TYPE_THRESHOLD = 4,
-      ONE_COLUMN_TYPE_THRESHOLD = 8,
-      SUBTYPE_COUNT = 4,
-      TYPES_WITH_TITLE = [3, 4, 7, 8, 11, 12];
    var _private = {
       getNumberInterval: function(number, limits) {
          for (var i = 0; i < limits.length; i++) {
@@ -39,52 +20,52 @@ define('Controls/List/Swipe/List', [
 
          // inline
          type = _private.getNumberInterval(size, [
-            ROW_FIRST_TYPE_THRESHOLD,
-            ROW_SECOND_TYPE_THRESHOLD,
-            ROW_THIRD_TYPE_THRESHOLD,
-            ROW_FOURTH_TYPE_THRESHOLD
+            swipeConstants.ROW_FIRST_TYPE_THRESHOLD,
+            swipeConstants.ROW_SECOND_TYPE_THRESHOLD,
+            swipeConstants.ROW_THIRD_TYPE_THRESHOLD,
+            swipeConstants.ROW_FOURTH_TYPE_THRESHOLD
          ]);
-         if (type < ROW_TYPE_THRESHOLD) {
+         if (type < swipeConstants.ROW_TYPE_THRESHOLD) {
             return type + 1; // index start from 0
          }
 
          // 1 column
          x1 =
             (size -
-               VERTICAL_MARGIN -
-               (VERTICAL_MARGIN + SEPARATOR_WIDTH) * (count - 1)) /
+               swipeConstants.VERTICAL_MARGIN -
+               (swipeConstants.VERTICAL_MARGIN + swipeConstants.SEPARATOR_WIDTH) * (count - 1)) /
             count;
          type = _private.getNumberInterval(x1, [
-            COLUMN_FIRST_TYPE_THRESHOLD,
-            COLUMN_SECOND_TYPE_THRESHOLD,
-            COLUMN_THIRD_TYPE_THRESHOLD,
-            COLUMN_FOURTH_TYPE_THRESHOLD
+            swipeConstants.COLUMN_FIRST_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_SECOND_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_THIRD_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_FOURTH_TYPE_THRESHOLD
          ]);
          if (type) {
-            return type + ROW_TYPE_THRESHOLD;
+            return type + swipeConstants.ROW_TYPE_THRESHOLD;
          }
 
          // 2column
          evenNumber = count % 2 ? count + 1 : count;
          x2 =
             (2 * size -
-               VERTICAL_MARGIN * 2 -
-               (VERTICAL_MARGIN + SEPARATOR_WIDTH) * (evenNumber - 2)) /
+               swipeConstants.VERTICAL_MARGIN * 2 -
+               (swipeConstants.VERTICAL_MARGIN + swipeConstants.SEPARATOR_WIDTH) * (evenNumber - 2)) /
             evenNumber;
          type = _private.getNumberInterval(x2, [
-            COLUMN_FIRST_TYPE_THRESHOLD,
-            COLUMN_SECOND_TYPE_THRESHOLD,
-            COLUMN_THIRD_TYPE_THRESHOLD,
-            COLUMN_FOURTH_TYPE_THRESHOLD
+            swipeConstants.COLUMN_FIRST_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_SECOND_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_THIRD_TYPE_THRESHOLD,
+            swipeConstants.COLUMN_FOURTH_TYPE_THRESHOLD
          ]);
          if (type) {
-            return type + ONE_COLUMN_TYPE_THRESHOLD;
+            return type + swipeConstants.ONE_COLUMN_TYPE_THRESHOLD;
          }
-         return TWO_COLUMN_MENU_TYPE;
+         return swipeConstants.TWO_COLUMN_MENU_TYPE;
       },
 
       initSwipeDirection: function(type) {
-         if (type <= ROW_TYPE_THRESHOLD) {
+         if (type <= swipeConstants.ROW_TYPE_THRESHOLD) {
             return 'row';
          }
          return 'column';
@@ -92,19 +73,19 @@ define('Controls/List/Swipe/List', [
 
       swipeIsFull: function(type) {
          return (
-            (type > ROW_TYPE_THRESHOLD && type <= ONE_COLUMN_TYPE_THRESHOLD) ||
-            type === TWO_COLUMN_MENU_TYPE
+            (type > swipeConstants.ROW_TYPE_THRESHOLD && type <= swipeConstants.ONE_COLUMN_TYPE_THRESHOLD) ||
+            type === swipeConstants.TWO_COLUMN_MENU_TYPE
          );
       },
 
       getActionDefaultHeight: function(type) {
          var heights = {
-            1: SMALL_ICON_SIZE + VERTICAL_MARGIN,
-            2: BIG_ICON_SIZE + VERTICAL_MARGIN,
-            3: SMALL_ICON_SIZE + TITLE_HEIGHT + VERTICAL_MARGIN,
-            0: BIG_ICON_SIZE + TITLE_HEIGHT + VERTICAL_MARGIN
+            1: swipeConstants.SMALL_ICON_SIZE + swipeConstants.VERTICAL_MARGIN,
+            2: swipeConstants.BIG_ICON_SIZE + swipeConstants.VERTICAL_MARGIN,
+            3: swipeConstants.SMALL_ICON_SIZE + swipeConstants.TITLE_HEIGHT + swipeConstants.VERTICAL_MARGIN,
+            0: swipeConstants.BIG_ICON_SIZE + swipeConstants.TITLE_HEIGHT + swipeConstants.VERTICAL_MARGIN
          };
-         return heights[type % SUBTYPE_COUNT]; // каждые SUBTYPE_COUNT типа высота сбрасывается до 1
+         return heights[type % swipeConstants.SUBTYPE_COUNT]; // каждые swipeConstants.SUBTYPE_COUNT типа высота сбрасывается до 1
       },
 
       getSwipeConfig: function(itemActions, actionsHeight) {
@@ -115,7 +96,7 @@ define('Controls/List/Swipe/List', [
             direction: _private.initSwipeDirection(type),
             isFull: _private.swipeIsFull(type),
             swipeIconSize: _private.initSwipeIconSize(type),
-            bigTitle: type === TWO_COLUMN_MENU_TYPE
+            bigTitle: type === swipeConstants.TWO_COLUMN_MENU_TYPE
          };
       },
 
@@ -129,8 +110,8 @@ define('Controls/List/Swipe/List', [
             item.height = _private.getActionDefaultHeight(swipeType) + 'px';
          });
 
-         if (swipeType > ROW_TYPE_THRESHOLD) {
-            if (swipeType <= ONE_COLUMN_TYPE_THRESHOLD) {
+         if (swipeType > swipeConstants.ROW_TYPE_THRESHOLD) {
+            if (swipeType <= swipeConstants.ONE_COLUMN_TYPE_THRESHOLD) {
                return _private.getOneColumnsItems(itemActions);
             }
             return _private.getTwoColumsItems(swipeType, itemActions, actionsHeight);
@@ -162,16 +143,16 @@ define('Controls/List/Swipe/List', [
             } else {
                break;
             }
-            sum += SEPARATOR_WIDTH;
+            sum += swipeConstants.SEPARATOR_WIDTH;
          }
 
-         if (swipeType === TWO_COLUMN_MENU_TYPE) {
+         if (swipeType === swipeConstants.TWO_COLUMN_MENU_TYPE) {
             firstColumnItems = allActions.slice(0, oneColumnCount);
             secondColumnItems = allActions.slice(oneColumnCount, oneColumnCount * 2 - 1);
 
             secondColumnItems.push({
                title: 'Еще',
-               icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
+               icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
                height: 'auto',
                isMenu: true
             });
@@ -218,7 +199,7 @@ define('Controls/List/Swipe/List', [
          return (
             tempAction.title &&
             (!tempAction.icon ||
-               (!!~TYPES_WITH_TITLE.indexOf(type) && hasIcon !== false))
+               (!!~swipeConstants.TYPES_WITH_TITLE.indexOf(type) && hasIcon !== false))
          );
       },
 
@@ -237,7 +218,7 @@ define('Controls/List/Swipe/List', [
          if (actionIndex === visibleItemsCount) {
             return false;
          }
-         if (type > ONE_COLUMN_TYPE_THRESHOLD) {
+         if (type > swipeConstants.ONE_COLUMN_TYPE_THRESHOLD) {
             // две колонки
             // если с меню то не показываем у меню и у средней
             // без меню не показываем у средней

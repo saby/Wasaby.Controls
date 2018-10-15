@@ -1,14 +1,10 @@
 define('Controls/List/Swipe/Tile', [
-
+   'Controls/List/Swipe/Constants'
 ], function(
-
+   swipeConstants
 ) {
    'use strict';
 
-   var ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size',
-      BIG_ICON_SIZE = 32,
-      VERTICAL_MARGIN = 12,
-      SEPARATOR_WIDTH = 1;
    var _private = {
       initItemsForSwipe: function(itemActions, actionsHeight) {
          var
@@ -20,13 +16,13 @@ define('Controls/List/Swipe/Tile', [
             });
 
          for (i = 0; i <= actionsWithIcons.length - 1; i++) {
-            sum += BIG_ICON_SIZE + VERTICAL_MARGIN;
+            sum += swipeConstants.BIG_ICON_SIZE + swipeConstants.VERTICAL_MARGIN;
             if (actionsHeight >= sum) {
                visibleItems.push(actionsWithIcons[i]);
             } else {
                break;
             }
-            sum += SEPARATOR_WIDTH;
+            sum += swipeConstants.SEPARATOR_WIDTH;
          }
 
 
@@ -34,7 +30,7 @@ define('Controls/List/Swipe/Tile', [
             visibleItems.pop();
             visibleItems.push({
                title: 'Еще',
-               icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
+               icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
                isMenu: true
             });
          }

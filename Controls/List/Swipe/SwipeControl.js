@@ -101,6 +101,8 @@ define('Controls/List/Swipe/SwipeControl', [
          }
 
          if (this._options.viewName !== newOptions.viewName) {
+            // TODO: убрать определение measurer после того, как стандарты свайпа в плитке и в списках сделают одинаковыми.
+            // Поручение: https://online.sbis.ru/opendoc.html?guid=fe815afd-db06-476a-ac50-d9a647a84cd3
             require([_private.getMeasurerModuleName(newOptions.viewName)], function(result) {
                self._measurer = result;
                self._forceUpdate();
