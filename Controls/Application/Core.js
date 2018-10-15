@@ -60,10 +60,10 @@ define('Controls/Application/Core',
             }
 
             // TODO Нужно для совместимости. Убрать после синхронизации с WS.
-            cfg.lite = true;
+            // cfg.lite = true;
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot, cfg.resourceRoot);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, cfg.resourceRoot, cfg.lite);
          },
          _getChildContext: function() {
             return {

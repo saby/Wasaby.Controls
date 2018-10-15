@@ -109,7 +109,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return packages;
    }
 
-   function getCssPackages(allDeps, bundlesRoute) {
+   function getCssPackages(allDeps, bundlesRoute, themesActive) {
       var packages = {
          themedCss: {},
          simpleCss: {}
@@ -120,7 +120,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
-               if (isThemedCss(key)) {
+               if (isThemedCss(key) && themesActive) {
                   packages.themedCss[getPackageName(bundleName)] = DEPTYPES.BUNDLE;
                } else {
                   packages.simpleCss[getPackageName(bundleName)] = DEPTYPES.BUNDLE;
@@ -140,13 +140,13 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return packages;
    }
 
-   function getAllPackagesNames(allDeps, bundlesRoute) {
+   function getAllPackagesNames(allDeps, bundlesRoute, themesActive) {
       var packages = {
          js: {},
          css: {}
       };
       packages.js = getPackagesNames(allDeps.js, bundlesRoute);
-      packages.css = getCssPackages(allDeps.css, bundlesRoute);
+      packages.css = getCssPackages(allDeps.css, bundlesRoute, themesActive);
       packages.tmpl = getPackagesNames(allDeps.tmpl, bundlesRoute);
       packages.wml = getPackagesNames(allDeps.wml, bundlesRoute);
       return packages;
@@ -196,12 +196,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
        * @param modInfo - contains info about path to module files
        * @param bundlesRoute - contains info about custom packets with modules
        */
-      constructor: function(modDeps, modInfo, bundlesRoute, buildNumber, appRoot) {
+      constructor: function(modDeps, modInfo, bundlesRoute, themesActive) {
          this.modDeps = modDeps;
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
-         this.buildNumber = buildNumber;
-         this.appRoot = appRoot;
+         this.themesActive = themesActive;
       },
       collectDependencies: function(deps) {
          var files = {
@@ -209,7 +208,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
-         var packages = getAllPackagesNames(allDeps, this.bundlesRoute); // Find all bundles, and removes dependencies that are included in bundles
+         var packages = getAllPackagesNames(allDeps, this.bundlesRoute, this.themesActive); // Find all bundles, and removes dependencies that are included in bundles
          for (var key in packages.js) {
             if (packages.js.hasOwnProperty(key)) {
                files.js.push(key);

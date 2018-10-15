@@ -84,7 +84,7 @@ define('Controls/Application/HeadDataContext', [
       },
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber, self.appRoot);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             var components = Object.keys(self.depComponentsMap);
@@ -127,15 +127,14 @@ define('Controls/Application/HeadDataContext', [
             });
          });
       },
-      constructor: function(theme, buildNumber, cssLinks, appRoot) {
+      constructor: function(theme, cssLinks, themesActive) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateObjectsArray = {};
          this.receivedStateArr = {};
          this.additionalDeps = {};
-         this.buildNumber = buildNumber;
-         this.appRoot = appRoot;
+         this.themesActive = themesActive;
          this.cssLinks = cssLinks;
          this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
       },
