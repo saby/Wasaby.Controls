@@ -8,6 +8,7 @@
    validationErrors="{{_options.validationErrors}}"
    tooltip="{{_options.tooltip}}"
    on:focusin="_focusinHandler()"
+   on:valueChanged="_notifyHandler('valueChanged')"
 >
    <ws:content>
       <ws:partial
