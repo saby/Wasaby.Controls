@@ -1,23 +1,36 @@
 define('Controls/List/TileView/TileViewModel', [
-   'Controls/List/ListViewModel'
-], function(ListViewModel) {
+   'Controls/List/ListViewModel',
+   'Core/core-merge'
+], function(ListViewModel, cMerge) {
 
    'use strict';
+
+   var
+      DEFAULT_ITEM_WIDTH = 250,
+      DEFAULT_ITEM_HEIGHT = 200,
+      ITEM_COMPRESSION_COEFFICIENT = 0.7;
 
    var TileViewModel = ListViewModel.extend({
       constructor: function() {
          TileViewModel.superclass.constructor.apply(this, arguments);
          this._tileMode = this._options.tileMode;
-         this._itemsHeight = this._options.itemsHeight;
+         this._itemsHeight = this._options.itemsHeight || DEFAULT_ITEM_HEIGHT;
       },
 
       getCurrent: function() {
          var current = TileViewModel.superclass.getCurrent.apply(this, arguments);
-         current.tileMode = this._tileMode;
-         current.itemsHeight = this._itemsHeight;
-         current.imageProperty = this._options.imageProperty;
-
+         current = cMerge(current, this.getDefaultItemData());
          return current;
+      },
+
+      getDefaultItemData: function() {
+         return {
+            tileMode: this._tileMode,
+            itemsHeight: this._itemsHeight,
+            imageProperty: this._options.imageProperty,
+            defaultItemWidth: DEFAULT_ITEM_WIDTH,
+            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
+         };
       },
 
       setTileMode: function(tileMode) {
