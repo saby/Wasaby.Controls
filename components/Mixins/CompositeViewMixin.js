@@ -750,7 +750,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                //3. Если это добавление элементов в плоском списоке
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (action === 'a' && !cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/TreeMixin') || ((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action === 'rm' || action === 'a') {
+               if (action === 'a' && !cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/TreeMixin') || ((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action === 'rm') {
                   parentFnc.apply(this, args);
                }
                else {

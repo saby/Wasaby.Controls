@@ -325,7 +325,9 @@ define('SBIS3.CONTROLS/TextArea', [
             var
                newText = escapeHtml(this.getText());
             //при установке контента через .html() убирается код каретки, поэтому высота в диве отличается от высоты в текстареи
-            newText = newText.replace(/\n/g,'<br>');
+            if (newText) {
+               newText = newText.replace(/\n/g, '<br>');
+            }
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
          }
       },
