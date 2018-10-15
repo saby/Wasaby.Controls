@@ -8,8 +8,11 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
       'use strict';
       
       /**
-       * Сслыка, которая может использоваться в качестве метки поля связи.
-       * Пример создания метки в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/config/#_3 статье}.
+       * Класс компонента "Ссылка для поля связи". Может быть использован в качестве метки поля связи.
+       * Клик по ссылке открывает окно выбора значений.
+       *
+       * Если компонент расположен внутри {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/ поля связи}, опцию {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/Label/options/owner/  owner} задавать не нужно, она заполняется автоматически.
+       * Если компонент расположен вне поля связи (справа, слева и т.д.), то в опции owner следует указать имя поля связи в формате '/имя поля связи'. В таком случае клик по Link будет вызывать команду {@link https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/methods/showSelector/ showSelector}, открывающую {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/ окно выбора}.
        * @class SBIS3.CONTROLS/FieldLink/Link
        * @extends WSControls/Buttons/ButtonBase
        * @mixes SBIS3.CONTROLS/FieldLink/LinkDocs
@@ -19,6 +22,9 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
        *
        * @control
        * @public
+       * @demo Examples/FieldLink/FieldLinkPlaceHolder/FieldLinkPlaceHolder
+       *
+       *
        */
       
       var FieldLink_Link = ButtonBase.extend({
@@ -50,3 +56,8 @@ define('SBIS3.CONTROLS/FieldLink/Link', [
       
       return FieldLink_Link;
    });
+
+      /**
+       * @cfg {String} Устанавливает имя поля связи, к которому будет привязана метка.
+       * @name SBIS3.CONTROLS/FieldLink/Link#owner
+       */

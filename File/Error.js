@@ -1,13 +1,22 @@
 define("File/Error", ["require", "exports", "Core/core-classicExtend"], function (require, exports, classicExtend) {
     "use strict";
     /**
-     * Ошибка файла
+     * Базовый класс ошибки, возникающий при работе с ресурсами
      * @class
      * @name File/Error
      * @public
      * @extends Error
+     * @author Заляев А.В.
      */
     var FileError = /** @class */ (function () {
+        /**
+         *
+         * @params {String} message Текст ошибки
+         * @params {String} fileName Имя файла, вызвавшего ошибку
+         * @params {String} details Детальное описание ошибки.
+         * @constructor
+         * @name File/Error
+         */
         function FileError(_a) {
             var message = _a.message, fileName = _a.fileName, details = _a.details;
             this.name = 'FileError';
