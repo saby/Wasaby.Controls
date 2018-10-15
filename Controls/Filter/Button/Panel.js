@@ -11,12 +11,20 @@ define('Controls/Filter/Button/Panel', [
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
    /**
     * Control "Filter panel"
+    * Component for displaying a filter panel template. Displays each filters by specified templates.
+    * It consists of three blocks: Selected, Possible to selected, Previously selected.
+    *
     * @class Controls/Filter/Button/Panel
     * @extends Core/Control
     * @mixes Controls/interface/IFilterPanel
+    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
     * @control
     * @public
     * @author Герасимов А.М.
+    *
+    * @cssModifier controls-PanelFilter__width-m Medium panel width.
+    * @cssModifier controls-PanelFilter__width-l Large panel width.
+    * @cssModifier controls-PanelFilter__width-xl Extra large panel width.
     *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
@@ -29,7 +37,9 @@ define('Controls/Filter/Button/Panel', [
     */
 
    /**
-    * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
+    * @event Controls/Filter/Button/Panel#sendResult Happens when clicking the button "Select".
+    * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
+    * @param {Object} items items
     */
 
    'use strict';
@@ -125,7 +135,7 @@ define('Controls/Filter/Button/Panel', [
 
       _applyHistoryFilter: function(event, items) {
          var filter = _private.getFilter(this, items);
-         filter['$_history' ] = true;
+         filter['$_history'] = true;
          this._applyFilter(event, items);
       },
 
@@ -155,8 +165,7 @@ define('Controls/Filter/Button/Panel', [
       return {
          title: rk('Отбираются'),
          headerStyle: 'primary',
-         panelStyle: 'default',
-         size: 'm'
+         panelStyle: 'default'
       };
    };
 

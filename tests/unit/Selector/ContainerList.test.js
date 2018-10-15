@@ -139,6 +139,66 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          assert.isFalse(selectCompleted);
       });
    
+      it('_itemClick handler', function() {
+         var listContainer = new Container();
+         var selectedKeys = [];
+         var options = {
+            keyProperty: 'id',
+            multiSelect: false,
+            nodeProperty: 'Раздел@'
+         };
+         var selectCompleted = false;
+         var selectionResult = null;
+         var selectedItem = new Model({
+            idProperty: 'id',
+            rawData: {
+               id: 'test',
+               'Раздел@': false
+            }
+         });
+         var otherSelectedItem = new Model({
+            idProperty: 'id',
+            rawData: {
+               id: 'test1',
+               'Раздел@': false
+            }
+         });
+         
+         
+         
+         listContainer.saveOptions(options);
+         listContainer._ignoreItemClickEvent = false;
+         listContainer.context = {
+            get: function() {
+               return {
+                  selectedKeys: selectedKeys
+               };
+            }
+         };
+         listContainer._notify = function(event, result) {
+            if (event === 'selectComplete') {
+               selectCompleted = true;
+            }
+            if (event === 'listSelectionChange') {
+               selectedKeys = result[1];
+               selectionResult = result;
+            }
+         };
+   
+         listContainer._itemClick(null, selectedItem);
+   
+         assert.equal(selectedKeys.length, 1);
+         assert.equal(selectedKeys[0], 'test');
+         assert.isTrue(selectCompleted);
+         
+         selectCompleted = false;
+         listContainer._itemClick(null, otherSelectedItem);
+   
+         assert.equal(selectedKeys.length, 1);
+         assert.equal(selectedKeys[0], 'test1');
+         assert.isTrue(selectCompleted);
+      });
+   
    });
    
 });

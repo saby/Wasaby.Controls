@@ -5,6 +5,8 @@ define("File/Decorator/isDestroyed", ["require", "exports", "Core/Deferred"], fu
     /**
      * Декоратор, проверяющий задестроен ли компонент
      * @name File/Decorator/isDestroyed#isDestroyed
+     * @public
+     * @author Заляев А.В.
      */
     exports.isDestroyed = function (target, propertyKey, descriptor) {
         var origin = descriptor.value;
@@ -23,6 +25,8 @@ define("File/Decorator/isDestroyed", ["require", "exports", "Core/Deferred"], fu
     /**
      * Декоратор асинхронной функции, проверяющий задестроен ли компонент
      * @name File/Decorator/isDestroyed#isDestroyedAsync
+     * @public
+     * @author Заляев А.В.
      */
     exports.isDestroyedAsync = function (target, propertyKey, descriptor) {
         var origin = descriptor.value;

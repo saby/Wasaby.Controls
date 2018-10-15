@@ -13,14 +13,13 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
       var sugTmpl = Control.extend({
          _template: template,
          _viewValue: '',
+         _source: null,
 
          _beforeMount: function(options) {
             this._viewValue = options.value;
-         },
-         _getSuggestSource: function() {
-            return new Memory({
+            this._source = new Memory({
                idProperty: 'title',
-               data: this._options.items,
+               data: options.items,
                filter: function(record, filter) {
                   if (record.get('title').indexOf(filter.title) !== -1) {
                      return true;

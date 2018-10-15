@@ -24,11 +24,6 @@
   }
 }
 
-.controls-Lookup__showAllLinks_hidden {
-  visibility: hidden;
-  position: absolute;
-}
-
 .controls-Lookup__picker {
   padding: @spacing_Lookup-collection;
   box-sizing: border-box;
@@ -37,8 +32,8 @@
   border-top: none;
 }
 
-.controls-Lookup__collection_hidden {
-  display: none !important;
+.controls-Lookup__collection.controls-Lookup__collection_hidden {
+  display: none;
 }
 
 .controls-Lookup__collection_single {
@@ -47,4 +42,13 @@
 
 .controls-Lookup__collection_multi {
   .flex-shrink(0);
+}
+
+.controls-Lookup-collection__measurer {
+  display: inline-flex;
+  top: 0;
+  left: -9999px;
+  position: absolute;
+  white-space: nowrap;
+  backface-visibility: hidden;
 }

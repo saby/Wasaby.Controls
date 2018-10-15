@@ -1,5 +1,5 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
-                                                attr:class="controls-PanelFilter controls-PanelFilter__size-{{_options.size}}
+                                                attr:class="controls-PanelFilter
                                                 {{_options.panelStyle === 'column' ? 'controls-FilterPanel__column'}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
@@ -9,7 +9,7 @@
                <ws:partial template="{{_options.topTemplate}}"/>
             </div>
          </ws:if>
-         <Controls.Button style="linkMain" readOnly="{{!_isChanged}}" caption="{[По умолчанию]}"
+         <Controls.Button style="linkMain" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
                           on:click="_resetFilter()"
                           name="resetButton"
                           attr:class="controls-FilterPanel__resetButton"/>
@@ -20,8 +20,9 @@
    </ws:topArea>
    <ws:contentArea>
       <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
-      <div class="{{_options.panelStyle === 'column' ? 'controls-FilterPanel__blockParams-column'}}">
-         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
+      <div class="{{_options.panelStyle === 'column' ? 'controls-FilterPanel__content-column'}}">
+         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}
+         {{_options.panelStyle === 'column' ? 'controls-FilterPanel__blockParams-column'}}">
             <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                    itemTemplate="{{_options.itemTemplate}}"
                                    itemTemplateProperty="{{_options.itemTemplateProperty}}"
@@ -40,7 +41,7 @@
          <ws:if data="{{_historyId}}">
             <Controls.Filter.Button.History.List
                     historyId="{{_historyId}}"
-                    attr:class="{{_options.panelStyle === 'column' ? 'controls-HistoryList__column'}}"
+                    attr:class="controls-HistoryList__{{_options.panelStyle}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>
       </div>

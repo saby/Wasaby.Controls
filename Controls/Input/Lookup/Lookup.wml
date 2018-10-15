@@ -1,12 +1,10 @@
 <ws:template name="collection">
     <Controls.Input.Lookup._Collection
             name="{{name}}"
-            displayProperty="{{_options.displayProperty}}"
             itemTemplate="{{_options.itemTemplate}}"
             itemsLayout="{{itemsLayout}}"
             items="{{items}}"
             readOnly="{{_options.readOnly}}"
-            displayItemsIndex="{{displayItemsIndex}}"
             on:itemClick="_itemClick()"
             on:crossClick="_crossClick()"/>
 </ws:template>
@@ -25,7 +23,7 @@
         tooltip="{{_options.tooltip}}"
         bind:suggestState="_suggestState"
         filter="{{_options.filter}}"
-        autoDropDown="{{_autoDropDown}}"
+        autoDropDown="{{_determineAutoDropDown()}}"
         layerName="Controls/Container/Suggest/__PopupLayer">
     <Controls.Input.resources.InputRender.InputRender
             name="inputRender"
@@ -44,28 +42,24 @@
             attr:class="controls-Lookup__inputRender">
 
         <ws:beforeFieldWrapper>
-            <ws:if data="{{!_isEmpty}}">
-                <ws:if data="{{!_collectionIsReady || !_isAllRecordsDisplay}}">
-                    <div name="showAllLinks"
-                         class="controls-Lookup__showAllLinks{{_isAllRecordsDisplay ? ' controls-Lookup__showAllLinks_hidden'}}"
-                         on:click="_togglePicker(!_isPickerVisible)">&#133;
-                    </div>
-                </ws:if>
+            <ws:if data="{{!_isEmpty && !_isAllRecordsDisplay || _isPickerVisible}}">
+                <ws:partial template="wml!Controls/Input/Lookup/resources/showAllLinksTemplate" name="showAllLinks" on:click="_togglePicker()"/>
+            </ws:if>
 
+            <ws:if data="{{!_isEmpty}}">
                 <ws:partial template="collection"
                             attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}{{_isPickerVisible ? ' controls-Lookup__collection_hidden'}}"
-                            attr:style="max-width:{{!_options.readOnly && _options.multiSelect ? _availableWidthCollection}}px;"
+                            attr:style="max-width:{{_options.multiSelect ? _availableWidthCollection}}px;"
                             name="collection"
                             itemsLayout="oneRow"
-                            items="{{_collectionIsReady || _options.readOnly ? _items}}"
-                            displayItemsIndex="{{_options.readOnly || !_options.multiSelect ? 0 :_displayItemsIndex}}"
+                            items="{{_options.readOnly ? _items : _visibleItems}}"
                 />
             </ws:if>
         </ws:beforeFieldWrapper>
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <div name="showSelector" class="controls-Lookup__showSelector icon-ListView" on:click="showSelector()"></div>
+                <ws:partial template="wml!Controls/Input/Lookup/resources/showSelectorTemplate" name="showSelector" on:click="showSelector()"/>
                 <Controls.Selector.Opener name="selectorOpener">
                     <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                         <ws:eventHandlers onResult="{{_selectCallback}}"/>

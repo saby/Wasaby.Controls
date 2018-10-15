@@ -136,18 +136,16 @@ define('Controls/Popup/InfoBox',
             /**
              * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
              */
-            if (this._context.isTouch.isTouch && this._options.trigger === 'hover') {
-               return;
+            if (!this._context.isTouch.isTouch || this._options.trigger !== 'hover') {
+               var self = this;
+
+               clearTimeout(this._closeId);
+
+               this._openId = setTimeout(function() {
+                  self._open(event);
+                  self._forceUpdate();
+               }, self._options.showDelay);
             }
-
-            var self = this;
-
-            clearTimeout(this._closeId);
-
-            this._openId = setTimeout(function() {
-               self._open(event);
-               self._forceUpdate();
-            }, self._options.showDelay);
          },
 
          _contentMouseleaveHandler: function() {
