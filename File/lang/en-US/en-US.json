@@ -8,7 +8,7 @@
   "К сожалению, к вашему компьютеру не подключена камера.": "Unfortunately, the camera is not connected to your computer.",
   "Ошибка выбора файла": "File chosen error",
   "Превышен допустимый размер загружаемого файла": "Exceeded the allowable size of the uploaded file",
-  "Выбранный файл неверного типа": "The chosen file is of the wrong type",
+  "Выбранный файл неверного типа": "Wrong type of selected file",
   "FileError@@аудио": "audio",
   "FileError@@видео": "video",
   "FileError@@изображений": "image",
