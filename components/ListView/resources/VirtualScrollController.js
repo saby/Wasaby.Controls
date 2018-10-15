@@ -292,12 +292,14 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
          },
 
          _getItemHeight: function(item){
-            var itemHeight = $('[data-hash="' + item.getHash() + '"]', this._options.viewContainer).height();
+            var itemDOM = document.querySelector('[data-hash="' + item.getHash() + '"]', this._options.viewContainer);
+
             // Если записи нет в видимой области, не получится посчитать ее высоту.
-            if (!itemHeight) {
+            if (itemDOM) {
+               return itemDOM.offsetHeight;
+            } else {
                return this._getAverageItemHeight();
             }
-            return itemHeight;
          },
 
          addItems: function (items, at) {
