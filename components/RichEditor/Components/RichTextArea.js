@@ -705,7 +705,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              */
             setJson: function(json) {
                this._options.json = json;
-               this.setText(this._getTextFromJson(json, true));
+               this.setText(json ? this._getTextFromJson(json, true) : '');
             },
 
             /**
@@ -714,7 +714,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @return {string}
              */
             getTextFromJson: function () {
-               return this._getTextFromJson(this._options.json, false);
+               var json = this._options.json;
+               return json ? this._getTextFromJson(json, false) : '';
             },
 
             /**
@@ -725,6 +726,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @return {string}
              */
             _getTextFromJson: function (json, withCleaning) {
+               if (!json) {
+                  return '';
+               }
                if (typeof json === 'string') {
                   json = JSON.parse(json);
                }
