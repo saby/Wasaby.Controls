@@ -4,7 +4,6 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       'WS.Data/Source/Memory',
       'wml!Controls-demo/Filter/Button/panelOptions/panelPG',
       'json!Controls-demo/PropertyGrid/pgtext',
-      'Engine-demo/Selector/SelectorData',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
@@ -16,7 +15,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       'wml!Controls-demo/Filter/Button/ChooseDate'
    ],
 
-   function(Control, MemorySource, template, config, SelectorData) {
+   function(Control, MemorySource, template, config) {
       'use strict';
       var panelPG = Control.extend({
          _template: template,
@@ -27,10 +26,6 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
          _itemsSimple: null,
          _componentOptions: null,
          _beforeMount: function() {
-            this._sourceLookup = new MemorySource({
-               idProperty: 'id',
-               data: SelectorData.companies
-            });
             this._items = [
                {
                   id: 'period',
