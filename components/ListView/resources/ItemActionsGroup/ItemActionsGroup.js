@@ -192,6 +192,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
                horizontalAlign: horizontalAlign,
                closeByExternalClick: true,
                _canScroll: true,
+               _notMoveFocusAfterCloseSubmenu: true,
                handlers: {
                   onClose: function() {
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
