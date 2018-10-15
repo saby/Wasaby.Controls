@@ -47,6 +47,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       _items: null,
 
       constructor: function(options) {
+         this._options = options;
          this._selectedKeys = cClone(options.selectedKeys);
          this._excludedKeys = cClone(options.excludedKeys);
 
@@ -171,7 +172,7 @@ define('Controls/Controllers/Multiselect/Selection', [
             itemId;
 
          this._items.forEach(function(item) {
-            itemId = item.getId();
+            itemId = item.get(self._options.keyProperty);
             if (self._selectedKeys[0] === null && self._excludedKeys.indexOf(itemId) === -1 || self._selectedKeys.indexOf(itemId) !== -1) {
                res.push(itemId);
             }
