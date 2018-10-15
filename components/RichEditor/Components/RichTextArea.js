@@ -815,7 +815,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService || 'd');
+               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
