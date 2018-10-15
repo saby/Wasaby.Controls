@@ -19,11 +19,11 @@ define('Controls/List/TileView/TileViewModel', [
 
       getCurrent: function() {
          var current = TileViewModel.superclass.getCurrent.apply(this, arguments);
-         current = cMerge(current, this.getDefaultItemData());
+         current = cMerge(current, this.getTileItemData());
          return current;
       },
 
-      getDefaultItemData: function() {
+      getTileItemData: function() {
          return {
             tileMode: this._tileMode,
             itemsHeight: this._itemsHeight,

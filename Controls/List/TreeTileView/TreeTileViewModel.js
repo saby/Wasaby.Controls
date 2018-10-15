@@ -34,13 +34,13 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
             current.fixedPosition = hoveredItem.fixedPosition;
          }
 
-         current = cMerge(current, this.getDefaultItemData());
+         current = cMerge(current, this.getTileItemData());
 
          return current;
       },
 
-      getDefaultItemData: function() {
-         var opts = this._tileModel.getDefaultItemData();
+      getTileItemData: function() {
+         var opts = this._tileModel.getTileItemData();
          opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
          return opts;
       },
