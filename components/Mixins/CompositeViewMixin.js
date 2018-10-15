@@ -747,9 +747,10 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
                //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
                //1. Если это добавление в конец и на второй странице нет папок
                //2. Если это удаление
+               //3. Если это добавление элементов в плоском списоке
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action === 'rm') {
+               if (action === 'a' && !cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/TreeMixin') || ((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action === 'rm') {
                   parentFnc.apply(this, args);
                }
                else {
