@@ -725,6 +725,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @return {string}
              */
             _getTextFromJson: function (json, withCleaning) {
+               if (!json) {
+                  return '';
+               }
                if (typeof json === 'string') {
                   json = JSON.parse(json);
                }
