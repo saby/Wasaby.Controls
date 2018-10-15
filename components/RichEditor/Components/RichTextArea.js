@@ -1585,7 +1585,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      selection.select(listNode.parentNode, false);
                      $listNode.attr('contenteditable', 'false');
                      afterProcess.push(function () {
-                        $listNode.unwrap();
+                        if (!$listNode.parent().is('blockquote')) {
+                           $listNode.unwrap();
+                        }
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
                      });
@@ -1684,7 +1686,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (customFormats) {
                      var formatIds = Object.keys(customFormats);
                      if (formatIds.length) {
-                        afterProcess.unshift(function () {
+                        afterProcess.push(function () {
                            for (var i = 0; i < formatIds.length; i++) {
                               formatter.remove(formatIds[i]);
                            }
