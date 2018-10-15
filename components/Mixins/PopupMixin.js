@@ -1478,7 +1478,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                   parentHide.call(self);
                   clearZIndex();
                   self._fixedOffset = null;
-                  deactivateWindow.call(self);
+                  if (self._notMoveFocusAfterCloseSubmenu !== true) {
+                     deactivateWindow.call(self);
+                  }
                   if (self._options.target) {
                      self._options.target.trigger('wsSubWindowClose');
                   }

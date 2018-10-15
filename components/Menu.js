@@ -362,6 +362,9 @@ define('SBIS3.CONTROLS/Menu', [
                      }
                      self._createdSubMenuId = id;
                      mySubmenu = self._subMenus[id];
+                     //прокидывем опцию чтоб при закрытии подменю, не пытаться восставновить фокус, т.к. если меню в
+                     //плитках, это может привести к скролу, скидыванию активной плитки, а значит и закрытию меню.
+                     mySubmenu['_notMoveFocusAfterCloseSubmenu'] = self._options._notMoveFocusAfterCloseSubmenu;
                      mySubmenu.show();
 
                      submenuContainer = mySubmenu.getContainer();
