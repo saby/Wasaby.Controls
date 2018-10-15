@@ -705,7 +705,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              */
             setJson: function(json) {
                this._options.json = json;
-               this.setText(json ? this._getTextFromJson(json, true) : '');
+               this.setText(this._getTextFromJson(json, true));
             },
 
             /**
