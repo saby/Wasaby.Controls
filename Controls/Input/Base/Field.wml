@@ -1,7 +1,6 @@
 <input
    autocorrect="off"
    type="{{type}}"
-   value="{{value}}"
    name="{{fieldName}}"
    autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
    on:keyup="_keyUpHandler()"

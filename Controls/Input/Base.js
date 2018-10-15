@@ -2,6 +2,7 @@ define('Controls/Input/Base',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
+      'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Base/ViewModel',
       'Controls/Utils/hasHorizontalScroll',
@@ -10,7 +11,7 @@ define('Controls/Input/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly'
    ],
-   function(Control, descriptor, isEqual, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
+   function(Control, descriptor, tmplNotify, isEqual, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
       
       'use strict';
 
@@ -31,13 +32,39 @@ define('Controls/Input/Base',
        * @author Журавлев М.С.
        */
       var Base = Control.extend({
+
+         /**
+          * @type {Function} Control display template.
+          * @private
+          */
          _template: template,
 
+         /**
+          * @type {Function} The template for input field in edit mode.
+          * @private
+          */
          _fieldTemplate: fieldTemplate,
 
+         /**
+          * @type {Function} The template for input field in read mode.
+          * @private
+          */
          _readOnlyTemplate: readOnlyTemplate,
 
+         /**
+          * @type {Controls/Input/Base/ViewModel} The display model of the input field.
+          * @remark
+          * On the prototype lie the constructor of the model. In _beforeMount you need to create an instance.
+          * In this way, you can override the model in the inheritors without using an additional variable for the model constructor.
+          * @private
+          */
          _viewModel: ViewModel,
+
+         /**
+          * @type {Controls/Utils/tmplNotify}
+          * @private
+          */
+         _notifyHandler: tmplNotify,
 
          /**
           * @type {String} Text of the tooltip shown when the control is hovered over.
@@ -99,10 +126,19 @@ define('Controls/Input/Base',
             this._synchronizeFieldWithModel();
          },
 
+         /**
+          * Event handler mouseenter.
+          * @private
+          */
          _mouseenterHandler: function() {
             this._tooltip = hasHorizontalScroll(this._getField()) ? this._viewModel.displayValue : this._options.tooltip;
          },
 
+         /**
+          * Event handler keyup in field.
+          * @param {Object} event Event descriptor.
+          * @private
+          */
          _keyUpHandler: function(event) {
             var keyCode = event.nativeEvent.keyCode;
 
@@ -114,34 +150,50 @@ define('Controls/Input/Base',
             }
          },
 
+         /**
+          * Event handler click in field.
+          * @private
+          */
          _clickHandler: function() {
             this._viewModel.selection = this._getFieldSelection();
          },
 
+         /**
+          * Event handler selection in field.
+          * @private
+          */
          _selectionHandler: function() {
             this._viewModel.selection = this._getFieldSelection();
          },
 
+         /**
+          * Get the native field.
+          * @return {Node}
+          * @private
+          */
          _getField: function() {
             return this._children[this._fieldName];
          },
 
+         /**
+          * Get the beginning and end of the selected portion of the field's text.
+          * @return {Controls/Input/Base/Types/SelectionInField.typedef}
+          * @private
+          */
          _getFieldSelection: function() {
             var field = this._getField();
-            var selection;
 
-            if (field.selectionStart === field.selectionEnd) {
-               selection = field.selectionStart;
-            } else {
-               selection = {
-                  start: field.selectionStart,
-                  end: field.selectionEnd
-               };
-            }
-
-            return selection;
+            return {
+               start: field.selectionStart,
+               end: field.selectionEnd
+            };
          },
 
+         /**
+          *
+          * @return {Object}
+          * @private
+          */
          _getViewModelOptions: function() {
             return {};
          },

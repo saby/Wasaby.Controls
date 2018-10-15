@@ -1,21 +1,24 @@
 define('Controls/Input/Render',
    [
       'Core/Control',
+      'Controls/Utils/tmplNotify',
       'Controls/Input/resources/RenderHelper',
 
       'wml!Controls/Input/Render/Render'
    ],
-   function(Control, RenderHelper, template) {
+   function(Control, tmplNotify, RenderHelper, template) {
 
       'use strict';
 
       var Render = Control.extend({
          _template: template,
 
+         _notifyHandler: tmplNotify,
+
          _inputHandler: function(event) {
             var model = this._options.viewModel;
-            var value = model.displayValue;
-            var selection = model.selection;
+            var value = model.oldDisplayValue;
+            var selection = model.oldSelection;
             var newValue = event.target.value;
             var position = event.target.selectionEnd;
 
@@ -31,7 +34,8 @@ define('Controls/Input/Render',
             var splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
             if (model.handleInput(splitValue, inputType)) {
-               this._notify('valueChanged', model.value, model.displayValue);
+               console.log('render= ' + model.value + ', ' + model.displayValue);
+               this._notify('valueChanged', [model.value, model.displayValue]);
             }
 
             event.target.value = value;

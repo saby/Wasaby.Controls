@@ -16,7 +16,6 @@
       <ws:partial type="{{_type}}"
                   fieldName="{{_fieldName}}"
                   template="{{_fieldTemplate}}"
-                  value="{{_viewModel.displayValue}}"
                   placeholder="{{_options.placeholder}}"
                   autocomplete="{{_options.autocomplete}}"/>
    </ws:else>

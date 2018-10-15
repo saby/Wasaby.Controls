@@ -12,6 +12,18 @@ define('Controls/Input/Base/ViewModel',
             return this._shouldBeChanged;
          },
 
+         get oldValue() {
+            return this._oldValue;
+         },
+
+         get oldDisplayValue() {
+            return this.oldValue;
+         },
+
+         get oldSelection() {
+            return clone(this._oldSelection);
+         },
+
          get value() {
             return this._value;
          },
@@ -43,6 +55,8 @@ define('Controls/Input/Base/ViewModel',
                   if (this._selection.start !== value) {
                      this._selection.start = value;
                      this._selection.end = value;
+                     this._oldSelection.start = value;
+                     this._oldSelection.end = value;
                      this._shouldBeChanged = true;
                   }
                   break;
@@ -50,6 +64,8 @@ define('Controls/Input/Base/ViewModel',
                   if (this._selection.start !== value.start || this._selection.end !== value.end) {
                      this._selection.start = value.start;
                      this._selection.end = value.end;
+                     this._oldSelection.start = value.start;
+                     this._oldSelection.end = value.end;
                      this._shouldBeChanged = true;
                   }
                   break;
@@ -57,28 +73,39 @@ define('Controls/Input/Base/ViewModel',
          },
 
          constructor: function(options) {
-            this._value = '';
-            this._selection = {
+            var value = '';
+            var selection = {
                start: 0,
                end: 0
             };
-            this.options = options;
+
+            this._value = value;
+            this._oldValue = value;
+            this._selection = clone(selection);
+            this._oldSelection = clone(selection);
+            this._options = options;
             this._shouldBeChanged = true;
          },
 
          handleInput: function(splitValue) {
             var position = splitValue.before.length + splitValue.insert.length;
+            var value = splitValue.before + splitValue.insert + splitValue.after;
+            var shouldBeChangedValue = this._value !== value;
 
+            this._value = value;
             this._selection.start = position;
             this._selection.end = position;
-            this._value = splitValue.before + splitValue.insert + splitValue.after;
 
             this._shouldBeChanged = true;
 
-            return true;
+            return shouldBeChangedValue;
          },
 
          changesHaveBeenApplied: function() {
+            this._oldValue = this._value;
+            this._oldDisplayValue = this._displayValue;
+            this._oldSelection = clone(this._selection);
+
             this._shouldBeChanged = false;
          }
       });

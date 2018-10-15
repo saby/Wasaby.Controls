@@ -1,30 +1,32 @@
-.controls-Render__style {
+.controls-Render {
+   position: relative;
+   display: inline-block;
+   box-sizing: border-box;
+}
+
+.controls-Render_size {
+   @variants: default, small, large;
+   .for(@variants, { &_@{_item} {
+      height: ~"@{color_Render_fontStyle_@{_item}}";
+   } });
+}
+
+.controls-Render_fontStyle {
+   @variants: default, primary;
+   .for(@variants, { &_@{_item} {
+      color: ~"@{color_Render_fontStyle_@{_item}}";
+      font-size: ~"@{font-size_Render_fontStyle_@{_item}}";
+      font-weight: ~"@{font-weight_Render_fontStyle_@{_item}}";
+   } });
+}
+
+.controls-Render_style {
+   border-style: solid;
+   border-width: @border-width_InputRender;
 
    @variants: info, danger, invalid, primary, success, warning;
-   .for(@variants, {
-      &_@{_item} {
-
-      }
-   });
-}
-
-.controls-Render__fontStyle {
-
-   @variants: default, primary;
-   .for(@variants, {
-      &_@{_item} {
-
-      }
-   });
-}
-
-.controls-Render__tagStyle {
-
-
-   @variants: info, danger, success, primary, warning, secondary;
-   .for(@variants, {
-      &_@{_item} {
-
-      }
-   });
+   .for(@variants, { &_@{_item} {
+      border-color: ~"@{border-color_Render_style_@{_item}}";
+      background: ~"@{background_Render_style_@{_item}}";
+   } });
 }
