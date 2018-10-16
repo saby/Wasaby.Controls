@@ -95,7 +95,7 @@ define([
             stateBegin: 'normal',
             statePrev: 'normal',
             stateNext: 'normal',
-            stateEnd: 'disabled'
+            stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
          
          spInstance.handleScrollEdge('up');
@@ -123,7 +123,7 @@ define([
             stateBegin: 'normal',
             statePrev: 'normal',
             stateNext: 'normal',
-            stateEnd: 'disabled'
+            stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
 
       });

@@ -48,12 +48,13 @@ define('Controls/List/Controllers/ScrollPaging',
          },
 
          handleScrollBottom: function(hasMoreDataDown) {
+            var stateNext =  hasMoreDataDown ? 'normal' : 'disabled';
             if (!(this._curState === 'bottom')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'normal',
                   statePrev: 'normal',
-                  stateNext: hasMoreDataDown ? 'normal' : 'disabled',
-                  stateEnd: 'disabled'
+                  stateNext: stateNext,
+                  stateEnd: stateNext
                });
                this._curState = 'bottom';
             }
