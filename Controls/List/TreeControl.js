@@ -76,14 +76,21 @@ define('Controls/List/TreeControl', [
             }
          });
       },
+      getParentId: function(key, items, parentProperty) {
+         var item = items.getRecordById(key);
+
+         if (item) {
+            return item.get(parentProperty);
+         }
+      },
       getAllParentsIds: function(hierarchyRelation, key, items) {
          var
             parentsIds = [],
-            parent = hierarchyRelation.getParent(key, items);
+            parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty());
 
-         while (parent) {
-            parentsIds.push(parent.getId());
-            parent = hierarchyRelation.getParent(parent, items);
+         while (parentId) {
+            parentsIds.push(parentId);
+            parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
          }
 
          return parentsIds;

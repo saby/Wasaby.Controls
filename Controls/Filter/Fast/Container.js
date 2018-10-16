@@ -4,11 +4,10 @@
 define('Controls/Filter/Fast/Container',
    [
       'Core/Control',
-      'wml!Controls/Filter/Fast/Container',
-      'Controls/Container/Filter/FilterContextField'
+      'wml!Controls/Filter/Fast/Container'
    ],
    
-   function(Control, template, FilterContextField) {
+   function(Control, template) {
       
       /**
        * Special container for {@link Controls/Filter/Fast}.
@@ -30,32 +29,11 @@ define('Controls/Filter/Fast/Container',
       var Container = Control.extend(/** @lends Controls/Filter/Fast/Container.prototype */{
          
          _template: template,
-
-         _beforeUpdate: function(options, context) {
-            //context from Filter layout
-            // Временно не будем проверять поменялось ли значение контекста, потому что
-            // объект контекста один, и значения в нем меняются по ссылке.
-            var filterItems = context.filterLayoutField.fastFilterItems;
-            this._items = filterItems;
-         },
-         
-         _beforeMount: function(options, context) {
-            if (context.filterLayoutField.fastFilterItems) {
-               this._items = context.filterLayoutField.fastFilterItems;
-            }
-         },
          
          _itemsChanged: function(event, items) {
-            this._items = items;
             this._notify('filterItemsChanged', [items], {bubbling: true});
          }
       });
-
-      Container.contextTypes = function() {
-         return {
-            filterLayoutField: FilterContextField
-         };
-      };
       
       return Container;
    });

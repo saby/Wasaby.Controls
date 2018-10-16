@@ -1146,11 +1146,6 @@
             "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
             "title": "Sets the source of data set to use in the mapping"
           },
-          "items": {
-            "type": "Array",
-            "itemType": "Controls/interface/IFastFilter/FastFilterItems.typedef",
-            "title": "Sets a set of initial data to build the mapping."
-          },
           "readOnly": {
             "type": "Boolean",
             "default": "Inherited",
