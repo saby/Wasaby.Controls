@@ -364,6 +364,10 @@ define('SBIS3.CONTROLS/TextBox', [
             this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
          }
 
+         if (this._options.maxLength) {
+            this.setMaxLength(this._options.maxLength);
+         }
+
          this._container.on('mouseenter', '.controls-TextBox__informationIcon', function(e) {
             self._notify('onInformationIconMouseEnter');
          });
@@ -513,7 +517,10 @@ define('SBIS3.CONTROLS/TextBox', [
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength', num);
+         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
+         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
+         //Поэтому для IE просто не будем навешивать аттрибут maxLength
+         this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       },
 
       /**

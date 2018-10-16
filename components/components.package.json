@@ -488,7 +488,9 @@
       "SBIS3.CONTROLS/FloatArea/*"
     ],
     "exclude": [
-      "css!SBIS3.CONTROLS*"
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/FloatArea/FloatAreaSelector"
+
     ],
     "output": "sbis3controls-floatarea.package.js"
   },
@@ -629,12 +631,45 @@
   {
     "include": [
       "SBIS3.CONTROLS/OperationsPanel",
-      "SBIS3.CONTROLS/OperationsPanel/*"
+      "tmpl!SBIS3.CONTROLS/OperationsPanel/OperationsPanel",
+      "tmpl!SBIS3.CONTROLS/OperationsPanel/resources/ItemTemplate",
+      "SBIS3.CONTROLS/OperationsPanel/PanelButton/*"
     ],
     "exclude": [
       "css!SBIS3.CONTROLS*"
     ],
     "output": "sbis3controls-operationspanel.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Print*",
+      "SBIS3.CONTROLS/OperationsPanel/Unload*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-print.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Delete",
+      "SBIS3.CONTROLS/OperationsPanel/Mark*",
+      "SBIS3.CONTROLS/OperationsPanel/Move*",
+      "SBIS3.CONTROLS/OperationsPanel/Sum"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-baseoperations.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Merge*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-merge.package.js"
   },
   {
     "include": [

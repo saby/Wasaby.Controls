@@ -73,7 +73,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   })
                },
                {
-                  id: 'sender', value: '', resetValue: '', visibility: false
+                  id: 'sender', value: '', resetValue: '', visibility: false, source: this._sourceLookup
                },
                {
                   id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''

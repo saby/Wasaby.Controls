@@ -102,9 +102,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixinDS', [
              *    Чтобы шаблон можно было использовать в опции, его нужно подключить в массив зависимостей компонента.</li>
              * </ul>
              * @example
-             * В частном случае шаблон футера узла иерархии используют для размещения кнопок создания нового листа или папки.
+             * В частном случае, в шаблоне футера узла иерархии можно разместить кнопки, через которые создают новый лист или папку.
              * ![](/folderFooterTpl.png)
-             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/#hierarchy Добавление по месту в иерархическом списке}.
              * @see SBIS3.CONTROLS.List#footerTpl
              */
             folderFooterTpl: undefined,
