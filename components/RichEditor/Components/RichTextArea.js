@@ -1588,7 +1588,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      selection.select(listNode.parentNode, false);
                      $listNode.attr('contenteditable', 'false');
                      afterProcess.push(function () {
-                        $listNode.unwrap();
+                        if (!$listNode.parent().is('blockquote')) {
+                           $listNode.unwrap();
+                        }
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
                      });
@@ -1687,7 +1689,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (customFormats) {
                      var formatIds = Object.keys(customFormats);
                      if (formatIds.length) {
-                        afterProcess.unshift(function () {
+                        afterProcess.push(function () {
                            for (var i = 0; i < formatIds.length; i++) {
                               formatter.remove(formatIds[i]);
                            }
@@ -1750,6 +1752,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      });
                   }
                }
+               if (selection.isCollapsed() && ['bold', 'italic', 'underline', 'strikethrough'].indexOf(command) !== -1 && formatter.match(command)) {
+                  rng = selection.getRng();
+                  var node = rng.commonAncestorContainer;
+                  if (node.nodeType === node.TEXT_NODE) {
+                     var offset = rng.startOffset;
+                     // Применение свойств форматирования (bold, italic, underline и strikethrough) в TinyMCE реализуются последовательным
+                     // оборачиванием контента форматирующими элементами. При снятии свойств форматирования tinyMCE ориентируется как на положение
+                     // текщего рэнжа, так и на положение служебного контейнера области ввода (элемент с идентификатором "_mce_caret"), если он есть.
+                     // Если применено несколько стилей (то есть имеется несколько вложенных форматирующих элементов), а снять нужно не самый верхний,
+                     // то при наличии служебного контейнера области ввода будут снято всё форматирование внутри него (он будет иметь приоритет перед
+                     // текущим рэнжем). Поэтому лучше убрать его совсем
+                     // При использовании метода applyFormats (обрабатывающего вызов из стилевой панели) подобная ситуация не возникает, так как там
+                     // всегда обрабатывается полный набор свойств форматирования (начиная с их очистки)
+                     // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
+                     if (this._removeAscendingCarretContainer(node)) {
+                        this._selectNewRng(node, offset);
+                     }
+                  }
+               }
                if (skipUndo) {
                   editor.undoManager.ignore(editor.execCommand.bind(editor, editorCmd || command));
                }
@@ -1765,6 +1786,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
                   this._getTinyEditorValue() == '') {
                   selection.select(editor.getBody(), true);
+               }
+            },
+
+            /**
+             * Удалить служебный контейнер зоны ввода, вышележащий от указанного dom-узла
+             * @param {DOMNode} node dom-узел
+             * @return {boolean}
+             */
+            _removeAscendingCarretContainer: function (node) {
+               var editor = this._tinyEditor;
+               var dom = editor.dom;
+               var caret = dom.getParent(node, '#_mce_caret');
+               if (caret) {
+                  dom.remove(caret, true);
+                  return true;
                }
             },
 
