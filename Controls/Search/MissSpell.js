@@ -16,7 +16,7 @@ define('Controls/Search/MissSpell',
     * @css @line-height_MissSpell A line-height of the misspelling caption.
     * @css @color_MissSpell_caption A color of the misspelling caption.
     * @css @color_MissSpell_caption-hover A hover color of the misspelling caption.
-    * @css @spacing_MissSpell_vertical A vertical spacing (padding) on the left and right sides.
+    * @css @spacing_MissSpell_horizontal A horizontal spacing (padding) on the left and right sides.
     */
    
    function(Control, template) {
