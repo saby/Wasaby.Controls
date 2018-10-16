@@ -19,11 +19,13 @@ define(
             resDef.addCallback(function(res) {
                assert.isTrue(!!~res.additionalDeps.indexOf('WS.Data/Collection/RecordSet'));
                if (typeof window !== 'undefined') {
-                  window._$ThemesController = null;
+                  delete window._$ThemesController;
                } else if (typeof process !== 'undefined') {
                   if (process && process.domain && process.domain.req) {
-                     process.domain.req._$ThemesController = null;
+                     delete process.domain.req._$ThemesController;
                   }
+               } else if (typeof global !== 'undefined') {
+                  delete global._$ThemesController;
                }
                done();
             });
