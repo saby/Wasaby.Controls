@@ -1790,18 +1790,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
-             * Удалить служебный контейнер зоны ввода, вышележащий от указанного dom-узла
+             * Удалить служебные контейнеры зоны ввода, находящиеся выше по дереву элементов от указанного dom-узла
              * @param {DOMNode} node dom-узел
              * @return {boolean}
              */
             _removeAscendingCarretContainer: function (node) {
                var editor = this._tinyEditor;
                var dom = editor.dom;
-               var caret = dom.getParent(node, '#_mce_caret');
-               if (caret) {
+               var isFound;
+               var caret;
+               // Cлужебных контейнеров зоны ввода может быть несколько, вложенных один в другой - убрать их все
+               while (caret = dom.getParent(node, '[data-mce-type="format-caret"]')) {
                   dom.remove(caret, true);
-                  return true;
+                  isFound = true;
                }
+               return isFound;
             },
 
             /**
