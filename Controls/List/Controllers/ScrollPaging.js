@@ -47,12 +47,12 @@ define('Controls/List/Controllers/ScrollPaging',
             }
          },
 
-         handleScrollBottom: function() {
+         handleScrollBottom: function(hasMoreDataDown) {
             if (!(this._curState === 'bottom')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'normal',
                   statePrev: 'normal',
-                  stateNext: 'disabled',
+                  stateNext: hasMoreDataDown ? 'normal' : 'disabled',
                   stateEnd: 'disabled'
                });
                this._curState = 'bottom';
@@ -60,10 +60,10 @@ define('Controls/List/Controllers/ScrollPaging',
 
          },
 
-         handleScrollEdge: function(direction) {
+         handleScrollEdge: function(direction, hasMoreDataDown) {
             switch (direction) {
                case 'up': this.handleScrollTop(); break;
-               case 'down': this.handleScrollBottom(); break;
+               case 'down': this.handleScrollBottom(hasMoreDataDown); break;
             }
          },
 

@@ -262,14 +262,21 @@ define('Controls/List/BaseControl', [
        */
       handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
+         var hasMoreDataDown = false;
+         
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
+         
+         if (self._sourceController) {
+            hasMoreDataDown = self._sourceController.hasMoreData('down');
+         }
+         
          if (self._scrollPagingCtr) {
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
             } else {
-               self._scrollPagingCtr.handleScrollEdge(position);
+               self._scrollPagingCtr.handleScrollEdge(position, hasMoreDataDown);
             }
          }
       },
