@@ -1,6 +1,7 @@
 define('Controls/Input/Mask',
    [
       'Core/IoC',
+      'Controls/Utils/tmplNotify',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
@@ -10,7 +11,8 @@ define('Controls/Input/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/input'
    ],
-   function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+
       'use strict';
 
       /**
@@ -156,6 +158,7 @@ define('Controls/Input/Mask',
             _template: MaskTpl,
 
             _viewModel: null,
+            _notifyHandler: tmplNotify,
 
             _beforeMount: function(options) {
                this._viewModel = new ViewModel({
@@ -165,28 +168,16 @@ define('Controls/Input/Mask',
                   formatMaskChars: options.formatMaskChars
                });
             },
+
             _beforeUpdate: function(newOptions) {
-               if (!(newOptions.value === this._options.value &&
+               if (!(
+                  newOptions.value === this._options.value &&
                   newOptions.mask === this._options.mask &&
                   newOptions.replacer === this._options.replacer &&
                   isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
                ) {
                   this._viewModel.updateOptions({
                      value: newOptions.value,
-                     mask: newOptions.mask,
-                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
-                     formatMaskChars: newOptions.formatMaskChars
-                  });
-               }
-               if (!(newOptions.mask === this._options.mask &&
-                  newOptions.replacer === this._options.replacer)) {
-                  this._viewModel.updateOptions({
-                     value: newOptions.replacer || newOptions.mask ? newOptions.mask.replace(/./g, function(s) {
-                        if (/[Lldx]/.test(s)) {
-                           return newOptions.replacer;
-                        }
-                        return s;
-                     }) : this._options.value,
                      mask: newOptions.mask,
                      replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
                      formatMaskChars: newOptions.formatMaskChars

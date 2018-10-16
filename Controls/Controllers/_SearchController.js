@@ -31,8 +31,8 @@ define('Controls/Controllers/_SearchController',
             _private.getSearch(self).addCallback(function(search) {
                var filter = self._options.filter;
                
-               filter[self._options.searchParam] = value;
                filter = clone(filter);
+               filter[self._options.searchParam] = value;
                search.search(filter)
                   .addCallback(function(result) {
                      if (self._options.searchCallback) {
@@ -60,7 +60,9 @@ define('Controls/Controllers/_SearchController',
                var filter = self._options.filter;
                delete filter[self._options.searchParam];
                filter = clone(filter);
-               self._options.abortCallback(filter);
+               if (self._options.abortCallback) {
+                  self._options.abortCallback(filter);
+               }
                return search;
             });
          }

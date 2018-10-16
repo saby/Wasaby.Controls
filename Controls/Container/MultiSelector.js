@@ -130,7 +130,8 @@ define('Controls/Container/MultiSelector', [
          this._multiselection = new Selection({
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
-            items: context.dataOptions.items
+            items: context.dataOptions.items,
+            keyProperty: context.dataOptions.keyProperty
          });
       },
 
