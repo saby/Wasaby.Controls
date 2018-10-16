@@ -14,7 +14,7 @@ define('Controls/Container/Suggest/Layout',
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll'];
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/MissSpell'];
       
       var _private = {
          hasMore: function(searchResult) {
