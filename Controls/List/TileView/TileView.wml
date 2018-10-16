@@ -12,9 +12,7 @@
          itemOutputWrapper="{{_itemOutputWrapper}}"
          itemTemplate="{{_itemTemplate}}"/>
       <ws:if data="{{_options.tileMode === 'static'}}">
-         <ws:for data="i in 10">
-            <ws:partial template="{{_itemTemplate}}" invisible="{{true}}"/>
-         </ws:for>
+         <ws:partial template="wml!Controls/List/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
       </ws:if>
    </ws:if>
 </div>

@@ -1,11 +1,12 @@
 define('Controls/List/TreeTileView/TreeTileViewModel', [
    'Controls/List/TileView/TileViewModel',
-   'Controls/List/Tree/TreeViewModel'
-], function(TileViewModel, TreeViewModel) {
+   'Controls/List/Tree/TreeViewModel',
+   'Core/core-merge'
+], function(TileViewModel, TreeViewModel, cMerge) {
 
    'use strict';
+   var DEFAULT_FOLDER_WIDTH = 250;
 
-   //TODO: крпипаста из TileViewModel, думаю как нормально
    var TreeTileViewModel = TreeViewModel.extend({
       constructor: function(cfg) {
          var self = this;
@@ -23,10 +24,6 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
             hoveredItem = this._tileModel.getHoveredItem(),
             current = TreeTileViewModel.superclass.getCurrent.apply(this, arguments);
 
-         current.tileMode = this._tileModel.getTileMode();
-         current.itemsHeight = this._tileModel.getItemsHeight();
-         current.imageProperty = this._options.imageProperty;
-
          prevItem = this._display.at(current.index - 1);
          if (prevItem) {
             current.hasSeparator = prevItem.isNode() && !current.dispItem.isNode();
@@ -37,7 +34,15 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
             current.fixedPosition = hoveredItem.fixedPosition;
          }
 
+         current = cMerge(current, this.getTileItemData());
+
          return current;
+      },
+
+      getTileItemData: function() {
+         var opts = this._tileModel.getTileItemData();
+         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
+         return opts;
       },
 
       setTileMode: function(tileMode) {
