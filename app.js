@@ -72,7 +72,14 @@ function createConfig(baseUrl, wsPath, resourcesPath) {
             'optional': path.join(wsPath, 'ext/requirejs/plugins/optional'),
             'remote': path.join(wsPath, 'ext/requirejs/plugins/remote'),
 
-            'Core/i18n': path.join(wsPath, 'core', 'i18n')
+            'Core/i18n': path.join(wsPath, 'core', 'i18n'),
+            'Core/Util': path.join(resourcesPath, 'Core/Util'),
+            'Core/_Util': path.join(resourcesPath, 'Core/_Util'),
+            'Core/Debug': path.join(resourcesPath, 'Core/Debug'),
+            'Core/_Debug': path.join(resourcesPath, 'Core/_Debug'),
+            'Core/Entity': path.join(resourcesPath, 'Core/Entity'),
+            'Core/_Entity': path.join(resourcesPath, 'Core/_Entity'),
+            'Core/ApplyContents': path.join(resourcesPath, 'Core/ApplyContents')
          }
       };
 

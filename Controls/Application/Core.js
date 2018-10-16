@@ -14,29 +14,8 @@ define('Controls/Application/Core',
    function(Control,
       template,
       AppData,
-      HeadDataContext,
-      ThemesController,
-      nativeCss,
-      cssResolve) {
+      HeadDataContext) {
       'use strict';
-
-      function parseTheme(path) {
-         var splitted = path.split('theme?');
-         var res;
-         if (splitted.length > 1) {
-            res = {
-               name: splitted[1],
-               hasTheme: true
-            };
-         } else {
-            res = {
-               name: path,
-               hasTheme: false
-            };
-         }
-         return res;
-      }
-
 
       var AppCore = Control.extend({
          _template: template,
