@@ -9,15 +9,22 @@ define('Controls/Filter/Button/Panel', [
    'css!Controls/Filter/Button/Panel/Panel'
 
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
-
    /**
     * Control "Filter panel"
+    * Component for displaying a filter panel template. Displays each filters by specified templates.
+    * It consists of three blocks: Selected, Possible to selected, Previously selected.
+    *
     * @class Controls/Filter/Button/Panel
     * @extends Core/Control
     * @mixes Controls/interface/IFilterPanel
+    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
     * @control
     * @public
     * @author Герасимов А.М.
+    *
+    * @cssModifier controls-PanelFilter__width-m Medium panel width.
+    * @cssModifier controls-PanelFilter__width-l Large panel width.
+    * @cssModifier controls-PanelFilter__width-xl Extra large panel width.
     *
     * @css @width_FilterPanel_default Width filter panel
     * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
@@ -30,7 +37,9 @@ define('Controls/Filter/Button/Panel', [
     */
 
    /**
-    * @event Controls/Filter/Button/Panel#filterChanged Happens when clicking on the button "Select"
+    * @event Controls/Filter/Button/Panel#sendResult Happens when clicking the button "Select".
+    * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
+    * @param {Object} items items
     */
 
    'use strict';
@@ -49,12 +58,15 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
+      resolveHistoryId: function(options, context) {
+         return options.historyId || (context && context.historyId);
+      },
+
       cloneItems: function(items) {
          if (items['[WS.Data/Entity/CloneableMixin]']) {
             return items.clone();
-         } else {
-            return Clone(items);
          }
+         return Clone(items);
       },
 
       getFilter: function(self, items) {
@@ -97,14 +109,20 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
-         this._historyId = options.historyId || (this._contextOptions && this._contextOptions.historyId);
+         this._historyId = _private.resolveHistoryId(options, this._contextOptions);
          this._hasAdditionalParams = options.additionalTemplate && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
-      _beforeUpdate: function(newOptions) {
+      _beforeUpdate: function(newOptions, context) {
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = newOptions.additionalTemplate && _private.hasAdditionalParams(this._items);
+         if (this._options.historyId !== newOptions.historyId) {
+            this._historyId = _private.resolveHistoryId(newOptions, context);
+         }
+         if (!isEqual(this._options.items, newOptions.items)) {
+            _private.resolveItems(this, newOptions, context);
+         }
       },
 
       _valueChangedHandler: function() {
@@ -117,7 +135,7 @@ define('Controls/Filter/Button/Panel', [
 
       _applyHistoryFilter: function(event, items) {
          var filter = _private.getFilter(this, items);
-         filter['$_history' ] = true;
+         filter['$_history'] = true;
          this._applyFilter(event, items);
       },
 
@@ -146,8 +164,8 @@ define('Controls/Filter/Button/Panel', [
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
          title: rk('Отбираются'),
-         styleHeader: 'primary',
-         size: 'm'
+         headerStyle: 'primary',
+         panelStyle: 'default'
       };
    };
 
@@ -159,5 +177,4 @@ define('Controls/Filter/Button/Panel', [
 
    FilterPanel._private = _private;
    return FilterPanel;
-
 });

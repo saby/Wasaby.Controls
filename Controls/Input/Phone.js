@@ -1,10 +1,11 @@
 define('Controls/Input/Phone',
    [
       'Core/Control',
+      'Controls/Utils/tmplNotify',
       'Controls/Input/Phone/ViewModel',
-      'wml!Controls/Input/Mask/Mask'
+      'wml!Controls/Input/Phone/Phone'
    ],
-   function(Control, ViewModel, template) {
+   function(Control, tmplNotify, ViewModel, template) {
 
       'use strict';
 
@@ -33,6 +34,9 @@ define('Controls/Input/Phone',
 
          _viewModel: null,
 
+         _firstClickActivateMode: true,
+         _notifyHandler: tmplNotify,
+
          _beforeMount: function(options) {
             this._viewModel = new ViewModel({
                value: options.value
@@ -47,24 +51,39 @@ define('Controls/Input/Phone',
             }
          },
 
-         _focusinHandler: function() {
+         _deactivatedHandler: function() {
+            this._firstClickActivateMode = true;
+         },
+
+         _clickHandler: function() {
+            /**
+             * If we first clicked in the field, after deactivation, the user did not select anything
+             * and the mask is not completely filled, then you need to move the cursor to the end.
+             */
+            if (!this._firstClickActivateMode) {
+               return;
+            }
+
             var input = this._children.input;
 
-            if (!this._viewModel.isFilled()) {
+            if (!this._viewModel.isFilled() && input.selectionStart === input.selectionEnd) {
                var position = this._viewModel.getDisplayValue().length;
 
                input.selectionStart = position;
                input.selectionEnd = position;
             }
+
+            this._firstClickActivateMode = false;
          }
       });
 
       Phone.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            selectOnClick: false
          };
       };
-      
+
       return Phone;
    }
 );

@@ -23,6 +23,9 @@ define('File-demo/ResourceGetter/DropArea', [
          if (this.getter) {
             this.getter.destroy();
          }
+         if(!document || !document.getElementById('basket')){
+            return;
+         }
          this.getter = new DropArea({
             element: document.getElementById('basket'),
             extensions: this._extensions ? this._extensions.split(', ') : [],

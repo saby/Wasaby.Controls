@@ -2,12 +2,13 @@ define('Controls/Button', [
    'Core/Control',
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
+   'SBIS3.CONTROLS/Utils/Sanitize',
    'css!Controls/Button/Button'
-], function(Control, Classes, template) {
+], function(Control, Classes, template, sanitize) {
    'use strict';
 
    /**
-    * Base button with support different display styles, sizes, icon styles.
+    * This control native button or a elements enhanced with display styling.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
@@ -22,7 +23,7 @@ define('Controls/Button', [
     * @public
     * @author Михайловский Д.С.
     * @category Button
-    * @demo Controls-demo/Buttons/ButtonDemo
+    * @demo Controls-demo/Buttons/ButtonDemoPG
     */
 
    /**
@@ -105,27 +106,6 @@ define('Controls/Button', [
     */
 
    /**
-    * @name Controls/Button#caption
-    * @cfg {String} Control caption text.
-    * @default Undefined
-    * @remark You can submit the markup to the caption.
-    * @example
-    * Control has caption 'Dialog'.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”Dialog”/>
-    * </pre>
-    * Control has markup caption.
-    * <pre>
-    *    <ControlsDirectory.Control caption=”captionTemplate”/>
-    * </pre>
-    * <pre>
-    *    <span class='customDialog'>
-    *       Dialog
-    *    </span>
-    * </pre>
-    */
-
-   /**
     * @name Controls/Button#icon
     * @cfg {String} Button icon.
     * @default Undefined
@@ -168,7 +148,7 @@ define('Controls/Button', [
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
-         self._caption = options.caption;
+         self._caption = sanitize(options.caption);
          self._icon = options.icon;
          self._isTransparent = !!currentButtonClass.transparent;
       }

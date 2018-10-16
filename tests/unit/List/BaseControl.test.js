@@ -7,11 +7,12 @@ define([
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
    'Controls/List/ListViewModel',
+   'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, tUtil, cDeferred, cInstance) {
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -102,7 +103,7 @@ define([
             dataLoadCallback: function() {
                dataLoadFired = true;
             },
-            viewModelConstructor: ListViewModel,
+            viewModelConstructor: TreeViewModel,
             viewModelConfig: {
                items: [],
                keyProperty: 'id'
@@ -115,6 +116,8 @@ define([
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
          ctrl.saveOptions(cfg);
          assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
+         assert.equal(ctrl._viewModelConstructor, TreeViewModel);
+         assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
 
          //сорс грузит асинхронно
          setTimeout(function() {
@@ -123,9 +126,6 @@ define([
             ctrl._beforeUnmount();
             done();
          }, 100);
-
-
-
       });
 
       it('errback to callback', function(done) {

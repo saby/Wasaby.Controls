@@ -45,8 +45,9 @@ define('Controls/Filter/Fast/Container',
             }
          },
          
-         _filterChanged: function() {
-            this._notify('filterItemsChanged', [this._items], {bubbling: true});
+         _itemsChanged: function(event, items) {
+            this._items = items;
+            this._notify('filterItemsChanged', [items], {bubbling: true});
          }
       });
 

@@ -84,7 +84,7 @@ define('Controls-demo/Demo/Page',
       var DemoPage = Control.extend({
          _template: template,
          _theme: null,
-         componentName: 'Controls-demo/Index',
+         componentName: 'Controls-demo/IndexOld',
          _beforeMount: function() {
             var deferred = new Deferred();
             if (UrlParams.cname) {

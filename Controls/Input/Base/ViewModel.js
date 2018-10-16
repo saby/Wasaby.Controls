@@ -72,7 +72,7 @@ define('Controls/Input/Base/ViewModel',
             }
          },
 
-         constructor: function(options) {
+         constructor: function() {
             var value = '';
             var selection = {
                start: 0,
@@ -83,14 +83,13 @@ define('Controls/Input/Base/ViewModel',
             this._oldValue = value;
             this._selection = clone(selection);
             this._oldSelection = clone(selection);
-            this._options = options;
             this._shouldBeChanged = true;
          },
 
          handleInput: function(splitValue) {
             var position = splitValue.before.length + splitValue.insert.length;
             var value = splitValue.before + splitValue.insert + splitValue.after;
-            var shouldBeChangedValue = this._value !== value;
+            var hasChangedValue = this._value !== value;
 
             this._value = value;
             this._selection.start = position;
@@ -98,7 +97,7 @@ define('Controls/Input/Base/ViewModel',
 
             this._shouldBeChanged = true;
 
-            return shouldBeChangedValue;
+            return hasChangedValue;
          },
 
          changesHaveBeenApplied: function() {

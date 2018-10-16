@@ -23,7 +23,8 @@
    <Controls.Button icon="{{_options.icon}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
-                    size="{{_options.size}}"/>
+                    size="{{_options.size}}"
+                    tooltip="{{_options.tooltip}}"/>
    </Controls.Dropdown.Controller>
    <Controls.Popup.Opener.Notification name="notificationOpener"/>
 </div>

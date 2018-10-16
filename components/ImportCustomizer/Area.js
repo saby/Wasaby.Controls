@@ -1162,7 +1162,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             };
             item.parserConfig = ['hierarchyName', 'hierarchyField', 'columns'].reduce(function (r, v) { r[v] = providerArgs[v] || null; return r; }, {});
             if (provider.separator) {
-               item.parserConfig.dilimiter = provider.separator;
+               item.parserConfig.delimiter = provider.separator;
             }
             if (sheet) {
                item.name = sheet.name;

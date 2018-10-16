@@ -179,7 +179,7 @@
 @margin_PeriodDialog-header-applyButton:           12px;
 @width_PeriodDialog-header-dash:                   2px;
 @margin_PeriodDialog-header-dash:                  0 3px;
-@width_DateRangeBigChoose-header-closeButton:            40px;
+@width_DateRangeBigChoose-header-closeButton:      40px;
 @height_PeriodDialog-years:                        44px;
 @width_PeriodDialog-years-leftRight:               33px;
 @height_PeriodDialog-years-rangeButton:            30px;
@@ -216,9 +216,9 @@
 @padding-left_PeriodDialog-DateRange-header-year:      11px;
 @font-weight_PeriodDialog-DateRange-header-year:       bold;
 @height_PeriodDialog-DateRange-months-nextYearButton:  auto;
-@width_PeriodDialog-MonthRange-item-selectedStart-before:     1px;
-@margin_DateRangeBigChoose-picker:                       -11px 0 0 -39px;
-@margin_DateRangeBigChoose-picker-month-only:            -11px 0 0 -11px;
+@width_PeriodDialog-MonthRange-item-selectedStart-before:   1px;
+@margin_PeriodDialog-picker:                                -11px 0 0 -39px;
+@margin_PeriodDialog-picker-withoutModeBtn:                 -11px 0 0 -11px;
 
 // PeriodLiteDialog
 @indents_PeriodLiteDialog:                       4px;
@@ -288,10 +288,16 @@
 @margin-top_DropdownList-ff:    -7px;
 @margin-top_DropdownList-head:   -6px;
 @margin-left_DropdownList:      -13px;
+@margin_DropdownList-group:                           4px 12px;
+@thickness_DropdownList-group-separator:              1px;
+@spacing_DropdownList-group-between-text-separator:   12px;
+@font-size_DropdownList-group-text:                   12px;
 @right_DropdownList-icon:       6px;
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
 @padding_DropdownList-head:     @padding_DropdownList-default;
 @offset_DropdownList-submenu:   -3px;
+@right-DropdownList-cross:             5px;
+@top-DropdownList-cross:               6px;
 
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
@@ -345,6 +351,24 @@
 @height_DraggingTemplate-counter:                20px;
 @padding_DraggingTemplate-counter:               0 6px;
 @font-size_DraggingTemplate-counter:             14px;
+
+//VDOM List.TileView
+@margin_TileView-item:                             6px;
+@border-width_TileView-item:                       1px;
+@box-shadow-size_TileView-item:                    12px;
+@max-height_TileView-title:                        36px;
+@padding_TileView-title:                           3px 4px;
+@border-width_TileView-title:                      1px;
+@height_TileView-title_visible:                    25px;
+@box-shadow-offset_TileView-itemActions:           -12px;
+@box-shadow-blur_TileView-itemActions:             18px;
+
+//VDOM List.TreeTileView
+@font-size_TreeTileView-title:                   15px;
+@height_TreeTileView-item:                       40px;
+@left_TreeTileView-checkbox:                     4px;
+@margin_TreeTileView-title:                      0 8px 0 4px;
+@margin_TreeTileView-icon:                       0 0 0 4px;
 
 //VDOM Operations.Panel
 @height_OperationsPanel:                              30px;
@@ -402,11 +426,15 @@
 //CloseButton
 @border-width_CloseButton:               1px 0 1px 1px;
 @border-radius_CloseButton:              2px 0 0 2px;
+//оставил чтобы переменные без индекса для поддержки старых компонентов
 @width_CloseButton:                      36px;
 @height_CloseButton:                     28px;
+@width_CloseButton_m:                      29px;
+@height_CloseButton_m:                     24px;
 //TODO Выпилить этот стиль при полном переходе на VDOM
 @font-size_CloseButton:                  23px;
 @font-size_CloseButton_default:          23px;
+@font-size_CloseButton_m:                20px;
 @font-size_CloseButton_light:            24px;
 @width_CloseButton_small:                24px;
 @height_CloseButton_small:               24px;
@@ -482,6 +510,8 @@
 
 //Lookup
 @spacing_Lookup-item:                    4px;
+@spacing_Lookup-collection:              4px;
+@spacing_Lookup-showAllLinks:            4px;
 
 //itemActions
 @height_itemActions_inside:              24px;
@@ -597,10 +627,15 @@
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @spacing-bottom_FilterPanel:                                   12px;
-@padding_FilterPanel-history:                                  6px 12px 12px 12px;
+@padding_FilterPanel-history-default:                          6px 12px 12px 12px;
+@padding_FilterPanel-history-column:                           6px 12px 0 12px;
+@margin_FilterPanel-history:                                   12px;
+@border-width_FilterPanel-column:                              1px;
 @spacing_FilterPanel-items:                                    22px;
+//FilterLink
+@height_FilterLink:                                            24px;
+@font-size_FilterLink:                                         14px;
 //PropertyGrid
-@height_PropertyGrid-item:                                     24px;
 @spacing_PropertyGrid-between-items:                           4px;
 //AdditionalParams
 @max-height_FilterPanel-items:              120px;

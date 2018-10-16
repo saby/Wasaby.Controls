@@ -6,5 +6,5 @@
       "tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar",
       "css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar"
    ],
-   "output": "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar"
+   "output": "sbis3controls-richeditor-roundtoolbar.package.js"
 }]

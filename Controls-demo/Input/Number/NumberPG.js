@@ -40,14 +40,15 @@ define('Controls-demo/Input/Number/NumberPG',
                name: 'Number',
                placeholder: 'Input number',
                tagStyle: 'primary',
-               presition: 2,
+               precision: 2,
                onlyPositive: true,
                integersLength: 5,
                showEmptyDecimals: true,
                textAlign: 'left',
                readOnly: false,
                tooltip: 'myTooltip',
-               validationErrors: ''
+               validationErrors: '',
+               selectOnClick: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -117,7 +117,7 @@ define('Controls/Input/Number',
             if (options.integersLength <= 0) {
                IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
-
+            var value = options.value !== null ? String(options.value) : '';
             this._previousValue = String(options.value);
 
             this._numberViewModel = new NumberViewModel({
@@ -125,7 +125,7 @@ define('Controls/Input/Number',
                integersLength: options.integersLength,
                precision: options.precision,
                showEmptyDecimals: options.showEmptyDecimals,
-               value: String(options.value)
+               value: value
             });
          },
 
@@ -228,7 +228,8 @@ define('Controls/Input/Number',
 
       NumberInput.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            selectOnClick: false
          };
       };
 

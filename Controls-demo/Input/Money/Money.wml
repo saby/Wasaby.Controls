@@ -1,0 +1,1 @@
+<Controls.Input.Money bind:value="_value"/>

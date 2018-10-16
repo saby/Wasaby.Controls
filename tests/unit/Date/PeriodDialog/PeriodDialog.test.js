@@ -24,6 +24,7 @@ define([
             assert.isTrue(component._yearStateEnabled);
             assert.strictEqual(component._state, component._STATES.year);
             assert.strictEqual(component._yearRangeSelectionType, 'range');
+            assert.strictEqual(component._headerType, 'link');
          });
 
          it('should create the correct range models when empty range passed.', function() {
@@ -78,6 +79,43 @@ define([
                assert.isFalse(component._monthStateEnabled);
                assert.isTrue(component._yearStateEnabled);
             });
+         });
+
+         it('should set correct header type.', function() {
+            const component = calendarTestUtils.createComponent(
+               PeriodDialog,
+               { headerType: PeriodDialog.HEADER_TYPES.input }
+            );
+            assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.input);
+         });
+      });
+
+      describe('_headerLinkClick', function() {
+         it('should toggle header type.', function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+            assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.link);
+            component._headerLinkClick();
+            assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.input);
+         });
+      });
+
+      describe('_startValuePickerChanged', function() {
+         it('should update start value.', function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               date = new Date();
+            component._startValuePickerChanged(null, date);
+            assert.strictEqual(component._rangeModel.startValue, date);
+            assert.strictEqual(component._headerRangeModel.startValue, date);
+         });
+      });
+
+      describe('_endValuePickerChanged', function() {
+         it('should update end value.', function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               date = new Date();
+            component._endValuePickerChanged(null, date);
+            assert.strictEqual(component._rangeModel.endValue, date);
+            assert.strictEqual(component._headerRangeModel.endValue, date);
          });
       });
 
@@ -188,6 +226,21 @@ define([
             assert(dateUtils.isDatesEqual(component._headerRangeModel.startValue, start));
             assert(dateUtils.isDatesEqual(component._headerRangeModel.endValue, end));
             assert.isFalse(component._monthRangeSelectionProcessing);
+         });
+      });
+
+      describe('_dateRangeSelectionEnded', function() {
+         it('should generate "sendResult" event.', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               start = new Date(),
+               end = new Date();
+
+            sandbox.stub(component, '_notify');
+
+            component._dateRangeSelectionEnded(null, start, end);
+            sinon.assert.calledWith(component._notify, 'sendResult', [start, end]);
+            sandbox.restore();
          });
       });
    });

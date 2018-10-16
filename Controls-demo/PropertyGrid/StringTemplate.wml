@@ -15,7 +15,8 @@
               items="{{_options.items}}"
               caption="{{_options.caption}}"
               minSearchLength="1"
-              on:valueChanged="_valueChangedHandler()"
+              on:valueChanged="_suggestValueChanged()"
+              on:choose="_chooseChangedHandler()"
               config="{{_options.config}}"
       />
    </ws:else>

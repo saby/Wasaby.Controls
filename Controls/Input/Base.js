@@ -1,4 +1,4 @@
-define('Controls/Input/Base', 
+define('Controls/Input/Base',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
@@ -74,6 +74,8 @@ define('Controls/Input/Base',
 
          /**
           * @type {String} Value of the type attribute in the native field.
+          * @remark
+          * How an native field works varies considerably depending on the value of its {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types type attribute}.
           * @private
           */
          _type: 'text',
@@ -88,7 +90,7 @@ define('Controls/Input/Base',
             /**
              * Browsers use autocomplete to the fields with the previously stored name.
              * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the tag.
+             * To avoid this, we will translate the name of the control to the name of the <input> tag.
              * https://habr.com/company/mailru/blog/301840/
              */
             if ('name' in options) {
@@ -101,6 +103,10 @@ define('Controls/Input/Base',
          },
 
          _afterMount: function() {
+            if (this._options.readOnly) {
+               return;
+            }
+
             var fieldValue = this._getField().value;
 
             /**
@@ -123,7 +129,23 @@ define('Controls/Input/Base',
 
             this._viewModel.value = newOptions.value;
 
-            this._synchronizeFieldWithModel();
+            /**
+             * If you change from read mode to edit mode, a native field appears that you want to synchronize with the model.
+             * The field in DOM will appear in _afterUpdate, so synchronization should be done there.
+             */
+            if (this._options.readOnly && !newOptions.readOnly) {
+               this._shouldBeSyncAfterUpdate = true;
+            } else if (!newOptions.readOnly) {
+               this._synchronizeFieldWithModel();
+            }
+         },
+
+         _afterUpdate: function() {
+            if (this._shouldBeSyncAfterUpdate) {
+               this._shouldBeSyncAfterUpdate = false;
+
+               this._synchronizeFieldWithModel(true);
+            }
          },
 
          /**
@@ -135,7 +157,7 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler keyup in field.
+          * Event handler keyup in native field.
           * @param {Object} event Event descriptor.
           * @private
           */
@@ -151,7 +173,7 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler click in field.
+          * Event handler click in native field.
           * @private
           */
          _clickHandler: function() {
@@ -159,7 +181,7 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler selection in field.
+          * Event handler selection in native field.
           * @private
           */
          _selectionHandler: function() {
@@ -190,16 +212,23 @@ define('Controls/Input/Base',
          },
 
          /**
-          *
-          * @return {Object}
+          * Get the options for the view model.
+          * @return {Object} View model options.
           * @private
           */
          _getViewModelOptions: function() {
             return {};
          },
 
-         _synchronizeFieldWithModel: function() {
-            if (this._viewModel.shouldBeChanged) {
+         /**
+          * Synchronize data from the model with the native field.
+          * @param {Boolean} [synchronize] Determined whether to perform synchronization regardless of model changes.
+          * @variant true Synchronization will occur even if the model has not changed since the last synchronization.
+          * @variant false Synchronization will occur only if the model has changed since the last synchronization.
+          * @private
+          */
+         _synchronizeFieldWithModel: function(synchronize) {
+            if (this._viewModel.shouldBeChanged || synchronize) {
                var field = this._getField();
 
                field.value = this._viewModel.displayValue;
@@ -225,7 +254,6 @@ define('Controls/Input/Base',
       
       Base.getDefaultOptions = function() {
          return {
-            value: '',
             style: 'info',
             textAlign: 'left',
             fontStyle: 'default'

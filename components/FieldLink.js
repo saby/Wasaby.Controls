@@ -1160,7 +1160,7 @@ define('SBIS3.CONTROLS/FieldLink',
              if (this._showAllButton) {
                 this._toggleShowAllButtonState(this.isEnabled());
              }
-             this._getAfterFieldWrapper().toggleClass('ws-hidden', !this.isEnabled());
+             this._getAfterFieldWrapper().toggleClass('controls-FieldLink__afterFieldWrapper-hidden', !this.isEnabled());
              this._container.find('.controls-FieldLink__beforeFieldWrapper')
                 .toggleClass('controls-FieldLink__beforeFieldWrapper-enabled', this.isEnabled())
                 .toggleClass('controls-FieldLink__beforeFieldWrapper-disabled', !this.isEnabled());

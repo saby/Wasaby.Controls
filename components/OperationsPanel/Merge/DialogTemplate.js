@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
    "SBIS3.CONTROLS/WaitIndicator",
+   "Core/core-merge",
    "Core/helpers/Hcontrol/openErrorsReportDialog",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellRadioButtonTpl",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellCommentTpl",
@@ -21,7 +22,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "i18n!!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
    'css!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
    'css!SBIS3.CONTROLS/Radio/Button/RadioButton'
-], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, WaitIndicator, openErrorsReportDialog, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, WaitIndicator, cMerge, openErrorsReportDialog, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',
@@ -38,9 +39,6 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
         $protected: {
             _options: {
                 _itemTpl: rowTpl,
-                _titleCellTemplate: cellTitleTpl,
-                _cellCommentTpl: cellCommentTpl,
-                _cellRadioButtonTpl: cellRadioButtonTpl,
                 _onSearchPathClick: onSearchPathClick,
                 name: 'controls-MergeDialogTemplate',
                 width: 760,
@@ -76,6 +74,24 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
         },
         $constructor: function() {
             CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
+        },
+        _modifyOptions: function() {
+           var opts = MergeDialogTemplate.superclass._modifyOptions.apply(this, arguments);
+           opts._columns = [{
+              cellTemplate: cellRadioButtonTpl
+           }, cMerge({
+              title: rk('Наименование'),
+              width: 400,
+              field: opts.displayProperty,
+              className: 'controls-DataGridView-cell-overflow-ellipsis',
+              cellTemplate: opts.titleCellTemplate ? opts.titleCellTemplate : cellTitleTpl
+           }, opts.titleColumnConfig || {}), cMerge({
+              title: rk('Комментарий'),
+              field: 'Comment',
+              className: 'controls-DataGridView-cell-overflow-ellipsis',
+              cellTemplate: cellCommentTpl
+           }, opts.commentColumnConfig || {})];
+           return opts;
         },
         init: function() {
             MergeDialogTemplate.superclass.init.apply(this, arguments);

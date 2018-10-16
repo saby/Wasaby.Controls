@@ -125,6 +125,11 @@ function(cMerge,
             destrFunc = function() {
                destroyDef.callback();
                destroyDef = null;
+
+               // CompoundArea должна отписаться от этого обработчика после onDestroy, на случай
+               // если кто-то кеширует конфигурацию панели, иначе этот обработчик будет добавлен дважды,
+               // что приведет к ошибке при закрытии/уничтожении панели
+               this.unsubscribe('onDestroy', destrFunc);
             };
 
          if (cfg.context) {
@@ -262,15 +267,7 @@ function(cMerge,
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
 
-         /**
-          * InfoBox в своем шаблоне имеет опции с именами template и templateOptions.
-          * нужно их положить в innerComponentOptions.templateOptions.
-          */
-         if (cfg.componentOptions.innerComponentOptions.template) {
-            cfg.componentOptions.innerComponentOptions.templateOptions = cMerge({}, cfg.componentOptions.innerComponentOptions);
-         }
-
-         cfg.componentOptions.innerComponentOptions.template = cfg.template;
+         cfg.componentOptions.innerComponentOptions._template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
          cfg.border = false;

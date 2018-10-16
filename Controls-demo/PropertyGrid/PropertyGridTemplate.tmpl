@@ -1,9 +1,18 @@
 <ws:template name="String">
+   <ws:if data="{{item.items}}">
     <Controls-demo.PropertyGrid.StringTemplate
-           bind:value="itemValue[name]"
+            bind:value="item.value"
             caption="{{name}}"
-           scope="{{item}}">
+            scope="{{item}}">
     </Controls-demo.PropertyGrid.StringTemplate>
+   </ws:if>
+   <ws:else>
+      <Controls-demo.PropertyGrid.StringTemplate
+              bind:value="itemValue[name]"
+              caption="{{name}}"
+              scope="{{item}}">
+      </Controls-demo.PropertyGrid.StringTemplate>
+   </ws:else>
 </ws:template>
 
 <ws:template name="Number">
@@ -20,6 +29,7 @@
             scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.BooleanTemplate>
+    <br/>
 </ws:template>
 
 <ws:template name="enum">
@@ -70,6 +80,7 @@
             caption="{{name}}"
             triState="{{itemValue.triState}}">
     </Controls-demo.PropertyGrid.BooleanOrNullTemplate>
+    <br/>
 </ws:template>
 
 <ws:template name="DateTime">

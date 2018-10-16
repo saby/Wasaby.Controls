@@ -1,6 +1,7 @@
 define('Controls/Date/PeriodDialog', [
    'Core/Control',
    'Core/core-merge',
+   'WS.Data/Type/descriptor',
    'Controls/Date/interface/IRangeSelectable',
    'Controls/Date/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
@@ -14,6 +15,7 @@ define('Controls/Date/PeriodDialog', [
 ], function(
    BaseControl,
    coreMerge,
+   types,
    IRangeSelectable,
    EventProxyMixin,
    DateRangeModel,
@@ -46,6 +48,7 @@ define('Controls/Date/PeriodDialog', [
             self._headerRangeModel.startValue = start;
             self._headerRangeModel.endValue = end;
             self._monthRangeSelectionProcessing = false;
+            _private.sendResult(self, start, end);
          },
          selectionChanged: function(self, start, end) {
             self._headerRangeModel.startValue = start;
@@ -56,6 +59,13 @@ define('Controls/Date/PeriodDialog', [
             self._rangeModel.endValue = end;
             self._headerRangeModel.startValue = start;
             self._headerRangeModel.endValue = end;
+         },
+         sendResult: function(self, start, end) {
+            self._notify(
+               'sendResult',
+               [start || self._rangeModel.startValue, end || self._rangeModel.endValue],
+               { bubbling: true }
+            );
          }
       },
       HEADER_TYPES = {
@@ -96,7 +106,7 @@ define('Controls/Date/PeriodDialog', [
       _yearRangeSelectionType: null,
 
       _beforeMount: function(options) {
-         this._displayedDate = dateUtils.getStartOfMonth(new Date(1900, 0));
+         this._displayedDate = dateUtils.getStartOfMonth(options.startValue);
 
          this._rangeModel = new DateRangeModel();
          this._rangeModel.update(options);
@@ -132,6 +142,8 @@ define('Controls/Date/PeriodDialog', [
                this._monthRangeSelectionType = 'disable';
             }
          }
+
+         this._headerType = options.headerType;
       },
 
       _beforeUpdate: function(options) {
@@ -152,6 +164,31 @@ define('Controls/Date/PeriodDialog', [
          _private.rangeChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
       },
 
+      _headerLinkClick: function(e) {
+         if (this._headerType === this._HEADER_TYPES.link) {
+            this._headerType = this._HEADER_TYPES.input;
+         } else {
+            this._headerType = this._HEADER_TYPES.link;
+         }
+      },
+
+      _startValuePickerChanged: function(e, value) {
+         _private.rangeChanged(
+            this,
+            value,
+            this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single ? value : this._rangeModel.endValue
+         );
+      },
+
+      _endValuePickerChanged: function(e, value) {
+         _private.rangeChanged(
+            this,
+            this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single
+               ? value : this._rangeModel.startValue,
+            value
+         );
+      },
+
       _yearsSelectionChanged: function(e, start, end) {
          _private.selectionChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
       },
@@ -159,6 +196,10 @@ define('Controls/Date/PeriodDialog', [
       _yearsSelectionStarted: function(e, start, end) {
          this._monthRangeSelectionViewType = MonthsRange.SELECTION_VEIW_TYPES.days;
          this._monthRangeSelectionProcessing = false;
+      },
+
+      _yearsRangeSelectionEnded: function(e, start, end) {
+         _private.sendResult(this, start, dateUtils.getEndOfYear(end));
       },
 
       _monthsRangeChanged: function(e, start, end) {
@@ -169,6 +210,10 @@ define('Controls/Date/PeriodDialog', [
 
       _monthsSelectionChanged: function(e, start, end) {
          _private.selectionChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
+      },
+
+      _monthsRangeSelectionEnded: function(e, start, end) {
+         _private.sendResult(this, start, dateUtils.getEndOfMonth(end));
       },
 
       _monthRangeMonthClick: function(e, date) {
@@ -190,19 +235,27 @@ define('Controls/Date/PeriodDialog', [
          _private.selectionChanged(this, start, end);
       },
 
+      _dateRangeSelectionEnded: function(e, start, end) {
+         _private.sendResult(this, start, end);
+      },
+
       _dateRangeFixedPeriodClick: function(e, start, end) {
          _private.fixedPeriodClick(this, start, end);
       },
 
       _applyClick: function(e) {
-         this._notify('sendResult', [this._rangeModel.startValue, this._rangeModel.endValue], { bubbling: true });
-      }
+         _private.sendResult(this);
+      },
 
+      _closeClick: function() {
+         this._notify('close');
+      }
    });
 
    Component._private = _private;
 
    Component.SELECTION_TYPES = IRangeSelectable.SELECTION_TYPES;
+   Component.HEADER_TYPES = HEADER_TYPES;
 
    Component.getDefaultOptions = function() {
       return coreMerge({
@@ -213,12 +266,25 @@ define('Controls/Date/PeriodDialog', [
           */
          emptyCaption: rk('Не указан'),
 
+         /**
+          * @name Controls/Date/PeriodDialog#headerType
+          * @cfg {String} Type of the header.
+          * @variant link
+          * @variant input
+          */
+         headerType: HEADER_TYPES.link
+
       }, IRangeSelectable.getDefaultOptions());
    };
 
-   // Component.getOptionTypes = function() {
-   //    return coreMerge({}, IRangeSelectable.getOptionTypes());
-   // };
+   Component.getOptionTypes = function() {
+      return coreMerge({
+         headerType: types(String).oneOf([
+            HEADER_TYPES.link,
+            HEADER_TYPES.input
+         ]),
+      }, IRangeSelectable.getOptionTypes());
+   };
 
    return Component;
 });

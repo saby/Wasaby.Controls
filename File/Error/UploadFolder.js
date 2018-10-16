@@ -7,19 +7,15 @@ define("File/Error/UploadFolder", ["require", "exports", "tslib", "File/Error"],
      * @name File/Error/UploadFolder
      * @public
      * @extends File/Error
+     * @author Заляев А.В.
      */
     var UploadFolderError = /** @class */ (function (_super) {
         tslib_1.__extends(UploadFolderError, _super);
         function UploadFolderError(params) {
-            var _this = _super.call(this, {
+            return _super.call(this, {
                 message: MESSAGE,
                 fileName: params.fileName
             }) || this;
-            /*
-             * https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
-             */
-            Object.setPrototypeOf(_this, UploadFolderError.prototype);
-            return _this;
         }
         return UploadFolderError;
     }(FileError));

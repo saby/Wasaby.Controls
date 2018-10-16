@@ -415,3 +415,11 @@ define('SBIS3.CONTROLS/EditAtPlace',
 
       return EditAtPlace;
    });
+
+   /**
+    * @name SBIS3.CONTROLS/EditAtPlace#style
+    * @cfg {String} Устанавливает стилевое оформление поля ввода.
+    * @variant default по умолчанию
+    * @variant header заголовок
+    * @variant accentHeader акцентный заголовок
+    */

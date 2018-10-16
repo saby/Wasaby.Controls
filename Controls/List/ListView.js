@@ -127,6 +127,14 @@ define('Controls/List/ListView', [
             this._notify('itemMouseEnter', [itemData, event]);
          },
 
+         //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
+         //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
+         _onItemMouseLeave: function() {},
+
+         _onItemMouseMove: function() {},
+
+         _onItemWheel: function() {},
+
          _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
          }

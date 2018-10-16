@@ -76,6 +76,22 @@ define('SBIS3.CONTROLS/TextBox', [
     * @category Input
     */
 
+   var _private = {
+      prepareInformationIconColor: function(color) {
+         var resColor = color;
+         //поддержка старых цветов, чтоб не ломать старые контроы
+         if (color === 'attention') {
+            resColor = 'warning';
+         }
+         if (color === 'done') {
+            resColor= 'success';
+         }
+         if (color === 'error') {
+            resColor = 'danger';
+         }
+         return resColor;
+      }
+   };
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/TextBox.prototype */ {
       _dotTplFn: dotTplFn,
 
@@ -324,6 +340,7 @@ define('SBIS3.CONTROLS/TextBox', [
                cfg.placeholder = Sanitize(cfg.placeholder);
             }
          }
+         cfg._informationIconColor = _private.prepareInformationIconColor(cfg.informationIconColor);
          return cfg;
       },
 
@@ -345,6 +362,10 @@ define('SBIS3.CONTROLS/TextBox', [
 
          if (this._options.informationIconColor) {
             this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
+         }
+
+         if (this._options.maxLength) {
+            this.setMaxLength(this._options.maxLength);
          }
 
          this._container.on('mouseenter', '.controls-TextBox__informationIcon', function(e) {
@@ -379,19 +400,21 @@ define('SBIS3.CONTROLS/TextBox', [
       setInformationIconColor: function(color) {
          if (!color) {
             this._options.informationIconColor = color;
+            this._options._informationIconColor = _private.prepareInformationIconColor(this._options.informationIconColor);
             this._destroyInformationIcon();
             return;
          }
 
          if (!this._informationIcon) {
-            this._createInformationIcon(color);
+            this._createInformationIcon(this._options._informationIconColor);
          }
 
-         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
-         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options.informationIconColor);
+         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options._informationIconColor);
+         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options._informationIconColor);
          this._options.informationIconColor = color;
-         this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
-         this._informationIcon.addClass('controls-InputRender__tagStyle-' + color);
+         this._options._informationIconColor = _private.prepareInformationIconColor(this._options.informationIconColor);
+         this._informationIcon.addClass('controls-TextBox__informationIcon-' + this._options._informationIconColor);
+         this._informationIcon.addClass('controls-InputRender__tagStyle-' + this._options._informationIconColor);
       },
 
       _createInformationIcon: function(color) {
@@ -494,7 +517,10 @@ define('SBIS3.CONTROLS/TextBox', [
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength', num);
+         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
+         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
+         //Поэтому для IE просто не будем навешивать аттрибут maxLength
+         this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       },
 
       /**

@@ -38,14 +38,14 @@ define('Controls/Date/Controllers/RangeSelectionController', [
          if (self._startValue === range[0] && self._endValue === range[1]) {
             return;
          }
-         self._notify('onBeforeSelectionEnded', [range[0], range[1]]);
+         self._notify('beforeSelectionEnded', [range[0], range[1]]);
          self._selectionProcessing = false;
          self._selectionBaseValue = null;
          self._selectionHoveredValue = null;
          self._startValue = self._displayedStartValue = range[0];
          self._endValue = self._displayedEndValue = range[1];
 
-         self._notify('onSelectionEnded');
+         self._notify('selectionEnded', [range[0], range[1]]);
          _private.notifyAllDataChanged(self);
       },
 
@@ -279,9 +279,9 @@ define('Controls/Date/Controllers/RangeSelectionController', [
          this._selectionHoveredValue = null;
          this._startValue = this._displayedStartValue = range[0];
          this._endValue = this._displayedEndValue = range[1];
-         this._notify('selectionEnded');
          this._notify('selectionChanged', [this._displayedStartValue, this._displayedEndValue]);
          this._notify('rangeChanged', [this._startValue, this._endValue]);
+         this._notify('selectionEnded', [this._displayedStartValue, this._displayedEndValue]);
       },
 
       /**

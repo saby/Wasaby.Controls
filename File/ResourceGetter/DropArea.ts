@@ -1,5 +1,4 @@
 /// <amd-module name="File/ResourceGetter/DropArea" />
-
 import IResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
 import LocalFile = require("File/LocalFile");
@@ -68,13 +67,14 @@ const OPTION: Partial<DropAreaConfig> = {
 };
 
 /**
- * Класс реализующий интерфейс IResourceGetter, позволяющий получать ресурсы через DragAndDrop
+ * Класс реализующий интерфейс {@link File/IResourceGetter}, позволяющий получать ресурсы через DragAndDrop
  * @class
  * @name File/ResourceGetter/DropArea
  * @extends File/IResourceGetter
  * @public
  * @author Заляев А.В.
  * @demo File-demo/ResourceGetter/DropArea
+ * @implements File/IResourceGetter
  */
 class DropArea extends IResourceGetterBase {
     protected readonly name = "DropArea";

@@ -6,11 +6,18 @@ define(['Controls/Explorer'], function(Explorer) {
             dataLoadCallback = function(data) {
                dataLoadCallbackArgument = data;
             },
+            notify = function() {},
             forceUpdate = function() {},
+            itemOpenHandlerCalled = false,
+            itemOpenHandler = function() {
+               itemOpenHandlerCalled = true;
+            },
             self = {
                _forceUpdate: forceUpdate,
+               _notify: notify,
                _options: {
-                  dataLoadCallback: dataLoadCallback
+                  dataLoadCallback: dataLoadCallback,
+                  itemOpenHandler: itemOpenHandler
                }
             },
             testRoot = 'testRoot',
@@ -35,18 +42,23 @@ define(['Controls/Explorer'], function(Explorer) {
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
+            _notify: notify,
             _options: {
-               dataLoadCallback: dataLoadCallback
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "setRoot(self, testRoot)".');
+         assert.isTrue(itemOpenHandlerCalled);
          Explorer._private.dataLoadCallback(self, testData1);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
+            _notify: notify,
             _breadCrumbsItems: [],
             _breadCrumbsVisibility: false,
             _options: {
-               dataLoadCallback: dataLoadCallback
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
          assert.deepEqual(dataLoadCallbackArgument, testData1, 'Incorrect "dataLoadCallback" arguments.');
@@ -54,22 +66,50 @@ define(['Controls/Explorer'], function(Explorer) {
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
+            _notify: notify,
             _breadCrumbsItems: testBreadCrumbs,
             _breadCrumbsVisibility: true,
             _options: {
-               dataLoadCallback: dataLoadCallback
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData2)".');
          Explorer._private.dataLoadCallback(self, testData1);
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
+            _notify: notify,
             _breadCrumbsItems: [],
             _breadCrumbsVisibility: false,
             _options: {
-               dataLoadCallback: dataLoadCallback
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
+      });
+
+      it('setViewMode', function() {
+         var
+            cfg = {
+               root: 'rootNode',
+               viewMode: 'tree'
+            },
+            newCfg = {
+               viewMode: 'search',
+               root: 'rootNode'
+            },
+            instance = new Explorer(cfg);
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg);
+         assert.equal(instance._viewMode, 'tree');
+         assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.tree);
+         assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.tree);
+         assert.equal(instance._leftPadding, undefined);
+         instance._beforeUpdate(newCfg);
+         assert.equal(instance._viewMode, 'search');
+         assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
+         assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
+         assert.equal(instance._leftPadding, 'search');
       });
 
       it('_notifyHandler', function() {
