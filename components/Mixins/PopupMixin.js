@@ -286,9 +286,14 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                if (self.isVisible()) {
                   // на vdom динамически меняется zindex попапов.
                   // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
-                  cWindowManager.releaseZIndex(self._zIndex);
-                  self._container.css('z-index', self._getZIndex());
-                  ModalOverlay.adjust(self.isModal() ? self._zIndex : null);
+                  var oldZIndex = self._zIndex;
+                  if (oldZIndex !== self._getZIndex()) {
+                     cWindowManager.releaseZIndex(self._zIndex);
+                     self._container.css('z-index', self._zIndex);
+                     if (self.isModal()) {
+                        ModalOverlay.adjust(self._zIndex);
+                     }
+                  }
                }
             }, VDOM_POPUP_RECAL_ZINDEX_INTERVAL);
          }
