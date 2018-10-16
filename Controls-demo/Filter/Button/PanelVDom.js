@@ -30,16 +30,16 @@ define('Controls-demo/Filter/Button/PanelVDom',
        */
 
       'use strict';
-          var PanelVDom = Control.extend({
+      var PanelVDom = Control.extend({
          _template: template,
          _itemsSimple: null,
          _itemsTemplate: null,
          _items: null,
          _itemsHistory: null,
-         sourcePeriod: null,
-         sourceState: null,
+         _sourcePeriod: null,
+         _stateSource: null,
          _beforeMount: function() {
-            this.sourcePeriod = new MemorySource({
+            this._periodSource = new MemorySource({
                data: [
                   {key: 1, title: 'All time'},
                   {key: 2, title: 'Today'},
@@ -49,7 +49,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                ],
                idProperty: 'key'
             });
-            this.sourceState = new MemorySource({
+            this._stateSource = new MemorySource({
                data: [
                   {key: 1, title: 'All states'},
                   {key: 2, title: 'In progress'},
@@ -59,9 +59,16 @@ define('Controls-demo/Filter/Button/PanelVDom',
                ],
                idProperty: 'key'
             });
+            this._limitSource = new MemorySource({
+               idProperty: 'key',
+               data: [
+                  {key: 1, title: 'Due date'},
+                  {key: 2, title: 'Overdue'}
+               ]
+            });
             this._itemsSimple = [
-               {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: this.sourcePeriod},
-               {id: 'state', value: [1], resetValue: [1], source: this.sourceState},
+               {id: 'period', value: [2], resetValue: [1], textValue: 'Today', source: this._periodSource},
+               {id: 'state', value: [1], resetValue: [1], source: this._stateSource},
                {id: 'sender', value: '', resetValue: ''},
                {id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''},
                {id: 'responsible', value: '', resetValue: ''}
@@ -70,25 +77,44 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'author', value: 'Author: Ivanov A.A.', resetValue: '', textValue: 'Author: Ivanov A.A.',
                   templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/author'},
                { id: 'period', value: [1], textValue: 'Period', resetValue: [1],
-                  source: this.sourcePeriod,
+                  source: this._periodSource,
                   templateItem: 'wml!Controls-demo/Filter/Button/resources/itemTemplate/period'}
             ];
             this._items = [
-               {id: 'period', value: [1], resetValue: [1]},
-               {id: 'state', value: [1], resetValue: [1]},
-               {id: 'limit', value: [1], resetValue: '', textValue: 'Due date', visibility: false},
+               {id: 'period', value: [1], resetValue: [1], source: this._periodSource},
+               {id: 'state', value: [1], resetValue: [1], source: this._stateSource},
+               {id: 'limit', value: [1], resetValue: [1], textValue: 'Due date', visibility: false, source: this._limitSource},
                {id: 'sender', value: '', resetValue: '', visibility: false},
                {id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''},
                {id: 'responsible', value: '', resetValue: '', visibility: false},
                {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
                {id: 'operation', value: '', resetValue: '', visibility: false},
-               {id: 'group', value: [1], resetValue: '', visibility: false},
+               {id: 'group', value: [1], resetValue: '', visibility: false, source: new MemorySource({
+                  idProperty: 'key',
+                  data: [
+                     { key: 1, title: 'My' },
+                     { key: 2, title: 'My department' }
+                  ]
+               })},
                {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false},
                {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
-               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false},
+               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false, source: new MemorySource({
+                  idProperty: 'key',
+                  data: [
+                     { key: 1, title: 'On me' },
+                     { key: 2, title: 'On department' }
+                  ]
+               })},
                {id: 'our organisation', value: '', resetValue: '', visibility: false},
                {id: 'document', value: '', resetValue: '', visibility: false},
-               {id: 'activity', value: [1], resetValue: '', selectedKeys: [1], visibility: false}
+               {id: 'activity', value: [1], resetValue: [1], visibility: false, source: new MemorySource({
+                  idProperty: 'key',
+                  data: [
+                     { key: 1, title: 'Activity for the last month' },
+                     { key: 2, title: 'Activity for the last quarter' },
+                     { key: 3, title: 'Activity for the last year' }
+                  ]
+               })}
             ];
             this._itemsHistory = this._items;
          },

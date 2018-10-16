@@ -123,16 +123,11 @@ define('Controls/Filter/Fast',
          _configs: null,
          _items: null,
 
-         constructor: function() {
-            Fast.superclass.constructor.apply(this, arguments);
-
+         _beforeMount: function(options) {
             this._configs = {};
             this._items = [];
-
             this._onResult = _private.onResult.bind(this);
-         },
 
-         _beforeMount: function(options) {
             var self = this,
                resultDef;
             if (options.items) {
@@ -161,6 +156,9 @@ define('Controls/Filter/Fast',
          },
 
          _open: function(event, item, index) {
+            if (this._options.readOnly) {
+               return;
+            }
             var config = {
                templateOptions: {
                   items: this._configs[index]._items,
