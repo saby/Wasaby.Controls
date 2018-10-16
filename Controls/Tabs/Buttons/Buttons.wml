@@ -13,7 +13,7 @@
     </ws:for>
     <div class="controls-Tabs__space">
         <ws:if data="{{ _options.tabSpaceTemplate }}">
-            <ws:partial template="{{_options.tabSpaceTemplate}}" />
+            <ws:partial template="{{_options.tabSpaceTemplate}}" scope="{{_options}}"/>
         </ws:if>
     </div>
 </div>

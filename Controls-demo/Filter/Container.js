@@ -68,7 +68,7 @@ define('Controls-demo/Filter/Container', [
                         { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
                         { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
                         { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
-                        { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+                        { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' }
                      ]
                   })
                }
@@ -77,7 +77,17 @@ define('Controls-demo/Filter/Container', [
          this._filterButtonData = [{
             id: 'owner',
             resetValue: '0',
-            value: '0'
+            value: '0',
+            source: new MemorySource({
+               data: [
+                  { id: '0', title: 'По ответственному', lastName: '0' },
+                  { id: '1', title: 'Новиков Д.В.', lastName: 'Новиков Д.В.' },
+                  { id: '2', title: 'Кошелев А.Е.', lastName: 'Кошелев А.Е.' },
+                  { id: '3', title: 'Субботин А.В.', lastName: 'Субботин А.В.' },
+                  { id: '4', title: 'Чеперегин А.С.', lastName: 'Чеперегин А.С.' }
+               ],
+               idProperty: 'id'
+            })
          }];
          this._source = new MemorySource({
             data: memorySourceData,
