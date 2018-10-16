@@ -2,6 +2,12 @@ define([
    'Controls/List/Swipe/Tile'
 ], function(TileSwipe) {
    describe('Controls.List.Swipe.Tile', function() {
+      var showMore = {
+         title: rk('Еще'),
+         icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
+         isMenu: true
+      };
+
       it('needShowTitle', function() {
          assert.isFalse(TileSwipe.needShowTitle());
       });
@@ -58,11 +64,7 @@ define([
             };
             var result = TileSwipe.initItemsForSwipe(itemActions, 90);
             assert.deepEqual(result.all, itemActions.all);
-            assert.deepEqual(result.showedFirst, [itemActions.all[0], {
-               title: 'Еще',
-               icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
-               isMenu: true
-            }]);
+            assert.deepEqual(result.showedFirst, [itemActions.all[0], showMore]);
          });
 
          it('enough height for menu only', function() {
@@ -77,11 +79,7 @@ define([
             };
             var result = TileSwipe.initItemsForSwipe(itemActions, 40);
             assert.deepEqual(result.all, itemActions.all);
-            assert.deepEqual(result.showedFirst, [{
-               title: 'Еще',
-               icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
-               isMenu: true
-            }]);
+            assert.deepEqual(result.showedFirst, [showMore]);
          });
       });
    });

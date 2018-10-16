@@ -2,6 +2,13 @@ define([
    'Controls/List/Swipe/List'
 ], function(ListSwipe) {
    describe('Controls.List.Swipe.List', function() {
+      var showMore = {
+         title: rk('Еще'),
+         icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
+         height: 'auto',
+         isMenu: true
+      };
+
       it('needShowTitle', function() {
          assert.isTrue(ListSwipe.needShowTitle(false, 3));
          assert.isTrue(ListSwipe.needShowTitle(false, 4));
@@ -460,9 +467,7 @@ define([
             var result = ListSwipe.initItemsForSwipe(itemActions, 73, 13);
             assert.equal(result.all, itemActions.all);
             assert.deepEqual(result.showedFirst, [itemActions.all[0], itemActions.all[1]]);
-            assert.deepEqual(result.showedSecond, [itemActions.all[2], {
-               height: 'auto', icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size', title: 'Еще', isMenu: true
-            }]);
+            assert.deepEqual(result.showedSecond, [itemActions.all[2], showMore]);
             result.showedFirst.forEach(function(item) {
                assert.equal(item.height, '36px');
             });
