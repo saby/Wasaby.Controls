@@ -26,10 +26,10 @@ define('Controls-demo/Input/Mask/MaskPG',
             };
             this._itemsSimple =
                {
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[a-z]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+                  'M': '[А-ЯA-ZЁ]',
+                  'm': '[а-яa-zё]',
+                  'l': '[0-9]',
+                  'd': '[А-ЯA-Zа-яa-z0-9ёЁ]'
                };
             this._dataObject = {
                value: {
@@ -41,44 +41,31 @@ define('Controls-demo/Input/Mask/MaskPG',
                   selectedKey: 0
                },
                mask: {
+                  readOnly: true
+               },
+               replacer: {
+                  readOnly: true
+               },
+               formatMaskChars: {
                   items: [
                      {
-                        id: 1,
-                        title: 'dd dd dddddd',
-                        value: 'dd dd dddddd',
-                        example: 'You can use mask of Russian passport'
+                        id: '1', title: 'default', example: 'L:[А-ЯA-ZЁ]\nl:[а-яa-zё]\nd:[0-9]\nx:[А-ЯA-Zа-яa-z0-9ёЁ]', items: this._items
                      },
                      {
-                        id: 2,
-                        title: 'ddd-ddd-ddd dd',
-                        value: 'ddd-ddd-ddd dd',
-                        example: 'You can use mask of INILA(Insurance Number of Individual Ledger Account)'
-                     },
-                     {
-                        id: 3, title: '(ddd(ddd)ddd)', value: '(ddd(ddd)ddd)', example: ''
-                     },
-                     {
-                        id: 4, title: 'd\\{1,3}l\\{1,3}', value: 'd\\{1,3}l\\{1,3}', example: ''
+                        id: '2', title: 'secondary', example: 'M:[А-ЯA-ZЁ]\nm:[а-яa-zё]\nk:[0-9]\nd:[А-ЯA-Zа-яa-z0-9ёЁ]', items: this._itemsSimple
                      }
                   ],
+                  value: 'default',
                   config: {
                      template: 'custom',
                      value: 'title',
                      comment: 'example'
                   }
-               },
-
-               formatMaskChars: {
-                  items: [
-                     { id: '1', title: 'default', items: this._items },
-                     { id: '2', title: 'secondary', items: this._itemsSimple }
-                  ],
-                  value: 'default'
                }
             };
             this._componentOptions = {
                name: 'Mask',
-               mask: '',
+               mask: 'dd-dd dd',
                placeholder: 'Input text',
                tagStyle: 'primary',
                value: '',
