@@ -6,10 +6,11 @@ define('Controls/Search/Controller',
       'Controls/Container/Data/ContextOptions',
       'Core/core-clone',
       'Controls/Controllers/_SearchController',
-      'Core/helpers/Object/isEqual'
+      'Core/helpers/Object/isEqual',
+      'Controls/Search/MissSpell/getSwitcherStrFromData'
    ],
    
-   function(Control, template, DataOptions, clone, _SearchController, isEqual) {
+   function(Control, template, DataOptions, clone, _SearchController, isEqual, getSwitcherStrFromData) {
       
       'use strict';
    
@@ -34,11 +35,17 @@ define('Controls/Search/Controller',
          },
          
          searchCallback: function(self, result, filter) {
+            var switcherStr = getSwitcherStrFromData(result.data);
+            
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
             self._forceUpdate();
             self._notify('filterChanged', [filter], {bubbling: true});
             self._notify('itemsChanged', [result.data], {bubbling: true});
+            
+            if (switcherStr) {
+               this._notify('misspelling', [switcherStr]);
+            }
          },
          
          abortCallback: function(self, filter) {
@@ -48,6 +55,7 @@ define('Controls/Search/Controller',
                self._searchValue = '';
                self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
+               self._notify('misspelling', [null]);
             }
          },
          
@@ -104,6 +112,10 @@ define('Controls/Search/Controller',
          _beforeMount: function(options, context) {
             this._dataOptions = context.dataOptions;
             this._previousViewMode = this._viewMode = options.viewMode;
+            
+            if (options.searchValue) {
+               this._search(null, options.searchvalue);
+            }
          },
    
          _beforeUpdate: function(newOptions, context) {
@@ -112,6 +124,10 @@ define('Controls/Search/Controller',
 
             if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
                this._searchController = null;
+            }
+            
+            if (this._options.searchValue !== newOptions.searchValue) {
+               this._search(null, newOptions.searchValue);
             }
          },
 
