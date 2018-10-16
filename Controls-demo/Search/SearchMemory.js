@@ -1,7 +1,7 @@
 define('Controls-demo/Search/SearchMemory', [
    'WS.Data/Source/Memory',
       'Core/Deferred',
-      'Engine-demo/Browser/resources/kbLayoutRevert',
+      'Controls-demo/Search/kbLayoutRevert',
       'WS.Data/Source/DataSet',
       'WS.Data/Entity/Model',
       'Core/core-clone'
