@@ -22,8 +22,8 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
                },
                root, rootAsNode;
 
-            if (cfg.itemsGroup && cfg.itemsGroup.method) {
-               displayProperties.group = cfg.itemsGroup.method;
+            if (cfg.groupMethod) {
+               displayProperties.group = cfg.groupMethod;
             }
 
             if (typeof cfg.root !== 'undefined') {

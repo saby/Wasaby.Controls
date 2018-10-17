@@ -2,6 +2,7 @@ define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
    'Core/core-clone',
+   'Core/core-merge',
    'wml!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -17,6 +18,7 @@ define('Controls/List/BaseControl', [
 ], function(Control,
    IoC,
    cClone,
+   cMerge,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -306,6 +308,9 @@ define('Controls/List/BaseControl', [
          model.subscribe('onListChange', function() {
             self._forceUpdate();
          });
+         model.subscribe('onGroupsExpandChange', function(event, changes) {
+            _private.groupsExpandChangeHandler(self, changes);
+         });
       },
 
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
@@ -369,7 +374,30 @@ define('Controls/List/BaseControl', [
                showClose: true
             }
          };
+      },
+
+      groupsExpandChangeHandler: function(self, changes) {
+         self._notify(changes.changeType === 'expand' ? 'onGroupExpanded' : 'onGroupCollapsed', [changes.group], { bubbling: true });
+         requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.storeKeyCollapsedGroups);
+         });
+      },
+
+      prepareCollapsedGroups: function(config) {
+         var
+            result = new Deferred();
+         if (config.storeCollapsedGroups) {
+            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+               GroupUtil.restoreCollapsedGroups(config.storeKeyCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
+                  result.callback(collapsedGroupsFromStore ? collapsedGroupsFromStore : config.collapsedGroups);
+               });
+            });
+         } else {
+            result.callback(config.collapsedGroups);
+         }
+         return result;
       }
+
    };
 
    /**
@@ -418,6 +446,9 @@ define('Controls/List/BaseControl', [
       _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
+         var
+            self = this;
+
          this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
@@ -436,30 +467,30 @@ define('Controls/List/BaseControl', [
             };
          }
 
-         /* Load more data after reaching end or start of the list.
-          TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-          */
-
-         if (newOptions.viewModelConstructor) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
-            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
-            _private.initListViewModelHandler(this, this._listViewModel);
-         }
-
-         if (newOptions.source) {
-            this._sourceController = new SourceController({
-               source: newOptions.source,
-               navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
-            });
-
-            if (receivedState) {
-               this._sourceController.calculateState(receivedState);
-               this._listViewModel.setItems(receivedState);
-            } else {
-               return _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
+            var
+               viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : newOptions;
+            if (newOptions.viewModelConstructor) {
+               self._viewModelConstructor = newOptions.viewModelConstructor;
+               self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+               self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               _private.initListViewModelHandler(self, self._listViewModel);
             }
-         }
+
+            if (newOptions.source) {
+               self._sourceController = new SourceController({
+                  source: newOptions.source,
+                  navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
+               });
+
+               if (receivedState) {
+                  self._sourceController.calculateState(receivedState);
+                  self._listViewModel.setItems(receivedState);
+               } else {
+                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+               }
+            }
+         });
       },
 
       getViewModel: function() {
@@ -538,7 +569,6 @@ define('Controls/List/BaseControl', [
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
-
 
       _afterUpdate: function() {
          if (_private.getItemsCount(this)) {

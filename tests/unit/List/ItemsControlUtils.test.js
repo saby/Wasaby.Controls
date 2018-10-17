@@ -37,10 +37,8 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             cfg1 = {
                itemsSortMethod : sortFnc,
                itemsFilterMethod : filterFnc,
-               itemsGroup : {
-                  method : groupFnc
-               }
-            }
+               groupMethod: groupFnc
+            };
          });
          
          describe('ItemsUtil', function () {

@@ -93,8 +93,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
             }
-            if (config.itemsGroup && config.itemsGroup.template) {
-               this._groupTemplate = config.itemsGroup.template;
+            if (config.groupTemplate) {
+               this._groupTemplate = config.groupTemplate;
             }
 
             if (config.showHeader) {
@@ -132,7 +132,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
-                  itemsGroup: newOptions.itemsGroup
+                  groupTemplate: newOptions.groupTemplate,
+                  groupMethod: newOptions.groupMethod,
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                _private.setPopupOptions(this, newOptions);
