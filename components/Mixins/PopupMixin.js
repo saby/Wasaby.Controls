@@ -286,9 +286,15 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                if (self.isVisible()) {
                   // на vdom динамически меняется zindex попапов.
                   // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
-                  cWindowManager.releaseZIndex(self._zIndex);
-                  self._container.css('z-index', self._getZIndex());
-                  ModalOverlay.adjust(self.isModal() ? self._zIndex : null);
+                  var oldZIndex = self._zIndex;
+                  if (oldZIndex !== self._getZIndex()) {
+                     // Говорим core.WM что такого zindex больше нет
+                     cWindowManager.releaseZIndex(oldZIndex);
+                     self._container.css('z-index', self._zIndex);
+                     if (self.isModal()) {
+                        ModalOverlay.adjust(self._zIndex);
+                     }
+                  }
                }
             }, VDOM_POPUP_RECAL_ZINDEX_INTERVAL);
          }
@@ -1277,12 +1283,19 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          } else {
             var openerPopupZIndex = this._getOpenerZIndex();
+            cWindowManager.releaseZIndex(this._zIndex);
             if (openerPopupZIndex) {
                this._zIndex = parseInt(openerPopupZIndex, 10) + 1; //Выше vdom-окна, над которым открывается попап
             } else {
                //zIndex vdom контролов начинается с 10. если опенер лежит не в панели, все открываемые
                //vdom-окна должны быть выше текущего попапа
                this._zIndex = 9;
+            }
+
+            // Добавляем в Core.WM информацию о текущем zindex модального попапа напрямую, т.к. сами его высчитали
+            // Core.WM публичным api не позволяет задавать zindex, т.к. по своей логиче высчитывает их сам
+            if (this.isModal() && cWindowManager._modalIndexes && cWindowManager._modalIndexes.push) {
+               cWindowManager._modalIndexes.push(this._zIndex);
             }
          }
          return this._zIndex;

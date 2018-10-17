@@ -8,7 +8,7 @@ define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"
      * @name File/LocalFile
      * @public
      * @author Заляев А.В.
-     * @implements File/IResource
+     * @implements {File/IResource}
      */
     var LocalFile = /** @class */ (function (_super) {
         tslib_1.__extends(LocalFile, _super);

@@ -1,10 +1,12 @@
 define("File/Driver/URL", ["require", "exports", "Core/detection"], function (require, exports, detection) {
     "use strict";
     /**
+     * Файловый драйвер для скачивания файлов по URL
      * @public
-     * @class File/Driver/URL
+     * @class
      * @author Ибрагимов А.А
-     * @description Файловый драйвер для скачивания файлов по URL
+     * @implements {File/Driver/Interface}
+     * @example
      * <pre>
      * require(['File/Driver/URL'], function(URLDriver) {
      *    var url_document = "/file-transfer/file.pdf"

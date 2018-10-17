@@ -16,6 +16,7 @@ define('Controls-demo/Explorer/Explorer', [
          _viewMode: 'table',
          _selectedKeys: [],
          _excludedKeys: [],
+         _changeViewIcon: 'icon-ArrangePreview',
          _beforeMount: function() {
             this._viewColumns = [
                {
@@ -118,6 +119,10 @@ define('Controls-demo/Explorer/Explorer', [
                   isDocument: true
                }]
             });
+         },
+         _changeViewMode: function() {
+            this._viewMode = this._viewMode === 'tile' ? 'table' : 'tile';
+            this._changeViewIcon = this._viewMode === 'tile' ? 'icon-ArrangeList' : 'icon-ArrangePreview';
          }
       });
 
