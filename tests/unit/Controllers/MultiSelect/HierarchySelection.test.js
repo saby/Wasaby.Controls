@@ -67,7 +67,8 @@ define([
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
-            items: allData
+            items: allData,
+            keyProperty: 'id'
          };
          selectionInstance = new HierarchySelection(cfg);
          selection = selectionInstance.getSelection();
@@ -82,7 +83,8 @@ define([
                cfg = {
                   selectedKeys: [],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -100,7 +102,8 @@ define([
                cfg = {
                   selectedKeys: [],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -123,7 +126,8 @@ define([
                cfg = {
                   selectedKeys: [],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -151,7 +155,8 @@ define([
                cfg = {
                   selectedKeys: [],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -169,7 +174,8 @@ define([
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [2, 5],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -199,7 +205,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -219,7 +226,8 @@ define([
                cfg = {
                   selectedKeys: [2],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -239,7 +247,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [3],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -259,7 +268,8 @@ define([
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [3],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -279,7 +289,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -305,7 +316,8 @@ define([
                cfg = {
                   selectedKeys: [null],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -361,7 +373,8 @@ define([
                cfg = {
                   selectedKeys: [1],
                   excludedKeys: [],
-                  items: allData
+                  items: allData,
+                  keyProperty: 'id'
                };
                selectionInstance = new HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -393,7 +406,8 @@ define([
                items: new RecordSet({
                   rawData: itemsWithDuplicateIds,
                   idProperty: 'id'
-               })
+               }),
+               keyProperty: 'id'
             };
             selectionInstance = new HierarchySelection(cfg);
             selection = selectionInstance.getSelection();

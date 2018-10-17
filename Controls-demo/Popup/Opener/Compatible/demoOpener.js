@@ -57,28 +57,28 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
                {title: 'right'}
             ];
             this._widthItems = [
-               {title: 500},
-               {title: 550},
-               {title: 600},
-               {title: 650},
-               {title: 700},
-               {title: 750}
+               {title: '500'},
+               {title: '550'},
+               {title: '600'},
+               {title: '650'},
+               {title: '700'},
+               {title: '750'}
             ];
             this._heightItems = [
-               {title: 150},
-               {title: 200},
-               {title: 250},
-               {title: 300},
-               {title: 350},
-               {title: 400}
+               {title: '150'},
+               {title: '200'},
+               {title: '250'},
+               {title: '300'},
+               {title: '350'},
+               {title: '400'}
             ];
             this._offsetItems = [
-               {title: -150},
-               {title: -100},
-               {title: -50},
-               {title: 50},
-               {title: 100},
-               {title: 150}
+               {title: '-150'},
+               {title: '-100'},
+               {title: '-50'},
+               {title: '50'},
+               {title: '100'},
+               {title: '150'}
             ];
          },
 
