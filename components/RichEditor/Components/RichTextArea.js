@@ -1800,7 +1800,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                var isFound;
                var caret;
                // Cлужебных контейнеров зоны ввода может быть несколько, вложенных один в другой - убрать их все
-               while (caret = dom.getParent(node, '[data-mce-type="format-caret"]')) {
+               while ((caret = dom.getParent(node, '[data-mce-type="format-caret"]'))) {
                   dom.remove(caret, true);
                   isFound = true;
                }
