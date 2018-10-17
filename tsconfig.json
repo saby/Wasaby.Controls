@@ -3,7 +3,7 @@
     "module": "amd",
     "moduleResolution": "classic",
     "target": "es5",
-    "lib": ["DOM", "ES5", "es2015"],
+    "lib": ["dom", "es5", "es2015"],
     "declaration": false,
     "noImplicitAny": false,
     "stripInternal": true,
@@ -11,12 +11,15 @@
     "alwaysStrict": true,
     "traceResolution": true,
     "baseUrl": "./",
+    "pretty": false,
     "diagnostics": true,
     "locale": "ru",
     "importHelpers": true,
     "experimentalDecorators": true
   },
   "include": [
-    "Controls/**/*.ts"
+    "Controls/**/*.ts",
+    "File/**/*.ts",
+    "File/*"
   ]
 }

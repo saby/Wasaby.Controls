@@ -85,5 +85,17 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'WS.Data/Collection/Reco
          treeTileViewModel.setRoot('root');
          assert.equal(treeTileViewModel.getHoveredItem(), null);
       });
+
+      it('getTileItemData', function() {
+         var tileItemData = treeTileViewModel.getTileItemData();
+         assert.deepEqual(tileItemData, {
+            defaultFolderWidth: 250,
+            defaultItemWidth: 250,
+            imageProperty: 'image',
+            itemCompressionCoefficient: 0.7,
+            itemsHeight: 200,
+            tileMode: 'dynamic'
+         });
+      });
    });
 });
