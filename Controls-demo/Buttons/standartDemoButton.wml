@@ -1,7 +1,7 @@
 <div class="demo-Button__wrapper">
     <h1>Button</h1>
     <h2>Default button</h2>
-    <div attr:class="demo-Button_margin-10">
+    <div attr:class="demo-Button_margin-10 ControlsDemo__small-text">
         <h3>Small button</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__small">
             <div attr:class="test_element_two_column">
@@ -12,7 +12,7 @@
             </div>
         </div>
     </div>
-    <div attr:class="demo-Button_margin-10">
+    <div attr:class="demo-Button_margin-10 ControlsDemo__big-text">
         <h3>Big button</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__big">
             <div attr:class="test_element_two_column">
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <div attr:class="demo-Button_margin-10">
+    <div attr:class="demo-Button_margin-10 ControlsDemo__icon-text">
         <h3>Button with icon</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__icon">
             <div attr:class="test_element_two_column">
@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div attr:class="demo-Button_margin-10">
+    <div attr:class="demo-Button_margin-10 ControlsDemo__iconText-text">
         <h3>Button with icon and text</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__iconText">
             <div attr:class="test_element_two_column">
