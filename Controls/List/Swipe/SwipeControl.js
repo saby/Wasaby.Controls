@@ -53,7 +53,7 @@ define('Controls/List/Swipe/SwipeControl', [
       },
 
       getMeasurerModuleName: function(viewName) {
-         return viewName.indexOf('TileView') !== -1 ? 'Controls/List/Swipe/Tile' : 'Controls/List/Swipe/List';
+         return 'Controls/List/Swipe/' + viewName;
       }
    };
 
@@ -75,7 +75,7 @@ define('Controls/List/Swipe/SwipeControl', [
          if (newOptions.listModel) {
             _private.updateModel(this, newOptions);
          }
-         require([_private.getMeasurerModuleName(newOptions.viewName)], function(result) {
+         require([_private.getMeasurerModuleName(newOptions.viewName.indexOf('TileView') !== -1 ? 'Tile' : 'List')], function(result) {
             self._measurer = result;
             def.callback();
          });
@@ -103,7 +103,7 @@ define('Controls/List/Swipe/SwipeControl', [
          if (this._options.viewName !== newOptions.viewName) {
             // TODO: убрать определение measurer после того, как стандарты свайпа в плитке и в списках сделают одинаковыми.
             // Поручение: https://online.sbis.ru/opendoc.html?guid=fe815afd-db06-476a-ac50-d9a647a84cd3
-            require([_private.getMeasurerModuleName(newOptions.viewName)], function(result) {
+            require([_private.getMeasurerModuleName(newOptions.viewName.indexOf('TileView') !== -1 ? 'Tile' : 'List')], function(result) {
                self._measurer = result;
                self._forceUpdate();
             });
