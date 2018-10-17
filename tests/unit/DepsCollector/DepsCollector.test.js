@@ -10,6 +10,7 @@ define([
       "css!theme?aaat/dddt": [],
       "ccc/aaa": ["ccc/ccc", "css"],
       "ccc/ccc": ["ddd/aaa"],
+      "js/tmpl": ["tmpl!tmplDep"],
       "css": [],
       "ccc/bbb": [],
       "xxx/aaa": [],
@@ -29,6 +30,7 @@ define([
       "vvv/bbb": "resources/bdl/ccc.package.min.js",
       "ccc/aaa": "resources/bdl/ddd.package.min.js",
       "ccc/ccc": "resources/bdl/eee.package.min.js",
+      "js/tmplDep": "resources/jstmplbdl/tmpldep.package.min.js",
       "css": "resources/bdl/ggg.package.min.js",
       "ddd/aaa": "resources/bdl/hhh.package.min.js",
       "xxx/aaa": "resources/bdl/jjj.package.min.js"
@@ -81,6 +83,15 @@ define([
       it('ext tmpl', function() {
          var deps = depsCollectorWithThemes.collectDependencies(["tmpl!xxx/aaa"]);
          assert.deepEqual(deps.tmpl, ["xxx/aaa"]);
+      });
+      it('tmpl in js bundle', function() {
+         var deps = depsCollectorWithThemes.collectDependencies(["js/tmpl"]);
+         assert.deepEqual(deps.js, ["xxx/aaa"]);
+      });
+      it('tmpl in js bundle', function() {
+         var deps = depsCollectorWithThemes.collectDependencies(["js/tmpl"]);
+         assert.deepEqual(deps.js, ["jstmplbdl/tmpldep.package"]);
+         assert.deepEqual(deps.tmpl, []);
       });
    });
 });

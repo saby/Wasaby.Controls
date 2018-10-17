@@ -13,20 +13,21 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          plugin: 'tmpl',
          hasDeps: true,
          hasPacket: false,
-         canBePackedInJs: true
+         canBePackedInParent: true
       },
       js: {
          type: 'js',
          plugin: '',
          hasDeps: true,
-         hasPacket: true
+         hasPacket: true,
+         packOwnDeps: true
       },
       wml: {
          type: 'wml',
          plugin: 'wml',
          hasDeps: true,
          hasPacket: false,
-         canBePackedInJs: true
+         canBePackedInParent: true
       },
       css: {
          type: 'css',
@@ -159,7 +160,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
     * @param curNodeDeps
     * @param modDeps
     */
-   function recursiveWalker(allDeps, curNodeDeps, modDeps, modInfo) {
+   function recursiveWalker(allDeps, curNodeDeps, modDeps, modInfo, skipDep) {
       if (curNodeDeps && curNodeDeps.length) {
          for (var i = 0; i < curNodeDeps.length; i++) {
             var node = curNodeDeps[i];
@@ -178,10 +179,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                   allDeps[moduleType] = {};
                }
                if (!allDeps[moduleType][node]) {
-                  allDeps[moduleType][module.fullName] = module;
+                  if (!(skipDep && !!module.typeInfo.canBePackedInParent)) {
+                     allDeps[moduleType][module.fullName] = module;
+                  }
                   if (module.typeInfo.hasDeps) {
                      var nodeDeps = modDeps[node];
-                     recursiveWalker(allDeps, nodeDeps, modDeps, modInfo);
+                     recursiveWalker(allDeps, nodeDeps, modDeps, modInfo, !!module.typeInfo.packOwnDeps);
                   }
                }
             }

@@ -5,9 +5,10 @@ define('Controls/Application/HeadDataContext', [
    'Core/cookie',
    'View/Runner/common',
    'Core/Themes/ThemesController',
-   'Core/Serializer'
+   'Core/Serializer',
+   'Core/IoC'
 
-], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer) {
+], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer, IoC) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -105,11 +106,13 @@ define('Controls/Application/HeadDataContext', [
                   additionalDepsArray.push(key);
                }
             }
+            IoC.resolve('ILogger').error('Additional deps array: ' + additionalDepsArray);
 
             // Костыль. Чтобы сериализовать receivedState, нужно собрать зависимости, т.к. в receivedState у компонента
             // Application сейчас будет список css, для восстановления состояния с сервера.
             // Но собирать зависимости нам нужно после receivedState, потому что в нем могут тоже могут быть зависимости
             var additionalDeps = depsCollector.collectDependencies(additionalDepsArray);
+
             files.js = files.js || [];
             for (var i = 0; i < additionalDeps.js.length; i++) {
                if (!~files.js.indexOf(additionalDeps.js[i])) {
