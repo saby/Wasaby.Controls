@@ -29,6 +29,7 @@ let Model: IFileModel = DataModel.extend({
 
     /**
      * Возвращает оригинал загружаемого ресурса
+     * @name File/Attach/Model#getOrigin
      * @return {File/IResource}
      */
     getOrigin(): IResource {
@@ -37,6 +38,7 @@ let Model: IFileModel = DataModel.extend({
 
     /**
      * Возвращает имя загружаемого ресурса
+     * @name File/Attach/Model#getName
      * @return {String}
      */
     getName(): string {
