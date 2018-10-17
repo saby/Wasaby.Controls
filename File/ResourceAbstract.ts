@@ -5,7 +5,7 @@ import {IResource, FileInfo} from 'File/IResource';
  * Абстрактный класс, реализующий интерфейс работы с ресурсами {@link File/IResource}
  * @class
  * @abstract
- * @implements File/IResource
+ * @implements {File/IResource}
  * @name File/ResourceAbstract
  * @author Заляев А.В.
  */
