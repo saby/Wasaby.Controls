@@ -10,7 +10,7 @@ define([
       "css!theme?aaat/dddt": [],
       "ccc/aaa": ["ccc/ccc", "css"],
       "ccc/ccc": ["ddd/aaa"],
-      "js/tmpl": ["tmpl!tmplDep"],
+      "js/tmplDep": ["tmpl!tmplDep"],
       "css": [],
       "ccc/bbb": [],
       "xxx/aaa": [],
@@ -85,11 +85,7 @@ define([
          assert.deepEqual(deps.tmpl, ["xxx/aaa"]);
       });
       it('tmpl in js bundle', function() {
-         var deps = depsCollectorWithThemes.collectDependencies(["js/tmpl"]);
-         assert.deepEqual(deps.js, ["xxx/aaa"]);
-      });
-      it('tmpl in js bundle', function() {
-         var deps = depsCollectorWithThemes.collectDependencies(["js/tmpl"]);
+         var deps = depsCollectorWithThemes.collectDependencies(["js/tmplDep"]);
          assert.deepEqual(deps.js, ["jstmplbdl/tmpldep.package"]);
          assert.deepEqual(deps.tmpl, []);
       });
