@@ -1,0 +1,27 @@
+<div class="ProgressBarDemo">
+   <div class="ProgressBarDemo__content">
+      <p>
+         <Controls.Indicator.ProgressBar
+            class="ProgressBarDemo__progressBar"
+            infoLeft="left info"
+            infoRight="right info"
+            currentValue="{{ _currentValue }}"
+            totalValue="{{ _totalValue }}"
+            barSmoothMotion="{{ _barSmoothMotion }}"
+         />
+      </p>
+      <br/>
+      <p>
+         totalValue <Controls.Input.Number bind:value="_totalValue" precision="{{0}}" />
+      </p>
+      <br/>
+      <p>
+         currentValue <Controls.Input.Number bind:value="_currentValue" precision="{{0}}" />
+      </p>
+      <br/>
+      <p>
+         barSmoothMotion <Controls.Toggle.Checkbox bind:value="_barSmoothMotion" />
+      </p>
+
+   </div>
+</div>

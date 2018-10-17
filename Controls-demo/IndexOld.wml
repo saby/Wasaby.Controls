@@ -239,5 +239,8 @@
       <a href="/Controls-demo/demo.html?withoutLayout=true&cname=Controls-demo/FormController/FormController&theme=online">
          FormController
       </a>
+
+      <h1>Indicator</h1>
+      <a href="/Controls-demo/demo.html?cname=Controls-demo/Indicator/ProgressBar/ProgressBar">Progress</a>
    </div>
 </div>
