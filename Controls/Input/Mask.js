@@ -119,9 +119,8 @@ define('Controls/Input/Mask',
                   position = value.indexOf(replacer);
 
                   return position === -1 ? value.length : position;
-               } else {
-                  return value.length;
                }
+               return value.length;
             },
 
             /**
