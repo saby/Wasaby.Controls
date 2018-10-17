@@ -14,8 +14,8 @@ define('Controls/Filter/Button',
 
    function(Control, template, Chain, Utils, Deferred, isEqual) {
       /**
-       * Control for data filtering. Consists of a filter button and a filter string.
-       * Clicking on a control opens the panel. {@link Controls/Filter/Button/Panel}
+       * Control for data filtering. Consists of an icon-button and a string representation of the filter.
+       * Clicking on a icon-button or a string opens the panel. {@link Controls/Filter/Button/Panel}
        * Supports the insertion of a custom template between the button and the filter string.
        * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>here</a>.
        * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
