@@ -1,7 +1,13 @@
 /// <amd-module name='File/Driver/Blob' />
 import Interface = require('File/Driver/Interface');
 import detection = require('Core/detection');
-
+/**
+ * Файловый драйвер для скачивания Blob файлов
+ * @public
+ * @class 
+ * @implements {File/Driver/Interface}
+ * @author Ибрагимов А.А
+ */
 class BlobDriver implements Interface.FileDriver {
     private name: string = 'no_name_blob';
 

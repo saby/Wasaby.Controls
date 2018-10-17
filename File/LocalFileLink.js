@@ -8,7 +8,7 @@ define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstr
      * @name File/LocalFileLink
      * @public
      * @author Заляев А.В.
-     * @implements File/IResource
+     * @implements {File/IResource}
      */
     var LocalFileLink = /** @class */ (function (_super) {
         tslib_1.__extends(LocalFileLink, _super);

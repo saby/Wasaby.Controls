@@ -5,7 +5,7 @@ define("File/ResourceAbstract", ["require", "exports"], function (require, expor
      * Абстрактный класс, реализующий интерфейс работы с ресурсами {@link File/IResource}
      * @class
      * @abstract
-     * @implements File/IResource
+     * @implements {File/IResource}
      * @name File/ResourceAbstract
      * @author Заляев А.В.
      */
