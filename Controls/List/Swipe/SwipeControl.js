@@ -4,6 +4,7 @@ define('Controls/List/Swipe/SwipeControl', [
    'Controls/Application/TouchDetector/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Core/Deferred',
+   'WS.Data/Type/descriptor',
    'Controls/Utils/Toolbar',
    'css!Controls/List/Swipe/Swipe'
 ], function(
@@ -11,9 +12,15 @@ define('Controls/List/Swipe/SwipeControl', [
    template,
    TouchContextField,
    aUtil,
-   Deferred
+   Deferred,
+   types
 ) {
    'use strict';
+
+   var MEASURER_NAMES = {
+      tile: 'Controls/List/Swipe/Tile',
+      table: 'Controls/List/Swipe/List'
+   };
 
    var _private = {
       notifyAndResetSwipe: function(self) {
@@ -50,10 +57,6 @@ define('Controls/List/Swipe/SwipeControl', [
             listModel.setItemActions(itemData.item, self._measurer.initItemsForSwipe(itemData.itemActions, actionsHeight, self._swipeConfig.type));
          }
          self._animationState = 'open';
-      },
-
-      getMeasurerModuleName: function(viewName) {
-         return 'Controls/List/Swipe/' + viewName;
       }
    };
 
@@ -75,7 +78,7 @@ define('Controls/List/Swipe/SwipeControl', [
          if (newOptions.listModel) {
             _private.updateModel(this, newOptions);
          }
-         require([_private.getMeasurerModuleName(newOptions.viewName.indexOf('TileView') !== -1 ? 'Tile' : 'List')], function(result) {
+         require([MEASURER_NAMES[newOptions.swipeViewMode]], function(result) {
             self._measurer = result;
             def.callback();
          });
@@ -103,7 +106,7 @@ define('Controls/List/Swipe/SwipeControl', [
          if (this._options.viewName !== newOptions.viewName) {
             // TODO: убрать определение measurer после того, как стандарты свайпа в плитке и в списках сделают одинаковыми.
             // Поручение: https://online.sbis.ru/opendoc.html?guid=fe815afd-db06-476a-ac50-d9a647a84cd3
-            require([_private.getMeasurerModuleName(newOptions.viewName.indexOf('TileView') !== -1 ? 'Tile' : 'List')], function(result) {
+            require([MEASURER_NAMES[newOptions.swipeViewMode]], function(result) {
                self._measurer = result;
                self._forceUpdate();
             });
@@ -156,6 +159,21 @@ define('Controls/List/Swipe/SwipeControl', [
          }
       }
    });
+
+   SwipeControl.getDefaultOptions = function() {
+      return {
+         swipeViewMode: 'table'
+      };
+   };
+
+   SwipeControl.getOptionTypes = function() {
+      return {
+         swipeViewMode: types(String).oneOf([
+            'list',
+            'table'
+         ])
+      };
+   };
 
    SwipeControl.contextTypes = function contextTypes() {
       return {

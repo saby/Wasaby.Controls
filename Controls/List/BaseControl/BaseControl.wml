@@ -84,6 +84,7 @@
                          menuIsShown="{{_menuIsShown}}"
                          viewName="{{ _options.viewName }}"
                          listModel="{{_listViewModel}}"
+                         swipeViewMode="{{_options.swipeViewMode}}"
                          itemActions="{{_options.itemActions}}"
                          name="swipeControl">
                 <Controls.Container.Async name="itemActionsContainer" templateName="Controls/List/ItemActions/ItemActionsControl">
