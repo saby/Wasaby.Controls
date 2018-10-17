@@ -79,6 +79,9 @@ define('Controls/Search/Controller',
        * @class Controls/Search/Controller
        * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
        * @author Герасимов Александр
        * @control
        * @public
