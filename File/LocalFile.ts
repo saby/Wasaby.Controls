@@ -12,7 +12,7 @@ interface Info extends FileInfo {
  * @name File/LocalFile
  * @public
  * @author Заляев А.В.
- * @implements File/IResource
+ * @implements {File/IResource}
  */
 class LocalFile extends ResourceAbstract {
     /**

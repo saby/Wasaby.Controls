@@ -9,7 +9,7 @@ import {FileInfo} from 'File/IResource';
  * @name File/LocalFileLink
  * @public
  * @author Заляев А.В.
- * @implements File/IResource
+ * @implements {File/IResource}
  */
 class LocalFileLink extends ResourceAbstract {
     /**
