@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    <h2>Button-link</h2>
+    <h2 class="ControlsDemo__Button-link-text">Button-link</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__Button-link">
         <h3>Simple button-link</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__simpleLink">
@@ -71,8 +71,8 @@
             <Controls.List.AddButton attr:test_name="add_button_1" readOnly="{{false}}" caption="Nomination"/>
         </div>
     </div>
-    <h2>Button-icon</h2>
-    <div attr:class="demo-Button_margin-10">
+    <h2 class="ControlsDemo__Button-icon-text">Button-icon</h2>
+    <div attr:class="demo-Button_margin-10 ControlsDemo__Button-icon">
         <h3>Simple button-icon</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__simpleIcon">
             <div attr:class="test_element_three_column">
@@ -211,7 +211,7 @@
             </div>
         </div>
     </div>
-    <h2>Typical</h2>
+    <h2 class="ControlsDemo__typical-text">Typical</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__typical">
         <div attr:class="test_element_three_column">
             <h4>Button-icon 16px</h4>
@@ -343,7 +343,7 @@
             </div>
         </div>
     </div>
-    <h2>Text link</h2>
+    <h2 class="ControlsDemo__textLink-text">Text link</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__textLink">
         Today the site with the <a attr:class="asLink" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
     </div>
