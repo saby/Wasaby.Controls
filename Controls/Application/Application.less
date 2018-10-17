@@ -1,3 +1,23 @@
 .pre-load {
    pointer-events: none;
 }
+.theme-changing {
+   //transition: opacity .25s ease-in-out;
+   //-moz-transition: opacity .25s ease-in-out;
+   //-webkit-transition: opacity .25s ease-in-out;
+   opacity: 0.2;
+   pointer-events: none;
+}
+#theme-changing-overlay {
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   top: 0;
+   left: 0;
+   transition: background-color .25s ease-in-out;
+   -moz-transition: background-color .25s ease-in-out;
+   -webkit-transition: background-color .25s ease-in-out;
+   background-color: rgb(255, 255, 255); /* Black background with opacity */
+   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+   cursor: pointer; /* Add a pointer on hover */
+}

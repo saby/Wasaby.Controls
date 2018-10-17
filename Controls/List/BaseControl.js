@@ -13,7 +13,7 @@ define('Controls/List/BaseControl', [
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
 
-   'css!Controls/List/BaseControl/BaseControl'
+   'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
    cClone,
