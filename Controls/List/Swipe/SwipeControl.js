@@ -103,7 +103,7 @@ define('Controls/List/Swipe/SwipeControl', [
             _private.updateModel(this, newOptions);
          }
 
-         if (this._options.viewName !== newOptions.viewName) {
+         if (this._options.swipeViewMode !== newOptions.swipeViewMode) {
             // TODO: убрать определение measurer после того, как стандарты свайпа в плитке и в списках сделают одинаковыми.
             // Поручение: https://online.sbis.ru/opendoc.html?guid=fe815afd-db06-476a-ac50-d9a647a84cd3
             require([MEASURER_NAMES[newOptions.swipeViewMode]], function(result) {
@@ -169,8 +169,8 @@ define('Controls/List/Swipe/SwipeControl', [
    SwipeControl.getOptionTypes = function() {
       return {
          swipeViewMode: types(String).oneOf([
-            'list',
-            'table'
+            'table',
+            'tile'
          ])
       };
    };
