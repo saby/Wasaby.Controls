@@ -1,0 +1,38 @@
+<div style="width:250px; display: flex; padding: 20px;">
+    <Controls.Validate.Input   name="InputValidate" >
+    <ws:validators>
+        <ws:Function value="{{_value }}">Controls/Validate/Validators/IsRequired</ws:Function>
+    </ws:validators>
+    <ws:content>
+        <Controls.Input.Text
+                name="textBox"
+                bind:value="_value"
+                placeholder="{{_placeholder}}"
+                tagStyle="primary"
+                validationErrors="{{_validationErrors}}"
+                on:valueChanged="_eventHandler()"
+                on:inputCompleted="_eventHandler()"
+                readOnly="{{ _readOnly }}"
+                attr:class="demo-TextBox ControlsDemo-Text__demo"
+        />
+    </ws:content>
+</Controls.Validate.Input>
+    <Controls.Validate.Input   name="InputValidate" >
+        <ws:validators>
+            <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsRequired</ws:Function>
+        </ws:validators>
+        <ws:content>
+            <Controls.Input.Text
+                    name="textBox2"
+                    bind:value="_value2"
+                    placeholder="{{_placeholder}}"
+                    tagStyle="primary"
+                    validationErrors="{{_validationErrors}}"
+                    on:valueChanged="_eventHandler()"
+                    on:inputCompleted="_eventHandler()"
+                    readOnly="{{ _readOnly }}"
+                    attr:class="demo-TextBox ControlsDemo-Text__demo"
+            />
+        </ws:content>
+    </Controls.Validate.Input>
+</div>
