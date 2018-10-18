@@ -107,5 +107,7 @@ define('Controls/Input/ComboBox',
          };
       };
 
+      ComboBox._private = _private;
+
       return ComboBox;
    });
