@@ -70,7 +70,7 @@
     },
     {
       "name": "tests",
-      "path": "%cd%/tests"
+      "path": "%cd%/tests/unit"
     },
     {
       "name": "File",
