@@ -2,7 +2,7 @@ define(
    [
       'Controls/StickyHeader',
       'Controls/StickyHeader/Context',
-      'tests/unit/resources/TemplateUtil',
+      'tests/resources/TemplateUtil',
       'Controls/StickyHeader/_StickyHeader'
    ],
    function(StickyHeader, Context, TemplateUtil, _StickyHeader) {
