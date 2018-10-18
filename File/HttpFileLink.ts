@@ -9,7 +9,7 @@ import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
  * @name File/HttpFileLink
  * @public
  * @author Заляев А.В.
- * @implements File/IResource
+ * @implements {File/IResource}
  */
 class HttpFileLink extends ResourceAbstract {
     /**
