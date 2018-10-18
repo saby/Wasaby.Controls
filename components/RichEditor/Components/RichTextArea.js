@@ -813,9 +813,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _updateJson: function (e, text) {
                // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
-               if (text[0] !== '<') {
-                  text = '<p>' + text + '</p>';
-               }
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
                text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
