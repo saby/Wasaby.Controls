@@ -11,7 +11,7 @@ const config = require('./package.json').config;
 
 app.run({
    moduleType: 'amd',
-   root: './',
+   root: './application',
    ws: 'WS.Core',
    tests: 'tests',
    reportFile: process.env.test_report || config.test_report
