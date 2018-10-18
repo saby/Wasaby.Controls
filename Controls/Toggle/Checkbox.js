@@ -29,7 +29,7 @@ define('Controls/Toggle/Checkbox', [
     * @variant True Enable triState.
     * @variant False Disable triState.
     * @default False
-    * @remark If the threeState mode is set, then the value can be null.
+    * @remark If the triState mode is set, then the value can be null.
     * @example
     * Checkbox with enabled triState.
     * <pre>
@@ -52,7 +52,7 @@ define('Controls/Toggle/Checkbox', [
     * @cfg {Boolean|null} Current value, it's determines current state.
     * @variant True Selected checkbox state.
     * @variant False Unselected checkbox state. It is default state.
-    * @variant Null Tristate checkbox state.
+    * @variant Null TriState checkbox state.
     * @default False
     * @remark Variant null of value this option is possible only when the triState option is enabled.
     * @example
