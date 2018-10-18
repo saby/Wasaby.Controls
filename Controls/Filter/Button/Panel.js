@@ -50,11 +50,12 @@ define('Controls/Filter/Button/Panel', [
    var _private = {
 
       resolveItems: function(self, options, context) {
-         if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
-            self._contextOptions = context.filterPanelOptionsField.options;
+         if (options.items) {
+            self._items = this.cloneItems(options.items);
+         } else if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
          } else {
-            self._items = this.cloneItems(options.items);
+            throw new Error('Controls/Filter/Button/Panel::items option is required');
          }
       },
 
