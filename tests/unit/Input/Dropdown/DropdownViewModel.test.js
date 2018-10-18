@@ -56,6 +56,23 @@ define(
                }
             ]
          });
+         const rs2 = new RecordSet({
+            idProperty: 'id',
+            rawData: [
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ]
+         });
 
          let config = {
             items: rs,
@@ -65,9 +82,17 @@ define(
             selectedKeys: '3',
             rootKey: null
          };
+         const config2 = {
+            items: rs2,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: '@parent',
+            selectedKeys: '3',
+            rootKey: null
+         };
 
          let viewModel = new DropdownViewModel(config);
-         let viewModel2 = new DropdownViewModel(config);
+         let viewModel2 = new DropdownViewModel(config2);
 
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._display.getCount(), 3);
@@ -77,6 +102,11 @@ define(
             viewModel._options.nodeProperty = null;
             viewModel.setFilter(viewModel.getDisplayFilter());
             assert.equal(viewModel._itemsModel._display.getCount(), 8);
+         });
+
+         it('parentProperty is set but items don\'t have it', () => {
+            viewModel2.setFilter(viewModel2.getDisplayFilter());
+            assert.equal(viewModel2._itemsModel._display.getCount(), 3);
          });
 
          it('check additional', () => {

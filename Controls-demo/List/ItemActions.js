@@ -5,13 +5,11 @@ define('Controls-demo/List/ItemActions', [
    'Core/Control',
    'wml!Controls-demo/List/ItemActions/ItemActions',
    'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet',
    'css!Controls-demo/List/ItemActions/ItemActions'
-], function(BaseControl,
+], function(
+   BaseControl,
    template,
-   MemorySource,
-   RecordSet
-
+   MemorySource
 ) {
    'use strict';
    var showType = {
@@ -64,6 +62,8 @@ define('Controls-demo/List/ItemActions', [
             id: 2,
             icon: 'icon-EmptyMessage',
             title: 'message',
+            parent: null,
+            'parent@': true,
             handler: function() {
                alert('Message Click');
             }
@@ -73,6 +73,8 @@ define('Controls-demo/List/ItemActions', [
             icon: 'icon-Profile',
             title: 'profile',
             showType: showType.MENU_TOOLBAR,
+            parent: 2,
+            'parent@': null,
             handler: function() {
                console.log('action profile Click');
             }
@@ -88,8 +90,6 @@ define('Controls-demo/List/ItemActions', [
             }
          }
       ];
-
-
 
    var ModuleClass = BaseControl.extend(
       {
