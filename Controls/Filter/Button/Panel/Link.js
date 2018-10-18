@@ -27,11 +27,5 @@ define('Controls/Filter/Button/Panel/Link', [
 
    });
 
-   FilterLink.getDefaultOptions = function() {
-      return {
-         value: true
-      };
-   };
-
    return FilterLink;
 });
