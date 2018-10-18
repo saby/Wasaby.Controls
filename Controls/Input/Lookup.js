@@ -69,7 +69,6 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
-               _private.notifyItemsChanged(self, result);
                return result;
             })
             .addErrback(function(result) {
@@ -83,6 +82,7 @@ define('Controls/Input/Lookup', [
       notifyChanges: function(self, selectedKeys) {
          _private.notifySelectedKeys(self, selectedKeys);
          _private.notifyItemsChanged(self, _private.getItems(self));
+         _private.notifyTextValueChanged(self, _private.getTextValue(self));
       },
 
       notifyItemsChanged: function(self, items) {
@@ -91,6 +91,10 @@ define('Controls/Input/Lookup', [
 
       notifySelectedKeys: function(self, selectedKeys) {
          self._notify('selectedKeysChanged', [selectedKeys]);
+      },
+
+      notifyTextValueChanged: function(self, textValue) {
+         self._notify('textValueChanged', textValue);
       },
 
       notifyValue: function(self, value) {
@@ -219,13 +223,13 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      getItemsSizes: function(self, items, itemTemplate, readOnly) {
+      getItemsSizes: function(self, items, itemTemplate, readOnly, displayProperty) {
          var
             itemsSizes = [],
             measurer = document.createElement('div');
 
          measurer.innerHTML = itemsTemplate({
-            _options: _private.getCollectionOptions(items, itemTemplate, readOnly)
+            _options: _private.getCollectionOptions(items, itemTemplate, readOnly, displayProperty)
          });
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -238,11 +242,12 @@ define('Controls/Input/Lookup', [
          return itemsSizes;
       },
 
-      getCollectionOptions: function(items, itemTemplate, readOnly) {
+      getCollectionOptions: function(items, itemTemplate, readOnly, displayProperty) {
          return merge({
             items: items,
             itemTemplate: itemTemplate,
-            readOnly: readOnly
+            readOnly: readOnly,
+            displayProperty: displayProperty
          }, Collection.getDefaultOptions(), {
             preferSource: true
          });
@@ -258,6 +263,16 @@ define('Controls/Input/Lookup', [
          }
 
          return lastSelectedItems;
+      },
+
+      getTextValue: function(self) {
+         var titleItems = [];
+
+         _private.getItems(self).each(function(item) {
+            titleItems.push(item.get(self._options.displayProperty));
+         });
+
+         return titleItems.join(', ');
       }
    };
 
@@ -327,14 +342,15 @@ define('Controls/Input/Lookup', [
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               self._forceUpdate();
+               _private.notifyItemsChanged(self, result);
+               _private.notifyTextValueChanged(self, _private.getTextValue(self));
                return result;
             });
          }
 
          if (this._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(this, MAX_VISIBLE_ITEMS);
-            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly);
+            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly, newOptions.displayProperty);
             availableWidth = _private.getAvailableCollectionWidth(this._children.inputRender._container, newOptions.readOnly, newOptions.multiSelect);
             visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(this).getCount() === visibleItems.length;
