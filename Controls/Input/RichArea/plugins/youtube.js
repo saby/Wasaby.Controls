@@ -22,7 +22,7 @@ define('Controls/Input/RichArea/plugins/youtube', [
             return false;
          }
       }, _private = {
-         getYouTubeVideoId(link) {
+         getYouTubeVideoId: function(link) {
             var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
             return link.match(p) ? RegExp.$1 : false;
          },
