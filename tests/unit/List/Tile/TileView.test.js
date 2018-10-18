@@ -262,7 +262,7 @@ define(['Controls/List/TileView/TileView',
          tileView._listModel.setHoveredItem(null);
          tileView._onItemMouseMove(null, {key: 2});
          assert.isFalse(!!tileView._mouseMoveTimeout);
-         assert.equal(tileView._listModel.getHoveredItem().key, 2);
+         assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
          isTouch = false;
