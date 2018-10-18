@@ -385,15 +385,15 @@ define('Controls/List/EditInPlace', [
             ? listModel._prepareDisplayItemForAdd(item)
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
 
-         listModel.reset(); // reset делается для того, чтобы при добавлении не лезть за пределы проекции
          var actions = listModel.getItemActions(item);
-         this._editingItemData = listModel.getCurrent();
-         this._editingItemData.item = this._editingItem;
-         this._editingItemData.dispItem = editingItemProjection;
+         this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
          this._editingItemData.isEditing = true;
-         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
+         this._editingItemData.item = this._editingItem;
          this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length;
-         this._editingItemData.itemActions = this._isAdd ? listModel.getItemActions(item) : {};
+         this._editingItemData.itemActions = this._isAdd ? actions : {};
+         if (this._isAdd) {
+            this._editingItemData.index = index;
+         }
          listModel._setEditingItemData(this._editingItemData);
       },
 
