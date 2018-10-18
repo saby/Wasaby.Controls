@@ -14,6 +14,7 @@
         on:choose="_choose()"
         on:deactivated="_deactivated()"
         suggestTemplate="{{_options.suggestTemplate}}"
+        footerTemplate="{{_options.suggestFooterTemplate}}"
         on:suggestStateChanged="_suggestStateChanged()"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
