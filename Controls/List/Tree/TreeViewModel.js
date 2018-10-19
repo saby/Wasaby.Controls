@@ -109,11 +109,10 @@ define('Controls/List/Tree/TreeViewModel', [
                   if (removedItems[idx].isNode && removedItems[idx].isNode()) {
                      nodeId = removedItems[idx].getContents().getId();
 
-                     // clear only if node removed from items, else this is collapsed node
-                     if (!self._items.getRecordById(nodeId)) {
-                        delete self._expandedNodes[nodeId];
-                        self._notify('onNodeRemoved', nodeId);
-                     }
+                     // If it is necessary to delete only the nodes deleted from the items, add this condition:
+                     // if (!self._items.getRecordById(nodeId)) {
+                     delete self._expandedNodes[nodeId];
+                     self._notify('onNodeRemoved', nodeId);
                   }
                }
             }
