@@ -1,5 +1,5 @@
 <ws:if data="{{menuStyle === 'defaultHead'}}">
-   <div class="controls-DropdownList__head {{horizontalOrientation === 'left' ? 'controls-DropdownList__head-left'}}">
+   <div class="controls-DropdownList__head {{headerClass}}">
       <ws:partial template="{{headContentTemplate || defaultContentHeadTemplate}}" icon="{{icon}}" caption="{{caption}}"/>
    </div>
 </ws:if>

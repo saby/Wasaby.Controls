@@ -46,7 +46,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          keyProperty: 'id',
          nodeProperty: '@parent',
          parentProperty: 'parent',
-         typeShadow: 'suggestionsContainer'
+         typeShadow: 'suggestionsContainer',
          itemTemplateProperty: 'myTemplate'
       };
    };

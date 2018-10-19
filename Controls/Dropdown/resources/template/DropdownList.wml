@@ -1,6 +1,5 @@
 <div class="controls-DropdownList__popup
-            {{_verticalOrientation === 'top' ? 'controls-DropdownList__popup-top'}}
-            controls-DropdownList__popup-shadow-{{_typeShadow}}
+            {{_dropdownClass}}
             {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"
      on:mouseleave="_mouseOutHandler()">
@@ -8,7 +7,7 @@
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
-                  horizontalOrientation="{{_horizontalOrientation}}"
+                  headerClass="{{_headerClass}}"
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>

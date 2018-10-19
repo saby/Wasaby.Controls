@@ -32,11 +32,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          },
 
-         prepareOrientationCfg: function(self, verticalAlign, horizontalAlign) {
-            self._verticalOrientation = verticalAlign.side;
-            self._horizontalOrientation = horizontalAlign.side;
-            self._typeShadow = self._options.typeShadow === 'suggestionsContainer' ? self._options.typeShadow + '-' + verticalAlign.side
-               : self._options.typeShadow;
+         getDropdownClass: function(verticalAlign, typeShadow) {
+            return 'controls-DropdownList__popup-' + verticalAlign.side +
+               ' controls-DropdownList__popup-shadow-' + typeShadow;
+         },
+
+         getDropdownHeaderClass: function(horizontalAlign) {
+            return 'controls-DropdownList__head-' + horizontalAlign.side;
          },
 
          getSubMenuOptions: function(instance, event, item) {
@@ -169,16 +171,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (context && context.stickyCfg.horizontalAlign &&
                (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
-               _private.prepareOrientationCfg(this, context.stickyCfg.verticalAlign, context.stickyCfg.horizontalAlign);
-               _private.setPopupOptions(this, this._horizontalOrientation);
+               this._dropdownClass = _private.getDropdownClass(context.stickyCfg.verticalAlign, newOptions.typeShadow);
+               this._headerClass = _private.getDropdownHeaderClass(context.stickyCfg.horizontalAlign);
+               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign.side);
             }
          },
-
-
-
-
-
-
 
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
