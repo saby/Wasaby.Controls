@@ -4,6 +4,7 @@ define('Controls/Explorer', [
    'Controls/List/SearchView/SearchGridViewModel',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Controls/List/TreeTileView/TreeTileViewModel',
+   'Controls/Utils/tmplNotify',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -12,7 +13,14 @@ define('Controls/Explorer', [
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
-], function(Control, template, SearchGridViewModel, TreeGridViewModel, TreeTileViewModel) {
+], function(
+   Control,
+   template,
+   SearchGridViewModel,
+   TreeGridViewModel,
+   TreeTileViewModel,
+   tmplNotify
+) {
    'use strict';
 
    var
@@ -119,9 +127,7 @@ define('Controls/Explorer', [
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
          _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
       },
-      _notifyHandler: function(e, eventName) {
-         return this._notify(eventName, Array.prototype.slice.call(arguments, 2));
-      }
+      _notifyHandler: tmplNotify
    });
 
    Explorer._private = _private;

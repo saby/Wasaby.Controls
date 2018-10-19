@@ -20,9 +20,8 @@
                     <Controls.List.Container>
                         <Controls.List
                                 name="list"
-                                on:beforeItemEdit="_onBeginEdit()"
-                                on:beforeItemAdd="_onBeginAdd()"
-                                on:beforeItemEndEdit="_onEndEdit()"
+                                on:beforeBeginEdit="_onBeginEdit()"
+                                on:beforeEndEdit="_onEndEdit()"
                                 allowEmptySelection="{{false}}"
                                 itemActionsType="outside"
                                 itemActions="{{_itemActions}}"

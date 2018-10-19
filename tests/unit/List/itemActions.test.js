@@ -127,12 +127,12 @@ define([
          assert.equal(listViewModel._actions[0].showed.length, 4 + 1); // 3-showType.TOOLBAR 1-showType.MENU_TOOLBAR 1 -само menu
       });
 
-      it('updateItemActions editingItem showToolbar', function() {
+      it('updateItemActions editingItem toolbarVisibility', function() {
          var callBackCount = 0;
          var cfg = {
             listModel: listViewModel,
             itemActions: actions,
-            showToolbar: true,
+            toolbarVisibility: true,
             itemActionsPosition: 'outside'
          };
          var ctrl = new ItemActionsControl(cfg);
