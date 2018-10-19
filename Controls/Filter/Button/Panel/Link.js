@@ -22,7 +22,7 @@ define('Controls/Filter/Button/Panel/Link', [
       _template: template,
 
       _clickHandler: function() {
-         this._notify('visibilityChanged');
+         this._notify('visibilityChanged', [true]);
       }
 
    });
