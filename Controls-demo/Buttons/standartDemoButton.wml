@@ -1,6 +1,6 @@
 <div class="demo-Button__wrapper">
     <h1>Button</h1>
-    <h2>Default button</h2>
+    <h2 class="ControlsDemo__Default-button">Default button</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__small-text">
         <h3>Small button</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__small">
