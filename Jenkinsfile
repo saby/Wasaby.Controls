@@ -525,7 +525,9 @@ node('controls') {
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
                         SHOW_CHECK_LOG = True
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
+						[filestostart]
+						test_date_range_slider.py"""
 
                     if ( "${params.theme}" != "online" ) {
                         writeFile file: "./controls/tests/reg/config.ini",
@@ -569,6 +571,8 @@ node('controls') {
                             [regression]
                             IMAGE_DIR = capture
                             RUN_REGRESSION=True
+							[filestostart]
+							test_report_browser.py
                             """
                     }
 
