@@ -9,6 +9,7 @@
    wsRoot="{{wsRoot}}"
    appRoot="{{appRoot}}"
    resourceRoot="{{resourceRoot}}"
+   RUMEnabled="{{ RUMEnabled }}"
    jsLinks="{{ jsLinks }}"
    cssBundles="{{ cssBundles }}"
    servicesPath="{{ servicesPath }}"
