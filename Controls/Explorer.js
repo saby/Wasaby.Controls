@@ -59,6 +59,7 @@ define('Controls/Explorer', [
                self._root = typeof self._options.root !== 'undefined' ? self._options.root : null;
             }
             self._viewMode = viewMode;
+            self._swipeViewMode = viewMode === 'search' ? 'list' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
             self._leftPadding = viewMode === 'search' ? 'search' : undefined;
