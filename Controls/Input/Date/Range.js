@@ -19,6 +19,7 @@ define('Controls/Input/Date/Range', [
 
    /**
     * Control for entering date range.
+    * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
     * @class Controls/Input/Date/Range
     * @mixes Controls/Date/interface/IRange
     * @mixes Controls/Input/interface/IInputDateRange
@@ -26,6 +27,7 @@ define('Controls/Input/Date/Range', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
+    * @demo Controls-demo/Input/Date/RangePG
     * @category Input
     */
 

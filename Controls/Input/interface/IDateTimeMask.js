@@ -42,7 +42,7 @@ define('Controls/Input/interface/IDateTimeMask', [
              * @variant 'YY-MM-DD HH:mm:ss'
              * @variant 'YY-MM-DD HH:mm'
              * @variant 'YYYY'
-             * @variant 'MM/YYYY'
+             * @variant 'MM.YYYY'
              * @default 'DD.MM.YY'
              * @remark
              * Allowed mask chars:
@@ -108,7 +108,7 @@ define('Controls/Input/interface/IDateTimeMask', [
                'YY-MM-DD HH:mm:ss',
                'YY-MM-DD HH:mm',
                'YYYY',
-               'MM/YYYY'
+               'MM.YYYY'
             ])
          };
       }
