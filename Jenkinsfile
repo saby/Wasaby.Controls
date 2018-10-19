@@ -60,11 +60,11 @@ node('controls') {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: true, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
+            booleanParam(defaultValue: true, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: true, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
             booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
@@ -573,6 +573,7 @@ node('controls') {
                             RUN_REGRESSION=True
 							[filestostart]
 							test_report_browser.py
+							test_sticky_header.py
                             """
                     }
 
