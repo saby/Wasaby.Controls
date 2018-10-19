@@ -40,10 +40,13 @@ define(
          });
 
          it('_valueChangedHandler', function() {
-            addParams._valueChangedHandler('valueChanged', 2, undefined);
-            assert.equal(true, addParams._options.items[2].value);
             addParams._valueChangedHandler('valueChanged', 2, 'newValue');
             assert.equal('newValue', addParams._options.items[2].value);
+         });
+
+         it('_visibilityChanged', function() {
+            addParams._visibilityChangedHandler('visibilityChanged', 2);
+            assert.equal(true, addParams._options.items[2].visibility);
          });
 
       });

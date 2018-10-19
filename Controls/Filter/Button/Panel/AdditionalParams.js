@@ -84,11 +84,15 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       },
 
       _valueChangedHandler: function(event, index, value) {
-         if (value) {
-            this._options.items[index].value = value;
-         }
+         this._options.items[index].value = value;
          this._options.items[index].visibility = true;
          this._notify('valueChanged');
+         _private.onResize(this);
+      },
+
+      _visibilityChangedHandler: function(event, index) {
+         this._options.items[index].visibility = true;
+         this._notify('visibilityChanged');
          _private.onResize(this);
       },
 
