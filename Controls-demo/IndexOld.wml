@@ -9,6 +9,11 @@
             <a href="{{content.href}}">Router/RouterController</a>
          </Controls.Router.Link>
       </div>
+      <div>
+         <Controls.Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+            <a href="{{content.href}}">RootRouter</a>
+         </Controls.Router.Link>
+      </div>
 
       <h1>List</h1>
       <div>

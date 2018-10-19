@@ -2,12 +2,21 @@
 import getUrl = require('Transport/URL/getUrl');
 import IoC = require('Core/IoC');
 
+let currentUrl: string = '';
+
 function _validateMask(mask) {
    if (mask.indexOf('/') !== -1 && mask.indexOf('=') !== -1) {
       IoC.resolve('ILogger').error('RouterHelper', 'Wrong mask, check it');
    }
 }
+function setRelativeUrl(url: string) {
+   currentUrl = url;
+}
+
 function getRelativeUrl() {
+   if (currentUrl) {
+      return currentUrl;
+   }
    let url = getUrl();
    url = url.replace(/^http[s]?:\/\//, '');
    const indexOfSlash = url.indexOf('/');
@@ -187,6 +196,7 @@ function calculateHref(mask, cfg) {
 }
 
 export default {
+   setRelativeUrl: setRelativeUrl,
    getRelativeUrl: getRelativeUrl,
    calculateUrlParams: calculateUrlParams,
    calculateCfgParams: calculateCfgParams,

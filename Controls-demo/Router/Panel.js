@@ -11,6 +11,10 @@ define('Controls-demo/Router/Panel',
       var module = Control.extend({
          _template: template,
          myPanels: -1,
+         _beforeMount: function(){
+            this._onCloseHandler = this._onCloseHandler.bind(this);
+            this.myPanels = myPanels++;
+         },
          innChanged: function(e, value) {
             this._notify('innChanged', [value], { bubbling: true });
          },
@@ -18,23 +22,37 @@ define('Controls-demo/Router/Panel',
             this._notify('kppChanged', [value], { bubbling: true });
          },
 
-         successUrl: function() {
+         successUrl: function(event, newLoc, oldLoc) {
             if (!this._mystack) {
-               this._children.stack.open();
+               this._lastUrl = oldLoc.url;
+               this._lastPrettyUrl = oldLoc.prettyUrl;
+               window.requestAnimationFrame(function(){
+                  this._children.stack.open();
+               }.bind(this));
                this._mystack = true;
             }
          },
 
+         _onCloseHandler: function() {
+            if (this.resolvePromise) {
+               this.resolvePromise();
+               this.resolvePromise = undefined;
+               return;
+            }
+            this._notify('routerUpdated', [this._lastUrl, this._lastPrettyUrl], { bubbling: true });
+         },
+
          errorUrl: function() {
             if (this._mystack) {
+               /*return new Promise((resolve)=>{
+                     setTimeout(()=>{resolve(false);}, 1000);
+                  });*/
                this._mystack = false;
-               var iWantCallbackHere = this._children.stack.close();
-               if (iWantCallbackHere && iWantCallbackHere.addCallback) {
-                  iWantCallbackHere.addCallback(function (a) {
 
-                  }).addErrback(function () {
-                  });
-               }
+               new Promise(function(resolve) {
+                  this.resolvePromise = resolve;
+               }.bind(this));
+               this._children.stack.close();
             }
          }
       });

@@ -20,8 +20,8 @@ class Router extends Control {
       this.pathUrlOptionsFromCfg(cfg);
    }
 
-   beforeApplyUrl(url: string): Promise {
-      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, url);
+   beforeApplyUrl(newLoc: object, oldLoc: object): Promise {
+      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, newLoc.url);
       let notUndefVal = false;
       for(let i in this._urlOptions) {
          if (this._urlOptions.hasOwnProperty(i)){
@@ -33,10 +33,32 @@ class Router extends Control {
       }
       if (notUndefVal) {
          this.pathUrlOptionsFromCfg(this._options);
-         return this._notify('succesUrl');
+         return this._notify('succesUrl', [newLoc, oldLoc]);
       }
       this.pathUrlOptionsFromCfg(this._options);
-      return this._notify('errorUrl');
+      return this._notify('errorUrl', [newLoc, oldLoc]);
+   }
+
+   afterUpForNotify(): Promise {
+      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, RouterHelper.getRelativeUrl());
+      let notUndefVal = false;
+      for(let i in this._urlOptions) {
+         if (this._urlOptions.hasOwnProperty(i)){
+            if (this._urlOptions[i] !== undefined) {
+               notUndefVal = true;
+               break;
+            }
+         }
+      }
+      if (notUndefVal) {
+         this.pathUrlOptionsFromCfg(this._options);
+         return this._notify('succesUrl',
+            [{url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()},
+               {url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()}]);
+      }
+      this.pathUrlOptionsFromCfg(this._options);
+      return this._notify('errorUrl', [{url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()},
+         {url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()}]);
    }
 
    applyNewUrl(): void {
@@ -50,6 +72,7 @@ class Router extends Control {
 
    _afterMount(): void {
       this._notify('routerCreated', [this], { bubbling: true });
+      this.afterUpForNotify();
    }
 
    _beforeUpdate(cfg: object) {

@@ -5,6 +5,7 @@ import template = require('wml!Controls/Router/Controller');
 import registrar = require('Controls/Event/Registrar');
 import UrlRewriter from 'Controls/Router/UrlRewriter'
 import RouterHelper from 'Controls/Router/Helper';
+import Router from 'Controls/Router';
 
 class Controller extends Control {
    private _history: null;
@@ -37,8 +38,10 @@ class Controller extends Control {
 
             if (!event.state || event.state.id < this._currentRoute) {
                //back
-               this.navigate(event, this._history[this._currentRoute - 1].url, () => {
+               this.navigate(event, this._history[this._currentRoute - 1].url,
+                  this._history[this._currentRoute - 1].prettyUrl, () => {
                      this._currentRoute--;
+                     RouterHelper.setRelativeUrl(this._history[this._currentRoute].url);
                   },
                   () => {
                      skipped = true;
@@ -46,8 +49,10 @@ class Controller extends Control {
                   });
             } else {
                //forward
-               this.navigate(event, this._history[this._currentRoute+1].url, () => {
+               this.navigate(event, this._history[this._currentRoute+1].url,
+                  this._history[this._currentRoute + 1].prettyUrl, () => {
                      this._currentRoute++;
+                     RouterHelper.setRelativeUrl(this._history[this._currentRoute].url);
                   },
                   () => {
                      skipped = true;
@@ -68,45 +73,55 @@ class Controller extends Control {
       }
    }
 
-   applyUrl(newUrl: string): void {
-      this._registrarUpdate.startAsync(newUrl);
+   applyUrl(): void {
+      this._registrarUpdate.startAsync();
    }
 
-   beforeApplyUrl(newUrl: string): void {
+   startAsyncUpdate(newUrl: string, newPrettyUrl: string): Promise {
+      return this._registrar.startAsync({url: newUrl, prettyUrl: newPrettyUrl},
+         {url: this._history[this._currentRoute].url, prettyUrl: this._history[this._currentRoute].prettyUrl}).then((values) => (values.find((value) => {return value === false;}) !== false ));
+   }
+
+   beforeApplyUrl(newUrl: string, newPrettyUrl: string): void {
 
       let newApp = this.getAppFromUrl(newUrl);
       let currentApp = this.getAppFromUrl(this._history[this._currentRoute].url);
 
       let lastRoot = this._rootRouters[this._rootRouters.length - 1];
 
-      /*TODO: Стрельнуть событием, а Core должен поймать событие и переключить
-      * если Core вернул false начит приложение не поменялось
-      * */
-      if (newApp === currentApp) {//this.getAppFromUrl(lastRoot._options.mask)){
-         return this._registrar.startAsync(newUrl).then((values) => (values.find((value) => {return value === false;}) !== false ));
-      } else {
-         require([newApp], () => {
-            const changed = this._notify('changeApplication', [newApp], {bubbling: true});
-            if (!changed) {
-               this._registrar.start(RouterHelper.getRelativeUrl());
-            }
-         });
-      }
+      return this.startAsyncUpdate(newUrl, newPrettyUrl).then((result) => {
+         if (newApp === currentApp) {
+            return result;
+         } else {
+            return new Promise((resolve) => {
+               require([newApp], () => {
+
+                  const changed = this._notify('changeApplication', [newApp], {bubbling: true});
+                  if (!changed) {
+                     this.startAsyncUpdate(newUrl, newPrettyUrl).then((ret) => {
+                        resolve(ret);
+                     });
+                  }
+                  resolve(true);
+               });
+            });
+         }
+      });
    }
    //co.navigate({}, '(.*)asda=:cmp([^&]*)(&)?(.*)?', {cmp:'asdasdasd123'})
    //co.navigate({}, '(.*)/edo/:idDoc([^/?]*)(.*)?', {idDoc:'8985'})
    //co.navigate({}, '/app/:razd/:idDoc([^/?]*)(.*)?', {razd: 'sda', idDoc:'12315'})
 
-   navigate(event: object, newUrl:string, callback: any, errback: any): void {
+   navigate(event: object, newUrl:string, newPrettyUrl:string, callback: any, errback: any): void {
 
-      const prettyUrl = UrlRewriter.getPrettyUrl(newUrl);
+      const prettyUrl = newPrettyUrl || UrlRewriter.getPrettyUrl(newUrl);
       const currentState = this._history[this._currentRoute];
 
-      if (currentState.url === newUrl){
+      if (currentState.url === newUrl || this._navigateProcessed){
          return;
       }
-
-      this.beforeApplyUrl(newUrl).then((accept:boolean)=>{
+      this._navigateProcessed = true;
+      this.beforeApplyUrl(newUrl, prettyUrl).then((accept:boolean)=>{
          if (accept) {
             if (callback) {
                callback();
@@ -119,31 +134,33 @@ class Controller extends Control {
                   url: newUrl,
                   prettyUrl: prettyUrl
                };
+               RouterHelper.setRelativeUrl(newUrl);
                history.pushState(state, prettyUrl, prettyUrl);
                this._history.push(state);
             }
-            this.applyUrl(prettyUrl);
+            this.applyUrl();
          } else {
             errback();
          }
+         this._navigateProcessed = false;
       });
    }
 
-   routerCreated(event: object, inst: object): void {
+   routerCreated(event: Event, inst: Router): void {
       if (inst._options.mask[0] === '/') {
          this._rootRouters.push(inst);
       }
 
-      this._registrar.register(event, inst, (newUrl) => {
-         return inst.beforeApplyUrl(newUrl);
+      this._registrar.register(event, inst, (newUrl, oldUrl) => {
+         return inst.beforeApplyUrl(newUrl, oldUrl);
       });
 
-      this._registrarUpdate.register(event, inst, (newUrl) => {
-         return inst.applyNewUrl(newUrl);
+      this._registrarUpdate.register(event, inst, (newUrl, oldUrl) => {
+         return inst.applyNewUrl(newUrl, oldUrl);
       });
    }
 
-   routerDestroyed(event: object, inst: object, mask: string): void {
+   routerDestroyed(event: Event, inst: Router, mask: string): void {
       this._registrar.unregister(event, inst);
       this._registrarUpdate.unregister(event, inst);
 

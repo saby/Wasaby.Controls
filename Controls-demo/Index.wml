@@ -1,7 +1,5 @@
-<Controls.Router.Controller>
-   <Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
-      <div>
-         <Controls-demo.RootRouter />
-      </div>
-   </Controls.Application>
-</Controls.Router.Controller>
+<Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
+   <div>
+      <Controls-demo.RootRouter />
+   </div>
+</Controls.Application>

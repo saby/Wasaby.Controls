@@ -1,7 +1,6 @@
 /// <amd-module name="Controls/Router/Link" />
 import Control = require('Core/Control');
 import template = require('wml!Controls/Router/Link');
-import UrlRewriter from 'Controls/Router/UrlRewriter'
 import RouterHelper from 'Controls/Router/Helper';
 
 class Link extends Control {
@@ -9,14 +8,15 @@ class Link extends Control {
       e.preventDefault();
       e.stopPropagation();
 
-      this._notify('routerUpdated', [this._href], { bubbling: true });
+      this._notify('routerUpdated', [this._href, this._prettyhref], { bubbling: true });
    }
 
    _beforeMount(cfg: object): void {
       this._href = RouterHelper.calculateHref(cfg.href, cfg);
       if (cfg.prettyUrl) {
          this._prettyhref = RouterHelper.calculateHref(cfg.prettyUrl, cfg);
-         UrlRewriter.push(this._href, this._prettyhref);
+      } else {
+         this._prettyhref = undefined;
       }
    }
 
@@ -24,7 +24,8 @@ class Link extends Control {
       this._href = RouterHelper.calculateHref(cfg.href, cfg);
       if (cfg.prettyUrl) {
          this._prettyhref = RouterHelper.calculateHref(cfg.prettyUrl, cfg);
-         UrlRewriter.push(this._href, this._prettyhref);
+      } else {
+         this._prettyhref = undefined;
       }
    }
 }
