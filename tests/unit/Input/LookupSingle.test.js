@@ -514,6 +514,23 @@ define([
          assert.isTrue(lookup._determineAutoDropDown());
       });
 
+      it('_onClickShowSelector', function() {
+         var
+            result,
+            isShowSelector = false,
+            lookup = new Lookup();
+
+         lookup.showSelector = function(templateOptions) {
+            isShowSelector = true;
+            result = templateOptions
+         };
+
+         lookup._onClickShowSelector();
+
+         assert.isTrue(isShowSelector);
+         assert.equal(result, undefined);
+      });
+
       it('showSelector', function() {
          var
             templateOptions,
