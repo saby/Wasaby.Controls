@@ -445,6 +445,10 @@ define('Controls/Input/Lookup', [
          return this._options.autoDropDown && (!this._selectedKeys.length || this._options.multiSelect);
       },
 
+      _onClickShowSelector: function() {
+         this.showSelector();
+      },
+
       showSelector: function(templateOptions) {
          var
             self = this,

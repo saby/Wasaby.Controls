@@ -6,12 +6,15 @@ define('Controls/List', [
    'wml!Controls/List/List',
    'Controls/List/ListViewModel',
    'Core/Deferred',
+   'Controls/Utils/tmplNotify',
    'Controls/List/ListView',
    'Controls/List/ListControl'
-], function(Control,
+], function(
+   Control,
    ListControlTpl,
    ListViewModel,
-   Deferred
+   Deferred,
+   tmplNotify
 ) {
    'use strict';
 
@@ -28,14 +31,14 @@ define('Controls/List', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
-    * @mixes Controls/interface/IEditInPlace
+    * @mixes Controls/interface/IEditableList
     * @control
     * @author Авраменко А.С.
     * @public
     * @category List
     */
 
-   var ListControl = Control.extend(/** @lends Controls/List */{
+   var ListControl = Control.extend(/** @lends Controls/List.prototype */{
       _template: ListControlTpl,
       _viewName: 'Controls/List/ListView',
       _viewTemplate: 'Controls/List/ListControl',
@@ -53,72 +56,23 @@ define('Controls/List', [
          this._children.listControl.reload();
       },
 
-
-      /**
-       * Starts editing in place.
-       * @param {ItemEditOptions} options Options of editing.
-       * @returns {Core/Deferred}
-       */
-      editItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.listControl.editItem(options);
+      beginEdit: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.beginEdit(options);
       },
 
-      /**
-       * Starts adding.
-       * @param {AddItemOptions} options Options of adding.
-       * @returns {Core/Deferred}
-       */
-      addItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.listControl.addItem(options);
+      beginAdd: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.listControl.beginAdd(options);
       },
 
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.listControl.cancelEdit();
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.listControl.commitEdit();
       },
 
-      _onBeforeItemAdd: function(e, options) {
-         return this._notify('beforeItemAdd', [options]);
-      },
-
-      _onBeforeItemEdit: function(e, options) {
-         return this._notify('beforeItemEdit', [options]);
-      },
-
-      _onAfterItemEdit: function(e, item, isAdd) {
-         this._notify('afterItemEdit', [item, isAdd]);
-      },
-
-      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
-         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
-      },
-
-      _onAfterItemEndEdit: function(e, item, isAdd) {
-         this._notify('afterItemEndEdit', [item, isAdd]);
-      },
-
-      _dragStart: function(event, items) {
-         return this._notify('dragStart', [items]);
-      },
-
-      _dragEnd: function(event, items, target, position) {
-         return this._notify('dragEnd', [items, target, position]);
-      },
-
-      _markedKeyChangedHandler: function(event, key) {
-         this._notify('markedKeyChanged', [key]);
-      }
+      _notifyHandler: tmplNotify
    });
 
    ListControl.getDefaultOptions = function() {

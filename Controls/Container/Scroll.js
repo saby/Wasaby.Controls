@@ -468,7 +468,6 @@ define('Controls/Container/Scroll',
 
       Scroll.getDefaultOptions = function() {
          return {
-            style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
          };

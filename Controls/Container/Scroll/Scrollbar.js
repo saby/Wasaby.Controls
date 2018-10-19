@@ -277,8 +277,7 @@ define('Controls/Container/Scroll/Scrollbar',
 
       Scrollbar.getDefaultOptions = function() {
          return {
-            position: 0,
-            style: 'normal'
+            position: 0
          };
       };
 

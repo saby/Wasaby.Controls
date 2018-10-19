@@ -3,7 +3,7 @@
         <div class="ControlsDemo-options_block">
             <h3>Options</h3>
             <div class="ControlsDemo-options_wrapper">
-                <Controls.Label caption="style:"/>
+                <Controls.Label caption="theme:"/>
                 <Controls.Input.ComboBox
 						attr:class="ControlsDemo-scrollStyleSource"
                         source="{{_scrollStyleSource}}"
@@ -28,7 +28,7 @@
             <Controls.Container.Scroll attr:class="ControlsDemo-scroll_container"
                                        scrollbarVisible="{{_scrollbarVisible}}"
                                        shadowVisible="{{_shadowVisible}}"
-                                       style="{{_selectedStyle}}">
+                                       theme="{{_selectedStyle}}">
 
                 <div>
                     <ws:for data="index in _numberOfRecords">

@@ -58,7 +58,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             showed.sort(_private.sortActions);
          }
 
-         if (isEditingItem && options.showToolbar) {
+         if (isEditingItem && options.toolbarVisibility) {
             showed.push({
                icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
                style: 'bordered',
