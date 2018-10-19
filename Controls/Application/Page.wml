@@ -59,8 +59,10 @@
                                              draggingTemplateOptions="{{content.draggingTemplateOptions}}"
                                              draggingTemplate="{{content.draggingTemplate}}"/>
                               </ws:if>
-                              <Controls.Popup.Manager.Container attr:id="popup"
+
+                                 <Controls.Popup.Manager.Container attr:id="popup"
                                                                 eventHandler="{{content._managerEventHandler}}"/>
+
                                  <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
                                     <ws:for data="i in _options.scripts">
                                        <ws:partial template="{{ i }}"/>
