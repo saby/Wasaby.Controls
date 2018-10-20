@@ -2,4 +2,6 @@
       on:routerUpdated="navigate()"
       on:routerCreated="routerCreated()"
       on:routerDestroyed="routerDestroyed()"
+      on:linkCreated="linkCreated()"
+      on:linkDestroyed="linkDestroyed()"
       />

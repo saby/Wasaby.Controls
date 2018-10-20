@@ -2,6 +2,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/Router/Router');
 import RouterHelper from 'Controls/Router/Helper';
+import History from 'Controls/Router/History';
 
 class Router extends Control {
    private _urlOptions = null;
@@ -15,13 +16,10 @@ class Router extends Control {
       }
    }
 
-   _applyNewUrl(mask: string, cfg: object): void {
-      this._urlOptions = RouterHelper.calculateUrlParams(mask);
-      this.pathUrlOptionsFromCfg(cfg);
-   }
-
-   beforeApplyUrl(newLoc: object, oldLoc: object): Promise {
-      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, newLoc.url);
+   /**
+    * return flag = resolved params from URL
+    */
+   _wasResolvedParam(): boolean {
       let notUndefVal = false;
       for(let i in this._urlOptions) {
          if (this._urlOptions.hasOwnProperty(i)){
@@ -31,7 +29,20 @@ class Router extends Control {
             }
          }
       }
-      if (notUndefVal) {
+      return notUndefVal;
+   }
+
+
+   _applyNewUrl(mask: string, cfg: object): boolean {
+      this._urlOptions = RouterHelper.calculateUrlParams(mask);
+      let notUndefVal = this._wasResolvedParam();
+      this.pathUrlOptionsFromCfg(cfg);
+      return notUndefVal;
+   }
+
+   beforeApplyUrl(newLoc: object, oldLoc: object): Promise {
+      this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, newLoc.url);
+      if (this._wasResolvedParam()) {
          this.pathUrlOptionsFromCfg(this._options);
          return this._notify('succesUrl', [newLoc, oldLoc]);
       }
@@ -41,24 +52,15 @@ class Router extends Control {
 
    afterUpForNotify(): Promise {
       this._urlOptions = RouterHelper.calculateUrlParams(this._options.mask, RouterHelper.getRelativeUrl());
-      let notUndefVal = false;
-      for(let i in this._urlOptions) {
-         if (this._urlOptions.hasOwnProperty(i)){
-            if (this._urlOptions[i] !== undefined) {
-               notUndefVal = true;
-               break;
-            }
-         }
-      }
-      if (notUndefVal) {
-         this.pathUrlOptionsFromCfg(this._options);
-         return this._notify('succesUrl',
-            [{url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()},
-               {url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()}]);
-      }
+      let notUndefVal = this._wasResolvedParam();
       this.pathUrlOptionsFromCfg(this._options);
-      return this._notify('errorUrl', [{url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()},
-         {url:RouterHelper.getRelativeUrl(), prettyUrl:RouterHelper.getRelativeUrl()}]);
+
+      const currentState = History.getCurrentState();
+      const prevState = History.getPrevState();
+      if (notUndefVal) {
+         return this._notify('succesUrl', [currentState, prevState]);
+      }
+      return this._notify('errorUrl', [currentState, prevState]);
    }
 
    applyNewUrl(): void {

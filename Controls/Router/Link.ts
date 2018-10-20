@@ -12,6 +12,22 @@ class Link extends Control {
    }
 
    _beforeMount(cfg: object): void {
+      this._recalcHref(cfg);
+   }
+
+   _afterMount(): void {
+      this._notify('linkCreated', [this], { bubbling: true });
+   }
+
+   _beforeUpdate(cfg: object): void {
+      this._recalcHref(cfg);
+   }
+
+   _beforeUnmount() {
+      this._notify('linkDestroyed', [this], { bubbling: true });
+   }
+
+   _recalcHref(cfg: object): void {
       this._href = RouterHelper.calculateHref(cfg.href, cfg);
       if (cfg.prettyUrl) {
          this._prettyhref = RouterHelper.calculateHref(cfg.prettyUrl, cfg);
@@ -20,13 +36,9 @@ class Link extends Control {
       }
    }
 
-   _beforeUpdate(cfg: object): void {
-      this._href = RouterHelper.calculateHref(cfg.href, cfg);
-      if (cfg.prettyUrl) {
-         this._prettyhref = RouterHelper.calculateHref(cfg.prettyUrl, cfg);
-      } else {
-         this._prettyhref = undefined;
-      }
+   recalcHref(): void {
+      this._recalcHref(this._options);
+      this._forceUpdate();
    }
 }
 

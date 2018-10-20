@@ -6,27 +6,24 @@ import registrar = require('Controls/Event/Registrar');
 import UrlRewriter from 'Controls/Router/UrlRewriter'
 import RouterHelper from 'Controls/Router/Helper';
 import Router from 'Controls/Router';
+import History from 'Controls/Router/History';
+import Link = require("./Link");
 
 class Controller extends Control {
-   private _history: null;
-   private _registrar: null;
-   private _rootRouters: null;
+   private _registrar: registrar = null;
+   private _registrarLink: registrar = null;
    private _currentRoute;
-   private _registrarUpdate;
+   private _registrarUpdate: registrar = null;
 
    constructor(cfg: object) {
       super(cfg);
-      this._rootRouters = [];
       this._currentRoute = 0;
 
       /*Controller doesn't work on server*/
       if (typeof window !== 'undefined') {
-
-         this._history = [];
          this._registrar = new registrar();
          this._registrarUpdate = new registrar();
-         let state = {id: 0, url: RouterHelper.getRelativeUrl(), prettyUrl: RouterHelper.getRelativeUrl()};
-         this._history.push(state);
+         this._registrarLink = new registrar();
 
          let skipped = false;
          window.onpopstate = (event: object) => {
@@ -34,14 +31,14 @@ class Controller extends Control {
                skipped = false;
                return;
             }
+            let currentState = History.getCurrentState();
 
-
-            if (!event.state || event.state.id < this._currentRoute) {
+            if (!event.state || event.state.id < currentState.id) {
                //back
-               this.navigate(event, this._history[this._currentRoute - 1].url,
-                  this._history[this._currentRoute - 1].prettyUrl, () => {
-                     this._currentRoute--;
-                     RouterHelper.setRelativeUrl(this._history[this._currentRoute].url);
+               let prevState = History.getPrevState();
+               this.navigate(event, prevState.url, prevState.prettyUrl,
+                  () => {
+                     History.back();
                   },
                   () => {
                      skipped = true;
@@ -49,10 +46,10 @@ class Controller extends Control {
                   });
             } else {
                //forward
-               this.navigate(event, this._history[this._currentRoute+1].url,
-                  this._history[this._currentRoute + 1].prettyUrl, () => {
-                     this._currentRoute++;
-                     RouterHelper.setRelativeUrl(this._history[this._currentRoute].url);
+               let nextState = History.getNextState();
+               this.navigate(event, nextState.url, nextState.prettyUrl,
+                  () => {
+                     History.forward();
                   },
                   () => {
                      skipped = true;
@@ -75,19 +72,19 @@ class Controller extends Control {
 
    applyUrl(): void {
       this._registrarUpdate.startAsync();
+      this._registrarLink.startAsync();
    }
 
    startAsyncUpdate(newUrl: string, newPrettyUrl: string): Promise {
+      let state = History.getCurrentState();
       return this._registrar.startAsync({url: newUrl, prettyUrl: newPrettyUrl},
-         {url: this._history[this._currentRoute].url, prettyUrl: this._history[this._currentRoute].prettyUrl}).then((values) => (values.find((value) => {return value === false;}) !== false ));
+         {url: state.url, prettyUrl: state.prettyUrl}).then((values) => (values.find((value) => {return value === false;}) !== false ));
    }
 
    beforeApplyUrl(newUrl: string, newPrettyUrl: string): void {
-
+      let state = History.getCurrentState();
       let newApp = this.getAppFromUrl(newUrl);
-      let currentApp = this.getAppFromUrl(this._history[this._currentRoute].url);
-
-      let lastRoot = this._rootRouters[this._rootRouters.length - 1];
+      let currentApp = this.getAppFromUrl(state.url);
 
       return this.startAsyncUpdate(newUrl, newPrettyUrl).then((result) => {
          if (newApp === currentApp) {
@@ -95,7 +92,6 @@ class Controller extends Control {
          } else {
             return new Promise((resolve) => {
                require([newApp], () => {
-
                   const changed = this._notify('changeApplication', [newApp], {bubbling: true});
                   if (!changed) {
                      this.startAsyncUpdate(newUrl, newPrettyUrl).then((ret) => {
@@ -115,7 +111,7 @@ class Controller extends Control {
    navigate(event: object, newUrl:string, newPrettyUrl:string, callback: any, errback: any): void {
 
       const prettyUrl = newPrettyUrl || UrlRewriter.getPrettyUrl(newUrl);
-      const currentState = this._history[this._currentRoute];
+      const currentState = History.getCurrentState();
 
       if (currentState.url === newUrl || this._navigateProcessed){
          return;
@@ -126,17 +122,7 @@ class Controller extends Control {
             if (callback) {
                callback();
             } else {
-               this._currentRoute++;
-               this._history.splice(this._currentRoute);
-
-               let state = {
-                  id: this._currentRoute,
-                  url: newUrl,
-                  prettyUrl: prettyUrl
-               };
-               RouterHelper.setRelativeUrl(newUrl);
-               history.pushState(state, prettyUrl, prettyUrl);
-               this._history.push(state);
+               History.push(newUrl, prettyUrl);
             }
             this.applyUrl();
          } else {
@@ -147,10 +133,6 @@ class Controller extends Control {
    }
 
    routerCreated(event: Event, inst: Router): void {
-      if (inst._options.mask[0] === '/') {
-         this._rootRouters.push(inst);
-      }
-
       this._registrar.register(event, inst, (newUrl, oldUrl) => {
          return inst.beforeApplyUrl(newUrl, oldUrl);
       });
@@ -163,16 +145,16 @@ class Controller extends Control {
    routerDestroyed(event: Event, inst: Router, mask: string): void {
       this._registrar.unregister(event, inst);
       this._registrarUpdate.unregister(event, inst);
+   }
 
-      if (inst._options.mask[0] === '/') {
-         if (false){//tODO:: какое-то усовие, что !inst._closeByMe && resolveMask(this._history[this._currentRoute].url, mask)) {
-            //TODO:: только делать pushState
-            this._currentRoute--;
-            history.back();
-         }
-         this._rootRouters.splice(-1);
-      }
+   linkCreated(event: Event, inst: Link): void {
+      this._registrarLink.register(event, inst, () => {
+         return inst.recalcHref();
+      });
+   }
 
+   linkDestroyed(event: Event, inst: Link): void {
+      this._registrarLink.unregister(event, inst);
    }
 }
 
