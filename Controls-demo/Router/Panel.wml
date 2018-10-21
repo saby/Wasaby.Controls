@@ -2,27 +2,27 @@
    <Controls.Input.Text on:valueChanged="innChanged()" value="{{_options.inn}}" placeholder="inn" name="inn"/>
    <Controls.Input.Text on:valueChanged="kppChanged()" value="{{_options.kpp}}" placeholder="kpp" name="kpp"/>
    <p>
-      <Controls.Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 100 }}" kpp="{{6}}">
+      <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 100 }}" kpp="{{6}}">
          <a href="{{content.href}}">*inn/100/kpp/6*</a>
-      </Controls.Router.Link> <br/>
-      <Controls.Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 777 }}" kpp="{{25}}">
+      </Router.Link> <br/>
+      <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 777 }}" kpp="{{25}}">
          <a href="{{content.href}}">*inn/777/kpp/25*</a>
-      </Controls.Router.Link><br/>
-      <Controls.Router.Link href="inn/:inn/kpp/:kpp" clear="{{true}}">
+      </Router.Link><br/>
+      <Router.Link href="inn/:inn/kpp/:kpp" clear="{{true}}">
          <a href="{{content.href}}">*clear inn and kpp*</a>
-      </Controls.Router.Link><br/>
-      <Controls.Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+      </Router.Link><br/>
+      <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
          <a href="{{content.href}}">Go to list of demos</a>
-      </Controls.Router.Link><br/>
+      </Router.Link><br/>
 
-      <Controls.Router.Link href="panel/Controls-demo/app/:app"
+      <Router.Link href="panel/Controls-demo/app/:app"
                             prettyUrl="/Controls-demo/app/:app"
                             app="{{ 'Controls-demo/IndexOld' }}">
          <ws:content>Open panel from route</ws:content>
-      </Controls.Router.Link><br/>
+      </Router.Link><br/>
 
 
-      <Controls.Router mask="panel/Controls-demo/app/:app"
+      <Router.Route mask="panel/Controls-demo/app/:app"
                        on:succesUrl="successUrl()"
                        on:errorUrl="errorUrl()"/>
 

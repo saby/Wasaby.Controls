@@ -1,5 +1,0 @@
-<a href="{{ _prettyhref || _href }}" title="{{ _options.title }}"
-   id="{{ _options.id }}"
-   on:click="clickHandler()">
-   <ws:partial template="{{ _options.content }}"/>
-</a>

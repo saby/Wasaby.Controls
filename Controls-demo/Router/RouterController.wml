@@ -1,5 +1,5 @@
 <div>
-   <Controls.Router mask="/Controls-demo/demo.html">
+   <Router.Route mask="/Controls-demo/demo.html">
       <Controls-demo.Router.Router/>
-   </Controls.Router>
+   </Router.Route>
 </div>
