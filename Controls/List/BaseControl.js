@@ -14,7 +14,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
 
-   'css!Controls/List/BaseControl/BaseControl'
+   'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
    cClone,

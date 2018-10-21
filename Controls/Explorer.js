@@ -9,7 +9,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'css!Controls/Explorer/Explorer',
+   'css!theme?Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'

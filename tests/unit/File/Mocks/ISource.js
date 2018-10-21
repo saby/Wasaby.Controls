@@ -31,5 +31,5 @@ function definition(Deferred) {
     return SourceMock;
 }
 
-define('tests/unit/File/SourceMock', ['Core/Deferred'], definition);
-define('optional!tests/unit/File/SourceMock', ['Core/Deferred'], definition);
+define('tests/File/SourceMock', ['Core/Deferred'], definition);
+define('optional!tests/File/SourceMock', ['Core/Deferred'], definition);
