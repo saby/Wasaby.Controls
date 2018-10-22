@@ -193,6 +193,7 @@ define('Controls/Application',
             self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
+            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
