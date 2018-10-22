@@ -1,11 +1,12 @@
 define(
    [
+      'Core/constants',
       'Core/core-instance',
       'Controls/Input/Base',
       'tests/unit/resources/TemplateUtil',
       'tests/unit/resources/ProxyCall'
    ],
-   function(instance, Base, TemplateUtil, ProxyCall) {
+   function(constants, instance, Base, TemplateUtil, ProxyCall) {
 
       'use strict';
 
@@ -55,6 +56,133 @@ define(
                   name: 'synchronizeFieldWithModel',
                   arguments: []
                }]);
+            });
+            it('Hooks update. Read mode.', function() {
+               ctrl._options.readOnly = true;
+
+               ctrl._beforeUpdate({
+                  value: '',
+                  readOnly: true
+               });
+
+               assert.equal(calls.length, 0);
+
+               ctrl._afterUpdate();
+
+               assert.equal(calls.length, 0);
+            });
+            it('Hooks update. From read mode to edit mode.', function() {
+               ctrl._options.readOnly = true;
+
+               ctrl._beforeUpdate({
+                  value: '',
+                  readOnly: false
+               });
+
+               assert.equal(calls.length, 0);
+
+               ctrl._afterUpdate();
+
+               assert.deepEqual(calls, [{
+                  name: 'synchronizeFieldWithModel',
+                  arguments: [true]
+               }]);
+            });
+            it('Hooks update. Edit mode.', function() {
+               ctrl._options.readOnly = false;
+
+               ctrl._beforeUpdate({
+                  value: '',
+                  readOnly: false
+               });
+
+               assert.deepEqual(calls, [{
+                  name: 'synchronizeFieldWithModel',
+                  arguments: []
+               }]);
+
+               calls = [];
+               ctrl._afterUpdate();
+
+               assert.equal(calls.length, 0);
+            });
+            it('Hooks update. From edit mode to read mode.', function() {
+               ctrl._options.readOnly = false;
+
+               ctrl._beforeUpdate({
+                  value: '',
+                  readOnly: true
+               });
+
+               assert.equal(calls.length, 0);
+
+               ctrl._afterUpdate();
+
+               assert.equal(calls.length, 0);
+            });
+         });
+         describe('Changing options in model.', function() {
+            beforeEach(function() {
+               ctrl._getViewModelOptions = function(options) {
+                  return {
+                     option: options.optionModel
+                  };
+               };
+               ctrl._beforeMount({
+                  value: '',
+                  optionModel: 'test'
+               });
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['options'], calls, true);
+            });
+            it('No change.', function() {
+               ctrl._beforeUpdate({
+                  value: '',
+                  optionModel: 'test'
+               });
+
+               assert.equal(calls.length, 0);
+            });
+
+            it('There are changes.', function() {
+               ctrl._beforeUpdate({
+                  value: '',
+                  optionModel: 'test option'
+               });
+
+               assert.deepEqual(calls, [{
+                  name: 'options',
+                  value: {
+                     option: 'test option'
+                  }
+               }]);
+            });
+         });
+         describe('Mouseeneter', function() {
+            describe('Tooltip', function() {
+               beforeEach(function() {
+                  ctrl._beforeMount({
+                     value: 'test value'
+                  });
+                  ctrl._options.tooltip = 'test tooltip';
+               });
+               it('The value fits in the field.', function() {
+                  ctrl._hasHorizontalScroll = function() {
+                     return false;
+                  };
+
+                  ctrl._mouseenterHandler();
+
+                  assert.equal(ctrl._tooltip, 'test tooltip');
+               });
+               it('The value no fits in the field.', function() {
+                  ctrl._hasHorizontalScroll = function() {
+                     return true;
+                  };
+
+                  ctrl._mouseenterHandler();
+
+                  assert.equal(ctrl._tooltip, 'test value');
+               });
             });
          });
          it('The browser automatically completed the field.', function() {

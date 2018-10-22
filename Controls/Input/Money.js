@@ -20,7 +20,13 @@ define('Controls/Input/Money',
        * @category Input
        */
       var Money = Base.extend({
-         _viewModel: ViewModel
+         _viewModel: ViewModel,
+
+         _getViewModelOptions: function(options) {
+            return {
+               onlyPositive: options.onlyPositive
+            };
+         }
       });
 
       return Money;

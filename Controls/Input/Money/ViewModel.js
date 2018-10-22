@@ -1,16 +1,55 @@
 define('Controls/Input/Money/ViewModel',
    [
       'Controls/Input/Base/ViewModel',
-      'Controls/Input/Money/Formatter'
+      'Controls/Input/Money/Formatter',
+      'Controls/Input/Number/InputProcessor',
+      'Controls/Input/Number/SplitValueHelper'
    ],
-   function(BaseViewModel, Formatter) {
+   function(BaseViewModel, Formatter, InputProcessor, SplitValueHelper) {
 
       'use strict';
 
       var ViewModel = BaseViewModel.extend({
          handleInput: function(splitValue, inputType) {
-            var pathWithCursor, cursor, position;
-            var value;
+            var
+               result,
+               splitValueHelper = new SplitValueHelper(splitValue),
+               inputProcessor = new InputProcessor();
+
+            this.options.precision = 2;
+
+            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
+
+            switch (inputType) {
+               case 'insert':
+                  result = inputProcessor.processInsert(splitValue, this.options, splitValueHelper);
+                  break;
+               case 'delete':
+                  result = inputProcessor.processDelete(splitValue, this.options, splitValueHelper);
+                  break;
+               case 'deleteForward':
+                  result = inputProcessor.processDeleteForward(splitValue, this.options, splitValueHelper);
+                  break;
+               case 'deleteBackward':
+                  result = inputProcessor.processDeleteBackward(splitValue, this.options, splitValueHelper);
+                  break;
+            }
+
+            this._value = result.value;
+            this._selection.start = result.position;
+            this._selection.end = result.position;
+
+            this._shouldBeChanged = true;
+
+            return true;
+
+            /*var pathWithCursor, cursor, position;
+            var value, hasDot;
+
+            if (splitValue.insert.slice(-1) === '.' && splitValue.after[0] === '.') {
+               hasDot = true;
+            }
 
             if (inputType === 'insert') {
                var insert = Formatter.toNumber(splitValue.insert);
@@ -53,13 +92,17 @@ define('Controls/Input/Money/ViewModel',
 
             value = Formatter.toNumber(value.integer).integer + '.' + value.fraction.substring(0, 2) + '00'.substring(value.fraction.length);
 
+            if (hasDot) {
+               position++;
+            }
+
             this._value = value;
             this._selection.start = position;
             this._selection.end = position;
 
             this._shouldBeChanged = true;
 
-            return true;
+            return true;*/
          }
       });
 

@@ -25,6 +25,27 @@ define('tests/unit/resources/ProxyCall',
                   }
                }
             });
+         },
+
+         set: function(object, names, callStorage, emptyCall) {
+            return new Proxy(object, {
+               set: function(target, prop, value) {
+                  if (names.includes(prop)) {
+                     callStorage.push({
+                        name: prop,
+                        value: value
+                     });
+
+                     if (!emptyCall) {
+                        target[prop] = value;
+                     }
+                  } else {
+                     target[prop] = value;
+                  }
+
+                  return true;
+               }
+            });
          }
       };
    }

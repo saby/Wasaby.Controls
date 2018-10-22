@@ -4,7 +4,7 @@
                        tagStyle="{{_options.tagStyle}}"
                        fontStyle="{{_options.fontStyle}}"
                        textAlign="{{_options.textAlign}}"
-                       plasceholder="{{_options.placeholder}}"
+                       placeholder="{{_options.placeholder}}"
                        on:mouseenter="_mouseenterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">

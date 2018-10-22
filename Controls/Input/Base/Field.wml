@@ -5,6 +5,8 @@
    autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
    on:keyup="_keyUpHandler()"
    on:click="_clickHandler()"
+   on:input="_inputHandler()"
+   on:change="_changeHandler()"
    on:selection="_selectionHandler()"
 />
 <ws:partial template="{{placeholderTemplate}}" placeholder="{{placeholder}}"/>

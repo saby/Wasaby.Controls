@@ -72,7 +72,7 @@ define('Controls/Input/Base/ViewModel',
             }
          },
 
-         constructor: function() {
+         constructor: function(options) {
             var value = '';
             var selection = {
                start: 0,
@@ -83,6 +83,7 @@ define('Controls/Input/Base/ViewModel',
             this._oldValue = value;
             this._selection = clone(selection);
             this._oldSelection = clone(selection);
+            this.options = clone(options);
             this._shouldBeChanged = true;
          },
 

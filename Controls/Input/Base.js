@@ -4,6 +4,7 @@ define('Controls/Input/Base',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
+      'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Controls/Utils/hasHorizontalScroll',
 
@@ -11,7 +12,7 @@ define('Controls/Input/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly'
    ],
-   function(Control, descriptor, tmplNotify, isEqual, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
+   function(Control, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
       
       'use strict';
 
@@ -65,6 +66,12 @@ define('Controls/Input/Base',
           * @private
           */
          _notifyHandler: tmplNotify,
+
+         /**
+          * @type {Controls/Utils/hasHorizontalScroll}
+          * @private
+          */
+         _hasHorizontalScroll: hasHorizontalScroll,
 
          /**
           * @type {String} Text of the tooltip shown when the control is hovered over.
@@ -153,7 +160,7 @@ define('Controls/Input/Base',
           * @private
           */
          _mouseenterHandler: function() {
-            this._tooltip = hasHorizontalScroll(this._getField()) ? this._viewModel.displayValue : this._options.tooltip;
+            this._tooltip = this._getTooltip();
          },
 
          /**
@@ -165,9 +172,9 @@ define('Controls/Input/Base',
             var keyCode = event.nativeEvent.keyCode;
 
             /**
-             * Clicking the arrows moves the cursor.
+             * Clicking the arrows and keys home, end moves the cursor.
              */
-            if (keyCode > 36 && keyCode < 41) {
+            if (keyCode > 34 && keyCode < 41) {
                this._viewModel.selection = this._getFieldSelection();
             }
          },
@@ -186,6 +193,40 @@ define('Controls/Input/Base',
           */
          _selectionHandler: function() {
             this._viewModel.selection = this._getFieldSelection();
+         },
+
+         _inputHandler: function(event) {
+            var field = this._getField();
+            var model = this._viewModel;
+            var value = model.oldDisplayValue;
+            var selection = model.oldSelection;
+            var newValue = field.value;
+            var position = field.selectionEnd;
+
+            /**
+             * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
+             * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
+             * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
+             */
+            var inputType = event.nativeEvent.inputType && event.nativeEvent.inputType !== 'insertCompositionText'
+               ? InputUtil.getAdaptiveInputType(event.nativeEvent.inputType, selection)
+               : InputUtil.getInputType(value, newValue, position, selection);
+
+            var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
+
+            if (model.handleInput(splitValue, inputType)) {
+               this._notify('valueChanged', [model.value, model.displayValue]);
+            }
+
+            field.value = value;
+            field.selectionStart = selection.start;
+            field.selectionEnd = selection.end;
+         },
+
+         _changeHandler: function() {
+            var model = this._viewModel;
+
+            this._notify('inputCompleted', [model.value, model.displayValue]);
          },
 
          /**
@@ -218,6 +259,10 @@ define('Controls/Input/Base',
           */
          _getViewModelOptions: function() {
             return {};
+         },
+
+         _getTooltip: function() {
+            return this._hasHorizontalScroll(this._getField()) ? this._viewModel.displayValue : this._options.tooltip;
          },
 
          /**

@@ -16,9 +16,7 @@
             class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
             <ws:partial
                attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
-               template="{{_options.content}}"
-               on:input="_inputHandler()"
-               on:change="_inputCompletedHandler()">
+               template="{{_options.content}}">
                <ws:placeholderTemplate>
                   <ws:if data="{{_isShowPlaceholder()}}">
                      <ws:partial
