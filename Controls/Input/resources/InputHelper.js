@@ -14,15 +14,8 @@ define('Controls/Input/resources/InputHelper',
           * @param [selection] the selection in the field
           */
          pasteHelper: function(inputRender, domInputElement, textToPaste, selection) {
-            var selectionStart, selectionEnd;
-
-            if (selection) {
-               selectionStart = selection.start;
-               selectionEnd = selection.end;
-            } else {
-               selectionStart = domInputElement.selectionStart;
-               selectionEnd = domInputElement.selectionEnd;
-            }
+            var selectionStart = selection ? selection.start : domInputElement.selectionStart;
+            var selectionEnd = selection ? selection.end : domInputElement.selectionEnd;
 
             return inputRender.paste(textToPaste, selectionStart, selectionEnd);
          }
