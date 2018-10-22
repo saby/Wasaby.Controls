@@ -52,9 +52,16 @@ define(
           */
          calcProgressPercent: function(currentValue, totalValue) {
             var
-               calculatedPercent = Math.round(currentValue / (totalValue / 100));
+               calculatedPercent = Math.round(currentValue / (totalValue / 100)),
+               result = calculatedPercent;
 
-            return calculatedPercent < MAX_PERCENT ? calculatedPercent : MAX_PERCENT;
+            if (calculatedPercent > MAX_PERCENT) {
+               result = MAX_PERCENT;
+            } else if (calculatedPercent < MIN_PERCENT) {
+               result = MIN_PERCENT;
+            }
+
+            return result;
          },
 
          /**
@@ -137,6 +144,8 @@ define(
             smoothChange: typeDescriptor(Boolean)
          };
       };
+
+      BaseController._private = _private;
 
       return BaseController;
    }
