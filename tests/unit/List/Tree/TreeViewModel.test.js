@@ -153,6 +153,12 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, false);
             assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, false)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, false)".');
+
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
+            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after expand "123" and "234".');
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
+            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after collapse "123".');
          });
 
          it('multiSelectStatus', function() {
