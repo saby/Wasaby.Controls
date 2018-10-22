@@ -7,9 +7,10 @@ define('Controls/Input/Number',
       'Controls/Input/Number/ViewModel',
       'Controls/Input/resources/InputHelper',
       'Core/helpers/Function/runDelayed',
-      'Core/IoC'
+      'Core/IoC',
+      'Core/detection'
    ],
-   function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC) {
+   function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC, detection) {
 
       'use strict';
 
@@ -97,8 +98,19 @@ define('Controls/Input/Number',
                // Не меняется value у dom-элемента, при смене аттрибута value
                // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
                target.value = self._numberViewModel.getDisplayValue();
-               target.selectionStart = selectionStart;
-               target.selectionEnd = selectionEnd;
+
+               /**
+                * If you change the value, the selection is set to the end. Therefore, it must be restored.
+                * In ie, if the selection changes, the field will be automatically focused.
+                * If the method is called during the focus out, the focus field will not lose. Therefore, remember the selection.
+                */
+               if (detection.isIE) {
+                  self._selectionStart = target.selectionStart;
+                  self._selectionEnd = target.selectionEnd;
+               } else {
+                  target.selectionStart = selectionStart;
+                  target.selectionEnd = selectionEnd;
+               }
             }
          }
       };
@@ -222,7 +234,20 @@ define('Controls/Input/Number',
          },
 
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
+            var field = this._children.input;
+            var selection;
+
+            /**
+             * In ie and inactive state the selection is stored on the instance.
+             */
+            if (!this._active && detection.isIE) {
+               selection = {
+                  start: this._selectionStart,
+                  end: this._selectionEnd
+               };
+            }
+
+            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text, selection);
          }
       });
 
