@@ -1,0 +1,1 @@
+<span class="controls-ProgressTimer">{{ _getDisplayTime() }}</span>

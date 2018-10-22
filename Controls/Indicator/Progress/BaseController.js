@@ -1,18 +1,43 @@
 define(
-   'Controls/Indicator/ProgressBar',
+   'Controls/Indicator/Progress/BaseController',
    [
       'Core/Control',
-      'wml!Controls/Indicator/ProgressBar/ProgressBar',
-      'WS.Data/Type/descriptor',
-
-      'css!Controls/Indicator/ProgressBar/ProgressBar'
+      'WS.Data/Type/descriptor'
    ],
    function(
       Control,
-      template,
       typeDescriptor
    ) {
       'use strict';
+
+      /**
+       * Controller for progress bar that calculates and provides percent value
+       *
+       * @class Controls/Indicator/Progress/BaseController
+       * @extends Core/Control
+       *
+       * @public
+       *
+       * @author Baranov M.A.
+       */
+
+
+      /**
+       * @name Controls/Indicator/Progress/BaseController#currentValue
+       * @cfg {Number} Current progress value
+       */
+
+
+      /**
+       * @name Controls/Indicator/Progress/BaseController#totalValue
+       * @cfg {Number} Total progress value
+       */
+
+
+      /**
+       * @name Controls/Indicator/Progress/BaseController#smoothChange
+       * @cfg {Number} If we have to change the value in multiple steps
+       */
 
       var MAX_PERCENT = 100;
       var MIN_PERCENT = 0;
@@ -65,20 +90,18 @@ define(
       };
 
       var
-         ProgressBar = Control.extend({
-            _template: template,
+         BaseController = Control.extend({
 
+            // Progress percentage value
             _progressPercent: 0,
-
-            _direction: undefined,
 
             _beforeMount: function(options) {
                this._progressPercent = _private.calcProgressPercent(options.currentValue, options.totalValue);
             },
 
             _beforeUpdate: function(newOptions) {
-               // If barSmoothMotion option is on, then change the percentage step by step
-               if (newOptions.barSmoothMotion) {
+               // If smoothChange option is on, then change the percentage step by step
+               if (newOptions.smoothChange) {
                   var
                      newProgressPercent = _private.calcProgressPercent(newOptions.currentValue, newOptions.totalValue);
 
@@ -100,22 +123,21 @@ define(
              */
             _getProgressPercentNextStepValue: function(newProgressPercent) {
                var
-                  step = _private.calcStepSize(Math.abs(newProgressPercent - this._progressPercent));
+                  step = _private.calcStepSize(Math.abs(newProgressPercent - this._progressPercent)),
+                  direction = _private.calcMovementDirection(this._progressPercent, newProgressPercent);
 
-               this._direction = _private.calcMovementDirection(this._progressPercent, newProgressPercent);
-
-               return this._progressPercent + (this._direction * step);
+               return this._progressPercent + (direction * step);
             }
          });
 
-      ProgressBar.getOptionTypes = function() {
+      BaseController.getOptionTypes = function() {
          return {
             currentValue: typeDescriptor(Number).required(),
             totalValue: typeDescriptor(Number).required(),
-            smoothMotion: typeDescriptor(Boolean)
+            smoothChange: typeDescriptor(Boolean)
          };
       };
 
-      return ProgressBar;
+      return BaseController;
    }
 );

@@ -1,15 +1,43 @@
 <div class="ProgressBarDemo">
    <div class="ProgressBarDemo__content">
       <p>
-         <Controls.Indicator.ProgressBar
+         <b>DefaultLayout</b>
+         <br/>
+         <br/>
+         <Controls.Indicator.Progress.DefaultLayout
             class="ProgressBarDemo__progressBar"
             infoLeft="left info"
-            infoRight="right info"
             currentValue="{{ _currentValue }}"
             totalValue="{{ _totalValue }}"
-            barSmoothMotion="{{ _barSmoothMotion }}"
-         />
+            smoothChange="{{ _smoothChange }}"
+         >
+            <ws:infoRight>
+               <Controls.Indicator.Progress.Timer
+                  value="{{ 5 }}"
+                  autoTick="{{ true }}"
+               />
+            </ws:infoRight>
+         </Controls.Indicator.Progress.DefaultLayout>
+         <br/>
+         <br/>
+         <b>CompactLayout</b>
+         <br/>
+         <br/>
+         <Controls.Indicator.Progress.CompactLayout
+            class="ProgressBarDemo__progressBar"
+            currentValue="{{ _currentValue }}"
+            totalValue="{{ _totalValue }}"
+            smoothChange="{{ _smoothChange }}"
+         >
+            <ws:infoRight>
+               <Controls.Indicator.Progress.Timer
+                  value="{{ 5 }}"
+                  autoTick="{{ true }}"
+               />
+            </ws:infoRight>
+         </Controls.Indicator.Progress.CompactLayout>
       </p>
+      <br/>
       <br/>
       <p>
          totalValue <Controls.Input.Number bind:value="_totalValue" precision="{{0}}" />
@@ -20,8 +48,7 @@
       </p>
       <br/>
       <p>
-         barSmoothMotion <Controls.Toggle.Checkbox bind:value="_barSmoothMotion" />
+         barSmoothMotion <Controls.Toggle.Checkbox bind:value="_smoothChange" />
       </p>
-
    </div>
 </div>

@@ -19,7 +19,7 @@ define(
 
          _currentValue: 69,
 
-         _barSmoothMotion: true
+         _smoothChange: true
       });
    }
 );

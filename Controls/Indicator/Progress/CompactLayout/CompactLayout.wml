@@ -1,0 +1,11 @@
+<div class="controls-ProgressCompactLayout">
+   <div class="controls-ProgressCompactLayout__infoPercent">{{ _progressPercent }}%</div>
+   <Controls.Indicator.Progress.Bar
+      attr:class="controls-ProgressCompactLayout__bar"
+      percentValue="{{ _progressPercent }}"
+      smoothChange="{{ _options.smoothChange }}"
+   />
+   <div class="controls-ProgressCompactLayout__infoRight ws-ellipsis">
+      <ws:partial template="{{ _options.infoRight }}" />
+   </div>
+</div>
