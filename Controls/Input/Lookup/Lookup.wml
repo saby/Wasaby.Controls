@@ -14,6 +14,7 @@
         on:choose="_choose()"
         on:deactivated="_deactivated()"
         suggestTemplate="{{_options.suggestTemplate}}"
+        footerTemplate="{{_options.suggestFooterTemplate}}"
         on:suggestStateChanged="_suggestStateChanged()"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
@@ -59,7 +60,7 @@
 
         <ws:afterFieldWrapper>
             <ws:if data="{{!_options.readOnly}}">
-                <ws:partial template="wml!Controls/Input/Lookup/resources/showSelectorTemplate" name="showSelector" on:click="showSelector()"/>
+                <ws:partial template="wml!Controls/Input/Lookup/resources/showSelectorTemplate" name="showSelector" on:click="_onClickShowSelector()"/>
                 <Controls.Selector.Opener name="selectorOpener">
                     <ws:popupOptions template="{{_options.lookupTemplate.templateName}}">
                         <ws:eventHandlers onResult="{{_selectCallback}}"/>

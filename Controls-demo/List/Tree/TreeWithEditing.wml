@@ -9,7 +9,7 @@
                     keyProperty="id"
                     parentProperty="Раздел"
                     nodeProperty="Раздел@"
-                    on:beforeItemAdd="_onBeforeItemAdd()"
+                    on:beforeBeginEdit="_onBeforeBeginEdit()"
                     source = "{{_viewSource}}"
                     columns="{{gridColumns}}">
                 <ws:editingConfig>

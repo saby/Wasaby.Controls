@@ -1,6 +1,6 @@
 define([
    'Controls/Input/Date/LinkView',
-   'tests/unit/Calendar/Utils'
+   'tests/Calendar/Utils'
 ], function(
    LinkView,
    calendarTestUtils

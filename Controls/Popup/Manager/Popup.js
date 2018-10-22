@@ -5,7 +5,7 @@ define('Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Controls/Popup/PopupContext',
-      'css!Controls/Popup/Manager/Popup'
+      'css!theme?Controls/Popup/Manager/Popup'
    ],
    function(Control, template, runDelayed, CoreConstants, PopupContext) {
       'use strict';

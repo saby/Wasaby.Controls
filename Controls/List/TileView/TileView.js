@@ -111,8 +111,8 @@ define('Controls/List/TileView/TileView', [
       _onItemMouseMove: function(event, itemData) {
          var self = this;
 
-         if (!this._listModel.getHoveredItem()) {
-            if (this._options.hoverMode && !_private.isTouch(this)) {
+         if (!this._listModel.getHoveredItem() && !_private.isTouch(this)) {
+            if (this._options.hoverMode) {
                if (this._mouseMoveTimeout) {
                   _private.clearMouseMoveTimeout(this);
                }

@@ -66,23 +66,24 @@
                 ws:content="listView"
                 name="editInPlace"
                 editingConfig="{{_options.editingConfig}}"
-                on:beforeItemAdd="_onBeforeItemAdd()"
-                on:beforeItemEdit="_onBeforeItemEdit()"
-                on:afterItemEdit="_onAfterItemEdit()"
-                on:beforeItemEndEdit="_onBeforeItemEndEdit()"
-                on:afterItemEndEdit="_onAfterItemEndEdit()"
+                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                on:afterBeginEdit="_onAfterBeginEdit()"
+                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                on:afterEndEdit="_onAfterEndEdit()"
                 listModel="{{_listViewModel}}"
                 source="{{_sourceController}}"/>
     </ws:template>
 
     <ws:template name="clientTemplate">
-       <ws:if data="{{_options.itemActions.length || _options.editingConfig && _options.editingConfig.showToolbar}}">
+       <ws:if data="{{_options.itemActions.length || _options.editingConfig && _options.editingConfig.toolbarVisibility}}">
           <Controls.Container.Async name="swipeContainer" templateName="Controls/List/Swipe/SwipeControl">
              <ws:partial template="{{'Controls/List/Swipe/SwipeControl'}}"
                          on:menuActionsClick="_showActionsMenu()"
                          on:closeSwipe="_closeSwipe()"
                          menuIsShown="{{_menuIsShown}}"
+                         viewName="{{ _options.viewName }}"
                          listModel="{{_listViewModel}}"
+                         swipeViewMode="{{_options.swipeViewMode}}"
                          itemActions="{{_options.itemActions}}"
                          name="swipeControl">
                 <Controls.Container.Async name="itemActionsContainer" templateName="Controls/List/ItemActions/ItemActionsControl">
@@ -91,7 +92,7 @@
                                on:cancelActionClick="_cancelEditActionHandler()"
                                on:menuActionsClick="_showActionsMenu()"
                                on:itemActionsClick="_onItemActionsClick()"
-                               showToolbar="{{_options.editingConfig.showToolbar}}"
+                               toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
                                name="itemActions"
                                style="{{_options.style}}"
                                listModel="{{_listViewModel}}"

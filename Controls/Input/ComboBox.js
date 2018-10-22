@@ -6,7 +6,7 @@ define('Controls/Input/ComboBox',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify',
-      'css!Controls/Input/ComboBox/ComboBox'
+      'css!theme?Controls/Input/ComboBox/ComboBox'
    ],
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
@@ -106,6 +106,8 @@ define('Controls/Input/ComboBox',
             placeholder: rk('Выберите...')
          };
       };
+
+      ComboBox._private = _private;
 
       return ComboBox;
    });

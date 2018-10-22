@@ -93,7 +93,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls, controls_theme:${workspace}/controls"
         def run_test_fail = ""
 		def branch_atf
 		if (params.branch_atf) {
@@ -181,7 +181,7 @@ node('controls') {
                         },
                         checkout_engine: {
                             echo " Выкачиваем engine"
-                            dir("./controls/tests"){
+                            dir("./controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -471,19 +471,19 @@ node('controls') {
                 stage ("Unit тесты"){
                     if ( unit ){
                         echo "Запускаем юнит тесты"
-                        dir(workspace){
-                            sh """
-                            cd ws_data
-                            npm i
-                            cd ../WIS-git-temp
-                            npm i
-                            node compileEsAndTs.js
-                            cd ..
-                            ln -s ../WIS-git-temp controls/sbis3-ws
-                            ln -s ../ws_data/WS.Data controls/WS.Data
-                            ln -s ../ws_data/Data controls/Data
-                            """
-                        }
+                        //dir(workspace){
+                          //  sh """
+                           // cd ws_data
+                            //npm i
+                           // cd ../WIS-git-temp
+                           // npm i
+                           // node compileEsAndTs.js
+                           // cd ..
+                            //ln -s ../WIS-git-temp controls/sbis3-ws
+                           // ln -s ../ws_data/WS.Data controls/WS.Data
+                           // ln -s ../ws_data/Data controls/Data
+                           // """
+                        //}
                         dir("./controls"){
                             sh "npm config set registry http://npmregistry.sbis.ru:81/"
                             echo "run isolated"

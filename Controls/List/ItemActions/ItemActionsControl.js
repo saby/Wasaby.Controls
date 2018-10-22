@@ -5,7 +5,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
    'Controls/Application/TouchDetector/TouchContextField',
-   'css!Controls/List/ItemActions/ItemActions'
+   'css!theme?Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
@@ -58,7 +58,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             showed.sort(_private.sortActions);
          }
 
-         if (isEditingItem && options.showToolbar) {
+         if (isEditingItem && options.toolbarVisibility) {
             showed.push({
                icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
                style: 'bordered',

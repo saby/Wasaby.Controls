@@ -3,25 +3,17 @@ define('Controls-demo/List/EditAndRemoveOperations', [
    'wml!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
-   'Core/Deferred',
    'Controls/Validate/Validators/IsRequired'
 ], function(Control,
             template,
             MemorySource,
-            Model,
-            Deferred
+            Model
 ) {
    'use strict';
    var counter = 10;
    var EditInPlace = Control.extend({
       _template: template,
       _itemActions: null,
-      editingConfig: null,
-      _editOnClick: true,
-      _singleEdit: false,
-      _autoAdd: false,
-      _editingItem: null,
-      _addItem: null,
 
       _showAction: function(action, item) {
          if (item.get('id') === 1 && action.id === 0) { //первую запись всё равно нельзя редактировать
@@ -198,7 +190,10 @@ define('Controls-demo/List/EditAndRemoveOperations', [
             type: 'yesno'
          });
       },
-      _onBeginEdit: function(e, itemObj) {
+      _onBeginEdit: function(e, itemObj, isAdd) {
+         if (isAdd) {
+            return this._onBeginAdd();
+         }
          var item = itemObj.item;
          this.__editingItem = item;
          switch (item.get('id')) {

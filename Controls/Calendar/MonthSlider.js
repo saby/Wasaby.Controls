@@ -7,7 +7,7 @@ define('Controls/Calendar/MonthSlider', [
    'Controls/Calendar/Utils',
    'Controls/Utils/Date',
    'wml!Controls/Calendar/MonthSlider/MonthSlider',
-   'css!Controls/Calendar/MonthSlider/MonthSlider'
+   'css!theme?Controls/Calendar/MonthSlider/MonthSlider'
 ], function(
    BaseControl,
    coreMerge,
