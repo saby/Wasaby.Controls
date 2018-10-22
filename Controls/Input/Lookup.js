@@ -230,7 +230,7 @@ define('Controls/Input/Lookup', [
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Lookup__item'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-SelectedCollection__item'), function(item) {
             itemsSizes.push(item.clientWidth);
          });
          document.body.removeChild(measurer);
