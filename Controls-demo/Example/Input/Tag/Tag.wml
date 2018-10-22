@@ -13,7 +13,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="done"
+                  <Controls.Input.Text tagStyle="success"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -22,7 +22,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="attention"
+                  <Controls.Input.Text tagStyle="warning"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
@@ -31,7 +31,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.Input.Text tagStyle="error"
+                  <Controls.Input.Text tagStyle="danger"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
