@@ -100,6 +100,7 @@ define('Controls/Validate/Controller',
 
             return resultDeferred;
          },
+
          /**
           * Запустить валидацию
           * @returns {*}

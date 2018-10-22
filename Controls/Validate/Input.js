@@ -16,7 +16,7 @@ define('Controls/Validate/Input',
             this._forceUpdate();
             this._notify('focusOut');
          },
-         _hoverHandler: function(){
+         _hoverHandler: function() {
             this._notify('hover');
             this._shouldValidate = true;
             this._forceUpdate();
