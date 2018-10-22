@@ -10,7 +10,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
       'SBIS3.CONTROLS/NotificationPopup',
       'browser!SBIS3.CONTROLS/Utils/NotificationStackManager',
       'Core/constants',
-      'Core/helpers/Function/runDelayed'
+      'Core/helpers/Function/runDelayed',
+      'Transport/XHR/ErrorText'
    ],
 
    /**
@@ -44,10 +45,20 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
       NotificationPopup,
       NotificationManager,
       constants,
-      runDelayed) {
+      runDelayed,
+      ErrorText) {
       'use strict';
 
+      var getConnectionErrorText = function() {
+         return ErrorText.lossOfConnection + " " + window.location.hostname;
+      };
+
+      var isConnectionErrorPopupShow = false;
+
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler) {
+         if (config.message === getConnectionErrorText()) {
+            isConnectionErrorPopupShow = true;
+         }
          if (config.message && config.status === 'error') {
             config.message = config.message.toString().replace('Error: ', '');
          }
@@ -63,6 +74,8 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                case false: handler = negativeHandler; break;
                default: handler = cancelHandler; break;
             }
+
+            isConnectionErrorPopupShow = false;
 
             if (handler && typeof handler === 'function') {
                handler.call(popup);
@@ -134,7 +147,14 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
           * @see showCustomNotification
           */
          showMessageDialog: function(config, handler) {
-            return showSubmitDialog(config, null, null, handler);
+            // На уровне InformationPopupManager определяем, что уже показано сообщение о потере связи с сайтом,
+            // для того, чтобы не появлялось кучи однотипных нотификационных попапов (их зовут все, кто выполняет запрос
+            // на БЛ и получает ошибку)
+            // Для vdom нужно реализовать контроллер для единой точки обработки исключений. В качестве аргумента должна
+            // прилетать ошибка (а не текст как сейчас)
+            if (config.message !== getConnectionErrorText() || !isConnectionErrorPopupShow) {
+               return showSubmitDialog(config, null, null, handler);
+            }
          },
 
          /**
