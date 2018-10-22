@@ -106,7 +106,6 @@ define('Controls/Application/HeadDataContext', [
                   additionalDepsArray.push(key);
                }
             }
-            IoC.resolve('ILogger').error('Additional deps array: ' + additionalDepsArray);
 
             // Костыль. Чтобы сериализовать receivedState, нужно собрать зависимости, т.к. в receivedState у компонента
             // Application сейчас будет список css, для восстановления состояния с сервера.
