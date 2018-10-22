@@ -95,7 +95,7 @@ define('Controls/Toggle/Button', [
       return {
          style: 'linkMain',
          size: 'l',
-         iconStyle: 'default'
+         iconStyle: 'secondary'
       };
    };
 

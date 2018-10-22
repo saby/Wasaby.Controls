@@ -1,17 +1,19 @@
 <a attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
              controls-Button_type-{{_type}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_type-{{_typeWithSize}}
-             controls-Button_viewMode-{{_options.viewMode}}
+             controls-Button_viewMode-{{_options.viewMode}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
+             controls-Button_viewMode-{{_viewModeWithSize}}
              controls-Button_style-{{_style}}_viewMode-{{_options.viewMode}}{{_state}}
              {{_options.readOnly ?  '':'controls-Button_style-' + _styleWithIconStyle + _state}}"
     attr:title="{{_options.tooltip}}"
     on:click="_clickHandler()"
     on:keypress="_keyUpHandler()"
     attr:href="{{_options.href}}">
-    <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}} controls-Button__wrapper_viewMode-{{_typeWithSize}}">
+    <span attr:class="controls-BaseButton__content controls-Button__wrapper_type-{{_typeWithSize}} controls-Button__wrapper_viewMode-{{_viewModeWithSize}}">
         <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon {{_icon}} {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + _state}}
-                            {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + 'viewMode-' +_options.viewMode + _state}}"/>
+                            {{_options.readOnly ? '':'controls-Button__icon-' + _options.iconStyle + _state}}
+                            {{_options.readOnly ? '':'controls-Button__icon-' + _styleWithIconStyle + '_viewMode-' +_options.viewMode + _state}}"/>
         </ws:if>
         <ws:if data="{{!!_caption}}">
            <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} controls-Button__text_viewMode-{{_options.viewMode}} {{_options.icon ? ' controls-Button__text_gap'}}">

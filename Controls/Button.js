@@ -146,6 +146,7 @@ define('Controls/Button', [
          self._style = currentButtonClass.style;
          self._type = currentButtonClass.type;
          self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
+         self._viewModeWithSize = options.viewMode + '_size-' + options.size;
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
