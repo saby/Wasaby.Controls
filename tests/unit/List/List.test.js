@@ -9,7 +9,7 @@ define([
 ) {
    describe('Controls.List', function() {
       describe('EditInPlace', function() {
-         it('editItem', function() {
+         it('beginEdit', function() {
             var opt = {
                test: '123'
             };
@@ -17,30 +17,30 @@ define([
                list = new List({});
             list._children = {
                listControl: {
-                  editItem: function(options) {
+                  beginEdit: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = list.editItem(opt);
+            var result = list.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('editItem, readOnly: true', function() {
+         it('beginEdit, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                list = new List({});
             list.saveOptions({ readOnly: true });
-            var result = list.editItem(opt);
+            var result = list.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
 
-         it('addItem', function() {
+         it('beginAdd', function() {
             var opt = {
                test: '123'
             };
@@ -48,25 +48,25 @@ define([
                list = new List({});
             list._children = {
                listControl: {
-                  addItem: function(options) {
+                  beginAdd: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = list.addItem(opt);
+            var result = list.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('addItem, readOnly: true', function() {
+         it('beginAdd, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                list = new List({});
             list.saveOptions({ readOnly: true });
-            var result = list.addItem(opt);
+            var result = list.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });

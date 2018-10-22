@@ -22,16 +22,10 @@ define('Controls/Filter/Button/Panel/Link', [
       _template: template,
 
       _clickHandler: function() {
-         this._notify('valueChanged');
+         this._notify('visibilityChanged', [true]);
       }
 
    });
-
-   FilterLink.getDefaultOptions = function() {
-      return {
-         value: true
-      };
-   };
 
    return FilterLink;
 });

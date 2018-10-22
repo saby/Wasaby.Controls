@@ -35,6 +35,7 @@
                        itemTemplate="{{_options.additionalTemplate}}"
                        itemTemplateProperty="{{_options.additionalTemplateProperty}}"
                        on:valueChanged="_valueChangedHandler()"
+                       on:visibilityChanged="_visibilityChangedHandler()"
                        attr:class="controls-FilterPanel__AdditionalParams"/>
             </ws:if>
          </div>

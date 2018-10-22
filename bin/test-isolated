@@ -4,7 +4,5 @@
 node -v
 npm install
 
-node depencyCollector
-node sbis3-ws/compileEsAndTs.js
-python build.py
+node build-app
 node node_modules/ws-unit-testing/mocha -t 10000 -R xunit --amd test-report
