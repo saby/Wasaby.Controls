@@ -1,5 +1,5 @@
 <div class="demo-Grid">
-    <Controls.List.AddButton caption="Add record" on:click="list.addItem()" class="test_add_record_1"/>
+    <Controls.List.AddButton caption="Add record" on:click="list.beginAdd()" class="test_add_record_1"/>
     <div class="demo-Grid__container">
         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
             <Controls.TreeGrid
