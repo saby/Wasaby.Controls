@@ -268,14 +268,14 @@ define('Controls/List/BaseControl', [
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          
-         if (self._sourceController) {
-            hasMoreDataDown = self._sourceController.hasMoreData('down');
-         }
-         
          if (self._scrollPagingCtr) {
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
             } else {
+               //when scrolling down we will send information to scrollPaging about the availability of data next
+               if (self._sourceController) {
+                  hasMoreDataDown = self._sourceController.hasMoreData('down');
+               }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreDataDown);
             }
          }
