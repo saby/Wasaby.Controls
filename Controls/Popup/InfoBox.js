@@ -7,7 +7,6 @@ define('Controls/Popup/InfoBox',
       'Controls/Application/TouchDetector/TouchContextField'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext) {
-
       'use strict';
 
       /**
@@ -59,6 +58,7 @@ define('Controls/Popup/InfoBox',
                target: event.currentTarget || event.target,
                template: OpenerTemplate,
                position: self._options.position,
+               style: self._options.style,
                eventHandlers: {
                   onResult: self._resultHandler
                },
@@ -69,6 +69,7 @@ define('Controls/Popup/InfoBox',
                }
             };
          }
+
       };
 
       var InfoBox = Control.extend({
@@ -91,7 +92,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             }
          },
 
@@ -99,7 +100,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this, event);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], {bubbling: true});
+               this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                this._children.infoBoxOpener.open(config);
             }
@@ -114,7 +115,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             } else {
                this._children.infoBoxOpener.close();
             }
@@ -131,6 +132,7 @@ define('Controls/Popup/InfoBox',
             this._open(event);
             event.stopPropagation();
          },
+
 
          _contentMouseenterHandler: function(event) {
             /**

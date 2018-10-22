@@ -23,7 +23,6 @@ define('Controls/Validate/Controller',
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
          },
-
          _validationResult: undefined,
 
          _callValidators: function callValidators(validators) {
@@ -101,7 +100,6 @@ define('Controls/Validate/Controller',
 
             return resultDeferred;
          },
-
          /**
           * Запустить валидацию
           * @returns {*}
@@ -129,7 +127,7 @@ define('Controls/Validate/Controller',
          },
 
          /**
-          * Показывает InfoBox с ошибкой  валидации
+          * Показывает InfoBox с подсказкой
           */
          openInfoBox: function() {
             this._notify('openInfoBox', [{
@@ -138,6 +136,10 @@ define('Controls/Validate/Controller',
                message: this._validationResult
             }], { bubbling: true });
          },
+
+         /**
+          * Скрывает InfoBox с подсказкой
+          */
          closeInfoBox: function() {
             this._notify('closeInfoBox', [], { bubbling: true });
          },

@@ -14,6 +14,15 @@ define('Controls/Validate/Input',
          _focusOutHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
+            this._notify('focusOut');
+         },
+         _hoverHandler: function(){
+            this._notify('hover');
+            this._shouldValidate = true;
+            this._forceUpdate();
+         },
+         _focusInHandler: function() {
+            this._notify('focusIn');
          },
          _cleanValid: function() {
             this.setValidationResult(null);
@@ -25,5 +34,4 @@ define('Controls/Validate/Input',
             }
          }
       });
-   }
-);
+   });
