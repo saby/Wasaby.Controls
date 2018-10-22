@@ -5,7 +5,7 @@
    wsRoot="{{ wsRoot }}"
    resourceRoot="{{ resourceRoot }}"
    appRoot="{{ appRoot }}"
-   RUMEnabled="{{ _options.RUMEnabled }}"
+   RUMEnabled="{{ RUMEnabled }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}"
