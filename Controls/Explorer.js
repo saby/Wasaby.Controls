@@ -52,7 +52,7 @@ define('Controls/Explorer', [
             var
                path = data.getMetaData().path;
             if (path) {
-               self._breadCrumbsItems = data.getMetaData().path;
+               self._breadCrumbsItems = path;
             } else {
                self._breadCrumbsItems = [];
             }
