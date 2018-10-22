@@ -171,6 +171,22 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             }
             return false;
          },
+         hasAdditional: function() {
+            var self = this;
+            var hasAdditional = false;
+            var display = this._itemsModel._display;
+            var item;
+
+            if (this._options.additionalProperty && this._options.rootKey === null) {
+               display.each(function(displayItem) {
+                  if (!hasAdditional) {
+                     item = displayItem.getContents();
+                     hasAdditional = item.get && item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
+                  }
+               });
+            }
+            return hasAdditional;
+         },
          _hasParent: function(item) {
             return this._hierarchy.hasParent(item, this._options.items);
          },
