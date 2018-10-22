@@ -114,8 +114,8 @@
 
 .controls-DropdownList-cross {
    position: absolute;
-   right: @right-DropdownList-cross;
-   top: @top-DropdownList-cross;
+   right: @margin-right_DropdownList-cross;
+   top: @margin-top_DropdownList-cross;
    z-index: 2;
 }
 
@@ -163,9 +163,8 @@
 }
 
 .controls-Toolbar__menu-position {
-   //todo: жду крестик для темизации
-   margin-top: -6px;
-   margin-left: 6px - 2px;//border or ya hz chto eto takoe
+   margin-top: -@margin-top_DropdownList-cross;
+   margin-left: @margin-right_DropdownList-cross;
 }
 
 .controls-DropdownList__additional {
