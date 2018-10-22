@@ -123,10 +123,11 @@ define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', '']
          var res = link;
          if (this.isDebug) {
             res = link + '.' + ext;
-         } else if (!this.buildNumber) {
-            res = link + '.min.' + ext;
          } else {
-            res = link + '.min.v' + this.buildNumber + '.' + ext;
+            res = link + '.min.' + ext;
+            if (this.buildNumber) {
+               res = res + '?x_version=' + this.buildNumber;
+            }
          }
          return res;
       }
