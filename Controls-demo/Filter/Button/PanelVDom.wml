@@ -24,7 +24,7 @@
       <div>
          <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  on:filterChanged="_filterChangedHandler()"
-                                 orientation="right"
+                                 alignment="left"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_items">
          </Controls.Filter.Button>
@@ -37,7 +37,7 @@
          <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_itemsHistory"
-                                 orientation="right"
+                                 alignment="left"
                                  historyId="DEMO_HISTORY_ID">
          </Controls.Filter.Button>
       </div>
