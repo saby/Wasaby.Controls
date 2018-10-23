@@ -24,7 +24,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @cfg {String} Sets the display of the filter panel.
     * @variant vertical Vertical orientation of the panel. The history block is displayed below.
     * @variant horizontal Horizontal orientation of the panel. History block is displayed on the right.
-    * @default default
+    * @default vertical
     * @remark
     * If there is no history in the panel, the component will be displayed in one column.
     * When the panel is displayed in two columns, the history block is displayed on the right.
