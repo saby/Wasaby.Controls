@@ -42,7 +42,7 @@ define(
             keyProperty: 'id',
             displayProperty: 'title',
             caption: 'Выберите запись',
-            maxVisibilityItems: 2
+            maxVisibleItems: 2
          };
 
          let getButton = function(config) {
