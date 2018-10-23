@@ -103,6 +103,8 @@ define('Controls/Input/Number',
                 * If you change the value, the selection is set to the end. Therefore, it must be restored.
                 * In ie, if the selection changes, the field will be automatically focused.
                 * If the method is called during the focus out, the focus field will not lose. Therefore, remember the selection.
+                *
+                * Changing the value in the focus out field is only in the number field. Therefore, the code is not needed for all fields.
                 */
                if (detection.isIE) {
                   self._selectionStart = target.selectionStart;
