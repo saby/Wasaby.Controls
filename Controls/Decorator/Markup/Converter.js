@@ -15,14 +15,14 @@ define('Controls/Decorator/Markup/Converter', [
 
       if (dom.nodeType === 1 && dom.attributes.length > 0) {
          json[1] = {};
-         for (var j = 0; j < dom.attributes.length; j++) {
+         for (var j = 0; j < dom.attributes.length; ++j) {
             var attribute = dom.attributes.item(j);
             json[1][attribute.nodeName] = attribute.nodeValue;
          }
       }
 
       if (dom.hasChildNodes()) {
-         for (var i = 0; i < dom.childNodes.length; i++) {
+         for (var i = 0; i < dom.childNodes.length; ++i) {
             var item = domToJson(dom.childNodes.item(i));
             json.push(item);
          }

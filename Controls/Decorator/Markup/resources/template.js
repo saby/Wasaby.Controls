@@ -2,8 +2,10 @@
  * Created by rn.kondakov on 18.10.2018.
  */
 define('Controls/Decorator/Markup/resources/template', [
-   'View/Runner/tclosure'
-], function(thelpers) {
+   'View/Runner/tclosure',
+   'Core/validHtml'
+], function(thelpers,
+   validHtml) {
    'use strict';
 
    var markupGenerator,
@@ -11,10 +13,27 @@ define('Controls/Decorator/Markup/resources/template', [
       control,
       resolver;
 
-   function recursiveMarkup(value, attrsToDecorate, key) {
-      var valueToBuild = resolver ? resolver(value) : value;
+   function isString(value) {
+      return typeof value === 'string' || value instanceof String;
+   }
+
+   function recursiveMarkup(value, attrsToDecorate, key, parent) {
+      var valueToBuild = resolver ? resolver(value, parent) : value;
       if (value !== valueToBuild) {
          resolver = false;
+      }
+      if (isString(value)) {
+         return markupGenerator.createText(markupGenerator.escape(value), key);
+      }
+      var out = [];
+      if (Array.isArray(value[0])) {
+         for (var i = 0; i < value.length; ++i) {
+            out.push(recursiveMarkup(value[i]), attrsToDecorate, key + i + '_');
+         }
+         return out;
+      }
+      if (!validHtml.validNodes[value[0]]) {
+         return [];
       }
    }
 
@@ -34,7 +53,7 @@ define('Controls/Decorator/Markup/resources/template', [
             context: attr.context
          };
       try {
-         out = markupGenerator.joinElements(recursiveMarkup(data._options.value, attrsToDecorate, key));
+         out = markupGenerator.joinElements(recursiveMarkup(data._options.value, attrsToDecorate, key, null));
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       }
