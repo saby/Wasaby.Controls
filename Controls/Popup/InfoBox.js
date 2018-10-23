@@ -11,12 +11,14 @@ define('Controls/Popup/InfoBox',
       'use strict';
 
       /**
-       * A delayed template display component.
-       * Uses Controls/Popup/Opener/InfoBox.
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
        * @extends Core/Control
-       * @mixes Controls/interface/IStickyOpener
+       * @mixes Controls/interface/IInfoboxOptions
+       *
+       *
+       *
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
@@ -32,6 +34,11 @@ define('Controls/Popup/InfoBox',
        * @cfg {Number} Delay before opening after mouse enters.
        */
 
+       /**
+        * @name Controls/Popup/InfoBox#position
+        * @cfg {Number} Point positioning of the target relative to infobox.
+        */
+
       /**
        * @name Controls/Popup/InfoBox#content
        * @cfg {Function} The content to which the logic of opening and closing the template is added.
@@ -39,8 +46,13 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#template
-       * @cfg {Function} Popup template
+       * @cfg {String|Function} Popup template.
        */
+
+       /**
+        * @name Controls/Popup/InfoBox#templateOptions
+        * @cfg {Object} Popup template options.
+        */
 
       /**
        * @name Controls/Popup/InfoBox#trigger
