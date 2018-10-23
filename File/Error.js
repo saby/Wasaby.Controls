@@ -11,11 +11,10 @@ define("File/Error", ["require", "exports", "Core/core-classicExtend"], function
     var FileError = /** @class */ (function () {
         /**
          *
-         * @params {String} message Текст ошибки
-         * @params {String} fileName Имя файла, вызвавшего ошибку
-         * @params {String} details Детальное описание ошибки.
+         * @param {String} message Текст ошибки
+         * @param {String} fileName Имя файла, вызвавшего ошибку
+         * @param {String} details Детальное описание ошибки.
          * @constructor
-         * @name File/Error
          */
         function FileError(_a) {
             var message = _a.message, fileName = _a.fileName, details = _a.details;
@@ -27,7 +26,7 @@ define("File/Error", ["require", "exports", "Core/core-classicExtend"], function
         }
         return FileError;
     }());
-    /*
+    /**
      * Error - является не совсем честным конструктором и при использовании записи эквивалентны
      * 1) var e = new Error('');
      * 2) var e = Error('');

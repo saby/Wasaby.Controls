@@ -24,7 +24,7 @@
                      swipeTemplate="{{swipeTemplate}}"
                      itemActionsTemplate="{{itemActionsTemplate}}"
                      hasTitle="{{hasTitle}}"
-                     width="{{width}}"/>
+                     width="{{width || itemData.defaultItemWidth}}"/>
       </ws:if>
       <ws:else>
          <ws:partial template="{{imageWrapper}}"/>
@@ -52,11 +52,11 @@
 </ws:template>
 
 <ws:if data="{{invisible}}">
-   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'flex-basis: ' + width + 'px;'}}"></div>
+   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
-      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' +  (width * 0.7) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + width + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}}" attr:style="{{'height: ' + itemData.itemsHeight + 'px;'}}">
@@ -67,12 +67,12 @@
       </ws:partial>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + width + 'px;'}}">
-         <div style="{{'padding-top: ' + (itemData.itemsHeight / width) * 100 + '%;'}}"></div>
+      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+         <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl">
-                  <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / width) * 100 + '%;'}}"></div>
+                  <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
                   <ws:partial template="imageTpl"/>
                </ws:partial>
             </ws:imageWrapper>

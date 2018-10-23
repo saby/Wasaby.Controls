@@ -24,7 +24,7 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @name Controls/interface/IFilterButton#items
-    * @cfg {FilterPanelItems[]} Properties for editing or showing.
+    * @cfg {FilterPanelItems[]} Special structure for the visual representation of the filter.
     * @remark
     * The "value" from every item will insert in filter by "id" of this item.
     * If visibility is not specified, the filter item will always be displayed in the main block.
@@ -61,7 +61,7 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#lineSpaceTemplate
     * @cfg {Function} Template for the space between the button and the string, that is formed by the values from items.
     * @remark
-    * For example, here you can place a period selection component.
+    * For example, here you can place a period selection control.
     * @example
     * Example of inserting a quick period selection
     * <pre>
@@ -80,11 +80,11 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @name Controls/interface/IFilterButton#templateName
-    * @cfg {String} Template for the pop-up panel.
+    * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
     * @remark
-    * As a template, it is recommended to use the component {@link Controls/Filter/Button/Panel }
+    * As a template, it is recommended to use the control {@link Controls/Filter/Button/Panel }
     * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>here</a>.
-    * Important: for lazy loading template in the option give the path to the component
+    * Important: for lazy loading template in the option give the path to the control
     * @example
     * Example setting options for two filters.
     * Templates for displaying both filters in the "Select" block are in "MyModule/mainBlockTemplate.wml"
@@ -121,6 +121,8 @@ define('Controls/interface/IFilterButton', [
     * @variant right The panel opens to the left.
     * @variant left The panel opens to the right.
     * @default left
+    * @remark
+    * The string, that is formed by the values from items, also changes position.
     * @example
     * Example of opening the filter panel in the right
     * <pre>

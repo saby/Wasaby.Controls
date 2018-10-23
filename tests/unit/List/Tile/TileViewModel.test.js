@@ -53,5 +53,16 @@ define(['Controls/List/TileView/TileViewModel', 'WS.Data/Collection/RecordSet'],
          tileViewModel.setActiveItem({key: 3});
          assert.equal(tileViewModel.getHoveredItem().key, 2);
       });
+
+      it('getTileItemData', function() {
+         var tileItemData = tileViewModel.getTileItemData();
+         assert.deepEqual(tileItemData, {
+            tileMode: 'dynamic',
+            itemsHeight: 200,
+            imageProperty: 'image',
+            defaultItemWidth: 250,
+            itemCompressionCoefficient: 0.7
+         });
+      });
    });
 });

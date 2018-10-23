@@ -57,7 +57,7 @@ export type IResource = {
 
 /**
  * Конструктор обёртки над ресурсом
- * @typedef  File/IResourceConstructor
+ * @typedef File/IResourceConstructor
  * @constructor
  * @see File/IResource
  * @public

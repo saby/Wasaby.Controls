@@ -1,3 +1,6 @@
+@import "./../../../Controls-theme/themes/default/controls/Render";
+@import "./../../../Controls-theme/themes/default/helpers/_mixins";
+
 .controls-Render {
    position: relative;
    display: inline-block;
@@ -7,7 +10,7 @@
 .controls-Render_size {
    @variants: default, small, large;
    .for(@variants, { &_@{_item} {
-      height: ~"@{color_Render_fontStyle_@{_item}}";
+      height: ~"@{height_Render_size_@{_item}}";
    } });
 }
 
@@ -22,11 +25,24 @@
 
 .controls-Render_style {
    border-style: solid;
-   border-width: @border-width_InputRender;
+   border-width: @border-width_Render;
 
    @variants: info, danger, invalid, primary, success, warning;
    .for(@variants, { &_@{_item} {
       border-color: ~"@{border-color_Render_style_@{_item}}";
       background: ~"@{background_Render_style_@{_item}}";
+   } });
+}
+
+.controls-Render__tagStyle {
+   top: 0;
+   right: 0;
+   position: absolute;
+   width: @width_Render-tagStyle;
+   height: @height_Render-tagStyle;
+
+   @variants: info, danger, success, primary, warning, secondary;
+   .for(@variants, { &_@{_item} {
+      fill: ~"@{color_Render-tagStyle_@{_item}}";
    } });
 }

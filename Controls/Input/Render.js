@@ -4,7 +4,8 @@ define('Controls/Input/Render',
       'Controls/Utils/tmplNotify',
       'Controls/Input/resources/RenderHelper',
 
-      'wml!Controls/Input/Render/Render'
+      'wml!Controls/Input/Render/Render',
+      'css!Controls/Input/Render/Render'
    ],
    function(Control, tmplNotify, RenderHelper, template) {
 

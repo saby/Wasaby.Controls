@@ -13,7 +13,7 @@
             readOnly="{{readOnly}}"
             value="{{value123}}"
             on:valueChanged="changeText()"
-            codeMode="{{codeMode}}"
+            sourceMode="{{sourceMode}}"
             autoHeight="{{true}}"
             maximalHeight="{{250}}"
             minimalHeight="{{200}}"

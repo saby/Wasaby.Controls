@@ -26,6 +26,7 @@ define(
          ];
 
          var addParams = new AddParams();
+         addParams.saveOptions({items: items});
          addParams._beforeMount({items: items});
 
          it('is visible', function() {
@@ -36,6 +37,16 @@ define(
 
          it('count items', function() {
             assert.equal(AddParams._private.countItems(addParams, items), 1);
+         });
+
+         it('_valueChangedHandler', function() {
+            addParams._valueChangedHandler('valueChanged', 2, 'newValue');
+            assert.equal('newValue', addParams._options.items[2].value);
+         });
+
+         it('_visibilityChanged', function() {
+            addParams._visibilityChangedHandler('visibilityChanged', 2);
+            assert.equal(true, addParams._options.items[2].visibility);
          });
 
       });

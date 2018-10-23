@@ -8,7 +8,7 @@ define("File/HttpFileLink", ["require", "exports", "tslib", "File/ResourceAbstra
      * @name File/HttpFileLink
      * @public
      * @author Заляев А.В.
-     * @implements File/IResource
+     * @implements {File/IResource}
      */
     var HttpFileLink = /** @class */ (function (_super) {
         tslib_1.__extends(HttpFileLink, _super);

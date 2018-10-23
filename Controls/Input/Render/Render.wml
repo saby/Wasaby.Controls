@@ -1,11 +1,4 @@
-<div class="controls-InputRender
-   controls-Text-InputRender
-   controls-Text-InputRender_style_{{ _options.style }}
-   controls-Text-InputRender_state_{{ _inputState }}
-   {{ _options.readOnly ? 'controls-Text-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
-   controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
-   controls-Text-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}
-   {{ !_options.multiline ? 'controls-InputRender_whiteSpace_nowrap' : 'controls-InputRender_whiteSpace_normal' }}">
+<div class="controls-Render">
    <div
       class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
       <ws:if data="{{_options.beforeFieldWrapper}}">
@@ -34,9 +27,13 @@
       </ws:if>
    </div>
    <ws:if data="{{_options.tagStyle}}">
-      <div name="tag" class="controls-InputRender__tagStyle controls-InputRender__tagStyle-{{_options.tagStyle}}"
-           on:mouseenter="_notifyHandler('tagHover', _children.tag)"
-           on:click="_notifyHandler('tagClick', _children.tag)">
-      </div>
+      <svg name="tag"
+           viewBox="0 0 1 1"
+           xmlns="http://www.w3.org/2000/svg"
+           class="controls-Render__tagStyle controls-Render__tagStyle_{{_options.tagStyle}}"
+           on:click="_notifyHandler('tagClick', _children.tag)"
+           on:mouseenter="_notifyHandler('tagHover', _children.tag)">
+         <polygon points="0,0 1,1 1,0"/>
+      </svg>
    </ws:if>
 </div>

@@ -96,7 +96,8 @@ define('SBIS3.CONTROLS/NotificationPopup', [
                 */
                additionalClass: 'controls-NotificationPopup_popup',
                closeButton: true,
-               crossStyle: 'light'
+               crossStyle: 'light',
+               _checkZIndexVDOM: false
             },
 
             _customIcon: false
