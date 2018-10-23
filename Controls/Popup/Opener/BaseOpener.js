@@ -239,11 +239,16 @@ define('Controls/Popup/Opener/BaseOpener',
                deps.push('SBIS3.CONTROLS/Action/OpenDialog');
             }
 
-            requirejs(deps, function(CompatibleOpener, Action) {
+            if (typeof cfg.template === 'string') {
+               deps.push(cfg.template);
+            }
+
+            requirejs(deps, function(CompatibleOpener, Action, Tpl) {
                if (opener && opener._options.closeOnTargetScroll) {
                   cfg.closeOnTargetScroll = true;
                }
-               var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg);
+
+               var newCfg = CompatibleOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
                var action;
                if (!opener || !opener._action) {
                   action = new Action({
