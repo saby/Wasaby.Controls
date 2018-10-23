@@ -174,14 +174,11 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          hasAdditional: function() {
             var self = this;
             var hasAdditional = false;
-            var display = this._itemsModel._display;
-            var item;
 
             if (this._options.additionalProperty && this._options.rootKey === null) {
-               display.each(function(displayItem) {
+               this._options.items.each(function(item) {
                   if (!hasAdditional) {
-                     item = displayItem.getContents();
-                     hasAdditional = item.get && item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
+                     hasAdditional = item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
                   }
                });
             }
