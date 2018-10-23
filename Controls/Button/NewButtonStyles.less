@@ -1,15 +1,15 @@
-.controls-Button_style-primaryNew_viewMode-button {
+.controls-Button_style-primary_viewMode-button {
    color: @color_Button-Vdom-text_primary;
    border-color: @border-color_Button_primary;
    background: @background_Button_primary;
 }
 
-.controls-Button_style-primaryNew_viewMode-button:active {
+.controls-Button_style-primary_viewMode-button:active {
    border-color: @border-color_Button_primary_hovered;
    background: @background_Button_primary_active;
 }
 
-.controls-Button_style-primaryNew_viewMode-button_readOnly {
+.controls-Button_style-primary_viewMode-button_readOnly {
    background: @background_Button-primary_readOnly;
 }
 
@@ -73,7 +73,7 @@
    color: @color_Button-icon;
 }
 
-.controls-Button__icon-primaryNew_iconStyle-default_viewMode-button {
+.controls-Button__icon-primary_iconStyle-default_viewMode-button {
    color: @color_Button-icon_primary;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .ws-is-no-touch {
-   .controls-Button_style-primaryNew_viewMode-button:hover {
+   .controls-Button_style-primary_viewMode-button:hover {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_hovered;
    }
@@ -97,7 +97,7 @@
       background: @background_Button_default_active;
    }
 
-   .controls-Button_style-primaryNew_viewMode-button:active {
+   .controls-Button_style-primary_viewMode-button:active {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_active;
    }
@@ -122,27 +122,27 @@
 }
 
 .controls-Button__icon-info {
-   color: @color_info;
+   color: @color-Icon_style_info;
 }
 
 .controls-Button__icon-success {
-   color: @color_success;
+   color: @color-Icon_style_success;
 }
 
 .controls-Button__icon-danger {
-   color: @color_danger;
+   color: @color-Icon_style_danger;
 }
 
 .controls-Button__icon-warning {
-   color: @color_warning;
+   color: @color-Icon_style_warning;
 }
 
 .controls-Button__icon-secondary {
-   color: @color_secondary;
+   color: @color-Icon_style_secondary;
 }
 
 .controls-Button__icon-primary {
-   color: @color_primaryV;
+   color: @color-Icon_style_primary;
 }
 
 .controls-Button__icon-default {
@@ -258,19 +258,19 @@
 }
 
 .controls-Button_style-success_viewMode-link {
-   color: @color_success;
+   color: @color_Link_success;
 }
 
 .controls-Button_style-danger_viewMode-link {
-   color: @color_danger;
+   color: @color_Link_danger;
 }
 
 .controls-Button_style-info_viewMode-link {
-   color: @color_info;
+   color: @color_Link_info;
 }
 
 .controls-Button_style-warning_viewMode-link {
-   color: @color_warning;
+   color: @color_Link_warning;
 }
 
 .controls-Button_style-primary_viewMode-link {
@@ -315,7 +315,7 @@
    background: @background_Button-default_readOnly;
 }
 
-.controls-Button_style-primaryNew_viewMode-Button_readOnly {
+.controls-Button_style-primary_viewMode-Button_readOnly {
    background: @background_Button-primary_readOnly;
 }
 
@@ -394,6 +394,23 @@
 }
 .controls-Button__text_gap {
    margin-left: @spacing_Button-between-icon-text;
+}
+.ws-is-no-touch {
+   .controls-Label_underline-hovered:hover {
+      text-decoration: underline;
+   }
+   .controls-Label_underline_color-hovered:hover {
+      color: @color_Link-main-text_hovered;
+   }
+}
+.controls-Label_underline-hovered:active {
+   text-decoration: underline;
+}
+.controls-Label_underline_color-hovered:active {
+   color: @color_Link-main-text_hovered;
+}
+.controls-Label_underline_color-hovered {
+   text-decoration: underline;
 }
 // перенес в vDom, чтобы не было пересечения со старыми кнопками
 // изменено имя в остальном стили аналогичны

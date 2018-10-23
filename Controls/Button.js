@@ -151,16 +151,15 @@ define('Controls/Button', [
       cssStyleGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._style = currentButtonClass.style;
-         self._type = currentButtonClass.type;
-         self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
-         self._viewModeWithSize = options.viewMode + '_size-' + options.size;
-         self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
+         self._style = currentButtonClass ? currentButtonClass.style : undefined;
+         self._type = currentButtonClass ? currentButtonClass.type : undefined;
+         self._typeWithSize = currentButtonClass ? currentButtonClass.type + '_size-' + options.size : undefined;
+         self._styleWithIconStyle = currentButtonClass ? currentButtonClass.style + '_iconStyle-' + options.iconStyle : undefined;
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
          self._icon = options.icon;
-         self._isTransparent = !!currentButtonClass.transparent;
+         self._isTransparent = currentButtonClass ? !!currentButtonClass.transparent : undefined;
       }
    };
    var Button = Control.extend({
