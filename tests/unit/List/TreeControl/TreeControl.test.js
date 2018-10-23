@@ -1,11 +1,13 @@
 define([
    'Controls/List/TreeControl',
    'Core/Deferred',
-   'Core/core-instance'
+   'Core/core-instance',
+   'WS.Data/Collection/RecordSet'
 ], function(
    TreeControl,
    Deferred,
-   cInstance
+   cInstance,
+   RecordSet
 ) {
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function() {
@@ -57,6 +59,7 @@ define([
             }
          };
          treeControl._beforeUpdate({ root: 'testRoot' });
+         treeControl._afterUpdate({ root: '' });
          assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
          assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
       });
@@ -261,6 +264,132 @@ define([
          };
          treeControl._onNodeRemoved(null, 1);
          assert.deepEqual({ 2: {}, 3: {} }, treeControl._nodesSourceControllers, 'Incorrect value "_nodesSourceControllers" after call "treeControl._onNodeRemoved(null, 1)".');
+      });
+      describe('_onCheckBoxClick', function() {
+         it('select', function() {
+            var
+               treeControl = new TreeControl({}),
+               cfg = {
+                  selectedKeys: [1, 2, 3]
+               };
+            treeControl.saveOptions(cfg);
+            treeControl._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs[0], [1, 2, 3, 4]);
+               assert.deepEqual(eventArgs[1], [4]);
+               assert.deepEqual(eventArgs[2], []);
+            };
+            treeControl._onCheckBoxClick({}, 4, false);
+         });
+         it('unselect all children', function() {
+            var
+               treeControl = new TreeControl({}),
+               cfg = {
+                  selectedKeys: [1, 2, 3],
+                  parentProperty: 'parent',
+                  nodeProperty: 'parent@',
+                  keyProperty: 'id',
+                  items: new RecordSet({
+                     idProperty: 'id',
+                     rawData: [{
+                        id: 1,
+                        'parent': null,
+                        'parent@': true
+                     }, {
+                        id: 2,
+                        'parent': 1,
+                        'parent@': false
+                     }, {
+                        id: 3,
+                        'parent': 1,
+                        'parent@': false
+                     }]
+                  })
+               };
+            treeControl.saveOptions(cfg);
+            treeControl._beforeMount(cfg);
+            treeControl._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs[0], [1, 3]);
+               assert.deepEqual(eventArgs[1], []);
+               assert.deepEqual(eventArgs[2], [2]);
+            };
+            treeControl._onCheckBoxClick({}, 2, true);
+            treeControl._options.selectedKeys = [1, 3];
+            treeControl._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs[0], []);
+               assert.deepEqual(eventArgs[1], []);
+               assert.deepEqual(eventArgs[2], [1, 3]);
+            };
+            treeControl._onCheckBoxClick({}, 3, true);
+         });
+         it('unselect folder', function() {
+            var
+               treeControl = new TreeControl({}),
+               cfg = {
+                  selectedKeys: [1, 2, 3],
+                  parentProperty: 'parent',
+                  nodeProperty: 'parent@',
+                  keyProperty: 'id',
+                  items: new RecordSet({
+                     idProperty: 'id',
+                     rawData: [{
+                        id: 1,
+                        'parent': null,
+                        'parent@': true
+                     }, {
+                        id: 2,
+                        'parent': 1,
+                        'parent@': true
+                     }, {
+                        id: 3,
+                        'parent': 2,
+                        'parent@': false
+                     }]
+                  })
+               };
+            treeControl.saveOptions(cfg);
+            treeControl._beforeMount(cfg);
+            treeControl._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs[0], []);
+               assert.deepEqual(eventArgs[1], []);
+               assert.deepEqual(eventArgs[2], [1, 2, 3]);
+            };
+            treeControl._onCheckBoxClick({}, 1, true);
+         });
+         it('unselect child while inside a folder (so folder doesn\'t exist in items)', function() {
+            var
+               treeControl = new TreeControl({}),
+               cfg = {
+                  selectedKeys: [1, 2, 3],
+                  parentProperty: 'parent',
+                  nodeProperty: 'parent@',
+                  keyProperty: 'id',
+                  items: new RecordSet({
+                     idProperty: 'id',
+                     rawData: [{
+                        id: 2,
+                        'parent': 1,
+                        'parent@': false
+                     }, {
+                        id: 3,
+                        'parent': 1,
+                        'parent@': false
+                     }]
+                  })
+               };
+            treeControl.saveOptions(cfg);
+            treeControl._beforeMount(cfg);
+            treeControl._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs[0], [1, 3]);
+               assert.deepEqual(eventArgs[1], []);
+               assert.deepEqual(eventArgs[2], [2]);
+            };
+            treeControl._onCheckBoxClick({}, 2, true);
+         });
       });
    });
 });

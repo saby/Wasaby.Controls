@@ -680,8 +680,10 @@
 //CloseButton
 @border-width_CloseButton:                      0 0 0 0;
 @border-radius_CloseButton:                     1px;
-@width_CloseButton:                             round(86px * @multiplier);
-@height_CloseButton:                            round(78px * @multiplier);
+@width_CloseButton_m:                             round(86px * @multiplier);
+@height_CloseButton_m:                            round(78px * @multiplier);
+@width_CloseButton:                             @width_CloseButton_m;
+@height_CloseButton:                            @height_CloseButton_m;
 @width_CloseButton_small:                       round(42px * @multiplier);
 @height_CloseButton_small:                      round(42px * @multiplier);
 @font-size_CloseButton:                         round(52px * @multiplier);
@@ -792,8 +794,6 @@
 @margin_FilterPanel__PropertyGrid:          round(11px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @spacing_FilterPanel-header-topTemplate:    0;
 @height_FilterPanel-header:                 round(100px * @multiplier);
-//PropertyGrid
-@height_PropertyGrid-item:                  round(78px * @multiplier);
 //VDOM ListView
 @height_ListView-group: round(50px * @multiplier);
 @spacing_ListView-group-between-text-separator: round(24px * @multiplier);

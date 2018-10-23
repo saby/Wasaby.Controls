@@ -87,9 +87,7 @@ define(
          };
 
          var fastData = new FastData(config);
-         var isSelected = false,
-            selectedKey,
-            isFilterChanged;
+         var isFilterChanged;
 
          var configWithItems = {};
          configWithItems.items = source;
@@ -97,10 +95,7 @@ define(
          fastDataItems._beforeMount(configWithItems);
 
          fastData._notify = (e, args) => {
-            if (e == 'selectedKeysChanged') {
-               isSelected = true;
-               selectedKey = args[0];
-            } else {
+            if (e == 'filterChanged') {
                isFilterChanged = true;
             }
          };
@@ -111,9 +106,10 @@ define(
          };
 
          it('beforeUpdate new items', function(done) {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
-            var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
                fastFilter._beforeUpdate(configWithItems);
@@ -126,6 +122,7 @@ define(
             var fastFilter = getFastFilter(config),
                newConfigSource = Clone(config),
                newSource = Clone(source);
+            fastFilter._beforeMount(config);
             newSource[0].value = 'США';
             newConfigSource.source = new Memory({
                idProperty: 'id',
@@ -191,13 +188,10 @@ define(
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
-                  isSelected = false;
                   isFilterChanged = false;
-                  selectedKey = null;
                   fastData._onResult({ data: [fastData._configs[0]._items.at(2)] });
-                  assert.isTrue(isSelected);
                   assert.isTrue(isFilterChanged);
-                  assert.equal(items[0][2].title, selectedKey);
+                  assert.equal(items[0][2].title, 'США');
                   done();
                });
             });
@@ -221,11 +215,8 @@ define(
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   fastData._container = { children: [] };
-                  isSelected = false;
-                  selectedKey = null;
                   fastData._reset(null, fastData._items.at(0), 0);
-                  assert.isTrue(isSelected);
-                  assert.equal(fastData._items.at(0).get('resetValue'), selectedKey);
+                  assert.equal(fastData._items.at(0).get('resetValue'), 'все страны');
                   done();
                });
             });

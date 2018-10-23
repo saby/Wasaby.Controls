@@ -1,16 +1,28 @@
 /// <amd-module name="File/utils/ExtensionsHelper" />
-
 import MimeTypes = require("json!File/utils/MimeTypes");
 import MediaTypes = require("json!File/utils/MediaTypes");
 
 let isMediaType = (type: string) => {
     return (type == 'audio' || type == 'video' || type == 'image') || false;
 };
+
+/**
+ * Класс-утилита для работы с типами файлов
+ * @class
+ * @public
+ * @author Заляев А.В.
+ * @name File/utils/ExtensionsHelper
+ */
 class ExtensionsHelper {
     // Исходный набор расширений, нужен для формирования более короткой строки MIME-type
     private rawExtensions: Array<string>;
     // Преобразованный набор, где audio, video, image будут заменены на соответствующие наборы расширений
     private extensions: Array<string> = [];
+
+    /**
+     * @param {Array.<String>} extensions Массив допустимых MIME типов файлов или расширений
+     * @constructor
+     */
     constructor(extensions?: Array<string>) {
         extensions = extensions || [];
         this.rawExtensions = extensions;

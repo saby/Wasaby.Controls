@@ -18,6 +18,7 @@
   },
   "include": [
     "../File/**/*",
+    "../Controls/",
     "core.d.ts",
     "tslib.js"
   ],

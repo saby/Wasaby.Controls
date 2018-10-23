@@ -1,0 +1,5 @@
+<ws:partial template="{{_options.content}}"
+      on:routerUpdated="navigate()"
+      on:routerCreated="routerCreated()"
+      on:routerDestroyed="routerDestroyed()"
+      />

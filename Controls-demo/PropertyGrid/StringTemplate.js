@@ -10,12 +10,19 @@ define('Controls-demo/PropertyGrid/StringTemplate',
 
       var stringTmpl = Control.extend({
          _template: template,
-         _valueChangedHandler: function(event, tmp) {
-            this._notify('valueChanged', [tmp]);
+         _valueChangedHandler: function(event, value) {
+            this._notify('valueChanged', [value]);
          },
 
-         _valueChangedSuggest: function(event, value) {
-            this._notify('valueChanged', [value]);
+         _suggestValueChanged: function(event, value) {
+            if (this._options.items) {
+               var item = this._options.items.find(function(item) {
+                  return item.title === value;
+               });
+               this._valueChangedHandler(event, item ? item.value : value);
+            } else {
+               this._valueChangedHandler(event, value);
+            }
          },
 
          _chooseChangedHandler: function(event, item) {

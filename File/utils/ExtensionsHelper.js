@@ -1,10 +1,20 @@
-/// <amd-module name="File/utils/ExtensionsHelper" />
 define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/MimeTypes", "json!File/utils/MediaTypes"], function (require, exports, MimeTypes, MediaTypes) {
     "use strict";
     var isMediaType = function (type) {
         return (type == 'audio' || type == 'video' || type == 'image') || false;
     };
+    /**
+     * Класс-утилита для работы с типами файлов
+     * @class
+     * @public
+     * @author Заляев А.В.
+     * @name File/utils/ExtensionsHelper
+     */
     var ExtensionsHelper = /** @class */ (function () {
+        /**
+         * @param {Array.<String>} extensions Массив допустимых MIME типов файлов или расширений
+         * @constructor
+         */
         function ExtensionsHelper(extensions) {
             var _this = this;
             // Преобразованный набор, где audio, video, image будут заменены на соответствующие наборы расширений

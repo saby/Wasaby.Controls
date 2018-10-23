@@ -415,3 +415,14 @@ define('SBIS3.CONTROLS/EditAtPlace',
 
       return EditAtPlace;
    });
+
+   /**
+    * @name SBIS3.CONTROLS/EditAtPlace#style
+    * @cfg {String} Устанавливает стилевое оформление поля ввода.
+    * @variant default по умолчанию
+    * @variant header заголовок
+    * @variant accentHeader акцентный заголовок
+    * @remark
+    * Акцентный заголовок в теме онлайна имеет такие параметры: размер - 18px, шрифт - жирный, цвет - #D94700 (оранжевый).
+    * Обычный заголовок в теме онлайна имеет параметры: размер - 18px, шрифт - жирный, цвет - #313E78 (синий).
+    */

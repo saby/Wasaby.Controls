@@ -2,10 +2,12 @@ define("File/ResourceAbstract", ["require", "exports"], function (require, expor
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
+     * Абстрактный класс, реализующий интерфейс работы с ресурсами {@link File/IResource}
      * @class
      * @abstract
-     * @implements File/IResource
+     * @implements {File/IResource}
      * @name File/ResourceAbstract
+     * @author Заляев А.В.
      */
     var ResourceAbstract = /** @class */ (function () {
         function ResourceAbstract() {

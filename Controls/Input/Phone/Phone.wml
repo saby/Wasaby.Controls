@@ -9,6 +9,7 @@
    tooltip="{{_options.tooltip}}"
    on:click="_clickHandler()"
    on:deactivated="_deactivatedHandler()"
+   on:valueChanged="_notifyHandler('valueChanged')"
 >
    <ws:content>
       <ws:partial

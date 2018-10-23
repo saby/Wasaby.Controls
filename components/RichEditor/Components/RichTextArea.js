@@ -89,8 +89,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          return version;
       };
 
-      var onlyNotSpacesRegExp = new RegExp('[^' + String.fromCharCode(160) + ' ]+');
-
       var
          // TinyMCE 4.7 и выше не поддерживает MSIE 10? поэтому отдельно для него старый TinyMCE
          // 1175061954 https://online.sbis.ru/opendoc.html?guid=296b17cf-d7e9-4ff3-b4d9-e192627b41a1
@@ -727,6 +725,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @return {string}
              */
             _getTextFromJson: function (json, withCleaning) {
+               if (!json) {
+                  return '';
+               }
                if (typeof json === 'string') {
                   json = JSON.parse(json);
                }
@@ -774,12 +775,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                   // Ссылку нужно декорировать, только если она прямой ребёнок внешнего тега абзаца.
                   if (json[0] === 'p') {
-                     if (i === json.length - 1) {
-                        // Если ссылка находится в конце строки, её нужно декорировать.
+                     var j = i + 1;
+                     if (typeof json[j] === 'string' && !/[^ \u00a0]/.test(json[j])) {
+                        // Если после ссылки находится строка только из пробелов, она не существенна
+                        j++;
+                     }
+                     if (j === json.length) {
+                        // Ссылку в конце строки нужно декорировать.
                         continue;
                      }
-                     if (i === json.length - 2 && typeof json[i + 1] === 'string' && !onlyNotSpacesRegExp.test(json[i + 1])) {
-                        // Если в строке после ссылки только пробелы, её нужно декорировать.
+                     if (Array.isArray(json[j]) && json[j][0] === 'br') {
+                        // Если делать перенос строки с помощью shift + enter, вместо нового тега p
+                        // создаётся тег br внутри текущего тега p. Декорировать тоже нужно
                         continue;
                      }
                   }
@@ -806,9 +813,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _updateJson: function (e, text) {
                // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
-               if (text[0] !== '<') {
-                  text = '<p>' + text + '</p>';
-               }
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
                text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
@@ -1560,7 +1564,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._ensureHasMinContent();
                var rng;
                var isAlreadyApplied;
-               var afterProcess;
+               var afterProcess = [];
                var skipUndo;
                if (isA.blockquote || isA.list) {
                   rng = selection.getRng();
@@ -1571,13 +1575,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var isBlockquoteOfList;
                if (isA.blockquote) {
-                  // Перед применением цитаты сбрасываем вначале прикладные стили
-                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
-                  for (var format in this._options.customFormats) {
-                     if (this._options.customFormats.hasOwnProperty(format)) {
-                        this._tinyEditor.formatter.remove(format);
-                     }
-                  }
                   // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
                   // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
                   var listNode = rng.commonAncestorContainer;
@@ -1587,21 +1584,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $listNode.wrap('<div>');
                      selection.select(listNode.parentNode, false);
                      $listNode.attr('contenteditable', 'false');
-                     afterProcess = function() {
-                        $listNode.unwrap();
+                     afterProcess.push(function () {
+                        if (!$listNode.parent().is('blockquote')) {
+                           $listNode.unwrap();
+                        }
                         $listNode.removeAttr('contenteditable');
                         selection.select(listNode, true);
-                     };
+                     });
                   }
                   else {
                      var dom = editor.dom;
                      var node = rng.commonAncestorContainer;
-                     if (!dom.isBlock(node)) {
+                     if (!dom.isBlock(node) && !isAlreadyApplied) {
                         // Если элемент не является блочным элементом - поднять рэнж выше по дереву
                         // 1175494679 https://online.sbis.ru/opendoc.html?guid=4ce44085-0bd4-4bf9-8f6f-1d43f081cf83
                         var body = editor.getBody();
                         var isChanged;
-                        var _hasBlockSibling = function(bode) {
+                        var _hasBlockSibling = function(node) {
                            return Array.prototype.some.call(node.parentNode.childNodes, function(v) {
                               return v.nodeName === 'IMG' || dom.isBlock(v);
                            });
@@ -1610,6 +1609,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                !_hasBlockSibling(node); node = node.parentNode, isChanged = true) {
                         }
                         if (isChanged) {
+                           var bookmark = selection.getBookmark();
+                           afterProcess.push(function () {
+                              // Нужно восстанавить последнее выделение после применения команды.
+                              // Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
+                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения пораждают
+                              // мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
+                              // несфокусирпованном состоянии
+                              // 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
+                              var root = editor.getBody();
+                              selection.select(root);
+                              selection.collapse(true);
+                              root.blur();
+                              setTimeout(function () {
+                                 selection.moveToBookmark(bookmark);
+                                 root.focus();
+                              }, 100);
+                           });
                            selection.select(node, true);
                            rng = selection.getRng();
                         }
@@ -1629,13 +1645,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  $video.before('<span ' + attr + '>temporary</span>').remove();
                               }.bind(this));
                               skipUndo = true;
-                              afterProcess = function () {
+                              afterProcess.push(function () {
                                  undoManager.ignore(function () {
                                     var $video = $(editor.getBody()).find('[' + attr + ']');
                                     $video.before(this._makeYouTubeVideoHtml(url, videoId)).remove();
                                  }.bind(this));
                                  undoManager.add();
-                              }.bind(this);
+                              }.bind(this));
                            }
                         }
                      }
@@ -1663,16 +1679,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
+               if (isA.blockquote && !isAlreadyApplied) {
+                  // При применением цитаты сбрасываем прикладные стили
+                  // https://online.sbis.ru/opendoc.html?guid=e71731ad-321d-4775-95f1-8af621a12667
+                  var customFormats = this._options.customFormats;
+                  if (customFormats) {
+                     var formatIds = Object.keys(customFormats);
+                     if (formatIds.length) {
+                        afterProcess.push(function () {
+                           for (var i = 0; i < formatIds.length; i++) {
+                              formatter.remove(formatIds[i]);
+                           }
+                        });
+                     }
+                  }
+               }
                if (isA.list) {
                   if (!isAlreadyApplied) {
                      if (['aligncenter', 'alignright'].some(function(v) {
                            return formatter.match(v);
                         })) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var list = editor.dom.getParent(selection.getRng().commonAncestorContainer, 'ol,ul');
                            $(list).css('list-style-position', 'inside');
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                   else {
@@ -1684,14 +1715,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                      });
                      if (align) {
-                        afterProcess = function() {
+                        afterProcess.push(function () {
                            var isCollapsed = selection.isCollapsed();
                            formatter.apply(align);
                            if (isCollapsed) {
                               selection.collapse(false);
                            }
                            this._updateTextByTiny();
-                        }.bind(this);
+                        }.bind(this));
                      }
                   }
                }
@@ -1713,9 +1744,28 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      command === 'alignright' ? 'inside' : '');
                   }
                   if (selection.isCollapsed()) {
-                     afterProcess = function() {
+                     afterProcess.push(function () {
                         selection.collapse(false);
-                     };
+                     });
+                  }
+               }
+               if (selection.isCollapsed() && ['bold', 'italic', 'underline', 'strikethrough'].indexOf(command) !== -1 && formatter.match(command)) {
+                  rng = selection.getRng();
+                  var node = rng.commonAncestorContainer;
+                  if (node.nodeType === node.TEXT_NODE) {
+                     var offset = rng.startOffset;
+                     // Применение свойств форматирования (bold, italic, underline и strikethrough) в TinyMCE реализуются последовательным
+                     // оборачиванием контента форматирующими элементами. При снятии свойств форматирования tinyMCE ориентируется как на положение
+                     // текщего рэнжа, так и на положение служебного контейнера области ввода (элемент с идентификатором "_mce_caret"), если он есть.
+                     // Если применено несколько стилей (то есть имеется несколько вложенных форматирующих элементов), а снять нужно не самый верхний,
+                     // то при наличии служебного контейнера области ввода будут снято всё форматирование внутри него (он будет иметь приоритет перед
+                     // текущим рэнжем). Поэтому лучше убрать его совсем
+                     // При использовании метода applyFormats (обрабатывающего вызов из стилевой панели) подобная ситуация не возникает, так как там
+                     // всегда обрабатывается полный набор свойств форматирования (начиная с их очистки)
+                     // 1175887899 https://online.sbis.ru/opendoc.html?guid=8c07266a-2f55-4453-a701-ea3626c23384
+                     if (this._removeAscendingCarretContainer(node)) {
+                        this._selectNewRng(node, offset);
+                     }
                   }
                }
                if (skipUndo) {
@@ -1724,14 +1774,34 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                else {
                   editor.execCommand(editorCmd || command);
                }
-               if (afterProcess) {
-                  afterProcess();
+               if (afterProcess.length) {
+                  for (var i = 0; i < afterProcess.length; i++) {
+                     afterProcess[i]();
+                  }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
                if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
                   this._getTinyEditorValue() == '') {
                   selection.select(editor.getBody(), true);
                }
+            },
+
+            /**
+             * Удалить служебные контейнеры зоны ввода, находящиеся выше по дереву элементов от указанного dom-узла
+             * @param {DOMNode} node dom-узел
+             * @return {boolean}
+             */
+            _removeAscendingCarretContainer: function (node) {
+               var editor = this._tinyEditor;
+               var dom = editor.dom;
+               var isFound;
+               var caret;
+               // Cлужебных контейнеров зоны ввода может быть несколько, вложенных один в другой - убрать их все
+               while ((caret = dom.getParent(node, '[data-mce-type="format-caret"]'))) {
+                  dom.remove(caret, true);
+                  isFound = true;
+               }
+               return isFound;
             },
 
             /**
@@ -2467,11 +2537,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi, '\'TensorFont Regular\'');
 
-               var options = this._options;
+               var pasteAsText = this._options.editorConfig.paste_as_text;
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
-               if (!this._mouseIsPressed && options.editorConfig.paste_as_text) {
+               if (pasteAsText && (!this._mouseIsPressed || !asRichContent)) {
                   e.content = this._sanitizeClasses(e.content, false);
                }
                this._mouseIsPressed = false;
@@ -2481,7 +2551,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (this._isPasteWithStyles) {
                   return e;
                }
-               if (!asRichContent && options.editorConfig.paste_as_text && this._clipboardText) {
+               if (!asRichContent && pasteAsText && this._clipboardText) {
                   //если данные не из БТР и не из word`a, то вставляем как текст
                   //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
 
@@ -2493,7 +2563,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   //             b)Вставка текста
                   //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
                   var editor = this._tinyEditor;
-                  e.content = editor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
+                  var func = editor.plugins.paste.clipboard.prepareTextBeforePaste;
+                  // Этот метод в старой версии tinymce, используемой в MSIE10, имеет только один аргуметн
+                  // 1176026572 https://online.sbis.ru/opendoc.html?guid=b54dd9c9-3cd0-4f1f-98f8-9195373c82ee
+                  e.content = func.length === 1 ? func(this._clipboardText) : func(editor, this._clipboardText);
                }
             },
             _onPasteCallback: function(e) {

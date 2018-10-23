@@ -17,7 +17,8 @@
         </ws:if>
         <ws:if data="{{!!_caption}}">
            <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} controls-Button__text_viewMode-{{_options.viewMode}} {{_options.icon ? ' controls-Button__text_gap'}}">
-               <ws:partial template="{{_caption}}"/>
+              <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
+              <ws:else><ws:partial template="{{_caption}}"/></ws:else>
            </span>
         </ws:if>
     </span>

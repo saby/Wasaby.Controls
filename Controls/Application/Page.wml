@@ -5,6 +5,7 @@
    wsRoot="{{ wsRoot }}"
    resourceRoot="{{ resourceRoot }}"
    appRoot="{{ appRoot }}"
+   RUMEnabled="{{ RUMEnabled }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}"
@@ -102,7 +103,9 @@
                                  </div>
                               </ws:else>
                               <Controls.Popup.Opener.Previewer name="previewerOpener"/>
-                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" />
+                              <ws:if data="{{ application && application.toLowerCase().indexOf('demo') === -1 }}">
+                                 <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" />
+                              </ws:if>
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               </body>
                            </Controls.DragNDrop.Container>

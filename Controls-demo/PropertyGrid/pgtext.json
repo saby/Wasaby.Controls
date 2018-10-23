@@ -538,10 +538,9 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
+          "formatMaskChars": {
+            "type": "Object",
+            "title": "Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys."
           },
           "value": {
             "type": "String",
@@ -849,6 +848,11 @@
             "type": "Boolean",
             "title": "Determines whether trailing zeros are shown in the fractional part."
           },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": true,
+            "title": "If true, text is selected when input is clicked."
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
@@ -952,25 +956,6 @@
             "enum": {
               "default": "display in one column",
               "column": "display in two columns"
-            }
-          },
-          "headerStyle": {
-            "default": "primary",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "primary": "primary color",
-              "default": "default color"
-            }
-          },
-          "size": {
-            "default": "m",
-            "title": "Color of title in header of filter panel.",
-            "type": "enum",
-            "enum": {
-              "m": "primary color",
-              "l": "default color",
-              "xl": "default color"
             }
           },
           "title": {
@@ -1139,6 +1124,41 @@
               "horizontal": "Horizontal orientation. It is default value.",
               "vertical": "Vertical orientation."
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Filter/Fast": {
+    "name": "Controls/Filter/Fast",
+    "title": "Control \"Fast Filter\".",
+    "className": "Controls/Filter/Fast",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Filter/Fast",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "type": "Array",
+            "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
+            "title": "Sets the source of data set to use in the mapping"
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "default": "Inherited",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "enum": {
+              "true": "User cannot change control's value (or interact with the control if its value is not editable).",
+              "false": "User can change control's value (or interact with the control if its value is not editable).",
+              "inherited": "Value inherited from the parent."
+            }
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
           }
         }
       }

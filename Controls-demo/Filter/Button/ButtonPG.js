@@ -86,9 +86,9 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   source: new MemorySource({
                      idProperty: 'key',
                      data: [
-                        { key: '0', title: 'Used' },
+                        { key: '0', title: 'All states' },
                         { key: '1', title: 'In archive' },
-                        { key: '2', title: 'All states' }
+                        { key: '2', title: 'Used' }
                      ]
                   })
                },

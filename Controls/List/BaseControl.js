@@ -329,7 +329,12 @@ define('Controls/List/BaseControl', [
             self._children.itemActionsOpener.open({
                opener: self._children.listView,
                target: !context ? childEvent.target : false,
-               templateOptions: {items: rs},
+               templateOptions: {
+                  items: rs,
+                  keyProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'parent@'
+               },
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
@@ -396,6 +401,7 @@ define('Controls/List/BaseControl', [
       _isActiveByClick: false,
 
       _listViewModel: null,
+      _viewModelConstructor: null,
 
       _loader: null,
       _loadingState: null,
@@ -440,6 +446,7 @@ define('Controls/List/BaseControl', [
           */
 
          if (newOptions.viewModelConstructor) {
+            this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(newOptions);
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
@@ -481,6 +488,13 @@ define('Controls/List/BaseControl', [
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var sourceChanged = newOptions.source !== this._options.source;
+
+         if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
+            this._viewModelConstructor = newOptions.viewModelConstructor;
+            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            _private.initListViewModelHandler(this, this._listViewModel);
+         }
 
          if (newOptions.markedKey !== this._options.markedKey) {
             this._listViewModel.setMarkedKey(newOptions.markedKey);
@@ -780,7 +794,8 @@ define('Controls/List/BaseControl', [
    BaseControl.getDefaultOptions = function() {
       return {
          uniqueKeys: true,
-         multiSelectVisibility: 'hidden'
+         multiSelectVisibility: 'hidden',
+         style: 'default'
       };
    };
    return BaseControl;

@@ -29,44 +29,55 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#style
     * @cfg {Enum} Button display style.
-    * @variant buttonPrimary Primary contour button display style.
-    * @variant buttonDefault Default contour button display style.
-    * @variant iconButtonBordered Bordered button display style.
-    * @variant linkMain First main link display style.
-    * @default buttonDefault
+    * @variant primary
+    * @variant success
+    * @variant warning
+    * @variant danger
+    * @variant info
+    * @variant secondary
+    * @variant default
+    * @default secondary
+    * @example
+    * Primary link button with xl size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+    * </pre>
+    * Quick button with m size.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    * </pre>
+    * Uncorrect button. ViewMode button doesn't support xl size.
+    * <pre>
+    *    <Controls.Button size="xl" caption="Send document" style="success" viewMode="button"/>
+    * </pre>
+    * @see Size
+    */
+
+   /**
+    * @name Controls/Button#viewMode
+    * @cfg {Enum} Button view mode.
+    * @variant link
+    * @variant button
+    * @variant quickButton
+    * @default button
     * @remark
-    * There are additional button styles:
+    * Sizes 's' and 'xl' don't supported by viewModes:
     * <ul>
-    *     <li>buttonAdd - Button add display style.</li>
-    *     <li>linkMain2 - Second main link display style.</li>
-    *     <li>linkMain3 - Third main link display style.</li>
-    *     <li>linkAdditional - First additional link display style.</li>
-    *     <li>linkAdditional2 - Second additional link display style.</li>
-    *     <li>linkAdditional3 - Third additional link display style.</li>
-    *     <li>linkAdditional4 - Fourth additional link display style.</li>
-    *     <li>linkAdditional5 - Fifth additional link display style.</li>
-    *     <li>iconButtonBorderedAdditional - Additional bordered button display style.</li>
-    * </ul>
-    * Sizes 's' and 'xl' don't supported by styles:
-    * <ul>
-    *     <li>iconButtonBordered,</li>
-    *     <li>iconButtonBorderedAdditional,</li>
-    *     <li>buttonPrimary,</li>
-    *     <li>buttonDefault,</li>
-    *     <li>buttonAdd.</li>
+    *     <li>button,</li>
+    *     <li>quickButton</li>
     * </ul>
     * @example
-    * Main link button with xl size.
+    * Button with link viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="linkMain" size="xl"/>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Bordered icon button with default size.
+    * Button with quickButton viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="iconButtonBordered"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
     * </pre>
-    * Uncorrect button. Primary button doesn't support xl size.
+    * Button with button viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="buttonPrimary" size="xl"/>
+    *    <Controls.Button caption="Send document" style="success" viewMode="button"/>
     * </pre>
     * @see Size
     */
@@ -83,24 +94,21 @@ define('Controls/Button', [
     * Button size is different for different button styles.
     * Sizes 's' and 'xl' don't supported by styles:
     * <ul>
-    *     <li>iconButtonBordered,</li>
-    *     <li>iconButtonBorderedAdditional,</li>
-    *     <li>buttonPrimary,</li>
-    *     <li>buttonDefault,</li>
-    *     <li>buttonAdd.</li>
+    *     <li>button,</li>
+    *     <li>quickButton</li>
     * </ul>
     * @example
     * L size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="buttonPrimary" size="l"/>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="l"/>
     * </pre>
     * M size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="buttonPrimary"/>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="button"/>
     * </pre>
     * Uncorrect size of primary button.
     * <pre>
-    *    <Controls.Button caption="Send document" style="buttonPrimary" size="xl"/>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="xl"/>
     * </pre>
     * @see style
     */
@@ -109,11 +117,11 @@ define('Controls/Button', [
     * @name Controls/Button#icon
     * @cfg {String} Button icon.
     * @default Undefined
-    * @remark Icon is given by css-classes, without color class.
+    * @remark Icon is given by css-rules, without color class.
     * @example
     * Button with style buttonPrimary and icon Add.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>
     * @see iconStyle
     */
@@ -121,21 +129,21 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#iconStyle
     * @cfg {Enum} Icon display style.
-    * @variant primary Display style to attract attention.
-    * @variant success The display style of the field with success.
-    * @variant warning The display style of the field with warning.
-    * @variant danger Information field display style.
-    * @variant info Information field display style.
-    * @default Default
-    * @remark Default display style is different for different button styles.
+    * @variant primary The display style of the attracting attention icon.
+    * @variant success The display style of the success icon.
+    * @variant warning The display style of the warning icon.
+    * @variant danger The display style of the danger icon.
+    * @variant info The display style of the danger icon.
+    * @variant secondary The display style of the secondary icon.
+    * @default secondary
     * @example
     * Primary button with default icon style.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>
     * Primary button with done icon style.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" iconStyle="done" style="buttonPrimary"/>
+    *    <Controls.Button icon="icon-Add" iconStyle="done" style="primary" viewMode="button"/>
     * </pre>
     * @see Icon
     */
@@ -150,6 +158,7 @@ define('Controls/Button', [
          self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
+         self._stringCaption = typeof options.caption === 'string';
          self._icon = options.icon;
          self._isTransparent = !!currentButtonClass.transparent;
       }

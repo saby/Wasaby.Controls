@@ -1,12 +1,18 @@
 /// <amd-module name="File/utils/b64toBlob" />
 
 let b64toBlob: (data: string, contentType: string, sliceSize?: number) => Blob;
+
 /**
  * Получение файла из base64 строки
  * @param {String} data Тело файла в виде base64 строки
  * @param {String} contentType MIME-type
  * @param {Number} [sliceSize]
  * @return {File}
+ *
+ * @name File/utils/b64toBlob
+ * @function
+ * @public
+ * @author Заляев А.В.
  */
 b64toBlob = (data: string, contentType: string, sliceSize?: number): Blob => {
     sliceSize = sliceSize || 512;

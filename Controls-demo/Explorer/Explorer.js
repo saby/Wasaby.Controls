@@ -16,6 +16,7 @@ define('Controls-demo/Explorer/Explorer', [
          _viewMode: 'table',
          _selectedKeys: [],
          _excludedKeys: [],
+         _changeViewIcon: 'icon-ArrangePreview',
          _beforeMount: function() {
             this._viewColumns = [
                {
@@ -23,11 +24,82 @@ define('Controls-demo/Explorer/Explorer', [
                   width: '1fr'
                }
             ];
-            this._itemActions = [{
-               title: 'Action',
-               showType: 0,
-               id: 0
-            }];
+            this._itemActions = [
+               {
+                  id: 1,
+                  icon: 'icon-PhoneNull',
+                  title: 'phone',
+                  showType: 0,
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-EmptyMessage',
+                  title: 'message',
+                  showType: 0,
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-Profile',
+                  title: 'profile',
+                  showType: 0,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase',
+                  iconStyle: 'error',
+                  title: 'delete pls',
+                  showType: 0,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               },
+               {
+                  id: 5,
+                  icon: 'icon-PhoneNull',
+                  title: 'phone',
+                  showType: 0,
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 6,
+                  icon: 'icon-EmptyMessage',
+                  title: 'message',
+                  showType: 0,
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 7,
+                  icon: 'icon-Profile',
+                  title: 'profile',
+                  showType: 0,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 8,
+                  icon: 'icon-Erase',
+                  iconStyle: 'error',
+                  title: 'delete pls',
+                  showType: 0,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: [{
@@ -118,6 +190,10 @@ define('Controls-demo/Explorer/Explorer', [
                   isDocument: true
                }]
             });
+         },
+         _changeViewMode: function() {
+            this._viewMode = this._viewMode === 'tile' ? 'table' : 'tile';
+            this._changeViewIcon = this._viewMode === 'tile' ? 'icon-ArrangeList' : 'icon-ArrangePreview';
          }
       });
 

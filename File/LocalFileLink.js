@@ -1,12 +1,14 @@
 define("File/LocalFileLink", ["require", "exports", "tslib", "File/ResourceAbstract"], function (require, exports, tslib_1, ResourceAbstract_1) {
     "use strict";
     /**
-     * Класс - обёртка над ссылкой на локальный файл
+     * Класс, реализующий интерфейс работы с ресурсами {@link File/IResource},
+     * предназначенный для работы с ссылками на файлы, находящимися на локальном компьютере
      * @class
      * @extends File/ResourceAbstract
      * @name File/LocalFileLink
      * @public
      * @author Заляев А.В.
+     * @implements {File/IResource}
      */
     var LocalFileLink = /** @class */ (function (_super) {
         tslib_1.__extends(LocalFileLink, _super);

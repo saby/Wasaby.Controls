@@ -164,6 +164,7 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
     };
     /// endregion FileReader
     /**
+     * Модуль, отвечающий за чтение файлов из директории
      * Т.к. нету нормальной возможности грузить директории на сервис, но есть возможность получать их через D&D
      * Надо обойти полученный FileList на наличие "непонятных" файлов, у которых нету типа
      * 1) Если таковых нет, то ввозвращаем исходный FileList без изменений
@@ -179,6 +180,8 @@ define("File/ResourceGetter/DropArea/replaceDir", ["require", "exports", "Core/P
      * @param {FileList} files
      * @return {Core/Deferred.<FileList | Array.<File | Error>>}
      * @private
+     * @function
+     * @author Заляев А.В.
      */
     var replaceDir = function (_a) {
         var items = _a.items, files = _a.files;

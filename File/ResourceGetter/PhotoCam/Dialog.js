@@ -1,4 +1,3 @@
-/// <amd-module name="File/ResourceGetter/PhotoCam/Dialog" />
 define("File/ResourceGetter/PhotoCam/Dialog", ["require", "exports", "File/ResourceGetter/PhotoCam/DialogAbstract", "Core/Deferred"], function (require, exports, DialogAbstract, Deferred) {
     "use strict";
     var lastStream;
@@ -18,7 +17,7 @@ define("File/ResourceGetter/PhotoCam/Dialog", ["require", "exports", "File/Resou
             if (def.isReady()) {
                 stopStream(stream);
             }
-            if (!stream.getVideoTracks().length) {
+            if (!stream.getVideoTracks().length) { // нет камеры
                 stopStream(stream);
                 def.errback(DialogAbstract.ERRORS.NO_MEDIA);
             }
@@ -71,6 +70,14 @@ define("File/ResourceGetter/PhotoCam/Dialog", ["require", "exports", "File/Resou
         }
         return DialogAbstract.ERRORS.NO_MEDIA;
     };
+    /**
+     * Компонент отвечающий за захват и отображение изображение с камеры
+     * @private
+     * @class
+     * @author Заляев А.В.
+     * @name File/ResourceGetter/PhotoCam/Dialog
+     * @extends File/ResourceGetter/PhotoCam/DialogAbstract
+     */
     var Dialog = DialogAbstract.extend({
         $protected: {
             _options: {

@@ -7,9 +7,10 @@ define('Controls/Input/Number',
       'Controls/Input/Number/ViewModel',
       'Controls/Input/resources/InputHelper',
       'Core/helpers/Function/runDelayed',
-      'Core/IoC'
+      'Core/IoC',
+      'Core/detection'
    ],
-   function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC) {
+   function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC, detection) {
 
       'use strict';
 
@@ -97,8 +98,21 @@ define('Controls/Input/Number',
                // Не меняется value у dom-элемента, при смене аттрибута value
                // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
                target.value = self._numberViewModel.getDisplayValue();
-               target.selectionStart = selectionStart;
-               target.selectionEnd = selectionEnd;
+
+               /**
+                * If you change the value from code, as we do above, the selection is set to the end. Therefore, it must be restored.
+                * In ie, if the selection changes, the field will be automatically focused.
+                * If the current method is called during the focus out, the focus field will not lose. Therefore, remember the selection.
+                *
+                * Changing the value in the focus out field is only in the number field. Therefore, the code is not needed for all fields.
+                */
+               if (detection.isIE) {
+                  self._selectionStart = target.selectionStart;
+                  self._selectionEnd = target.selectionEnd;
+               } else {
+                  target.selectionStart = selectionStart;
+                  target.selectionEnd = selectionEnd;
+               }
             }
          }
       };
@@ -117,7 +131,7 @@ define('Controls/Input/Number',
             if (options.integersLength <= 0) {
                IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
-
+            var value = options.value !== null ? String(options.value) : '';
             this._previousValue = String(options.value);
 
             this._numberViewModel = new NumberViewModel({
@@ -125,7 +139,7 @@ define('Controls/Input/Number',
                integersLength: options.integersLength,
                precision: options.precision,
                showEmptyDecimals: options.showEmptyDecimals,
-               value: String(options.value)
+               value: value
             });
          },
 
@@ -222,7 +236,20 @@ define('Controls/Input/Number',
          },
 
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text);
+            var field = this._children.input;
+            var selection;
+
+            /**
+             * In ie and inactive state the selection is stored on the instance.
+             */
+            if (!this._active && detection.isIE) {
+               selection = {
+                  start: this._selectionStart,
+                  end: this._selectionEnd
+               };
+            }
+
+            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text, selection);
          }
       });
 

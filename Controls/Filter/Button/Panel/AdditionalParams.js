@@ -7,7 +7,6 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    'WS.Data/Chain',
    'css!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
 ], function(Control, Utils, isEqual, Clone, template, Chain) {
-
    /**
     * Control "Additional params". Used in the filter panel.
     * @class Controls/Filter/Button/Panel/AdditionalParams
@@ -35,9 +34,8 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       cloneItems: function(items) {
          if (items['[WS.Data/Entity/CloneableMixin]']) {
             return items.clone();
-         } else {
-            return Clone(items);
          }
+         return Clone(items);
       },
 
       countItems: function(self, items) {
@@ -52,7 +50,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       onResize: function(self) {
          self._arrowVisible = _private.countItems(self, self._options.items) > MAX_NUMBER_ITEMS;
-         
+
          if (!self._arrowVisible) {
             self._isMaxHeight = true;
          }
@@ -85,19 +83,15 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
             Utils.getItemPropertyValue(item, 'visibility');
       },
 
-      _clickItemHandler: function(event, index) {
-         if (!this._options.items[index].source) {
-            this._options.items[index].visibility = true;
-            this._notify('valueChanged');
-            _private.onResize(this);
-         }
-      },
-
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
          this._options.items[index].visibility = true;
          this._notify('valueChanged');
-         _private.onResize(this);
+      },
+
+      _visibilityChangedHandler: function(event, index) {
+         this._options.items[index].visibility = true;
+         this._notify('visibilityChanged');
       },
 
       _clickSeparatorHandler: function() {
@@ -109,5 +103,4 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
    AdditionalParams._private = _private;
 
    return AdditionalParams;
-
 });

@@ -2,12 +2,14 @@
 import {ResourceAbstract} from 'File/ResourceAbstract';
 import {FileInfo} from 'File/IResource';
 /**
- * Класс - обёртка над ссылкой на локальный файл
+ * Класс, реализующий интерфейс работы с ресурсами {@link File/IResource},
+ * предназначенный для работы с ссылками на файлы, находящимися на локальном компьютере
  * @class
  * @extends File/ResourceAbstract
  * @name File/LocalFileLink
  * @public
  * @author Заляев А.В.
+ * @implements {File/IResource}
  */
 class LocalFileLink extends ResourceAbstract {
     /**

@@ -34,14 +34,19 @@ define('Controls/Search/Controller',
          },
          
          searchCallback: function(self, result, filter) {
-            self._searchMode = true;
+            self._previousViewMode = self._viewMode;
+            self._viewMode = 'search';
+            self._forceUpdate();
             self._notify('filterChanged', [filter], {bubbling: true});
             self._notify('itemsChanged', [result.data], {bubbling: true});
          },
          
          abortCallback: function(self, filter) {
-            if (self._searchMode) {
-               self._searchMode = false;
+            if (self._viewMode === 'search') {
+               self._viewMode = self._previousViewMode;
+               self._previousViewMode = null;
+               self._searchValue = '';
+               self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
             }
          },
@@ -53,6 +58,9 @@ define('Controls/Search/Controller',
                    options.source !== newOptions.source ||
                    options.searchParam !== newOptions.searchParam ||
                    options.minSearchLength !== newOptions.minSearchLength;
+         },
+         itemOpenHandler: function() {
+            _private.getSearchController(this).abort();
          }
       };
    
@@ -71,6 +79,9 @@ define('Controls/Search/Controller',
        * @class Controls/Search/Controller
        * @extends Core/Control
        * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
        * @author Герасимов Александр
        * @control
        * @public
@@ -80,23 +91,33 @@ define('Controls/Search/Controller',
          
          _template: template,
          _dataOptions: null,
-         _searchMode: false,
-         
+         _itemOpenHandler: null,
+         _previousViewMode: null,
+         _viewMode: null,
+         _searchValue: null,
+
+         constructor: function() {
+            this._itemOpenHandler = _private.itemOpenHandler.bind(this);
+            Container.superclass.constructor.apply(this, arguments);
+         },
+
          _beforeMount: function(options, context) {
             this._dataOptions = context.dataOptions;
+            this._previousViewMode = this._viewMode = options.viewMode;
          },
    
          _beforeUpdate: function(newOptions, context) {
             var currentOptions = this._dataOptions;
             this._dataOptions = context.dataOptions;
-            
+
             if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
                this._searchController = null;
             }
          },
-         
+
          _search: function(event, value) {
             _private.getSearchController(this).search(value);
+            this._searchValue = value;
          },
    
          _beforeUnmount: function() {
@@ -106,7 +127,6 @@ define('Controls/Search/Controller',
             }
             this._dataOptions = null;
          }
-         
       });
    
       Container.contextTypes = function() {
@@ -121,7 +141,7 @@ define('Controls/Search/Controller',
             searchDelay: 500
          };
       };
-   
+
       Container._private = _private;
       
       return Container;
