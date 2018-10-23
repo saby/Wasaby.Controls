@@ -1,6 +1,7 @@
 define('Controls/Input/Mask',
    [
       'Core/IoC',
+      'Controls/Utils/tmplNotify',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
@@ -10,7 +11,7 @@ define('Controls/Input/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/input'
    ],
-   function(IoC, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
       'use strict';
 
@@ -118,9 +119,8 @@ define('Controls/Input/Mask',
                   position = value.indexOf(replacer);
 
                   return position === -1 ? value.length : position;
-               } else {
-                  return value.length;
                }
+               return value.length;
             },
 
             /**
@@ -158,6 +158,7 @@ define('Controls/Input/Mask',
             _template: MaskTpl,
 
             _viewModel: null,
+            _notifyHandler: tmplNotify,
 
             _beforeMount: function(options) {
                this._viewModel = new ViewModel({

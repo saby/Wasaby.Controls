@@ -110,13 +110,13 @@ define('Controls/Filter/Button/Panel', [
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
          this._historyId = _private.resolveHistoryId(options, this._contextOptions);
-         this._hasAdditionalParams = options.additionalTemplate && _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
       },
 
       _beforeUpdate: function(newOptions, context) {
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = newOptions.additionalTemplate && _private.hasAdditionalParams(this._items);
+         this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          if (this._options.historyId !== newOptions.historyId) {
             this._historyId = _private.resolveHistoryId(newOptions, context);
          }

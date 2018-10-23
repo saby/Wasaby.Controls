@@ -538,10 +538,9 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
+          "formatMaskChars": {
+            "type": "Object",
+            "title": "Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys."
           },
           "value": {
             "type": "String",
@@ -1145,11 +1144,6 @@
             "type": "Array",
             "itemType": "Controls/interface/IFastFilter/FastFilterSource.typedef",
             "title": "Sets the source of data set to use in the mapping"
-          },
-          "items": {
-            "type": "Array",
-            "itemType": "Controls/interface/IFastFilter/FastFilterItems.typedef",
-            "title": "Sets a set of initial data to build the mapping."
           },
           "readOnly": {
             "type": "Boolean",

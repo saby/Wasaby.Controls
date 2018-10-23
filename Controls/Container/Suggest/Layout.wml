@@ -26,7 +26,7 @@
                 <ws:partial template="suggestTpl"/>
 
                 <ws:if data="{{_isFooterShown}}">
-                    <ws:partial template="{{ _options.footerTemplate.templateName }}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+                    <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
                 </ws:if>
             </ws:content>
         </ws:partial>

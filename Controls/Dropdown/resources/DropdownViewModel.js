@@ -13,11 +13,15 @@ define('Controls/Dropdown/resources/DropdownViewModel',
    function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
-
+            var parent;
             if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
                return true;
             }
-            return item.get(this._options.parentProperty) === this._options.rootKey;
+            parent = item.get(this._options.parentProperty);
+            if (typeof parent === 'undefined') {
+               parent = null;
+            }
+            return parent === this._options.rootKey;
          },
          
          isHistoryItem: function(item) {

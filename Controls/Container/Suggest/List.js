@@ -22,6 +22,8 @@ define('Controls/Container/Suggest/List',
        */
       
       'use strict';
+
+      var DIALOG_PAGE_SIZE = 25;
       
       var _private = {
          checkContext: function(self, context) {
@@ -39,6 +41,7 @@ define('Controls/Container/Suggest/List',
                   
                   /* to show paging */
                   navigation.viewConfig.pagingMode = true;
+                  navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
                   self._navigation = navigation;
                } else {
                   self._navigation = self._suggestListOptions.navigation;

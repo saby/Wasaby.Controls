@@ -662,7 +662,7 @@ define(
                return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu, autoComplete);
             }
          } else if (autoComplete) {
-            if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
+            if (filled.indexOf("HH") !== -1 && notFilled.indexOf("II") !== -1) {
                ii = this._getFormatModel().getGroupValueByMask("II", '0');
                filled.push("II");
             }

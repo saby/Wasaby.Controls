@@ -1,4 +1,4 @@
-define(['Controls/Filter/Controller', 'Controls/Container/Filter/FilterContextField'], function(Filter, FilterContextField){
+define(['Controls/Filter/Controller'], function(Filter) {
    
    describe('Controls.Filter.Controller', function () {
       
@@ -13,7 +13,6 @@ define(['Controls/Filter/Controller', 'Controls/Container/Filter/FilterContextFi
          filterLayout._notify = function() {
             filterChangedNotifyed = true;
          };
-         filterLayout._filterContext = new FilterContextField({});
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
          assert.isTrue(filterChangedNotifyed);

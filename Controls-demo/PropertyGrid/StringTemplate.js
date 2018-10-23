@@ -19,7 +19,7 @@ define('Controls-demo/PropertyGrid/StringTemplate',
                var item = this._options.items.find(function(item) {
                   return item.title === value;
                });
-               this._valueChangedHandler(event, item ? item.value : item);
+               this._valueChangedHandler(event, item ? item.value : value);
             } else {
                this._valueChangedHandler(event, value);
             }

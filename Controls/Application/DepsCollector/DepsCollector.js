@@ -18,7 +18,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function getLinkWithBuildNumber(link, buildnumber) {
       if (buildnumber) {
-         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildnumber + '$&');
+         return link.replace(/\.(css|js|tmpl)$/, '$&?x_version=' + buildnumber);
       } else {
          return link;
       }

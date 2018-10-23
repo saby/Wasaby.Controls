@@ -23,6 +23,7 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
         },
         /**
          * Возвращает оригинал загружаемого ресурса
+         * @name File/Attach/Model#getOrigin
          * @return {File/IResource}
          */
         getOrigin: function () {
@@ -30,6 +31,7 @@ define("File/Attach/Model", ["require", "exports", "WS.Data/Entity/Model", "WS.D
         },
         /**
          * Возвращает имя загружаемого ресурса
+         * @name File/Attach/Model#getName
          * @return {String}
          */
         getName: function () {

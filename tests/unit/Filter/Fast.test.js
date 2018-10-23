@@ -87,9 +87,7 @@ define(
          };
 
          var fastData = new FastData(config);
-         var isSelected = false,
-            selectedKey,
-            isFilterChanged;
+         var isFilterChanged;
 
          var configWithItems = {};
          configWithItems.items = source;
@@ -108,9 +106,10 @@ define(
          };
 
          it('beforeUpdate new items', function(done) {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
-            var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
                fastFilter._beforeUpdate(configWithItems);
@@ -123,6 +122,7 @@ define(
             var fastFilter = getFastFilter(config),
                newConfigSource = Clone(config),
                newSource = Clone(source);
+            fastFilter._beforeMount(config);
             newSource[0].value = 'США';
             newConfigSource.source = new Memory({
                idProperty: 'id',
