@@ -27,7 +27,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var isDebug = false;
          var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveLink('Controls/Button', 'js');
-         assert.equal(res, '/resources/Controls/Button.min.v1234.js');
+         assert.equal(res, '/resources/Controls/Button.min.js?x_version=1234');
       });
       it('4', function () {
          var appRoot = '/consultant/';
@@ -75,7 +75,7 @@ define(['Controls/Application/LinkResolver'], function (LinkResolver) {
          var theme = 'online';
          var rl = new LinkResolver(isDebug, buildnumber, '', appRoot, resourceRoot);
          var res = rl.resolveCssWithTheme('Controls/Button', theme);
-         assert.equal(res, '/consultant/resources/Controls/Button_online.min.v123.css');
+         assert.equal(res, '/consultant/resources/Controls/Button_online.min.css?x_version=123');
       });
    });
 });
