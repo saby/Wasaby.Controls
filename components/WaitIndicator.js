@@ -590,8 +590,9 @@ define('SBIS3.CONTROLS/WaitIndicator',
             var parent = spinner.parentNode;
             if (parent) {
                var child = spinner.firstElementChild;
-               var w = child.offsetWidth;
-               var h = child.offsetHeight;
+               // При использовании опции immediate child может отсутствовать
+               var w = child ? child.offsetWidth : 0;
+               var h = child ? child.offsetHeight : 0;
                var w0 = parent.offsetWidth;
                var h0 = parent.offsetHeight;
                var x = parent.offsetLeft;
