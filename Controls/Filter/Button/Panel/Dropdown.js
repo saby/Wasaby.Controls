@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/Dropdown', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/Dropdown/Dropdown',
-   'css!Controls/Filter/Button/Panel/Dropdown/Dropdown'
+   'css!theme?Controls/Filter/Button/Panel/Dropdown/Dropdown'
 ], function(Control, template) {
    /**
     * Input for selection from the list of options with cross.

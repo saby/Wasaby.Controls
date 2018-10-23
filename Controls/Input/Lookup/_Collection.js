@@ -3,7 +3,7 @@ define('Controls/Input/Lookup/_Collection',
       'Core/Control',
       'wml!Controls/Input/Lookup/Collection/_Collection',
       'wml!Controls/Input/Lookup/Collection/ItemTemplate',
-      'css!Controls/Input/Lookup/Collection/Collection'
+      'css!theme?Controls/Input/Lookup/Collection/Collection'
    ],
    
    function(Control, template, ItemTemplate) {

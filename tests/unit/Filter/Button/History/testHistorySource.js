@@ -1,4 +1,4 @@
-define('tests/unit/Filter/Button/History/testHistorySource',
+define('tests/Filter/Button/History/testHistorySource',
    [
       'Core/Control',
       'WS.Data/Di',

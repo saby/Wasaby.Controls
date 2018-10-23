@@ -9,7 +9,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'css!Controls/Explorer/Explorer',
+   'css!theme?Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
@@ -52,7 +52,7 @@ define('Controls/Explorer', [
             var
                path = data.getMetaData().path;
             if (path) {
-               self._breadCrumbsItems = data.getMetaData().path;
+               self._breadCrumbsItems = path;
             } else {
                self._breadCrumbsItems = [];
             }

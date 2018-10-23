@@ -1,6 +1,6 @@
-define('tests/unit/resources/TemplateUtil',
+define('tests/resources/TemplateUtil',
    [
-      'wml!tests/unit/resources/SimpleContent'
+      'wml!tests/resources/SimpleContent'
    ],
    function(SimpleContent) {
 
