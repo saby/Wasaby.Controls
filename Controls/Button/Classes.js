@@ -75,6 +75,41 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          style: 'primary-add',
          type: 'button',
          outdated: true
+      },
+
+      primary: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      info: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      default: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      success: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      danger: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      warning: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
+      magic: {
+         style: 'newStyle',
+         type: 'newType'
       }
    };
    var Classes = {
@@ -89,7 +124,11 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          if (classesOfButton.hasOwnProperty(style)) {
             IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили кнопки. Используйте последнюю версию документации https://wi.sbis.ru/docs/js/Controls/Button/');
             currentButtonClass = classesOfButton[style];
+         } else {
+            IoC.resolve('ILogger').error('Button', 'Для кнопки задан несуществующий стиль');
+            currentButtonClass = classesOfButton.buttonDefault;
          }
+
          return currentButtonClass;
       }
 
