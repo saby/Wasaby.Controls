@@ -38,7 +38,7 @@ define('Controls/Decorator/Markup/Converter', [
    };
 
    var jsonToHtml = function(json, tagResolver) {
-      return template({ _options: { value: json, tagResolver: tagResolver } });
+      return template({ _options: { value: json, tagResolver: tagResolver } }, {});
    };
 
    var deepCopyJson = function(json) {

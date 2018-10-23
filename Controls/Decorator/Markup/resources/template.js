@@ -17,27 +17,54 @@ define('Controls/Decorator/Markup/resources/template', [
       return typeof value === 'string' || value instanceof String;
    }
 
-   function recursiveMarkup(value, attrsToDecorate, key, parent) {
-      var valueToBuild = resolver ? resolver(value, parent) : value;
-      if (value !== valueToBuild) {
-         resolver = false;
-      }
-      if (isString(value)) {
-         return markupGenerator.createText(markupGenerator.escape(value), key);
-      }
-      var out = [];
-      if (Array.isArray(value[0])) {
-         for (var i = 0; i < value.length; ++i) {
-            out.push(recursiveMarkup(value[i]), attrsToDecorate, key + i + '_');
+   function validAttributesInsertion(to, from) {
+      var validAttributes = validHtml.validAttributes;
+      for (var key in from) {
+         if (from.hasOwnProperty(key) && validAttributes[key]) {
+            to[key] = from[key];
          }
-         return out;
-      }
-      if (!validHtml.validNodes[value[0]]) {
-         return [];
       }
    }
 
-   var template = function(data, attr, context, isVdom, sets) {
+   function recursiveMarkup(value, attrsToDecorate, key, parent) {
+      var valueToBuild = resolver ? resolver(value, parent) : value,
+         i;
+      if (value !== valueToBuild) {
+         resolver = false;
+      }
+      if (isString(valueToBuild)) {
+         return markupGenerator.createText(markupGenerator.escape(valueToBuild), key);
+      }
+      var children = [];
+      if (Array.isArray(valueToBuild[0])) {
+         for (i = 0; i < valueToBuild.length; ++i) {
+            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', parent));
+         }
+         return children;
+      }
+      var firstChildIndex = 1,
+         tagName = valueToBuild[0],
+         attrs = {
+            attributes: {},
+            events: {},
+            key: key
+         };
+      if (!validHtml.validNodes[tagName]) {
+         // TODO Если нужно, реализовать для тегов из validHtml.fullEscapeNodes возврат чего-то вроде
+         // markupGenerator.createText(markupGenerator.escape(Converter.jsonToHtml(valueToBuild)), key)
+         return [];
+      }
+      if (valueToBuild[1] && !isString(valueToBuild[1]) && !Array.isArray(valueToBuild[1])) {
+         firstChildIndex = 2;
+         validAttributesInsertion(attrs.attributes, valueToBuild[1]);
+      }
+      for (i = firstChildIndex; i < valueToBuild.length; ++i) {
+         children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild));
+      }
+      return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
+   }
+
+   function template(data, attr, context, isVdom, sets) {
       markupGenerator = thelpers.getMarkupGenerator(isVdom);
       defCollection = {
          id: [],
@@ -46,23 +73,25 @@ define('Controls/Decorator/Markup/resources/template', [
       control = data;
       resolver = data._options.resolver;
 
-      var out,
-         key = ((attr && attr.key) || '_') + '0_',
+      var elements,
+         key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
             context: attr.context
          };
       try {
-         out = markupGenerator.joinElements(recursiveMarkup(data._options.value, attrsToDecorate, key, null));
+         elements = recursiveMarkup(data._options.value, attrsToDecorate, key + '0_');
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       }
-      if (!out || !out.length) {
-         out = markupGenerator.joinElements([markupGenerator.createTag('span',
-            { key: key }, [], attrsToDecorate, defCollection, data, key)]);
+      if (!elements || !elements.length) {
+         // TODO: need an invisible node, but now rewriting an invisible node to a visible one
+         // by changing the value doesn't work.
+         elements = [markupGenerator.createTag('span', { key: key + '0_' }, [], attrsToDecorate,
+            defCollection, data, key + '0_')];
       }
-      return out;
-   };
+      return markupGenerator.joinElements(elements, key, defCollection);
+   }
 
    return template;
 });
