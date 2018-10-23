@@ -10,8 +10,8 @@ define('Controls/Filter/Fast',
       'Core/Deferred',
       'WS.Data/Utils',
       'Core/helpers/Object/isEqual',
-      'css!Controls/Filter/Fast/Fast',
-      'css!Controls/Input/Dropdown/Dropdown'
+      'css!theme?Controls/Filter/Fast/Fast',
+      'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
    function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {

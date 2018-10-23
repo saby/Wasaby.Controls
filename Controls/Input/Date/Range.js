@@ -21,6 +21,7 @@ define('Controls/Input/Date/Range', [
     * Control for entering date range.
     * @class Controls/Input/Date/Range
     * @mixes Controls/Date/interface/IRange
+    * @mixes Controls/Input/interface/IInputDateRange
     * @mixes Controls/Input/interface/IDateMask
     * @mixes Controls/Input/interface/IValidation
     * @control

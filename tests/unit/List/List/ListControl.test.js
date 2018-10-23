@@ -9,7 +9,7 @@ define([
 ) {
    describe('Controls.List.ListControl', function() {
       describe('EditInPlace', function() {
-         it('editItem', function() {
+         it('beginEdit', function() {
             var opt = {
                test: '123'
             };
@@ -17,30 +17,30 @@ define([
                listControl = new ListControl({});
             listControl._children = {
                baseControl: {
-                  editItem: function(options) {
+                  beginEdit: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = listControl.editItem(opt);
+            var result = listControl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('editItem, readOnly: true', function() {
+         it('beginEdit, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                listControl = new ListControl({});
             listControl.saveOptions({ readOnly: true });
-            var result = listControl.editItem(opt);
+            var result = listControl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
 
-         it('addItem', function() {
+         it('beginAdd', function() {
             var opt = {
                test: '123'
             };
@@ -48,25 +48,25 @@ define([
                listControl = new ListControl({});
             listControl._children = {
                baseControl: {
-                  addItem: function(options) {
+                  beginAdd: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = listControl.addItem(opt);
+            var result = listControl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('addItem, readOnly: true', function() {
+         it('beginAdd, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                listControl = new ListControl({});
             listControl.saveOptions({ readOnly: true });
-            var result = listControl.addItem(opt);
+            var result = listControl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });

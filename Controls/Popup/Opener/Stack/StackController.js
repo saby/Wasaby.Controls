@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
       'Core/constants',
-      'css!Controls/Popup/Opener/Stack/Stack'
+      'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';
@@ -36,10 +36,13 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (item.popupOptions.isCompoundTemplate) {
                //Берем размеры прикладного шаблона
                template = container.querySelector('.controls-CompoundArea__container').children[0];
-            } else {
-               template = container.querySelector('.controls-Popup__template');
+               return template.clientWidth;
             }
-            return template.clientWidth; // Берем размеры пользовательского шаблона без бордера
+            template = container.querySelector('.controls-Popup__template');
+            var cStyle = getComputedStyle(template);
+
+            // Stack has a left border. Do not consider the border for calculating user template width
+            return parseInt(cStyle.width, 10) - parseInt(cStyle.borderLeftWidth, 10);
          },
 
          getStackParentCoords: function() {

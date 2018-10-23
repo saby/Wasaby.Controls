@@ -6,7 +6,7 @@ define('Controls/List/Swipe/SwipeControl', [
    'Core/Deferred',
    'WS.Data/Type/descriptor',
    'Controls/Utils/Toolbar',
-   'css!Controls/List/Swipe/Swipe'
+   'css!theme?Controls/List/Swipe/Swipe'
 ], function(
    Control,
    template,

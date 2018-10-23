@@ -1,7 +1,7 @@
 define(
    [
       'Controls/Container/Scroll',
-      'wml!tests/unit/Container/resources/Content'
+      'wml!tests/Container/resources/Content'
    ],
    function(Scroll, Content) {
 
