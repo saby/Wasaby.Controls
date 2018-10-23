@@ -69,7 +69,6 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
-               _private.notifyItemsChanged(self, result);
                return result;
             })
             .addErrback(function(result) {
