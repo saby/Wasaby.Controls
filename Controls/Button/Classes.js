@@ -83,6 +83,11 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          type: 'newType'
       },
 
+      secondary: {
+         style: 'newStyle',
+         type: 'newType'
+      },
+
       info: {
          style: 'newStyle',
          type: 'newType'
@@ -123,8 +128,10 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
       getCurrentButtonClass: function(style) {
          var currentButtonClass;
          if (classesOfButton.hasOwnProperty(style)) {
-            IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили кнопки. Используйте последнюю версию документации https://wi.sbis.ru/docs/js/Controls/Button/');
-            currentButtonClass = classesOfButton[style];
+            if (classesOfButton[style].outdated) {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили кнопки. Используйте последнюю версию документации https://wi.sbis.ru/docs/js/Controls/Button/');
+               currentButtonClass = classesOfButton[style];
+            }
          } else {
             IoC.resolve('ILogger').error('Button', 'Для кнопки задан несуществующий стиль');
             currentButtonClass = classesOfButton.buttonDefault;
