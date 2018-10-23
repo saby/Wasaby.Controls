@@ -77,6 +77,7 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          outdated: true
       },
 
+      //TODO: заглушка для корректной работы старых стилей. Удалить когда перейдем на новые
       primary: {
          style: 'newStyle',
          type: 'newType'
