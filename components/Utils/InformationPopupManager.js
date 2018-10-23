@@ -151,7 +151,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
             // для того, чтобы не появлялось кучи однотипных нотификационных попапов (их зовут все, кто выполняет запрос
             // на БЛ и получает ошибку)
             // Для vdom нужно реализовать контроллер для единой точки обработки исключений. В качестве аргумента должна
-            // прилетать ошибка (а не текст как сейчас)
+            // прилетать ошибка (а не текст как сейчас) https://online.sbis.ru/opendoc.html?guid=bfd69d88-0692-42bc-bb74-e4ffd96c0772
             if (config.message !== getConnectionErrorText() || !isConnectionErrorPopupShow) {
                return showSubmitDialog(config, null, null, handler);
             }
