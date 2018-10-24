@@ -93,7 +93,7 @@ define('Controls-demo/Suggest/Suggest', [
       { id: 76, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 77, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 78, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 79, title: 'Sasha', text: 'test', currentTab: 2 },
+      { id: 79, title: 'Sasha', text: 'test', currentTab: 2 }
    ];
    for (var i = 80; i < 120; i++) {
     sourceData.push( { id: i, title: 'Sasha', text: 'test', currentTab: 1} );
