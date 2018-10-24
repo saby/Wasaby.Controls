@@ -3,7 +3,7 @@ define('Controls/Toggle/Button', [
    'Controls/Toggle/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
-   'css!Controls/Button/NewButtonStyles',
+   'css!Controls/Button/Button',
    'css!Controls/Toggle/Button/Button'
 ], function(Control, Classes, template, validateIconStyle) {
    /**
