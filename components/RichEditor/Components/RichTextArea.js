@@ -991,6 +991,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                RichTextArea.superclass.destroy.apply(this, arguments);
 
+               if (this._htmlJson) {
+                  this._htmlJson.destroy();
+                  this._htmlJson = null;
+               }
+
                this._tinyLastRng = null;
                this._tinyEditor = null;
                this._sourceContainer = null;
