@@ -1,29 +1,29 @@
 
 define('Controls/Popup/Templates/BaseTemplate',
-    [
-        'Core/Control',
-        'wml!Controls/Popup/Templates/BaseTemplate',
-        'css!Controls/Popup/Templates/BaseTemplate'
-    ],
-    function(Control, template) {
-        'use strict';
+   [
+      'Core/Control',
+      'wml!Controls/Popup/Templates/BaseTemplate',
+      'css!Controls/Popup/Templates/BaseTemplate'
+   ],
+   function(Control, template) {
+      'use strict';
 
-         /**
-          * Layout of the popup template.
-          *
-          * @class Controls/Popup/Templates/BaseTemplate
-          * @extends Core/Control
-          * @mixes Controls/interface/I
-          *
-          * @public
-          * @author Красильников А.С.
-          * @demo Controls-demo/InfoBox/InfoBox
-          */
+      /**
+       * Layout of the popup template.
+       *
+       * @class Controls/Popup/Templates/BaseTemplate
+       * @extends Core/Control
+       * @mixes Controls/interface/I
+       *
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/InfoBox/InfoBox
+       */
 
-        var DialogTemplate = Control.extend({
+      var DialogTemplate = Control.extend({
 
-        });
-        return DialogTemplate;
+      });
+      return DialogTemplate;
 
 });
 

@@ -65,7 +65,7 @@ define('Controls/Popup/Opener/Stack',
           * </pre>
           * @see close
           */
-          open: function(config) {
+         open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);
             return BaseOpener.prototype.open.call(this, config, 'Controls/Popup/Opener/Stack/StackController');
