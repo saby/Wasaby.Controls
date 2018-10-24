@@ -695,6 +695,7 @@ define('SBIS3.CONTROLS/Image',
                      template: 'SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog',
                      opener: self,
                      visible: false,
+                     _openFromAction: true, // Диалог редкий, модальный, можно открыть старый инстанс, чтобы не переписывать открываемый шаблон
                      minWidth: 390,
                      cssClassName: 'controls-EditDialog__template',
                      componentOptions: cMerge({
