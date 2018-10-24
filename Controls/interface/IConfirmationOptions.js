@@ -22,9 +22,9 @@ define('Controls/interface/IConfirmationOptions', [
     * @property {String} okCaption Accept text button.
     */
 
-    /**
-     * @cfg {Config[]} Confirmation configuration.
-     * @name Controls/interface/IConfirmationOptions#config
-     */
+   /**
+    * @cfg {Config[]} Confirmation configuration.
+    * @name Controls/interface/IConfirmationOptions#config
+    */
 
 });
