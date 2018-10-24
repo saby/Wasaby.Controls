@@ -6,9 +6,10 @@ define('Controls/Filter/Button/Panel', [
    'Core/helpers/Object/isEqual',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
+   'Core/IoC',
    'css!theme?Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template) {
+], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template, IoC) {
    /**
     * Control "Filter panel"
     * Component for displaying a filter panel template. Displays each filters by specified templates.
@@ -54,6 +55,8 @@ define('Controls/Filter/Button/Panel', [
             self._items = this.cloneItems(options.items);
          } else if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
+            self._contextOptions = context.filterPanelOptionsField.options;
+            IoC.resolve('ILogger').info('Controls/Filter/Button/Panel:', "You must pass the items option for the panel.");
          } else {
             throw new Error('Controls/Filter/Button/Panel::items option is required');
          }
@@ -110,6 +113,7 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
+         
          this._historyId = _private.resolveHistoryId(options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
