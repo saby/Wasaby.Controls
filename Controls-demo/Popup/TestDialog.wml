@@ -1,4 +1,4 @@
-<div style="height: 100%; min-width: 500px; max-width: 700px;">
+<div style="max-height: 400px; height: 400px; min-height: 200px; min-width: 500px; max-width: 700px;">
     <Controls.Popup.Templates.Dialog.DialogTemplate caption="PopupManager" bind:draggable="_draggable">
         <ws:topArea>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
@@ -7,6 +7,7 @@
         </ws:topArea>
         <ws:contentArea>
             <div style="margin-left: 8px; margin-top: 8px;">
+                <Controls.Input.Text />
                 <Controls.Popup.Opener.Stack name="stack">
                     <ws:popupOptions template="Controls-demo/Popup/TestDialog">
                         <ws:templateOptions type="stack"/>

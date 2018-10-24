@@ -263,13 +263,27 @@ define(
                height: 300
             };
             it('dialog positioning base', function() {
-               let position = Dialog.getPosition(1920, 1080, sizes , {popupOptions: {}});
+               let windowData = {
+                  width: 1920,
+                  height: 1080,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes , {popupOptions: {}});
                assert.equal(position.top, 390);
                assert.equal(position.left, 860);
+
+               windowData.scrollTop = 80;
+               position = Dialog.getPosition(windowData, sizes , {popupOptions: {}});
+               assert.equal(position.top, 470);
             });
 
             it('dialog positioning overflow container', function() {
-               let position = Dialog.getPosition(300, 300, sizes, {popupOptions: {}});
+               let windowData = {
+                  width: 300,
+                  height: 300,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: {}});
                assert.equal(position.top, 0);
                assert.equal(position.left, 50);
                assert.equal(position.width, undefined);
@@ -281,7 +295,12 @@ define(
                   minWidth: 300,
                   maxWidth: 600
                };
-               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
+               let windowData = {
+                  width: 500,
+                  height: 500,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 500);
             });
@@ -291,7 +310,12 @@ define(
                   minWidth: 600,
                   maxWidth: 700
                };
-               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
+               let windowData = {
+                  width: 500,
+                  height: 500,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 600);
             });
@@ -335,7 +359,12 @@ define(
 
             it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
-               let position = Dialog.getPosition(800, 600, sizes, {
+               let windowData = {
+                  width: 800,
+                  height: 600,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {
                   position: itemPosition,
                   dragged: true
                });
@@ -343,7 +372,12 @@ define(
                assert.equal(position.top, itemPosition.top);
 
                itemPosition = {left: 700, top: 500, width: sizes.width, height: sizes.height};
-               position = Dialog.getPosition(800, 600, sizes, {
+               windowData = {
+                  width: 800,
+                  height: 600,
+                  scrollTop: 0
+               };
+               position = Dialog.getPosition(windowData, sizes, {
                   position: itemPosition,
                   dragged: true
                });
