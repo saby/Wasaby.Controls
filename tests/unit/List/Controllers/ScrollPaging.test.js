@@ -70,7 +70,7 @@ define([
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
 
-         spInstance.handleScrollTop();
+         spInstance.handleScrollTop(false);
          assert('top', spInstance._curState, 'Wrong curState after scroll to top');
          assert.deepEqual({
             stateBegin: 'disabled',
@@ -79,7 +79,7 @@ define([
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
 
-         spInstance.handleScrollBottom();
+         spInstance.handleScrollBottom(false);
          assert('bottom', spInstance._curState, 'Wrong curState after scroll to bottom');
          assert.deepEqual({
             stateBegin: 'normal',
@@ -98,7 +98,7 @@ define([
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
          
-         spInstance.handleScrollEdge('up');
+         spInstance.handleScrollEdge('up', {down: true, up: false});
          assert('top', spInstance._curState, 'Wrong curState after scroll to edge up');
          assert.deepEqual({
             stateBegin: 'disabled',
@@ -107,7 +107,7 @@ define([
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
 
-         spInstance.handleScrollEdge('down');
+         spInstance.handleScrollEdge('down', {down: false, up: true});
          assert('bottom', spInstance._curState, 'Wrong curState after scroll to edge down');
          assert.deepEqual({
             stateBegin: 'normal',
@@ -117,7 +117,7 @@ define([
          }, result, 'Wrong pagingCfg after scroll');
    
          spInstance.handleScroll();//to reset _curState
-         spInstance.handleScrollEdge('down', true);
+         spInstance.handleScrollEdge('down', {down: true, up: false});
          assert('bottom', spInstance._curState, 'Wrong curState after scroll to edge down');
          assert.deepEqual({
             stateBegin: 'normal',
@@ -126,6 +126,11 @@ define([
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
 
+      });
+      
+      it('_private.getStateByHasMore', function() {
+         assert.equal(ScrollPaging._private.getStateByHasMoreData(true), 'normal');
+         assert.equal(ScrollPaging._private.getStateByHasMoreData(false), 'disabled');
       });
    })
 });

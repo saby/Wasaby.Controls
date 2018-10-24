@@ -11,6 +11,12 @@ define('Controls/List/Controllers/ScrollPaging',
        * @author Авраменко А.С.
        * @public
        */
+      
+      var _private = {
+         getStateByHasMoreData: function(hasMoreData) {
+            return hasMoreData ? 'normal' : 'disabled';
+         }
+      };
 
       var Paging = cExtend.extend({
          _curState: null,
@@ -35,11 +41,12 @@ define('Controls/List/Controllers/ScrollPaging',
             }
          },
 
-         handleScrollTop: function() {
+         handleScrollTop: function(hasMoreData) {
+            var statePrev = _private.getStateByHasMoreData(hasMoreData);
             if (!(this._curState === 'top')) {
                this._options.pagingCfgTrigger({
-                  stateBegin: 'disabled',
-                  statePrev: 'disabled',
+                  stateBegin: statePrev,
+                  statePrev: statePrev,
                   stateNext: 'normal',
                   stateEnd: 'normal'
                });
@@ -47,8 +54,8 @@ define('Controls/List/Controllers/ScrollPaging',
             }
          },
 
-         handleScrollBottom: function(hasMoreDataDown) {
-            var stateNext =  hasMoreDataDown ? 'normal' : 'disabled';
+         handleScrollBottom: function(hasMoreData) {
+            var stateNext =  _private.getStateByHasMoreData(hasMoreData);
             if (!(this._curState === 'bottom')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'normal',
@@ -61,10 +68,10 @@ define('Controls/List/Controllers/ScrollPaging',
 
          },
 
-         handleScrollEdge: function(direction, hasMoreDataDown) {
+         handleScrollEdge: function(direction, hasMoreData) {
             switch (direction) {
-               case 'up': this.handleScrollTop(); break;
-               case 'down': this.handleScrollBottom(hasMoreDataDown); break;
+               case 'up': this.handleScrollTop(hasMoreData.up); break;
+               case 'down': this.handleScrollBottom(hasMoreData.down); break;
             }
          },
 
@@ -75,5 +82,7 @@ define('Controls/List/Controllers/ScrollPaging',
 
       });
 
+      Paging._private = _private;
+      
       return Paging;
    });

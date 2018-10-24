@@ -262,7 +262,7 @@ define('Controls/List/BaseControl', [
        */
       handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
-         var hasMoreDataDown = false;
+         var hasMoreData;
          
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
@@ -272,11 +272,14 @@ define('Controls/List/BaseControl', [
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
             } else {
-               //when scrolling down we will send information to scrollPaging about the availability of data next
+               //when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                if (self._sourceController) {
-                  hasMoreDataDown = self._sourceController.hasMoreData('down');
+                  hasMoreData = {
+                     up: self._sourceController.hasMoreData('up'),
+                     down: self._sourceController.hasMoreData('down')
+                  };
                }
-               self._scrollPagingCtr.handleScrollEdge(position, hasMoreDataDown);
+               self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
          }
       },
