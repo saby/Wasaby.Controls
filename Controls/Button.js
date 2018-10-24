@@ -3,7 +3,7 @@ define('Controls/Button', [
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
-   'css!Controls/Button/NewButtonStyles'
+   'css!Controls/Button/Button'
 ], function(Control, Classes, template, validateIconStyle) {
    'use strict';
 
@@ -152,7 +152,7 @@ define('Controls/Button', [
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
-         self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
+         self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';

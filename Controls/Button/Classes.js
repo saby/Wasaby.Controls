@@ -65,17 +65,6 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
       }
    };
 
-   var legalStylesOfButton = [
-      'secondary',
-      'primary',
-      'info',
-      'default',
-      'danger',
-      'success',
-      'warning',
-      'magic'
-   ];
-
    var Classes = {
 
       /**
@@ -95,9 +84,6 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
             } else {
                IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
             }
-         } else if (legalStylesOfButton.indexOf(style) !== -1) {
-            IoC.resolve('ILogger').error('Button', 'Задан несуществующий style.');
-            currentButtonClass.style = 'secondary';
          }
          return currentButtonClass;
       }
