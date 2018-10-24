@@ -126,17 +126,15 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig, context);
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'right' });
-            assert.equal(dropDownList._verticalOrientation, 'top');
-            assert.equal(dropDownList._horizontalOrientation, 'right');
-            assert.equal(dropDownList._typeShadow, 'suggestionsContainer-top');
+            assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-top controls-DropdownList__popup-shadow-suggestionsContainer');
+            assert.equal(dropDownList._headerClass, 'controls-DropdownList__head-right');
 
             context.stickyCfg.horizontalAlign.side = 'left';
             context.stickyCfg.verticalAlign.side = 'bottom';
             dropDownList._beforeUpdate(dropDownConfig, context);
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
-            assert.equal(dropDownList._verticalOrientation, 'bottom');
-            assert.equal(dropDownList._horizontalOrientation, 'left');
-            assert.equal(dropDownList._typeShadow, 'suggestionsContainer-bottom');
+            assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
+            assert.equal(dropDownList._headerClass, 'controls-DropdownList__head-left');
 
          });
 
