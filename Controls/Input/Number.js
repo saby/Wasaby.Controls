@@ -107,8 +107,8 @@ define('Controls/Input/Number',
                 * Changing the value in the focus out field is only in the number field. Therefore, the code is not needed for all fields.
                 */
                if (detection.isIE) {
-                  self._selectionStart = target.selectionStart;
-                  self._selectionEnd = target.selectionEnd;
+                  self._selectionStart = selectionStart;
+                  self._selectionEnd = selectionEnd;
                } else {
                   target.selectionStart = selectionStart;
                   target.selectionEnd = selectionEnd;

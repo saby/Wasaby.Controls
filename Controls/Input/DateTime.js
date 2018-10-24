@@ -25,6 +25,7 @@ define('Controls/Input/DateTime', [
     *    <li>just time,</li>
     *    <li>date and time.</li>
     * </ol>
+    * <a href="/materials/demo-ws4-input-datetime">Demo examples.</a>.
     * @class Controls/Input/DateTime
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
@@ -32,6 +33,7 @@ define('Controls/Input/DateTime', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
+    * @demo Controls-demo/Input/DateTime/DateTimePG
     * @author Миронов А.Ю.
     * @category Input
     */

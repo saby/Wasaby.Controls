@@ -535,10 +535,16 @@ define([
             viewModelConstructor: ListViewModel,
             navigation: {
                view: 'infinity',
+               source: 'page',
                viewConfig: {
                   pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
                }
-            }
+            },
          };
          var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
@@ -554,7 +560,7 @@ define([
 
             //прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.handleListScroll(ctrl, 300, 'down');
-            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'disabled', stateEnd: 'disabled'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
