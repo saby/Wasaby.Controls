@@ -154,9 +154,8 @@ define('Controls/Popup/Manager',
          },
 
          controllerVisibilityChangeHandler: function(instance) {
-            var recalcPositionControllers = ['Dialog'];
             instance._popupItems.each(function(item) {
-               if (recalcPositionControllers.indexOf(item.controller.type) > -1) {
+               if (item.controller.needRecalcOnKeyboardShow()) {
                   item.controller._elementUpdated(item, _private.getItemContainer(item.id));
                }
             });
