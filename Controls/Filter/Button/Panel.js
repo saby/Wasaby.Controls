@@ -56,7 +56,7 @@ define('Controls/Filter/Button/Panel', [
          } else if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
             self._contextOptions = context.filterPanelOptionsField.options;
-            IoC.resolve('ILogger').info('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
+            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
          } else {
             throw new Error('Controls/Filter/Button/Panel::items option is required');
          }
