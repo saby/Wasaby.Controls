@@ -11,15 +11,15 @@ define('Controls/Popup/Opener/Edit',
       'Core/Deferred'
    ],
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
-      /**
-       * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
-       * @class Controls/Popup/Opener/Edit
-       * @control
-       * @public
-       * @author Красильников А.С.
-       * @category Popup
-       * @extends Core/Control
-       */
+     /**
+      * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
+      * @class Controls/Popup/Opener/Edit
+      * @control
+      * @public
+      * @author Красильников А.С.
+      * @category Popup
+      * @extends Core/Control
+      */
 
       var _private = {
          getConfig: function(instance, meta, popupOptions) {

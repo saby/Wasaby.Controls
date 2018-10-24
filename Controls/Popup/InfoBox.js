@@ -34,10 +34,10 @@ define('Controls/Popup/InfoBox',
        * @cfg {Number} Delay before opening after mouse enters.
        */
 
-       /**
-        * @name Controls/Popup/InfoBox#position
-        * @cfg {Number} Point positioning of the target relative to infobox.
-        */
+      /**
+       * @name Controls/Popup/InfoBox#position
+       * @cfg {Number} Point positioning of the target relative to infobox.
+       */
 
       /**
        * @name Controls/Popup/InfoBox#content
@@ -49,10 +49,10 @@ define('Controls/Popup/InfoBox',
        * @cfg {String|Function} Popup template.
        */
 
-       /**
-        * @name Controls/Popup/InfoBox#templateOptions
-        * @cfg {Object} Popup template options.
-        */
+      /**
+       * @name Controls/Popup/InfoBox#templateOptions
+       * @cfg {Object} Popup template options.
+       */
 
       /**
        * @name Controls/Popup/InfoBox#trigger
@@ -96,11 +96,11 @@ define('Controls/Popup/InfoBox',
             this._resultHandler = this._resultHandler.bind(this);
          },
 
-         /**
-          * TODO: https://online.sbis.ru/opendoc.html?guid=ed987a67-0d73-4cf6-a55b-306462643982
-          * Кто должен закрывать инфобокс после разрушения компонента нужно будет обсудить.
-          * Если компонент обрабатывающий openInfoBox и closeInfoBox, то данный код будет удален по ошибке выше.
-          */
+        /**
+         * TODO: https://online.sbis.ru/opendoc.html?guid=ed987a67-0d73-4cf6-a55b-306462643982
+         * Кто должен закрывать инфобокс после разрушения компонента нужно будет обсудить.
+         * Если компонент обрабатывающий openInfoBox и closeInfoBox, то данный код будет удален по ошибке выше.
+         */
          _beforeUnmount: function() {
             if (this._opened) {
                this._notify('closeInfoBox', [], {bubbling: true});
