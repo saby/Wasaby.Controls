@@ -44,7 +44,7 @@ define('Controls/Popup/Opener/Stack',
       return Stack;
    });
 
-   /**
-    * @name Controls/Popup/Opener/Stack#closePopupBeforeUnmount
-    * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
-    */
+/**
+ * @name Controls/Popup/Opener/Stack#closePopupBeforeUnmount
+ * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
+ */

@@ -73,6 +73,7 @@ define('Controls/Popup/Opener/Dialog',
 
       return Dialog;
    }
+
    /**
     * @name Controls/Popup/Opener/Dialog#popupOptions
     * @cfg {Object} Sets the popup configuration.
