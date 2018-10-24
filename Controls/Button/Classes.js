@@ -77,10 +77,11 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
          if (deprecatedClassesOfButton.hasOwnProperty(style)) {
             currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
             currentButtonClass.style = deprecatedClassesOfButton[style].style;
-            if (deprecatedClassesOfButton[style] === 'linkMain2' || deprecatedClassesOfButton[style] === 'linkMain3') {
+            if (style === 'linkMain2' || style === 'linkMain3') {
                IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте компонент Controls/Label c модификаторами: controls-Label_underline-hovered и controls-Label_underline_color-hovered');
-            } else if (deprecatedClassesOfButton[style] === 'buttonAdd') {
-               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опцию iconStyle в различных значениях(черный - default)');
+            } else if (style === 'buttonAdd') {
+               currentButtonClass.buttonAdd = true;
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опцию iconStyle в различных значениях для изменения по наведению');
             } else {
                IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
             }

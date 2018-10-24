@@ -157,7 +157,7 @@ define('Controls/Button', [
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
          self._icon = options.icon;
-         self._iconStyle = validateIconStyle.iconStyleTransformation(options.iconStyle);
+         self._iconStyle = currentButtonClass.buttonAdd ? 'default' : validateIconStyle.iconStyleTransformation(options.iconStyle);
       }
    };
    var Button = Control.extend({
@@ -186,9 +186,10 @@ define('Controls/Button', [
 
    Button.getDefaultOptions = function() {
       return {
-         style: 'buttonDefault',
+         style: 'secondary',
+         viewMode: 'button',
          size: 'm',
-         iconStyle: 'default'
+         iconStyle: 'secondary'
       };
    };
 

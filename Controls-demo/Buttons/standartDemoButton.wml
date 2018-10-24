@@ -101,11 +101,11 @@
         <h3>Bordered button-icon with m size</h3>
         <div attr:class="demo-Button_margin-10">
             <div attr:class="demo-Button__testBlock__controlPanelFirst">
-                <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="secondary" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="transparentQuickButton" size="m"/>
                 <span class="demo-Button__Label">Confirm</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
-                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="secondary" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="transparentQuickButton" size="m"/>
                 <span class="demo-Button__Label">Delete</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
@@ -125,11 +125,11 @@
         <div attr:class="demo-Button_margin-10">
             <div>
                 <div attr:class="demo-Button__testBlock__controlPanelFirst">
-                    <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="transparentQuickButton" size="l"/>
                     <span class="demo-Button__Label">Confirm</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="transparentQuickButton" size="l"/>
                     <span class="demo-Button__Label">Delete</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
@@ -155,8 +155,8 @@
             <div>
                 <div class="demo-Button__Label">Not transparent button</div>
                 <div class="demo-Button__background_complex">
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="secondary" viewMode="quickButton" size="l"/>
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="secondary" viewMode="quickButton" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="quickButton" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="quickButton" size="l"/>
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="quickButton" size="l"/>
                     <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="primary"/>
                 </div>
