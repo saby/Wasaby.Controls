@@ -20,12 +20,12 @@ define('Controls/interface/IGroupedView', [
 
    /**
     * @name Controls/interface/IGroupedView#collapsedGroups
-    * @property {Object} collapsedGroups List of collapsed groups.
+    * @property {Array} collapsedGroups List of collapsed group identifiers. Identifiers of groups are obtained as a result of calling the groupMethod method.
     */
 
    /**
     * @name Controls/interface/IGroupedView#historyIdCollapsedGroups
-    * @property {Boolean} historyIdCollapsedGroups Unique id for save to history a list of collapsed groups.
+    * @property {String} historyIdCollapsedGroups Unique id for save to history a list of identifiers collapsed groups.
     */
 
    /**

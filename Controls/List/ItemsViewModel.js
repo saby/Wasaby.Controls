@@ -5,9 +5,8 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
-   'Core/core-clone',
    'Controls/Constants'
-], function(BaseViewModel, ItemsUtil, cInstance, cClone, ControlsConstants) {
+], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants) {
 
    /**
     *
@@ -26,6 +25,28 @@ define('Controls/List/ItemsViewModel', [
       },
       displayFilterGroups: function(item, index, displayItem) {
          return item === ControlsConstants.view.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
+      },
+      prepareCollapsedGroupsByArray: function(collapsedGroups) {
+         var
+            result = {};
+         if (collapsedGroups) {
+            collapsedGroups.forEach(function(group) {
+               result[group] = true;
+            });
+         }
+         return result;
+      },
+      prepareCollapsedGroupsByObject: function(collapsedGroups) {
+         var
+            result = [];
+         if (collapsedGroups) {
+            for (var group in collapsedGroups) {
+               if (collapsedGroups.hasOwnProperty(group)) {
+                  result.push(group);
+               }
+            }
+         }
+         return result;
       },
       getDisplayFilter: function(data, cfg) {
          var
@@ -50,11 +71,7 @@ define('Controls/List/ItemsViewModel', [
       constructor: function(cfg) {
          ItemsViewModel.superclass.constructor.apply(this, arguments);
          this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-         if (cfg.collapsedGroups) {
-            this._collapsedGroups = cClone(cfg.collapsedGroups);
-         } else {
-            this._collapsedGroups = {};
-         }
+         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
          if (cfg.items) {
             if (cfg.itemsReadyCallback) {
                cfg.itemsReadyCallback(cfg.items);
@@ -137,7 +154,7 @@ define('Controls/List/ItemsViewModel', [
          this._notify('onGroupsExpandChange', {
             group: group,
             changeType: state ? 'expand' : 'collapse',
-            collapsedGroups: cClone(this._collapsedGroups)
+            collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
          });
          this._notify('onListChange');
       },
