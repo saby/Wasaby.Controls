@@ -156,10 +156,10 @@ define('Controls/Popup/Opener/Edit',
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
 
-                /**
-                 * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
-                 */
-                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
+               /**
+                * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
+                */
+               var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;
                if (eventResult !== Edit.CANCEL && this._options.items) {
                   _private.loadSynchronizer().addCallback(function(Synchronizer) {
