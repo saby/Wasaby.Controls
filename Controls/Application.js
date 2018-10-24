@@ -203,6 +203,7 @@ define('Controls/Application',
                context.AppData.application = self.application;
                context.AppData.servicesPath = self.servicesPath;
                context.AppData.product = self.product;
+               context.AppData.staticDomains = self.staticDomains;
             }
 
             /**
@@ -214,6 +215,7 @@ define('Controls/Application',
                buildnumber: self.buildnumber,
                title: self.title,
                appRoot: self.appRoot,
+               staticDomains: self.staticDomains,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
