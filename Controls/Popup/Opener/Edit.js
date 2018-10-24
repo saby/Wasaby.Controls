@@ -11,15 +11,15 @@ define('Controls/Popup/Opener/Edit',
       'Core/Deferred'
    ],
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
-     /**
-      * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
-      * @class Controls/Popup/Opener/Edit
-      * @control
-      * @public
-      * @author Красильников А.С.
-      * @category Popup
-      * @extends Core/Control
-      */
+      /**
+       * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
+       * @class Controls/Popup/Opener/Edit
+       * @control
+       * @public
+       * @author Красильников А.С.
+       * @category Popup
+       * @extends Core/Control
+       */
 
       var _private = {
          getConfig: function(instance, meta, popupOptions) {
@@ -155,9 +155,9 @@ define('Controls/Popup/Opener/Edit',
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
 
-                /**
-                 * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
-                 */
+               /**
+                * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
+                */
                 var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;
                if (eventResult !== Edit.CANCEL && this._options.items) {
@@ -185,8 +185,8 @@ define('Controls/Popup/Opener/Edit',
       return Edit;
    });
 
-  /**
-   * @name Controls/Popup/Opener/Edit#close
-   * Close edit popup.
-   * @function
-   */
+/**
+ * @name Controls/Popup/Opener/Edit#close
+ * Close edit popup.
+ * @function
+ */

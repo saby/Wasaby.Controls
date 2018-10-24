@@ -19,14 +19,14 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          }
       };
 
-     /**
-      * Стратегия позиционирования окна.
-      * @class Controls/Popup/Opener/Dialog/DialogController
-      * @control
-      * @public
-      * @category Popup
-      * @extends Controls/Popup/Opener/BaseController
-      */
+      /**
+       * Стратегия позиционирования окна.
+       * @class Controls/Popup/Opener/Dialog/DialogController
+       * @control
+       * @public
+       * @category Popup
+       * @extends Controls/Popup/Opener/BaseController
+       */
       var DialogController = BaseController.extend({
          elementCreated: function(cfg, container) {
             this.prepareConfig(cfg, container);
