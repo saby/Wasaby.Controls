@@ -202,9 +202,9 @@ define('Controls/List/EditInPlace', [
          },
 
          getSequentialEditing: function(newOptions) {
-            //TODO: опция editingConfig.sequentialEditing по умолчанию должна быть true. Но она находится внутри объекта,
-            //а при вызове getDefaultOptions объекты не мержатся. Нужно либо на стороне ws делать мерж объектов, либо
-            //делать 5 опций на списке, либо вот такой костыль:
+            // TODO: опция editingConfig.sequentialEditing по умолчанию должна быть true. Но она находится внутри объекта,
+            // а при вызове getDefaultOptions объекты не мержатся. Нужно либо на стороне ws делать мерж объектов, либо
+            // делать 5 опций на списке, либо вот такой костыль:
             if (newOptions.editingConfig && typeof newOptions.editingConfig.sequentialEditing !== 'undefined') {
                return newOptions.editingConfig.sequentialEditing;
             }
