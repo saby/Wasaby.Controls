@@ -7,11 +7,11 @@ define([
    var SwitchArea;
    var testItems = [
       {
-         id: 1
+         id: '1'
       }, {
-         id: 2
+         id: '2'
       }, {
-         id: 3
+         id: '3'
       }
    ];
    describe('Controls.SwitchableArea', function() {
@@ -26,8 +26,9 @@ define([
          };
          SwitchArea.saveOptions(opt);
          SwitchArea._beforeMount(opt);
-         opt.selectedKey = '2';
-         SwitchArea._beforeUpdate(opt);
+         SwitchArea._beforeUpdate({
+            selectedKey: '2'
+         });
          assert.equal(SwitchArea._viewModel._items[0].loaded, true, '_beforeMount. Item load status is uncorrect');
          assert.equal(SwitchArea._viewModel._items[1].loaded, true, '_beforeUpdate. Item load status is uncorrect');
       });
