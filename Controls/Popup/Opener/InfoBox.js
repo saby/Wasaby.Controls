@@ -55,31 +55,31 @@ define('Controls/Popup/Opener/InfoBox',
          _openId: null,
          _closeId: null,
 
-        /**
-         * Open popup.
-         * @function Controls/Popup/Opener/InfoBox#open
-         * @param {Object} config infobox options.
-         * @returns {undefined}
-         * @example
-         * js
-         * <pre>
-         *   Control.extend({
-         *      ...
-         *
-         *      _openInfobox() {
-         *          var config= {
-         *              message: 'Всплывающая подсказка'
-         *              target: this._children.buttonTarget //dom node
-         *          }
-         *          this._notify('openInfoBox', [config], {bubbling: true});
-         *      }
-         *
-         *      _closeInfobox() {
-         *          this._notify('closeInfoBox', [], {bubbling: true});
-         *      }
-         *   });
-         * </pre>
-         */
+         /**
+          * Open popup.
+          * @function Controls/Popup/Opener/InfoBox#open
+          * @param {Object} config infobox options.
+          * @returns {undefined}
+          * @example
+          * js
+          * <pre>
+          *   Control.extend({
+          *      ...
+          *
+          *      _openInfobox() {
+          *          var config= {
+          *              message: 'Всплывающая подсказка'
+          *              target: this._children.buttonTarget //dom node
+          *          }
+          *          this._notify('openInfoBox', [config], {bubbling: true});
+          *      }
+          *
+          *      _closeInfobox() {
+          *          this._notify('closeInfoBox', [], {bubbling: true});
+          *      }
+          *   });
+          * </pre>
+          */
          open: function(cfg) {
             // todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
             // еще старая версия подсказки => нельзя получить актуальные размеры, чтобы правильно спозиционироваться.
@@ -114,10 +114,10 @@ define('Controls/Popup/Opener/InfoBox',
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
 
-          /**
-           * Close popup.
-           * @function Controls/Popup/Opener/InfoBox#close
-           */
+         /**
+          * Close popup.
+          * @function Controls/Popup/Opener/InfoBox#close
+          */
          close: function(delay) {
             delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
             this._clearTimeout();
