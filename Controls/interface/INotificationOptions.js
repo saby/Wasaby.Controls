@@ -1,4 +1,4 @@
-define('Controls/interface/IBreadCrumbs', [
+define('Controls/interface/INotificationOptions', [
 ], function() {
 
    /**
