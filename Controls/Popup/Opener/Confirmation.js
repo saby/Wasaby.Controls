@@ -6,16 +6,16 @@ define('Controls/Popup/Opener/Confirmation',
    function(BaseOpener, Deferred) {
       'use strict';
 
-     /**
-      * Component that opens the confirmation popup.
-      * @class Controls/Popup/Opener/Confirmation
-      * @extends Core/Control
-      * @mixes Controls/interface/IConfirmationOptions
-      * @control
-      * @public
-      * @category Popup
-      * @author Красильников А.С.
-      */
+      /**
+       * Component that opens the confirmation popup.
+       * @class Controls/Popup/Opener/Confirmation
+       * @extends Core/Control
+       * @mixes Controls/interface/IConfirmationOptions
+       * @control
+       * @public
+       * @category Popup
+       * @author Красильников А.С.
+       */
 
       var Confirmation = BaseOpener.extend({
          _resultDef: null,
