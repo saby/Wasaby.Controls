@@ -1,10 +1,6 @@
 define('SBIS3.CONTROLS/Utils/OpenErrorsReportDialog', [
-   'require',
-   'Core/Deferred',
-   'Core/WindowManager',
-   'Core/Context',
-   'Core/moduleStubs'
-], function(require, Deferred, windowManager, Context, moduleStubs) {
+   'Core/WindowManager'
+], function(windowManager) {
 
    /**
     * Модуль, в котором описана функция <b>openErrorsReportDialog(cfg)</b>.
@@ -42,17 +38,9 @@ define('SBIS3.CONTROLS/Utils/OpenErrorsReportDialog', [
     */
    return function(cfg) {
       var
-         numSelected = cfg.numSelected || 0,
-         numSuccess = cfg.numSuccess || 0,
-         numErrors = numSelected - numSuccess,
-         errors = cfg.errors || [],
-         finishContextDfr = new Deferred(),
-         context = Context.createContext(finishContextDfr),
-         errorsText = [];
+         errorsText = [],
+         errors = cfg.errors || [];
 
-      context.setValue('Отмечено', numSelected);
-      context.setValue('Обработано', numSuccess);
-      context.setValue('НеВыполнено', numErrors);
       for (var i = 0, len = errors.length; i < len; i++) {
          var text = errors[i] instanceof Error ? errors[i].message : errors[i];
          if (errorsText.indexOf(text) === -1) {
@@ -63,33 +51,21 @@ define('SBIS3.CONTROLS/Utils/OpenErrorsReportDialog', [
          }
       }
 
-      context.setValue('ТекстОшибки', errorsText.join('<br>'));
-      moduleStubs.require(['SBIS3.CONTROLS/Action/OpenDialog']).addCallback(function(result) {
-         var action  = new result[0]({
-            template: 'Deprecated/res/wsmodules/ErrorsReportDialog/ErrorsReportDialog',
-            dialogOptions: {
-               cssClassName: 'ws-errorsReportDialog',
-               context: context,
-               resizable: false,
-               isReadOnly: true,
-               caption: cfg.title || '',
+      require(['Controls/Popup/Opener/Dialog', 'Core/Control'], function(PopupOpener, Control) {
+         var popupOpener = Control.createControl(PopupOpener, {
+            popupOptions: {
+               isModal: true,
+               template: 'Controls/Utils/ErrorsReportDialog/ErrorsReportDialog',
                opener: windowManager && windowManager.getActiveWindow(),
-               handlers: {
-                  onAfterLoad: function() {
-                     $('.ws-errorsReportDialog-errorsDescription', this.getContainer()).html('<div style="overflow: auto;">' + errorsText.join('<br>') + '</div>');
-                     if (numErrors === 0) {
-                        this.getContainer().find('.ws-errorsReportDialog-process-panel').css('display', 'none');
-                     }
-                  },
-                  onDestroy: function() {
-                     finishContextDfr.callback();
-                     action.destroy();
-                  }
+               templateOptions: {
+                  operationsCount: cfg.numSelected || 0,
+                  operationsSuccess: cfg.numSuccess || 0,
+                  errors: errorsText,
+                  title: cfg.title
                }
             }
-         });
-
-         action.execute();
+         }, document.createElement('div'));
+         popupOpener.open();
       });
    };
 });
