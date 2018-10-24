@@ -33,7 +33,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * <pre>
     *    <Controls.Filter.Button.Panel
     *          items={{_items}}
-    *          orientation="column"
+    *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
