@@ -25,7 +25,7 @@ define('Controls/Popup/Templates/BaseTemplate',
       });
       return DialogTemplate;
 
-});
+   });
 
 /**
  * @name Controls/Popup/Templates/BaseTemplate#contentTemplate

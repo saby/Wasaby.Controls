@@ -75,10 +75,10 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
          },
          changeMaximizedState: function() {
 
-           /**
-            * @event maximized
-            * Occurs when you click the expand / collapse button of the panels.
-            */
+            /**
+             * @event maximized
+             * Occurs when you click the expand / collapse button of the panels.
+             */
             this._notify('maximized', [!this._options.maximized], {bubbling: true});
          }
       });
