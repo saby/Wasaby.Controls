@@ -379,16 +379,16 @@ define('Controls/List/BaseControl', [
       groupsExpandChangeHandler: function(self, changes) {
          self._notify(changes.changeType === 'expand' ? 'onGroupExpanded' : 'onGroupCollapsed', [changes.group], { bubbling: true });
          requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
-            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.storeKeyCollapsedGroups);
+            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups);
          });
       },
 
       prepareCollapsedGroups: function(config) {
          var
             result = new Deferred();
-         if (config.storeCollapsedGroups) {
+         if (config.historyIdCollapsedGroups) {
             requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
-               GroupUtil.restoreCollapsedGroups(config.storeKeyCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
+               GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
                   result.callback(collapsedGroupsFromStore ? collapsedGroupsFromStore : config.collapsedGroups);
                });
             });

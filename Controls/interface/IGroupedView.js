@@ -24,13 +24,8 @@ define('Controls/interface/IGroupedView', [
     */
 
    /**
-    * @name Controls/interface/IGroupedView#storeCollapsedGroups
-    * @property {Boolean} storeCollapsedGroups Store a list of collapsed groups.
-    */
-
-   /**
-    * @name Controls/interface/IGroupedView#storeKeyCollapsedGroups
-    * @property {Boolean} storeKeyCollapsedGroups Key, using for store a list of collapsed groups.
+    * @name Controls/interface/IGroupedView#historyIdCollapsedGroups
+    * @property {Boolean} historyIdCollapsedGroups Unique id for save to history a list of collapsed groups.
     */
 
    /**
