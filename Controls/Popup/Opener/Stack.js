@@ -27,7 +27,7 @@ define('Controls/Popup/Opener/Stack',
       };
 
       var Stack = BaseOpener.extend({
-          
+
          open: function(config) {
             config = _private.getStackConfig(config);
             this._setCompatibleConfig(config);

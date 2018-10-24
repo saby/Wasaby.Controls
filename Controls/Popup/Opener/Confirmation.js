@@ -34,34 +34,34 @@ define('Controls/Popup/Opener/Confirmation',
          },
 
           /**
-           * Open confirmation popup.
-           * @param config Confirmation options.
-           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
-           * @remark
-           * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
-           * @example
-           * wml
-           * <pre>
-           *    <Controls.Popup.Opener.Confirmation name="confirmationOpener">
-           *    </Controls.Popup.Opener.Confirmation>
-           *
-           *    <Controls.Button name="openConfirmation" caption="open confirmation" on:click="_open()"/>
-           * </pre>
-           * js
-           * <pre>
-           *     Control.extend({
-           *       ...
-           *
-           *        _open() {
-           *           var config= {
-           *              message: 'Сохранить изменения?'
-           *              type: 'yesnocancel'
-           *           }
-           *           this._children.confirmationOpener.open(config)
-           *        }
-           *     });
-           * </pre>
-           */
+          * Open confirmation popup.
+          * @param config Confirmation options.
+          * @returns {Deferred} The deferral will end with the result when the user closes the popup.
+          * @remark
+          * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
+          * @example
+          * wml
+          * <pre>
+          *    <Controls.Popup.Opener.Confirmation name="confirmationOpener">
+          *    </Controls.Popup.Opener.Confirmation>
+          *
+          *    <Controls.Button name="openConfirmation" caption="open confirmation" on:click="_open()"/>
+          * </pre>
+          * js
+          * <pre>
+          *     Control.extend({
+          *       ...
+          *
+          *        _open() {
+          *           var config= {
+          *              message: 'Сохранить изменения?'
+          *              type: 'yesnocancel'
+          *           }
+          *           this._children.confirmationOpener.open(config)
+          *        }
+          *     });
+          * </pre>
+          */
 
           open: function(templateOptions) {
             this._resultDef = new Deferred();
