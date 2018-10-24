@@ -19,25 +19,25 @@ define('Controls/Popup/Opener/InfoBox',
        * @private
        */
 
-       /**
-        * @typedef {Object} Config
-        * @description Infobox configuration.
-        * @property {Object} opener Control, which is the logical initiator of popup opening.
-        * @property {String|Function} template Template inside popup
-        * @property {Object} templateOptions Template options inside popup.
-        * @property {Object} eventHandlers Callback functions on popup events
-        * @property {domNode} target The target relative to which the popup is positioned.
-        * @property {String} position Point positioning of the target relative to infobox.
-        * @property {String} message The text in the body popup.
-        * @property {Boolean} float Whether the content should wrap around the cross closure.
-        * @property {String} style Infobox display style.
-        * @property {Number} showDelay Delay before opening.
-        */
+      /**
+       * @typedef {Object} Config
+       * @description Infobox configuration.
+       * @property {Object} opener Control, which is the logical initiator of popup opening.
+       * @property {String|Function} template Template inside popup
+       * @property {Object} templateOptions Template options inside popup.
+       * @property {Object} eventHandlers Callback functions on popup events
+       * @property {domNode} target The target relative to which the popup is positioned.
+       * @property {String} position Point positioning of the target relative to infobox.
+       * @property {String} message The text in the body popup.
+       * @property {Boolean} float Whether the content should wrap around the cross closure.
+       * @property {String} style Infobox display style.
+       * @property {Number} showDelay Delay before opening.
+       */
 
-       /**
-        * @name Controls/interface/IInfoboxOptions#config
-        * @cfg {Config[]} Infobox options.
-        */
+      /**
+       * @name Controls/interface/IInfoboxOptions#config
+       * @cfg {Config[]} Infobox options.
+       */
 
       var INFOBOX_HIDE_DELAY = 300;
       var INFOBOX_SHOW_DELAY = 300;

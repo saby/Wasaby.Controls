@@ -6,16 +6,16 @@ define('Controls/Popup/Opener/Confirmation',
    function(BaseOpener, Deferred) {
       'use strict';
 
-      /**
-       * Component that opens the confirmation popup.
-       * @class Controls/Popup/Opener/Confirmation
-       * @extends Core/Control
-       * @mixes Controls/interface/IConfirmationOptions
-       * @control
-       * @public
-       * @category Popup
-       * @author Красильников А.С.
-       */
+     /**
+      * Component that opens the confirmation popup.
+      * @class Controls/Popup/Opener/Confirmation
+      * @extends Core/Control
+      * @mixes Controls/interface/IConfirmationOptions
+      * @control
+      * @public
+      * @category Popup
+      * @author Красильников А.С.
+      */
 
       var Confirmation = BaseOpener.extend({
          _resultDef: null,
@@ -33,7 +33,7 @@ define('Controls/Popup/Opener/Confirmation',
             }
          },
 
-          /**
+         /**
           * Open confirmation popup.
           * @param config Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
@@ -63,7 +63,7 @@ define('Controls/Popup/Opener/Confirmation',
           * </pre>
           */
 
-          open: function(templateOptions) {
+         open: function(templateOptions) {
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
             Confirmation.superclass.open.call(this, popupOptions, 'Controls/Popup/Opener/Dialog/DialogController');
