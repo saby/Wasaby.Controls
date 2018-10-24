@@ -1,13 +1,20 @@
 define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy'
+      'Controls/Popup/Opener/Dialog/DialogStrategy',
+      'SBIS3.CONTROLS/Utils/TouchKeyboardHelper'
    ],
-   function(BaseController, DialogStrategy) {
+   function(BaseController, DialogStrategy, TouchKeyboardHelper) {
       var _private = {
          prepareConfig: function(item, sizes) {
+            var windowData = {
+               width: document.body.clientWidth,
+               height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(),
+               scrollTop: document.body.scrollTop,
+            };
+
             // Positioning relative to body
-            item.position = DialogStrategy.getPosition(document.body.clientWidth, document.body.clientHeight, sizes, item);
+            item.position = DialogStrategy.getPosition(windowData, sizes, item);
             _private.fixCompatiblePosition(item);
          },
          fixCompatiblePosition: function(cfg) {
@@ -89,6 +96,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             _private.prepareConfig(cfg, sizes);
          }
       });
+      DialogController.prototype.type = 'Dialog';
       return new DialogController();
    }
 );
