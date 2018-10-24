@@ -3,10 +3,11 @@ define(
       'Core/constants',
       'Core/core-instance',
       'Controls/Input/Base',
+      'tests/unit/resources/ProxyCall',
       'tests/unit/resources/TemplateUtil',
-      'tests/unit/resources/ProxyCall'
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(constants, instance, Base, TemplateUtil, ProxyCall) {
+   function(constants, instance, Base, ProxyCall, TemplateUtil, SyntheticEvent) {
 
       'use strict';
 
@@ -183,6 +184,104 @@ define(
 
                   assert.equal(ctrl._tooltip, 'test value');
                });
+            });
+         });
+         describe('KeyUp', function() {
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: '',
+                  optionModel: 'test'
+               });
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
+               ctrl._children.input = {
+                  selectionStart: 10,
+                  selectionEnd: 10
+               };
+            });
+            it('Pressing the up arrow', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.up
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the right arrow', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.right
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the down arrow', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.down
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the left arrow', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.left
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the key end', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.end
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the home arrow', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.home
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+            it('Pressing the key which no changed selection', function() {
+               ctrl._keyUpHandler(new SyntheticEvent({
+                  keyCode: constants.key.b
+               }));
+
+               assert.equal(calls.length, 0);
             });
          });
          it('The browser automatically completed the field.', function() {

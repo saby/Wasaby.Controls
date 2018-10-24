@@ -42,6 +42,13 @@ define('Controls-demo/Input/Base/Base',
                   placeholder: 'select',
                   keyProperty: 'id',
                   displayProperty: 'title'
+               },
+               textAlign: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {
@@ -52,25 +59,11 @@ define('Controls-demo/Input/Base/Base',
                style: undefined,
                tagStyle: undefined,
                readOnly: undefined,
-               fontStyle: undefined
+               fontStyle: undefined,
+               textAlign: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
-         }/*,
-
-         _test: '1234',
-
-         _console: function(event, value, displayValue) {
-            if (value === '123456') {
-               this._test = '12345';
-            } else {
-               this._test = value;
-            }
-            console.log('demo= ' + value + ', ' + displayValue);
-         },
-
-         _changeValue: function() {
-            this._test = 'Значение изменено';
-         }*/
+         }
       });
 
       return Base;

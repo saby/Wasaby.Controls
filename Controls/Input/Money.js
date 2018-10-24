@@ -1,9 +1,13 @@
 define('Controls/Input/Money',
    [
       'Controls/Input/Base',
-      'Controls/Input/Money/ViewModel'
+      'Controls/Input/Money/ViewModel',
+
+      'wml!Controls/Input/Money/ReadOnly',
+
+      'css!Controls/Input/Money/Money'
    ],
-   function(Base, ViewModel) {
+   function(Base, ViewModel, readOnlyTemplate) {
 
       'use strict';
 
@@ -21,6 +25,8 @@ define('Controls/Input/Money',
        */
       var Money = Base.extend({
          _viewModel: ViewModel,
+
+         _readOnlyTemplate: readOnlyTemplate,
 
          _getViewModelOptions: function(options) {
             return {

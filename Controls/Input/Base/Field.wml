@@ -1,5 +1,6 @@
 <input
    autocorrect="off"
+   class="controls-Base__field"
    type="{{type}}"
    name="{{fieldName}}"
    autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
@@ -7,6 +8,6 @@
    on:click="_clickHandler()"
    on:input="_inputHandler()"
    on:change="_changeHandler()"
-   on:selection="_selectionHandler()"
+   on:select="_selectHandler()"
 />
 <ws:partial template="{{placeholderTemplate}}" placeholder="{{placeholder}}"/>

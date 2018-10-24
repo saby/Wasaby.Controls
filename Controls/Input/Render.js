@@ -18,6 +18,16 @@ define('Controls/Input/Render',
 
          _isShowPlaceholder: function() {
             return !(this._options.viewModel.displayValue || this._options.readOnly);
+         },
+
+         _getState: function() {
+            if (this._options.readOnly) {
+               return '_readOnly';
+            } else if (this._active) {
+               return '_active';
+            } else {
+               return '';
+            }
          }
       });
 

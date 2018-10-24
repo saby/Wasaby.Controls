@@ -1,5 +1,1 @@
-<div>
-   <Controls.Input.Base value="{{_test}}" on:valueChanged="_console()"/>
-   <Controls.Button caption="Поменять значение в поле" on:click="_changeValue()" attr:style="margin-top: 10px;"/>
-   <div style="margin-top: 10px;">value={{_test}}</div>
-</div>
+<Controls.Input.Base value="123"/>

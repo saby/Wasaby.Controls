@@ -1,0 +1,28 @@
+@import "./../../../Controls-theme/themes/default/helpers/_mixins";
+.controls-Base__field {
+   width: 100%;
+   text-overflow: ellipsis;
+   /**
+    * Reset browser styles.
+    */
+   border: none;
+   font: inherit;
+   color: inherit;
+   text-align: inherit;
+   background: transparent;
+   .box-shadow(none);
+   &::-webkit-contacts-auto-fill-button {
+      display: none;
+   }
+   &::-ms-clear {
+      display: none;
+   }
+   &::-ms-reveal {
+      display: none;
+   }
+   /**
+    * In firefox, the field is not compressed unless you set a minimum width.
+    * https://jsfiddle.net/hr9mvn2o/
+    */
+   min-width: 0;
+}

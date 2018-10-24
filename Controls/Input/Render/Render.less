@@ -5,6 +5,7 @@
    position: relative;
    display: inline-block;
    box-sizing: border-box;
+   height: @height_Render;
 }
 
 .controls-Render_size {
@@ -32,6 +33,21 @@
       border-color: ~"@{border-color_Render_style_@{_item}}";
       background: ~"@{background_Render_style_@{_item}}";
    } });
+
+   .for(@variants, { &_@{_item}:hover {
+      border-color: ~"@{border-color_Render_style_@{_item}_hover}";
+      background: ~"@{background_Render_style_@{_item}_hover}";
+   } });
+
+   .for(@variants, { &_@{_item}_active {
+      border-color: ~"@{border-color_Render_style_@{_item}_active}";
+      background: ~"@{background_Render_style_@{_item}_active}";
+   } });
+
+   .for(@variants, { &_@{_item}_readOnly {
+      border-color: ~"@{border-color_Render_style_@{_item}_readOnly}";
+      background: ~"@{background_Render_style_@{_item}_readOnly}";
+   } });
 }
 
 .controls-Render__tagStyle {
@@ -44,5 +60,12 @@
    @variants: info, danger, success, primary, warning, secondary;
    .for(@variants, { &_@{_item} {
       fill: ~"@{color_Render-tagStyle_@{_item}}";
+   } });
+}
+
+.controls-Render_textAlign {
+   @variants: right, left;
+   .for(@variants, { &_@{_item} {
+      text-align: @_item;
    } });
 }

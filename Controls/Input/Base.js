@@ -10,7 +10,9 @@ define('Controls/Input/Base',
 
       'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Base/Field',
-      'wml!Controls/Input/Base/ReadOnly'
+      'wml!Controls/Input/Base/ReadOnly',
+
+      'css!Controls/Input/Base/Base'
    ],
    function(Control, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
       
@@ -32,6 +34,84 @@ define('Controls/Input/Base',
        *
        * @author Журавлев М.С.
        */
+      var _private = {
+         initViewModel: function(self, options, value) {
+            self._viewModel = new (self._viewModel)(options);
+
+            self._viewModel.value = value;
+         },
+
+         updateViewModel: function(self, newOptions, value) {
+            if (!isEqual(self._viewModel.options, newOptions)) {
+               self._viewModel.options = newOptions;
+            }
+
+            if (self._viewModel.value !== value) {
+               self._viewModel.value = value;
+            }
+         },
+
+         initField: function(self) {
+            /**
+             * In read mode, the field does not exist.
+             */
+            if (self._options.readOnly) {
+               return;
+            }
+
+            var fieldValue = self._getField().value;
+
+            /**
+             * If there is a value in the field, when mounting, then browser use auto-complete.
+             * In this case, you change the displayed value in the model to the value in the field and
+             * must tell the parent that the value in the field has changed.
+             */
+            if (fieldValue) {
+               self._viewModel.displayValue = fieldValue;
+               _private.notifyValueChanged(self);
+            } else {
+               self._synchronizeFieldWithModel();
+            }
+         },
+
+         beforeUpdateField: function(self, newOptions) {
+            /**
+             * If you change from read mode to edit mode, a native field appears that you want to synchronize with the model.
+             * The field in DOM will appear in afterUpdateField, so synchronization should be done there.
+             */
+            if (self._options.readOnly && !newOptions.readOnly) {
+               self._shouldBeSyncAfterUpdate = true;
+            } else if (!newOptions.readOnly) {
+               self._synchronizeFieldWithModel();
+            }
+         },
+
+         afterUpdateField: function(self) {
+            if (self._shouldBeSyncAfterUpdate) {
+               self._shouldBeSyncAfterUpdate = false;
+
+               self._synchronizeFieldWithModel(true);
+            }
+         },
+
+         notifyValueChanged: function(self) {
+            self._notify('valueChanged', [self._viewModel.value, self._viewModel.displayValue]);
+         },
+
+         notifyInputCompleted: function(self) {
+            self._notify('inputCompleted', [self._viewModel.value, self._viewModel.displayValue]);
+         },
+
+         calculateSplitValueToPaste: function(pastedText, displayedText, selection) {
+            return {
+               before: displayedText.substring(0, selection.start),
+               insert: pastedText,
+               delete: displayedText.substring(selection.start, selection.end),
+               after: displayedText.substring(selection.end)
+            };
+         }
+      };
+
       var Base = Control.extend({
 
          /**
@@ -94,8 +174,12 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          _beforeMount: function(options) {
+            var viewModelOptions = this._getViewModelOptions(options);
+
+            _private.initViewModel(this, viewModelOptions, options.value);
+
             /**
-             * Browsers use autocomplete to the fields with the previously stored name.
+             * Browsers use auto-complete to the fields with the previously stored name.
              * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
              * To avoid this, we will translate the name of the control to the name of the <input> tag.
              * https://habr.com/company/mailru/blog/301840/
@@ -103,56 +187,21 @@ define('Controls/Input/Base',
             if ('name' in options) {
                this._fieldName = options.name;
             }
-
-            this._viewModel = new (this._viewModel)(this._getViewModelOptions(options));
-
-            this._viewModel.value = options.value;
          },
 
          _afterMount: function() {
-            if (this._options.readOnly) {
-               return;
-            }
-
-            var fieldValue = this._getField().value;
-
-            /**
-             * If the browser automatically filled in the field, we believe that value has changed.
-             */
-            if (fieldValue) {
-               this._viewModel.displayValue = fieldValue;
-               this._notify('valueChanged', [this._viewModel.value, fieldValue]);
-            } else {
-               this._synchronizeFieldWithModel();
-            }
+            _private.initField(this);
          },
 
          _beforeUpdate: function(newOptions) {
             var newViewModelOptions = this._getViewModelOptions(newOptions);
 
-            if (!isEqual(this._viewModel.options, newViewModelOptions)) {
-               this._viewModel.options = newViewModelOptions;
-            }
-
-            this._viewModel.value = newOptions.value;
-
-            /**
-             * If you change from read mode to edit mode, a native field appears that you want to synchronize with the model.
-             * The field in DOM will appear in _afterUpdate, so synchronization should be done there.
-             */
-            if (this._options.readOnly && !newOptions.readOnly) {
-               this._shouldBeSyncAfterUpdate = true;
-            } else if (!newOptions.readOnly) {
-               this._synchronizeFieldWithModel();
-            }
+            _private.updateViewModel(this, newViewModelOptions, newOptions.value);
+            _private.beforeUpdateField(this, newOptions);
          },
 
          _afterUpdate: function() {
-            if (this._shouldBeSyncAfterUpdate) {
-               this._shouldBeSyncAfterUpdate = false;
-
-               this._synchronizeFieldWithModel(true);
-            }
+            _private.afterUpdateField(this);
          },
 
          /**
@@ -188,10 +237,10 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler selection in native field.
+          * Event handler select in native field.
           * @private
           */
-         _selectionHandler: function() {
+         _selectHandler: function() {
             this._viewModel.selection = this._getFieldSelection();
          },
 
@@ -219,14 +268,11 @@ define('Controls/Input/Base',
             }
 
             field.value = value;
-            field.selectionStart = selection.start;
-            field.selectionEnd = selection.end;
+            field.setSelectionRange(selection.start, selection.end);
          },
 
          _changeHandler: function() {
-            var model = this._viewModel;
-
-            this._notify('inputCompleted', [model.value, model.displayValue]);
+            _private.notifyInputCompleted(this);
          },
 
          /**
@@ -261,8 +307,16 @@ define('Controls/Input/Base',
             return {};
          },
 
+         /**
+          * Get the tooltip for field.
+          * If the displayed value fits in the field, the tooltip option is returned. Otherwise the displayed value is returned.
+          * @return {String} Tooltip.
+          * @private
+          */
          _getTooltip: function() {
-            return this._hasHorizontalScroll(this._getField()) ? this._viewModel.displayValue : this._options.tooltip;
+            var hasFieldHorizontalScroll = this._hasHorizontalScroll(this._getField());
+
+            return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
          /**
@@ -277,23 +331,16 @@ define('Controls/Input/Base',
                var field = this._getField();
 
                field.value = this._viewModel.displayValue;
-               field.selectionStart = this._viewModel.selection.start;
-               field.selectionEnd = this._viewModel.selection.end;
+               field.setSelectionRange(this._viewModel.selection.start, this._viewModel.selection.end);
 
                this._viewModel.changesHaveBeenApplied();
             }
          },
 
          paste: function(text) {
-            var value = this._viewModel.displayValue;
-            var selection = this._viewModel.selection;
+            var splitValue = _private.calculateSplitValueToPaste(text, this._viewModel.displayValue, this._viewModel.selection);
 
-            this._viewModel.handleInput({
-               before: value.substring(0, selection.start),
-               insert: text,
-               delete: value.substring(selection.start, selection.end),
-               after: value.substring(selection.end)
-            }, 'insert');
+            this._viewModel.handleInput(splitValue, 'insert');
          }
       });
       

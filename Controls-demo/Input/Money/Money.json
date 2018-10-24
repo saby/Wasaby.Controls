@@ -1,11 +1,11 @@
 {
-  "Controls/Input/Base": {
-    "name": "Controls/Input/Base",
+  "Controls/Input/Money": {
+    "name": "Controls/Input/Money",
     "title": "Text input.",
-    "className": "Controls/Input/Base",
+    "className": "Controls/Input/Money",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Base",
+    "fullname": "Controls/Input/Money",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -56,14 +56,6 @@
               "primary": "primary",
               "warning": "warning",
               "secondary": "secondary"
-            }
-          },
-          "textAlign": {
-            "type": "enum",
-            "title": "Horizontal alignment of the text in field.",
-            "enum": {
-              "left": "left",
-              "right": "right"
             }
           },
           "readOnly": {
