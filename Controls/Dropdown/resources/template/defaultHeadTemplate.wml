@@ -8,12 +8,12 @@
       <div if="{{icon}}" class="{{icon}}"></div>
    </div>
 </ws:if>
-<ws:if data="{{menuStyle === 'duplicateSelectedItem'}} {{horizontalOrientation === 'left' ? 'controls-DropdownList__head-left'}}">
+<ws:if data="{{menuStyle === 'duplicateSelectedItem'}} {{headerClass}}">
    <div class="controls-DropdownList__head">
       <div if="{{caption}}">{{caption}}</div>
    </div>
 </ws:if>
-<ws:if data="{{menuStyle === 'titleHead'}} {{horizontalOrientation === 'left' ? 'controls-DropdownList__head-left'}}">
+<ws:if data="{{menuStyle === 'titleHead'}} {{headerClass}}">
    <div class="controls-DropdownList__head">
       {{caption}}
    </div>
