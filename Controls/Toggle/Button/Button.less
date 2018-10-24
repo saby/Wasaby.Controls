@@ -92,6 +92,10 @@
    color: @color_ToggleButton_style-LinkMain;
 }
 
+.controls-Button__icon-link-main_toggled_iconStyle-secondary_toggle_on {
+   color: @color_ToggleButton_style-LinkMain;
+}
+
 .controls-Button__icon-link-main_toggled_iconStyle-error_toggle_on {
    color: @color-Icon_style_error;
 }
@@ -124,36 +128,32 @@
    }
 }
 
-// NEW BUTTON STYLES
+//NEW STYLES
 
-.controls-Button__icon-secondary_toggle_on {
-   color: @color_ToggleButton_style-LinkMain;
-}
-
-.controls-Button_viewMode-link_toggled, .controls-Button_viewMode-link_toggled_readOnly {
+.controls-Button_viewMode-toggledLink, .controls-Button_viewMode-toggledLink_readOnly {
    border: @border-width_ToggleButton solid;
    border-radius: @border-radius-ToggleButton;
 }
 
-.controls-Button_viewMode-quickButton_style-secondary_toggle_on {
+.controls-Button_viewMode-quickButton_toggle_on {
    border-color: @border-color-IconButton_toggled;
 }
 
-.controls-Button_viewMode-link_toggled {
+.controls-Button_viewMode-toggledLink {
    color: @color-ToggleButton_text;
    cursor: pointer;
 }
 
-.controls-Button_viewMode-link_toggled_readOnly {
+.controls-Button_viewMode-toggledLink_readOnly {
    color: @color_ToggleButton_readOnly;
 }
 
-.controls-Button_viewMode-link_toggled_readOnly {
+.controls-Button_style-secondary_viewMode-toggledLink_readOnly {
    border-color: @background_ToggleButton;
    background: @background_ToggleButton;
 }
 
-.controls-Button_viewMode-link_toggled_toggle_on_readOnly {
+.controls-Button_style-secondary_viewMode-toggledLink_toggle_on_readOnly {
    border-color: @border-color_ToggleButton_readOnly;
    background: @background_ToggleButton_readOnly;
 }
@@ -162,95 +162,103 @@
    box-shadow: none;
 }
 
-.controls-Button_viewMode-link_toggled {
+.controls-Button_style-secondary_viewMode-toggledLink {
    background: @background_ToggleButton;
    border-color: @background_ToggleButton;
 }
 
-.controls-Button_viewMode-link_toggled_toggle_on {
+.controls-Button_style-secondary_viewMode-toggledLink_toggle_on {
    border-color: @border-color_ToggleButton;
    background: @background_ToggleButton_state-on;
 }
 
-.controls-Button_viewMode-link_toggled_size-s {
+.controls-Button_viewMode-toggledLink_size-s {
    height: @height-ToggleButton_size-s;
    min-width: @min-width-ToggleButton_size-s;
 }
 
-.controls-Button_viewMode-link_toggled_size-m {
+.controls-Button_viewMode-toggledLink_size-m {
    height: @height-ToggleButton_size-m;
    min-width: @min-width-ToggleButton_size-m;
 }
 
-.controls-Button_viewMode-link_toggled_size-l {
+.controls-Button_viewMode-toggledLink_size-l {
    height: @height-ToggleButton_size-l;
    min-width: @min-width-ToggleButton_size-l;
 }
 
-.controls-Button__wrapper_viewMode-link_toggled_size-s {
+.controls-Button__wrapper_viewMode-toggledLink_size-s {
    padding: @padding_ToggleButton-wrapper_s;
    .justify-content(center);
 }
 
-.controls-Button__wrapper_viewMode-link_toggled_size-m {
+.controls-Button__wrapper_viewMode-toggledLink_size-m {
    padding: @padding_ToggleButton-wrapper_m;
    .justify-content(center);
 }
 
-.controls-Button__wrapper_viewMode-link_toggled_size-l {
+.controls-Button__wrapper_viewMode-toggledLink_size-l {
    padding: @padding_ToggleButton-wrapper_l;
    .justify-content(center);
 }
 
-.controls-Button_viewMode-quickButton_style-success_toggle_on {
+.controls-Button_viewMode-quickButton_iconStyle-success_toggle_on {
    border-color: @color-Icon_style_done;
 }
 
-.controls-Button_style-quickButton_style-warning_toggle_on {
+.controls-Button_viewMode-quickButton_iconStyle-warning_toggle_on {
    border-color: @color-Icon_style_attention;
 }
 
-.controls-Button_style-quickButton_style-secondary_toggle_on {
+.controls-Button_viewMode-quickButton_iconStyle-secondary_toggle_on {
    border-color: @border-color-IconButton_toggled;
 }
 
-.controls-Button_viewMode-link_toggled:active {
-   .controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
+.controls-Button_viewMode-toggledLink:active {
+   .controls-Button__icon-secondary_toggle_on {
       color: @color_ToggleButton_Link-main_hovered;
    }
 }
 
-.controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
-   color: @color_ToggleButton_style-LinkMain;
+.controls-Button__icon-secondary_iconStyle-secondary_viewMode-quickButton_toggle_on {
+   color: @color_ToggleButton_Link-main_hovered;
 }
 
-.controls-Button__icon-link-main_toggled_iconStyle-error_toggle_on {
-   color: @color-Icon_style_error;
+.controls-Button__icon-secondary_iconStyle-secondary_viewMode-toggledLink_toggle_on {
+   color: @color-Icon_style_secondary;
 }
 
-.controls-Button__icon-link-main_toggled_iconStyle-done_toggle_on {
-   color: @color-Icon_style_done;
+.controls-Button__icon-danger_toggle_on {
+   color: @color-Icon_style_danger;
 }
 
-.controls-Button__icon-link-main_toggled_iconStyle-attention_toggle_on {
-   color: @color-Icon_style_attention;
+.controls-Button__icon-success_toggle_on {
+   color: @color-Icon_style_success;
 }
 
-.controls-Button__icon-iconButtonBordered_iconStyle-default_toggle_on {
-   color: @color-IconButtonBordered_default;
+.controls-Button__icon-warning_toggle_on {
+   color: @color-Icon_style_warning;
+}
+
+.controls-Button__icon-info_toggle_on {
+   color: @color-Icon_style_info;
+}
+
+.controls-Button__icon-primary_toggle_on {
+   color: @color-Icon_style_primary;
 }
 
 .ws-is-no-touch {
-   .controls-Button_style-link-main_toggled:hover {
-      .controls-Button__icon-link-main_toggled_iconStyle-default_toggle_on {
+   .controls-Button_style-secondary_viewMode-toggledLink:hover {
+      .controls-Button__icon-secondary_toggle_on {
          color: @color_ToggleButton_Link-main_hovered;
       }
    }
 
-   .controls-Button_style-link-main_toggled:hover {
+   .controls-Button_style-secondary_viewMode-toggledLink:hover {
       background: @background-ToggleButton_hovered;
       border-color: @background-ToggleButton_hovered;
-      .controls-Button__icon-link-main_toggled_iconStyle-default {
+      .controls-Button__icon_iconStyle-secondary {
          color: @color-ToggleButton__icon_hovered;
       }
    }

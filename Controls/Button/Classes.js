@@ -1,123 +1,81 @@
 define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
 
    'use strict';
-   var classesOfButton = {
+
+   var deprecatedClassesOfButton = {
       iconButtonBorderedAdditional: {
          style: 'iconButtonBordered',
-         type: 'iconButtonBordered',
-         outdated: true
+         type: 'quickButton'
       },
 
       iconButtonBordered: {
          style: 'iconButtonBordered',
-         type: 'iconButtonBordered',
-         transparent: true,
-         outdated: true
+         type: 'transparentQuickButton'
       },
 
       linkMain: {
-         style: 'link-main',
-         type: 'link',
-         outdated: true
+         style: 'secondary',
+         type: 'link'
       },
       linkMain2: {
-         style: 'link-main2',
-         type: 'link',
-         outdated: true
+         style: 'info',
+         type: 'link'
       },
       linkMain3: {
-         style: 'link-main3',
-         type: 'link',
-         outdated: true
+         style: 'info',
+         type: 'link'
       },
       linkAdditional: {
-         style: 'link-additional',
-         type: 'link',
-         outdated: true
+         style: 'info',
+         type: 'link'
       },
       linkAdditional2: {
-         style: 'link-additional2',
-         type: 'link',
-         outdated: true
+         style: 'default',
+         type: 'link'
       },
 
       linkAdditional3: {
-         style: 'link-additional3',
-         type: 'link',
-         outdated: true
+         style: 'danger',
+         type: 'link'
       },
 
       linkAdditional4: {
-         style: 'link-additional4',
-         type: 'link',
-         outdated: true
+         style: 'success',
+         type: 'link'
       },
 
       linkAdditional5: {
-         style: 'link-additional5',
-         type: 'link',
-         outdated: true
+         style: 'magic',
+         type: 'link'
       },
 
       buttonPrimary: {
          style: 'primary',
-         type: 'button',
-         outdated: true
+         type: 'button'
       },
 
       buttonDefault: {
-         style: 'default',
-         type: 'button',
-         outdated: true
+         style: 'secondary',
+         type: 'button'
       },
 
       buttonAdd: {
-         style: 'primary-add',
-         type: 'button',
-         outdated: true
-      },
-
-      //TODO: заглушка для корректной работы старых стилей. Удалить когда перейдем на новые
-      primary: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      secondary: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      info: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      default: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      success: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      danger: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      warning: {
-         style: 'newStyle',
-         type: 'newType'
-      },
-
-      magic: {
-         style: 'newStyle',
-         type: 'newType'
+         style: 'primary',
+         type: 'button'
       }
    };
+
+   var legalStylesOfButton = [
+      'secondary',
+      'primary',
+      'info',
+      'default',
+      'danger',
+      'success',
+      'warning',
+      'magic'
+   ];
+
    var Classes = {
 
       /**
@@ -126,17 +84,21 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
      * @returns {Object}
      */
       getCurrentButtonClass: function(style) {
-         var currentButtonClass;
-         if (classesOfButton.hasOwnProperty(style)) {
-            if (classesOfButton[style].outdated) {
-               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили кнопки. Используйте последнюю версию документации https://wi.sbis.ru/docs/js/Controls/Button/');
-               currentButtonClass = classesOfButton[style];
+         var currentButtonClass = {};
+         if (deprecatedClassesOfButton.hasOwnProperty(style)) {
+            currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
+            currentButtonClass.style = deprecatedClassesOfButton[style].style;
+            if (deprecatedClassesOfButton[style] === 'linkMain2' || deprecatedClassesOfButton[style] === 'linkMain3') {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте компонент Controls/Label c модификаторами: controls-Label_underline-hovered и controls-Label_underline_color-hovered');
+            } else if (deprecatedClassesOfButton[style] === 'buttonAdd') {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опцию iconStyle в различных значениях(черный - default)');
+            } else {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
             }
-         } else {
-            IoC.resolve('ILogger').error('Button', 'Для кнопки задан несуществующий стиль');
-            currentButtonClass = classesOfButton.buttonDefault;
+         } else if (legalStylesOfButton.indexOf(style) !== -1) {
+            IoC.resolve('ILogger').error('Button', 'Задан несуществующий style.');
+            currentButtonClass.style = 'secondary';
          }
-
          return currentButtonClass;
       }
 
