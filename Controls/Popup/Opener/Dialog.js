@@ -26,43 +26,43 @@ define('Controls/Popup/Opener/Dialog',
 
       var Dialog = Base.extend({
 
-         /**
-          * Open dialog popup.
-          * @function Controls/Popup/Opener/Dialog#open
-          * @returns {Undefined}
-          * @param {Object} popupOptions Dialog popup options.
-          * @example
-          * wml
-          * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog">
-          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
-          *          <ws:templateOptions key="111"/>
-          *       </ws:popupOptions>
-          *    </Controls.Popup.Opener.Dialog>
-          *
-          *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
-          *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
-          * </pre>
-          * js
-          * <pre>
-          *   Control.extend({
-          *      ...
-          *
-          *       _openDialog() {
-          *          var popupOptions = {
-          *              autofocus: true
-          *          }
-          *          this._children.dialog.open(popupOptions)
-          *       }
-          *
-          *       _closeDialog() {
-          *          this._children.dialog.close()
-          *       }
-          *       ...
-          *   });
-          * </pre>
-          * @see close
-          */
+        /**
+         * Open dialog popup.
+         * @function Controls/Popup/Opener/Dialog#open
+         * @returns {Undefined}
+         * @param {Object} popupOptions Dialog popup options.
+         * @example
+         * wml
+         * <pre>
+         *    <Controls.Popup.Opener.Dialog name="dialog">
+         *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+         *          <ws:templateOptions key="111"/>
+         *       </ws:popupOptions>
+         *    </Controls.Popup.Opener.Dialog>
+         *
+         *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+         *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+         * </pre>
+         * js
+         * <pre>
+         *   Control.extend({
+         *      ...
+         *
+         *       _openDialog() {
+         *          var popupOptions = {
+         *              autofocus: true
+         *          }
+         *          this._children.dialog.open(popupOptions)
+         *       }
+         *
+         *       _closeDialog() {
+         *          this._children.dialog.close()
+         *       }
+         *       ...
+         *   });
+         * </pre>
+         * @see close
+         */
          open: function(config) {
             config = _private.getDialogConfig(config);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
@@ -73,57 +73,57 @@ define('Controls/Popup/Opener/Dialog',
 
       return Dialog;
    }
-    /**
-     * @name Controls/Popup/Opener/Dialog#popupOptions
-     * @cfg {Object} Sets the popup configuration.
-     */
+   /**
+    * @name Controls/Popup/Opener/Dialog#popupOptions
+    * @cfg {Object} Sets the popup configuration.
+    */
 
-    /**
-     * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
-     * @cfg {Object} Determines whether to close the popup when the component is destroyed.
-     */
+   /**
+    * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
+    * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+    */
 
-    /**
-     * @name Controls/Popup/Opener/Dialog#close
-     * @function
-     * @description Close dialog popup.
-     * @returns {Undefined}
-     * @example
-     * wml
-     * <pre>
-     *    <Controls.Popup.Opener.Dialog name="dialog">
-     *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
-     *          <ws:templateOptions key="111"/>
-     *       </ws:popupOptions>
-     *    </Controls.Popup.Opener.Dialog>
-     *
-     *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
-     *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
-     * </pre>
-     * js
-     * <pre>
-     *   Control.extend({
-     *      ...
-     *
-     *       _openDialog() {
-     *          var popupOptions = {
-     *              autofocus: true
-     *          }
-     *          this._children.dialog.open(popupOptions)
-     *       }
-     *
-     *       _closeDialog() {
-     *          this._children.dialog.close()
-     *       }
-     *       ...
-     *   });
-     * </pre>
-     * @see open
-     */
+   /**
+    * @name Controls/Popup/Opener/Dialog#close
+    * @function
+    * @description Close dialog popup.
+    * @returns {Undefined}
+    * @example
+    * wml
+    * <pre>
+    *    <Controls.Popup.Opener.Dialog name="dialog">
+    *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+    *          <ws:templateOptions key="111"/>
+    *       </ws:popupOptions>
+    *    </Controls.Popup.Opener.Dialog>
+    *
+    *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+    *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+    * </pre>
+    * js
+    * <pre>
+    *   Control.extend({
+    *      ...
+    *
+    *       _openDialog() {
+    *          var popupOptions = {
+    *              autofocus: true
+    *          }
+    *          this._children.dialog.open(popupOptions)
+    *       }
+    *
+    *       _closeDialog() {
+    *          this._children.dialog.close()
+    *       }
+    *       ...
+    *   });
+    * </pre>
+    * @see open
+    */
 
-    /**
-     * @name Controls/Popup/Opener/Dialog#isOpened
-     * @function
-     * @description Popup opened status.
-     */
+   /**
+    * @name Controls/Popup/Opener/Dialog#isOpened
+    * @function
+    * @description Popup opened status.
+    */
 );
