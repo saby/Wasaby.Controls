@@ -94,9 +94,12 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
             _private.prepareConfig(cfg, sizes);
+         },
+
+         needRecalcOnKeyboardShow: function() {
+            return true;
          }
       });
-      DialogController.prototype.type = 'Dialog';
       return new DialogController();
    }
 );
