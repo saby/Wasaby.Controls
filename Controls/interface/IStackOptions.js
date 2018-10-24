@@ -1,16 +1,16 @@
-define('Controls/interface/IDialogOptions', [], function() {
+define('Controls/interface/IStackOptions', [], function() {
 
    /**
-    * Dialog popup options
+    * Stack popup options.
     *
-    * @interface Controls/interface/IDialogOptions
+    * @interface Controls/interface/IStackOptions
     * @typedef Object
     * @public
     */
 
    /**
     * @typedef {Object} PopupOptions
-    * @description Dialog popup options.
+    * @description Stack popup options.
     * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
     * @property {Boolean} isModal Determines whether the window is modal.
     * @property {String} className Class names of popup.
@@ -27,7 +27,7 @@ define('Controls/interface/IDialogOptions', [], function() {
 
    /**
     * @cfg {PopupOptions[]} Sets the popup configuration.
-    * @name Controls/interface/IDialogOptions#popupOptions
+    * @name Controls/interface/IStackOptions#popupOptions
     * @default {}
     * @remark
     * PopupOptions can be set both on the opener options and passed to the open method. PopupOptions passed to the open method will be merged with popupOptions declared on the open options.
@@ -74,7 +74,7 @@ define('Controls/interface/IDialogOptions', [], function() {
     */
 
    /**
-    * @name Controls/interface/IDialogOptions#eventHandlers
+    * @name Controls/interface/IStackOptions#eventHandlers
     * @cfg {EventHandlers[]} Callback functions on popup events.
     * @variant onClose Callback function is called when popup is closed.
     * @default {}

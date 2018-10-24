@@ -1,15 +1,15 @@
-define('Controls/Popup/Templates/Notification/Base',
+define('Controls/Popup/Templates/Notification/Simple',
    [
       'Core/Control',
-      'wml!Controls/Popup/Templates/Notification/Base',
-      'css!Controls/Popup/Templates/Notification/Base'
+      'wml!Controls/Popup/Templates/Notification/Simple',
+      'css!Controls/Popup/Templates/Notification/Simple'
    ],
    function(Control, template) {
 
       /**
-       * Base template of notification popup.
+       * Template (WML) of simple notification.
        *
-       * @class Controls/Popup/Templates/Notification/Base
+       * @class Controls/Popup/Templates/Notification/Simple
        * @extends Core/Control
        * @control
        * @public
@@ -65,21 +65,26 @@ define('Controls/Popup/Templates/Notification/Base',
 );
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#autoClose
+ * @name Controls/Popup/Templates/Notification/Simple#autoClose
  * @cfg {Integer} Close by timeout after open.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#style
+ * @name Controls/Popup/Templates/Notification/Simple#style
  * @cfg {String} Notification display style.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#closeButtonVisibility
+ * @name Controls/Popup/Templates/Notification/Simple#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#contentTemplate
- * @cfg {String} Main content.
+ * @name Controls/Popup/Templates/Notification/Simple#icon
+ * @cfg {Object} Notification message icon.
+ */
+
+/**
+ * @name Controls/Popup/Templates/Notification/Simple#text
+ * @cfg {String} Notification message.
  */
