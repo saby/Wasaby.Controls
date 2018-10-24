@@ -261,7 +261,7 @@ require(['Core/core-init'], function(){
 });
 
 /*server side render*/
-app.get('/app/*', function(req, res){
+app.get('/:moduleName/*', function(req, res){
 
    req.compatible=false;
    if (!process.domain) {
@@ -270,16 +270,27 @@ app.get('/app/*', function(req, res){
          exit: function(){}
       };
    }
-   
    process.domain.req = req;
 
    var tpl = require('wml!Controls/Application/Route');
-   require(req.query.app);
+   var originalUrl = req.originalUrl;
+
+   var path = req.originalUrl.split('/');
+   var cmp = path?path[1]:'Index';
+   cmp += '/Index';
+
+   try {
+      require(cmp);
+   }catch(e){
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end('');
+      return;
+   }
    var html = tpl({
       lite: true,
       wsRoot: '/WS.Core/',
       resourceRoot: '/',
-      application: req.query.app
+      application: cmp
    });
 
    if (html.addCallback) {

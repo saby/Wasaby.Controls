@@ -13,11 +13,6 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
-   <style>
-      .ws-hidden {
-         display: none;
-      }
-   </style>
    <ws:if data="{{ _options.head }}">
       <ws:if data="{{ isArrayHead() }}">
          <ws:for data="i in _options.head">

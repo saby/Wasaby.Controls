@@ -103,7 +103,9 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
       _keyPressed: function(e) {
          if (e.nativeEvent.keyCode === constants.key.esc) {
-            (this._options.type === 'ok' || this._options.type === 'yesnocancel') && this._sendResult();
+            // for 'ok' and 'yesnocancel' type value equal undefined
+            var result = this._options.type === 'yesno' ? false : undefined;
+            this._sendResult(null, result);
             e.stopPropagation();
          }
       }
