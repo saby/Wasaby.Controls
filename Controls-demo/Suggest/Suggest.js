@@ -94,20 +94,10 @@ define('Controls-demo/Suggest/Suggest', [
       { id: 77, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 78, title: 'Sasha', text: 'test', currentTab: 1 },
       { id: 79, title: 'Sasha', text: 'test', currentTab: 2 },
-      { id: 80, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 81, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 82, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 83, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 84, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 85, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 86, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 87, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 88, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 89, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 90, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 91, title: 'Sasha', text: 'test', currentTab: 1 },
-      { id: 92, title: 'Sasha', text: 'test', currentTab: 1 }
    ];
+   for (var i = 80; i < 120; i++) {
+    sourceData.push( { id: i, title: 'Sasha', text: 'test', currentTab: 1} );
+   };
    
    var VDomSuggest = Control.extend({
       _template: template,
