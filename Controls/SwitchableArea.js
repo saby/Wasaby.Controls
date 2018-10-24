@@ -1,60 +1,70 @@
-define('Controls/SwitchableArea',
-   [
-      'Core/Control',
-      'Controls/SwitchableArea/ViewModel',
-      'wml!Controls/SwitchableArea/SwitchableArea',
-      'wml!Controls/SwitchableArea/resource/itemTemplate'
-   ],
-   function(Control, ViewModel, template, defaultItemTemplate) {
+define('Controls/SwitchableArea', [
+   'Core/Control',
+   'Controls/SwitchableArea/ViewModel',
+   'wml!Controls/SwitchableArea/SwitchableArea',
+   'wml!Controls/SwitchableArea/resource/itemTemplate'
+],
+function(
+   Control,
+   ViewModel,
+   template,
+   defaultItemTemplate
+) {
+   'use strict';
 
-      'use strict';
+   /**
+    * SwitchableArea
+    *
+    * @class Controls/SwitchableArea
+    * @extends Core/Control
+    * @control
+    * @public
+    */
 
-      /**
-       * SwitchableArea
-       *
-       * @class Controls/SwitchableArea
-       * @extends Core/Control
-       * @control
-       * @public
-       * @category SwitchableArea
-       * @demo Controls-demo/SwitchableArea/DemoSwitchableArea
-       */
+   /**
+    * @typedef {Object} SwitchableAreaItem
+    * @property {String|Number} id
+    * @property {Function} itemTemplate
+    */
 
-      /**
-       * @name Controls/SwitchableArea#items
-       * @cfg {RecordSet} RecordSet of item, which itemTemplate are displayed.
-       */
+   /**
+    * @name Controls/SwitchableArea#items
+    * @cfg {Array.<SwitchableAreaItem>}
+    */
 
-      /**
-       * @name Controls/SwitchableArea#selectedKey
-       * @cfg {String} Key of selected item.
-       */
+   /**
+    * @name Controls/SwitchableArea#selectedKey
+    * @cfg {String} Key of selected item.
+    */
 
-      /**
-       * @name Controls/SwitchableArea#itemTemplateProperty
-       * @cfg {String} Name of field with template, which display.
-       */
+   /**
+    * @name Controls/SwitchableArea#itemTemplate
+    * @cfg {Function} Template for item render.
+    */
 
-      /**
-       * @name Controls/SwitchableArea#itemTemplate
-       * @cfg {Function} Template for item render.
-       */
+   var SwitchableArea = Control.extend({
+      _template: template,
 
-      var SwitchableArea = Control.extend({
-         _template: template,
-         _defaultItemTemplate: defaultItemTemplate,
+      _beforeMount: function(options) {
+         this._viewModel = new ViewModel(options.items, options.selectedKey);
+      },
 
-         _beforeMount: function(options) {
-            this._viewModel = new ViewModel(options.items, options.selectedKey);
-            this._items = options.items;
-         },
-
-         _beforeUpdate: function(newOptions) {
-            this._viewModel.updateViewModel(newOptions.items, newOptions.selectedKey);
-         },
-         getItemId: function(item) {
-            return item.get(this._options.items.getIdProperty());
+      _beforeUpdate: function(newOptions) {
+         if (this._options.selectedKey !== newOptions.selectedKey) {
+            this._viewModel.updateViewModel(newOptions.selectedKey);
          }
-      });
-      return SwitchableArea;
+      },
+
+      _beforeUnmount: function() {
+         this._viewModel = null;
+      }
    });
+
+   SwitchableArea.getDefaultOptions = function() {
+      return {
+         itemTemplate: defaultItemTemplate
+      };
+   };
+
+   return SwitchableArea;
+});
