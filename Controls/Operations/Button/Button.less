@@ -2,6 +2,7 @@
    display: inline-flex;
    align-items: center;
    justify-content: center;
+   position: relative;
    color: @color_OperationsButton__icon;
    cursor: pointer;
    width: @width_OperationsButton;
@@ -18,4 +19,15 @@
    &:hover {
       color: @color_OperationsButton__icon_readonly;
    }
+}
+.controls-OperationsButton:after {
+   background: #ccc;
+   width: @width_OperationsPanelButton-separator;
+   height: 24px;
+   content: '\00a0';
+   font-size: 1px;
+   position: absolute;
+   display: inline-block;
+   left: 0;
+   top: 0;
 }
