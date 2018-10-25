@@ -99,7 +99,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue)) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
