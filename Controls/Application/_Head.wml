@@ -7,7 +7,7 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
-         staticDomains: '{{ _options.staticDomains }}',
+         staticDomains: {{ _options.staticDomains }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }}
       };
