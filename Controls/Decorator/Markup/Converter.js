@@ -32,6 +32,7 @@ define('Controls/Decorator/Markup/Converter', [
    }
 
    var htmlToJson = function(html) {
+      // TODO: Make linkWrap.
       var div = document.createElement('div');
       div.innerHTML = html;
       return domToJson(div).slice(1);

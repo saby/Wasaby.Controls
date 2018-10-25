@@ -64,7 +64,7 @@ define('Controls/Decorator/Markup/resources/template', [
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-   function template(data, attr, context, isVdom, sets) {
+   var template = function(data, attr, context, isVdom, sets) {
       markupGenerator = thelpers.getMarkupGenerator(isVdom);
       defCollection = {
          id: [],
@@ -73,7 +73,7 @@ define('Controls/Decorator/Markup/resources/template', [
       control = data;
       resolver = data._options.resolver;
 
-      var elements,
+      var elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
@@ -84,14 +84,24 @@ define('Controls/Decorator/Markup/resources/template', [
       } catch (e) {
          thelpers.templateError('Controls/Decorator/Markup', e, data);
       }
-      if (!elements || !elements.length) {
-         // TODO: need an invisible node, but now rewriting an invisible node to a visible one
-         // by changing the value doesn't work.
-         elements = [markupGenerator.createTag('span', { key: key + '0_' }, [], attrsToDecorate,
-            defCollection, data, key + '0_')];
+      if (isVdom) {
+         // Нет смысла при использовании в конвертере (jsonToHtml) запрещать пустую и мультиноду.
+         // Если это сломает серверную вёрстку, можно придумать что-то ещё.
+         if (!elements.length) {
+            // TODO: Здесь должно быть создание invisible-node, но когда я пытался переписать старый HtmlJson таким образом,
+            // не прокатило. Если после пустого json передать непустой, всё падало.
+            // После создания невидимого узла this._container становился равным контейнеру родителя,
+            // и если потом передать новый json, контейнер уже не переприсваивался при перерисовке, что неправильно.
+            // Пока оставил спан.
+            elements = [markupGenerator.createTag('span', { key: key + '0_' }, [], attrsToDecorate,
+               defCollection, data, key + '0_')];
+         } else if (elements.length > 1) {
+            elements = [markupGenerator.createTag('span', { key: key + 'wrap_' }, elements, attrsToDecorate,
+               defCollection, data, key + 'wrap_')];
+         }
       }
       return markupGenerator.joinElements(elements, key, defCollection);
-   }
+   };
 
    return template;
 });
