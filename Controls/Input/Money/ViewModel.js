@@ -36,12 +36,6 @@ define('Controls/Input/Money/ViewModel',
                   break;
             }
 
-            var dotPosition = result.value.indexOf('.');
-            if (dotPosition > -1) {
-               result.value += '00'.substring(0, 3 - result.value.length + dotPosition);
-            } else {
-               result.value += '.00';
-            }
             this._value = result.value;
             this._selection.start = result.position;
             this._selection.end = result.position;

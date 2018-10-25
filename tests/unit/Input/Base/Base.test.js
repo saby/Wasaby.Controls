@@ -37,91 +37,6 @@ define(
                assert.equal(ctrl._fieldName, 'test name');
             });
          });
-         describe('Synchronization the field with the model.', function() {
-            beforeEach(function() {
-               ctrl._synchronizeFieldWithModel = ProxyCall.apply(ctrl._synchronizeFieldWithModel, 'synchronizeFieldWithModel', calls, true);
-            });
-            it('Hook _afterMount. Read mode.', function() {
-               ctrl._options.readOnly = true;
-
-               ctrl._afterMount();
-
-               assert.equal(calls.length, 0);
-            });
-            it('Hook _afterMount. Edit mode.', function() {
-               ctrl._options.readOnly = false;
-
-               ctrl._afterMount();
-
-               assert.deepEqual(calls, [{
-                  name: 'synchronizeFieldWithModel',
-                  arguments: []
-               }]);
-            });
-            it('Hooks update. Read mode.', function() {
-               ctrl._options.readOnly = true;
-
-               ctrl._beforeUpdate({
-                  value: '',
-                  readOnly: true
-               });
-
-               assert.equal(calls.length, 0);
-
-               ctrl._afterUpdate();
-
-               assert.equal(calls.length, 0);
-            });
-            it('Hooks update. From read mode to edit mode.', function() {
-               ctrl._options.readOnly = true;
-
-               ctrl._beforeUpdate({
-                  value: '',
-                  readOnly: false
-               });
-
-               assert.equal(calls.length, 0);
-
-               ctrl._afterUpdate();
-
-               assert.deepEqual(calls, [{
-                  name: 'synchronizeFieldWithModel',
-                  arguments: [true]
-               }]);
-            });
-            it('Hooks update. Edit mode.', function() {
-               ctrl._options.readOnly = false;
-
-               ctrl._beforeUpdate({
-                  value: '',
-                  readOnly: false
-               });
-
-               assert.deepEqual(calls, [{
-                  name: 'synchronizeFieldWithModel',
-                  arguments: []
-               }]);
-
-               calls = [];
-               ctrl._afterUpdate();
-
-               assert.equal(calls.length, 0);
-            });
-            it('Hooks update. From edit mode to read mode.', function() {
-               ctrl._options.readOnly = false;
-
-               ctrl._beforeUpdate({
-                  value: '',
-                  readOnly: true
-               });
-
-               assert.equal(calls.length, 0);
-
-               ctrl._afterUpdate();
-
-               assert.equal(calls.length, 0);
-            });
-         });
          describe('Changing options in model.', function() {
             beforeEach(function() {
                ctrl._getViewModelOptions = function(options) {
@@ -193,10 +108,8 @@ define(
                   optionModel: 'test'
                });
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
-               ctrl._children.input = {
-                  selectionStart: 10,
-                  selectionEnd: 10
-               };
+               ctrl._children.input.selectionStart = 10;
+               ctrl._children.input.selectionEnd = 10;
             });
             it('Pressing the up arrow', function() {
                ctrl._keyUpHandler(new SyntheticEvent({

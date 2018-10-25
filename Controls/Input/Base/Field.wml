@@ -2,6 +2,7 @@
    autocorrect="off"
    class="controls-Base__field"
    type="{{type}}"
+   value="{{value}}"
    name="{{fieldName}}"
    autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
    on:keyup="_keyUpHandler()"

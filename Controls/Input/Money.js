@@ -7,7 +7,7 @@ define('Controls/Input/Money',
 
       'css!Controls/Input/Money/Money'
    ],
-   function(Base, ViewModel, readOnlyTemplate) {
+   function(Base, ViewModel, readOnlyFieldTemplate) {
 
       'use strict';
 
@@ -26,10 +26,11 @@ define('Controls/Input/Money',
       var Money = Base.extend({
          _viewModel: ViewModel,
 
-         _readOnlyTemplate: readOnlyTemplate,
+         _readOnlyFieldTemplate: readOnlyFieldTemplate,
 
          _getViewModelOptions: function(options) {
             return {
+               showEmptyDecimals: true,
                onlyPositive: options.onlyPositive
             };
          }

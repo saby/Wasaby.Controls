@@ -2,7 +2,6 @@ define('Controls-demo/Input/Base/Base',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      /*'wml!Controls-demo/Input/Base/Base',*/
       'json!Controls-demo/Input/Base/Base'
    ],
 

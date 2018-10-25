@@ -14,7 +14,7 @@ define('Controls/Input/Base',
 
       'css!Controls/Input/Base/Base'
    ],
-   function(Control, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyTemplate) {
+   function(Control, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
       
       'use strict';
 
@@ -53,44 +53,18 @@ define('Controls/Input/Base',
 
          initField: function(self) {
             /**
-             * In read mode, the field does not exist.
-             */
-            if (self._options.readOnly) {
-               return;
-            }
-
-            var fieldValue = self._getField().value;
-
-            /**
              * If there is a value in the field, when mounting, then browser use auto-complete.
              * In this case, you change the displayed value in the model to the value in the field and
              * must tell the parent that the value in the field has changed.
+             * In read mode, the field does not exist.
              */
-            if (fieldValue) {
-               self._viewModel.displayValue = fieldValue;
-               _private.notifyValueChanged(self);
-            } else {
-               self._synchronizeFieldWithModel();
-            }
-         },
+            if (!self._options.readOnly) {
+               var fieldValue = self._getField().value;
 
-         beforeUpdateField: function(self, newOptions) {
-            /**
-             * If you change from read mode to edit mode, a native field appears that you want to synchronize with the model.
-             * The field in DOM will appear in afterUpdateField, so synchronization should be done there.
-             */
-            if (self._options.readOnly && !newOptions.readOnly) {
-               self._shouldBeSyncAfterUpdate = true;
-            } else if (!newOptions.readOnly) {
-               self._synchronizeFieldWithModel();
-            }
-         },
-
-         afterUpdateField: function(self) {
-            if (self._shouldBeSyncAfterUpdate) {
-               self._shouldBeSyncAfterUpdate = false;
-
-               self._synchronizeFieldWithModel(true);
+               if (fieldValue) {
+                  self._viewModel.displayValue = fieldValue;
+                  _private.notifyValueChanged(self);
+               }
             }
          },
 
@@ -130,7 +104,7 @@ define('Controls/Input/Base',
           * @type {Function} The template for input field in read mode.
           * @private
           */
-         _readOnlyTemplate: readOnlyTemplate,
+         _readOnlyFieldTemplate: readOnlyFieldTemplate,
 
          /**
           * @type {Controls/Input/Base/ViewModel} The display model of the input field.
@@ -197,11 +171,7 @@ define('Controls/Input/Base',
             var newViewModelOptions = this._getViewModelOptions(newOptions);
 
             _private.updateViewModel(this, newViewModelOptions, newOptions.value);
-            _private.beforeUpdateField(this, newOptions);
-         },
-
-         _afterUpdate: function() {
-            _private.afterUpdateField(this);
+            this._viewModel.changesHaveBeenApplied();
          },
 
          /**
@@ -267,8 +237,8 @@ define('Controls/Input/Base',
                this._notify('valueChanged', [model.value, model.displayValue]);
             }
 
-            field.value = value;
-            field.setSelectionRange(selection.start, selection.end);
+            field.value = model.displayValue;
+            field.setSelectionRange(model.selection.start, model.selection.end);
          },
 
          _changeHandler: function() {
@@ -319,28 +289,12 @@ define('Controls/Input/Base',
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
-         /**
-          * Synchronize data from the model with the native field.
-          * @param {Boolean} [synchronize] Determined whether to perform synchronization regardless of model changes.
-          * @variant true Synchronization will occur even if the model has not changed since the last synchronization.
-          * @variant false Synchronization will occur only if the model has changed since the last synchronization.
-          * @private
-          */
-         _synchronizeFieldWithModel: function(synchronize) {
-            if (this._viewModel.shouldBeChanged || synchronize) {
-               var field = this._getField();
-
-               field.value = this._viewModel.displayValue;
-               field.setSelectionRange(this._viewModel.selection.start, this._viewModel.selection.end);
-
-               this._viewModel.changesHaveBeenApplied();
-            }
-         },
-
          paste: function(text) {
             var splitValue = _private.calculateSplitValueToPaste(text, this._viewModel.displayValue, this._viewModel.selection);
 
             this._viewModel.handleInput(splitValue, 'insert');
+
+            _private.notifyValueChanged(this);
          }
       });
       
