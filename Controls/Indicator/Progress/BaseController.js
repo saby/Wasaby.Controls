@@ -35,7 +35,7 @@ define(
 
 
       /**
-       * @name Controls/Indicator/Progress/BaseController#smoothChange
+       * @name Controls/Indicator/Progress/BaseController#smoothMotion
        * @cfg {Number} If we have to change the value in multiple steps
        */
 
@@ -107,8 +107,8 @@ define(
             },
 
             _beforeUpdate: function(newOptions) {
-               // If smoothChange option is on, then change the percentage step by step
-               if (newOptions.smoothChange) {
+               // If smoothMotion option is on, then change the percentage step by step
+               if (newOptions.smoothMotion) {
                   var
                      newProgressPercent = _private.calcProgressPercent(newOptions.currentValue, newOptions.totalValue);
 
@@ -141,7 +141,7 @@ define(
          return {
             currentValue: typeDescriptor(Number).required(),
             totalValue: typeDescriptor(Number).required(),
-            smoothChange: typeDescriptor(Boolean)
+            smoothMotion: typeDescriptor(Boolean)
          };
       };
 

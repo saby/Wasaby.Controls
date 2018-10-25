@@ -9,7 +9,7 @@
             infoLeft="left info"
             currentValue="{{ _currentValue }}"
             totalValue="{{ _totalValue }}"
-            smoothChange="{{ _smoothChange }}"
+            smoothMotion="{{ _smoothMotion }}"
          >
             <ws:infoRight>
                <Controls.Indicator.Progress.Timer
@@ -27,7 +27,7 @@
             class="ProgressBarDemo__progressBar"
             currentValue="{{ _currentValue }}"
             totalValue="{{ _totalValue }}"
-            smoothChange="{{ _smoothChange }}"
+            smoothMotion="{{ _smoothMotion }}"
          >
             <ws:infoRight>
                <Controls.Indicator.Progress.Timer
@@ -48,7 +48,7 @@
       </p>
       <br/>
       <p>
-         barSmoothMotion <Controls.Toggle.Checkbox bind:value="_smoothChange" />
+         barSmoothMotion <Controls.Toggle.Checkbox bind:value="_smoothMotion" />
       </p>
    </div>
 </div>

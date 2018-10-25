@@ -33,7 +33,7 @@ define(
 
 
       /**
-       * @name Controls/Indicator/Progress/Bar#smoothChange
+       * @name Controls/Indicator/Progress/Bar#smoothMotion
        * @cfg {Boolean} Animated indicator change
        */
 
@@ -45,7 +45,7 @@ define(
       Bar.getOptionTypes = function() {
          return {
             percentValue: typeDescriptor(Number).required(),
-            smoothChange: typeDescriptor(Boolean)
+            smoothMotion: typeDescriptor(Boolean)
          };
       };
 
