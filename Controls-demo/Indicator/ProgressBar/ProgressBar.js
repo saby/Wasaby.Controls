@@ -19,7 +19,7 @@ define(
 
          _currentValue: 69,
 
-         _smoothMotion: true
+         _smoothFill: true
       });
    }
 );

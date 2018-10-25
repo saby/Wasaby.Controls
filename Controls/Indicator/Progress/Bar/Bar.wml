@@ -1,6 +1,6 @@
 <div class="controls-ProgressBar">
    <div
-      class="controls-ProgressBar__filled {{ _options.smoothMotion ? 'controls-ProgressBar__filled-smoothMotion' }}"
+      class="controls-ProgressBar__filled {{ _options.smoothFill ? 'controls-ProgressBar__filled-smoothFill' }}"
       style="width: {{ _options.percentValue }}%;"
    ></div>
 </div>

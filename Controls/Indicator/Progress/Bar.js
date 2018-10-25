@@ -28,13 +28,13 @@ define(
 
       /**
        * @name Controls/Indicator/Progress/Bar#percentValue
-       * @cfg {Number} Width in percents of filled part of indicator
+       * @cfg {Number} Progress in percents (ratio of the filled part)
        */
 
 
       /**
-       * @name Controls/Indicator/Progress/Bar#smoothMotion
-       * @cfg {Boolean} Animated indicator change
+       * @name Controls/Indicator/Progress/Bar#smoothFill
+       * @cfg {Boolean} Smooth indicator fill
        */
 
       var
@@ -45,7 +45,7 @@ define(
       Bar.getOptionTypes = function() {
          return {
             percentValue: typeDescriptor(Number).required(),
-            smoothMotion: typeDescriptor(Boolean)
+            smoothFill: typeDescriptor(Boolean)
          };
       };
 

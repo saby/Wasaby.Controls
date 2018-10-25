@@ -1,7 +1,7 @@
 <div class="controls-ProgressDefaultLayout">
    <Controls.Indicator.Progress.Bar
       percentValue="{{ _progressPercent }}"
-      smoothMotion="{{ _options.smoothMotion }}"
+      smoothFill="{{ _options.smoothFill }}"
    />
    <div class="controls-ProgressDefaultLayout__info">
       <div class="controls-ProgressDefaultLayout__infoLeft ws-ellipsis">
