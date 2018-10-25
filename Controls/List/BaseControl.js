@@ -583,7 +583,7 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && itemData.multiSelectVisibility) {
+         if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
             var status = itemData.multiSelectStatus;
             this._notify('checkboxClick', [itemData.key, status]);
          }

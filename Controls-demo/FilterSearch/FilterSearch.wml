@@ -123,7 +123,7 @@
                                     <ws:tabSpaceTemplate>
                                         <div class="controls-demo__filterSearch-filters">
                                             <Controls.Filter.Button.Container>
-                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" orientation="right"/>
+                                                <Controls.Filter.Button attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" alignment="left"/>
                                             </Controls.Filter.Button.Container>
 
                                             <Controls.Filter.Fast.Container>
