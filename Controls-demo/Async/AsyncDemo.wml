@@ -29,4 +29,9 @@
          window.$is_OK$ = (is_ok || isDebug);
       }
    </script>
+   <div class="error-block">
+      <Controls.Container.Async templateName="Bad/Module/Not/Found">
+         <ws:partail template="{{content.resolvedTemplate}}" />
+      </Controls.Container.Async>
+   </div>
 </div>
