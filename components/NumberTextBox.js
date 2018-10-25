@@ -175,12 +175,12 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          if (typeof value !== 'undefined' && value !== null){
             options.text = FormatText.formatText(
                value,
-               options.text, 
-               options.onlyInteger, 
-               options.decimals, 
-               options.integers, 
-               options.delimiters, 
-               options.onlyPositive, 
+               options.text,
+               options.onlyInteger,
+               options.decimals,
+               options.integers,
+               options.delimiters,
+               options.onlyPositive,
                options.maxLength,
                options.hideEmptyDecimals,
                options.countMinusInLength
@@ -412,13 +412,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       _formatText: function(value){
          return FormatText.formatText(
-            value, 
-            this._options.text, 
-            this._options.onlyInteger, 
-            this._options.decimals, 
-            this._options.integers, 
-            this._options.delimiters, 
-            this._options.onlyPositive, 
+            value,
+            this._options.text,
+            this._options.onlyInteger,
+            this._options.decimals,
+            this._options.integers,
+            this._options.delimiters,
+            this._options.onlyPositive,
             this._options.maxLength,
             this._options.hideEmptyDecimals,
             this._options.countMinusInLength
@@ -570,10 +570,10 @@ define('SBIS3.CONTROLS/NumberTextBox', [
             }
             if (this._options.text.indexOf('-') == -1) {
                this._setText('-' + value);
-               this._setCaretPosition(this._caretPosition[0] + step);
+               this._setCaretPosition(this._caretPosition[0] + step, this._caretPosition[1] + step);
             } else {
                this._setText(value.substr(1));
-               this._setCaretPosition(this._caretPosition[0] - 1);
+               this._setCaretPosition(this._caretPosition[0], this._caretPosition[1] - 1);
             }
             TextBox.superclass.setText.call(this, this._getInputValue());
          }
