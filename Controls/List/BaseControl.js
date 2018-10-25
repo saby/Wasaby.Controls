@@ -55,6 +55,10 @@ define('Controls/List/BaseControl', [
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
+
+               if (!list.getCount()) {
+                  _private.checkLoadToDirectionCapability(self);
+               }
             }).addErrback(function(error) {
                _private.processLoadError(self, error, userErrback);
                resDeferred.callback(null);
@@ -87,6 +91,10 @@ define('Controls/List/BaseControl', [
 
                   // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
                   // self._virtualScroll.prependItems(addedItems.getCount());
+               }
+
+               if (!addedItems.getCount()) {
+                  _private.checkLoadToDirectionCapability(self);
                }
 
                return addedItems;
@@ -125,24 +133,24 @@ define('Controls/List/BaseControl', [
          return error;
       },
 
-      viewResize: function(self) {
+      checkLoadToDirectionCapability: function(self) {
          if (self._needScrollCalculation) {
-            if (self._scrollLoadStarted['up']) {
+            if (self._loadTriggerVisibility['up']) {
                _private.onScrollLoadEdge(self, 'up');
             }
-            if (self._scrollLoadStarted['down']) {
+            if (self._loadTriggerVisibility['down']) {
                _private.onScrollLoadEdge(self, 'down');
             }
          }
       },
 
       onScrollLoadEdgeStart: function(self, direction) {
-         self._scrollLoadStarted[direction] = true;
+         self._loadTriggerVisibility[direction] = true;
          _private.onScrollLoadEdge(self, direction);
       },
 
       onScrollLoadEdgeStop: function(self, direction) {
-         self._scrollLoadStarted[direction] = false;
+         self._loadTriggerVisibility[direction] = false;
       },
 
       onScrollLoadEdge: function(self, direction) {
@@ -269,11 +277,11 @@ define('Controls/List/BaseControl', [
       handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          var hasMoreData;
-         
+
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
-         
+
          if (self._scrollPagingCtr) {
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
@@ -423,7 +431,7 @@ define('Controls/List/BaseControl', [
       _itemTemplate: null,
 
       _needScrollCalculation: false,
-      _scrollLoadStarted: null,
+      _loadTriggerVisibility: null,
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
@@ -445,7 +453,7 @@ define('Controls/List/BaseControl', [
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (this._needScrollCalculation) {
-            this._scrollLoadStarted = {
+            this._loadTriggerVisibility = {
                up: false,
                down: false
             };
@@ -549,7 +557,7 @@ define('Controls/List/BaseControl', [
          if (this._listViewModel) {
             this._listViewModel.destroy();
          }
-         this._scrollLoadStarted = null;
+         this._loadTriggerVisibility = null;
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
@@ -642,7 +650,7 @@ define('Controls/List/BaseControl', [
       },
 
       _viewResize: function() {
-         _private.viewResize(this);
+         _private.checkLoadToDirectionCapability(this);
       },
 
       /**
