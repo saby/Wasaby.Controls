@@ -11,7 +11,7 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
-         _focusOutHandler: function(){
+         _focusOutHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
             this._notify('focusOutValidate', [this], { bubbling: true });
