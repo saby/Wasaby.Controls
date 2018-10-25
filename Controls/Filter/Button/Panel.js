@@ -165,7 +165,7 @@ define('Controls/Filter/Button/Panel', [
       return {
          title: rk('Отбираются'),
          headerStyle: 'primary',
-         panelStyle: 'default'
+         orientation: 'vertical'
       };
    };
 

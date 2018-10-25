@@ -225,7 +225,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                },
                itemTemplateProperty: '',
                historyId: undefined,
-               panelStyle: 'default',
+               orientation: 'vertical',
                headerStyle: 'primary',
                title: 'Отбираются',
                readOnly: false

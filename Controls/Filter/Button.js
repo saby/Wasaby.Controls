@@ -100,10 +100,11 @@ define('Controls/Filter/Button',
                closeByExternalClick: true,
                eventHandlers: {
                   onResult: self._onFilterChanged
-               }
+               },
+               className: 'controls-FilterButton-popup-orientation-' + (options.alignment === 'right' ? 'left' : 'right')
             };
 
-            if (options.orientation === 'left') {
+            if (options.alignment === 'right') {
                self._popupOptions.corner = {
                   vertical: 'top',
                   horizontal: 'right'
@@ -156,7 +157,7 @@ define('Controls/Filter/Button',
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
             }
-            if (this._options.orientation !== options.orientation) {
+            if (this._options.alignment !== options.alignment) {
                _private.setPopupOptions(this, options);
             }
          },
@@ -210,7 +211,7 @@ define('Controls/Filter/Button',
 
       FilterButton.getDefaultOptions = function() {
          return {
-            orientation: 'left'
+            alignment: 'right'
          };
       };
 
