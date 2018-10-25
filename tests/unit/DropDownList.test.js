@@ -161,7 +161,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   selectedKeys: dropDownList._options.selectedKeys,
                   rootKey: items.at(0).get(dropDownList._options.keyProperty),
                   showHeader: false,
-                  defaultItemTemplate: dropDownList._options.defaultItemTemplate
+                  defaultItemTemplate: dropDownList._options.defaultItemTemplate,
+                  dropdownClassName: dropDownList._options.dropdownClassName
                },
                corner: dropDownList._popupOptions.corner,
                horizontalAlign: dropDownList._popupOptions.horizontalAlign,
