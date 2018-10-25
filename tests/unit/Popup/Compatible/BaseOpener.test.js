@@ -227,8 +227,8 @@ define(
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.catchFocus, true);
-            assert.equal(newConfig.componentOptions.innerComponentOptions, config.templateOptions);
-            assert.equal(newConfig.componentOptions.innerComponentOptions._template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.equal(newConfig.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(newConfig.componentOptions.template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);

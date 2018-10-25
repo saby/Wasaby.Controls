@@ -263,7 +263,7 @@ define('Controls/Popup/Opener/BaseOpener',
                if (compoundArea && !isFormController) {
                   //Перерисовываем открытый шаблон по новым опциям
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                   dialog.setTarget && dialog.setTarget($(newCfg.target));
                } else {
                   action.closeDialog();
