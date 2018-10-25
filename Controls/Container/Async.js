@@ -49,17 +49,19 @@ define('Controls/Container/Async',
                self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
                return;
             }
-            
-            /*It can work without Controls.Application */
+
+            /*
+             * It can work without Controls.Application
+             * */
+
             if (context.headData && context.headData.pushDepComponent) {
                if (options.templateName) {
-               context.headData.pushDepComponent(options.templateName, true);
+                  context.headData.pushDepComponent(options.templateName, true);
                } else {
                   IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
-            }
+               }
             }
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
-
          },
 
          _beforeUpdate: function(options) {
@@ -86,5 +88,4 @@ define('Controls/Container/Async',
          };
       };
       return Async;
-   }
-);
+   });
