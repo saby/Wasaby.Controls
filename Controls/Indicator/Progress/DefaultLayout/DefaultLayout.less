@@ -1,9 +1,5 @@
-.controls-ProgressDefaultLayout {
-
-}
-
 .controls-ProgressDefaultLayout__info {
-   height: 24px;
+   height: @height-ProgressBar__info;
    display: flex;
    align-items: baseline;
    justify-content: space-between;
@@ -11,15 +7,16 @@
 
 .controls-ProgressDefaultLayout__infoLeft,
 .controls-ProgressDefaultLayout__infoRight {
-   font-size: 12px;
+   font-size: @font-size-ProgressBar__info;
    color: @color-ProgressBar__info;
    width: 50%;
 }
 
 .controls-ProgressDefaultLayout__infoPercent {
-   padding: 0 8px;
-   line-height: 24px;
-   font-size: 14px;
+   padding-left: @side-padding-ProgressBar__percent-defaultLayout;
+   padding-right: @side-padding-ProgressBar__percent-defaultLayout;
+   line-height: @height-ProgressBar__info;
+   font-size: @font-size-ProgressBar__percent-defaultLayout;
    color: @color-ProgressBar__progress;
 }
 
