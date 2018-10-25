@@ -97,7 +97,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                }
             ];
             this._dataObject = {
-               orientation: {
+               alignment: {
                   selectedKey: 1,
                   displayProperty: 'title',
                   keyProperty: 'id'
@@ -130,7 +130,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
             this._componentOptions = {
                name: 'filterButton',
                readOnly: false,
-               orientation: 'left',
+               alignment: 'left',
                lineSpaceTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate',
                templateName: 'wml!Controls-demo/Filter/Button/buttonPGTemplate',
                items: this._items
