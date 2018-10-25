@@ -1,14 +1,20 @@
-<input
-   autocorrect="off"
-   class="controls-Base__field"
-   type="{{type}}"
-   value="{{value}}"
-   name="{{fieldName}}"
-   autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
-   on:keyup="_keyUpHandler()"
-   on:click="_clickHandler()"
-   on:input="_inputHandler()"
-   on:change="_changeHandler()"
-   on:select="_selectHandler()"
-/>
-<ws:partial template="{{placeholderTemplate}}" placeholder="{{placeholder}}"/>
+<div class="controls-Base__field">
+   <input
+      autocorrect="off"
+      class="controls-Base__nativeField"
+      type="{{type}}"
+      name="{{fieldName}}"
+      value="{{_calculateValueForTemplate()}}"
+      autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
+      on:keyup="_keyUpHandler()"
+      on:click="_clickHandler()"
+      on:input="_inputHandler()"
+      on:change="_changeHandler()"
+      on:select="_selectHandler()"
+   />
+   <ws:if data="{{!value}}">
+      <div class="controls-Base__placeholder">
+         <ws:partial template="{{placeholderTemplate}}" on:click="_clickInPlaceholderHandler()"/>
+      </div>
+   </ws:if>
+</div>

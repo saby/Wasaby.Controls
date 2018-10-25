@@ -21,4 +21,10 @@ define('Controls/Input/Base/Types', [], function() {
     * @variant deleteBackward Delete with help key backspace [ + ctrl] without value selection.
     * @variant deleteForward Delete with help key delete [ + ctrl] without value selection.
     */
+
+   /**
+    * @type {Object} DisplayingControl
+    * @property {Function} template Control template.
+    * @property {Object} [scope] Control template options.
+    */
 });

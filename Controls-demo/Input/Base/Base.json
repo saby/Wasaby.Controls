@@ -26,6 +26,15 @@
             "type": "String",
             "title": "Field value."
           },
+          "size": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
+          },
           "style": {
             "type": "enum",
             "title": "Display style of the field.",

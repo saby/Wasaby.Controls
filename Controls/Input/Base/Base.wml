@@ -1,5 +1,6 @@
 <Controls.Input.Render attr:title="{{_tooltip}}"
                        viewModel="{{_viewModel}}"
+                       size="{{_options.size}}"
                        style="{{_options.style}}"
                        tagStyle="{{_options.tagStyle}}"
                        fontStyle="{{_options.fontStyle}}"
@@ -9,15 +10,19 @@
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
    <ws:if data="{{_options.readOnly}}">
-      <ws:partial template="{{_readOnlyFieldTemplate}}"
-                  value="{{_viewModel.displayValue}}"/>
+      <ws:partial scope="{{_readOnlyField.scope}}"
+                  template="{{_readOnlyField.template}}"
+                  value="{{_viewModel.displayValue}}"
+                  attr:class="controls-Base__field_readOnly"/>
    </ws:if>
    <ws:else>
       <ws:partial type="{{_type}}"
+                  scope="{{_field.scope}}"
                   fieldName="{{_fieldName}}"
-                  template="{{_fieldTemplate}}"
+                  template="{{_field.template}}"
                   value="{{_viewModel.displayValue}}"
                   placeholder="{{_options.placeholder}}"
                   autocomplete="{{_options.autocomplete}}"/>
+      <div name="forFocusing"></div>
    </ws:else>
 </Controls.Input.Render>

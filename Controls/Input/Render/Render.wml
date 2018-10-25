@@ -1,30 +1,21 @@
 <div class="controls-Render controls-Render_style
+            controls-Render_size_{{_options.size}}
             controls-Render_style_{{_options.style}}{{_getState()}}
-            controls-Render_fontStyle_{{_options.fontStyle}}
+            controls-Render_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
             controls-Render_textAlign_{{_options.textAlign}}">
-   <div
-      class="controls-InputRender__wrapper controls-InputRender__wrapper_{{ _options.multiline ? 'multiLine' : 'singleLine' }}">
+   <div class="controls-Render__wrapper">
+      <span class="controls-Render__baseline">&#65279;</span>
       <ws:if data="{{_options.beforeFieldWrapper}}">
          <ws:partial template="{{_options.beforeFieldWrapper}}"/>
       </ws:if>
-      <ws:if data="{{_options.content}}">
-         <div
-            class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
-            <ws:partial
-               attr:class="{{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
-               template="{{_options.content}}">
-               <ws:placeholderTemplate>
-                  <ws:if data="{{_isShowPlaceholder()}}">
-                     <ws:partial
-                        attr:tabindex="{{-1}}"
-                        attr:class="{{ _options.multiline ? 'controls-InputRender__placeholder_multiLine' : 'controls-InputRender__placeholder_singleLine'}} {{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
-                        template="wml!Controls/Input/resources/CustomPlaceholder"
-                     />
-                  </ws:if>
-               </ws:placeholderTemplate>
-            </ws:partial>
-         </div>
-      </ws:if>
+      <ws:partial template="{{_options.content}}"
+                  attr:class="controls-Render__field_textAlign_{{_options.textAlign}}">
+         <ws:placeholderTemplate>
+            <div class="controls-Render__placeholder controls-Render__placeholder_overflow">
+               <ws:partial template="{{_options.placeholder}}"/>
+            </div>
+         </ws:placeholderTemplate>
+      </ws:partial>
       <ws:if data="{{_options.afterFieldWrapper}}">
          <ws:partial template="{{_options.afterFieldWrapper}}"/>
       </ws:if>

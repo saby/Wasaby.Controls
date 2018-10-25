@@ -1,6 +1,7 @@
 define('Controls/Input/Base',
    [
       'Core/Control',
+      'Core/detection',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
@@ -14,8 +15,8 @@ define('Controls/Input/Base',
 
       'css!Controls/Input/Base/Base'
    ],
-   function(Control, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
-      
+   function(Control, detection, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
+
       'use strict';
 
       /**
@@ -35,47 +36,87 @@ define('Controls/Input/Base',
        * @author Журавлев М.С.
        */
       var _private = {
+
+         /**
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {Object} options View model options.
+          * @param {String} value View model value.
+          */
          initViewModel: function(self, options, value) {
             self._viewModel = new (self._viewModel)(options);
 
             self._viewModel.value = value;
          },
 
-         updateViewModel: function(self, newOptions, value) {
+         /**
+          * @param {Controls/Input/Base} self Control instance.
+          */
+         initField: function(self) {
+            /**
+             * When you mount a field in the DOM, the browser can auto fill the field.
+             * In this case, you change the displayed value in the model to the value in the field and
+             * must tell the parent that the value in the field has changed.
+             */
+            if (_private.hasAutoFillField(self)) {
+               self._viewModel.displayValue = self._getField().value;
+               _private.notifyValueChanged(self);
+            }
+         },
+
+         initProperties: function(self) {
+            self._field.scope = {};
+            self._readOnlyField.scope = {};
+         },
+
+         /**
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {Object} newOptions New view model options.
+          * @param {String} newValue New view model value.
+          */
+         updateViewModel: function(self, newOptions, newValue) {
             if (!isEqual(self._viewModel.options, newOptions)) {
                self._viewModel.options = newOptions;
             }
 
-            if (self._viewModel.value !== value) {
-               self._viewModel.value = value;
+            if (self._viewModel.value !== newValue) {
+               self._viewModel.value = newValue;
             }
          },
 
-         initField: function(self) {
+         /**
+          *
+          * @param {Controls/Input/Base} self Control instance.
+          * @return {Boolean}
+          */
+         hasAutoFillField: function(self) {
             /**
-             * If there is a value in the field, when mounting, then browser use auto-complete.
-             * In this case, you change the displayed value in the model to the value in the field and
-             * must tell the parent that the value in the field has changed.
              * In read mode, the field does not exist.
              */
             if (!self._options.readOnly) {
-               var fieldValue = self._getField().value;
-
-               if (fieldValue) {
-                  self._viewModel.displayValue = fieldValue;
-                  _private.notifyValueChanged(self);
-               }
+               return !!self._getField().value;
             }
          },
 
+         /**
+          * @param {Controls/Input/Base} self Control instance.
+          */
          notifyValueChanged: function(self) {
             self._notify('valueChanged', [self._viewModel.value, self._viewModel.displayValue]);
          },
 
+         /**
+          * @param {Controls/Input/Base} self Control instance.
+          */
          notifyInputCompleted: function(self) {
             self._notify('inputCompleted', [self._viewModel.value, self._viewModel.displayValue]);
          },
 
+         /**
+          * @param {String} pastedText
+          * @param {String} displayedText
+          * @param {Controls/Input/Base/Types/SelectionInField.typedef} selection
+          * @return {Controls/Input/Base/Types/SplitValue.typedef}
+          */
          calculateSplitValueToPaste: function(pastedText, displayedText, selection) {
             return {
                before: displayedText.substring(0, selection.start),
@@ -95,16 +136,20 @@ define('Controls/Input/Base',
          _template: template,
 
          /**
-          * @type {Function} The template for input field in edit mode.
+          * @type {DisplayingControl} Input field in edit mode.
           * @private
           */
-         _fieldTemplate: fieldTemplate,
+         _field: {
+            template: fieldTemplate
+         },
 
          /**
-          * @type {Function} The template for input field in read mode.
+          * @type {DisplayingControl} Input field in read mode.
           * @private
           */
-         _readOnlyFieldTemplate: readOnlyFieldTemplate,
+         _readOnlyField: {
+            template: readOnlyFieldTemplate
+         },
 
          /**
           * @type {Controls/Input/Base/ViewModel} The display model of the input field.
@@ -147,9 +192,12 @@ define('Controls/Input/Base',
           */
          _fieldName: 'input',
 
+         _saveSelection: true,
+
          _beforeMount: function(options) {
             var viewModelOptions = this._getViewModelOptions(options);
 
+            _private.initProperties(this);
             _private.initViewModel(this, viewModelOptions, options.value);
 
             /**
@@ -161,6 +209,8 @@ define('Controls/Input/Base',
             if ('name' in options) {
                this._fieldName = options.name;
             }
+
+            this._field.scope._calculateValueForTemplate = this._calculateValueForTemplate.bind(this);
          },
 
          _afterMount: function() {
@@ -171,7 +221,6 @@ define('Controls/Input/Base',
             var newViewModelOptions = this._getViewModelOptions(newOptions);
 
             _private.updateViewModel(this, newViewModelOptions, newOptions.value);
-            this._viewModel.changesHaveBeenApplied();
          },
 
          /**
@@ -211,7 +260,11 @@ define('Controls/Input/Base',
           * @private
           */
          _selectHandler: function() {
-            this._viewModel.selection = this._getFieldSelection();
+            if (this._saveSelection) {
+               this._viewModel.selection = this._getFieldSelection();
+            }
+
+            this._saveSelection = true;
          },
 
          _inputHandler: function(event) {
@@ -221,15 +274,20 @@ define('Controls/Input/Base',
             var selection = model.oldSelection;
             var newValue = field.value;
             var position = field.selectionEnd;
+            var inputType;
 
             /**
              * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
              * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
              * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
              */
-            var inputType = event.nativeEvent.inputType && event.nativeEvent.inputType !== 'insertCompositionText'
-               ? InputUtil.getAdaptiveInputType(event.nativeEvent.inputType, selection)
-               : InputUtil.getInputType(value, newValue, position, selection);
+            if (detection.isMobileAndroid && event.nativeEvent.inputType === 'insertCompositionText') {
+               inputType = InputUtil.getInputType(value, newValue, position, selection);
+            } else {
+               inputType = event.nativeEvent.inputType
+                  ? InputUtil.getAdaptiveInputType(event.nativeEvent.inputType, selection)
+                  : InputUtil.getInputType(value, newValue, position, selection);
+            }
 
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
@@ -237,12 +295,30 @@ define('Controls/Input/Base',
                this._notify('valueChanged', [model.value, model.displayValue]);
             }
 
-            field.value = model.displayValue;
-            field.setSelectionRange(model.selection.start, model.selection.end);
+            this._saveSelection = false;
+            field.value = value;
+            field.setSelectionRange(selection.start, selection.end);
          },
 
          _changeHandler: function() {
             _private.notifyInputCompleted(this);
+         },
+
+         _clickInPlaceholderHandler: function() {
+            /**
+             * Placeholder is positioned above the input field. When clicking, the cursor should stand in the input field.
+             * To do this, we ignore placeholder using the pointer-events property with none value.
+             * The property is not supported in ie lower version 11. In ie 11, you sometimes need to switch versions in emulation to work.
+             * Therefore, we ourselves will activate the field on click.
+             * https://caniuse.com/#search=pointer-events
+             */
+            if (detection.IEVersion < 12) {
+               this.activate();
+            }
+         },
+
+         _deactivatedHandler: function() {
+            this._getField().scrollLeft = 0;
          },
 
          /**
@@ -289,27 +365,57 @@ define('Controls/Input/Base',
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
-         paste: function(text) {
-            var splitValue = _private.calculateSplitValueToPaste(text, this._viewModel.displayValue, this._viewModel.selection);
+         _calculateValueForTemplate: function() {
+            var model = this._viewModel;
+            var field = this._getField();
 
-            this._viewModel.handleInput(splitValue, 'insert');
+            if (model.shouldBeChanged && field) {
+               this._saveSelection = false;
+               if (this._active) {
+                  this._children.forFocusing.focus();
+                  field.value = model.displayValue;
+                  field.setSelectionRange(model.selection.start, model.selection.end);
+                  field.focus();
+               } else {
+                  field.value = model.displayValue;
+                  field.setSelectionRange(model.selection.start, model.selection.end);
+               }
+
+               this._viewModel.changesHaveBeenApplied();
+            }
+
+            return model.displayValue;
+         },
+
+         paste: function(text) {
+            var model = this._viewModel;
+            var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
+
+            model.handleInput(splitValue, 'insert');
 
             _private.notifyValueChanged(this);
          }
       });
-      
+
       Base.getDefaultOptions = function() {
          return {
+            size: 'm',
             style: 'info',
+            placeholder: '',
             textAlign: 'left',
             fontStyle: 'default'
          };
       };
-      
+
       Base.getDefaultTypes = function() {
          return {
             value: descriptor(String),
             tooltip: descriptor(String),
+            size: descriptor(String).oneOf([
+               's',
+               'm',
+               'l'
+            ]),
             fontStyle: descriptor(String).oneOf([
                'default',
                'primary'

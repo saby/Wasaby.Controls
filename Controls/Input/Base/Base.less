@@ -1,6 +1,22 @@
 @import "./../../../Controls-theme/themes/default/helpers/_mixins";
+
 .controls-Base__field {
+   flex-grow: 1;
+   position: relative;
+}
+
+.controls-Base__placeholder {
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   position: absolute;
+   pointer-events: none;
+}
+
+.controls-Base__nativeField {
    width: 100%;
+   height: 100%;
    text-overflow: ellipsis;
    /**
     * Reset browser styles.

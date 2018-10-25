@@ -6,21 +6,42 @@
    display: inline-block;
    box-sizing: border-box;
    height: @height_Render;
+   padding: 0 @spacing_Render_border-text;
+}
+
+.controls-Render__wrapper {
+   height: 100%;
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-Render__baseline {
+   display: flex;
+   align-items: center;
+   height: 100%;
+}
+
+.controls-Render__placeholder {
+   color: @color_Render-placeholder;
+}
+
+.controls-Render__placeholder_overflow {
+   .text-overflow();
 }
 
 .controls-Render_size {
-   @variants: default, small, large;
+   @variants: s, m, l;
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Render_size_@{_item}}";
    } });
 }
 
 .controls-Render_fontStyle {
-   @variants: default, primary;
-   .for(@variants, { &_@{_item} {
-      color: ~"@{color_Render_fontStyle_@{_item}}";
-      font-size: ~"@{font-size_Render_fontStyle_@{_item}}";
-      font-weight: ~"@{font-weight_Render_fontStyle_@{_item}}";
+   @variants: default s, primary s, default m, primary m, default l, primary l;
+   .for(@variants, { @fontStyle: extract(@_item, 1); @size: extract(@_item, 2); &_@{fontStyle}_size_@{size} {
+      color: ~"@{color_Render_fontStyle_@{fontStyle}_size_@{size}}";
+      font-size: ~"@{font-size_Render_fontStyle_@{fontStyle}_size_@{size}}";
+      font-weight: ~"@{font-weight_Render_fontStyle_@{fontStyle}_size_@{size}}";
    } });
 }
 
