@@ -51,7 +51,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      this._options.template = this._options.innerComponentOptions._template;
                   }
                   this._options.templateOptions = this._options.innerComponentOptions;
-                  IoC.resolve("ILogger").error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
+                  IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
                }
 
                this._modifyInnerOptionsByHandlers();
