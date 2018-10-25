@@ -22,11 +22,6 @@ define('Controls/Button/SelectorButton', [
             return items;
          });
       },
-      getVisibleItems: function(items, maxVisibleItems) {
-         return new List({
-            items: Chain(items).last(maxVisibleItems).value()
-         });
-      },
       getSelectedKeys: function(items, keyProperty) {
          var selKeys = [];
          Chain(items).each(function(item) {
@@ -42,7 +37,6 @@ define('Controls/Button/SelectorButton', [
          } else {
             self._selectedItems.assign(items);
          }
-         self._selectedItemsVisible = _private.getVisibleItems(self._selectedItems, self._options.maxVisibleItems);
          self._selectedKeys = _private.getSelectedKeys(items, keyProperty);
       },
       removeItem: function(self, item) {
@@ -63,11 +57,9 @@ define('Controls/Button/SelectorButton', [
       _template: template,
       _selectedItems: null,
       _selectedKeys: null,
-      _selectedItemsVisible: null,
 
       _beforeMount: function(options, context, receivedState) {
          this._onResult = this._onResult.bind(this);
-         this._resultHiddenItem = this._resultHiddenItem.bind(this);
          if (options.selectedKeys) {
             this._selectedKeys = options.selectedKeys.slice();
             if (receivedState) {
@@ -110,32 +102,12 @@ define('Controls/Button/SelectorButton', [
          _private.updateAndNotify(this, result);
       },
 
-      _resultHiddenItem: function(item, eventType) {
-         if (eventType === 'crossClick') {
-            _private.removeItem(this, item);
-         } else if (eventType === 'itemClick') {
-            this._itemClickHandler(item);
-         }
-      },
-
       _reset: function() {
          _private.updateAndNotify(this, []);
       },
 
       _crossClick: function(event, item) {
          _private.removeItem(this, item);
-      },
-
-      _showHiddenItems: function() {
-         this._children.stickyOpener.open({
-            templateOptions: {
-               items: this._selectedItems,
-               displayProperty: this._options.displayProperty,
-               width: this._container.offsetWidth
-            },
-            target: this._children.hiddenItems,
-            template: 'Controls/Button/SelectorButton/itemHiddenTemplate'
-         });
       },
 
       _itemClickHandler: function(item) {
