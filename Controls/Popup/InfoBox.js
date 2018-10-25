@@ -182,7 +182,7 @@ define('Controls/Popup/InfoBox',
                   this._closeId = null;
                   break;
                case 'mouseleave':
-                  if (this._options.trigger === 'hover') {
+                  if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
                      this._contentMouseleaveHandler();
                   }
                   break;
