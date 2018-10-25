@@ -55,8 +55,7 @@ define(
          it('getDefaultOptions', function() {
             result = Scrollbar.getDefaultOptions();
             assert.deepEqual(result, {
-               position: 0,
-               style: 'normal'
+               position: 0
             });
          });
       });

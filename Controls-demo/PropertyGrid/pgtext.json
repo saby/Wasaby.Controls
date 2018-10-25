@@ -538,10 +538,9 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
+          "formatMaskChars": {
+            "type": "Object",
+            "title": "Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys."
           },
           "value": {
             "type": "String",
@@ -890,7 +889,7 @@
             "type": "function",
             "title": "Template for the space between the filter button and the string."
           },
-          "orientation": {
+          "alignment": {
             "type": "enum",
             "title": "Sets the direction in which the popup panel will open.",
             "enum": {
@@ -950,13 +949,13 @@
             "type": "String",
             "title": "Unique id for save history."
           },
-          "panelStyle": {
-            "default": "default",
+          "orientation": {
+            "default": "vertical",
             "title": "Sets the display of the filter panel.",
             "type": "enum",
             "enum": {
-              "default": "display in one column",
-              "column": "display in two columns"
+              "vertical": "Vertical orientation of the panel. The history block is displayed below.",
+              "horizontal": "Horizontal orientation of the panel. History block is displayed on the right."
             }
           },
           "title": {

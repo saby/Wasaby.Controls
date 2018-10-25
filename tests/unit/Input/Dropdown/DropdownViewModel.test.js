@@ -56,6 +56,23 @@ define(
                }
             ]
          });
+         const rs2 = new RecordSet({
+            idProperty: 'id',
+            rawData: [
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ]
+         });
 
          let config = {
             items: rs,
@@ -65,9 +82,21 @@ define(
             selectedKeys: '3',
             rootKey: null
          };
+         const config2 = {
+            items: rs2,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: '@parent',
+            selectedKeys: '3',
+            rootKey: null
+         };
 
          let viewModel = new DropdownViewModel(config);
-         let viewModel2 = new DropdownViewModel(config);
+         let viewModel2 = new DropdownViewModel(config2);
+   
+         function setViewModelItems(viewModel, items) {
+            viewModel._options.items = items;
+         }
 
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._display.getCount(), 3);
@@ -77,6 +106,11 @@ define(
             viewModel._options.nodeProperty = null;
             viewModel.setFilter(viewModel.getDisplayFilter());
             assert.equal(viewModel._itemsModel._display.getCount(), 8);
+         });
+
+         it('parentProperty is set but items don\'t have it', () => {
+            viewModel2.setFilter(viewModel2.getDisplayFilter());
+            assert.equal(viewModel2._itemsModel._display.getCount(), 3);
          });
 
          it('check additional', () => {
@@ -213,6 +247,28 @@ define(
          it('destroy', () => {
             viewModel.destroy();
             assert.equal(null, viewModel._itemsModel._options);
+         });
+   
+         it('hasAdditional', () => {
+            var viewModel = new DropdownViewModel(config);
+            viewModel._options.additionalProperty = 'additional';
+            setViewModelItems(viewModel, rs);
+            assert.isTrue(!!viewModel.hasAdditional());
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional());
+   
+            viewModel._options.rootKey = 'test';
+            setViewModelItems(viewModel, rs);
+            assert.isFalse(!!viewModel.hasAdditional());
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional());
+   
+            viewModel._options.rootKey = null;
+            viewModel._options.additionalProperty = '';
+            setViewModelItems(viewModel, rs);
+            assert.isFalse(!!viewModel.hasAdditional(rs));
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional(rs2));
          });
       })
    });

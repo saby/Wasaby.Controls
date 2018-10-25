@@ -17,19 +17,7 @@ define('Controls/Input/interface/IDateTimeMask', [
 
             /**
              * @name Controls/Input/interface/IDateTimeMask#mask
-             * @cfg {String} Data format.
-             *
-             * One of the listed mask must be choosen. Allowed mask chars:
-             * <ol>
-             *    <li>D - day.</li>
-             *    <li>M - month.</li>
-             *    <li>Y - year.</li>
-             *    <li>H - hour.</li>
-             *    <li>m - minute.</li>
-             *    <li>s - second.</li>
-             *    <li>U - millisecond.</li>
-             *    <li>".", "-", ":", "/" - delimiters.</li>
-             * </ol>
+             * @cfg {String} Date format.
              * @variant 'DD.MM.YYYY'
              * @variant 'DD.MM.YY'
              * @variant 'DD.MM'
@@ -54,8 +42,40 @@ define('Controls/Input/interface/IDateTimeMask', [
              * @variant 'YY-MM-DD HH:mm:ss'
              * @variant 'YY-MM-DD HH:mm'
              * @variant 'YYYY'
-             * @variant 'MM/YYYY'
+             * @variant 'MM.YYYY'
              * @default 'DD.MM.YY'
+             * @remark
+             * Allowed mask chars:
+             * <ol>
+             *    <li>D - day.</li>
+             *    <li>M - month.</li>
+             *    <li>Y - year.</li>
+             *    <li>H - hour.</li>
+             *    <li>m - minute.</li>
+             *    <li>s - second.</li>
+             *    <li>U - millisecond.</li>
+             *    <li>".", "-", ":", "/", " " - delimiters.</li>
+             * </ol>
+             * @example
+             * In this example, the mask is set so that only the time can be entered in the input field.
+             * After a user has entered a “09:30”, the value of the _inputValue will be equal 01.01.1900 09:30.000.
+             * <pre>
+             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             * </pre>
+             * <pre>
+             *    Control.extend({
+             *       _inputValue: null,
+             *    });
+             * </pre>
+             * In the next example after a user has entered a “09:30”, the value of the _inputValue will be equal 10.03.2018 09:30.000
+             * <pre>
+             *    <Controls.Input.DateTime bind:value="_inputValue" mask=”HH:mm”/>
+             * </pre>
+             * <pre>
+             *    Control.extend({
+             *       _inputValue: new Date(2018, 2, 10),
+             *    });
+             * </pre>
              */
             mask: 'DD.MM.YY'
          };
@@ -88,7 +108,7 @@ define('Controls/Input/interface/IDateTimeMask', [
                'YY-MM-DD HH:mm:ss',
                'YY-MM-DD HH:mm',
                'YYYY',
-               'MM/YYYY'
+               'MM.YYYY'
             ])
          };
       }

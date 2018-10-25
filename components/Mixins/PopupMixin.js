@@ -226,6 +226,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             /* Опция необходима, чтобы на мобильных устройствах была возможность отключить resize попапа при скроле страницы.
                Не все попапы должны менять свое положение при скроле, т.к. скролить можно быстро и они будут скакать. */
             _resizeOnScroll: true,
+            _checkZIndexVDOM: true, //для тех, кто сам устанавливает zindex в попапе в обход его логики, проверка zindex'a со стороны попапа не нужны
             _fixJqueryPositionBug: false, //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
             _fixPopupRevertCorner: false //Логика поиска противоположного угла для меню. Скорее всего такая логика должна быть по умолчанию
          }
@@ -281,14 +282,20 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             container.appendTo('body');
          }
 
-         if (isNewEnvironment()) {
+         if (isNewEnvironment() && this._options._checkZIndexVDOM) {
             this._vdomZindexInterval = setInterval(function() {
                if (self.isVisible()) {
                   // на vdom динамически меняется zindex попапов.
                   // Держим актуальный zindex и для popupMixin'a, который располагается в попапах
-                  cWindowManager.releaseZIndex(self._zIndex);
-                  self._container.css('z-index', self._getZIndex());
-                  ModalOverlay.adjust(self.isModal() ? self._zIndex : null);
+                  var oldZIndex = self._zIndex;
+                  if (oldZIndex !== self._getZIndex()) {
+                     // Говорим core.WM что такого zindex больше нет
+                     cWindowManager.releaseZIndex(oldZIndex);
+                     self._container.css('z-index', self._zIndex);
+                     if (self.isModal()) {
+                        ModalOverlay.adjust(self._zIndex);
+                     }
+                  }
                }
             }, VDOM_POPUP_RECAL_ZINDEX_INTERVAL);
          }
@@ -1277,12 +1284,19 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
          } else {
             var openerPopupZIndex = this._getOpenerZIndex();
+            cWindowManager.releaseZIndex(this._zIndex);
             if (openerPopupZIndex) {
                this._zIndex = parseInt(openerPopupZIndex, 10) + 1; //Выше vdom-окна, над которым открывается попап
             } else {
                //zIndex vdom контролов начинается с 10. если опенер лежит не в панели, все открываемые
                //vdom-окна должны быть выше текущего попапа
                this._zIndex = 9;
+            }
+
+            // Добавляем в Core.WM информацию о текущем zindex модального попапа напрямую, т.к. сами его высчитали
+            // Core.WM публичным api не позволяет задавать zindex, т.к. по своей логиче высчитывает их сам
+            if (this.isModal() && cWindowManager._modalIndexes && cWindowManager._modalIndexes.push) {
+               cWindowManager._modalIndexes.push(this._zIndex);
             }
          }
          return this._zIndex;

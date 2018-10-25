@@ -2,7 +2,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
    [
       'Core/core-merge',
       'Core/Deferred',
-      'Core/IoC',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
       'SBIS3.CONTROLS/LongOperations/Manager',
@@ -21,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/LongOperations/History'
    ],
 
-   function (cMerge, Deferred, IoC, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
+   function (cMerge, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -117,9 +116,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          $constructor: function () {
-            //////////////////////////////////////////////////
-            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOList: Создан экземпляр');
-            //////////////////////////////////////////////////
             var context = this.getLinkedContext();
             if (!context.getValue('filter')) {
                context.setValue('filter', {});
@@ -134,9 +130,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          init: function () {
-            //////////////////////////////////////////////////
-            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOList: Инициализирован экземпляр');
-            //////////////////////////////////////////////////
             LongOperationsList.superclass.init.call(this);
 
             var options = this._options;
@@ -154,14 +147,8 @@ define('SBIS3.CONTROLS/LongOperations/List',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            //////////////////////////////////////////////////
-            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOList: Будет произведена подписка на события LOManager-а');
-            //////////////////////////////////////////////////
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'fulloperational'].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
-                  //////////////////////////////////////////////////
-                  IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOList: Получено событие "' + evtType + '" от LOManager' + (evt ? ': ' + JSON.stringify(evt) : ''));
-                  //////////////////////////////////////////////////
                   var custom = evt ? evt.custom : null;
                   if (custom) {
                      var customConditions = self._view.getDataSource().getOptions().customConditions;
@@ -244,9 +231,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   }
                });
             });
-            //////////////////////////////////////////////////
-            IoC.resolve('ILogger').log('LongOperations', '[' + (new Date()).getTime() + '] LOList: Выполнена подписка подписка на события LOManager-а');
-            //////////////////////////////////////////////////
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
             this.subscribeTo(this._view, 'onDrawItems', function () {

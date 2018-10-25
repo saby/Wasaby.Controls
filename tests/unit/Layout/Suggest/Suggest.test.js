@@ -321,7 +321,24 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
       });
-      
-   });
    
+      it('Suggest::_updateSuggestState', function() {
+         var compObj = getComponentObject();
+         compObj._options.fitler = {};
+         compObj._options.searchParam = 'testSearchParam';
+         
+         var suggestComponent = new Suggest();
+         suggestComponent.saveOptions(compObj._options);
+         suggestComponent._searchValue = 'te';
+         
+         compObj._options.autoDropDown = true;
+         Suggest._private.updateSuggestState(suggestComponent);
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te'});
+   
+         compObj._options.autoDropDown = false;
+         suggestComponent._filter = {};
+         Suggest._private.updateSuggestState(suggestComponent);
+         assert.deepEqual(suggestComponent._filter, {});
+      });
+   });
 });

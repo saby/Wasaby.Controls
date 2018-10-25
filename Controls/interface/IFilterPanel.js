@@ -20,11 +20,11 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#panelStyle
+    * @name Controls/interface/IFilterPanel#orientation
     * @cfg {String} Sets the display of the filter panel.
-    * @variant default one column panel
-    * @variant column two or more column panel
-    * @default default
+    * @variant vertical Vertical orientation of the panel. The history block is displayed below.
+    * @variant horizontal Horizontal orientation of the panel. History block is displayed on the right.
+    * @default vertical
     * @remark
     * If there is no history in the panel, the component will be displayed in one column.
     * When the panel is displayed in two columns, the history block is displayed on the right.
@@ -33,7 +33,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * <pre>
     *    <Controls.Filter.Button.Panel
     *          items={{_items}}
-    *          panelStyle="column"
+    *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>

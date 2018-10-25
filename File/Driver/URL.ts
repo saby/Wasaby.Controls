@@ -3,10 +3,12 @@ import DriverInterface = require('File/Driver/Interface');
 import detection = require('Core/detection');
 
 /**
+ * Файловый драйвер для скачивания файлов по URL
  * @public
- * @class File/Driver/URL
+ * @class 
  * @author Ибрагимов А.А
- * @description Файловый драйвер для скачивания файлов по URL
+ * @implements {File/Driver/Interface}
+ * @example
  * <pre>
  * require(['File/Driver/URL'], function(URLDriver) {
  *    var url_document = "/file-transfer/file.pdf"

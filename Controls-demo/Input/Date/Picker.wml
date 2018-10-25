@@ -1,0 +1,30 @@
+<div class="controlsDemo-Input-DatePicker">
+   <h1>Controls.Input.Date.Picker</h1>
+
+   <ws:for data="mask in _masks">
+      <div class="controlsDemo-Input-DatePicker__row">
+         <div class="controlsDemo-Input-DatePicker__row-item">
+            {{mask}}
+         </div>
+         <div class="controlsDemo-Input-DatePicker__row-item">
+            <Controls.Input.Date.Picker
+               value="{{null}}"
+               mask="{{mask}}"/>
+         </div>
+         <div class="controlsDemo-Input-DatePicker__row-item">
+            <Controls.Input.Date.Picker
+               bind:value="_date"
+               mask="{{mask}}"/>
+         </div>
+      </div>
+   </ws:for>
+
+   <h3>Baseline with inline blocks</h3>
+   <div>
+      Text:
+      <Controls.Input.Date.Picker
+         value="{{_date}}"
+         mask="{{mask}}"/>
+   </div>
+
+</div>

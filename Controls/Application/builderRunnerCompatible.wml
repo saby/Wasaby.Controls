@@ -14,10 +14,10 @@
          constants.$body = body;
          constants.$window = window;
          appinit();
-         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext', 'Core/app-start', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, HeadDataContext, AppStart, control, tclosure) {
+         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext', 'Core/app-start', 'Controls/Application/Core', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, HeadDataContext, AppStart, Core, tclosure) {
             window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
             var templateFn = {{_options.builder | unescape}};
-            var cnt = control.extend({
+            var cnt = Core.extend({
                _template: templateFn
             });
             AppStart._shouldStart = false;

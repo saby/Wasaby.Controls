@@ -714,7 +714,9 @@ define('SBIS3.CONTROLS/TextBox', [
             //https://codepen.io/anon/pen/LBYLpJ
             if (detection.isIE) {
                setTimeout(function() {
-                  self._selectText();
+                  if (self.isActive()) {
+                     self._selectText();
+                  }
                }, 0);
             } else {
                self._selectText();
