@@ -1,7 +1,7 @@
-define('Controls/Button/SelectorButton/itemHiddenTemplate',
+define('Controls/SelectedCollection/allCollectionTemplate',
    [
       'Core/Control',
-      'wml!Controls/Button/SelectorButton/itemHiddenTemplate'
+      'wml!Controls/SelectedCollection/allCollectionTemplate'
    ],
 
    function(Control, template) {
@@ -11,11 +11,11 @@ define('Controls/Button/SelectorButton/itemHiddenTemplate',
          _template: template,
 
          _itemClick: function(event, item) {
-            this._notify('sendResult', [item, 'itemClick']);
+            this._notify('sendResult', ['itemClick', item]);
          },
 
          _crossClick: function(event, item) {
-            this._notify('sendResult', [item, 'crossClick']);
+            this._notify('sendResult', ['crossClick', item]);
          },
 
          _mouseOutHandler: function() {

@@ -1,13 +1,8 @@
 <div class="controls-SelectorButton">
    <ws:if data="{{_selectedItems && _selectedItems.getCount() !== 0}}">
-      <ws:if data="{{_selectedItems.getCount() > _options.maxVisibilityItems}}">
-         <div class="controls-SelectorButton__counterItems" name="hiddenItems" on:click="_showHiddenItems()">
-            <span attr:class="controls-SelectorButton__counter">({{_selectedItems.getCount()}})</span>
-            <span>...</span>
-         </div>
-      </ws:if>
       <Controls.SelectedCollection
-              items="{{_selectedItemsVisible}}"
+              items="{{_selectedItems}}"
+              maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
               multiline="{{true}}"
               clickable="{{true}}"
@@ -31,9 +26,4 @@
          <ws:eventHandlers onResult="{{_onResult}}"/>
       </ws:popupOptions>
    </Controls.Selector.Opener>
-   <Controls.Popup.Opener.Sticky name="stickyOpener">
-      <ws:popupOptions className="controls-SelectorButton__popup-margins">
-         <ws:eventHandlers onResult="{{_resultHiddenItem}}"/>
-      </ws:popupOptions>
-   </Controls.Popup.Opener.Sticky>
 </div>

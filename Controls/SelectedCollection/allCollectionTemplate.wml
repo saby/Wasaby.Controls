@@ -1,7 +1,8 @@
 <div attr:class="controls-SelectorButton__popup"
      attr:style="width: {{_options.width}}px;"
      on:mouseleave="_mouseOutHandler()">
-   <span attr:class="controls-SelectorButton__counterItems">({{_options.items.getCount()}})</span>
+   <span attr:class="controls-SelectorButton__counterItems">
+      ({{_options.items.getCount ? _options.items.getCount() : _options.items.length}})</span>
    <Controls.SelectedCollection
            items="{{_options.items}}"
            displayProperty="{{_options.displayProperty}}"
