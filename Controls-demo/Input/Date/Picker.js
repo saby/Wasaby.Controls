@@ -1,36 +1,22 @@
-define('Controls-demo/Input/Date/Picker',
-   [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
+define('Controls-demo/Input/Date/Picker', [
+   'Core/Control',
+   'wml!Controls-demo/Input/Date/Picker',
+   'css!Controls-demo/Input/Date/Picker'
+], function(
+   BaseControl,
+   template
+) {
+   'use strict';
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
-   ],
+   var ModuleClass = BaseControl.extend({
+      _template: template,
+      _date: new Date(2017, 0, 1, 12, 15, 30, 123),
 
-   function(Control, template, config) {
-      'use strict';
-      var Component = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Date/Picker',
-         _dataObject: null,
-         _componentOptions: null,
-         _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               }
-            };
-            this._componentOptions = {
-               name: 'DatePicker',
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
-         }
-      });
-      return Component;
+      _masks: [
+         'DD.MM.YYYY',
+         'DD.MM.YY'
+      ]
+
    });
+   return ModuleClass;
+});

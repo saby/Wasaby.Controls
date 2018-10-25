@@ -8,53 +8,37 @@ define('Controls/Popup/Opener/InfoBox',
       'use strict';
 
       /**
-       * Класс открытия всплывающей подсказки с расширенными возможностями.
-       * 
-       * <a href="https://test-wi.sbis.ru/materials/demo-ws4-infobox">Демо-пример</a>.
-       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
-       * 
+       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
+       * @remark
+       * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @control
        * @category Popup
        * @author Красильников А.С.
+       * @private
        */
 
       /**
-       * @typedef {Object} InfoBoxCfg
-       * @property {String} message Сообщение, отображаемое в инфобоксе
-       * @property {Style} style Горизонтальное выравнивание инфобокса
-       * @property {Boolean} float Должно ли содержимое обтекать крестик закрытия
-       * @property {Object} target Таргет, относительно которого неообходимо показать инфобокс
-       * @property {Position} position Точка позиционировая инфобокса относительно таргета
-       * @property {Function} template Шаблон отображения внутреннего содержимого
-       * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
+       * @typedef {Object} Config
+       * @description Infobox configuration.
+       * @property {Object} opener Control, which is the logical initiator of popup opening.
+       * @property {String|Function} template Template inside popup
+       * @property {Object} templateOptions Template options inside popup.
+       * @property {Object} eventHandlers Callback functions on popup events
+       * @property {domNode} target The target relative to which the popup is positioned.
+       * @property {String} position Point positioning of the target relative to infobox.
+       * @property {String} message The text in the body popup.
+       * @property {Boolean} float Whether the content should wrap around the cross closure.
+       * @property {String} style Infobox display style.
+       * @property {Number} showDelay Delay before opening.
        */
 
       /**
-       * @typedef {String} Style
-       * @variant default
-       * @variant lite
-       * @variant help
-       * @variant error
+       * @name Controls/interface/IInfoboxOptions#config
+       * @cfg {Config[]} Infobox options.
        */
 
-      /**
-       * @typedef {String} Position
-       * @variant tl Всплывающее окно отображается сверху относительно точки построения, выравнивается по левому краю
-       * @variant tc Всплывающее окно отображается сверху относительно точки построения, выравнивается по центру
-       * @variant tr Всплывающее окно отображается сверху относительно точки построения, выравнивается по правому краю
-       * @variant bl Всплывающее окно отображается снизу относительно точки построения, выравнивается по левому краю
-       * @variant bc Всплывающее окно отображается снизу относительно точки построения, выравнивается по центру
-       * @variant br Всплывающее окно отображается снизу относительно точки построения, выравнивается по правому краю
-       * @variant rt Всплывающее окно отображается справа относительно точки построения, выравнивается по верхнему краю
-       * @variant rc Всплывающее окно отображается справа относительно точки построения, выравнивается по центру
-       * @variant rb Всплывающее окно отображается справа относительно точки построения, выравнивается по нижнему краю
-       * @variant lt Всплывающее окно отображается слева относительно точки построения, выравнивается по верхнему краю
-       * @variant lc Всплывающее окно отображается слева относительно точки построения, выравнивается по центру
-       * @variant lb Всплывающее окно отображается слева относительно точки построения, выравнивается по нижнему краю
-       */
       var INFOBOX_HIDE_DELAY = 300;
       var INFOBOX_SHOW_DELAY = 300;
 
@@ -72,9 +56,29 @@ define('Controls/Popup/Opener/InfoBox',
          _closeId: null,
 
          /**
-          * Открыть инфобокс
+          * Open popup.
           * @function Controls/Popup/Opener/InfoBox#open
-          * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
+          * @param {Object} config infobox options.
+          * @returns {undefined}
+          * @example
+          * js
+          * <pre>
+          *   Control.extend({
+          *      ...
+          *
+          *      _openInfobox() {
+          *          var config= {
+          *              message: 'Всплывающая подсказка'
+          *              target: this._children.buttonTarget //dom node
+          *          }
+          *          this._notify('openInfoBox', [config], {bubbling: true});
+          *      }
+          *
+          *      _closeInfobox() {
+          *          this._notify('closeInfoBox', [], {bubbling: true});
+          *      }
+          *   });
+          * </pre>
           */
          open: function(cfg) {
             // todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
@@ -109,6 +113,11 @@ define('Controls/Popup/Opener/InfoBox',
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
+
+         /**
+          * Close popup.
+          * @function Controls/Popup/Opener/InfoBox#close
+          */
          close: function(delay) {
             delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
             this._clearTimeout();

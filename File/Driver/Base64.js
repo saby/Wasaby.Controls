@@ -1,51 +1,49 @@
 define("File/Driver/Base64", ["require", "exports", "File/utils/b64toBlob", "File/Driver/Blob"], function (require, exports, base64toblob, BlobDriver) {
     "use strict";
-    /**
-     * @public
-     * @class File/Driver/Base64
-     * @author Ибрагимов А.А
-     * @description Файловый драйвер для скачивания файлов в кодировке base64
-     * <pre>
-     * require(['File/Driver/Base64'], function(Base64Driver) {
-     *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";
-     *    new Base64Driver(base64_text).download({
-     *       name: 'phrase.txt',
-     *       contentType: 'text/plain'
-     *     });
-     * });
-     * </pre>
-     */
-    var Base64 = /** @class */ (function () {
+    var Base64Driver = /** @class */ (function () {
         /**
-         * @constructor
-         * @param {String} data Строка в формате base64
-         */
-        function Base64(data) {
-            if (data.indexOf('data:') === -1) {
-                this.base64Data = data;
+         * @param {String} base64string Строка в формате base64
+         * */
+        function Base64Driver(base64string) {
+            if (base64string.indexOf('data:') === -1) {
+                this.base64Data = base64string;
                 return;
             }
-            this.contentType = data.substring(data.indexOf(':') + 1, data.indexOf(';'));
-            this.base64Data = data.substring(data.indexOf(',') + 1);
+            this.contentType = base64string.substring(base64string.indexOf(':') + 1, base64string.indexOf(';'));
+            this.base64Data = base64string.substring(base64string.indexOf(',') + 1);
         }
         /**
-         * @public
-         * @method
-         * @param {DownloadOptions} oprions Параметры загрузки
-         * @description Начинает загрузку файла
+         * Начинает загрузку файла
+         * @param {FileParams} fileParams Параметры загрузки
+         * @returns {Promise<void | Error>} Promise<void | Error>
          */
-        /**
-         * @typedef {Object} DownloadOptions
-         * @property {String} name имя файла
-         * @property {String} contentType тип файла
-         * @remark Игнорируется при загрузке URL
-         */
-        Base64.prototype.download = function (options) {
-            var type = (options && options['contentType']) ? options['contentType'] : this.contentType;
-            var blob = base64toblob(this.base64Data, type);
-            new BlobDriver(blob).download(options);
+        Base64Driver.prototype.download = function (fileParams) {
+            var type = (fileParams && fileParams['contentType']) ? fileParams['contentType'] : this.contentType;
+            var blob;
+            try {
+                blob = base64toblob(this.base64Data, type);
+            }
+            catch (e) {
+                return Promise.reject(new Error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043A\u043E\u043D\u0432\u0435\u0440\u0442\u0430\u0446\u0438\u0438 Base64 \u0441\u0442\u0440\u043E\u043A\u0438 \u0432 Blob!\n" + e.message));
+            }
+            return new BlobDriver(Promise.resolve(blob)).download(fileParams);
         };
-        return Base64;
+        return Base64Driver;
     }());
-    return Base64;
+    return Base64Driver;
 });
+/**
+ * @class File/Driver/Base64
+ * @public
+ * @author Ибрагимов А.А
+ * @description Файловый драйвер для скачивания файлов в кодировке base64
+ * <pre>
+ * require(['File/Driver/Base64'], function(Base64Driver) {
+ *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";
+ *    new Base64Driver(base64_text).download({
+ *       name: 'phrase.txt',          // Имя, под которым файл будет сохранен (необязательно)
+ *       contentType: 'text/plain'    // Тип контента (необязательно)
+ *     }).catch(console.error);       // обработчик ошибок преобразования
+ * });
+ * </pre>
+ */

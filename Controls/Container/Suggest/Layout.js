@@ -6,7 +6,8 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Core/moduleStubs',
       'Core/core-clone',
-      'css!Controls/Container/Suggest/Layout'
+      'css!theme?Controls/Container/Suggest/Layout/Suggest',
+      'css!theme?Controls/Container/Suggest/Layout'
    ],
    function(Control, template, emptyTemplate, types, mStubs, clone) {
       
@@ -98,7 +99,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue)) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {

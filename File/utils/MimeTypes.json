@@ -98,7 +98,6 @@
 
    "doc": "application/msword",
    "dot": "application/msword",
-   "pot": "application/mspowerpoint,application/vnd.ms-powerpoint",
    "pps": "application/mspowerpoint",
    "ppt": "application/mspowerpoint,application/powerpoint,application/vnd.ms-powerpoint,application/x-mspowerpoint",
    "xls": "application/vnd.ms-excel",

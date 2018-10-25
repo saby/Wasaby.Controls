@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
       'Core/constants',
-      'css!Controls/Popup/Opener/Stack/Stack'
+      'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
    function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants) {
       'use strict';

@@ -6,6 +6,17 @@ define('Controls/Popup/Templates/Notification/Base',
    ],
    function(Control, template) {
 
+      /**
+       * Base template of notification popup.
+       *
+       * @class Controls/Popup/Templates/Notification/Base
+       * @extends Core/Control
+       * @control
+       * @public
+       * @category popup
+       * @author Красильников А.С.
+       */
+
       var timeAutoClose = 5000;
 
       var Notification = Control.extend({
@@ -52,3 +63,23 @@ define('Controls/Popup/Templates/Notification/Base',
       return Notification;
    }
 );
+
+/**
+ * @name Controls/Popup/Templates/Notification/Base#autoClose
+ * @cfg {Integer} Close by timeout after open.
+ */
+
+/**
+ * @name Controls/Popup/Templates/Notification/Base#style
+ * @cfg {String} Notification display style.
+ */
+
+/**
+ * @name Controls/Popup/Templates/Notification/Base#closeButtonVisibility
+ * @cfg {Boolean} Determines whether display of the close button.
+ */
+
+/**
+ * @name Controls/Popup/Templates/Notification/Base#contentTemplate
+ * @cfg {String} Main content.
+ */

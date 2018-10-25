@@ -11,8 +11,9 @@ define('Controls/Popup/Opener/Edit',
       'Core/Deferred'
    ],
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
+
       /**
-       * action of open the edit popup
+       * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
        * @class Controls/Popup/Opener/Edit
        * @control
        * @public
@@ -108,6 +109,45 @@ define('Controls/Popup/Opener/Edit',
             return def;
          },
 
+         /**
+          * Open edit popup.
+          * @function Controls/Popup/Opener/Edit#open
+          * @param {Object} meta Data to edit: key, record.
+          * @param {Object} popupOptions options for edit popup.
+          * <ul>
+          *     <li>if mode option equal 'stack' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
+          *     <li>if mode option equal 'dialog' see {@link Controls/interface/IDialogOptions#popupOptions popupOptions}</li>
+          *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
+          * </ul>
+          * @returns {undefined}
+          * @example
+          * wml
+          * <pre>
+          *     <Controls.Popup.Opener.Edit name="EditOpener">
+          *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
+          *           <ws:templateOptions source="{{_viewSource}}" />
+          *        </ws:popupOptions>
+          *     </Controls.Popup.Opener.Edit>
+          * </pre>
+          * js
+          * <pre>
+          *   Control.extend({
+          *        ...
+          *
+          *        _itemClick(event, record) {
+          *           var popupOptions = {
+          *              closeByExternalClick: false,
+          *           };
+          *
+          *           var meta = {
+          *              record: record,
+          *          };
+          *
+          *           this._children.EditOpener.open(meta, popupOptions);
+          *       }
+          *    });
+          * </pre>
+          */
          open: function(meta, popupOptions) {
             var config = _private.getConfig(this, meta || {}, popupOptions);
             this._children.Opener.open(config);
@@ -115,6 +155,10 @@ define('Controls/Popup/Opener/Edit',
 
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
+
+               /**
+                * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
+                */
                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;
                if (eventResult !== Edit.CANCEL && this._options.items) {
@@ -141,3 +185,9 @@ define('Controls/Popup/Opener/Edit',
 
       return Edit;
    });
+
+/**
+ * @name Controls/Popup/Opener/Edit#close
+ * Close edit popup.
+ * @function
+ */

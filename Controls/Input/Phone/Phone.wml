@@ -10,6 +10,7 @@
    on:click="_clickHandler()"
    on:deactivated="_deactivatedHandler()"
    on:valueChanged="_notifyHandler('valueChanged')"
+   on:inputCompleted="_notifyHandler('inputCompleted')"
 >
    <ws:content>
       <ws:partial

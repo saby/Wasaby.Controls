@@ -2,13 +2,13 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/IoC',
       'Controls/Application/HeadDataContext',
       'wml!Controls/Container/Async/Async',
-      'View/Runner/requireHelper'
+      'View/Runner/requireHelper',
+      'Core/IoC'
    ],
 
-   function(Base, Deferred, IoC, HeadDataContext, template, requireHelper) {
+   function(Base, Deferred, HeadDataContext, template, requireHelper, IoC) {
       'use strict';
 
 
@@ -52,7 +52,11 @@ define('Controls/Container/Async',
             
             /*It can work without Controls.Application */
             if (context.headData && context.headData.pushDepComponent) {
+               if (options.templateName) {
                context.headData.pushDepComponent(options.templateName, true);
+               } else {
+                  IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
+            }
             }
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
 

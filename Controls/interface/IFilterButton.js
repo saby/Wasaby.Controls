@@ -116,11 +116,11 @@ define('Controls/interface/IFilterButton', [
     */
 
    /**
-    * @name Controls/interface/IFilterButton#orientation
+    * @name Controls/interface/IFilterButton#alignment
     * @cfg {String} Sets the direction in which the popup panel will open.
-    * @variant right The panel opens to the left.
-    * @variant left The panel opens to the right.
-    * @default left
+    * @variant right The button is attached to the right edge, the pop-up panel opens to the left.
+    * @variant left The button is attached to the left edge, the pop-up panel opens to the right.
+    * @default right
     * @remark
     * The string, that is formed by the values from items, also changes position.
     * @example
@@ -129,7 +129,7 @@ define('Controls/interface/IFilterButton', [
     *    <Controls.Filter.Button
     *       templateName="wml!MyModule/panelTemplate"
     *       items="{{_items}}"
-    *       orientation="right" />
+    *       alignment="left" />
     * </pre>
     */
 

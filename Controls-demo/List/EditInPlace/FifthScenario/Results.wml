@@ -1,0 +1,8 @@
+<ws:if data="{{ column.result }}">
+   <Controls.Decorator.Money number="{{column.result}}"
+                             style="{{column.displayProperty === 'NDS' ? 'noAccentResults' : 'accentResults'}}"
+                             attr:style="padding-right: 80px;"/>
+</ws:if>
+<ws:else>
+   <invisible-node />
+</ws:else>

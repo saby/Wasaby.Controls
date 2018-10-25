@@ -23,36 +23,29 @@ define('Controls/List/ListControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/interface/IEditableList
     * @control
     * @public
     * @author Авраменко А.С.
     * @category List
     */
 
-   var ListControl = Control.extend(/** @lends Controls/List/ListControl */{
+   var ListControl = Control.extend(/** @lends Controls/List/ListControl.prototype */{
       _template: ListControlTpl,
       reload: function() {
          this._children.baseControl.reload();
       },
-      editItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.editItem(options);
+      beginEdit: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
       },
-      addItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.addItem(options);
+      beginAdd: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginAdd(options);
       },
 
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.cancelEdit();
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
       },

@@ -5,7 +5,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
    'Controls/Application/TouchDetector/TouchContextField',
-   'css!Controls/List/ItemActions/ItemActions'
+   'css!theme?Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
@@ -31,12 +31,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
-                     action.iconDone = true;
-                  }
-                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
-                     action.iconError = true;
-                  }
                }
                actions.push(action);
             }
@@ -58,7 +52,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             showed.sort(_private.sortActions);
          }
 
-         if (isEditingItem && options.showToolbar) {
+         if (isEditingItem && options.toolbarVisibility) {
             showed.push({
                icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
                style: 'bordered',

@@ -12,7 +12,7 @@
 
       <h1>List</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Base">List/Base</a>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>
          <Controls.Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
@@ -20,223 +20,224 @@
          </Controls.Router.Link>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Multiselect">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
             List/Multiselect
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Group">List/Group</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FGroup">List/Group</a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Grid/Grid">List/Grid</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FGrid%252FGrid">List/Grid</a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/Tree">List/Tree</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FTree%252FTree">List/Tree</a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/TreeWithPhoto">List/TreeWithPhoto</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FTree%252FTreeWithPhoto">List/TreeWithPhoto</a>
       </div>
-       <div>
-           <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Tree/MultiSelection/MultiSelection">Tree/MultiSelection</a>
-       </div>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FTree%252FMultiSelection%252FMultiSelection">Tree/MultiSelection</a>
+      </div>
       <h1>Explorer</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Explorer/Explorer">Explorer</a>
+         <a href="/Controls-demo/app/Controls-demo%252FExplorer%252FExplorer">Explorer</a>
       </div>
       <h1>Paging</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Paging">Paging</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FPaging">Paging</a>
       </div>
       <h1>ItemActions</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/ItemActions&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FItemActions?theme=online">
             ItemActions
          </a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Swipe&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FSwipe?theme=online">
             Swipe
          </a>
       </div>
       <h1>DragNDrop</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/DragNDrop/Container&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FDragNDrop%252FContainer?theme=online">
             DragNDrop List</a>
-    </div>
-    <h1>Actions</h1>
-   <div>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Remove&theme=online">Remove</a>
-      <br/>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/List/Mover&theme=online">Mover</a>
+      </div>
+      <h1>Actions</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FRemove?theme=online">Remove</a>
+         <br/>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FMover?theme=online">Mover</a>
       </div>
       <h1>Edit And Remove Operations</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/EditAndRemoveOperations">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FEditAndRemoveOperations">
             Base
          </a>
       </div>
       <h1>Label</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Label/Label">Label</a>
+      <a href="/Controls-demo/app/Controls-demo%252FLabel%252FLabel">Label</a>
    </div>
    <div class="demo_controls_list_section">
-    <h1>Buttons</h1>
-    <div>
-        <a href="/Controls-demo/demo.html?cname=Controls-demo/Buttons/ButtonsVdom&theme=online">Buttons: baseline demo</a>
-    </div>
-    <div>
-        <a href="/Controls-demo/demo.html?cname=Controls-demo/Buttons/demoButtons&theme=online">Buttons: styles demo</a>
-    </div>
+      <h1>Buttons</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FButtonsVdom?theme=online">Buttons: baseline demo</a>
+      </div>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FdemoButtons?theme=online">Buttons: styles demo</a>
+      </div>
 
       <h1>Dropdown</h1>
-      <a href="/Controls-demo/demo.html?withoutLayout=true&cname=Controls-demo/Dropdown/MenuVdom&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FDropdown%252FMenuVdom?withoutLayout=true&theme=online">
          Dropdown
       </a>
 
       <h1>Search</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Search/SearchVDom&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FSearch%252FSearchVDom?theme=online">
          Search
       </a>
       <h1>Checkbox</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Checkbox/Checkbox&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FCheckbox%252FCheckbox?theme=online">
          Checkbox
       </a>
 
       <h1>SearchLayout</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Layouts/SearchLayout">
+      <a href="/Controls-demo/app/Controls-demo%252FLayouts%252FSearchLayout">
          SearchLayout
       </a>
 
       <h1>Input</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/VDomInputs/VDomInputs">Input</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FVDomInputs%252FVDomInputs">Input</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Text/Text">InputText</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FText%252FText">InputText</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Area/Area">InputArea</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FArea%252FArea">InputArea</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Number/Number">InputNumber</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FNumber%252FNumber">InputNumber</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Phone/Phone">InputPhone</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FPhone%252FPhone">InputPhone</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Mask/Mask">InputMask</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FMask%252FMask">InputMask</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Password/Password">Password</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FPassword%252FPassword">Password</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/ThemesDemo/ThemesDemo">ThemesDemo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FThemesDemo%252FThemesDemo">ThemesDemo</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/ComboBox/ComboBox">ComboBox</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FComboBox%252FComboBox">ComboBox</a>
          <br />
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Input/Suggest/Suggest">Suggest</a>
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FSuggest%252FSuggest">Suggest</a>
       </div>
    </div>
    <div class="demo_controls_list_section">
       <h1>InfoBox</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/InfoBox/InfoBox">InfoBox</a>
+      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBox">InfoBox</a>
 
       <h1>Confirmation</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Confirmation/Confirmation&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation?theme=online">
          Confirmation
       </a>
 
       <h1>TabButtons</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Tabs/Buttons&compat=true&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FTabs%252FButtons?compat=true&theme=online">
          TabButtons
       </a>
       <h1>Switchers</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Switch/SwitchDemo&compat=true&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FSwitchDemo?compat=true&theme=online">
             Switch
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Switch/DoubleSwitchDemo&compat=true&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FDoubleSwitchDemo?compat=true&theme=online">
             DoubleSwitch
          </a>
       </div>
       <h1>EditInPlace</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/EditInPlace">Base</a>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/List/EditInPlace/Hover">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FEditInPlace">Base</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FEditInPlace%252FHover">
             Hover
          </a>
       </div>
 
       <h1>Headers</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Headers/standartDemoHeader&theme=online">Headers</a>
+      <a href="/Controls-demo/app/Controls-demo%252FHeaders%252FstandartDemoHeader?theme=online">Headers</a>
       <br/>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/Headers/headerDemo">Headers2</a>
+      <a href="/Controls-demo/app/Controls-demo%252FHeaders%252FheaderDemo">Headers2</a>
    </div>
    <div class="demo_controls_list_section">
       <h1>FastFilter</h1>
-      <a href="/Controls-demo/demo.html?withoutLayout=true&cname=Controls-demo/FastFilter/FastFilter&theme=online">
+      %252F
+      <a href="/Controls-demo/app/Controls-demo%252FFastFilter%252FFastFilter?withoutLayout=true&theme=online">
          FastData
       </a>
       <h1>BreadCrumbs</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/BreadCrumbs/BreadCrumbs">
+         <a href="/Controls-demo/app/Controls-demo%252FBreadCrumbs%252FBreadCrumbs">
             BreadCrumbs
          </a>
       </div>
 
       <h1>OperationsPanel</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/OperationsPanel/Panel">
+         <a href="/Controls-demo/app/Controls-demo%252FOperationsPanel%252FPanel">
             OperationsPanel
          </a>
       </div>
 
       <h1>EditAtPlace</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/EditAtPlace/EditAtPlace">
+         <a href="/Controls-demo/app/Controls-demo%252FEditAtPlace%252FEditAtPlace">
             EditAtPlace
          </a>
       </div>
 
       <h1>Toolbar</h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Toolbar/ToolbarVdom">
+         <a href="/Controls-demo/app/Controls-demo%252FToolbar%252FToolbarVdom">
             Toolbar
          </a>
       </div>
 
       <h1>RadioGroup</h1>
-      <a href="/Controls-demo/demo.html?cname=Controls-demo/RadioGroup/RadioGroupDemo">
+      <a href="/Controls-demo/app/Controls-demo%252FRadioGroup%252FRadioGroupDemo">
          RadioGroup
       </a>
 
       <h1>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/Decorators">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FDecorators">
             Decorators
          </a>
       </h1>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/Money/Money">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FMoney%252FMoney">
             Money
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/Number/Number">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FNumber%252FNumber">
             Number
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/WrapURLs/WrapURLs">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FWrapURLs%252FWrapURLs">
             WrapURLs
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/Highlight/Highlight">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FHighlight%252FHighlight">
             Highlight
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/demo.html?cname=Controls-demo/Decorators/PhoneNumber/PhoneNumber">
+         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FPhoneNumber%252FPhoneNumber">
             PhoneNumber
          </a>
       </div>
    </div>
    <div class="demo_controls_list_section">
       <h1>FormController</h1>
-      <a href="/Controls-demo/demo.html?withoutLayout=true&cname=Controls-demo/FormController/FormController&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FFormController%252FFormController?withoutLayout=true&theme=online">
          FormController
       </a>
    </div>

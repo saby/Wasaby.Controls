@@ -15,7 +15,7 @@ define([
        'File/LocalFile',
        'File/LocalFileLink',
        'File/HttpFileLink',
-       'tests/unit/File/Mocks/GetResources'
+       'tests/File/Mocks/GetResources'
    ], function(LazyAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
        describe('File/LazyAttach', function () {
            var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
@@ -28,7 +28,7 @@ define([
                    [GetResources(HttpFileLink)]
                ];
                getters.forEach(function (getter, index) {
-                   attach.registerLazyGetter(getter, 'tests/unit/File/Mocks/ResourceGetter', {
+                   attach.registerLazyGetter(getter, 'tests/File/Mocks/ResourceGetter', {
                        chosenFiles: resources[index],
                        type: getter
                    });
@@ -50,7 +50,7 @@ define([
                var attach = new LazyAttach();
                var RIGHT_GETTER_NAME = "RightGetter";
                var WRONG_GETTER_NAME = "WrongGetter";
-               attach.registerLazyGetter(WRONG_GETTER_NAME, 'tests/unit/File/Mocks/ResourceGetter', {
+               attach.registerLazyGetter(WRONG_GETTER_NAME, 'tests/File/Mocks/ResourceGetter', {
                    type: RIGHT_GETTER_NAME
                });
                it('Обработка регистрации с некоректно переданным type', function (done) {
@@ -72,7 +72,7 @@ define([
                it('Ленивая регистрация ISource для загрузки файлов', function (done) {
                    attach.setSelectedResource(resources);
                    IFileDataConstructor.forEach(function (Contructor) {
-                       attach.registerLazySource(Contructor, 'tests/unit/File/SourceMock', Contructor);
+                       attach.registerLazySource(Contructor, 'tests/File/SourceMock', Contructor);
                    });
 
                    /**

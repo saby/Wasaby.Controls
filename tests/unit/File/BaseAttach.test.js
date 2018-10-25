@@ -15,9 +15,9 @@ define([
       'File/LocalFile',
       'File/LocalFileLink',
       'File/HttpFileLink',
-      'tests/unit/File/Mocks/GetResources',
-      'tests/unit/File/Mocks/ResourceGetter',
-      'tests/unit/File/SourceMock'
+      'tests/File/Mocks/GetResources',
+      'tests/File/Mocks/ResourceGetter',
+      'tests/File/SourceMock'
    ], function (BaseAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources, IResourceGetter, ISource) {
       describe('File/Attach/Base', function () {
          var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];

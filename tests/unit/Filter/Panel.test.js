@@ -114,6 +114,37 @@ define(
             panel._visibilityChangedHandler();
             assert.deepEqual(panel._items, config.items);
          });
+   
+         it('resolveItems', function() {
+            var items = ['test'];
+            var self = {};
+            var options = {
+               items: items
+            };
+            var context = {
+               filterPanelOptionsField: {
+                  options: {
+                     items: items
+                  }
+               }
+            };
+            var errorCathed = false;
+   
+            FilterPanel._private.resolveItems(self, options);
+            assert.isTrue(options.items !== self._items);
+            assert.equal(self._items[0], 'test');
+   
+            FilterPanel._private.resolveItems(self, {}, context);
+            assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
+            assert.equal(self._items[0], 'test');
+            
+            try {
+               FilterPanel._private.resolveItems(self, {}, {});
+            } catch (e) {
+               errorCathed = true;
+            }
+            assert.isTrue(errorCathed);
+         });
 
       });
    });

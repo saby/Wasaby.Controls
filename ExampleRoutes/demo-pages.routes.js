@@ -32,6 +32,30 @@ module.exports = function(Component) {
          }, []);
       },
 
+      '/demo-ws4-input-datetime': function(req, res) {
+         requirejs('Controls-demo/Input/DateTime/DateTime');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Input/DateTime/DateTime',
+            initDependencies: false
+         }, []);
+      },
+
+      '/demo-ws4-input-datepicker': function(req, res) {
+         requirejs('Controls-demo/Input/Date/Picker');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Input/Date/Picker',
+            initDependencies: false
+         }, []);
+      },
+
+      '/demo-ws4-input-daterange': function(req, res) {
+         requirejs('Controls-demo/Input/Date/Range');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Input/Date/Range',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах.
       '/demo-ws4-swipe': function(req, res) {
         requirejs('Examples/Swipe/Module');
@@ -60,7 +84,7 @@ module.exports = function(Component) {
       },
 
       // Демо-пример: редактирование по месту в списках.
-      '/edit-in-place': function(req, res) {
+      '/demo-ws4-edit-in-place': function(req, res) {
          requirejs('Examples/List/EditInPlace/EditInPlace');
          res.render('wml!Controls/Application/Route', {
             application: 'Examples/List/EditInPlace/EditInPlace',
