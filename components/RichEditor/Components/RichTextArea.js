@@ -808,12 +808,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @param {string} text Новое значение текста
              * @protected
              */
-            _updateJson: function (e, text) {
+            _updateJson: function(e, text) {
                // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               text = LinkWrap.wrapURLs(text, true, false, (typeof location === 'object' ? location.origin : '') +
+                  (cConstants.decoratedLinkService || ''));
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
