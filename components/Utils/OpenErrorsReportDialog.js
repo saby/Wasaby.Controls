@@ -55,7 +55,7 @@ define('SBIS3.CONTROLS/Utils/OpenErrorsReportDialog', [
          var popupOpener = Control.createControl(PopupOpener, {
             popupOptions: {
                isModal: true,
-               template: 'Controls/Utils/ErrorsReportDialog/ErrorsReportDialog',
+               template: 'Controls/Operations/ReportDialog',
                opener: windowManager && windowManager.getActiveWindow(),
                templateOptions: {
                   operationsCount: cfg.numSelected || 0,
