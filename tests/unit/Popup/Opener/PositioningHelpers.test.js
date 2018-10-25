@@ -355,7 +355,6 @@ define(
          });
 
          describe('Stack', function() {
-            let stackShadowWidth = 8;
             Stack.getMaxPanelWidth = () => 1000;
             let item = {
                popupOptions: {
@@ -366,7 +365,7 @@ define(
 
             it('stack with config sizes', function() {
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.popupOptions.maxWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -380,7 +379,7 @@ define(
                StackController.getDefaultConfig(itemConfig);
                assert.equal(itemConfig.position.top, -10000);
                assert.equal(itemConfig.position.left, -10000);
-               assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
+               assert.equal(itemConfig.position.width, 800);
                assert.equal(itemConfig.position.height, 950);
             });
 
@@ -423,13 +422,13 @@ define(
                assert.equal(itemConfig.popupOptions.maximized, false);
                assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
                let position = Stack.getPosition({top: 0, right: 0}, itemConfig);
-               assert.equal(position.width, popupOptions.minimizedWidth + stackShadowWidth);
+               assert.equal(position.width, popupOptions.minimizedWidth);
 
                StackController.elementMaximized(itemConfig, {}, true);
                assert.equal(itemConfig.popupOptions.maximized, true);
                assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
                position = Stack.getPosition({top: 0, right: 0}, itemConfig);
-               assert.equal(position.width, popupOptions.maxWidth + stackShadowWidth);
+               assert.equal(position.width, popupOptions.maxWidth);
 
                StackController._private.prepareMaximizedState(1600, itemConfig);
                assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
@@ -483,7 +482,7 @@ define(
 
             it('stack from target container', function() {
                var position = Stack.getPosition({top: 100, right: 100}, item);
-               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.popupOptions.maxWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
@@ -494,7 +493,7 @@ define(
                   containerWidth: 800
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === item.containerWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.containerWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -508,7 +507,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10) + stackShadowWidth);
+               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10));
             });
 
             it('stack reduced width', function() {
@@ -520,7 +519,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === Stack.getMaxPanelWidth() + stackShadowWidth);
+               assert.isTrue(position.width === Stack.getMaxPanelWidth());
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -534,7 +533,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 400}, item);
-               assert.isTrue(position.width === item.popupOptions.minWidth + stackShadowWidth);
+               assert.equal(position.width, item.popupOptions.minWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
