@@ -3548,7 +3548,7 @@ define('SBIS3.CONTROLS/ListView',
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
-               this._scrollLoadNextPage('down');
+               this._scrollLoadNextPage(isCursorNavigation ? 'up' : this._infiniteScrollState.mode);
             } else {
                if (infiniteScroll === 'both' && this.isScrollOnTop()){
                   this._setInfiniteScrollState('up');
