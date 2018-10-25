@@ -97,15 +97,6 @@ define(
             });
          });
 
-         it('getVisibleItems', function() {
-            let visibleItems = SelectorButton._private.getVisibleItems(new RecordSet({
-               rawData: initItems, idProperty: 'id'
-            }), 3);
-            assert.equal(visibleItems.getCount(), 3);
-            assert.equal(visibleItems.at(0).get('id'), '3');
-            assert.equal(visibleItems.at(2).get('id'), '5');
-         });
-
          it('getSelectedKeys', function() {
             let keys = SelectorButton._private.getSelectedKeys(new RecordSet({
                rawData: initItems, idProperty: 'id'
@@ -162,36 +153,20 @@ define(
          it('removeItems', function() {
             let button = getButton(config);
             button._beforeMount({});
-            button._selectedItems = button._selectedItemsVisible = new List({
+            button._selectedItems = new List({
                items: [{ id: '1', title: 'Запись 1' }]
             });
             SelectorButton._private.removeItem(button, button._selectedItems.at(0));
             assert.equal(button._selectedItems.getCount(), 0);
-            assert.equal(button._selectedItemsVisible.getCount(), 0);
-         });
-
-         it('_resultHiddenItem', function() {
-            let button = getButton(config);
-            button._selectedItems = button._selectedItemsVisible = new List({
-               items: [{ id: '1', title: 'Запись 1' }]
-            });
-            button._notify = (e, data) => {
-               if (e === 'itemClick') {
-                  assert.deepEqual(data[0], { id: '1', title: 'Запись 1' });
-               }
-            };
-            button._resultHiddenItem({ id: '1', title: 'Запись 1' }, 'crossClick');
-            button._resultHiddenItem({ id: '1', title: 'Запись 1' }, 'itemClick');
          });
 
          it('_crossClick', function() {
             let button = getButton(config);
-            button._selectedItems = button._selectedItemsVisible = new List({
+            button._selectedItems = new List({
                items: [{ id: '1', title: 'Запись 1' }]
             });
             button._crossClick('crossClick', { id: '1', title: 'Запись 1' });
             assert.equal(button._selectedItems.getCount(), 0);
-            assert.equal(button._selectedItemsVisible.getCount(), 0);
          });
 
          it('_itemClickHandler singleSelect', function() {
@@ -210,13 +185,6 @@ define(
                }
             };
             button._itemClickHandler([]);
-         });
-
-         it('_showHiddenItems', function() {
-            let button = getButton(config);
-            button._children = { 'stickyOpener': { open: setTrue.bind(this, assert) } };
-            button._container = { offsetWidth: 400 };
-            button._showHiddenItems();
          });
 
          function setTrue(assert) {
