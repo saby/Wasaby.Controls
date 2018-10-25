@@ -10,6 +10,7 @@
    appRoot="{{appRoot}}"
    resourceRoot="{{resourceRoot}}"
    RUMEnabled="{{ RUMEnabled }}"
+   staticDomains="{{staticDomains}}"
    jsLinks="{{ jsLinks }}"
    cssBundles="{{ cssBundles }}"
    servicesPath="{{ servicesPath }}"
