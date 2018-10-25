@@ -109,11 +109,10 @@ define('Controls/List/Tree/TreeViewModel', [
                   if (removedItems[idx].isNode && removedItems[idx].isNode()) {
                      nodeId = removedItems[idx].getContents().getId();
 
-                     // clear only if node removed from items, else this is collapsed node
-                     if (!self._items.getRecordById(nodeId)) {
-                        delete self._expandedNodes[nodeId];
-                        self._notify('onNodeRemoved', nodeId);
-                     }
+                     // If it is necessary to delete only the nodes deleted from the items, add this condition:
+                     // if (!self._items.getRecordById(nodeId)) {
+                     delete self._expandedNodes[nodeId];
+                     self._notify('onNodeRemoved', nodeId);
                   }
                }
             }
@@ -174,9 +173,9 @@ define('Controls/List/Tree/TreeViewModel', [
             _private.onCollectionChange(this, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
-         getCurrent: function() {
+         getItemDataByItem: function(dispItem) {
             var
-               current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
+               current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
             current.isExpanded = !!this._expandedNodes[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;

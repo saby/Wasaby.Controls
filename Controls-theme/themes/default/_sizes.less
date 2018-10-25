@@ -1,3 +1,5 @@
+@multiplier: 0.75;
+
 //MenuButton
 @margin-top_MenuButton_button:             -6px;
 @margin-left_MenuButton_button:            -1px;
@@ -99,6 +101,10 @@
 @border-width_DateRangeBigChoose-range-selected-startEnd:     1px;
 @size_DateRangeBigChoose__stateButton_icon:                   16px;
 @size_DateRangeBigChoose__homeBtn_icon:                       16px;
+
+// EditActions
+@width_EditActions-cancelButton:                       round(58px * @multiplier);
+@height_EditActions-cancelButton:                      round(58px * @multiplier);
 
 // MonthSlider
 @height_MonthSlider:                   300px;
@@ -272,6 +278,10 @@
 @border-radius_Block:             0px;
 
 //DropdownList
+@thickness_DropdownList-group-separator:              1px;
+@margin_DropdownList-group:                           4px 12px;
+@right-DropdownList-cross:             5px;
+@top-DropdownList-cross:         ceil(18px * @multiplier);
 @max-height_DropdownList:       400px;
 @max-width_DropdownList:        700px;
 @height_DropdownList-item:      32px;
@@ -296,8 +306,10 @@
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
 @padding_DropdownList-head:     @padding_DropdownList-default;
 @offset_DropdownList-submenu:   -3px;
-@right-DropdownList-cross:             5px;
-@top-DropdownList-cross:               6px;
+@right_DropdownList-cross:             5px;
+@top_DropdownList-cross:               6px;
+@margin-left_Toolbar-popup:               @right_DropdownList-cross;
+@margin-top_Toolbar-popup:                -@top_DropdownList-cross;
 
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
@@ -379,6 +391,7 @@
 //VDOM Operations.Button
 @height_OperationsButton:                             24px;
 @width_OperationsButton:                              24px;
+@width_OperationsPanelButton-separator:               1px;
 @font-size_OperationsButton__icon:                    18px;
 
    //VDOM Switch
@@ -507,6 +520,8 @@
 @font-family_FilterButton-icon:                    @default-icon-medium-font;
 @font-size_FilterButton-text:                      @default-text-size;
 @icon-size_FilterButton-text-icon:                 @icon-size_default;
+@margin-top_FilterButton_popup:                    -11px;
+@margin-left_FilterButton_popup:                   9px;
 
 //Lookup
 @spacing_Lookup-item:                    4px;
@@ -520,13 +535,17 @@
 @right_itemActions_inside:               6px;
 @padding_itemActions_inside:             0 6px 3px 6px;
 @padding_itemActions_outside:            0 6px 3px 0;
-@padding_itemActions_action:             6px;
+@spacing_itemActions_action:             6px;
 @margin_itemActions_separator:           3px;
 @width_itemActions_separator:            1px;
 @width_itemActions_swipeShadow:          6px;
 @max-width_itemActions_title:            120px;
 @margin-bottom_Actions_outside:    29px;
 @margin-bottom_Actions_inside:     3px;
+@border-radius_ItemActions_action_bordered: @border-radius-IconButton;
+@border-style_ItemActions_action_bordered:  @border-style-IconButton;
+@thickness_ItemActions_action_bordered:     @border-width-IconButton;
+@box-shadow_ItemActions_action_bordered:    @box-shadow-IconButton;
 //SwipeACtions
 @font-size_swipe_icon_small:             24px;
 @font-size_swipe_icon_big:               32px;
@@ -606,6 +625,7 @@
 @margin-left_FastFilter-popup:              2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
+@box-shadow_IconButton:                  0px 1px 4px @color-IconButton__shadow; // TODO Оставить один вариант
 @height-IconButton_size-m:               24px;
 @width-IconButton_size-m:                24px;
 @height-IconButton_size-l:               28px;
@@ -627,10 +647,10 @@
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @spacing-bottom_FilterPanel:                                   12px;
-@padding_FilterPanel-history-default:                          6px 12px 12px 12px;
-@padding_FilterPanel-history-column:                           6px 12px 0 12px;
+@padding_FilterPanel-history-vertical:                          6px 12px 12px 12px;
+@padding_FilterPanel-history-horizontal:                           6px 12px 0 12px;
 @margin_FilterPanel-history:                                   12px;
-@border-width_FilterPanel-column:                              1px;
+@border-width_FilterPanel-horizontal:                              1px;
 @spacing_FilterPanel-items:                                    22px;
 //FilterLink
 @height_FilterLink:                                            24px;
@@ -681,6 +701,7 @@
 @width_ListView-group-expander: 16px;
 @spacing_ListView-group-between-text-expander: 6px;
 @spacing_ListView-group-between-rightTemplate-separator: 12px;
+@margin-right_ListView-itemsToolbar-closeButton:       round(8px * @multiplier);
 
 //EngineBrowser
 //VDOM TreeGridView

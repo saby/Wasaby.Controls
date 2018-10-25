@@ -15,6 +15,7 @@ define('Controls/Input/Date/Picker', [
 
    /**
     * Control for entering date.
+    * <a href="/materials/demo-ws4-input-datepicker">Demo examples.</a>.
     * @class Controls/Input/Date/Picker
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
@@ -22,6 +23,7 @@ define('Controls/Input/Date/Picker', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
+    * @demo Controls-demo/Input/Date/PickerPG
     * @category Input
     */
 

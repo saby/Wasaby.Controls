@@ -9,13 +9,13 @@ define('Controls/Filter/Button',
       'WS.Data/Utils',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
-      'css!Controls/Filter/Button/Button'
+      'css!theme?Controls/Filter/Button/Button'
    ],
 
    function(Control, template, Chain, Utils, Deferred, isEqual) {
       /**
-       * Control for data filtering. Consists of a filter button and a filter string.
-       * Clicking on a control opens the panel. {@link Controls/Filter/Button/Panel}
+       * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
+       * Clicking on a icon-button or a string opens the panel. {@link Controls/Filter/Button/Panel}
        * Supports the insertion of a custom template between the button and the filter string.
        * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/filterbutton-and-fastfilters/'>here</a>.
        * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -100,10 +100,11 @@ define('Controls/Filter/Button',
                closeByExternalClick: true,
                eventHandlers: {
                   onResult: self._onFilterChanged
-               }
+               },
+               className: 'controls-FilterButton-popup-orientation-' + (options.alignment === 'right' ? 'left' : 'right')
             };
 
-            if (options.orientation === 'left') {
+            if (options.alignment === 'right') {
                self._popupOptions.corner = {
                   vertical: 'top',
                   horizontal: 'right'
@@ -156,7 +157,7 @@ define('Controls/Filter/Button',
             if (!isEqual(this._options.items, options.items)) {
                _private.resolveItems(this, options.items);
             }
-            if (this._options.orientation !== options.orientation) {
+            if (this._options.alignment !== options.alignment) {
                _private.setPopupOptions(this, options);
             }
          },
@@ -210,7 +211,7 @@ define('Controls/Filter/Button',
 
       FilterButton.getDefaultOptions = function() {
          return {
-            orientation: 'left'
+            alignment: 'right'
          };
       };
 

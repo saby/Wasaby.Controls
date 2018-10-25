@@ -3,8 +3,8 @@ define('Controls/Toggle/RadioGroup', [
    'Controls/Controllers/SourceController',
    'wml!Controls/Toggle/RadioGroup/RadioGroup',
    'wml!Controls/Toggle/RadioGroup/resources/ItemTemplate',
-   'css!Controls/Toggle/RadioGroup/RadioGroup',
-   'css!Controls/Toggle/resources/SwitchCircle/SwitchCircle'
+   'css!theme?Controls/Toggle/RadioGroup/RadioGroup',
+   'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
 ], function(Control, SourceController, template, defaultItemTemplate) {
 
    /**
@@ -118,7 +118,6 @@ define('Controls/Toggle/RadioGroup', [
     * @variant horizontal Elements are located one after another.
     * @variant vertical Elements are located one under another.
     * @default Horizontal
-    * @remark It's only displaying option, it's only regulates the location of the control.
     * @example
     * Vertical orientation.
     * <pre>

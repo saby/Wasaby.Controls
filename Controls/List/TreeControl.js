@@ -112,9 +112,8 @@ define('Controls/List/TreeControl', [
          return _private.getAllChildren(hierarchyRelation, rootId, items).reduce(function(acc, child) {
             if (selectedKeys.indexOf(child.getId()) !== -1) {
                return acc + 1;
-            } else {
-               return acc;
             }
+            return acc;
          }, 0);
       },
       onNodeRemoved: function(self, nodeId) {
@@ -129,13 +128,14 @@ define('Controls/List/TreeControl', [
     * Hierarchical list control with custom item template. Can load data from data source.
     *
     * @class Controls/List/TreeControl
+    * @mixes Controls/interface/IEditableList
     * @extends Controls/List/ListControl
     * @control
     * @public
     * @category List
     */
 
-   var TreeControl = Control.extend(/** @lends Controls/List/TreeControl */{
+   var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype */{
       _onNodeRemovedFn: null,
       _template: TreeControlTpl,
       _root: null,
@@ -194,26 +194,17 @@ define('Controls/List/TreeControl', [
          _private.clearSourceControllers(this);
          this._children.baseControl.reload(filter);
       },
-      editItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.editItem(options);
+      beginEdit: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
       },
-      addItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.addItem(options);
+      beginAdd: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginAdd(options);
       },
 
-
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.cancelEdit();
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
       },
@@ -232,7 +223,7 @@ define('Controls/List/TreeControl', [
             });
             ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, childrenIds);
             for (var i = 0; i < parents.length; i++) {
-               //TODO: проверка на hasMore должна быть тут
+               // TODO: проверка на hasMore должна быть тут
                if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this._options.items) === 0) {
                   newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
                } else {

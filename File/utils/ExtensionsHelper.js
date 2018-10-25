@@ -4,9 +4,10 @@ define("File/utils/ExtensionsHelper", ["require", "exports", "json!File/utils/Mi
         return (type == 'audio' || type == 'video' || type == 'image') || false;
     };
     /**
-     * Класс-улити для работы с типами файлов
+     * Класс-утилита для работы с типами файлов
      * @class
      * @public
+     * @author Заляев А.В.
      * @name File/utils/ExtensionsHelper
      */
     var ExtensionsHelper = /** @class */ (function () {

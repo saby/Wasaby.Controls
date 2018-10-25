@@ -9,7 +9,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
-      'css!Controls/Dropdown/resources/template/DropdownList'
+      'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
@@ -135,6 +135,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   itemsGroup: newOptions.itemsGroup
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
+               this._hasAdditional = this._listModel.hasAdditional();
                _private.setPopupOptions(this, newOptions);
             }
          },
@@ -156,6 +157,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (rootChanged || itemsChanged) {
                this._hasHierarchy = this._listModel.hasHierarchy();
+               this._hasAdditional = this._listModel.hasAdditional();
             }
 
             if (context && context.stickyCfg.horizontalAlign &&

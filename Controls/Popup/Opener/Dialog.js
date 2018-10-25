@@ -4,13 +4,14 @@ define('Controls/Popup/Opener/Dialog',
    ],
    function(Base) {
       /**
-       * Действие открытия окна
+       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
        * @class Controls/Popup/Opener/Dialog
        * @control
        * @public
        * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/Base
+       * @mixes Controls/interface/IDialogOptions
        */
 
       var _private = {
@@ -26,9 +27,41 @@ define('Controls/Popup/Opener/Dialog',
       var Dialog = Base.extend({
 
          /**
-          * Открыть диалоговое окно
+          * Open dialog popup.
           * @function Controls/Popup/Opener/Dialog#open
-          * @param config конфигурация попапа
+          * @returns {Undefined}
+          * @param {Object} popupOptions Dialog popup options.
+          * @example
+          * wml
+          * <pre>
+          *    <Controls.Popup.Opener.Dialog name="dialog">
+          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *          <ws:templateOptions key="111"/>
+          *       </ws:popupOptions>
+          *    </Controls.Popup.Opener.Dialog>
+          *
+          *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+          *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+          * </pre>
+          * js
+          * <pre>
+          *   Control.extend({
+          *      ...
+          *
+          *       _openDialog() {
+          *          var popupOptions = {
+          *              autofocus: true
+          *          }
+          *          this._children.dialog.open(popupOptions)
+          *       }
+          *
+          *       _closeDialog() {
+          *          this._children.dialog.close()
+          *       }
+          *       ...
+          *   });
+          * </pre>
+          * @see close
           */
          open: function(config) {
             config = _private.getDialogConfig(config);
@@ -40,4 +73,58 @@ define('Controls/Popup/Opener/Dialog',
 
       return Dialog;
    }
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#popupOptions
+    * @cfg {Object} Sets the popup configuration.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
+    * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#close
+    * @function
+    * @description Close dialog popup.
+    * @returns {Undefined}
+    * @example
+    * wml
+    * <pre>
+    *    <Controls.Popup.Opener.Dialog name="dialog">
+    *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+    *          <ws:templateOptions key="111"/>
+    *       </ws:popupOptions>
+    *    </Controls.Popup.Opener.Dialog>
+    *
+    *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+    *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+    * </pre>
+    * js
+    * <pre>
+    *   Control.extend({
+    *      ...
+    *
+    *       _openDialog() {
+    *          var popupOptions = {
+    *              autofocus: true
+    *          }
+    *          this._children.dialog.open(popupOptions)
+    *       }
+    *
+    *       _closeDialog() {
+    *          this._children.dialog.close()
+    *       }
+    *       ...
+    *   });
+    * </pre>
+    * @see open
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#isOpened
+    * @function
+    * @description Popup opened status.
+    */
 );

@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-      'css!Controls/Popup/Templates/Dialog/ConfirmationTemplate'
+      'css!theme?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
    ],
    function(Control, template) {
       'use strict';
@@ -10,7 +10,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
       var DialogTemplate = Control.extend({
 
          /**
-          * Базовый шаблон диалога
+          * Base template of confirm dialog.
           * @class Controls/Popup/Templates/Dialog/ConfirmationTemplate
           * @extends Core/Control
           * @control
@@ -20,8 +20,8 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           */
 
          /**
-          * @name Controls/Popup/Opener/Confirmation/Dialog#style
-          * @cfg {String} Стилевое оформление диалога
+          * @name Controls/Popup/Opener/Confirmation/Dialog#size
+          * @cfg {String} Option description.
           * @variant default По умоланию
           * @variant success Успех
           * @variant error Ошибка
@@ -29,25 +29,25 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#style
-          * @cfg {String} Style of dialog
+          * @cfg {String} Option description.
           * @variant default Default
           * @variant success Success
           * @variant error Error
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#hideCross
-          * @cfg {String} Don't show cross
+          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#closeButtonVisibility
+          * @cfg {Boolean} Determines whether display of the close button.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#mainArea
-          * @cfg {Content} Content of main area.
+          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#contentArea
+          * @cfg {Content} Main content.
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#footerArea
-          * @cfg {Content} Content of footer area.
+          * @cfg {Content} Content at the bottom of the confirm panel.
           */
 
          _template: template,

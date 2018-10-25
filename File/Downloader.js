@@ -3,16 +3,16 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
     /**
      * Инициализирует загрузку файла
      * @param {string} entity URL документа, либо Base64-строка
-     * @param {Object} [options] name - имя файла, contentType - тип файла
+     * @param {FileParams} [fileParams] name - имя файла, contentType - тип файла
      * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
      */
-    function Downloader(entity, options, driverName) {
+    function Downloader(entity, fileParams, driverName) {
         if (!entity) {
             throw new Error("Некорректный аргумент entity: " + typeof entity);
         }
-        require([driverName || DetectDriverName(entity)], function (Driver) {
-            new Driver(entity).download(options);
-        });
+        return new Promise(function (resolve) { return require([driverName || DetectDriverName(entity)], function (Driver) {
+            resolve(new Driver(entity).download(fileParams));
+        }); });
     }
     /**
      * Детектирует переданный аргумент и возвращает соответствующий для работы драйвер
@@ -26,10 +26,9 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
         return DRIVERS_NAMES.Base64;
     }
     /**
-       Имена драйверов для работы с файлами
-       @name File/Downloader#DRIVERS_NAMES
-       @type {enum}
-       @readonly
+     *  @name File/Downloader#DRIVERS_NAMES
+     *  Имена драйверов для работы с файлами
+     *  @typedef {DRIVERS_NAMES}
     */
     var DRIVERS_NAMES;
     (function (DRIVERS_NAMES) {
@@ -60,6 +59,12 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
  *    </li>
  * </ul>
  * </p>
+ * <p> Возвращаемое значение:
+ * <ul>
+ *      <li> В случае скачивания Base64 строки возвращает Promise<void | Error> </li>
+ *      <li> В случае скачивания URL адреса возвращает Promise<Response| void | Error> </li>
+ * </ul>
+ * </p>
  * <b>Пример использования</b>
  * <pre>
  * require(['File/Downloader'], function(Downloader) {
@@ -68,13 +73,14 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
  *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";
  *
  *    Downloader(base64_text, {
- *         name: 'phrase.txt',         // Имя, под которым файл будет сохранен (необязательно)
- *         contentType: 'text/plain'   // Тип контента (необязательно)
- *     }, Downloader.DRIVERS_NAMES.Base64);       // Имя файлового драйвера, явно указывает какого типа файл требуется скачать (необязательно)
+ *         name: 'phrase.txt',              // Имя, под которым файл будет сохранен (необязательно)
+ *         contentType: 'text/plain'        // Тип контента (необязательно)
+ *     }, Downloader.DRIVERS_NAMES.Base64)  // Имя файлового драйвера, явно указывает какого типа файл требуется скачать (необязательно)
+ *    .catch(console.error);                // Обработчик ошибки скачивания
  *
  *
  *    // Скачивание документа по URL
- *    Downloader("/file-transfer/file.pdf");
+ *    Downloader("https://bad_url").then(parseResponse).catch(console.error);
  * });
  * </pre>
  *  @see File/Driver/Base64
@@ -96,10 +102,9 @@ define("File/Downloader", ["require", "exports"], function (require, exports) {
  * @cfg {FileParams} Параметры скачиваемого файла
  */
 /**
- * @typedef {Object} FileParams
+ * @typedef  {Object} FileParams
  * @property {String} name  Имя, под которым файл будет сохранен (необязательно)
  * @property {String} contentType Тип файла
- * <i>Игнорируется при загрузке URL</i>
  * Пример: загрузка текстового файла, закодированного в base64
  * <pre class="brush:js">
  *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";

@@ -10,7 +10,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Header',
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
-   'css!Controls/List/Grid/Grid',
+   'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
 
@@ -36,12 +36,12 @@ define('Controls/List/Grid/GridView', [
             if (results) {
                if (results.position === 'top') {
                   if (header) {
-                     resultsPadding = this._container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
+                     resultsPadding = container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
                   } else {
                      resultsPadding = '0';
                   }
                } else {
-                  resultsPadding = 'calc(100% - ' + this._container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
+                  resultsPadding = 'calc(100% - ' + container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
                }
                cells = container.getElementsByClassName('controls-Grid__results-cell');
                Array.prototype.forEach.call(cells, function(elem) {

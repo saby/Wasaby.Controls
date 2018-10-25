@@ -13,11 +13,15 @@ define('Controls/Dropdown/resources/DropdownViewModel',
    function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
       var _private = {
          filterHierarchy: function(item) {
-
+            var parent;
             if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
                return true;
             }
-            return item.get(this._options.parentProperty) === this._options.rootKey;
+            parent = item.get(this._options.parentProperty);
+            if (typeof parent === 'undefined') {
+               parent = null;
+            }
+            return parent === this._options.rootKey;
          },
          
          isHistoryItem: function(item) {
@@ -166,6 +170,19 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                }
             }
             return false;
+         },
+         hasAdditional: function() {
+            var self = this;
+            var hasAdditional = false;
+
+            if (this._options.additionalProperty && this._options.rootKey === null) {
+               this._options.items.each(function(item) {
+                  if (!hasAdditional) {
+                     hasAdditional = item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
+                  }
+               });
+            }
+            return hasAdditional;
          },
          _hasParent: function(item) {
             return this._hierarchy.hasParent(item, this._options.items);

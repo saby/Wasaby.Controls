@@ -7,9 +7,10 @@ let isMediaType = (type: string) => {
 };
 
 /**
- * Класс-улити для работы с типами файлов
+ * Класс-утилита для работы с типами файлов
  * @class
  * @public
+ * @author Заляев А.В.
  * @name File/utils/ExtensionsHelper
  */
 class ExtensionsHelper {

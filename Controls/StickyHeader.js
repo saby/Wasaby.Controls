@@ -3,7 +3,7 @@ define('Controls/StickyHeader',
       'Core/Control',
       'Core/detection',
       'wml!Controls/StickyHeader/StickyHeader',
-
+      'css!theme?Controls/StickyHeader/StickyHeader',
       'Controls/StickyHeader/_StickyHeader'
    ],
    function(Control, detection, template) {

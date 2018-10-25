@@ -157,6 +157,11 @@ define('Controls/Popup/Opener/BaseController',
                left: -10000
             };
          },
+
+         needRecalcOnKeyboardShow: function() {
+            return false;
+         },
+
          _getPopupSizes: function(config, container) {
             var sizes = _private.getContentSizes(container);
             return {

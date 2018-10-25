@@ -1,0 +1,71 @@
+<div class="ControlsDemo-EipScenarios">
+   <div class="ControlsDemo-EipScenarios__title">Пример 1 - редактирование в карточке, режим "по ховеру"</div>
+   <Controls.Grid
+      name="firstExample"
+      attr:class="ControlsDemo-EipScenarios__list"
+      source="{{ _viewSource }}"
+      header="{{ _gridHeader }}"
+      on:beforeBeginEdit="_onItemAdd()"
+      columns="{{ _gridColumns }}"
+      leftPadding="S"
+      rightPadding="S"
+      itemActionsPosition="outside"
+      itemActions="{{_itemActions}}"
+      dataLoadCallback="{{_dataLoadCallback}}"
+      keyProperty="id">
+      <ws:editingConfig>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+      </ws:editingConfig>
+      <ws:itemsGroup method="{{_itemsGroupMethod}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
+   </Controls.Grid>
+   <div class="ControlsDemo-EipScenarios__tableFooter">
+      <Controls.List.AddButton caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
+      <span class="controls-addition-color controls-small-text-size">Всего 5</span>
+   </div>
+   <div class="ControlsDemo-EipScenarios__title">Пример 2 - редактирование в карточке, режим "по ховеру"</div>
+   <Controls.Grid
+      attr:class="ControlsDemo-EipScenarios__list"
+      source="{{ _viewSource2 }}"
+      header="{{ _gridHeader2 }}"
+      columns="{{ _gridColumns2 }}"
+      dataLoadCallback="{{_dataLoadCallback}}"
+      showRowSeparator="{{ true }}"
+      keyProperty="id">
+      <ws:editingConfig>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+      </ws:editingConfig>
+      <ws:results position="top" />
+   </Controls.Grid>
+   <div class="ControlsDemo-EipScenarios__tableFooter">
+      <Controls.List.AddButton caption="{[Наименование]}" />
+      <span class="controls-addition-color controls-small-text-size">Всего 5</span>
+   </div>
+   <div class="ControlsDemo-EipScenarios__title">Пример 4 - редактирование на странице (в реестре), режим "по ховеру</div>
+   <Controls.TreeGrid
+      attr:class="ControlsDemo-EipScenarios__list"
+      source="{{ _viewSource4 }}"
+      header="{{ _gridHeader4 }}"
+      columns="{{ _gridColumns4 }}"
+      dataLoadCallback="{{_dataLoadCallback}}"
+      parentProperty="Раздел"
+      nodeProperty="Раздел@"
+      showRowSeparator="{{ true }}"
+      keyProperty="id">
+      <ws:editingConfig>
+         <ws:Object editOnClick="{{true}}"/>
+      </ws:editingConfig>
+   </Controls.TreeGrid>
+   <div class="ControlsDemo-EipScenarios__title">Пример 5 - редактирование на странице (в реестре), режим "по ховеру"</div>
+   <Controls.Grid
+      attr:class="ControlsDemo-EipScenarios__list"
+      source="{{ _viewSource5 }}"
+      columns="{{ _gridColumns5 }}"
+      dataLoadCallback="{{_dataLoadCallback}}"
+      showRowSeparator="{{ true }}"
+      keyProperty="id">
+      <ws:editingConfig>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+      </ws:editingConfig>
+      <ws:results position="top" />
+   </Controls.Grid>
+</div>

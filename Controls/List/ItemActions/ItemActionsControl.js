@@ -5,7 +5,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
    'Controls/Application/TouchDetector/TouchContextField',
-   'css!Controls/List/ItemActions/ItemActions'
+   'css!theme?Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
@@ -22,7 +22,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    var _private = {
 
       sortActions: function(first, second) {
-         return  (second.showType || 0) - (first.showType || 0);
+         return (second.showType || 0) - (first.showType || 0);
       },
 
       fillItemAllActions: function(item, itemActions, itemActionVisibilityCallback) {
@@ -31,12 +31,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
-                  if (action.iconStyle && ~action.iconStyle.indexOf('done')) {
-                     action.iconDone = true;
-                  }
-                  if (action.iconStyle && ~action.iconStyle.indexOf('error')) {
-                     action.iconError = true;
-                  }
                }
                actions.push(action);
             }
@@ -58,7 +52,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             showed.sort(_private.sortActions);
          }
 
-         if (isEditingItem && options.showToolbar) {
+         if (isEditingItem && options.toolbarVisibility) {
             showed.push({
                icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
                style: 'bordered',
@@ -92,7 +86,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       updateActions: function(self, options, isTouch) {
          if (options.itemActions) {
-            for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
+            for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                var
                   itemData = options.listModel.getCurrent(),
                   item = itemData.item;
@@ -123,7 +117,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             }
          });
 
-         return actions && (additional + main !==  actions.length) && itemActionsPosition !== 'outside';
+         return actions && (additional + main !== actions.length) && itemActionsPosition !== 'outside';
       }
    };
 
@@ -139,7 +133,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeUpdate: function(newOptions, context) {
          var args = [this, newOptions, context.isTouch.isTouch];
-         
+
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
             _private.updateModel.apply(null, args);
          }

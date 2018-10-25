@@ -21,5 +21,5 @@ function definition (Deferred) {
 
     return GetterMock;
 }
-define('tests/unit/File/Mocks/ResourceGetter', ['Core/Deferred'], definition);
-define('optional!tests/unit/File/Mocks/ResourceGetter', ['Core/Deferred'], definition);
+define('tests/File/Mocks/ResourceGetter', ['Core/Deferred'], definition);
+define('optional!tests/File/Mocks/ResourceGetter', ['Core/Deferred'], definition);

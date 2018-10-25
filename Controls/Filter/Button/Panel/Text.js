@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/Text', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/Text/Text',
-   'css!Controls/Filter/Button/Panel/Text/Text'
+   'css!theme?Controls/Filter/Button/Panel/Text/Text'
 ], function(Control, template) {
 
    /**
