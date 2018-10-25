@@ -1,7 +1,8 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
+   'Core/helpers/getResourceUrl',
    'Core/core-extend'
-], function(Logger, coreExtend) {
+], function(Logger, getResourceUrl, coreExtend) {
 
    var DEPTYPES = {
       BUNDLE: 1,
@@ -149,6 +150,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          res = checkResourcesPrefix(res);
          res = getLinkWithBuildNumber(res, this.buildNumber);
          res = getLinkWithAppRoot(res, this.appRoot);
+         res = getResourceUrl(res);
          return res;
       }
    });
