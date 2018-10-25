@@ -11,6 +11,9 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          return {
             getId: function() {
                return self._id;
+            },
+            get: function() {
+               return self._isNode;
             }
          };
       };
@@ -137,6 +140,143 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel = new TreeViewModel(cMerge({itemsFilterMethod: function() {return true;}}, cfg));
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 2,
                'Invalid filters count prepared by "getDisplayFilter" with "itemsFilterMethod".');
+         });
+         it('shouldDrawExpander', function() {
+            var
+               testsShouldDrawExpander = [{
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }],
+               testsResultShouldDrawExpander = [false, false, false, true, true, false, true, true, false];
+            testsShouldDrawExpander.forEach(function(item, i) {
+               assert.equal(TreeViewModel._private.shouldDrawExpander(testsShouldDrawExpander[i].itemData, testsShouldDrawExpander[i].expanderIcon),
+                  testsResultShouldDrawExpander[i],
+                  'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
+            });
+         });
+         it('prepareExpanderClasses', function() {
+            var
+               testsPrepareExpanderClasses = [{
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }],
+               testsResultPrepareExpanderClasses = [
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed'
+               ];
+            testsPrepareExpanderClasses.forEach(function(item, i) {
+               assert.equal(TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon),
+                  testsResultPrepareExpanderClasses[i],
+                  'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.');
+            });
          });
       });
       describe('public methods', function() {

@@ -6,7 +6,7 @@
       <ws:for data="i in itemData.dispItem.getLevel()">
          <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{itemData.expanderSize ? itemData.expanderSize : 'default'}}"></div>
       </ws:for>
-      <div class="controls-TreeGrid__row-nodeExpanderPadding"></div>
+      <div class="controls-TreeGrid__row-expanderPadding"></div>
       <ws:if data="{{itemData.footerStorage.hasMoreStorage}}">
          <Controls.Button size="s" attr:class="controls-TreeGrid__nodeFooterHasMore" style="linkMain" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)"/>
       </ws:if>

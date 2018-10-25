@@ -2,5 +2,5 @@
                            on:markedKeyChanged="_markedKeyChangedHandler()"
                            scope="{{_options}}"
                            name="baseControl">
-   <ws:partial template="{{content.viewTemplate}}" on:nodeExpanderClick="_onNodeExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" />
+   <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" />
 </Controls.List.BaseControl>

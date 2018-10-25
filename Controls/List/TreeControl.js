@@ -184,7 +184,12 @@ define('Controls/List/TreeControl', [
             this._children.baseControl.getViewModel().setRoot(this._root);
          }
       },
-      _onNodeExpanderClick: function(e, dispItem) {
+      toggleExpanded: function(key) {
+         var
+            item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
+         _private.toggleExpanded(this, item);
+      },
+      _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
       },
       _onLoadMoreClick: function(e, dispItem) {
