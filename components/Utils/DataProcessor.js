@@ -286,13 +286,15 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
        * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
       downloadFile : function(id, isExcel){
-         var params = { 'id': id };
+         var url;
          if (isExcel) {
-            params['storage'] = 'excel';
+            url = prepareGetRPCInvocationURL('FileTransfer', 'Download', {
+               'id': id,
+               'storage': 'excel'
+            }, undefined, '/file-transfer/service/');
          } else {
-            params['storage'] = 'pdf_converter_storage';
+            url = id;
          }
-         var url = prepareGetRPCInvocationURL('FileTransfer', 'Download', params, undefined, '/file-transfer/service/');
          Downloader(url, {}, Downloader.DRIVERS_NAMES.URL);
       },
       /**
