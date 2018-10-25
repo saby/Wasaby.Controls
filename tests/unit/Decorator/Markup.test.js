@@ -49,9 +49,11 @@ define([
       });
 
       describe('deepCopyJson', function() {
-         var newJson = Converter.deepCopyJson(oneBigJson);
-         assert.notEqual(newJson, oneBigJson);
-         assert.deepEqual(newJson, oneBigJson);
+         it('one big', function() {
+            var newJson = Converter.deepCopyJson(oneBigJson);
+            assert.notEqual(newJson, oneBigJson);
+            assert.deepEqual(newJson, oneBigJson);
+         });
       });
    });
 });
