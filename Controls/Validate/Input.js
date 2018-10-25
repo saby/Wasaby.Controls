@@ -11,18 +11,21 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
-         _focusOutHandler: function() {
+         _focusOutHandler: function(){
             this._shouldValidate = true;
             this._forceUpdate();
-            this._notify('focusOut');
+            this._notify('focusOutValidate', [this], { bubbling: true });
          },
          _hoverHandler: function() {
-            this._notify('hover');
-            this._shouldValidate = true;
-            this._forceUpdate();
+            this._notify('hoverValidate', [this], { bubbling: true });
+         },
+         _mouseLeaveHandler: function() {
+            if (this.isValid()) {
+               this._notify('mouseLeaveValidate', [this], { bubbling: true });
+            }
          },
          _focusInHandler: function() {
-            this._notify('focusIn');
+            this._notify('focusInValidate', [this], { bubbling: true });
          },
          _cleanValid: function() {
             this.setValidationResult(null);

@@ -1,2 +1,8 @@
-<ws:partial template="{{ _options.content }}" validationErrors="{{isValid()}}" on:valueChanged="_cleanValid()" on:focusOut="_focusOutHandler()" on:mouseenter="_hoverHandler()"/>
+<ws:partial template="{{ _options.content }}"
+            validationErrors="{{isValid()}}"
+            on:valueChanged="_cleanValid()"
+            on:focusOut="_focusOutHandler()"
+            on:mouseenter="_hoverHandler()"
+            on:focusIn="_focusInHandler()"
+            on:mouseleave="_mouseLeaveHandler()"/>
 

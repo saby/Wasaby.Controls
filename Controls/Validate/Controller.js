@@ -17,11 +17,15 @@ define('Controls/Validate/Controller',
 
       var Validate = Base.extend({
          _template: template,
+         _isOpen: false,
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
+         },
+         closeAll: function() {
+            this._isOpen = false;
          },
          _validationResult: undefined,
 
@@ -120,10 +124,10 @@ define('Controls/Validate/Controller',
             if (!(validationResult instanceof Deferred)) {
                this._forceUpdate();
             }
-            if (validationResult && validationResult.length) {
-               this.openInfoBox();
-            } else {
+            if (!validationResult) {
                this.closeInfoBox();
+            } else {
+               this.openInfoBox();
             }
          },
 
@@ -131,11 +135,19 @@ define('Controls/Validate/Controller',
           * Показывает InfoBox с подсказкой
           */
          openInfoBox: function() {
-            this._notify('openInfoBox', [{
-               target: this._container,
-               style: 'error',
-               message: this._validationResult
-            }], { bubbling: true });
+            // debugger;
+            if (this._validationResult && this._validationResult.length && !this._isOpen) {
+               // debugger;
+               this._isOpen = true;
+               this._notify('openInfoBox', [{
+                  target: this._container,
+                  style: 'error',
+                  message: this._validationResult,
+                  eventHandlers: {
+                     'onClose': this.closeAll.bind(this)
+                  }
+               }], { bubbling: true });
+            }
          },
 
          /**
