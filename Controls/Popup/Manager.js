@@ -4,10 +4,12 @@ define('Controls/Popup/Manager',
       'wml!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/Number/randomId',
-      'WS.Data/Collection/List'
+      'WS.Data/Collection/List',
+      'Core/EventBus',
+      'Core/detection'
    ],
 
-   function(Control, template, ManagerController, randomId, List) {
+   function(Control, template, ManagerController, randomId, List, EventBus, cDetection) {
       'use strict';
 
       var _private = {
@@ -149,6 +151,15 @@ define('Controls/Popup/Manager',
 
          redrawItems: function(items) {
             ManagerController.getContainer().setPopupItems(items);
+         },
+
+         controllerVisibilityChangeHandler: function(instance) {
+            instance._popupItems.each(function(item) {
+               if (item.controller.needRecalcOnKeyboardShow()) {
+                  item.controller._elementUpdated(item, _private.getItemContainer(item.id));
+               }
+            });
+            _private.redrawItems(instance._popupItems);
          }
       };
 
@@ -158,6 +169,11 @@ define('Controls/Popup/Manager',
             ManagerController.setManager(this);
             this._hasMaximizePopup = false;
             this._popupItems = new List();
+            if (cDetection.isMobileIOS) {
+               _private.controllerVisibilityChangeHandler = _private.controllerVisibilityChangeHandler.bind(_private, this);
+               EventBus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EventBus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
+            }
          },
 
          /**
@@ -266,6 +282,12 @@ define('Controls/Popup/Manager',
             var actionResult = _private[actionName].apply(this, args);
             if (actionResult === true) {
                _private.redrawItems(this._popupItems);
+            }
+         },
+         _beforeUnmount: function() {
+            if (cDetection.isMobileIOS) {
+               EventBus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EventBus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
             }
          }
       });
