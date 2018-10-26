@@ -13,7 +13,6 @@ define('Controls/Popup/Templates/BaseTemplate',
        *
        * @class Controls/Popup/Templates/BaseTemplate
        * @extends Core/Control
-       * @mixes Controls/interface/I
        *
        * @public
        * @author Красильников А.С.
@@ -21,7 +20,7 @@ define('Controls/Popup/Templates/BaseTemplate',
        */
 
       var DialogTemplate = Control.extend({
-
+         _template: template
       });
       return DialogTemplate;
 
