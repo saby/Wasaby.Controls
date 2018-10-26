@@ -83,7 +83,7 @@ define([
 
          //received state 3'rd argument
          mountResult = ctrl._beforeMount(cfg, {}, rs);
-         assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
+         assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
@@ -411,12 +411,12 @@ define([
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
-            BaseControl._private.viewResize(ctrl);
+            BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
 
                BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.viewResize(ctrl);
+               BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
                setTimeout(function() {
                   assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');

@@ -2,6 +2,7 @@ define('Controls/List/BaseControl', [
    'Core/Control',
    'Core/IoC',
    'Core/core-clone',
+   'Core/core-merge',
    'wml!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -17,6 +18,7 @@ define('Controls/List/BaseControl', [
 ], function(Control,
    IoC,
    cClone,
+   cMerge,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -55,6 +57,11 @@ define('Controls/List/BaseControl', [
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
+
+               //If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               if (!list.getCount()) {
+                  _private.checkLoadToDirectionCapability(self);
+               }
             }).addErrback(function(error) {
                _private.processLoadError(self, error, userErrback);
                resDeferred.callback(null);
@@ -87,6 +94,11 @@ define('Controls/List/BaseControl', [
 
                   // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
                   // self._virtualScroll.prependItems(addedItems.getCount());
+               }
+
+               //If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               if (!addedItems.getCount()) {
+                  _private.checkLoadToDirectionCapability(self);
                }
 
                return addedItems;
@@ -125,24 +137,24 @@ define('Controls/List/BaseControl', [
          return error;
       },
 
-      viewResize: function(self) {
+      checkLoadToDirectionCapability: function(self) {
          if (self._needScrollCalculation) {
-            if (self._scrollLoadStarted['up']) {
+            if (self._loadTriggerVisibility['up']) {
                _private.onScrollLoadEdge(self, 'up');
             }
-            if (self._scrollLoadStarted['down']) {
+            if (self._loadTriggerVisibility['down']) {
                _private.onScrollLoadEdge(self, 'down');
             }
          }
       },
 
       onScrollLoadEdgeStart: function(self, direction) {
-         self._scrollLoadStarted[direction] = true;
+         self._loadTriggerVisibility[direction] = true;
          _private.onScrollLoadEdge(self, direction);
       },
 
       onScrollLoadEdgeStop: function(self, direction) {
-         self._scrollLoadStarted[direction] = false;
+         self._loadTriggerVisibility[direction] = false;
       },
 
       onScrollLoadEdge: function(self, direction) {
@@ -269,11 +281,11 @@ define('Controls/List/BaseControl', [
       handleListScroll: function(self, scrollTop, position) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          var hasMoreData;
-         
+
          if (virtualWindowIsChanged) {
             //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
-         
+
          if (self._scrollPagingCtr) {
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
@@ -315,6 +327,9 @@ define('Controls/List/BaseControl', [
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function() {
             self._forceUpdate();
+         });
+         model.subscribe('onGroupsExpandChange', function(event, changes) {
+            _private.groupsExpandChangeHandler(self, changes);
          });
       },
 
@@ -384,7 +399,30 @@ define('Controls/List/BaseControl', [
                showClose: true
             }
          };
+      },
+
+      groupsExpandChangeHandler: function(self, changes) {
+         self._notify(changes.changeType === 'expand' ? 'onGroupExpanded' : 'onGroupCollapsed', [changes.group], { bubbling: true });
+         requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups);
+         });
+      },
+
+      prepareCollapsedGroups: function(config) {
+         var
+            result = new Deferred();
+         if (config.historyIdCollapsedGroups) {
+            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+               GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
+                  result.callback(collapsedGroupsFromStore ? collapsedGroupsFromStore : config.collapsedGroups);
+               });
+            });
+         } else {
+            result.callback(config.collapsedGroups);
+         }
+         return result;
       }
+
    };
 
    /**
@@ -423,7 +461,7 @@ define('Controls/List/BaseControl', [
       _itemTemplate: null,
 
       _needScrollCalculation: false,
-      _scrollLoadStarted: null,
+      _loadTriggerVisibility: null,
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
@@ -433,6 +471,9 @@ define('Controls/List/BaseControl', [
       _isServer: null,
 
       _beforeMount: function(newOptions, context, receivedState) {
+         var
+            self = this;
+
          this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
@@ -445,36 +486,36 @@ define('Controls/List/BaseControl', [
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (this._needScrollCalculation) {
-            this._scrollLoadStarted = {
+            this._loadTriggerVisibility = {
                up: false,
                down: false
             };
          }
 
-         /* Load more data after reaching end or start of the list.
-          TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-          */
-
-         if (newOptions.viewModelConstructor) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
-            this._listViewModel = new newOptions.viewModelConstructor(newOptions);
-            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
-            _private.initListViewModelHandler(this, this._listViewModel);
-         }
-
-         if (newOptions.source) {
-            this._sourceController = new SourceController({
-               source: newOptions.source,
-               navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
-            });
-
-            if (receivedState) {
-               this._sourceController.calculateState(receivedState);
-               this._listViewModel.setItems(receivedState);
-            } else {
-               return _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
+            var
+               viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : newOptions;
+            if (newOptions.viewModelConstructor) {
+               self._viewModelConstructor = newOptions.viewModelConstructor;
+               self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+               self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               _private.initListViewModelHandler(self, self._listViewModel);
             }
-         }
+
+            if (newOptions.source) {
+               self._sourceController = new SourceController({
+                  source: newOptions.source,
+                  navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
+               });
+
+               if (receivedState) {
+                  self._sourceController.calculateState(receivedState);
+                  self._listViewModel.setItems(receivedState);
+               } else {
+                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+               }
+            }
+         });
       },
 
       getViewModel: function() {
@@ -549,11 +590,10 @@ define('Controls/List/BaseControl', [
          if (this._listViewModel) {
             this._listViewModel.destroy();
          }
-         this._scrollLoadStarted = null;
+         this._loadTriggerVisibility = null;
 
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
-
 
       _afterUpdate: function() {
          if (_private.getItemsCount(this)) {
@@ -642,7 +682,7 @@ define('Controls/List/BaseControl', [
       },
 
       _viewResize: function() {
-         _private.viewResize(this);
+         _private.checkLoadToDirectionCapability(this);
       },
 
       /**

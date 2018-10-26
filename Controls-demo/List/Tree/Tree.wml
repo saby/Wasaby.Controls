@@ -1,4 +1,4 @@
-<div><!--itemsGroup="{{_itemsGroup}}"-->
+<div>
    <div>
       <h3>Кликнули на </h3>
       <span class="action__last_clicked">{{_actionClicked}}</span>
@@ -15,7 +15,7 @@
                         <Controls.TreeGrid
                                 attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                                 parentProperty="Раздел"
-                                itemsGroup="{{_itemsGroup}}"
+                                groupMethod="{{_groupMethod}}"
                                 nodeProperty="Раздел@"
                                 columns="{{gridColumns}}"
                                 multiSelectVisibility="visible"
@@ -56,7 +56,7 @@
                                 multiSelectVisibility="visible"
                                 itemActions="{{_itemActions}}"
                                 itemActionsPosition="inside"
-                                itemsGroup="{{_itemsGroup}}"
+                                groupMethod="{{_groupMethod}}"
                                 on:itemActionsClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}">
 
