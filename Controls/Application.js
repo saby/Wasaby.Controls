@@ -194,6 +194,7 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
+            self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
@@ -225,6 +226,7 @@ define('Controls/Application',
                context.AppData.application = self.application;
                context.AppData.servicesPath = self.servicesPath;
                context.AppData.product = self.product;
+               context.AppData.staticDomains = self.staticDomains;
             }
 
             /**
@@ -238,6 +240,7 @@ define('Controls/Application',
                csses: ThemesController.getInstance().getCss(),
                title: self.title,
                appRoot: self.appRoot,
+               staticDomains: self.staticDomains,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
