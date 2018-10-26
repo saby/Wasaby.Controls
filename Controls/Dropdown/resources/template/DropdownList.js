@@ -15,7 +15,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var _private = {
 
          setPopupOptions: function(self, horizontalAlign) {
-            var align = horizontalAlign.side || 'right';
+            var align = horizontalAlign || 'right';
             self._popupOptions = {
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
@@ -30,6 +30,15 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   onResult: self.resultHandler
                }
             };
+         },
+
+         getDropdownClass: function(verticalAlign, typeShadow) {
+            return 'controls-DropdownList__popup-' + verticalAlign.side +
+               ' controls-DropdownList__popup-shadow-' + typeShadow;
+         },
+
+         getDropdownHeaderClass: function(horizontalAlign) {
+            return 'controls-DropdownList__head-' + horizontalAlign.side;
          },
 
          getSubMenuOptions: function(instance, event, item) {
@@ -136,7 +145,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
-               _private.setPopupOptions(this, newOptions);
+               _private.setPopupOptions(this);
             }
          },
 
@@ -162,15 +171,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (context && context.stickyCfg.horizontalAlign &&
                (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
-               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign);
+               this._dropdownClass = _private.getDropdownClass(context.stickyCfg.verticalAlign, newOptions.typeShadow);
+               this._headerClass = _private.getDropdownHeaderClass(context.stickyCfg.horizontalAlign);
+               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign.side);
             }
          },
-
-
-
-
-
-
 
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
