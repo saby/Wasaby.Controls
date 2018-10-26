@@ -8,7 +8,7 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
-         staticDomains: eval('[' + '{{ _options.staticDomains }}' + ']'),
+         staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }}
       };
