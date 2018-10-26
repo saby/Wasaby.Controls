@@ -36,7 +36,7 @@ define(
 
       /**
        * @name Controls/Indicator/Progress/BaseController#smoothFill
-       * @cfg {Number} If we have to change the value in multiple steps
+       * @cfg {Boolean} Determines whether the value is changing in multiple steps
        */
 
       var MAX_PERCENT = 100;

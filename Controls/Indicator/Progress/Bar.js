@@ -34,7 +34,7 @@ define(
 
       /**
        * @name Controls/Indicator/Progress/Bar#smoothFill
-       * @cfg {Boolean} Smooth indicator fill
+       * @cfg {Boolean} Determines whether the bar fills smoothly
        */
 
       var
