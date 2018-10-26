@@ -10,8 +10,9 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
     'WS.Data/Collection/RecordSet',
     'Core/moduleStubs',
     'Core/IoC',
+    'File/Downloader',
     'WS.Data/Adapter/Sbis'
-], function(SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, RecordSet, moduleStubs, IoC) {
+], function(SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, RecordSet, moduleStubs, IoC, Downloader) {
 
     'use strict';
 
@@ -316,13 +317,16 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          * @param isExcel - файл выгружается в формате EXCEL
          */
         _downloadFile : function(id, isExcel){
-           var params = { 'id': id };
+           var url;
            if (isExcel) {
-              params['storage'] = 'excel';
+              url = prepareGetRPCInvocationURL('FileTransfer', 'Download', {
+                 'id': id,
+                 'storage': 'excel'
+              }, undefined, '/file-transfer/service/');
            } else {
-              params['storage'] = 'pdf_converter_storage';
+              url = id;
            }
-           window.open(prepareGetRPCInvocationURL('FileTransfer', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+           Downloader(url, {}, Downloader.DRIVERS_NAMES.URL);
         },
 
         _parseColumns: function(columns) {
