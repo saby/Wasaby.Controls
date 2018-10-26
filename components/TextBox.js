@@ -504,6 +504,14 @@ define('SBIS3.CONTROLS/TextBox', [
          return this._inputField;
       },
 
+      /**
+       * Устанавливает режим выделения текста в поле ввода при получении фокуса.
+       * @param {Boolean} flag
+       */
+      setSelectOnClick: function(flag) {
+         this._options.selectOnClick = flag;
+      },
+
       setTooltip: function(tooltip) {
          this._getFieldForTooltip().attr('title', tooltip);
          TextBox.superclass.setTooltip.apply(this, arguments);
