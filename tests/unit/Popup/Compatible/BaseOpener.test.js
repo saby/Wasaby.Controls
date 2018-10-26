@@ -227,8 +227,8 @@ define(
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.catchFocus, true);
-            assert.equal(newConfig.componentOptions.innerComponentOptions, config.templateOptions);
-            assert.equal(newConfig.componentOptions.innerComponentOptions._template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.equal(newConfig.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(newConfig.componentOptions.template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
@@ -257,7 +257,7 @@ define(
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.equal(newConfig.dialogOptions.className, config.className);
-            assert.isFalse(newConfig.dialogOptions.border);
+            assert.isTrue(newConfig.dialogOptions.border);
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);
             assert.equal(newConfig.dialogOptions.onResultHandler, config.eventHandlers.onResult);
@@ -279,8 +279,10 @@ define(
                },
                mode: 'floatArea'
             };
-            let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            let vdomTemplate = { stable: true }; //state of vdom template
+            let newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig, vdomTemplate);
             assert.equal(newTestConfig.dialogOptions.direction, testconfig.horizontalAlign.side);
+            assert.isFalse(newTestConfig.dialogOptions.border);
             assert.equal(newTestConfig.dialogOptions.verticalAlign, 'bottom');
             assert.equal(newTestConfig.dialogOptions.offset.x, 10);
             assert.equal(newTestConfig.dialogOptions.offset.y, 15);

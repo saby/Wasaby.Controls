@@ -100,11 +100,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          constants = {
             decreaseHeight1: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__richTextArea уменьшаются на 2px так как она имеет верхнюю и нижнюю границы по 1px
             decreaseHeight2: 2,// Высоты всего, содержащегося внутри .controls-RichEditor__scrollContainer уменьшаются на 2px так как он имеет нижний отступ 2px
-            baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
-            defaultPreviewerSize: 768,//512
             //maximalPictureSize: 120,
-            imageOffset: 40, //16 слева +  24 справа
+            imageOffset: 16, //0 слева + 16 справа(от p)
             defaultYoutubeHeight: 300,
             minYoutubeHeight: 214,
             defaultYoutubeWidth: 430,
@@ -810,12 +808,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
              * @param {string} text Новое значение текста
              * @protected
              */
-            _updateJson: function (e, text) {
+            _updateJson: function(e, text) {
                // Обновить опцию "json" и сформировать событие "onJsonChange" при изменении текста
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, cConstants.decoratedLinkService);
+               text = LinkWrap.wrapURLs(text, true, false, (typeof location === 'object' ? location.origin : '') +
+                  (cConstants.decoratedLinkService || ''));
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
@@ -992,6 +991,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._options._prepareContent = null;
                }
                RichTextArea.superclass.destroy.apply(this, arguments);
+
+               if (this._htmlJson) {
+                  this._htmlJson.destroy();
+                  this._htmlJson = null;
+               }
 
                this._tinyLastRng = null;
                this._tinyEditor = null;
@@ -2254,7 +2258,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            width: image.style.width || image.width + 'px' || '',
                            height: image.style.height || image.height + 'px' || ''
                         },
-                        editorWidth: self._inputControl.width(),
+                        maxWidth: self._getMaxImageWidth(),
                         result: (new Deferred()).addCallback(function (data) {
                            self._changeImgSize($image, data.width, data.height, data.valueType !== 'per').addCallback(function() {
                               setTimeout(function() {
@@ -2623,7 +2627,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         width,
                         currentWidth,
                         naturalSizes;
-                     maximalWidth = this._inputControl.width() - constants.imageOffset;
+                     maximalWidth = this._getMaxImageWidth();
                      for (var i = 0; i < $images.length; i++) {
                         naturalSizes = ImageUtil.getNaturalSizes($images[i]);
                         currentWidth = $($images[i]).width();
@@ -3569,6 +3573,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             /**
+             * Получить максимально допустимую ширину изображения
+             * @protected
+             * @return {number}
+             */
+            _getMaxImageWidth: function () {
+               return $(this._tinyEditor.getBody()).width() - constants.imageOffset;
+            },
+
+            /**
              * Создать урл изображения через previewer-сервис с необходимым масштабированием
              * @protected
              * @param {object} imgInfo Информация об изображении (url, width, height, id?, filePath?)
@@ -3581,38 +3594,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (!(0 < width)) {
                   throw new Error('Size is not specified');
                }
-               var
-                  promise = new Deferred(),
-                  url = imgInfo.filePath || imgInfo.url,
-                  locationOrigin = '',
-                  previewerRegExp = /\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i,
-                  indexOfPreviewer,
-                  newUrl;
+               var url = imgInfo.filePath || imgInfo.url;
                if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
                   // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  promise.callback({
+                  return Deferred.success({
                      preview: url,
                      original: url
                   });
-                  return promise;
                }
-               indexOfPreviewer = url.search(previewerRegExp);
-               if (indexOfPreviewer > 0) {
-                  locationOrigin = url.slice(0, indexOfPreviewer);
-                  url = url.replace(locationOrigin, '');
-               }
-               url = url.replace(previewerRegExp, '');
-               promise = promise.addCallback(function(size) {
-                  newUrl = '';
-                  if (size) {
-                     if (locationOrigin) {
-                        newUrl = locationOrigin;
-                     }
-                     newUrl += '/previewer' + '/r/' + size + '/' + size + url;
+               var urlOrigin;
+               var ms = url.match(/\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i);
+               if (ms) {
+                  if (0 < ms.index) {
+                     urlOrigin = url.substring(0, ms.index);
+                     url = url.substring(ms.index);
                   }
+                  url = url.substring(ms[0].length);
+               }
+               var promise = (new Deferred()).addCallback(function(size) {
                   return {
-                     preview: newUrl,
-                     original: url
+                     preview: size ? ((urlOrigin || '') + '/previewer' + '/r/' + size + '/' + size + url) : '',
+                     original: (urlOrigin || '') + url
                   };
                });
                if (0 < width) {
@@ -3620,7 +3622,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      width = 100;
                      height = 100;
                   }
-                  var w = isPixels ? width : width * constants.baseAreaWidth / 100;//this.getContainer().width()
+                  var w = isPixels ? width : width * this._getMaxImageWidth() / 100;
                   if (0 < height) {
                      promise.callback(Math.round(width < height ? w * height / width : w));
                   }
@@ -3640,7 +3642,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                else {
-                  promise.callback(constants.defaultPreviewerSize);
+                  promise.callback(this._getMaxImageWidth());
                }
                return promise;
             },

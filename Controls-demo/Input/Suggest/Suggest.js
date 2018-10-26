@@ -34,7 +34,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
       _source: null,
       _suggestValue: '',
       _myTmpl: myTmpl,
-      _tagStyle: 'done',
+      _tagStyle: 'success',
       _events: '',
       _trim: false,
       _flag: 'custom',

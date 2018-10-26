@@ -1,7 +1,7 @@
 <Controls.DragNDrop.Container>
    <ws:partial
-         template="{{_options._template}}"
-         scope="{{_options}}"
+         template="{{_options.template}}"
+         scope="{{_options.templateOptions}}"
          on:close="_onCloseHandler()"
          on:controlresize="_onResizeHandler()"
          on:sendresult="_onResultHandler()"

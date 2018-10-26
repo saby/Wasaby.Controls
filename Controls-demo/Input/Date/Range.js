@@ -1,39 +1,23 @@
-define('Controls-demo/Input/Date/Range',
-   [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
+define('Controls-demo/Input/Date/Range', [
+   'Core/Control',
+   'wml!Controls-demo/Input/Date/Range',
+   'css!Controls-demo/Input/Date/Range'
+], function(
+   BaseControl,
+   template
+) {
+   'use strict';
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
-   ],
+   var ModuleClass = BaseControl.extend({
+      _template: template,
+      _startDate: new Date(2017, 0, 1, 12, 15, 30, 123),
+      _endDate: new Date(2017, 0, 2, 12, 15, 30, 123),
 
-   function(Control, template, config) {
-      'use strict';
-      var Component = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Date/Range',
-         _dataObject: null,
-         _componentOptions: null,
-         _beforeMount: function() {
-            this._dataObject = {
-               startValue: {
-                  readOnly: true
-               },
-               endValue: {
-                  readOnly: true
-               }
-            };
-            this._componentOptions = {
-               name: 'DateRange',
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
-         }
-      });
-      return Component;
+      _masks: [
+         'DD.MM.YY',
+         'DD.MM.YYYY'
+      ]
+
    });
+   return ModuleClass;
+});

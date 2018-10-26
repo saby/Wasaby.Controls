@@ -11,7 +11,11 @@
    .box-shadow(@shadow_DropdownList-default)
 }
 
-.controls-DropdownList__popup-shadow-suggestionsContainer{
+.controls-DropdownList__popup-top.controls-DropdownList__popup-shadow-suggestionsContainer{
+   .box-shadow(@shadow_suggestionsContainer-reverse);
+}
+
+.controls-DropdownList__popup-bottom.controls-DropdownList__popup-shadow-suggestionsContainer{
    .box-shadow(@shadow_suggestionsContainer);
 }
 
@@ -114,8 +118,8 @@
 
 .controls-DropdownList-cross {
    position: absolute;
-   right: @right-DropdownList-cross;
-   top: @top-DropdownList-cross;
+   right: @right_DropdownList-cross;
+   top: @top_DropdownList-cross;
    z-index: 2;
 }
 
@@ -143,12 +147,11 @@
    left: @margin-left_MenuButton_link_duplicate_head_small;
 }
 
-// чтобы убрать каскады нужно научить попап переворачиваться и сигналить об этом
-.controls-Popup-align-horizontal-left .controls-DropdownList__head{
+.controls-DropdownList__head-left {
    .flex-direction(row-reverse);
 }
 
-.controls-Popup-corner-vertical-bottom .controls-DropdownList__popup {
+.controls-DropdownList__popup-top {
    .flex-direction(column-reverse);
 }
 
@@ -163,9 +166,8 @@
 }
 
 .controls-Toolbar__menu-position {
-   //todo: жду крестик для темизации
-   margin-top: -6px;
-   margin-left: 6px - 2px;//border or ya hz chto eto takoe
+   margin-top: @margin-top_Toolbar-popup;
+   margin-left: @margin-left_Toolbar-popup;
 }
 
 .controls-DropdownList__additional {

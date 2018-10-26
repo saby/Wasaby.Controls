@@ -535,10 +535,16 @@ define([
             viewModelConstructor: ListViewModel,
             navigation: {
                view: 'infinity',
+               source: 'page',
                viewConfig: {
                   pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
                }
-            }
+            },
          };
          var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
@@ -554,7 +560,7 @@ define([
 
             //прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.handleListScroll(ctrl, 300, 'down');
-            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'disabled', stateEnd: 'disabled'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
@@ -1763,7 +1769,7 @@ define([
             assert.equal(callBackCount, 5);
          });
 
-         it('_listSwipe  multiSelectStatus = 1', function(done) {
+         it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var
                cfg = {
@@ -1798,7 +1804,7 @@ define([
                instance._listViewModel.goToNext();
                itemData = instance._listViewModel.getCurrent();
                itemData.multiSelectVisibility = true;
-               itemData.multiSelectStatus = 1;
+               itemData.multiSelectStatus = true;
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
@@ -1816,7 +1822,7 @@ define([
             return done;
          });
 
-         it('_listSwipe  multiSelectStatus = 0', function(done) {
+         it('_listSwipe  multiSelectStatus = false', function(done) {
             var callBackCount = 0;
             var
                cfg = {
@@ -1851,11 +1857,63 @@ define([
                instance._listViewModel.goToNext();
                itemData = instance._listViewModel.getCurrent();
                itemData.multiSelectVisibility = true;
-               itemData.multiSelectStatus = 0;
+               itemData.multiSelectStatus = false;
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
                done();
 
+            });
+            return done;
+         });
+
+         it('_listSwipe, multiSelectStatus = true, item is swiped', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                        callBackCount++;
+                     }
+                  }
+               };
+               instance._listViewModel.reset();
+               instance._listViewModel.goToNext();
+               itemData = instance._listViewModel.getCurrent();
+               itemData.multiSelectVisibility = true;
+               itemData.multiSelectStatus = true;
+               itemData.isSwiped = true;
+
+               instance._notify = function(eventName) {
+                  if (eventName === 'checkboxClick') {
+                     throw new Error('checkBoxClick shouldn\'t be called if the item is swiped');
+                  }
+               };
+
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(callBackCount, 1);
+
+               done();
             });
             return done;
          });

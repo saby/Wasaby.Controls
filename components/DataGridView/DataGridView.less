@@ -160,8 +160,8 @@
             content: '';
             position: absolute;
             bottom: 0;
-            left: @data-grid-cell-padding-right;
-            right: @data-grid-cell-padding-right;
+            left: 0;
+            right: 0;
             height: 1px;
             background: @background-color_grid_th_topRow_hasText_separator;
          }
@@ -477,7 +477,7 @@
          padding-left: @data-grid-ms-first-content-cell-padding-left;
       }
    }
-   
+
    &:not(.controls-ListView__hideCheckBoxes) > .controls-DataGridView__table {
       .check-box-width(@data-grid-td-visible-checkbox-width);
    }

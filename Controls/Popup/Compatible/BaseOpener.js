@@ -7,13 +7,15 @@ define('Controls/Popup/Compatible/BaseOpener', [
    'Core/Deferred',
    'Core/helpers/Number/randomId',
    'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil',
+   'Controls/Utils/isVDOMTemplate',
    'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
 ],
 function(cMerge,
    Context,
    Deferred,
    randomId,
-   OpenDialogUtil) {
+   OpenDialogUtil,
+   isVDOMTemplate) {
    /**
        * Слой совместимости для базового опенера для открытия старых шаблонов
        */
@@ -265,9 +267,9 @@ function(cMerge,
          cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+         cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
 
-         cfg.componentOptions.innerComponentOptions._template = cfg.template;
+         cfg.componentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
          cfg.border = false;
@@ -287,7 +289,7 @@ function(cMerge,
          this._setSizes(cfg, templateClass);
       },
 
-      _prepareConfigFromNewToOld: function(cfg) {
+      _prepareConfigFromNewToOld: function(cfg, template) {
          var newCfg = cMerge(cfg, {
             templateOptions: cfg.templateOptions || {},
             componentOptions: cfg.templateOptions || {},
@@ -298,7 +300,7 @@ function(cMerge,
                target: cfg.target,
                modal: cfg.isModal,
                handlers: cfg.handlers,
-               border: false
+               border: !isVDOMTemplate(template) //Если шаблон вдомный - кнопка закрытия не нужна
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
