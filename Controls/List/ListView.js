@@ -58,8 +58,8 @@ define('Controls/List/ListView', [
          },
 
          _beforeMount: function(newOptions) {
-            if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
-               this._groupTemplate = newOptions.itemsGroup.template;
+            if (newOptions.groupTemplate) {
+               this._groupTemplate = newOptions.groupTemplate;
             }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;

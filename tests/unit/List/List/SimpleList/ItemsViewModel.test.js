@@ -224,7 +224,7 @@ define([
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
 
-      it('itemsGroup', function() {
+      it('groupMethod', function() {
          var
             current,
             data = [
@@ -242,18 +242,16 @@ define([
             cfg = {
                items: items,
                keyProperty: 'id',
-               itemsGroup: {
-                  method: function(item) {
-                     if (item.get('group') === 'hidden') {
-                        return ControlsConstants.view.hiddenGroup;
-                     }
-                     return item.get('group');
+               groupMethod: function(item) {
+                  if (item.get('group') === 'hidden') {
+                     return ControlsConstants.view.hiddenGroup;
                   }
+                  return item.get('group');
                },
                displayProperty: 'title'
             },
             itemsViewModel = new ItemsViewModel(cfg);
-         assert.equal(itemsViewModel._display.getGroup(), cfg.itemsGroup.method, 'Grouping for display not applied. Error sending to display grouping method.');
+         assert.equal(itemsViewModel._display.getGroup(), cfg.groupMethod, 'Grouping for display not applied. Error sending to display grouping method.');
          assert.equal(itemsViewModel._display.getCount(), 9, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
          itemsViewModel.toggleGroup('group_1');
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');
