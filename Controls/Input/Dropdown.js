@@ -83,7 +83,7 @@ define('Controls/Input/Dropdown',
                this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
             } else {
                this._text = getPropValue(items[0], this._options.displayProperty);
-               this._icon = items[0].get('icon');
+               this._icon = getPropValue(items[0], 'icon');
             }
             if (items.length > 1) {
                this._text += ' и еще' + (items.length - 1);
