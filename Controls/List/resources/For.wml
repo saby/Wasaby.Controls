@@ -38,7 +38,7 @@
       template="wml!Controls/List/ItemTemplateWrapper"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
-      multiSelectTpl="{multiSelectTpl}}"
+      multiSelectTpl="{{multiSelectTpl}}"
       itemData="{{editingItemData}}"
       actionsType="{{itemActionsPosition}}"/>
 </ws:if>
