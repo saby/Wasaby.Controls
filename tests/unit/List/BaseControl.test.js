@@ -411,12 +411,12 @@ define([
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
-            BaseControl._private.viewResize(ctrl);
+            BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
                assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
 
                BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.viewResize(ctrl);
+               BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
                setTimeout(function() {
                   assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
