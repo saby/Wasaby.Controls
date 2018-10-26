@@ -92,6 +92,12 @@ define(
             };
             ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
          });
+
+         it('dataLoadCallback empty items', () => {
+            let ddl = getDropdown(config);
+            ddl._setText([]);
+            assert.equal(ddl._text, undefined);
+         });
       });
    }
 );
