@@ -83,7 +83,7 @@ define([
 
          //received state 3'rd argument
          mountResult = ctrl._beforeMount(cfg, {}, rs);
-         assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
+         assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
