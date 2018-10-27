@@ -20,20 +20,14 @@ define([
                'text',
                ['em',
                   'text',
-                  ['span',
-                     { 'style': 'text-decoration: underline;' },
-                     'text'
-                  ],
+                  ['span', { 'style': 'text-decoration: underline;' }, 'text'],
                   'text'
                ],
                'text'],
             'text'
          ],
          attributedNode = ['span', { 'class': 'someClass' }, 'text'],
-         linkNode = ['a',
-            { href: 'https://ya.ru' },
-            'https://ya.ru'
-         ],
+         linkNode = ['a', { href: 'https://ya.ru' }, 'https://ya.ru'],
          deepHtml = '<span style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
          linkHtml = '<a href="https://ya.ru">https://ya.ru</a>',
          decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a href="https://ya.ru" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="TODO" /></a></span>';
