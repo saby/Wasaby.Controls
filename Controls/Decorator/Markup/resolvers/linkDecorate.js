@@ -6,7 +6,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
 
    return function linkDecorate(json, parent) {
       // Decorate tag "a" only.
-      if (!Array.isArray(json) || Array.isArray(json[0]) || json[0] + '' !== 'a') {
+      if (!Array.isArray(json) || Array.isArray(json[0]) || json[0] != 'a') {
          return json;
       }
 
@@ -15,7 +15,10 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
          return json;
       }
 
-      // TODO: Decorate link only with text === href;
+      // Decorate link only with text == href;
+      if (!json[1] || !json[1].href || json[1].href != json[2]) {
+         return json;
+      }
 
       // Decorate link just in the end of paragraph.
       var last = parent.length - 1;
@@ -26,7 +29,22 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
          return json;
       }
 
-      // TODO: finish returning
-      return [json[0], json[1], ['img', {}]];
+      var linkAttrs = {};
+      for (var key in json[1]) {
+         if (json[1].hasOwnProperty(key)) {
+            linkAttrs[key] = json[1][key];
+         }
+      }
+      linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';
+
+      return ['span',
+         { 'class': 'LinkDecorator__wrap' },
+         ['a',
+            linkAttrs,
+            ['img',
+               { 'class': 'LinkDecorator__image', alt: linkAttrs.href, src: 'TODO' }
+            ]
+         ]
+      ];
    };
 });

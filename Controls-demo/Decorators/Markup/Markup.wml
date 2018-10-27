@@ -1,0 +1,11 @@
+<div>
+   <h1>Markup</h1>
+   Ввести строковое представление json-а:
+   <br />
+   <Controls.Input.Text on:valueChanged="_setJson()" on:keydown="_applyJson()" />
+   <Controls.Button on:click="_applyJson()" caption="подтвердить"/>
+   <br />
+   <br />
+   Результат:<br />
+   <Controls.Decorator.Markup value="{{ json }}" />
+</div>
