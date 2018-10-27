@@ -5,11 +5,7 @@ define('Controls/Popup/Opener/Stack',
    function(BaseOpener) {
 
       /**
-       * Действие открытия стековой панели.
-       *
-       * <a href="https://test-wi.sbis.ru/materials/demo-ws4-opener-stack">Демо-пример</a>.
-       * <u>Внимание</u>: временно демо-пример размещён на test-wi.sbis.ru.
-       * Для авторизации воспользуйтесь связкой логин/пароль как "Демо_тензор"/"Демо123".
+       * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
        * @class Controls/Popup/Opener/Stack
        * @control
@@ -17,6 +13,7 @@ define('Controls/Popup/Opener/Stack',
        * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/BaseOpener
+       * @mixes Controls/interface/IDialogOptions
        */
 
       var _private = {
@@ -32,9 +29,41 @@ define('Controls/Popup/Opener/Stack',
       var Stack = BaseOpener.extend({
 
          /**
-          * Открыть стек-панель
-          * @function Controls/Popup/Opener/Stack#open
-          * @param config конфигурация попапа
+          * Open stack popup.
+          * @param {Object} popupOptions Stack popup options.
+          * @returns {Undefined}
+          * @example
+          * Open stack with specified configuration.
+          * wml
+          * <pre>
+          *     <Controls.Popup.Opener.Stack name="stack">
+          *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+          *             <ws:templateOptions key="111"/>
+          *         </ws:popupOptions>
+          *     </Controls.Popup.Opener.Stack>
+          *
+          *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
+          *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
+          * </pre>
+          * js
+          * <pre>
+          *     Control.extend({
+          *        ...
+          *
+          *        _openStack() {
+          *            var popupOptions = {
+          *                autofocus: true
+          *            }
+          *            this._children.stack.open(popupOptions)
+          *        }
+          *
+          *        _closeStack() {
+          *            this._children.stack.close()
+          *        }
+          *        ...
+          *     });
+          * </pre>
+          * @see close
           */
          open: function(config) {
             config = _private.getStackConfig(config);
@@ -51,3 +80,50 @@ define('Controls/Popup/Opener/Stack',
 
       return Stack;
    });
+
+/**
+ * @name Controls/Popup/Opener/Stack#closePopupBeforeUnmount
+ * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#close
+ * Close Stack Popup.
+ * @returns {Undefined}
+ * @example
+ * wml
+ * <pre>
+ *     <Controls.Popup.Opener.Stack name="stack">
+ *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+ *             <ws:templateOptions key="111"/>
+ *         </ws:popupOptions>
+ *     </Controls.Popup.Opener.Stack>
+ *
+ *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
+ *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
+ * </pre>
+ * js
+ * <pre>
+ *     Control.extend({
+ *        ...
+ *
+ *        _openStack() {
+ *           var popupOptions = {
+ *               autofocus: true
+ *           }
+ *           this._children.stack.open(popupOptions)
+ *        }
+ *
+ *        _closeStack() {
+ *           this._children.stack.close()
+ *        }
+ *        ...
+ *    });
+ * </pre>
+ * @see open
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#isOpened
+ * Popup opened status.
+ */
