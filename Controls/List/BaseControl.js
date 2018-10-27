@@ -350,7 +350,8 @@ define('Controls/List/BaseControl', [
                   items: rs,
                   keyProperty: 'id',
                   parentProperty: 'parent',
-                  nodeProperty: 'parent@'
+                  nodeProperty: 'parent@',
+                  dropdownClassName: 'controls-itemActionsV__popup'
                },
                nativeEvent: context ? childEvent.nativeEvent : false
             });

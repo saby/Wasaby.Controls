@@ -154,6 +154,6 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-Toolbar__menu-position controls-itemActionsV__popup"
+            className="controls-Toolbar__menu-position"
             popupOptions="{{_popupOptions}}"/>
 </div>

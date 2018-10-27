@@ -53,6 +53,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   selectedKeys: instance._options.selectedKeys,
                   rootKey: item.get(instance._options.keyProperty),
                   showHeader: false,
+                  dropdownClassName: instance._options.dropdownClassName,
                   defaultItemTemplate: instance._options.defaultItemTemplate
                },
                corner: instance._popupOptions.corner,
