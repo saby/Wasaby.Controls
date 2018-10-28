@@ -1,7 +1,6 @@
 <ws:partial template="{{ _options.content }}"
             on:validateCreated="onValidateCreated()"
             on:validateDestroyed="onValidateDestroyed()"
-            on:hoverValidate="_hoverHandler()"
-            on:focusOutValidate="_focusOutHandler()"
-            on:focusInValidate="_focusInHandler()"
-            on:mouseLeaveValidate="_mouseLeaveHandler()"/>
+            on:focusOutController="_focusOutControllerHandler()"
+            on:focusInController="_focusInControllerHandler()"
+            on:closeInfoBox="_closeInfoBoxHandler()"/>

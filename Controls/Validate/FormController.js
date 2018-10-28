@@ -15,7 +15,7 @@ define('Controls/Validate/FormController',
 
       var Form = Base.extend({
          _template: template,
-         _element: null,
+         _activeElement: null,
          constructor: function(cfg) {
             Form.superclass.constructor.call(this, cfg);
             this._validates = [];
@@ -30,24 +30,18 @@ define('Controls/Validate/FormController',
             });
             e.stopPropagation();
          },
-         _focusInHandler: function(event, control) {
-            this._element = control;
+         _focusInControllerHandler: function(event, control) {
+            this._activeElement = control;
          },
-         _focusOutHandler: function() {
-            this._element = null; // уходит фокус с элемента
+         _focusOutControllerHandler: function() {
+            this._element = null;
          },
-         _mouseLeaveHandler: function(event, control) {
-            if (this._element) {
-               if (this._element !== control) {
-                  this._element.openInfoBox();
+         _closeInfoBoxHandler: function(event, control) {
+
+            if (this._activeElement) {
+               if (this._activeElement !== control) {
+                  this._activeElement.openInfoBox();
                }
-            } else {
-               control.closeInfoBox();
-            }
-         },
-         _hoverHandler: function(event, control) {
-            if (!control._isOpen) {
-               control.openInfoBox();
             }
          },
          submit: function() {

@@ -17,7 +17,7 @@ define('Controls/Validate/Controller',
 
       var Validate = Base.extend({
          _template: template,
-         _isOpen: false,
+         _isOpened: false,
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
@@ -25,7 +25,7 @@ define('Controls/Validate/Controller',
             this._notify('validateDestroyed', [this], { bubbling: true });
          },
          closeAll: function() {
-            this._isOpen = false;
+            this._isOpened = false;
          },
          _validationResult: undefined,
 
@@ -124,10 +124,10 @@ define('Controls/Validate/Controller',
             if (!(validationResult instanceof Deferred)) {
                this._forceUpdate();
             }
-            if (!validationResult) {
-               this.closeInfoBox();
-            } else {
+            if (validationResult ) {
                this.openInfoBox();
+            } else {
+               this.closeInfoBox();
             }
          },
 
@@ -135,16 +135,17 @@ define('Controls/Validate/Controller',
           * Показывает InfoBox с подсказкой
           */
          openInfoBox: function() {
-            // debugger;
-            if (this._validationResult && this._validationResult.length && !this._isOpen) {
-               // debugger;
-               this._isOpen = true;
+            if (this._validationResult && this._validationResult.length && !this._isOpened) {
+               this._isOpened = true;
                this._notify('openInfoBox', [{
                   target: this._container,
                   style: 'error',
+                  showDelay: 0,
+                  hideDelay: 0,
                   message: this._validationResult,
                   eventHandlers: {
-                     'onClose': this.closeAll.bind(this)
+                     onClose: this.closeAll.bind(this),
+                     onResult: this._mouseInfoboxHandler.bind(this)
                   }
                }], { bubbling: true });
             }
@@ -154,7 +155,8 @@ define('Controls/Validate/Controller',
           * Скрывает InfoBox с подсказкой
           */
          closeInfoBox: function() {
-            this._notify('closeInfoBox', [], { bubbling: true });
+            this._isOpened = false;
+            this._notify('closeInfoBox', [this], { bubbling: true });
          },
 
          /**

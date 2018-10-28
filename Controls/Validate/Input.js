@@ -14,18 +14,37 @@ define('Controls/Validate/Input',
          _focusOutHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
-            this._notify('focusOutValidate', [this], { bubbling: true });
+            this._notify('focusOutController', [this], { bubbling: true });
+         },
+         _hoverInfoboxHandler: function() {
+            clearTimeout(this._closeId);
          },
          _hoverHandler: function() {
-            this._notify('hoverValidate', [this], { bubbling: true });
+            clearTimeout(this._closeId);
+            if (!this._isOpened) {
+               this.openInfoBox();
+            }
          },
          _mouseLeaveHandler: function() {
             if (this.isValid()) {
-               this._notify('mouseLeaveValidate', [this], { bubbling: true });
+               var self = this;
+               this._closeId = setTimeout(function() {
+                  self.closeInfoBox();
+               }, 300);
+            }
+         },
+         _mouseInfoboxHandler: function(event) {
+            if (event.type === 'mouseenter') {
+               this._hoverInfoboxHandler(this);
+            } else {
+               this._mouseLeaveHandler(this);
             }
          },
          _focusInHandler: function() {
-            this._notify('focusInValidate', [this], { bubbling: true });
+            if (!this._isOpened) {
+               this.openInfoBox();
+            }
+            this._notify('focusInController', [this], { bubbling: true });
          },
          _cleanValid: function() {
             this.setValidationResult(null);
