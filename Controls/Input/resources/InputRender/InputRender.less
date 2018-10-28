@@ -118,16 +118,19 @@
    display: inline-flex;
 }
 
-.controls-InputRender__content:placeholder-shown + .controls-InputRender__placeholder {
-   display: inline-flex;
+.ws-is-chrome, .ws-is-desktop-safari, .ws-is-mobile-safari {
+   .controls-InputRender__content:placeholder-shown + .controls-InputRender__placeholder {
+      display: inline-flex;
+   }
 }
-
 /**
  * placeholder-shown не поддерживается в IE.
  * На поле весит аттрибут required и когда значение в поле нет будет применяться псевдоэлемент invalid.
  */
-.controls-InputRender__content:invalid + .controls-InputRender__placeholder {
-   display: inline-flex;
+body:not(.ws-is-chrome), body:not(.ws-is-desktop-safari), body:not(.ws-is-mobile-safari) {
+   .controls-InputRender__content:invalid + .controls-InputRender__placeholder {
+      display: inline-flex;
+   }
 }
 
 /**
