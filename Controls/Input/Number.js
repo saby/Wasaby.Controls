@@ -158,6 +158,10 @@ define('Controls/Input/Number',
                value = newOptions.value !== undefined ? String(newOptions.value) : '';
             }
 
+            if (newOptions.precision === 0 && value[0] === '-' && newOptions.value === 0) {
+               value = '-';
+            }
+
             this._numberViewModel.updateOptions({
                onlyPositive: newOptions.onlyPositive,
                integersLength: newOptions.integersLength,
