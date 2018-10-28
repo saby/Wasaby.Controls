@@ -124,7 +124,7 @@ define('Controls/Validate/Controller',
             if (!(validationResult instanceof Deferred)) {
                this._forceUpdate();
             }
-            if (validationResult ) {
+            if (validationResult) {
                this.openInfoBox();
             } else {
                this.closeInfoBox();
