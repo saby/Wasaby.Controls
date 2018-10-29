@@ -9,7 +9,6 @@ define('Controls/Dropdown/Controller',
    ],
 
    function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
-
       'use strict';
 
       /**
@@ -67,7 +66,7 @@ define('Controls/Dropdown/Controller',
                instance._selectedItems.push(null);
             } else {
                Chain(instance._items).each(function(item) {
-                  //fill the array of selected items from the array of selected keys
+                  // fill the array of selected items from the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                      instance._selectedItems.push(item);
                   }
@@ -88,10 +87,10 @@ define('Controls/Dropdown/Controller',
                case 'itemClick':
                   _private.selectItem.call(this, result.data);
 
-                  //FIXME тут необходимо перевести на кэширующий источник,
-                  //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
-                  //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
-                  //https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
+                  // FIXME тут необходимо перевести на кэширующий источник,
+                  // Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
+                  // Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
+                  // https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
@@ -121,10 +120,8 @@ define('Controls/Dropdown/Controller',
                if (receivedState) {
                   this._items = receivedState;
                   _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
-               } else {
-                  if (options.source) {
-                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
-                  }
+               } else if (options.source) {
+                  return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                }
             }
          },
@@ -148,8 +145,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _open: function(event) {
-
-            //Проверям что нажата левая кнопка мыши
+            // Проверям что нажата левая кнопка мыши
             if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
             }
@@ -170,11 +166,19 @@ define('Controls/Dropdown/Controller',
 
             if (this._options.source && !this._items) {
                _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
-                  open();
+                  if (items.getCount() !== 1) {
+                     open();
+                  } else {
+                     _private.selectItem.call(self, [items.at(0)]);
+                  }
                   return items;
                });
             } else {
-               open();
+               if (this._items.getCount() !== 1) {
+                  open();
+               } else {
+                  _private.selectItem.call(self, [this._items.at(0)]);
+               }
             }
          },
 
