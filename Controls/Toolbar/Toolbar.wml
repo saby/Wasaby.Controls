@@ -1,4 +1,4 @@
-<div class="controls-ToolBarV {{_options.className}}">
+<div class="controls-ToolBarV">
     <div class="controls-ToolBarV_content {{!_needShowMenu ? 'controls-ToolBarV_content__resetMargin'}}">
         <ws:for data="item in _items">
             <ws:if data="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}">
