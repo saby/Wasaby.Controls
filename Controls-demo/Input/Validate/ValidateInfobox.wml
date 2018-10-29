@@ -2,9 +2,10 @@
     <Controls.Validate.FormController>
         <ws:content>
             <div>
-                <Controls.Validate.Input   name="InputValidate" >
+                <Controls.Validate.Input   name="InputValidate" attr:style="margin: 30px" >
                     <ws:validators>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsINN</ws:Function>
+                        <ws:Function value="{{_value }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.Input.Text
@@ -16,7 +17,7 @@
                         />
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.Validate.Input   name="InputValidate2" >
+                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px"  >
                     <ws:validators>
                         <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsINN</ws:Function>
                     </ws:validators>

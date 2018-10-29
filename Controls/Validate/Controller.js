@@ -4,17 +4,24 @@ define('Controls/Validate/Controller',
       'wml!Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
-      'Core/Deferred'
+      'Core/Deferred',
+      'wml!Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
       template,
       IoC,
       ParallelDeferred,
-      Deferred
+      Deferred,
+      errorMessage
    ) {
       'use strict';
 
+      var _private = {
+         closeInfobox: function(self) {
+            self._isOpened = false;
+         }
+      };
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
@@ -23,9 +30,6 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
-         },
-         closeAll: function() {
-            this._isOpened = false;
          },
          _validationResult: undefined,
 
@@ -142,9 +146,10 @@ define('Controls/Validate/Controller',
                   style: 'error',
                   showDelay: 0,
                   hideDelay: 0,
-                  message: this._validationResult,
+                  template: errorMessage,
+                  templateOptions: { content: this._validationResult },
                   eventHandlers: {
-                     onClose: this.closeAll.bind(this),
+                     onClose: _private.closeAllInfobox(this),
                      onResult: this._mouseInfoboxHandler.bind(this)
                   }
                }], { bubbling: true });
