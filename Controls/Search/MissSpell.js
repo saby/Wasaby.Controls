@@ -13,19 +13,17 @@ define('Controls/Search/MissSpell',
     * @public
     * @author Герасимов А.М.
     *
-    * @css @line-height_MissSpell A line-height of the misspelling caption.
+    * @css @min-height_MissSpell A min-height of the misspelling control.
+    * @css @padding_MissSpell .
     * @css @color_MissSpell_caption A color of the misspelling caption.
     * @css @color_MissSpell_caption-hover A hover color of the misspelling caption.
-    * @css @spacing_MissSpell_horizontal A horizontal spacing (padding) on the left and right sides.
     */
    
    function(Control, template) {
       
       'use strict';
       
-      var MissSpell = Control.extend({
+      return Control.extend({
          _template: template
       });
-      
-      return MissSpell;
    });
