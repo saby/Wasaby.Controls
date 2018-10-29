@@ -4,9 +4,10 @@ define('Controls/Popup/InfoBox',
       'wml!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
-      'Controls/Application/TouchDetector/TouchContextField'
+      'Controls/Application/TouchDetector/TouchContextField',
+      'Controls/Utils/getZIndex'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
 
       'use strict';
 
@@ -113,6 +114,7 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], {bubbling: true});
             } else {
+               config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
             }
 

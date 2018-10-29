@@ -48,7 +48,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
-               if (Base.isNewEnvironment()) {
+               if (this._useVDOM()) {
                   this._popupIds.forEach(function(popupId) {
                      ManagerController.remove(popupId);
                   });
@@ -93,8 +93,9 @@ define('Controls/Popup/Opener/BaseOpener',
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                if (!self._isPopupCreating()) {
+                  cfg._vdomOnOldPage = self._options._vdomOnOldPage;
                   Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                     if (Base.isNewEnvironment()) {
+                     if (self._useVDOM()) {
                         self._popupIds.push(result);
 
                         //Call redraw to create emitter on scroll after popup opening
@@ -190,36 +191,35 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            if (Base.isNewEnvironment()) {
+            if (this._useVDOM()) {
                return !!ManagerController.find(this._getCurrentPopupId());
             }
             if (this._action) {
                return !!this._action.getDialog();
             }
             return null;
+         },
+         _useVDOM: function() {
+            return Base.isNewEnvironment() || this._options._vdomOnOldPage;
          }
       });
       Base.showDialog = function(rootTpl, cfg, controller, popupId, opener) {
          var def = new Deferred();
 
-         if (Base.isNewEnvironment()) {
-            if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-               if (popupId) {
-                  popupId = ManagerController.update(popupId, cfg);
-               } else {
-                  popupId = ManagerController.show(cfg, controller);
-               }
-               def.callback(popupId);
-            } else {
-               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-                  if (popupId) {
-                     popupId = ManagerController.update(popupId, cfg);
-                  } else {
-                     popupId = ManagerController.show(cfg, controller);
-                  }
-                  def.callback(popupId);
+         if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
+            if (!Base.isNewEnvironment()) {
+               Base.getManager().addCallback(function() {
+                  Base._openPopup(popupId, cfg, controller, def);
                });
+            } else {
+               if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+                  Base._openPopup(popupId, cfg, controller, def);
+               } else {
+                  requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+                     CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+                     Base._openPopup(popupId, cfg, controller, def);
+                  });
+               }
             }
          } else {
             var isFormController = false;
@@ -276,10 +276,20 @@ define('Controls/Popup/Opener/BaseOpener',
          return def;
       };
 
+      Base._openPopup = function(popupId, cfg, controller, def) {
+         if (popupId) {
+            popupId = ManagerController.update(popupId, cfg);
+         } else {
+            popupId = ManagerController.show(cfg, controller);
+         }
+         def.callback(popupId);
+      };
+
       Base.getDefaultOptions = function() {
          return {
             closePopupBeforeUnmount: true,
-            displayMode: 'single'
+            displayMode: 'single',
+            _vdomOnOldPage: false // Всегда открываем вдомную панель
          };
       };
 
@@ -293,6 +303,34 @@ define('Controls/Popup/Opener/BaseOpener',
       // TODO Compatible
       Base.isNewEnvironment = function() {
          return isNewEnvironment();
+      };
+
+      // TODO Compatible
+      Base.getManager = function() {
+         var managerContainer = document.body.querySelector('.controls-PopupContainer');
+         var deferred = new Deferred();
+         if (!managerContainer) {
+            managerContainer = document.createElement('div');
+            managerContainer.classList.add('controls-PopupContainer');
+            document.body.prepend(managerContainer);
+
+            require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
+               var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
+               // mount не синхронный, дожидаемся когда менеджер добавится в дом
+               if (!wrapper._mounted) {
+                  var intervalId = setInterval(function() {
+                     if (wrapper._mounted) {
+                        clearInterval(intervalId);
+                        deferred.callback();
+                     }
+                  }, 20);
+               } else {
+                  deferred.callback();
+               }
+            });
+            return deferred;
+         }
+         return deferred.callback();
       };
 
       Base._private = _private;

@@ -1,9 +1,10 @@
 define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
-      'Core/core-merge'
+      'Core/core-merge',
+      'Controls/Utils/getZIndex'
    ],
-   function(Sticky, coreMerge) {
+   function(Sticky, coreMerge, getZIndex) {
       /**
        * Opener for dropdown menu.
        *
@@ -97,6 +98,7 @@ define('Controls/Dropdown/Opener',
          open: function(config, opener) {
             _private.setTemplateOptions(this, config);
             _private.setPopupOptions(this, config);
+            config.zIndex = getZIndex(this);
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
@@ -106,7 +108,10 @@ define('Controls/Dropdown/Opener',
       DropdownOpener.getDefaultOptions = function() {
          return coreMerge(
             Sticky.getDefaultOptions(),
-            {closeOnTargetScroll: true});
+            {
+               closeOnTargetScroll: true,
+               _vdomOnOldPage: true
+            });
       };
 
       return DropdownOpener;
