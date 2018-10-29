@@ -98,6 +98,8 @@ define('Controls/Dropdown/Opener',
          open: function(config, opener) {
             _private.setTemplateOptions(this, config);
             _private.setPopupOptions(this, config);
+
+            // To place zIndex in the old environment
             config.zIndex = getZIndex(this);
             DropdownOpener.superclass.open.apply(this, arguments);
          }

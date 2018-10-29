@@ -114,6 +114,7 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], {bubbling: true});
             } else {
+               // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
             }
