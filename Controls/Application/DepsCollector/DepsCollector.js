@@ -1,8 +1,7 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
-   'Core/IoC',
    'Core/core-extend'
-], function(Logger, IoC, coreExtend) {
+], function(Logger, coreExtend) {
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
