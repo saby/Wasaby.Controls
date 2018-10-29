@@ -8,7 +8,7 @@ define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment'], function(i
    var ZINDEX_STEP = 50;
 
    return function getZIndex(instance) {
-      if (!isNewEnvironment()) {
+      if (document && !isNewEnvironment()) {
          var container = $(instance.getContainer());
          var parentArea = container.closest('.ws-float-area-stack-cut-wrapper, .controls-Popup, .controls-FloatArea, .ws-window');
          if (parentArea.length) {
