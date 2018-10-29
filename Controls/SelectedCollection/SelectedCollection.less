@@ -2,7 +2,7 @@
 	.flex-shrink(0);
 	.inline-flexbox();
 	.align-items(baseline);
-	padding: 0 @spacing_SelectedCollection-item 0 0;
+	padding-right: @spacing_SelectedCollection-between-itema;
 	box-sizing: border-box;
 	max-width: 100%;
 }
@@ -28,9 +28,9 @@
 }
 
 .controls-SelectedCollection__item__cross {
-	.icon-size-without-important(@icon-size_SelectedCollection_item-size);
+	.icon-size-without-important(@icon-size_SelectedCollection_cross);
 	.flex-shrink(0);
-	color: @color_SelectedCollection_item-cross;
+	color: @color_SelectedCollection_cross;
 	cursor: pointer;
 }
 
@@ -42,17 +42,17 @@
 }
 
 .controls-SelectedCollection__item__caption-size-default, .controls-SelectedCollection__item__caption-size-m {
-	font-size: @default-text-size;
+	font-size: @font-size_SelectedCollection-size-m;
 }
 
 .controls-SelectedCollection__item__caption-size-l {
-	font-size: @large-text-size;
+	font-size: @font-size_SelectedCollection-size-l;
 }
 
 .controls-SelectedCollection__item__caption-size-h {
-	font-size: @huge-text-size;
+	font-size: @font-size_SelectedCollection-size-h;
 	/* line-height тут нужен, из-за того, что 18 шрифт не влезает в поле ввода и ломает базовую линию */
-	line-height: @default-line-height;
+	line-height: @line-height_SelectedCollection-size-h;
 }
 
 .controls-SelectedCollection__item__caption-style-bold,
@@ -92,7 +92,7 @@
 	width: 0;
 	display: inline-block;
 	visibility: hidden;
-	line-height: @default-base-line-height;
+	line-height: @line-height_SelectedCollection__before;
 }
 
 .controls-SelectedCollection__collection_singleLine {
@@ -114,9 +114,9 @@
 
 .controls-SelectedCollection__popup {
 	border: @border-width_SelectedCollection-popup solid @border-color_SelectedCollection-popup;
-	box-shadow: @shadow_DropdownList-default;
+	box-shadow: @shadow_SelectedCollection-popup;
 	background-color: @background-color_SelectedCollection-popup;
-	padding-left: @padding_SelectedCollection-popup;
+	padding: @padding_SelectedCollection-popup;
 }
 
 .controls-SelectedCollection__popup-items {
