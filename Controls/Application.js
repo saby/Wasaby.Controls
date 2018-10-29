@@ -251,8 +251,8 @@ define('Controls/Application',
          },
 
          _keyPressHandler: function(event) {
-            if(constants.browser.isSafari) {
-               if(event.keyCode === 27) {
+            if (constants.browser.isSafari) {
+               if (event.keyCode === 27) {
                   event.preventDefault();
                }
             }
