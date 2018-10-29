@@ -11,7 +11,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
       }
 
       // Decorate link right inside paragraph.
-      if (!parent || parent[0] + '' !== 'p') {
+      if (!parent || parent[0] != 'p') {
          return json;
       }
 
