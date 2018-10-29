@@ -112,6 +112,7 @@ define('Controls/Dropdown/Controller',
 
       var Dropdown = Control.extend({
          _template: template,
+         _items: null,
 
          _beforeMount: function(options, context, receivedState) {
             this._selectedItems = [];
@@ -166,19 +167,11 @@ define('Controls/Dropdown/Controller',
 
             if (this._options.source && !this._items) {
                _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
-                  if (items.getCount() !== 1) {
-                     open();
-                  } else {
-                     _private.selectItem.call(self, [items.at(0)]);
-                  }
+                  (items.getCount() === 1) ? _private.selectItem.call(self, [items.at(0)]) : open();
                   return items;
                });
             } else {
-               if (this._items.getCount() !== 1) {
-                  open();
-               } else {
-                  _private.selectItem.call(self, [this._items.at(0)]);
-               }
+               (this._items.getCount() === 1) ? _private.selectItem.call(self, [this._items.at(0)]) : open();
             }
          },
 
