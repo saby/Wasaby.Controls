@@ -98,7 +98,7 @@ define('Controls/Filter/Button/Panel', [
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
-            if (getPropValue(item, 'visibility') !== undefined && !getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'visibility') === false) {
                hasAdditional = true;
             }
          });
