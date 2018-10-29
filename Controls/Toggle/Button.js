@@ -2,9 +2,10 @@ define('Controls/Toggle/Button', [
    'Core/Control',
    'Controls/Toggle/Button/Classes',
    'wml!Controls/Button/Button',
+   'Controls/Button/validateIconStyle',
    'css!theme?Controls/Button/Button',
    'css!theme?Controls/Toggle/Button/Button'
-], function(Control, Classes, template) {
+], function(Control, Classes, template, validateIconStyle) {
    /**
     * Button that switches between different states. It support different display styles, icon display styles and sizes
     *
@@ -62,18 +63,21 @@ define('Controls/Toggle/Button', [
     * Button with two caption have one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
     */
+   var stickyButton = [
+      'toggledLink',
+      'quickButton'
+   ];
 
    var _private = {
       optionsGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._style = currentButtonClass.style;
-         self._type = currentButtonClass.type;
-         self._typeWithSize = self._type + '_size-' + options.size;
-         self._styleWithIconStyle = self._style + '_iconStyle-' + options.iconStyle;
-         self._state = (options.value && currentButtonClass.toggled ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+         self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
+         self._state = (stickyButton.indexOf(self._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
          self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
-         self._icon = (options.icons ? (!options.value &&  options.icons[1] ? options.icons[1] : options.icons[0]) : '');
+         self._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
+         self._iconStyle = validateIconStyle.iconStyleTransformation(options.iconStyle);
       }
    };
    var ToggleButton = Control.extend({
@@ -95,7 +99,7 @@ define('Controls/Toggle/Button', [
       return {
          style: 'linkMain',
          size: 'l',
-         iconStyle: 'default'
+         iconStyle: 'secondary'
       };
    };
 
