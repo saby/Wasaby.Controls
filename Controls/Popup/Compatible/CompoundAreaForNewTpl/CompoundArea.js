@@ -224,7 +224,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
-               this._vDomTemplate._options = newOptions;
+               this._vDomTemplate._options.templateOptions = this._options.templateOptions;
                this._vDomTemplate._forceUpdate();
             }
          },
