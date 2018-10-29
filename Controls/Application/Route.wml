@@ -11,6 +11,7 @@
    resourceRoot="{{resourceRoot}}"
    RUMEnabled="{{ RUMEnabled }}"
    jsLinks="{{ jsLinks }}"
+   staticDomains="{{staticDomains}}"
    cssBundles="{{ cssBundles }}"
    servicesPath="{{ servicesPath }}"
    product="{{ product }}"
