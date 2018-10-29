@@ -164,14 +164,21 @@ define('Controls/Dropdown/Controller',
                };
                self._children.DropdownOpener.open(config, self);
             }
+            function itemsLoadCallback(items) {
+               if (items.getCount() === 1) {
+                  _private.selectItem.call(self, [items.at(0)]);
+               } else {
+                  open();
+               }
+            }
 
             if (this._options.source && !this._items) {
                _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
-                  (items.getCount() === 1) ? _private.selectItem.call(self, [items.at(0)]) : open();
+                  itemsLoadCallback(items);
                   return items;
                });
             } else {
-               (this._items.getCount() === 1) ? _private.selectItem.call(self, [this._items.at(0)]) : open();
+               itemsLoadCallback(this._items);
             }
          },
 
