@@ -47,6 +47,8 @@ define(
             rawData: items
          });
 
+         let selectItem = null;
+
          let config = {
             selectedKeys: '[2]',
             keyProperty: 'id',
