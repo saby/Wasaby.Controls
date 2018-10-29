@@ -1,8 +1,9 @@
 define('Controls/Operations/ReportDialog', [
    'Core/Control',
+   'Core/helpers/String/format',
    'wml!Controls/Operations/ReportDialog/ReportDialog',
    'css!Controls/Operations/ReportDialog/ReportDialog'
-], function(Control, template) {
+], function(Control, format, template) {
    'use strict';
 
    /**
@@ -40,6 +41,19 @@ define('Controls/Operations/ReportDialog', [
 
    return Control.extend({
       _template: template,
+      _message: null,
+      _beforeMount: function(cfg) {
+         if (cfg.operationsCount === cfg.operationsSuccess) {
+            this._message = rk('Выполнение операции завершилось успешно');
+         } else if (!cfg.errors || !cfg.errors.length) {
+            this._message = rk('Выполнение операции завершилось ошибкой');
+         } else {
+            this._message = format({
+               count: cfg.operationsCount,
+               errors: cfg.operationsCount - cfg.operationsSuccess
+            }, rk('$errors$s$ из $count$s$ операций были обработаны с ошибкой'));
+         }
+      },
       _onCloseClick: function() {
          this._notify('close', [], {bubbling: true});
       }

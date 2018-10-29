@@ -1,18 +1,12 @@
 <Controls.Popup.Templates.Dialog.ConfirmationTemplate size="big" style="{{_options.operationsCount === _options.operationsSuccess ? 'success' : 'error'}}" hideCross="true">
    <ws:contentArea>
       <div class="controls-ReportDialog__title">{{_options.title}}</div>
-      <ws:if data="{{_options.operationsCount === _options.operationsSuccess}}">
-         <div class="controls-ReportDialog__message">{[Выполнение операции завершилось успешно]}</div>
-      </ws:if>
-      <ws:else data="{{!_options.errors || !_options.errors.length}}">
-         <div class="controls-ReportDialog__message">{[Выполнение операции завершилось ошибкой]}</div>
-      </ws:else>
-      <ws:else>
-         <div class="controls-ReportDialog__message">{{_options.operationsCount - _options.operationsSuccess}} {[из]} {{_options.operationsCount}} {[операций были обработаны с ошибкой]}</div>
+      <div class="controls-ReportDialog__message">{{_message}}</div>
+      <ws:if data="{{_options.errors}}">
          <ws:for data="error in _options.errors">
             <div class="controls-ReportDialog__error">{{error}}</div>
          </ws:for>
-      </ws:else>
+      </ws:if>
    </ws:contentArea>
    <ws:footerArea>
       <div class="controls-ReportDialog__closeButtonContainer">

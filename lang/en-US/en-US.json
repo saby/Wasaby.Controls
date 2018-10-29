@@ -1,4 +1,5 @@
 {
+   "$count$s$ из $errors$s$ операций были обработаны с ошибкой": "$count$s$ out of $errors$s$ operations were processed with an error",
    ", по": ", on",
    "Calendar. Неверный формат даты": "Calendar. Invalid date format",
    "DataProcessor. Ошибка выгрузки данных": "DataProcessor. Error download data",
@@ -98,7 +99,6 @@
    "ОК": "OK",
    "ОперацииНадЗаписями@@Удалить записи?": "Remove items?",
    "ОперацииНадЗаписями@@Удалить текущую запись?": "Delete current record?",
-   "операций были обработаны с ошибкой": "operations were processed with an error",
    "Операция займет продолжительное время. Провести операцию?": "Operation will take long time. Perform operation?",
    "Основной": "Main",
    "Основной текст": "Main text",
