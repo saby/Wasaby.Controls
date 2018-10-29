@@ -732,6 +732,10 @@ define('Controls/List/BaseControl', [
          this._notify('itemActionsClick', [action, item]);
       },
 
+      _itemMouseMove: function(event, itemData, nativeEvent) {
+         this._notify('itemMouseMove', [itemData, nativeEvent]);
+      },
+
       _itemMouseDown: function(event, itemData, domEvent) {
          var
             items,
@@ -747,12 +751,13 @@ define('Controls/List/BaseControl', [
             dragStartResult = this._notify('dragStart', [items]);
             if (dragStartResult) {
                this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+               this._itemDragData = itemData;
             }
          }
       },
 
       _dragStart: function(event, dragObject) {
-         this._listViewModel.setDragItems(dragObject.entity.getItems());
+         this._listViewModel.setDragItems(dragObject.entity.getItems(), this._itemDragData);
       },
 
       _dragEnd: function(event, dragObject) {
@@ -787,7 +792,7 @@ define('Controls/List/BaseControl', [
       },
 
       _itemMouseEnter: function(event, itemData) {
-         if (this._options.itemsDragNDrop && this._isDragging && !itemData.isDragging) {
+         if (this._options.itemsDragNDrop && this._isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
       },

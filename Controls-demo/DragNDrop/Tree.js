@@ -14,6 +14,7 @@ define('Controls-demo/DragNDrop/Tree', [
       _gridHeader: null,
 
       _beforeMount: function() {
+         this._itemsReadyCallback = this._itemsReady.bind(this);
          this._viewSource = new TreeMemory({
             idProperty: 'id',
             data: DemoData
@@ -23,7 +24,8 @@ define('Controls-demo/DragNDrop/Tree', [
          }, {
             displayProperty: 'title'
          }, {
-            displayProperty: 'additional'
+            displayProperty: 'additional',
+            width: '150px'
          }];
          this._gridHeader = [{
             title: 'ID'
@@ -33,16 +35,30 @@ define('Controls-demo/DragNDrop/Tree', [
             title: 'Additional'
          }];
       },
+
+      _itemsReady: function(items) {
+         this._items = items;
+      },
+
       _dragStart: function(event, items) {
-         var hasBadItems = false;
+         var
+            hasBadItems = false,
+            firstItem = this._items.getRecordById(items[0]);
+
          items.forEach(function(item) {
-            if (item.getId() === 0) {
+            if (item === 0) {
                hasBadItems = true;
             }
          });
          return hasBadItems ? false : new ListEntity({
-            items: items
+            items: items,
+            mainText: firstItem.get('title'),
+            image: firstItem.get('image'),
+            additionalText: firstItem.get('additional')
          });
+      },
+      _dragEnd: function(event, items, target, position) {
+         this._children.listMover.moveItems(items, target, position);
       }
    });
 

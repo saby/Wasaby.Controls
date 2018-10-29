@@ -32,6 +32,7 @@
          on:itemContextMenu="_showActionsMenu()"
          on:itemMouseDown="_itemMouseDown()"
          on:itemMouseEnter="_itemMouseEnter()"
+         on:itemMouseMove="_itemMouseMove()"
          on:itemSwipe="_listSwipe()">
          <ws:viewTemplate>
             <ws:partial template="{{_options.viewName}}"/>
