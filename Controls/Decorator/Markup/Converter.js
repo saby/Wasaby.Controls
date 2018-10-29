@@ -8,12 +8,15 @@ define('Controls/Decorator/Markup/Converter', [
 
    function domToJson(dom) {
       if (dom.nodeType === 3) {
+         // Text node.
          return dom.nodeValue;
       }
 
+      // Tag name.
       var json = [dom.nodeName.toLowerCase()];
 
       if (dom.nodeType === 1 && dom.attributes.length > 0) {
+         // Element node with attributes.
          json[1] = {};
          for (var j = 0; j < dom.attributes.length; ++j) {
             var attribute = dom.attributes.item(j);
@@ -23,6 +26,7 @@ define('Controls/Decorator/Markup/Converter', [
 
       if (dom.hasChildNodes()) {
          for (var i = 0; i < dom.childNodes.length; ++i) {
+            // Recursive converting of children.
             var item = domToJson(dom.childNodes.item(i));
             json.push(item);
          }
@@ -31,10 +35,28 @@ define('Controls/Decorator/Markup/Converter', [
       return json;
    }
 
+   function wrapUrl(html) {
+      var parseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|<\/?[^>]*>))/g,
+         inLink = false;
+      return html.replace(parseRegExp, function(match, link, linkPrefix, email, text, end) {
+         if (link && !inLink) {
+            return '<a rel="noreferrer" href="' + (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>' + end;
+         }
+         if (email && !inLink) {
+            return '<a href="mailto:' + email + '">' + email + '</a>' + end;
+         }
+         if (~end.indexOf('<a')) {
+            inLink = true;
+         } else if (~end.indexOf('</a')) {
+            inLink = false;
+         }
+         return match;
+      });
+   }
+
    var htmlToJson = function(html) {
-      // TODO: Make linkWrap.
       var div = document.createElement('div');
-      div.innerHTML = html;
+      div.innerHTML = wrapUrl(html);
       return domToJson(div).slice(1);
    };
 
@@ -66,7 +88,8 @@ define('Controls/Decorator/Markup/Converter', [
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson
+      deepCopyJson: deepCopyJson,
+      wrapUrl: wrapUrl
    };
 
    return MarkupConverter;

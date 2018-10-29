@@ -19,16 +19,17 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function validAttributesInsertion(to, from) {
-      var validAttributes = validHtml.validAttributes;
+      var validAttributes = validHtml.validAttributes,
+         dataAttributeRegExp = /^data-([\w-])*$/gi;
       for (var key in from) {
-         if (from.hasOwnProperty(key) && validAttributes[key]) {
+         if (from.hasOwnProperty(key) && (validAttributes[key] || dataAttributeRegExp.test(key))) {
             to[key] = from[key];
          }
       }
    }
 
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
-      // TODO Спросить Дмитрия Зуева, не передавать стоит ли создать возможность опцией передавать третий парамент для резолвера.
+      // TODO Спросить Дмитрия Зуева, не стоит ли создать возможность опцией передавать третий парамент для резолвера.
       // TODO Например, для highlightResolver по задаче Баранова Максима нужно знать подстроку, которую нужно найти и заменить.
       // TODO Или, например, адрес сервиса декорирования ссылок для резолвера decoratedLink
       // TODO Если идея хорошая, согласовать с Андреем Бегуновым и реализовать (то есть дописать 3-5 строк)

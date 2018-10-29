@@ -37,6 +37,8 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
       }
       linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';
 
+      // TODO: get link decorate service address for src.
+
       return ['span',
          { 'class': 'LinkDecorator__wrap' },
          ['a',
