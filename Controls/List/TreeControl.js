@@ -17,6 +17,8 @@ define('Controls/List/TreeControl', [
 ) {
    'use strict';
 
+   var DRAG_MAX_OFFSET = 10;
+
    var _private = {
       clearSourceControllers: function(self) {
          for (var prop in self._nodesSourceControllers) {
@@ -250,6 +252,33 @@ define('Controls/List/TreeControl', [
 
       _markedKeyChangedHandler: function(event, key) {
          this._notify('markedKeyChanged', [key]);
+      },
+
+      _itemMouseMove: function(event, itemData, nativeEvent) {
+         var model = this._children.baseControl.getViewModel();
+
+         if (model.getDragTargetItem() && itemData.dispItem.isNode()) {
+            this._setDragPositionOnNode(itemData, nativeEvent);
+         }
+      },
+
+      _setDragPositionOnNode: function(itemData, event) {
+         var
+            topOffset,
+            bottomOffset,
+            dragTargetRect,
+            model = this._children.baseControl.getViewModel(),
+            dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
+
+         if (dragTarget) {
+            dragTargetRect = dragTarget.getBoundingClientRect();
+            topOffset = event.nativeEvent.pageY - dragTargetRect.top;
+            bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+
+            if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
+               model.setDragPositionOnNode(itemData, topOffset < DRAG_MAX_OFFSET ? 'before' : 'after');
+            }
+         }
       },
 
       _beforeUnmount: function() {
