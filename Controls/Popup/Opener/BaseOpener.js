@@ -21,7 +21,6 @@ define('Controls/Popup/Opener/BaseOpener',
       Deferred,
       isNewEnvironment
    ) {
-
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
@@ -98,7 +97,7 @@ define('Controls/Popup/Opener/BaseOpener',
                      if (self._useVDOM()) {
                         self._popupIds.push(result);
 
-                        //Call redraw to create emitter on scroll after popup opening
+                        // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
                      } else {
                         self._action = result;
@@ -155,11 +154,11 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#show
           */
          close: function() {
-            //TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
+            // TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
             if (this._getCurrentPopupId()) {
                ManagerController.remove(this._getCurrentPopupId());
 
-               //Ещё нужно удалить текущий id из массива всех id
+               // Ещё нужно удалить текущий id из массива всех id
                this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.closeDialog();
@@ -211,15 +210,13 @@ define('Controls/Popup/Opener/BaseOpener',
                Base.getManager().addCallback(function() {
                   Base._openPopup(popupId, cfg, controller, def);
                });
+            } else if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+               Base._openPopup(popupId, cfg, controller, def);
             } else {
-               if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+               requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
+                  CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                   Base._openPopup(popupId, cfg, controller, def);
-               } else {
-                  requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
-                     CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-                     Base._openPopup(popupId, cfg, controller, def);
-                  });
-               }
+               });
             }
          } else {
             var isFormController = false;
@@ -261,7 +258,7 @@ define('Controls/Popup/Opener/BaseOpener',
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
                if (compoundArea && !isFormController) {
-                  //Перерисовываем открытый шаблон по новым опциям
+                  // Перерисовываем открытый шаблон по новым опциям
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                   dialog.setTarget && dialog.setTarget($(newCfg.target));
@@ -316,6 +313,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
                var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
+
                // mount не синхронный, дожидаемся когда менеджер добавится в дом
                if (!wrapper._mounted) {
                   var intervalId = setInterval(function() {
