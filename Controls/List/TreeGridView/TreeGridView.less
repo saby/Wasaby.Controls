@@ -21,6 +21,21 @@
    min-height: @height_TreeGridView-nodeExpander;
    min-width: @width_TreeGridView-nodeExpander;
 }
+.controls-TreeGridView__dragTargetNode {
+   border-top: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
+   border-bottom: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+}
+.controls-TreeGridView__dragTargetNode_first {
+   border-left: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
+}
+.controls-TreeGridView__dragTargetNode_last {
+   border-right: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
+}
 .controls-TreeGrid__row-nodeExpanderPadding {
    visibility: hidden;
 }

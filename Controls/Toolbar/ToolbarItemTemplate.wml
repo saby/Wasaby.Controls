@@ -1,5 +1,5 @@
 <div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
-     title="{{item.title}}">
+     title="{{item.tooltip}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"

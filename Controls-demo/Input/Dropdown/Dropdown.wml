@@ -4,6 +4,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysSimple"
                                keyProperty="id"
                                displayProperty="title"
+							   attr:class="ControlsDemo-simple"
                                source="{{_createMemory(_simpleItems)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -33,6 +34,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysIcon"
                                keyProperty="id"
                                displayProperty="title"
+							   attr:class="ControlsDemo-iconLeft"
                                source="{{_createMemory(_iconItems)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">

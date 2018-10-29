@@ -159,6 +159,7 @@ define('Controls/Filter/Controller',
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
+                     var visibility = getPropValue(historyItem, 'visibility');
 
                      if (value !== undefined) {
                         setPropValue(item, 'value', value);
@@ -166,6 +167,10 @@ define('Controls/Filter/Controller',
 
                      if (textValue !== undefined && item.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
+                     }
+
+                     if (visibility !== undefined && item.hasOwnProperty('visibility')) {
+                        setPropValue(item, 'visibility', visibility);
                      }
                   }
                });

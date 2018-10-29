@@ -74,7 +74,7 @@ define([
       it('setDragTargetItem and setDragItems', function() {
          var
             dragItems = [1],
-            target = { index: 1, id: 2 },
+            target = { index: 1, key: 2 },
             notifyCont = 0,
             lvm = new ListViewModel({
                items: data,
@@ -96,7 +96,7 @@ define([
          assert.deepEqual(lvm._dragTargetPosition, { index: 1, position: 'after' });
          assert.equal(notifyCont, 2);
          lvm.setDragTargetItem(target);
-         assert.equal(notifyCont, 2);
+         assert.equal(notifyCont, 3);
       });
 
       it('_updateSelection', function() {
