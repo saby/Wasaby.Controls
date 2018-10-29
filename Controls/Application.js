@@ -8,6 +8,7 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
+      'Core/constants',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
@@ -39,6 +40,7 @@ define('Controls/Application',
       template,
       Deferred,
       BodyClasses,
+      constants,
       compatibility,
       AppData,
       ScrollContext,
@@ -246,6 +248,14 @@ define('Controls/Application',
 
          _closePreviewerHandler: function(event, type) {
             this._children.previewerOpener.close(type);
+         },
+
+         _keyPressHandler: function(event) {
+            if(constants.browser.isSafari) {
+               if(event.keyCode === 27) {
+                  event.preventDefault();
+               }
+            }
          },
 
          _cancelPreviewerHandler: function(event, action) {
