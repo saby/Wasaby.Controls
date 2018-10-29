@@ -149,7 +149,7 @@ define('Controls/Validate/Controller',
                   template: errorMessage,
                   templateOptions: { content: this._validationResult },
                   eventHandlers: {
-                     onClose: _private.closeAllInfobox(this),
+                     onClose: _private.closeInfobox(this),
                      onResult: this._mouseInfoboxHandler.bind(this)
                   }
                }], { bubbling: true });
