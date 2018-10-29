@@ -96,7 +96,7 @@ define(
          it('dataLoadCallback empty items', () => {
             let ddl = getDropdown(config);
             ddl._setText([]);
-            assert.equal(ddl._text, undefined);
+            assert.equal(ddl._text, '');
          });
       });
    }
