@@ -7,6 +7,7 @@
          nodeProperty="@parent"
          keyProperty="id"
          source="{{_getMemorySource(_defaultItems)}}"
+         pickerClassName="controls-Toolbar_test_pickerClassName"
          on:itemClick="_itemClick()"
       />
    </div>
