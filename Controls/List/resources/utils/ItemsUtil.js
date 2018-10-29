@@ -12,10 +12,10 @@ define('Controls/List/resources/utils/ItemsUtil', [
          if (cfg.itemsSortMethod) {
             projCfg.sort = cfg.itemsSortMethod;
          }
-         if (cfg.itemsGroup && cfg.itemsGroup.method) {
-            projCfg.group = cfg.itemsGroup.method;
+         if (cfg.groupMethod) {
+            projCfg.group = cfg.groupMethod;
          }
-         if (cfg.loadItemsStrategy == 'merge') {
+         if (cfg.loadItemsStrategy === 'merge') {
             projCfg.unique = true;
          }
          projCfg.filter = filter;
