@@ -1,5 +1,5 @@
 {
-   "$count$s$ из $errors$s$ операций были обработаны с ошибкой": "$count$s$ out of $errors$s$ operations were processed with an error",
+   "$errors$s$ из $count$s$ операций были обработаны с ошибкой": "$errors$s$ out of $count$s$ operations were processed with an error",
    ", по": ", on",
    "Calendar. Неверный формат даты": "Calendar. Invalid date format",
    "DataProcessor. Ошибка выгрузки данных": "DataProcessor. Error download data",
