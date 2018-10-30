@@ -6,10 +6,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
    return Control.extend({
       _template: template,
       _fillCallbacks: function(cfg) {
-         this._onCloseHandler = cfg._onCloseHandler;
-         this._onResizeHandler = cfg._onResizeHandler;
-         this._onResultHandler = cfg._onResultHandler;
-         this._onRegisterHandler = cfg._onRegisterHandler;
+         this._onCloseHandler = cfg.templateOptions._onCloseHandler;
+         this._onResizeHandler = cfg.templateOptions._onResizeHandler;
+         this._onResultHandler = cfg.templateOptions._onResultHandler;
+         this._onRegisterHandler = cfg.templateOptions._onRegisterHandler;
       },
       _beforeMount: function(cfg) {
          this._fillCallbacks(cfg);

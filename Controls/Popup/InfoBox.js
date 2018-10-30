@@ -4,9 +4,10 @@ define('Controls/Popup/InfoBox',
       'wml!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
-      'Controls/Application/TouchDetector/TouchContextField'
+      'Controls/Application/TouchDetector/TouchContextField',
+      'Controls/Utils/getZIndex'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
 
       'use strict';
 
@@ -113,6 +114,8 @@ define('Controls/Popup/InfoBox',
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], {bubbling: true});
             } else {
+               // To place zIndex in the old environment
+               config.zIndex = getZIndex(this._children.infoBoxOpener);
                this._children.infoBoxOpener.open(config);
             }
 
@@ -182,7 +185,7 @@ define('Controls/Popup/InfoBox',
                   this._closeId = null;
                   break;
                case 'mouseleave':
-                  if (this._options.trigger === 'hover') {
+                  if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
                      this._contentMouseleaveHandler();
                   }
                   break;

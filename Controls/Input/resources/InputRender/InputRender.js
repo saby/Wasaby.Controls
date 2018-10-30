@@ -7,9 +7,10 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
       'Controls/Utils/getWidth',
+      'Core/EventBus',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
 
       'use strict';
 
@@ -118,7 +119,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            var input = this._children.input.querySelector('.controls-InputRender__field');
+            var input = this._children.divinput.querySelector('.controls-InputRender__field');
             var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
@@ -166,7 +167,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(this._children.input.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
+               _private.hasHorizontalScroll(this._children.divinput.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
@@ -212,6 +213,10 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusinHandler: function(e) {
             this._inputActive = true;
 
+            if (cDetection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocus');
+            }
+
             if (!this._options.readOnly && this._options.selectOnClick) {
                //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
                if (cDetection.isIE) {
@@ -226,6 +231,10 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _focusoutHandler: function(e) {
             this._inputActive = false;
+
+            if (cDetection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocusOut');
+            }
 
             e.target.scrollLeft = 0;
          },

@@ -58,8 +58,8 @@ define('Controls/List/ListView', [
          },
 
          _beforeMount: function(newOptions) {
-            if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
-               this._groupTemplate = newOptions.itemsGroup.template;
+            if (newOptions.groupTemplate) {
+               this._groupTemplate = newOptions.groupTemplate;
             }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
@@ -124,14 +124,16 @@ define('Controls/List/ListView', [
          },
 
          _onItemMouseEnter: function(event, itemData) {
-            this._notify('itemMouseEnter', [itemData, event]);
+            this._notify('itemMouseEnter', [itemData, event], {bubbling: true});
          },
 
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
          //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
          _onItemMouseLeave: function() {},
 
-         _onItemMouseMove: function() {},
+         _onItemMouseMove: function(event, itemData) {
+            this._notify('itemMouseMove', [itemData, event]);
+         },
 
          _onItemWheel: function() {},
 

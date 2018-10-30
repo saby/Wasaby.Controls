@@ -53,10 +53,8 @@ define([
             items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title',
-            itemsGroup: {
-               method: function(item) {
-                  return item.get('type');
-               }
+            groupMethod: function(item) {
+               return item.get('type');
             }
          });
          eip = new EditInPlace();

@@ -186,6 +186,9 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.subscribe('onMarkedKeyChanged', function(event, key) {
                self._notify('onMarkedKeyChanged', key);
             });
+            this._model.subscribe('onGroupsExpandChange', function(event, changes) {
+               self._notify('onGroupsExpandChange', changes);
+            });
             this._columns = this._prepareColumns(this._options.columns);
             this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility !== 'hidden');
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
@@ -213,17 +216,7 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          _createModel: function(cfg) {
-            return new ListViewModel({
-               items: cfg.items,
-               keyProperty: cfg.keyProperty,
-               displayProperty: cfg.displayProperty,
-               itemsGroup: cfg.itemsGroup,
-               markedKey: cfg.markedKey,
-               selectedKeys: cfg.selectedKeys,
-               excludedKeys: cfg.excludedKeys,
-               multiSelectVisibility: cfg.multiSelectVisibility,
-               itemsReadyCallback: cfg.itemsReadyCallback
-            });
+            return new ListViewModel(cfg);
          },
 
          setColumnTemplate: function(columnTpl) {
@@ -448,7 +441,7 @@ define('Controls/List/Grid/GridViewModel', [
                current.columns = this._columns;
             }
 
-            if (this._options.itemsGroup) {
+            if (this._options.groupMethod) {
                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                   current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
                   return current;
@@ -603,8 +596,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setDragTargetItem(itemData);
          },
 
-         setDragItems: function(items) {
-            this._model.setDragItems(items);
+         getDragTargetItem: function() {
+            return this._model.getDragTargetItem();
+         },
+
+         setDragItems: function(items, itemData) {
+            this._model.setDragItems(items, itemData);
          },
 
          getActiveItem: function() {

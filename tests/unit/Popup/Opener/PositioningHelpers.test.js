@@ -263,13 +263,27 @@ define(
                height: 300
             };
             it('dialog positioning base', function() {
-               let position = Dialog.getPosition(1920, 1080, sizes , {popupOptions: {}});
+               let windowData = {
+                  width: 1920,
+                  height: 1080,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes , {popupOptions: {}});
                assert.equal(position.top, 390);
                assert.equal(position.left, 860);
+
+               windowData.scrollTop = 80;
+               position = Dialog.getPosition(windowData, sizes , {popupOptions: {}});
+               assert.equal(position.top, 470);
             });
 
             it('dialog positioning overflow container', function() {
-               let position = Dialog.getPosition(300, 300, sizes, {popupOptions: {}});
+               let windowData = {
+                  width: 300,
+                  height: 300,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: {}});
                assert.equal(position.top, 0);
                assert.equal(position.left, 50);
                assert.equal(position.width, undefined);
@@ -281,7 +295,12 @@ define(
                   minWidth: 300,
                   maxWidth: 600
                };
-               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
+               let windowData = {
+                  width: 500,
+                  height: 500,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 500);
             });
@@ -291,7 +310,12 @@ define(
                   minWidth: 600,
                   maxWidth: 700
                };
-               let position = Dialog.getPosition(500, 500, sizes, {popupOptions: popupOptions});
+               let windowData = {
+                  width: 500,
+                  height: 500,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {popupOptions: popupOptions});
                assert.equal(position.left, 0);
                assert.equal(position.width, 600);
             });
@@ -335,7 +359,12 @@ define(
 
             it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
-               let position = Dialog.getPosition(800, 600, sizes, {
+               let windowData = {
+                  width: 800,
+                  height: 600,
+                  scrollTop: 0
+               };
+               let position = Dialog.getPosition(windowData, sizes, {
                   position: itemPosition,
                   dragged: true
                });
@@ -343,7 +372,12 @@ define(
                assert.equal(position.top, itemPosition.top);
 
                itemPosition = {left: 700, top: 500, width: sizes.width, height: sizes.height};
-               position = Dialog.getPosition(800, 600, sizes, {
+               windowData = {
+                  width: 800,
+                  height: 600,
+                  scrollTop: 0
+               };
+               position = Dialog.getPosition(windowData, sizes, {
                   position: itemPosition,
                   dragged: true
                });
@@ -355,7 +389,6 @@ define(
          });
 
          describe('Stack', function() {
-            let stackShadowWidth = 8;
             Stack.getMaxPanelWidth = () => 1000;
             let item = {
                popupOptions: {
@@ -366,7 +399,7 @@ define(
 
             it('stack with config sizes', function() {
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.popupOptions.maxWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -380,7 +413,7 @@ define(
                StackController.getDefaultConfig(itemConfig);
                assert.equal(itemConfig.position.top, -10000);
                assert.equal(itemConfig.position.left, -10000);
-               assert.equal(itemConfig.position.width, 800 + stackShadowWidth);
+               assert.equal(itemConfig.position.width, 800);
                assert.equal(itemConfig.position.height, 950);
             });
 
@@ -423,13 +456,13 @@ define(
                assert.equal(itemConfig.popupOptions.maximized, false);
                assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
                let position = Stack.getPosition({top: 0, right: 0}, itemConfig);
-               assert.equal(position.width, popupOptions.minimizedWidth + stackShadowWidth);
+               assert.equal(position.width, popupOptions.minimizedWidth);
 
                StackController.elementMaximized(itemConfig, {}, true);
                assert.equal(itemConfig.popupOptions.maximized, true);
                assert.equal(itemConfig.popupOptions.templateOptions.maximized, true);
                position = Stack.getPosition({top: 0, right: 0}, itemConfig);
-               assert.equal(position.width, popupOptions.maxWidth + stackShadowWidth);
+               assert.equal(position.width, popupOptions.maxWidth);
 
                StackController._private.prepareMaximizedState(1600, itemConfig);
                assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
@@ -483,7 +516,7 @@ define(
 
             it('stack from target container', function() {
                var position = Stack.getPosition({top: 100, right: 100}, item);
-               assert.isTrue(position.width === item.popupOptions.maxWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.popupOptions.maxWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
@@ -494,7 +527,7 @@ define(
                   containerWidth: 800
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === item.containerWidth + stackShadowWidth);
+               assert.isTrue(position.width === item.containerWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -508,7 +541,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10) + stackShadowWidth);
+               assert.equal(position.width, parseInt(item.popupOptions.maxWidth, 10));
             });
 
             it('stack reduced width', function() {
@@ -520,7 +553,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === Stack.getMaxPanelWidth() + stackShadowWidth);
+               assert.isTrue(position.width === Stack.getMaxPanelWidth());
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
@@ -534,7 +567,7 @@ define(
                   }
                };
                var position = Stack.getPosition({top: 0, right: 400}, item);
-               assert.isTrue(position.width === item.popupOptions.minWidth + stackShadowWidth);
+               assert.equal(position.width, item.popupOptions.minWidth);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);

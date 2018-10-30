@@ -51,7 +51,7 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
        */
       getPosition: function(tCoords, item) {
          return {
-            width: _private.getPanelWidth(item, tCoords, this.getMaxPanelWidth()) + PANEL_SHADOW_WIDTH,
+            width: _private.getPanelWidth(item, tCoords, this.getMaxPanelWidth()),
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0

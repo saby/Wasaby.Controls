@@ -1,5 +1,5 @@
 <div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
-     title="{{item.title}}">
+     title="{{item.tooltip}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"
@@ -13,8 +13,8 @@
         <ws:else data="{{!!item.buttonStyle}}">
             <Controls.Button readOnly="{{item.buttonReadOnly}}" caption="{{item.buttonCaption}}" iconStyle="{{item.buttonIconStyle}}" icon="{{item.buttonIcon}}" style="{{item.buttonStyle}}" size="{{size}}"/>
         </ws:else>
-        <ws:else data="{{!!item.title}}">
+        <ws:if data="{{!!item.title}}">
             <span class="controls-ToolbarV__item_title">{{item.title}}</span>
-        </ws:else>
+        </ws:if>
     </ws:else>
 </div>

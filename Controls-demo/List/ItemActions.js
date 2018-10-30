@@ -80,6 +80,15 @@ define('Controls-demo/List/ItemActions', [
             }
          },
          {
+            id: 6,
+            title: 'call',
+            parent: 2,
+            'parent@': null,
+            handler: function() {
+               console.log('action profile Click');
+            }
+         },
+         {
             id: 4,
             icon: 'icon-Erase',
             iconStyle: 'error',
