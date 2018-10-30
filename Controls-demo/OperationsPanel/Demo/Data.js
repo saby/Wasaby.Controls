@@ -333,12 +333,6 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             title: 'Распечатать',
             parent: null
          }, {
-            id: 'plainList',
-            '@parent': false,
-            icon: 'icon-ListView',
-            title: 'Развернуть без подразделений',
-            parent: null
-         }, {
             id: 'sum',
             '@parent': false,
             icon: 'icon-Sum',
@@ -352,13 +346,26 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             title: 'Удалить',
             parent: null
          },
-         mergeOperation: {
-            id: 'merge',
-            icon: 'icon-Unite',
+         moveOperation: {
+            id: 'move',
+            icon: 'icon-Move',
             '@parent': false,
-            title: 'Merge employees',
+            title: 'Перенести',
             parent: null
-         }
+         },
+         itemActions: [{
+            id: 'remove',
+            icon: 'icon-Erase icon-error',
+            showType: 2
+         }, {
+            id: 'moveUp',
+            icon: 'icon-ArrowUp icon-primary',
+            showType: 2
+         }, {
+            id: 'moveDown',
+            icon: 'icon-ArrowDown icon-primary',
+            showType: 2
+         }]
       };
    return data;
 });
