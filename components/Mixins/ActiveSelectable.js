@@ -3,13 +3,15 @@
  */
 define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
    "Core/Deferred",
-   "WS.Data/Entity/Model",
+   "Data/type",
    "Core/core-instance",
    "SBIS3.CONTROLS/Utils/ToSourceModel",
    "SBIS3.CONTROLS/Utils/SourceUtil",
    "Controls/Utils/ArraySimpleValuesUtil",
    'Core/helpers/Object/isEmpty'
-], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil, isEmptyObject) {
+], function(Deferred, type, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil, isEmptyObject) {
+   var Model = type.Model;
+
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS/Mixins/ActiveSelectable
