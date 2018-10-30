@@ -3,7 +3,7 @@ let path = require('path'),
     nyc = require('nyc'),
     controlsPath = path.join(__dirname, 'Controls'),
     filePath = path.join(__dirname, 'File'),
-    componentsPath = path.join(__dirname, 'components'),
+    componentsPath = path.join(__dirname, 'SBIS3.CONTROLS'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
     coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
     coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
@@ -38,9 +38,9 @@ let rawCover = fs.readFileSync(coveragePath, 'utf8'),
     newCover = {},
     instrumenter = new nyc().instrumenter(),
     transformer = instrumenter.instrumentSync.bind(instrumenter),
-    controlsFiles = allFiles.filter(file => file.includes('Controls')),
-    fileFiles = allFiles.filter(file => file.includes('File')),
-    componentsFiles = allFiles.filter(file => file.includes('components'));
+    controlsFiles = allFiles.filter(file => file.includes('/Controls/')),
+    fileFiles = allFiles.filter(file => file.includes('/File/')),
+    componentsFiles = allFiles.filter(file => file.includes('/SBIS3.CONTROLS/'));
 
 // функция дописывает 0 покрытие для файлов которые не использовались в тестах
 // и меняет относительные пути на абсолютные

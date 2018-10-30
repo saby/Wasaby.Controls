@@ -8,7 +8,7 @@ define('Controls/List/ListView', [
    'wml!Controls/List/GroupTemplate',
    'wml!Controls/List/resources/ItemOutputWrapper',
    'wml!Controls/List/resources/ItemOutput',
-   'css!Controls/List/ListView/ListView'
+   'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
    ListViewTpl,
    defaultItemTemplate,

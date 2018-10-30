@@ -13,8 +13,9 @@ define('Controls/List/BaseControl', [
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
+   'Controls/Utils/tmplNotify',
 
-   'css!Controls/List/BaseControl/BaseControl'
+   'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(Control,
    IoC,
    cClone,
@@ -28,8 +29,8 @@ define('Controls/List/BaseControl', [
    Deferred,
    RecordSet,
    tUtil,
-   aUtil
-) {
+   aUtil,
+   tmplNotify) {
    'use strict';
 
    var _private = {
@@ -37,11 +38,10 @@ define('Controls/List/BaseControl', [
          if (self._sourceController) {
             _private.showIndicator(self);
 
-            //Need to create new Deffered, returned success result
-            //load() method may be fired with errback
+            // Need to create new Deffered, returned success result
+            // load() method may be fired with errback
             var resDeferred = new Deferred();
             self._sourceController.load(filter, self._sorting).addCallback(function(list) {
-
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
                }
@@ -52,7 +52,7 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
-               //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               // self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
                _private.handleListScroll(self, 0);
@@ -68,16 +68,14 @@ define('Controls/List/BaseControl', [
             });
 
             return resDeferred;
-         } else {
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
+         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
-
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
                }
@@ -103,14 +101,13 @@ define('Controls/List/BaseControl', [
 
                return addedItems;
 
-               //обновить начало/конец видимого диапазона записей и высоты распорок
-               //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+               // обновить начало/конец видимого диапазона записей и высоты распорок
+               // _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
                return _private.processLoadError(self, error, userErrback);
             });
-         } else {
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
+         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
 
@@ -122,15 +119,15 @@ define('Controls/List/BaseControl', [
                userErrback(error);
             }
 
-            if (!(error.processed || error._isOfflineMode)) {//Не показываем ошибку, если было прервано соединение с интернетом
-               //TODO новые попапы
-               /*InformationPopupManager.showMessageDialog(
+            if (!(error.processed || error._isOfflineMode)) {// Не показываем ошибку, если было прервано соединение с интернетом
+               // TODO новые попапы
+               /* InformationPopupManager.showMessageDialog(
 
                 opener: self,
 
                 status: 'error'
                 }
-                );*/
+                ); */
                error.processed = true;
             }
          }
@@ -139,10 +136,10 @@ define('Controls/List/BaseControl', [
 
       checkLoadToDirectionCapability: function(self) {
          if (self._needScrollCalculation) {
-            if (self._loadTriggerVisibility['up']) {
+            if (self._loadTriggerVisibility.up) {
                _private.onScrollLoadEdge(self, 'up');
             }
-            if (self._loadTriggerVisibility['down']) {
+            if (self._loadTriggerVisibility.down) {
                _private.onScrollLoadEdge(self, 'down');
             }
          }
@@ -174,17 +171,15 @@ define('Controls/List/BaseControl', [
             self._sourceController.setEdgeState(direction);
             _private.reload(self, self._options.filter, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
-                  self._notify('doScroll', ['top'], {bubbling: true});
+                  self._notify('doScroll', ['top'], { bubbling: true });
                } else {
-                  self._notify('doScroll', ['bottom'], {bubbling: true});
+                  self._notify('doScroll', ['bottom'], { bubbling: true });
                }
             });
+         } else if (direction === 'up') {
+            self._notify('doScroll', ['top'], { bubbling: true });
          } else {
-            if (direction === 'up') {
-               self._notify('doScroll', ['top'], {bubbling: true});
-            } else {
-               self._notify('doScroll', ['bottom'], {bubbling: true});
-            }
+            self._notify('doScroll', ['bottom'], { bubbling: true });
          }
       },
 
@@ -199,7 +194,6 @@ define('Controls/List/BaseControl', [
             };
 
          self._children.ScrollEmitter.startRegister(triggers);
-
       },
 
       onScrollShow: function(self) {
@@ -236,8 +230,6 @@ define('Controls/List/BaseControl', [
             });
 
             def.callback(scrollPagingCtr);
-
-
          }, function(error) {
             def.errback(error);
          });
@@ -246,7 +238,7 @@ define('Controls/List/BaseControl', [
       },
 
       showIndicator: function(self, direction) {
-         self._loadingState = direction ? direction : 'all';
+         self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
          setTimeout(function() {
             if (self._loadingState) {
@@ -283,7 +275,7 @@ define('Controls/List/BaseControl', [
          var hasMoreData;
 
          if (virtualWindowIsChanged) {
-            //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+            // _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
 
          if (self._scrollPagingCtr) {
@@ -312,11 +304,11 @@ define('Controls/List/BaseControl', [
        * @param self
        */
       initializeAverageItemsHeight: function(self) {
-         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
-         //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+         // TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         // Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
          var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
          if (res.changed) {
-            //_private.applyVirtualWindow(self, res.virtualWindow);
+            // _private.applyVirtualWindow(self, res.virtualWindow);
          }
       },
 
@@ -346,7 +338,7 @@ define('Controls/List/BaseControl', [
          }
          if (showActions && showActions.length) {
             var
-               rs = new RecordSet({rawData: showActions});
+               rs = new RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
@@ -390,8 +382,8 @@ define('Controls/List/BaseControl', [
       setPopupOptions: function(self) {
          self._popupOptions = {
             closeByExternalClick: true,
-            corner: {vertical: 'top', horizontal: 'right'},
-            horizontalAlign: {side: 'left'},
+            corner: { vertical: 'top', horizontal: 'right' },
+            horizontalAlign: { side: 'left' },
             eventHandlers: {
                onResult: self._closeActionsMenu,
                onClose: self._closeActionsMenu
@@ -438,13 +430,13 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IEditInPlace
+    * @mixes Controls/interface/IEditableList
     * @control
     * @public
     * @category List
     */
 
-   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -456,7 +448,7 @@ define('Controls/List/BaseControl', [
       _loadingState: null,
       _loadingIndicatorState: null,
 
-      //TODO пока спорные параметры
+      // TODO пока спорные параметры
       _sorting: undefined,
 
       _itemTemplate: null,
@@ -506,7 +498,7 @@ define('Controls/List/BaseControl', [
             if (newOptions.source) {
                self._sourceController = new SourceController({
                   source: newOptions.source,
-                  navigation: newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
+                  navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                });
 
                if (receivedState) {
@@ -532,7 +524,7 @@ define('Controls/List/BaseControl', [
             _private.startScrollEmitter(this);
          }
          if (_private.getItemsCount(this)) {
-            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+            // Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);
          }
       },
@@ -570,7 +562,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (filterChanged || sourceChanged) {
-            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback,  newOptions.dataLoadErrback);
+            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
          }
 
          if (newOptions.selectedKeys !== this._options.selectedKeys) {
@@ -579,7 +571,6 @@ define('Controls/List/BaseControl', [
       },
 
       _beforeUnmount: function() {
-
          if (this._sourceController) {
             this._sourceController.destroy();
          }
@@ -604,8 +595,8 @@ define('Controls/List/BaseControl', [
 
       __onPagingArrowClick: function(e, arrow) {
          switch (arrow) {
-            case 'Next': this._notify('doScroll', ['pageDown'], {bubbling: true}); break;
-            case 'Prev': this._notify('doScroll', ['pageUp'], {bubbling: true}); break;
+            case 'Next': this._notify('doScroll', ['pageDown'], { bubbling: true }); break;
+            case 'Prev': this._notify('doScroll', ['pageUp'], { bubbling: true }); break;
             case 'Begin': _private.scrollToEdge(this, 'up'); break;
             case 'End': _private.scrollToEdge(this, 'down'); break;
          }
@@ -624,7 +615,6 @@ define('Controls/List/BaseControl', [
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
          }
-
       },
 
       _onCheckBoxClick: function(e, key, status) {
@@ -686,61 +676,33 @@ define('Controls/List/BaseControl', [
          _private.checkLoadToDirectionCapability(this);
       },
 
-      /**
-      * Starts editing in place.
-      * @param {ItemEditOptions} options Options of editing.
-      * @returns {Core/Deferred}
-      */
-      editItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.editItem(options);
+      beginEdit: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginEdit(options);
       },
 
-      /**
-      * Starts adding.
-      * @param {AddItemOptions} options Options of adding.
-      * @returns {Core/Deferred}
-      */
-      addItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.addItem(options);
+      beginAdd: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginAdd(options);
       },
 
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.cancelEdit();
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
       },
 
-      _onBeforeItemAdd: function(e, options) {
-         return this._notify('beforeItemAdd', [options]);
-      },
+      _notifyHandler: tmplNotify,
 
-      _onBeforeItemEdit: function(e, options) {
-         return this._notify('beforeItemEdit', [options]);
-      },
-
-      _onAfterItemEdit: function(e, item, isAdd) {
-         this._notify('afterItemEdit', [item, isAdd]);
+      _onAfterBeginEdit: function(e, item, isAdd) {
+         this._notify('afterBeginEdit', [item, isAdd]);
          if (this._options.itemActions) {
             this._children.itemActions.updateItemActions(item, true);
          }
       },
 
-      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
-         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
-      },
-
-      _onAfterItemEndEdit: function(e, item, isAdd) {
-         this._notify('afterItemEndEdit', [item, isAdd]);
+      _onAfterEndEdit: function(e, item, isAdd) {
+         this._notify('afterEndEdit', [item, isAdd]);
          if (this._options.itemActions) {
             this._children.itemActions.updateItemActions(item);
          }
@@ -840,12 +802,12 @@ define('Controls/List/BaseControl', [
       }
    });
 
-   //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
-   /*ListView.getOptionTypes = function getOptionTypes(){
+   // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
+   /* ListView.getOptionTypes = function getOptionTypes(){
     return {
     dataSource: Types(ISource)
     }
-    };*/
+    }; */
    BaseControl._private = _private;
    BaseControl.getDefaultOptions = function() {
       return {

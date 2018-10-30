@@ -7,13 +7,14 @@ define('Controls/Application/Core',
       'wml!Controls/Application/Core',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'native-css'
+      'Core/Themes/ThemesController',
+      'native-css',
+      'Core/css-resolve'
    ],
    function(Control,
       template,
       AppData,
       HeadDataContext) {
-
       'use strict';
 
       var AppCore = Control.extend({
@@ -31,23 +32,17 @@ define('Controls/Application/Core',
             }
          },
          constructor: function(cfg) {
-
-            /*var self = this;
-            nativeCss.load = function(path, require, load, conf) {
-               load(null);
-               self.headDataCtx.pushCssLink(cssResolve(path));
-               self.headDataCtx.updateConsumers();
-            };*/
-
             try {
-               /*TODO: set to presentation service*/
+               /* TODO: set to presentation service */
                process.domain.req.compatible = false;
             } catch (e) {
             }
 
+            // TODO Нужно для совместимости. Убрать после синхронизации с WS.
+            // cfg.lite = true;
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.buildnumber, cfg.cssLinks, cfg.appRoot);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, cfg.resourceRoot, cfg.lite);
          },
          _getChildContext: function() {
             return {
@@ -73,5 +68,4 @@ define('Controls/Application/Core',
       });
 
       return AppCore;
-   }
-);
+   });

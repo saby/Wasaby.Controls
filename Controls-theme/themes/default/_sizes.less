@@ -1,3 +1,5 @@
+@multiplier: 0.75;
+
 //MenuButton
 @margin-top_MenuButton_button:             -6px;
 @margin-left_MenuButton_button:            -1px;
@@ -99,6 +101,10 @@
 @border-width_DateRangeBigChoose-range-selected-startEnd:     1px;
 @size_DateRangeBigChoose__stateButton_icon:                   16px;
 @size_DateRangeBigChoose__homeBtn_icon:                       16px;
+
+// EditActions
+@width_EditActions-cancelButton:                       round(58px * @multiplier);
+@height_EditActions-cancelButton:                      round(58px * @multiplier);
 
 // MonthSlider
 @height_MonthSlider:                   300px;
@@ -272,6 +278,10 @@
 @border-radius_Block:             0px;
 
 //DropdownList
+@thickness_DropdownList-group-separator:              1px;
+@margin_DropdownList-group:                           4px 12px;
+@right-DropdownList-cross:             5px;
+@top-DropdownList-cross:         ceil(18px * @multiplier);
 @max-height_DropdownList:       400px;
 @max-width_DropdownList:        700px;
 @height_DropdownList-item:      32px;
@@ -381,6 +391,7 @@
 //VDOM Operations.Button
 @height_OperationsButton:                             24px;
 @width_OperationsButton:                              24px;
+@width_OperationsPanelButton-separator:               1px;
 @font-size_OperationsButton__icon:                    18px;
 
    //VDOM Switch
@@ -524,13 +535,17 @@
 @right_itemActions_inside:               6px;
 @padding_itemActions_inside:             0 6px 3px 6px;
 @padding_itemActions_outside:            0 6px 3px 0;
-@padding_itemActions_action:             6px;
+@spacing_itemActions_action:             6px;
 @margin_itemActions_separator:           3px;
 @width_itemActions_separator:            1px;
 @width_itemActions_swipeShadow:          6px;
 @max-width_itemActions_title:            120px;
 @margin-bottom_Actions_outside:    29px;
 @margin-bottom_Actions_inside:     3px;
+@border-radius_ItemActions_action_bordered: @border-radius-IconButton;
+@border-style_ItemActions_action_bordered:  @border-style-IconButton;
+@thickness_ItemActions_action_bordered:     @border-width-IconButton;
+@box-shadow_ItemActions_action_bordered:    @box-shadow-IconButton;
 //SwipeACtions
 @font-size_swipe_icon_small:             24px;
 @font-size_swipe_icon_big:               32px;
@@ -610,6 +625,7 @@
 @margin-left_FastFilter-popup:              2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
+@box-shadow_IconButton:                  0px 1px 4px @color-IconButton__shadow; // TODO Оставить один вариант
 @height-IconButton_size-m:               24px;
 @width-IconButton_size-m:                24px;
 @height-IconButton_size-l:               28px;
@@ -685,6 +701,7 @@
 @width_ListView-group-expander: 16px;
 @spacing_ListView-group-between-text-expander: 6px;
 @spacing_ListView-group-between-rightTemplate-separator: 12px;
+@margin-right_ListView-itemsToolbar-closeButton:       round(8px * @multiplier);
 
 //EngineBrowser
 //VDOM TreeGridView

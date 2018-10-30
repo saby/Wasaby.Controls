@@ -127,11 +127,11 @@ define(['Controls/Explorer'], function(Explorer) {
          };
 
          result = instance._notifyHandler({}, 'itemActionsClick', 1, 2);
-         instance._notifyHandler({}, 'beforeItemAdd');
+         instance._notifyHandler({}, 'beforeBeginEdit');
          assert.equal(result, 123);
          assert.equal(events[0].eventName, 'itemActionsClick');
          assert.deepEqual(events[0].eventArgs, [1, 2]);
-         assert.equal(events[1].eventName, 'beforeItemAdd');
+         assert.equal(events[1].eventName, 'beforeBeginEdit');
          assert.deepEqual(events[1].eventArgs, []);
       });
    });
