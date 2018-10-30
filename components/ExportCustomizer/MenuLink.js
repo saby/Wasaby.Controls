@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
    [
       'Core/Deferred',
       'Core/core-merge',
+      'Core/RightsManager',
       'SBIS3.CONTROLS/CompoundControl',
       'WS.Data/Di',
       'WS.Data/Collection/RecordSet',
@@ -20,7 +21,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
       'css!SBIS3.CONTROLS/ExportCustomizer/MenuLink'
    ],
 
-   function (Deferred, cMerge, CompoundControl, Di, RecordSet, tmpl) {
+   function (Deferred, cMerge, RightsManager, CompoundControl, Di, RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -37,6 +38,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
        * @property {string} caption Название, которым будет заменено название первого статического пресета (опционально)
        * @property {Array<ExportPreset>} staticPresets Список неизменяемых пресетов (предустановленных настроек экспорта) (опционально)
        * @property {string} namespace Пространство имён для сохранения пользовательских пресетов (опционально)
+       * @property {string} accessZone Зона доступа пользовательских пресетов (опционально)
        */
 
       /**
@@ -112,7 +114,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
             var options = this._options;
             var presetGroup = options.presetGroup;
             var storage = this._storage;
-            return (storage && presetGroup && presetGroup.namespace ? storage.load(presetGroup.namespace) : Deferred.success(null)).addCallback(function (presets) {
+            var canUseCustom = !!(storage && presetGroup && presetGroup.namespace);
+            if (canUseCustom) {
+               var accessZone = presetGroup.accessZone;
+               canUseCustom = !accessZone || !!(RightsManager.getRights(accessZone)[accessZone] && RightsManager.READ_MASK);
+            }
+            return (canUseCustom ? storage.load(presetGroup.namespace, presetGroup.accessZone) : Deferred.success(null)).addCallback(function (presets) {
                var items = [];
                var statics = presetGroup ? presetGroup.staticPresets : null;
                if (statics && statics.length) {
@@ -139,7 +146,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
                if (firstItems && firstItems.length) {
                   items.unshift.apply(items, firstItems);
                }
-               items.push({id:'', title:rk('Создать новый шаблон', 'НастройщикЭкспорта'), className:'controls-ExportCustomizer-MenuLink__last'});
+               if (canUseCustom) {
+                  items.push({id:'', title:rk('Создать новый шаблон', 'НастройщикЭкспорта'), className:'controls-ExportCustomizer-MenuLink__last'});
+               }
                return new RecordSet({
                   rawData: items,
                   idProperty: 'id'
