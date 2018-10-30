@@ -1,51 +1,51 @@
 define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
 
    'use strict';
-   var classesOfButton = {
+
+   var deprecatedClassesOfButton = {
       iconButtonBorderedAdditional: {
          style: 'iconButtonBordered',
-         type: 'iconButtonBordered'
+         type: 'quickButton'
       },
 
       iconButtonBordered: {
          style: 'iconButtonBordered',
-         type: 'iconButtonBordered',
-         transparent: true
+         type: 'transparentQuickButton'
       },
 
       linkMain: {
-         style: 'link-main',
+         style: 'secondary',
          type: 'link'
       },
       linkMain2: {
-         style: 'link-main2',
+         style: 'info',
          type: 'link'
       },
       linkMain3: {
-         style: 'link-main3',
+         style: 'info',
          type: 'link'
       },
       linkAdditional: {
-         style: 'link-additional',
+         style: 'info',
          type: 'link'
       },
       linkAdditional2: {
-         style: 'link-additional2',
+         style: 'default',
          type: 'link'
       },
 
       linkAdditional3: {
-         style: 'link-additional3',
+         style: 'danger',
          type: 'link'
       },
 
       linkAdditional4: {
-         style: 'link-additional4',
+         style: 'success',
          type: 'link'
       },
 
       linkAdditional5: {
-         style: 'link-additional5',
+         style: 'magic',
          type: 'link'
       },
 
@@ -55,15 +55,16 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
       },
 
       buttonDefault: {
-         style: 'default',
+         style: 'secondary',
          type: 'button'
       },
 
       buttonAdd: {
-         style: 'primary-add',
+         style: 'primary',
          type: 'button'
       }
    };
+
    var Classes = {
 
       /**
@@ -72,12 +73,18 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
      * @returns {Object}
      */
       getCurrentButtonClass: function(style) {
-         var currentButtonClass;
-         if (classesOfButton.hasOwnProperty(style)) {
-            currentButtonClass = classesOfButton[style];
-         } else {
-            IoC.resolve('ILogger').error('Button', 'Для кнопки задан несуществующий стиль');
-            currentButtonClass = classesOfButton.buttonDefault;
+         var currentButtonClass = {};
+         if (deprecatedClassesOfButton.hasOwnProperty(style)) {
+            currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
+            currentButtonClass.style = deprecatedClassesOfButton[style].style;
+            if (style === 'linkMain2' || style === 'linkMain3') {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте компонент Controls/Label c модификаторами: controls-Label_underline-hovered и controls-Label_underline_color-hovered');
+            } else if (style === 'buttonAdd') {
+               currentButtonClass.buttonAdd = true;
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опцию iconStyle в различных значениях для изменения по наведению');
+            } else {
+               IoC.resolve('ILogger').error('Button', 'Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
+            }
          }
          return currentButtonClass;
       }
@@ -85,5 +92,4 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
    };
 
    return Classes;
-}
-);
+});
