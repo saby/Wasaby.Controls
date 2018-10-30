@@ -234,6 +234,49 @@ define(
             });
 
 
+            it('calculate state with nextPage', function () {
+               var pNav = new PositionNavigation({
+                  field: 'field',
+                  direction: 'both',
+                  position: 5,
+                  limit: 100
+               });
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true, nextPage:{before: [1], after: [7]}});
+               pNav.calculateState(dataRsbyLoad);
+               assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+               /**/
+
+               pNav = new PositionNavigation({
+                  field: 'field',
+                  direction: 'after',
+                  position: 5,
+                  limit: 100
+               });
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true, nextPage:[8]});
+               pNav.calculateState(dataRsbyLoad);
+               assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+               pNav = new PositionNavigation({
+                  field: 'field',
+                  direction: 'before',
+                  position: 5,
+                  limit: 100
+               });
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true, nextPage:[1]});
+               pNav.calculateState(dataRsbyLoad);
+               assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+
+            });
+
+
             it('prepare query params first load', function () {
                var params, pNav;
                pNav = new PositionNavigation({

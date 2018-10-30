@@ -99,8 +99,9 @@ define('Controls/Controllers/QueryParamsController/Position',
          },
 
          calculateState: function(list, loadDirection) {
-            var more, navDirection, edgeElem, navPosition;
+            var more, navDirection, edgeElem, metaNextPostion;
             more = list.getMetaData().more;
+            metaNextPostion = list.getMetaData().nextPosition;
             if (typeof more === 'boolean') {
                if (loadDirection || this._options.direction !== 'both') {
                   navDirection = _private.resolveDirection(loadDirection, this._options.direction);
@@ -118,14 +119,42 @@ define('Controls/Controllers/QueryParamsController/Position',
                }
             }
 
-            if (list.getCount()) {
-               if (loadDirection !== 'down') {
-                  edgeElem = list.at(0);
-                  this._beforePosition = _private.resolvePosition(edgeElem, this._options.field);
+            //if we have "nextPosition" in meta we must set this position for next query
+            //else we set this positions from records
+            if (metaNextPostion) {
+               if (metaNextPostion instanceof Array) {
+                  if (loadDirection || this._options.direction !== 'both') {
+                     if (loadDirection !== 'down') {
+                        this._beforePosition = metaNextPostion;
+                     } else if (loadDirection !== 'up') {
+                        this._afterPosition = metaNextPostion;
+                     }
+                  }
+                  else {
+                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
+                  }
                }
-               if (loadDirection !== 'up') {
-                  edgeElem = list.at(list.getCount() - 1);
-                  this._afterPosition = _private.resolvePosition(edgeElem, this._options.field);
+               else {
+                  if (!loadDirection && this._options.direction === 'both') {
+                     this._beforePosition = metaNextPostion.before;
+                     this._afterPosition = metaNextPostion.after;
+                  } else {
+                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
+                  }
+
+               }
+
+            }
+            else {
+               if (list.getCount()) {
+                  if (loadDirection !== 'down') {
+                     edgeElem = list.at(0);
+                     this._beforePosition = _private.resolvePosition(edgeElem, this._options.field);
+                  }
+                  if (loadDirection !== 'up') {
+                     edgeElem = list.at(list.getCount() - 1);
+                     this._afterPosition = _private.resolvePosition(edgeElem, this._options.field);
+                  }
                }
             }
          },
