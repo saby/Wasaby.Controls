@@ -440,6 +440,5 @@ function(cMerge,
          var initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
          return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
       }
-
    };
 });
