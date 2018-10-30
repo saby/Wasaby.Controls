@@ -13,11 +13,17 @@ define('Controls/Utils/DOMUtil', function() {
       width: function(container) {
          var
             computedStyle,
+            containerWidth;
+
+         if (jQuery && container instanceof jQuery) {
+            containerWidth = container.width();
+         } else if (container instanceof window.Node) {
             containerWidth = container.clientWidth;
 
-         if (window.getComputedStyle) {
-            computedStyle = window.getComputedStyle(container);
-            containerWidth -= parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
+            if (window.getComputedStyle) {
+               computedStyle = window.getComputedStyle(container);
+               containerWidth -= parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
+            }
          }
 
          return containerWidth;
