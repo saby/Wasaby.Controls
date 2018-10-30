@@ -429,9 +429,9 @@ node('controls') {
 					"""# UTF-8
 					[general]
 					browser = ${params.browser_type}
-					SITE = http://test-autotest90:30010
+					SITE = http://${NODE_NAME}:30010
 					SERVER = test-autotest-db1:5434
-					BASE_VERSION = css_test-autotest901
+					BASE_VERSION = css_${NODE_NAME}${ver}
 					DO_NOT_RESTART = True
 					SOFT_RESTART = ${soft_restart}
 					NO_RESOURCES = True
@@ -447,7 +447,7 @@ node('controls') {
 						"""# UTF-8
 						[general]
 						browser = ${params.browser_type}
-						SITE = http://test-autotest90:30010
+						SITE = http://${NODE_NAME}:30010
 						DO_NOT_RESTART = True
 						SOFT_RESTART = False
 						NO_RESOURCES = True
@@ -457,7 +457,7 @@ node('controls') {
 						WAIT_ELEMENT_LOAD = 20
 						HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
 						SERVER = test-autotest-db1:5434
-						BASE_VERSION = css_test-autotest901
+						BASE_VERSION = css_${NODE_NAME}${ver}
 						#BRANCH=True
 						[regression]
 						IMAGE_DIR = ${img_dir}
