@@ -15,7 +15,7 @@ define('Controls/Utils/DOMUtil', function() {
             computedStyle,
             containerWidth;
 
-         if (jQuery && container instanceof jQuery) {
+         if (window.jQuery && container instanceof window.jQuery) {
             containerWidth = container.width();
          } else if (container instanceof window.Node) {
             containerWidth = container.clientWidth;
