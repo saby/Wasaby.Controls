@@ -232,12 +232,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             var allFields = options.allFields;
-            var presetsOptions;
-            var usePresets = options.usePresets;
-            if (usePresets) {
-               var accessZone = options.presetAccessZone;
-               usePresets = !accessZone || !!(RightsManager.getRights([accessZone])[accessZone] & RightsManager.READ_MASK);
+            var accessZone = options.presetAccessZone;
+            var canUsePresets = true;
+            var canChangePresets = true;
+            if (accessZone) {
+               var rights = RightsManager.getRights([accessZone])[accessZone];
+               canUsePresets = !!(rights & RightsManager.WRITE_MASK);
+               canChangePresets = !!(rights & RightsManager.WRITE_MASK);
             }
+            var presetsOptions;
+            var usePresets = options.usePresets && canUsePresets;
             if (usePresets) {
                var staticPresets = options.staticPresets;
                var hasStaticPresets = !!(staticPresets && staticPresets.length);
@@ -281,13 +285,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                }
             }
             var serviceParams = options.serviceParams;
+            var readOnly = usePresets && !canChangePresets;
             options._scopes = {
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   fieldGroupTitles: options.fieldGroupTitles || undefined,
                   allFields: allFields,
-                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  readOnly: readOnly
                },
                formatter: {
                   title: options.formatterTitle,
@@ -295,7 +301,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
                   fileUuid: !usePresets && fileUuid ? fileUuid : undefined,
-                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
+                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined,
+                  readOnly: readOnly
                }
             };
          },

@@ -130,7 +130,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                /**
                 * @cfg {string|number} Идентификатор потребителя (обычно пресета)
                 */
-               consumerId: null
+               consumerId: null,
+               /**
+                * @cfg {bolean} Допускаются ли изменения
+                */
+               readOnly: null
             },
             // Массив обещаний, ожидающих результатов вызовов форматера
             _promises: [],
@@ -168,10 +172,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
                formatter.canEditInApp().addCallback(function (isAllow) {
                   this._isAppAllowed = isAllow;
                }.bind(this));
-               this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
+               var options = this._options;
+               if (!options.readOnly) {
+                  this._formatterMenu = this.getChildControlByName('controls-ExportCustomizer-Formatter-View__formatterMenu');
+               }
                this._preview = this.getContainer().find('.controls-ExportCustomizer-Formatter-View__preview img');
                this._bindEvents();
-               var options = this._options;
                var fieldIds = options.fieldIds;
                if (fieldIds && fieldIds.length) {
                   this._checkExistence().addCallback(function () {
@@ -191,34 +197,36 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          },
 
          _bindEvents: function () {
-            this.subscribeTo(this._formatterMenu, 'onActivated', function (evtName) {
-               if (!this._isAppAllowed) {
-                  this._formatterMenu.hidePicker();
-                  this._startFormatEditing(false);
-               }
-            }.bind(this));
+            if (!this._options.readOnly) {
+               this.subscribeTo(this._formatterMenu, 'onActivated', function (evtName) {
+                  if (!this._isAppAllowed) {
+                     this._formatterMenu.hidePicker();
+                     this._startFormatEditing(false);
+                  }
+               }.bind(this));
 
-            this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
-               this._startFormatEditing(selectedId === 'app');
-            }.bind(this));
+               this.subscribeTo(this._formatterMenu, 'onMenuItemActivate', function (evtName, selectedId) {
+                  this._startFormatEditing(selectedId === 'app');
+               }.bind(this));
 
-            this.subscribeTo(this._exportFormatter, 'editStart', function () {
-               this._onFormatEditStarted();
-            }.bind(this));
+               this.subscribeTo(this._exportFormatter, 'editStart', function () {
+                  this._onFormatEditStarted();
+               }.bind(this));
 
-            this.subscribeTo(this._exportFormatter, 'edit', function () {
-               this._onFormatEdited();
-            }.bind(this));
+               this.subscribeTo(this._exportFormatter, 'edit', function () {
+                  this._onFormatEdited();
+               }.bind(this));
 
-            this.subscribeTo(this._exportFormatter, 'editEnd', function (evtName, isChanged) {
-               this._onFormatEditEnded(isChanged);
-            }.bind(this));
+               this.subscribeTo(this._exportFormatter, 'editEnd', function (evtName, isChanged) {
+                  this._onFormatEditEnded(isChanged);
+               }.bind(this));
 
-            this._preview.on('click', function () {
-               if (this.isEnabled()) {
-                  this._startFormatEditing(false);
-               }
-            }.bind(this));
+               this._preview.on('click', function () {
+                  if (this.isEnabled()) {
+                     this._startFormatEditing(false);
+                  }
+               }.bind(this));
+            }
          },
 
          /**
@@ -571,10 +579,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           */
          _updatePreviewStartOnImgGet: function (cache) {
             var img = this._preview[0];
+            var options = this._options;
             img.onload = img.onerror = this._updatePreviewStartOnImgComplete.bind(this);
             img.src = cache.src;
             img.width = PREVIEW_SCALE*cache.width;
-            img.title = this._options.previewTitle;
+            img.title = !options.readOnly ? options.previewTitle : '';
             this._preview.removeClass('ws-disabled').addClass('ws-enabled');
          },
 
