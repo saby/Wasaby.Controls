@@ -7,19 +7,14 @@ define('Controls/Popup/Opener/Confirmation',
       'use strict';
 
       /**
-       * Хелпер открытия окна подтверждения
+       * Component that opens the confirmation popup.
        * @class Controls/Popup/Opener/Confirmation
        * @extends Core/Control
+       * @mixes Controls/interface/IConfirmationOptions
        * @control
        * @public
        * @category Popup
        * @author Красильников А.С.
-       */
-
-      /**
-       * @function Controls/Popup/Opener/Confirmation#open
-       * Открыть диалоговое окно
-       * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/Popup/Opener/Confirmation/Dialog}.
        */
 
       var Confirmation = BaseOpener.extend({
@@ -37,6 +32,36 @@ define('Controls/Popup/Opener/Confirmation',
                this._resultDef = null;
             }
          },
+
+         /**
+          * Open confirmation popup.
+          * @param config Confirmation options.
+          * @returns {Deferred} The deferral will end with the result when the user closes the popup.
+          * @remark
+          * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
+          * @example
+          * wml
+          * <pre>
+          *    <Controls.Popup.Opener.Confirmation name="confirmationOpener">
+          *    </Controls.Popup.Opener.Confirmation>
+          *
+          *    <Controls.Button name="openConfirmation" caption="open confirmation" on:click="_open()"/>
+          * </pre>
+          * js
+          * <pre>
+          *     Control.extend({
+          *       ...
+          *
+          *        _open() {
+          *           var config= {
+          *              message: 'Сохранить изменения?'
+          *              type: 'yesnocancel'
+          *           }
+          *           this._children.confirmationOpener.open(config)
+          *        }
+          *     });
+          * </pre>
+          */
 
          open: function(templateOptions) {
             this._resultDef = new Deferred();

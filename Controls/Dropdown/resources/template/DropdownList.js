@@ -53,6 +53,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   selectedKeys: instance._options.selectedKeys,
                   rootKey: item.get(instance._options.keyProperty),
                   showHeader: false,
+                  dropdownClassName: instance._options.dropdownClassName,
                   defaultItemTemplate: instance._options.defaultItemTemplate
                },
                corner: instance._popupOptions.corner,
@@ -102,8 +103,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
             }
-            if (config.itemsGroup && config.itemsGroup.template) {
-               this._groupTemplate = config.itemsGroup.template;
+            if (config.groupTemplate) {
+               this._groupTemplate = config.groupTemplate;
             }
 
             if (config.showHeader) {
@@ -141,7 +142,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
-                  itemsGroup: newOptions.itemsGroup
+                  groupTemplate: newOptions.groupTemplate,
+                  groupMethod: newOptions.groupMethod,
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();

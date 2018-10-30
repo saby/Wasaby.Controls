@@ -1,9 +1,10 @@
-define('Controls/interface/IStickyOpener', [], function() {
+define('Controls/interface/IStackOptions', [], function() {
 
    /**
-    * Sticky popup options.
+    * Stack popup options.
     *
-    * @interface Controls/interface/IStickyOpener
+    * @interface Controls/interface/IStackOptions
+    * @typedef Object
     * @public
     */
 
@@ -18,57 +19,51 @@ define('Controls/interface/IStickyOpener', [], function() {
     * @property {String|Template} template Template inside popup.
     * @property {String|Template} templateOptions Template options inside popup.
     * @property {Object} eventHandlers Callback functions on popup events.
-    * @property {Integer} corner Sets the popup build point relative target.
-    * @property {Integer} horizontalAlign Sets the horizontal alignment of the popup.
-    * @property {Integer} verticalAlign Sets the vertical alignment of the popup.
-    * @property {Integer} target The maximum width of the panel in a maximized state.
-    * @property {Integer} minWidth The target relative to which the popup is positioned.
-    * @property {Integer} maxWidth The minimum width of popup.
-    * @property {Integer} minHeight The maximum height of popup.
-    * @property {Integer} maxHeight The maximum height of popup.
-    * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
+    * @property {Integer} minWidth The minimum width of popup.
+    * @property {Integer} maxWidth The maximum width of popup.
+    * @property {Integer} minimizedWidth The width of the panel in a minimized state.
+    * @property {Boolean} maximize Determines whether the control is displayed in full screen.
     */
 
    /**
     * @cfg {PopupOptions[]} Sets the popup configuration.
-    * @name Controls/interface/IStickyOpener#popupOptions
+    * @name Controls/interface/IStackOptions#popupOptions
     * @default {}
     * @remark
     * PopupOptions can be set both on the opener options and passed to the open method. PopupOptions passed to the open method will be merged with popupOptions declared on the open options.
     * @example
     * wml
     * <pre>
-    *     <Controls.Popup.Opener.Sticky name="sticky">
-    *         <ws:popupOptions template="Controls-demo/Popup/TestDialog">
-    *             <ws:verticalAlign side="bottom"/>
-    *             <ws:horizontalAlign side="left"/>
-    *             <ws:corner vertical="bottom" horizontal="left"/>
+    *     <Controls.Popup.Opener.Stack name="stack">
+    *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}" autofocus="{{false}}">
+    *             <ws:templateOptions key="111"/>
+    *             <ws:eventHandlers onResult="{{_onResultHandler}}" onClose="{{_onCloseHandler}}" />
     *         </ws:popupOptions>
-    *     </Controls.Popup.Opener.Sticky>
+    *     </Controls.Popup.Opener.Stack>
     *
-    *     <div name="target">{{_text}}</div>
-    *
-    *     <Controls.Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
-    *     <Controls.Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
+    *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
     * </pre>
     * js
     * <pre>
     *     Control.extend({
     *       ...
     *
-    *       _open() {
+    *       _openStack() {
     *          var popupOptions = {
-    *             target: this._children.target,
-    *             opener: this._children.openStickyButton,
+    *             autofocus: true,
     *             templateOptions: {
     *                record: this._record
     *             }
     *          }
-    *          this._children.sticky.open(popupOptions);
+    *          this._children.stack.open(popupOptions)
     *       }
     *
-    *       _close() {
-    *           this._children.sticky.close()
+    *       _onResultHandler(newData) {
+    *           this._data = newData;
+    *       }
+    *
+    *       _onCloseHandler() {
+    *           this._sendData(this._data);
     *       }
     *       ...
     *   });
@@ -79,13 +74,12 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
 
    /**
-    * @name Controls/interface/IStickyOpener#eventHandlers
+    * @name Controls/interface/IStackOptions#eventHandlers
     * @cfg {EventHandlers[]} Callback functions on popup events.
     * @variant onClose Callback function is called when popup is closed.
-    * @variant onResult Callback function is called at the sendResult event in the popup template.
     * @default {}
     * @remark
-    * You need to consider the context of callback functions execution. See examples.
+    * You need to consider the context of callback functions execution. see examples.
     * @example
     * userControl.wml
     * <pre>
@@ -156,4 +150,5 @@ define('Controls/interface/IStickyOpener', [], function() {
     *     );
     * </pre>
     */
+
 });

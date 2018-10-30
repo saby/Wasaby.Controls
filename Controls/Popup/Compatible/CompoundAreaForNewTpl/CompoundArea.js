@@ -65,7 +65,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (wrapper.length) {
                      var wrapperOptions = {
                         template: self._options.template,
-                        templateOptions: self._options.templateOptions
+                        templateOptions: self._options.templateOptions,
+
+                        // Нужно передать себя в качестве родителя, чтобы система фокусов
+                        // могла понять, где находятся вложенные компоненты
+                        parent: self
                      };
                      self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
                      self._afterMountHandler();
