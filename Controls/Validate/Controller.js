@@ -25,7 +25,7 @@ define('Controls/Validate/Controller',
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
-            _afterMount: function() {
+         _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
          _beforeUnmount: function() {
