@@ -79,6 +79,7 @@ node('controls') {
         def skip_tests_int = ""
         def skip_tests_reg = ""
 		def tests_for_run = ""
+		def smoke_result = true
 
         try {
 
