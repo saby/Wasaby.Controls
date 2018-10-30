@@ -104,17 +104,6 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             assert.equal('1.2', NTB.getText());
          });
       });
-      describe('checkSelectionToggledMinus', function() {
-         it('selected[-50.52] -> toggleMinus -> selected[50.52]', function() {
-            NTB.setProperty('integers', 5);
-            NTB.setProperty('decimals', 2);
-            NTB.setProperty('delimiters', true);
-            NTB.setText('-50.52');
-            NTB._setCaretPosition(0, 6);
-            NTB._toggleMinus();
-            assert.deepEqual([0, 5], NTB._getCaretPosition());
-         });
-      });
       afterEach(function() {
          NTB.destroy();
          NTB = undefined;
