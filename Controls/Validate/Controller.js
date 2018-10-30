@@ -4,26 +4,33 @@ define('Controls/Validate/Controller',
       'wml!Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
-      'Core/Deferred'
+      'Core/Deferred',
+      'wml!Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
       template,
       IoC,
       ParallelDeferred,
-      Deferred
+      Deferred,
+      errorMessage
    ) {
       'use strict';
 
+      var _private = {
+         closeInfobox: function() {
+            this._isOpened = false;
+         }
+      };
       var Validate = Base.extend({
          _template: template,
+         _isOpened: false,
          _afterMount: function() {
-            this._notify('validateCreated', [this], {bubbling: true});
+            this._notify('validateCreated', [this], { bubbling: true });
          },
          _beforeUnmount: function() {
-            this._notify('validateDestroyed', [this], {bubbling: true});
+            this._notify('validateDestroyed', [this], { bubbling: true });
          },
-
          _validationResult: undefined,
 
          _callValidators: function callValidators(validators) {
@@ -121,6 +128,40 @@ define('Controls/Validate/Controller',
             if (!(validationResult instanceof Deferred)) {
                this._forceUpdate();
             }
+            if (validationResult) {
+               this.openInfoBox();
+            } else {
+               this.closeInfoBox();
+            }
+         },
+
+         /**
+          * Показывает InfoBox с подсказкой
+          */
+         openInfoBox: function() {
+            if (this._validationResult && this._validationResult.length && !this._isOpened) {
+               this._isOpened = true;
+               this._notify('openInfoBox', [{
+                  target: this._container,
+                  style: 'error',
+                  showDelay: 0,
+                  hideDelay: 0,
+                  template: errorMessage,
+                  templateOptions: { content: this._validationResult },
+                  eventHandlers: {
+                     onClose: _private.closeInfobox.bind(this),
+                     onResult: this._mouseInfoboxHandler.bind(this)
+                  }
+               }], { bubbling: true });
+            }
+         },
+
+         /**
+          * Скрывает InfoBox с подсказкой
+          */
+         closeInfoBox: function() {
+            this._isOpened = false;
+            this._notify('closeInfoBox', [this], { bubbling: true });
          },
 
          /**
@@ -132,5 +173,4 @@ define('Controls/Validate/Controller',
          }
       });
       return Validate;
-   }
-);
+   });

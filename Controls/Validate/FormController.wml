@@ -1,1 +1,6 @@
-<ws:partial template="{{ _options.content }}" on:validateCreated="onValidateCreated()" on:validateDestroyed="onValidateDestroyed()"/>
+<ws:partial template="{{ _options.content }}"
+            on:validateCreated="onValidateCreated()"
+            on:validateDestroyed="onValidateDestroyed()"
+            on:focusOutController="_focusOutControllerHandler()"
+            on:focusInController="_focusInControllerHandler()"
+            on:closeInfoBox="_closeInfoBoxHandler()"/>

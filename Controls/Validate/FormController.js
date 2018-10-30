@@ -15,7 +15,7 @@ define('Controls/Validate/FormController',
 
       var Form = Base.extend({
          _template: template,
-
+         _activeElement: null,
          constructor: function(cfg) {
             Form.superclass.constructor.call(this, cfg);
             this._validates = [];
@@ -29,6 +29,20 @@ define('Controls/Validate/FormController',
                return validate !== control;
             });
             e.stopPropagation();
+         },
+         _focusInControllerHandler: function(event, control) {
+            this._activeElement = control;
+         },
+         _focusOutControllerHandler: function() {
+            this._element = null;
+         },
+         _closeInfoBoxHandler: function(event, control) {
+
+            if (this._activeElement) {
+               if (this._activeElement !== control) {
+                  this._activeElement.openInfoBox();
+               }
+            }
          },
          submit: function() {
             var parallelDeferred = new ParallelDeferred();
