@@ -313,10 +313,8 @@ define('Controls/Input/Lookup', [
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
-         if (keysChanged) {
+         if (keysChanged || sourceIsChanged) {
             newSelectedKeys = newOptions.selectedKeys.slice();
-         } else if (sourceIsChanged) {
-            newSelectedKeys = [];
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
             newSelectedKeys = [];
             _private.getItems(this).each(function(item) {
@@ -484,7 +482,6 @@ define('Controls/Input/Lookup', [
    Lookup.getDefaultOptions = function() {
       return {
          displayProperty: 'title',
-         multiSelect: false,
          selectedKeys: []
       };
    };
