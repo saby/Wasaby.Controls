@@ -2623,6 +2623,13 @@ define('SBIS3.CONTROLS/ListView',
             // mousedown уже случился для другого элемента. В итоге click не случается и редактирование другой записи вообще не запускается.
             // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
             event.preventDefault();
+            //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+            var selection = window.getSelection();
+            if (selection.removeAllRanges) {
+               selection.removeAllRanges();
+            } else if (selection.empty) {
+               selection.empty();
+            }
          },
 
          //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
