@@ -564,46 +564,59 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          }
       },
 
-      _toggleMinus: function() {
-         var value,
-            step,
+
+      _getNewCaretPosition: function() {
+         // Меняет положение выделения после ввода минуса
+         var
             cpStart = this._caretPosition[0],
-            cpEnd = this._caretPosition[1];
+            cpEnd = this._caretPosition[1],
+            value = this._getInputValue(),
+            step;
+
+         // это надо т.к. при смене знака каретка должна остаться на месте
+         // если в поле ввода не было значения, то появится "-0" -> сдвиг 2 в остальных случаях сдвиг на 1
+         step = value ? 1 : 2;
+
+         // Если в числе не было минуса, то смещаем коретку вправо, чтобы, если было выделение, выделить всё число кроме минуса.
+         if (this._options.text.indexOf('-') == -1) {
+            cpStart = cpStart + step;
+            cpEnd = cpEnd + step;
+
+            // Если в числе был минус и не было выделения, то смещаем коретку вправо
+         } else if (cpStart === cpEnd) {
+            cpStart = cpStart > 0 ? cpStart - 1 : 0;
+            cpEnd = cpStart;
+
+            // Если в числе был минус и было выделение, то смещаем выделение вправо
+         } else {
+            cpStart = cpStart > 0 ? cpStart - 1 : 0;
+            cpEnd--;
+         }
+         return [cpStart, cpEnd];
+      },
+
+      _toggleMinus: function() {
+         var value = this._getInputValue(),
+            newCaretPosition;
 
          if (!this._options.onlyPositive) {
-            value = this._getInputValue();
-
             if (!NumberTextBoxUtil.checkMaxLength(value, this._options.maxLength, this._options.countMinusInLength)) {
                return;
             }
 
-            // это надо т.к. при смене знака каретка должна остаться на месте
-            // если в поле ввода не было значения, то появится "-0" -> сдвиг 2 в остальных случаях сдвиг на 1
-            step = value ? 1 : 2;
+            // Получаем новое положение коретки
+            newCaretPosition = this._getNewCaretPosition();
 
             if (!value) {
                value = '0';
             }
+
             if (this._options.text.indexOf('-') == -1) {
                this._setText('-' + value);
-
-               // Cмещаем каретку вправо, чтобы, если было выделение, выделить всё число кроме минуса.
-               cpStart = cpStart + step;
-               cpEnd = cpEnd + step;
             } else {
                this._setText(value.substr(1));
-
-               if (cpStart === cpEnd) {
-                  // Если не было выделения, то смещаем каретку влево
-                  cpStart = cpStart > 0 ? cpStart - 1 : 0;
-                  cpEnd = cpStart;
-               } else {
-                  // Если было выделение, смещаем каретку влево проверяя, что не уходим в минус
-                  cpStart = cpStart > 0 ? cpStart - 1 : 0;
-                  cpEnd--;
-               }
             }
-            this._setCaretPosition(cpStart, cpEnd);
+            this._setCaretPosition(newCaretPosition[0], newCaretPosition[1]);
             TextBox.superclass.setText.call(this, this._getInputValue());
          }
       },
