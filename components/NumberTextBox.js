@@ -10,9 +10,10 @@ define('SBIS3.CONTROLS/NumberTextBox', [
    'SBIS3.CONTROLS/Utils/ConfigByClasses',
    'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/NumberTextBox/NumberTextBox'
-], function(constants, NumberTextBoxUtil, TextBox, FormatText, ConfigByClasses) {
-   'use strict';
+], function ( constants, NumberTextBoxUtil, TextBox, FormatText, ConfigByClasses) {
 
+
+   'use strict';
    /**
     * Поле ввода числа.
     * Можно настроить:
@@ -51,7 +52,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
     * </component>
     */
 
-   function hideEmptyDecimals(value) {
+   function hideEmptyDecimals(value){
       value = value + '';
 
       while (value && value.indexOf('.') !== -1 && (value[value.length - 1] == '0' || value[value.length - 1] == '.')) {
@@ -67,7 +68,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          _SHIFT_KEY: false,
          _CTRL_KEY: false,
          _options: {
-
             /**
              * @cfg {Boolean} Ввод только положительных чисел
              * Возможные значения:
@@ -81,7 +81,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * </pre>
              */
             onlyPositive: false,
-
             /**
              * @cfg {Boolean} Ввод только целых чисел
              * Возможные значения:
@@ -98,7 +97,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see setOnlyInteger
              */
             onlyInteger: false,
-
             /**
              * @cfg {Number} Количество знаков после запятой
              * Опция задаёт ограничение количества знаков дробной части числа.
@@ -110,7 +108,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see hideEmptyDecimals
              */
             decimals: -1,
-
             /**
              * @cfg {Number} Количество знаков до запятой
              * Опция задаёт ограничение количества знаков в целой части числа.
@@ -121,7 +118,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see decimals
              */
             integers: 14,
-
             /**
              * @cfg {Boolean} Прятать нулевую дробную часть
              * Опция позволяет скрыть нулевую дробную часть.
@@ -132,7 +128,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see decimals
              */
             hideEmptyDecimals: true,
-
             /**
              * @cfg {Boolean} Показать разделители триад
              * @example
@@ -144,7 +139,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see decimals
              */
             delimiters: false,
-
             /**
              * @cfg {Number} Числовое значение контрола
              * Если установлено, то значение опции text игнорируется.
@@ -155,7 +149,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * @see text
              */
             numericValue: null,
-
             /**
              * @cfg {Boolean} Учитывать знак "-" при проверке длины числа
              * @see maxLength
@@ -170,18 +163,16 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          var
             classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
             params = [
-               {
-                  class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left'
-               }
+               { class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left' }
             ];
          ConfigByClasses(opts, params, classes);
       },
 
-      _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
+      _modifyOptions: function(baseCfg, parsedOptions, attrToMerge){
          var
             options = NumberTextBox.superclass._modifyOptions.apply(this, arguments),
             value = (options.numericValue != undefined) ? options.numericValue : options.text;
-         if (typeof value !== 'undefined' && value !== null) {
+         if (typeof value !== 'undefined' && value !== null){
             options.text = FormatText.formatText(
                value,
                options.text,
@@ -195,7 +186,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
                options.countMinusInLength
             );
          }
-         if (options.hideEmptyDecimals && options.text) {
+         if(options.hideEmptyDecimals && options.text) {
             options.text = hideEmptyDecimals(options.text);
          }
 
@@ -204,22 +195,22 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          return options;
       },
 
-      $constructor: function() {
+      $constructor: function () {
          var self = this;
          if (this._options.maxLength) {
             this.setMaxLength(this._options.maxLength);
          }
          this._createMirrorInput();
 
-         this._inputField.bind('blur', function() {
+         this._inputField.bind('blur', function(){
             self._blurHandler();
          });
-         if (this._options.text && !this._options.numericValue) {
-            this.setNumericValue(this._options.text);
+         if(this._options.text && !this._options.numericValue) {
+             this.setNumericValue(this._options.text);
          }
          this._inputField.on('input', function() {
-            // При вставке спец. символов не стреляет никаких событий, кроме input. Так что буду тут дёргать setText,
-            // чтобы отфильтровать лишнее
+            //При вставке спец. символов не стреляет никаких событий, кроме input. Так что буду тут дёргать setText,
+            //чтобы отфильтровать лишнее
             if (!self._pasteProcessing) {
                self._setText(self._getInputValue());
                self._setCaretPosition(self._caretPosition[0] + 1, self._caretPosition[1] + 1);
@@ -240,7 +231,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       _initMirrorInput: function() {
          var self = this;
-
          // TODO https://online.sbis.ru/opendoc.html?guid=f30c45a4-49f5-4125-b743-d391331b6587
          // временное решения в версию для скролла в поле ввода,
          // сейчас браузерный скролл ломает preventDefalt - его нельзя удалить т.к. мы обрабатываем все нажатия и иначе цифры будут дублироваться
@@ -248,7 +238,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
             var off = self._getCaretPosition()[0],
                containerWidth, cursorOffset, scrollLeft;
 
-            self._inputMirror.text(self._getInputValue().substring(0, off).replace(/\s/g, '\u00a0'));
+            self._inputMirror.text(self._getInputValue().substring(0, off).replace(/\s/g, "\u00a0"));
             containerWidth = self._inputField[0].clientWidth;
             cursorOffset = self._inputMirror.outerWidth();
             scrollLeft = cursorOffset - containerWidth;
@@ -258,14 +248,15 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._publish('onChangeNumericValue');
       },
 
-      _blurHandler: function() {
-         // Прятать нулевую дробную часть при потере фокуса
-         this._hideEmptyDecimals();
-      },
+       _blurHandler: function() {
+            // Прятать нулевую дробную часть при потере фокуса
+           this._hideEmptyDecimals();
+       },
 
       _focusOutHandler: function() {
-         // Сбрасываем CTRL_KEY и SHIFT_KEY так как keyUp не отработает при потере фокуса
-         // Ошибка: https://online.sbis.ru/opendoc.html?guid=2891bd28-e697-4866-be9a-ab7612eaa901
+
+         //Сбрасываем CTRL_KEY и SHIFT_KEY так как keyUp не отработает при потере фокуса
+         //Ошибка: https://online.sbis.ru/opendoc.html?guid=2891bd28-e697-4866-be9a-ab7612eaa901
          this._CTRL_KEY = this._SHIFT_KEY = false;
          NumberTextBox.superclass._focusOutHandler.apply(this, arguments);
       },
@@ -273,11 +264,10 @@ define('SBIS3.CONTROLS/NumberTextBox', [
       _inputFocusInHandler: function() {
          var
             text = this._getInputValue();
-
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
-            if (text !== this._options.text) {
+            if(text !== this._options.text) {
                this._setInputValue(this._options.text);
             }
          }
@@ -286,10 +276,9 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       _moveCursorAfterActivation: function() {
          var dotPosition = this._options.text.indexOf('.');
-
-         // По стандарту, если фокус пришёл не по клику, то курсор должен вставать либо перед точкой,
-         // либо после неё, в зависимости от количества цифр в целой части.
-         // Поэтому если фокус пришёл не по клику, то подвинем курсор в нужное место.
+         //По стандарту, если фокус пришёл не по клику, то курсор должен вставать либо перед точкой,
+         //либо после неё, в зависимости от количества цифр в целой части.
+         //Поэтому если фокус пришёл не по клику, то подвинем курсор в нужное место.
          if (this._options.integers === NumberTextBoxUtil._getIntegersCount(this._options.text)) {
             this._setCaretPosition(dotPosition + 1);
          } else {
@@ -297,8 +286,8 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          }
       },
 
-      _setText: function(text) {
-         if (text !== '-' && text !== '.' && text !== '') {
+      _setText: function(text){
+         if (text !== '-' && text !== '.' && text !== ''){
             text = this._formatText(text);
             if (text.indexOf('.') === text.length - 1) {
                this._setInputValue(text);
@@ -311,13 +300,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
 
-      setText: function(text) {
+      setText: function(text){
          var newText = this._isEmptyValue(text) ? text : this._formatText(text);
          if (newText !== this._options.text) {
             this._setNumericValue(newText);
          }
          NumberTextBox.superclass.setText.call(this, newText);
-         if (!this.isActive() && this._options.hideEmptyDecimals) {
+         if(!this.isActive() && this._options.hideEmptyDecimals) {
             this._hideEmptyDecimals();
          }
       },
@@ -338,9 +327,9 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._options.hideEmptyDecimals = flag;
       },
 
-      _hideEmptyDecimals: function() {
+      _hideEmptyDecimals: function () {
          var value = this._getInputValue();
-         if (value) {
+         if(value) {
             if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)) {
                value = hideEmptyDecimals(value);
             }
@@ -350,7 +339,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          }
       },
 
-      /**
+       /**
         * Возвращает текущее числовое значение поля ввода.
         * @returns {Number} Текущее значение поля ввода числа.
         * @example
@@ -360,21 +349,21 @@ define('SBIS3.CONTROLS/NumberTextBox', [
         *     }
         * </pre>
         */
-      getNumericValue: function() {
-         var val = this._options.numericValue;
-         return (isNaN(val)) ? null : val;
+      getNumericValue: function(){
+        var val = this._options.numericValue;
+        return (isNaN(val)) ? null : val;
       },
 
       setNumericValue: function(value) {
-         if (value !== this._options.numericValue && value < 9007199254740992) { // проверка на вернюю границу 2^53
+         if (value !== this._options.numericValue && value < 9007199254740992){ // проверка на вернюю границу 2^53
             this._setNumericValue(value);
             this.setText(value + '');
          }
       },
 
-      _setNumericValue: function(value) {
-         if (typeof (value) === 'string') {
-            value = value.replace(/\s+/g, '');
+      _setNumericValue: function(value){
+         if (typeof(value) == 'string'){
+             value = value.replace(/\s+/g,'');
          }
          if (this._options.onlyInteger) {
             this._options.numericValue = parseInt(value, 10);
@@ -384,7 +373,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._notifyOnPropertyChanged('numericValue');
          this._notify('onChangeNumericValue', this._options.numericValue);
       },
-
       /**
        * Установить количество знаков после запятой
        * @param decimals Количество знаков после запятой
@@ -406,13 +394,12 @@ define('SBIS3.CONTROLS/NumberTextBox', [
             this.setText(this._options.text);
          }
       },
-
       /**
        * Установить возможность ввода только целых чисел
        * @param {Boolean} onlyInteger Ввод только целых чисел
        * @see onlyInteger
        */
-      setOnlyInteger: function(onlyInteger) {
+      setOnlyInteger: function(onlyInteger){
          this._options.onlyInteger = Boolean(onlyInteger);
       },
 
@@ -423,7 +410,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          return this._options.decimals;
       },
 
-      _formatText: function(value) {
+      _formatText: function(value){
          return FormatText.formatText(
             value,
             this._options.text,
@@ -438,109 +425,109 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          );
       },
 
-      _keyDownBind: function(event) {
-         if (!this.isEnabled()) {
+      _keyDownBind: function (event) {
+         if (!this.isEnabled()){
             return false;
          }
          this._caretPosition = this._getCaretPosition();
-         if (event.shiftKey) {
+         if (event.shiftKey){
             this._SHIFT_KEY = true;
          }
-         if (event.ctrlKey) {
+         if (event.ctrlKey){
             this._CTRL_KEY = true;
          }
-         if (event.which == constants.key.f5 || // F5, не отменяем действие по-умолчанию
-            event.which == constants.key.f12 || // F12,не отменяем действие по-умолчанию
-            event.which == constants.key.left || // не отменяем arrow keys (влево, вправо)
+         if (event.which == constants.key.f5   || // F5, не отменяем действие по-умолчанию
+            event.which == constants.key.f12   || // F12,не отменяем действие по-умолчанию
+            event.which == constants.key.left  || // не отменяем arrow keys (влево, вправо)
             event.which == constants.key.right ||
-            event.which == constants.key.end || // не отменяем home, end
+            event.which == constants.key.end   || // не отменяем home, end
             event.which == constants.key.home
          ) {
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-
-         /* точка */
-         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (!event.key || event.key == ',' || event.key == '.' || event.key == 'б' || event.key == 'ю' || event.key == 'Decimal')) {
+         /*точка*/
+         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (!event.key || event.key == ',' || event.key == '.'|| event.key == 'б' || event.key == 'ю' || event.key == 'Decimal')) {
             this._dotHandler(event);
             return;
          }
-         if (keyCode == 189 || keyCode == 173 || keyCode == 109/* минус 173 - firefox, 109 - NumPad */) {
+         if(keyCode == 189 || keyCode == 173 || keyCode == 109/*минус 173 - firefox, 109 - NumPad*/){
             this._toggleMinus();
             event.preventDefault();
          }
 
-         if (keyCode == 46) { /* Delete */
+         if (keyCode == 46){ /*Delete*/
             this._deleteHandler();
-         } else if (keyCode == 8) { /* Backspace */
+         } else if (keyCode == 8){ /*Backspace*/
             this._backspaceHandler();
-         } else if (keyCode >= 48 && keyCode <= 57 && !this._SHIFT_KEY) { /* Numbers */
+         } else if (keyCode >= 48 && keyCode <= 57 && !this._SHIFT_KEY){ /*Numbers*/
             event.preventDefault();
             this._numberPressHandler(keyCode);
             return true;
          }
-         if (this._getInputValue().indexOf('.') === 0) {
+         if (this._getInputValue().indexOf('.') === 0){
             this._setText('0' + this._getInputValue());
             this._setCaretPosition(1);
          }
-         if (this._CTRL_KEY || (this._SHIFT_KEY && keyCode === 45) /* insert */) {
+         if (this._CTRL_KEY || (this._SHIFT_KEY && keyCode === 45) /* insert */){
             return true;
          }
          event.preventDefault();
       },
 
-      _numberPressHandler: function(keyCode) {
-         var b = this._caretPosition[0], // начало выделения
-            e = this._caretPosition[1], // конец выделения
-            currentVal = this._getInputValue(),
-            newState = NumberTextBoxUtil.numberPress(
-               b,
-               e,
-               currentVal,
-               this._options.delimiters,
-               this._options.integers,
-               this._options.decimals,
-               keyCode,
-               this._options.maxLength,
-               this._options.countMinusInLength
-            );
+      _numberPressHandler: function (keyCode) {
+         var b = this._caretPosition[0], //начало выделения
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.numberPress(
+                 b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.integers,
+                 this._options.decimals,
+                 keyCode,
+                 this._options.maxLength,
+                 this._options.countMinusInLength
+             );
 
          this._setText(newState.value);
          this._setCaretPosition(newState.caretPosition);
       },
 
-      _deleteHandler: function() {
-         var b = this._caretPosition[0], // начало выделения
-            e = this._caretPosition[1], // конец выделения
-            currentVal = this._getInputValue(),
-            newState = NumberTextBoxUtil.deletPressed(b,
-               e,
-               currentVal,
-               this._options.delimiters,
-               this._options.decimals);
+      _deleteHandler: function(){
+         var b = this._caretPosition[0], //начало выделения
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.deletPressed(b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.decimals
+             );
 
          this._setText(newState.value);
          this._setCaretPosition(newState.caretPosition + newState.step - 1);
       },
 
-      _backspaceHandler: function() {
-         var b = this._caretPosition[0], // начало выделения
-            e = this._caretPosition[1], // конец выделения
-            currentVal = this._getInputValue(),
-            newState = NumberTextBoxUtil.backspacePressed(
-               b,
-               e,
-               currentVal,
-               this._options.delimiters,
-               this._options.decimals,
-               this._dotOverstep
-            );
+      _backspaceHandler: function(){
+         var b = this._caretPosition[0], //начало выделения
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.backspacePressed(
+                 b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.decimals,
+                 this._dotOverstep
+             );
 
          this._setText(newState.value);
          this._setCaretPosition(newState.caretPosition + newState.step - 1);
       },
 
-      _dotHandler: function(event) {
+      _dotHandler: function(event){
          if (!this._options.onlyInteger && this._options.decimals !== 0) {
             var currentVal = this._getInputValue(),
                dotPosition = currentVal.indexOf('.');
@@ -554,12 +541,12 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          event.preventDefault();
       },
 
-      _keyUpBind: function(e) {
+      _keyUpBind: function(e){
          NumberTextBox.superclass._keyUpBind.apply(this, arguments);
-         if (e.which == 16) {
+         if (e.which == 16){
             this._SHIFT_KEY = false;
          }
-         if (e.which == 17) {
+         if (e.which == 17){
             this._CTRL_KEY = false;
          }
       },
@@ -625,41 +612,44 @@ define('SBIS3.CONTROLS/NumberTextBox', [
        * Возвращает массив содержащий координаты выделения
        * @return {Array} массив содержащий координаты выделения
        */
-      _getCaretPosition: function() {
+      _getCaretPosition : function(){
          var
             obj = this._inputField.get(0),
             b,
             e,
             l;
-         if (constants.browser.isIE && constants.browser.IEVersion < 9) { // IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var range = document.selection.createRange();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;
             range.moveEnd('textedit', -1);
             b = e - l;
-         } else {
+         }
+         else
+         {
             b = obj.selectionStart;
             e = obj.selectionEnd;
          }
-         return [b, e];
+         return [b,e];
       },
-
       /**
        * Выставляет каретку в переданное положение
        * @param {Number}  pos    позиция, в которую выставляется курсор
        * @param {Number} [pos2]  позиция правого края выделения
        */
-      _setCaretPosition: function(pos, pos2) {
+      _setCaretPosition : function(pos, pos2){
          pos2 = pos2 || pos;
          var obj = this._inputField.get(0);
-         if (constants.browser.isIE && constants.browser.IEVersion < 9) { // IE
+         if (constants.browser.isIE && constants.browser.IEVersion < 9) { //IE
             var r = obj.createTextRange();
             r.collapse(true);
-            r.moveStart('character', pos);
-            r.moveEnd('character', pos2 - pos); // Оказывается moveEnd определяет сдвиг, а не позицию
+            r.moveStart("character", pos);
+            r.moveEnd("character", pos2-pos); // Оказывается moveEnd определяет сдвиг, а не позицию
             r.select();
-         } else {
+         }
+         else
+         {
             obj.setSelectionRange(pos, pos2);
             obj.focus();
          }
@@ -667,13 +657,13 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       setMaxLength: function(num) {
          NumberTextBox.superclass.setMaxLength.call(this, num);
-
-         // IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
-         // Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
-         // Поэтому для IE просто не будем навешивать аттрибут maxLength
+         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
+         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
+         //Поэтому для IE просто не будем навешивать аттрибут maxLength
          this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       }
    });
 
    return NumberTextBox;
+
 });
