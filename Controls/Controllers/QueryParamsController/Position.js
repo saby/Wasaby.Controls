@@ -133,19 +133,16 @@ define('Controls/Controllers/QueryParamsController/Position',
                   else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
                   }
-               }
-               else {
+               } else {
                   if (!loadDirection && this._options.direction === 'both') {
                      this._beforePosition = metaNextPostion.before;
                      this._afterPosition = metaNextPostion.after;
                   } else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
                   }
-
                }
 
-            }
-            else {
+            } else {
                if (list.getCount()) {
                   if (loadDirection !== 'down') {
                      edgeElem = list.at(0);
