@@ -21,7 +21,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
          '0': 'неверно',
          '1': 'верно'
       },
-      globalStatus: 2,
+      globalStatus: -1,
       _afterMount: function() {
          if (!document) {
             return;
