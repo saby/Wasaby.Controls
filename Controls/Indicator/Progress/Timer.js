@@ -38,6 +38,23 @@ define(
        */
 
       var
+         _private = {
+
+            /**
+             * Converts time from seconds to mm:ss
+             * @param time (seconds)
+             */
+            getDisplayTime: function(time) {
+               var minutes = Math.floor(time / 60);
+               var seconds = time - minutes * 60;
+
+               var result = (minutes < 10 ? '0' + minutes : minutes);
+               result += ':' + (seconds < 10 ? '0' + seconds : seconds);
+               return result;
+            }
+         };
+
+      var
          Timer = Control.extend({
             _template: template,
 
@@ -47,11 +64,12 @@ define(
 
             _afterMount: function() {
                if (this._options.autoTick) {
+                  this._time += 1;
                   this._forceUpdate();
                }
             },
 
-            _beforeUpdate: function() {
+            _afterUpdate: function() {
                if (this._options.autoTick) {
                   var
                      self = this;
@@ -65,17 +83,12 @@ define(
             },
 
             /**
-             * Converts time from seconds to mm:ss
+             * Returns time to display
              * @return {*}
              * @private
              */
             _getDisplayTime: function() {
-               var minutes = Math.floor(this._time / 60);
-               var seconds = this._time - minutes * 60;
-
-               var result = (minutes < 10 ? '0' + minutes : minutes);
-               result += ':' + (seconds < 10 ? '0' + seconds : seconds);
-               return result;
+               return _private.getDisplayTime(this._time);
             }
          });
 
