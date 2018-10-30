@@ -18,14 +18,14 @@ define('Controls/Validate/Controller',
       'use strict';
 
       var _private = {
-         closeInfobox: function(self) {
-            self._isOpened = false;
+         closeInfobox: function() {
+            this._isOpened = false;
          }
       };
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
-         _afterMount: function() {
+            _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
          _beforeUnmount: function() {
@@ -149,7 +149,7 @@ define('Controls/Validate/Controller',
                   template: errorMessage,
                   templateOptions: { content: this._validationResult },
                   eventHandlers: {
-                     onClose: _private.closeInfobox(this),
+                     onClose: _private.closeInfobox.bind(this),
                      onResult: this._mouseInfoboxHandler.bind(this)
                   }
                }], { bubbling: true });
