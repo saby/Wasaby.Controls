@@ -40,7 +40,7 @@
 /tests/reg/js_errors
 /tests/reg/preprocessor_logs
 /tests/reg/screenshots
-/tests/reg/capture_reports
+/tests/reg/capture_report
 /__pycache__
 /application
 /builder-ui
