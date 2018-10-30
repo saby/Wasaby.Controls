@@ -1,6 +1,7 @@
 <div class="controls-Render controls-Render_style
             controls-Render_size_{{_options.size}}
             controls-Render_style_{{_options.style}}{{_getState()}}
+            controls-Render_fontStyle_{{_options.fontStyle}}
             controls-Render_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
             controls-Render_textAlign_{{_options.textAlign}}">
    <div class="controls-Render__wrapper">

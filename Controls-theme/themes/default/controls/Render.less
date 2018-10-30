@@ -1,7 +1,10 @@
 @import "./../_clean";
 
+//Local variables
+@border-color-bottom_Render:                    #AAB0C1;
+
 @height_Render:                                 @height_control_default;
-@spacing_Render_border-text:                    @spacing_default_xs;
+@spacing-between_Render_border-text:            @spacing_default_xs;
 
 //placeholder
 @color_Render-placeholder:                      @color_info;
@@ -27,14 +30,14 @@
 @border-color_Render_style_success:             @color_success;
 @border-color_Render_style_warning:             @color_warning;
 
-@border-color_Render_style_info_hover:          @color_border_input @color_border_input #AAB0C1 @color_border_input;
+@border-color_Render_style_info_hover:          @color_border_input @color_border_input @border-color-bottom_Render @color_border_input;
 @border-color_Render_style_danger_hover:        @color_danger;
 @border-color_Render_style_invalid_hover:       @color_danger;
 @border-color_Render_style_primary_hover:       @color_primaryV;
 @border-color_Render_style_success_hover:       @color_success;
 @border-color_Render_style_warning_hover:       @color_warning;
 
-@border-color_Render_style_info_active:         @color_border_input @color_border_input #AAB0C1 @color_border_input;
+@border-color_Render_style_info_active:         @color_border_input @color_border_input @border-color-bottom_Render @color_border_input;
 @border-color_Render_style_danger_active:       @color_danger;
 @border-color_Render_style_invalid_active:      @color_danger;
 @border-color_Render_style_primary_active:      @color_primaryV;
@@ -77,12 +80,8 @@
 @background_Render_style_warning_readOnly:      @background-color_default;
 
 //fontStyle
-@color_Render_fontStyle_default_size_s:         @color_text_default;
-@color_Render_fontStyle_primary_size_s:         #D94700;
-@color_Render_fontStyle_default_size_m:         @color_text_default;
-@color_Render_fontStyle_primary_size_m:         #D94700;
-@color_Render_fontStyle_default_size_l:         @color_text_default;
-@color_Render_fontStyle_primary_size_l:         #D94700;
+@color_Render_fontStyle_default:                @color_text_default;
+@color_Render_fontStyle_primary:                @color_Heading_primary;
 
 @font-size_Render_fontStyle_default_size_s:     @size_text_m;
 @font-size_Render_fontStyle_primary_size_s:     @size_text_3xl;
@@ -99,8 +98,7 @@
 @font-weight_Render_fontStyle_primary_size_l:   bold;
 
 //tagStyle
-@width_Render-tagStyle:                         8px;
-@height_Render-tagStyle:                        8px;
+@size_Render-tagStyle:                          8px;
 
 @color_Render-tagStyle_info:                    @color_info;
 @color_Render-tagStyle_danger:                  @color_danger;

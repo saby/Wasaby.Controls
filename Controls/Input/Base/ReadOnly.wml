@@ -1,1 +1,1 @@
-<div>{{value}}</div>
+<div class="controls-Base__field_readOnly">{{value}}</div>

@@ -38,13 +38,10 @@ define('Controls/Input/Money',
       var Money = Base.extend({
          _viewModel: ViewModel,
 
-         _readOnlyField: {
-            template: readOnlyFieldTemplate
-         },
+         _initProperties: function() {
+            Money.superclass._initProperties.apply(this, arguments);
 
-         _beforeMount: function() {
-            Money.superclass._beforeMount.apply(this, arguments);
-
+            this._readOnlyField.template = readOnlyFieldTemplate;
             this._readOnlyField.scope.integerPath = _private.integerPath;
             this._readOnlyField.scope.fractionPath = _private.fractionPath;
          },

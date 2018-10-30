@@ -2,9 +2,11 @@ define('Controls/Input/Base',
    [
       'Core/Control',
       'Core/detection',
+      'Core/constants',
       'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
+      'Controls/Utils/getTextWidth',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Controls/Utils/hasHorizontalScroll',
@@ -15,27 +17,17 @@ define('Controls/Input/Base',
 
       'css!Controls/Input/Base/Base'
    ],
-   function(Control, detection, descriptor, tmplNotify, isEqual, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
+   function(Control, detection, constants, descriptor, tmplNotify, isEqual, getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
 
       'use strict';
 
-      /**
-       * Base controls that allows user to enter text.
-       *
-       * @class Controls/Input/Base
-       * @extends Core/Control
-       *
-       * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
-       *
-       * @private
-       * @demo Controls-demo/Input/Base/Base
-       *
-       * @author Журавлев М.С.
-       */
       var _private = {
+
+         /**
+          * @type {Number} The width of the native cursor in the field measured in pixels.
+          * @private
+          */
+         widthCursor: 1,
 
          /**
           * @param {Controls/Input/Base} self Control instance.
@@ -43,9 +35,7 @@ define('Controls/Input/Base',
           * @param {String} value View model value.
           */
          initViewModel: function(self, options, value) {
-            self._viewModel = new (self._viewModel)(options);
-
-            self._viewModel.value = value;
+            self._viewModel = new self._viewModel(options, value);
          },
 
          /**
@@ -54,6 +44,7 @@ define('Controls/Input/Base',
          initField: function(self) {
             /**
              * When you mount a field in the DOM, the browser can auto fill the field.
+             * Then the displayed value in the model will not match the value in the field.
              * In this case, you change the displayed value in the model to the value in the field and
              * must tell the parent that the value in the field has changed.
              */
@@ -61,11 +52,6 @@ define('Controls/Input/Base',
                self._viewModel.displayValue = self._getField().value;
                _private.notifyValueChanged(self);
             }
-         },
-
-         initProperties: function(self) {
-            self._field.scope = {};
-            self._readOnlyField.scope = {};
          },
 
          /**
@@ -84,7 +70,39 @@ define('Controls/Input/Base',
          },
 
          /**
-          *
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {String} value The value to be set in the field.
+          * @param {Controls/Input/Base/Types/Selection.typedef} selection The selection to be set in the field.
+          */
+         updateField: function(self, value, selection) {
+            var field = self._getField();
+
+            if (field.value !== value) {
+               field.value = value;
+            }
+
+            /**
+             * After calling setSelectionRange, the select event is fired. Then will come the preservation of the selection in the model.
+             * We only need to do this with user actions. Therefore cancel this action through _skipSavingSelectionOnce.
+             */
+            if (_private.hasSelectionChanged(field, selection)) {
+               self._skipSavingSelectionOnce = true;
+               field.setSelectionRange(selection.start, selection.end);
+            }
+         },
+
+         /**
+          * Determines whether the value of the selection in the field with the checked value is equal.
+          * @param {Node} field Field to check.
+          * @param {Controls/Input/Base/Types/Selection.typedef} selection The checked value.
+          * @return {boolean}
+          */
+         hasSelectionChanged: function(field, selection) {
+            return field.selectionStart !== selection.start || field.selectionEnd !== selection.end;
+         },
+
+         /**
+          * Determinate whether the field has been auto fill.
           * @param {Controls/Input/Base} self Control instance.
           * @return {Boolean}
           */
@@ -95,6 +113,15 @@ define('Controls/Input/Base',
             if (!self._options.readOnly) {
                return !!self._getField().value;
             }
+         },
+
+         /**
+          * Determines whether the field in focus.
+          * @param {Node} field Field to check.
+          * @return {boolean}
+          */
+         hasFieldFocus: function(field) {
+            return document.activeElement === field;
          },
 
          /**
@@ -112,9 +139,49 @@ define('Controls/Input/Base',
          },
 
          /**
+          * @param {Controls/Input/Base} self Control instance.
+          * @param splitValue Parsed value after user input.
+          * @param inputType Type of user input.
+          */
+         handleInput: function(self, splitValue, inputType) {
+            if (self._viewModel.handleInput(splitValue, inputType)) {
+               _private.notifyValueChanged(self);
+            }
+         },
+
+         /**
+          * Calculate what type of input was carried out by the user.
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {String} oldValue The value of the field before user input.
+          * @param {String} newValue The value of the field after user input.
+          * @param {Number} position The caret position of the field after user input.
+          * @param {Controls/Input/Base/Types/Selection.typedef} selection The selection of the field before user input.
+          * @param {Controls/Input/Base/Types/NativeInputType.typedef} [nativeInputType] The value of the type property in the handle of the native input event.
+          * @return {Controls/Input/Base/Types/InputType.typedef}
+          */
+         calculateInputType: function(self, oldValue, newValue, position, selection, nativeInputType) {
+            var inputType;
+
+            /**
+             * On Android if you have enabled spell check and there is a deletion of the last character
+             * then the type of event equal insertCompositionText. However, in this case, the event type must be deleteContentBackward.
+             * Therefore, we will calculate the event type.
+             */
+            if (self._isMobileAndroid && nativeInputType === 'insertCompositionText') {
+               inputType = InputUtil.getInputType(oldValue, newValue, position, selection);
+            } else {
+               inputType = nativeInputType
+                  ? InputUtil.getAdaptiveInputType(nativeInputType, selection)
+                  : InputUtil.getInputType(oldValue, newValue, position, selection);
+            }
+
+            return inputType;
+         },
+
+         /**
           * @param {String} pastedText
           * @param {String} displayedText
-          * @param {Controls/Input/Base/Types/SelectionInField.typedef} selection
+          * @param {Controls/Input/Base/Types/Selection.typedef} selection
           * @return {Controls/Input/Base/Types/SplitValue.typedef}
           */
          calculateSplitValueToPaste: function(pastedText, displayedText, selection) {
@@ -124,8 +191,50 @@ define('Controls/Input/Base',
                delete: displayedText.substring(selection.start, selection.end),
                after: displayedText.substring(selection.end)
             };
+         },
+
+         /**
+          * Change the location of the visible area of the field so that the cursor is visible.
+          * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
+          * the cursor is visible in the middle of the area.
+          * @param {Node} field
+          * @param {String} value
+          * @param {Controls/Input/Base/Types/Selection.typedef} selection
+          */
+         recalculateLocationVisibleArea: function(field, value, selection) {
+            var textWidthBeforeCursor = getTextWidth(value.substring(0, selection.end));
+
+            var positionCursor = textWidthBeforeCursor + _private.widthCursor;
+            var sizeVisibleArea = field.clientWidth;
+            var beginningVisibleArea = field.scrollLeft;
+            var endingVisibleArea = field.scrollLeft + sizeVisibleArea;
+
+            /**
+             * The cursor is visible if its position is between the beginning and the end of the visible area.
+             */
+            var hasVisibilityCursor = beginningVisibleArea < positionCursor && positionCursor < endingVisibleArea;
+
+            if (!hasVisibilityCursor) {
+               field.scrollLeft = positionCursor - sizeVisibleArea / 2;
+            }
          }
       };
+
+      /**
+       * Base controls that allows user to enter text.
+       *
+       * @class Controls/Input/Base
+       * @extends Core/Control
+       *
+       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IInputBase
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       *
+       * @private
+       * @demo Controls-demo/Input/Base/Base
+       *
+       * @author Журавлев М.С.
+       */
 
       var Base = Control.extend({
 
@@ -139,17 +248,13 @@ define('Controls/Input/Base',
           * @type {DisplayingControl} Input field in edit mode.
           * @private
           */
-         _field: {
-            template: fieldTemplate
-         },
+         _field: null,
 
          /**
           * @type {DisplayingControl} Input field in read mode.
           * @private
           */
-         _readOnlyField: {
-            template: readOnlyFieldTemplate
-         },
+         _readOnlyField: null,
 
          /**
           * @type {Controls/Input/Base/ViewModel} The display model of the input field.
@@ -192,12 +297,20 @@ define('Controls/Input/Base',
           */
          _fieldName: 'input',
 
-         _saveSelection: true,
+         /**
+          * @type {Boolean} Determines whether to skip once save the current field selection to the model.
+          * @private
+          */
+         _skipSavingSelectionOnce: false,
+
+         _ieVersion: detection.IEVersion,
+
+         _isMobileAndroid: detection.isMobileAndroid,
 
          _beforeMount: function(options) {
             var viewModelOptions = this._getViewModelOptions(options);
 
-            _private.initProperties(this);
+            this._initProperties(this);
             _private.initViewModel(this, viewModelOptions, options.value);
 
             /**
@@ -209,8 +322,6 @@ define('Controls/Input/Base',
             if ('name' in options) {
                this._fieldName = options.name;
             }
-
-            this._field.scope._calculateValueForTemplate = this._calculateValueForTemplate.bind(this);
          },
 
          _afterMount: function() {
@@ -224,10 +335,27 @@ define('Controls/Input/Base',
          },
 
          /**
+          * @param {Controls/Input/Base} self Control instance.
+          * @private
+          */
+         _initProperties: function() {
+            this._field = {
+               template: fieldTemplate,
+               scope: {
+                  calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
+               }
+            };
+            this._readOnlyField = {
+               template: readOnlyFieldTemplate,
+               scope: {}
+            };
+         },
+
+         /**
           * Event handler mouseenter.
           * @private
           */
-         _mouseenterHandler: function() {
+         _mouseEnterHandler: function() {
             this._tooltip = this._getTooltip();
          },
 
@@ -242,7 +370,7 @@ define('Controls/Input/Base',
             /**
              * Clicking the arrows and keys home, end moves the cursor.
              */
-            if (keyCode > 34 && keyCode < 41) {
+            if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
                this._viewModel.selection = this._getFieldSelection();
             }
          },
@@ -260,11 +388,11 @@ define('Controls/Input/Base',
           * @private
           */
          _selectHandler: function() {
-            if (this._saveSelection) {
+            if (this._skipSavingSelectionOnce) {
+               this._skipSavingSelectionOnce = false;
+            } else {
                this._viewModel.selection = this._getFieldSelection();
             }
-
-            this._saveSelection = true;
          },
 
          _inputHandler: function(event) {
@@ -274,30 +402,17 @@ define('Controls/Input/Base',
             var selection = model.oldSelection;
             var newValue = field.value;
             var position = field.selectionEnd;
-            var inputType;
 
-            /**
-             * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
-             * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
-             * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
-             */
-            if (detection.isMobileAndroid && event.nativeEvent.inputType === 'insertCompositionText') {
-               inputType = InputUtil.getInputType(value, newValue, position, selection);
-            } else {
-               inputType = event.nativeEvent.inputType
-                  ? InputUtil.getAdaptiveInputType(event.nativeEvent.inputType, selection)
-                  : InputUtil.getInputType(value, newValue, position, selection);
-            }
-
+            var inputType = _private.calculateInputType(this, value, newValue, position, selection, event.nativeEvent.inputType);
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
-            if (model.handleInput(splitValue, inputType)) {
-               this._notify('valueChanged', [model.value, model.displayValue]);
-            }
+            _private.handleInput(this, splitValue, inputType);
 
-            this._saveSelection = false;
-            field.value = value;
-            field.setSelectionRange(selection.start, selection.end);
+            /**
+             * The field is displayed according to the control options. When user enters data,the display changes and does not match the options.
+             * Therefore, return the field to the state before entering.
+             */
+            _private.updateField(this, value, selection);
          },
 
          _changeHandler: function() {
@@ -317,7 +432,7 @@ define('Controls/Input/Base',
             }
          },
 
-         _deactivatedHandler: function() {
+         _focusOutHandler: function() {
             this._getField().scrollLeft = 0;
          },
 
@@ -332,7 +447,7 @@ define('Controls/Input/Base',
 
          /**
           * Get the beginning and end of the selected portion of the field's text.
-          * @return {Controls/Input/Base/Types/SelectionInField.typedef}
+          * @return {Controls/Input/Base/Types/Selection.typedef}
           * @private
           */
          _getFieldSelection: function() {
@@ -370,30 +485,21 @@ define('Controls/Input/Base',
             var field = this._getField();
 
             if (model.shouldBeChanged && field) {
-               this._saveSelection = false;
-               if (this._active) {
-                  this._children.forFocusing.focus();
-                  field.value = model.displayValue;
-                  field.setSelectionRange(model.selection.start, model.selection.end);
-                  field.focus();
-               } else {
-                  field.value = model.displayValue;
-                  field.setSelectionRange(model.selection.start, model.selection.end);
-               }
+               _private.updateField(this, model.displayValue, model.selection);
+               model.changesHaveBeenApplied();
 
-               this._viewModel.changesHaveBeenApplied();
+               if (_private.hasFieldFocus(field)) {
+                  _private.recalculateLocationVisibleArea(field, model.displayValue, model.selection);
+               }
             }
 
             return model.displayValue;
          },
 
          paste: function(text) {
-            var model = this._viewModel;
-            var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
+            var splitValue = _private.calculateSplitValueToPaste(text, this._viewModel.displayValue, this._viewModel.selection);
 
-            model.handleInput(splitValue, 'insert');
-
-            _private.notifyValueChanged(this);
+            _private.handleInput(this, splitValue, 'insert');
          }
       });
 
@@ -409,6 +515,11 @@ define('Controls/Input/Base',
 
       Base.getDefaultTypes = function() {
          return {
+
+            /**
+             * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+             * placeholder: descriptor(String|Function),
+             */
             value: descriptor(String),
             tooltip: descriptor(String),
             size: descriptor(String).oneOf([

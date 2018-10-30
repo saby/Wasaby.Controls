@@ -1,6 +1,6 @@
 define('Controls/Input/Base/Types', [], function() {
    /**
-    * @typedef {Object} SelectionInField
+    * @typedef {Object} Selection
     * @property {Number} start The beginning of the selected portion of the field's text. The value specifies the index of the first selected character.
     * @property {Number} end The end of the selected portion of the field's text. The value specifies the index of the character after the selection.
     * If this value is equal to the value of the start property, no text is selected, but the value indicates the position of the caret (cursor) within the field.
@@ -20,6 +20,17 @@ define('Controls/Input/Base/Types', [], function() {
     * @variant delete Delete with help key backspace [ + ctrl] or delete [ + ctrl] with value selection.
     * @variant deleteBackward Delete with help key backspace [ + ctrl] without value selection.
     * @variant deleteForward Delete with help key delete [ + ctrl] without value selection.
+    */
+
+   /**
+    * @type {String} NativeInputType
+    * @variant insertText Character input.
+    * @variant insertFromPaste Pasting from the clipboard.
+    * @variant insertFromDrop Insert through drop.
+    * @variant deleteContentBackward Delete with help key backspace.
+    * @variant deleteContentForward Delete with help key delete.
+    * @variant deleteWordBackward Delete with help key backspace + ctrl.
+    * @variant deleteWordForward Delete with help key delete + ctrl.
     */
 
    /**

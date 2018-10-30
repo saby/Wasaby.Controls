@@ -9,26 +9,26 @@ define('Controls/Input/Base/InputUtil', [], function() {
        * @param {String} oldValue Value before working with the field.
        * @param {String} newValue Value after working with the field.
        * @param {Number} caretPosition Carriage position after working with the field.
-       * @param {Controls/Input/Base/Types/SelectionInField.typedef} selection Selection before working with the field.
+       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection before working with the field.
        * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of working with the field.
        * @return {Controls/Input/Base/Types/SplitValue.typedef} Split
        */
       splitValue: function(oldValue, newValue, caretPosition, selection, inputType) {
          var selectionLength = selection.end - selection.start;
-         var deleteValue, insertValue, beforeInsertValue, afterInsertValue;
+         var deletedValue, insertedValue, beforeInsertedValue, afterInsertedValue;
 
-         afterInsertValue = newValue.substring(caretPosition);
-         beforeInsertValue = inputType === 'insert'
-            ? oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength)
+         afterInsertedValue = newValue.substring(caretPosition);
+         beforeInsertedValue = inputType === 'insert'
+            ? oldValue.substring(0, oldValue.length - afterInsertedValue.length - selectionLength)
             : newValue.substring(0, caretPosition);
-         insertValue = newValue.substring(beforeInsertValue.length, newValue.length - afterInsertValue.length);
-         deleteValue = oldValue.substring(beforeInsertValue.length, oldValue.length - afterInsertValue.length);
+         insertedValue = newValue.substring(beforeInsertedValue.length, newValue.length - afterInsertedValue.length);
+         deletedValue = oldValue.substring(beforeInsertedValue.length, oldValue.length - afterInsertedValue.length);
 
          return {
-            before: beforeInsertValue,
-            insert: insertValue,
-            delete: deleteValue,
-            after: afterInsertValue
+            before: beforeInsertedValue,
+            insert: insertedValue,
+            delete: deletedValue,
+            after: afterInsertedValue
          };
       },
 

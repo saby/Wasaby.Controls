@@ -1,11 +1,10 @@
 define('Controls/Input/Money/ViewModel',
    [
       'Controls/Input/Base/ViewModel',
-      'Controls/Input/Money/Formatter',
       'Controls/Input/Number/InputProcessor',
       'Controls/Input/Number/SplitValueHelper'
    ],
-   function(BaseViewModel, Formatter, InputProcessor, SplitValueHelper) {
+   function(BaseViewModel, InputProcessor, SplitValueHelper) {
 
       'use strict';
 
