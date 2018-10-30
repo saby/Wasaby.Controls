@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'Core/Deferred',
       'Core/helpers/createGUID',
       'Core/helpers/Object/isEqual',
+      'Core/RightsManager',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ItemNamer',
@@ -23,7 +24,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
-   function (CommandDispatcher, Deferred, createGUID, cObjectIsEqual, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
+   function (CommandDispatcher, Deferred, createGUID, cObjectIsEqual, RightsManager, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {
       'use strict';
 
       /**
@@ -99,6 +100,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                 */
                namespace: null,
                /**
+                * @cfg {string} Зона доступа пользовательских пресетов (опционально)
+                */
+               accessZone: null,
+               /**
                 * @cfg {string|number} Идентификатор выбранного пресета. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedId: undefined,
@@ -133,6 +138,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
 
          _modifyOptions: function () {
             var options = View.superclass._modifyOptions.apply(this, arguments);
+            var accessZone = options.accessZone;
+            options._canChange = !accessZone || !!(RightsManager.getRights([accessZone])[accessZone] & RightsManager.WRITE_MASK);
+            //////////////////////////////////////////////////
+            console.log('DBG: ExC_Presets._modifyOptions: options.namespace=', options.namespace, '; options.accessZone=', options.accessZone, '; options._canChange=', options._canChange, ';');
+            options._canChange = false;//^^^
+            //////////////////////////////////////////////////
             options._items = this._makeItems(options);
             var selectedId = options.selectedId;
             if (selectedId === undefined) {
@@ -143,18 +154,22 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                   this._checkSelectedId(options);
                }
             }
-            else {
+            else
+            if (options._canChange) {
                this._needNewPreset = true;
             }
             return options;
          },
 
          $constructor: function () {
-            this.getLinkedContext().setValue('editedTitle', '');
-            CommandDispatcher.declareCommand(this, 'delete', function () {
-               this._deletePreset(this._options.selectedId)
-                  .addCallback(_ifSuccess(this._updateSelector.bind(this)));
-            }.bind(this));
+            var options = this._options;
+            if (options._canChange) {
+               this.getLinkedContext().setValue('editedTitle', '');
+               CommandDispatcher.declareCommand(this, 'delete', function () {
+                  this._deletePreset(options.selectedId)
+                     .addCallback(_ifSuccess(this._updateSelector.bind(this)));
+               }.bind(this));
+            }
          },
 
          init: function () {
@@ -163,7 +178,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._storage = Di.resolve(_DI_STORAGE_NAME);
             }
             this._selector = this.getChildControlByName('controls-ExportCustomizer-Presets-View__selector');
-            if (this._storage) {
+            var options = this._options;
+            if (this._storage && options._canChange) {
                this._editor = this.getChildControlByName('controls-ExportCustomizer-Presets-View__editor');
 
                this._updateSelectorListOptions('handlers', {
@@ -178,7 +194,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
                this._history = this.getChildControlByName(historyComponentName);
             }
             this._bindEvents();
-            var options = this._options;
             if (this._storage) {
                this._loadCustoms().addCallback(function () {
                   var needNewPreset = this._needNewPreset;
@@ -587,8 +602,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @param {object} [listView] Списочный контрол (опционально)
           */
          _startEditingMode: function (listView) {
-            if (!this._isEditMode) {
-               var preset = this._findPresetById(this._options.selectedId);
+            var options = this._options;
+            if (!this._isEditMode && options._canChange) {
+               var preset = this._findPresetById(options.selectedId);
                if (preset && (preset.isStorable || preset.isUnreal)) {
                   if (listView) {
                      listView.sendCommand('close');
@@ -850,7 +866,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {Core/Deferred}
           */
          _loadCustoms: function () {
-            return this._storage.load(this._options.namespace).addCallback(function (presets) {
+            var options = this._options;
+            return this._storage.load(options.namespace/*, options.accessZone*/).addCallback(function (presets) {
                this._customs = presets;
             }.bind(this));
          },
@@ -862,7 +879,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
           * @return {Core/Deferred}
           */
          _saveCustoms: function () {
-            return this._storage.save(this._options.namespace, this._customs.filter(function (v) { return v.isStorable; }));
+            var options = this._options;
+            return options._canChange ? this._storage.save(options.namespace/*, options.accessZone*/, this._customs.filter(function (v) { return v.isStorable; })) : Deferred.success(false);
          },
 
          /**
