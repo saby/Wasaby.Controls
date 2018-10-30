@@ -280,7 +280,7 @@ define('SBIS3.CONTROLS/ComboBox', [
       init : function() {
          ComboBox.superclass.init.apply(this, arguments);
          if (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) {
-            //this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          } else {
             if (this._options.text) {
                this._setKeyByText();
