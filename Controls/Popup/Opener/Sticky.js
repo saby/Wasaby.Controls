@@ -12,6 +12,7 @@ define('Controls/Popup/Opener/Sticky',
        * @author Красильников А.С.
        * @category Popup
        * @extends Controls/Popup/Opener/Base
+       * @public
        */
       var Sticky = Base.extend({
 
