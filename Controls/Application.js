@@ -187,7 +187,7 @@ define('Controls/Application',
             self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
-            if(self.resourceRoot[self.resourceRoot.length - 1] !== '/') {
+            if (self.resourceRoot[self.resourceRoot.length - 1] !== '/') {
                self.resourceRoot = self.resourceRoot + '/';
             }
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
