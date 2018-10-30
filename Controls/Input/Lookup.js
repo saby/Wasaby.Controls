@@ -482,6 +482,7 @@ define('Controls/Input/Lookup', [
    Lookup.getDefaultOptions = function() {
       return {
          displayProperty: 'title',
+         multiSelect: false,
          selectedKeys: []
       };
    };
