@@ -118,6 +118,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Constants',
                return value;
             },
             presetNamespace: _typeIfDefined.bind(null, 'string'),
+            presetAccessZone: _typeIfDefined.bind(null, 'string'),
             selectedPresetId: function (value) {
                // Если значение есть
                if (value) {

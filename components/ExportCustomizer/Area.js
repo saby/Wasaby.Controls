@@ -15,6 +15,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
       'Core/core-merge',
+      'Core/RightsManager',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
       'SBIS3.CONTROLS/ExportCustomizer/_Executor',
@@ -27,7 +28,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, RightsManager, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -151,6 +152,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                presetNamespace: null,
                /**
+                * @cfg {string} Зона доступа пользовательских пресетов (опционально)
+                */
+               presetAccessZone: null,
+               /**
                 * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedPresetId: null,
@@ -230,6 +235,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var presetsOptions;
             var usePresets = options.usePresets;
             if (usePresets) {
+               var accessZone = options.presetAccessZone;
+               usePresets = !accessZone || !!(RightsManager.getRights([accessZone])[accessZone] & RightsManager.READ_MASK);
+            }
+            if (usePresets) {
                var staticPresets = options.staticPresets;
                var hasStaticPresets = !!(staticPresets && staticPresets.length);
                var currentPreset;
@@ -253,6 +262,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
+                  accessZone: options.presetAccessZone,
                   selectedId: options.selectedPresetId,
                   historyTarget: options.historyTarget
                };
