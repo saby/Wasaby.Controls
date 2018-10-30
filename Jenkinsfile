@@ -432,7 +432,7 @@ node('controls') {
 					browser = ${params.browser_type}
 					SITE = http://${NODE_NAME}:30010
 					SERVER = test-autotest-db1:5434
-					BASE_VERSION = css_${NODE_NAME}${ver}
+					BASE_VERSION = css_${NODE_NAME}${ver}1
 					DO_NOT_RESTART = True
 					SOFT_RESTART = ${soft_restart}
 					NO_RESOURCES = True
@@ -458,7 +458,7 @@ node('controls') {
 						WAIT_ELEMENT_LOAD = 20
 						HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
 						SERVER = test-autotest-db1:5434
-						BASE_VERSION = css_${NODE_NAME}${ver}
+						BASE_VERSION = css_${NODE_NAME}${ver}1
 						#BRANCH=True
 						[regression]
 						IMAGE_DIR = ${img_dir}
