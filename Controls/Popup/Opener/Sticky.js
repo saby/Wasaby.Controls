@@ -8,10 +8,10 @@ define('Controls/Popup/Opener/Sticky',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
        * @class Controls/Popup/Opener/Sticky
        * @mixes Controls/interface/IStickyOpener
+       * @public
        * @control
        * @author Красильников А.С.
        * @category Popup
-       * @extends Controls/Popup/Opener/Base
        */
       var Sticky = Base.extend({
 

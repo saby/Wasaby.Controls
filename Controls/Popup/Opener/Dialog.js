@@ -10,7 +10,6 @@ define('Controls/Popup/Opener/Dialog',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @extends Controls/Popup/Opener/Base
        * @mixes Controls/interface/IDialogOptions
        */
 
@@ -30,7 +29,6 @@ define('Controls/Popup/Opener/Dialog',
           * Open dialog popup.
           * @function Controls/Popup/Opener/Dialog#open
           * @returns {Undefined}
-          * @param {Object} popupOptions Dialog popup options.
           * @example
           * wml
           * <pre>
@@ -73,11 +71,6 @@ define('Controls/Popup/Opener/Dialog',
 
       return Dialog;
    }
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#popupOptions
-    * @cfg {Object} Sets the popup configuration.
-    */
 
    /**
     * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
