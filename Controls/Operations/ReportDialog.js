@@ -14,6 +14,14 @@ define('Controls/Operations/ReportDialog', [
     * @control
     * @public
     *
+    * @css @font-size_ReportDialog-title Title font-size.
+    * @css @color_ReportDialog-title Title text color.
+    * @css @color_ReportDialog-message Message text color.
+    * @css @color_ReportDialog-error Errors text color.
+    * @css @spacing_ReportDialog-between-title-message Spacing between title and message.
+    * @css @spacing_ReportDialog-between-message-errors Spacing between message and errors.
+    * @css @spacing_ReportDialog-between-errors Spacing between errors.
+    *
     */
 
    /**
