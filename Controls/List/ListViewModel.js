@@ -161,6 +161,7 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
+            this._notify('onListChange');
             this._nextVersion();
          },
 

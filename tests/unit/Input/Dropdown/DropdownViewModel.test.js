@@ -93,6 +93,10 @@ define(
 
          let viewModel = new DropdownViewModel(config);
          let viewModel2 = new DropdownViewModel(config2);
+   
+         function setViewModelItems(viewModel, items) {
+            viewModel._options.items = items;
+         }
 
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._display.getCount(), 3);
@@ -140,14 +144,11 @@ define(
                let newConfig = {
                   keyProperty: 'id',
                };
-               newConfig.itemsGroup = {
-                  method: function (item) {
-                     if (item.get('group') === 'hidden' || !item.get('group')) {
-                        return ControlsConstants.view.hiddenGroup;
-                     }
-                     return item.get('group');
-                  },
-                  template: '',
+               newConfig.groupMethod = function (item) {
+                  if (item.get('group') === 'hidden' || !item.get('group')) {
+                     return ControlsConstants.view.hiddenGroup;
+                  }
+                  return item.get('group');
                };
                newConfig.items = new RecordSet({
                   idProperty: 'id',
@@ -243,6 +244,28 @@ define(
          it('destroy', () => {
             viewModel.destroy();
             assert.equal(null, viewModel._itemsModel._options);
+         });
+   
+         it('hasAdditional', () => {
+            var viewModel = new DropdownViewModel(config);
+            viewModel._options.additionalProperty = 'additional';
+            setViewModelItems(viewModel, rs);
+            assert.isTrue(!!viewModel.hasAdditional());
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional());
+   
+            viewModel._options.rootKey = 'test';
+            setViewModelItems(viewModel, rs);
+            assert.isFalse(!!viewModel.hasAdditional());
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional());
+   
+            viewModel._options.rootKey = null;
+            viewModel._options.additionalProperty = '';
+            setViewModelItems(viewModel, rs);
+            assert.isFalse(!!viewModel.hasAdditional(rs));
+            setViewModelItems(viewModel, rs2);
+            assert.isFalse(!!viewModel.hasAdditional(rs2));
          });
       })
    });

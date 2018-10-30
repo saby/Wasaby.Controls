@@ -29,7 +29,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 1,
                   icon: 'icon-PhoneNull',
                   title: 'phone',
-                  showType: 2,
+                  showType: 0,
                   handler: function(item) {
                      console.log('action phone Click ', item);
                   }
@@ -38,7 +38,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 2,
                   icon: 'icon-EmptyMessage',
                   title: 'message',
-                  showType: 2,
+                  showType: 0,
                   handler: function() {
                      alert('Message Click');
                   }
@@ -47,7 +47,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 3,
                   icon: 'icon-Profile',
                   title: 'profile',
-                  showType: 2,
+                  showType: 0,
                   handler: function() {
                      console.log('action profile Click');
                   }
@@ -57,7 +57,7 @@ define('Controls-demo/Explorer/Explorer', [
                   icon: 'icon-Erase',
                   iconStyle: 'error',
                   title: 'delete pls',
-                  showType: 2,
+                  showType: 0,
                   handler: function() {
                      console.log('action delete Click');
                   }
@@ -66,7 +66,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 5,
                   icon: 'icon-PhoneNull',
                   title: 'phone',
-                  showType: 2,
+                  showType: 0,
                   handler: function(item) {
                      console.log('action phone Click ', item);
                   }
@@ -75,7 +75,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 6,
                   icon: 'icon-EmptyMessage',
                   title: 'message',
-                  showType: 2,
+                  showType: 0,
                   handler: function() {
                      alert('Message Click');
                   }

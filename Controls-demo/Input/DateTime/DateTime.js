@@ -1,36 +1,48 @@
-define('Controls-demo/Input/DateTime/DateTime',
-   [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
+define('Controls-demo/Input/DateTime/DateTime', [
+   'Core/Control',
+   'wml!Controls-demo/Input/DateTime/DateTime',
+   'css!Controls-demo/Input/DateTime/DateTime'
+], function(
+   BaseControl,
+   template
+) {
+   'use strict';
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
-   ],
+   var ModuleClass = BaseControl.extend({
+      _template: template,
+      _date: new Date(2017, 0, 1, 12, 15, 30, 123),
 
-   function(Control, template, config) {
-      'use strict';
-      var Component = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/DateTime',
-         _dataObject: null,
-         _componentOptions: null,
-         _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               }
-            };
-            this._componentOptions = {
-               name: 'DateTime',
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
-         }
-      });
-      return Component;
+      _masks: [{
+         title: 'Main date and time formats',
+         masks: [
+            'DD.MM.YYYY',
+            'DD.MM.YY',
+            'DD.MM',
+            'YYYY',
+            'HH:mm',
+            'HH:mm:ss'
+         ]
+      }, {
+         title: 'Additional date and time formats',
+         masks: [
+            'MM.YYYY'//,
+            // 'HH:MM:SS.UUU'
+         ]
+      }, {
+         title: 'Mixed date and time formats',
+         masks: [
+            'DD.MM HH:mm',
+            'DD.MM HH:mm:ss',
+            // 'DD.MM HH:mm:ss.UUU',
+            'DD.MM.YY HH:mm',
+            'DD.MM.YY HH:mm:ss',
+            // 'DD.MM.YY HH:mm:ss.UUU',
+            'DD.MM.YYYY HH:mm',
+            'DD.MM.YYYY HH:mm:ss',
+            // 'DD.MM.YYYY HH:mm:ss.UUU'
+         ]
+      }],
+
    });
+   return ModuleClass;
+});

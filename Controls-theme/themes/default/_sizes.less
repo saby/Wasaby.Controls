@@ -296,8 +296,10 @@
 @top_DropdownList-icon:         (@height_DropdownList-item - @menu-expand-height) / 2;
 @padding_DropdownList-head:     @padding_DropdownList-default;
 @offset_DropdownList-submenu:   -3px;
-@right-DropdownList-cross:             5px;
-@top-DropdownList-cross:               6px;
+@right_DropdownList-cross:             5px;
+@top_DropdownList-cross:               6px;
+@margin-left_Toolbar-popup:               @right_DropdownList-cross;
+@margin-top_Toolbar-popup:                -@top_DropdownList-cross;
 
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
@@ -507,6 +509,8 @@
 @font-family_FilterButton-icon:                    @default-icon-medium-font;
 @font-size_FilterButton-text:                      @default-text-size;
 @icon-size_FilterButton-text-icon:                 @icon-size_default;
+@margin-top_FilterButton_popup:                    -11px;
+@margin-left_FilterButton_popup:                   9px;
 
 //Lookup
 @spacing_Lookup-item:                    4px;
@@ -627,10 +631,10 @@
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @spacing-bottom_FilterPanel:                                   12px;
-@padding_FilterPanel-history-default:                          6px 12px 12px 12px;
-@padding_FilterPanel-history-column:                           6px 12px 0 12px;
+@padding_FilterPanel-history-vertical:                          6px 12px 12px 12px;
+@padding_FilterPanel-history-horizontal:                           6px 12px 0 12px;
 @margin_FilterPanel-history:                                   12px;
-@border-width_FilterPanel-column:                              1px;
+@border-width_FilterPanel-horizontal:                              1px;
 @spacing_FilterPanel-items:                                    22px;
 //FilterLink
 @height_FilterLink:                                            24px;

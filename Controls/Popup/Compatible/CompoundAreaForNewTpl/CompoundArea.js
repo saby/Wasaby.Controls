@@ -9,6 +9,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Core/vdom/Synchronizer/Synchronizer',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'Core/Control',
+      'Core/IoC',
       'Core/Deferred',
       'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
@@ -18,6 +19,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       Sync,
       SyntheticEvent,
       control,
+      IoC,
       Deferred) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
@@ -36,7 +38,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
-            this._modifyInnerOptionsByHandlers();
 
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
@@ -45,14 +46,32 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
 
-               require([this._options.innerComponentOptions._template], function() {
+               if (this._options.innerComponentOptions) {
+                  if (this._options.innerComponentOptions._template) {
+                     this._options.template = this._options.innerComponentOptions._template;
+                  }
+                  this._options.templateOptions = this._options.innerComponentOptions;
+                  IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
+               }
+
+               this._modifyInnerOptionsByHandlers();
+
+               require([this._options.template], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
                   }
                   var wrapper = $('.vDomWrapper', self.getContainer());
                   if (wrapper.length) {
-                     self._vDomTemplate = control.createControl(ComponentWrapper, self._options.innerComponentOptions, wrapper);
+                     var wrapperOptions = {
+                        template: self._options.template,
+                        templateOptions: self._options.templateOptions,
+
+                        // Нужно передать себя в качестве родителя, чтобы система фокусов
+                        // могла понять, где находятся вложенные компоненты
+                        parent: self
+                     };
+                     self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
                      self._afterMountHandler();
                      self._afterUpdateHandler();
                   } else {
@@ -133,7 +152,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             };
          },
          _modifyInnerOptionsByHandlers: function() {
-            var innerOptions = this._options.innerComponentOptions;
+            var innerOptions = this._options.templateOptions;
             innerOptions._onCloseHandler = this._onCloseHandler;
             innerOptions._onResultHandler = this._onResultHandler;
             innerOptions._onResizeHandler = this._onResizeHandler;
@@ -194,19 +213,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             // Заглушка для ForceUpdate которого на compoundControl нет
          },
 
-         setInnerComponentOptions: function(newOptions) {
+         setTemplateOptions: function(newOptions) {
             // Могут позвать перерисоку до того, как компонент создался
             // Если компонент еще не создался а его уже перерисовали, то создаться должент с новыми опциями
-            this._options.innerComponentOptions = newOptions;
+            this._options.templateOptions = newOptions;
             this._modifyInnerOptionsByHandlers();
 
             if (this._vDomTemplate) {
                this._isNewOptions = true;
-
-               newOptions._onCloseHandler = this._onCloseHandler;
-               newOptions._onResultHandler = this._onResultHandler;
-               newOptions._onResizeHandler = this._onResizeHandler;
-               newOptions._onRegisterHandler = this._onRegisterHandler;
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');

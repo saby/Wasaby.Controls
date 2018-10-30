@@ -36,10 +36,12 @@ define('Controls/Popup/Opener/Stack/StackController',
             if (item.popupOptions.isCompoundTemplate) {
                //Берем размеры прикладного шаблона
                template = container.querySelector('.controls-CompoundArea__container').children[0];
-            } else {
-               template = container.querySelector('.controls-Popup__template');
+               return template.clientWidth;
             }
-            return template.clientWidth; // Берем размеры пользовательского шаблона без бордера
+            template = container.querySelector('.controls-Popup__template');
+            var cStyle = getComputedStyle(template);
+
+            return parseInt(cStyle.width, 10);
          },
 
          getStackParentCoords: function() {

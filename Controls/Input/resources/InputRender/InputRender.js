@@ -7,9 +7,10 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
       'Controls/Utils/getWidth',
+      'Core/EventBus',
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
 
       'use strict';
 
@@ -212,6 +213,10 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusinHandler: function(e) {
             this._inputActive = true;
 
+            if (cDetection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocus');
+            }
+
             if (!this._options.readOnly && this._options.selectOnClick) {
                //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
                if (cDetection.isIE) {
@@ -226,6 +231,10 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _focusoutHandler: function(e) {
             this._inputActive = false;
+
+            if (cDetection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocusOut');
+            }
 
             e.target.scrollLeft = 0;
          },

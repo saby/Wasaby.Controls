@@ -1,7 +1,8 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
-   'Core/core-extend'
-], function(Logger, coreExtend) {
+   'Core/core-extend',
+   'Core/helpers/getResourceUrl'
+], function(Logger, coreExtend, getResourceUrl) {
 
    var DEPTYPES = {
       BUNDLE: 1,
@@ -18,7 +19,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function getLinkWithBuildNumber(link, buildnumber) {
       if (buildnumber) {
-         return link.replace(/\.(css|js|tmpl)$/, '.v' + buildnumber + '$&');
+         return link.replace(/\.(css|js|tmpl)$/, '$&?x_version=' + buildnumber);
       } else {
          return link;
       }
@@ -149,6 +150,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          res = checkResourcesPrefix(res);
          res = getLinkWithBuildNumber(res, this.buildNumber);
          res = getLinkWithAppRoot(res, this.appRoot);
+         res = getResourceUrl(res);
          return res;
       }
    });

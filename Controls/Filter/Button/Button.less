@@ -22,21 +22,21 @@
 	color: @color_FilterButton-icon_disabled;
 }
 
-.controls-FilterButton__spaceTemplate_right {
+.controls-FilterButton__spaceTemplate_left {
 	order: -1;
 	margin-right: @spacing_FilterButton-between-spaceTemplate-text;
 }
 
-.controls-FilterButton__spaceTemplate_left {
+.controls-FilterButton__spaceTemplate_right {
 	margin-left: @spacing_FilterButton-between-spaceTemplate-text;
 }
 
-.controls-FilterButton__icon_right {
+.controls-FilterButton__icon_left {
 	order: -2;
 	margin-right: @spacing_FilterButton-between-icon-text;
 }
 
-.controls-FilterButton__icon_left {
+.controls-FilterButton__icon_right {
 	margin-left: @spacing_FilterButton-between-icon-text;
 }
 
@@ -49,7 +49,7 @@
 
 .controls-FilterButton__wrapper:before {
 	content: "\200b";
-	order: -1;
+	order: -3;
 }
 
 .controls-FilterButton__text-wrapper {
@@ -109,6 +109,16 @@
 	.flex-shrink(0);
 }
 
+.controls-FilterButton-popup-orientation-left {
+	margin-top: @margin-top_FilterButton_popup;
+	margin-left: @margin-left_FilterButton_popup;
+}
+
+.controls-FilterButton-popup-orientation-right {
+	margin-top: @margin-top_FilterButton_popup;
+	margin-left: -@margin-left_FilterButton_popup;
+}
+
 /* ****************Для совместимости со старой панелью ****************/
 .controls-FilterButton {
 	position: relative;
@@ -121,11 +131,11 @@
 	visibility: hidden;
 }
 
-.controls-FilterButton__oldTemplate_right {
+.controls-FilterButton__oldTemplate_left {
 	left: 0;
 }
 
-.controls-FilterButton__oldTemplate_left {
+.controls-FilterButton__oldTemplate_right {
 	right: 0;
 }
 /********************************************************************/

@@ -362,7 +362,9 @@ define('Controls/Container/Scroll',
             _scrollMoveHandler: function(e, scrollData) {
                if (scrollData.position === 'up') {
                   this._pagingState.stateUp = 'disabled';
+                  this._pagingState.stateDown = 'normal';
                } else if (scrollData.position === 'down') {
+                  this._pagingState.stateUp = 'normal';
                   this._pagingState.stateDown = 'disabled';
                } else {
                   this._pagingState.stateUp = 'normal';
@@ -468,7 +470,6 @@ define('Controls/Container/Scroll',
 
       Scroll.getDefaultOptions = function() {
          return {
-            style: 'normal',
             shadowVisible: true,
             scrollbarVisible: true
          };

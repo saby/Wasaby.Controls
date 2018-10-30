@@ -27,8 +27,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
          var naturalSize = options.naturalSize;
          options.aspect = naturalSize.height/naturalSize.width;
          options.maxSizes = {
-            width: options.editorWidth,
-            height: Math.round(options.editorWidth*options.aspect)
+            width: options.maxWidth,
+            height: Math.round(options.maxWidth*options.aspect)
          };
          return options;
       },
@@ -159,7 +159,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             return parseInt(cssSize.height.indexOf('%') !== -1 ? cssSize.height : cssSize.width);
          }
          else {
-            return 100*options.pixelSize.width/options.editorWidth;
+            return 100*options.pixelSize.width/options.maxWidth;
          }
       },
 

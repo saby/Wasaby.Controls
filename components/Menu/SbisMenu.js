@@ -1,11 +1,11 @@
 define('SBIS3.CONTROLS/Menu/SbisMenu', [
    'SBIS3.CONTROLS/Menu/ContextMenu',
    'WS.Data/Entity/Model',
-   'Core/core-clone',
+   'WS.Data/Utils',
    'SBIS3.CONTROLS/Menu/SBISHistoryController',
    'SBIS3.CONTROLS/Utils/HistoryUtil',
    'css!SBIS3.CONTROLS/Menu/SbisMenu/SbisMenu'
-], function(ContextMenu, Model, coreClone, HistoryController, historyUtil) {
+], function(ContextMenu, Model, dataUtils, HistoryController, historyUtil) {
 
    'use strict';
 
@@ -145,7 +145,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
       _getHistoryController: function() {
          if (!this._historyController) {
             this._historyController = new HistoryController({
-               oldItems: coreClone(this._items),
+               oldItems: dataUtils.clone(this._items || this._options.items),
                historyId: this._options.historyId,
                pinned: this._options.pinned,
                frequent: this._options.frequent,

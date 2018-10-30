@@ -7,11 +7,11 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
       /**
        * Возвращает позицию диалогового окна
        * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
-       * @param wWidth ширина окна браузера
-       * @param wHeight высота окна браузера
-       * @param sizes размеры диалогового окна
+       * @param windowData параметры окна браузера
+       * @param containerSizes размеры контейенра окна
+       * @param item конфигурация окна
        */
-      getPosition: function(wWidth, wHeight, containerSizes, item) {
+      getPosition: function(windowData, containerSizes, item) {
          var width, height, left, top, dif;
 
          if (item.dragged) {
@@ -19,11 +19,11 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
             top = Math.max(0, item.position.top);
 
             //check overflowX
-            dif = (item.position.left + containerSizes.width) - wWidth;
+            dif = (item.position.left + containerSizes.width) - windowData.width;
             left -= Math.max(0, dif);
 
             //check overflowY
-            dif = (item.position.top + containerSizes.height) - wHeight;
+            dif = (item.position.top + containerSizes.height) - windowData.height;
             top -= Math.max(0, dif);
             return {
                left: left,
@@ -36,22 +36,22 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          var popupOptions = item.popupOptions;
 
          if (popupOptions.maximize) {
-            width = wWidth;
-            height = wHeight;
+            width = windowData.width;
+            height = windowData.height;
          } else {
-            width = !popupOptions.maximize ? this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, wWidth) : wWidth;
-            height = !popupOptions.maximize ? this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, wHeight) : wHeight;
+            width = !popupOptions.maximize ? this._calculateValue(popupOptions.minWidth, popupOptions.maxWidth, containerSizes.width, windowData.width) : windowData.width;
+            height = !popupOptions.maximize ? this._calculateValue(popupOptions.minHeight, popupOptions.maxHeight, containerSizes.height, windowData.height) : windowData.height;
          }
 
-         left = this._getCoord(wWidth, width);
-         top = this._getCoord(wHeight, height);
+         left = this._getLeftCoord(windowData.width, width);
+         top = this._getTopCoord(windowData, height);
 
          //don't limit container size when it fit in window
-         if (!popupOptions.minWidth && !popupOptions.maxWidth && width < wWidth) {
+         if (!popupOptions.minWidth && !popupOptions.maxWidth && width < windowData.width) {
             width = undefined;
          }
 
-         if (!popupOptions.minHeight && !popupOptions.maxHeight && height < wHeight) {
+         if (!popupOptions.minHeight && !popupOptions.maxHeight && height < windowData.height) {
             height = undefined;
          }
 
@@ -78,9 +78,13 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          }
          return windowValue;
       },
-      _getCoord: function(windowValue, value) {
-         var coord = Math.round((windowValue - value) / 2);
-         return Math.max(coord, 0);
+      _getLeftCoord: function(wWidth, width) {
+         return Math.max(Math.round((wWidth - width) / 2), 0);
+      },
+
+      _getTopCoord: function(windowData, height) {
+         var coord = Math.round((windowData.height - height) / 2) + windowData.scrollTop;
+         return Math.max(coord, windowData.scrollTop);
       }
    };
 });

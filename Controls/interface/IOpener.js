@@ -24,13 +24,13 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#closePopupBeforeUnmount
-    * @cfg {Boolean} Close the pop-up window when the opener was destroyed.
+    * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
     * Default value: true
     */
 
 
    /** @name Controls/interface/IOpener#popupOptions
-    * @cfg {PopupOptions} Options for pop-up.
+    * @cfg {PopupOptions} Sets the popup configuration.
     */
 
    /**

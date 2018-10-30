@@ -65,7 +65,8 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
-               itemsGroup: cfg.itemsGroup,
+               groupMethod: cfg.groupMethod,
+               groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
@@ -170,6 +171,19 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                }
             }
             return false;
+         },
+         hasAdditional: function() {
+            var self = this;
+            var hasAdditional = false;
+
+            if (this._options.additionalProperty && this._options.rootKey === null) {
+               this._options.items.each(function(item) {
+                  if (!hasAdditional) {
+                     hasAdditional = item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
+                  }
+               });
+            }
+            return hasAdditional;
          },
          _hasParent: function(item) {
             return this._hierarchy.hasParent(item, this._options.items);
