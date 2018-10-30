@@ -3,8 +3,9 @@ define('Controls/List/Mover', [
    'Core/Deferred',
    'Core/core-instance',
    'WS.Data/Source/ISource',
-   'Controls/Container/Data/ContextOptions'
-], function(Control, Deferred, cInstance, ISource, dataOptions) {
+   'Controls/Container/Data/ContextOptions',
+   'wml!Controls/List/Mover/Mover'
+], function(Control, Deferred, cInstance, ISource, dataOptions, template) {
 
    var BEFORE_ITEMS_MOVE_RESULT = {
       CUSTOM: 'Custom',
@@ -167,6 +168,7 @@ define('Controls/List/Mover', [
     */
 
    var Mover = Control.extend({
+      _template: template,
       _beforeMount: function(options, context) {
          _private.updateDataOptions(this, context.dataOptions);
       },
