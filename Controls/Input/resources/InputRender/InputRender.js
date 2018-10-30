@@ -119,7 +119,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            var input = this._children.input.querySelector('.controls-InputRender__field');
+            var input = this._children.divinput.querySelector('.controls-InputRender__field');
             var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
@@ -167,7 +167,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(this._children.input.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
+               _private.hasHorizontalScroll(this._children.divinput.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
