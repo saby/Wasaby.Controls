@@ -129,8 +129,7 @@ define('Controls/Controllers/QueryParamsController/Position',
                      } else if (loadDirection !== 'up') {
                         this._afterPosition = metaNextPostion;
                      }
-                  }
-                  else {
+                  } else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
                   }
                } else {
