@@ -67,7 +67,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
       /**
        *
        * Действие открытия прилипающего окна
-       * @class Controls/Popup/Opener/Menu
        * @control
        * @public
        * @category Popup
