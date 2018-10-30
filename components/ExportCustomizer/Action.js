@@ -376,7 +376,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                   };
                   if (!_usePreset(options.staticPresets) && Di.isRegistered(_DI_STORAGE_NAME)) {
                      var promise = new Deferred();
-                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace, options.presetAccessZone).addCallback(function (customs) {
+                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace/*, options.presetAccessZone*/).addCallback(function (customs) {
                         _usePreset(customs);
                         promise.callback();
                      });

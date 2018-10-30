@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
                var accessZone = presetGroup.accessZone;
                canUseCustom = !accessZone || !!(RightsManager.getRights(accessZone)[accessZone] && RightsManager.READ_MASK);
             }
-            return (canUseCustom ? storage.load(presetGroup.namespace, presetGroup.accessZone) : Deferred.success(null)).addCallback(function (presets) {
+            return (canUseCustom ? storage.load(presetGroup.namespace/*, presetGroup.accessZone*/) : Deferred.success(null)).addCallback(function (presets) {
                var items = [];
                var statics = presetGroup ? presetGroup.staticPresets : null;
                if (statics && statics.length) {
