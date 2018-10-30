@@ -15,8 +15,8 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
          return json;
       }
 
-      // Decorate link only with text == href;
-      if (!json[1] || !json[1].href || json[1].href != json[2]) {
+      // Decorate link only with text == href, and href length should be less then 1500;
+      if (!json[1] || !json[1].href || json[1].length >= 1500 || json[1].href != json[2]) {
          return json;
       }
 

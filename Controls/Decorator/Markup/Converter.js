@@ -36,7 +36,7 @@ define('Controls/Decorator/Markup/Converter', [
    }
 
    function wrapUrl(html) {
-      var parseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|<\/?[^>]*>))/g,
+      var parseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|(<[^>]*>)))/g,
          inLink = false;
       return html.replace(parseRegExp, function(match, link, linkPrefix, email, text, end) {
          if (link && !inLink) {
@@ -88,8 +88,7 @@ define('Controls/Decorator/Markup/Converter', [
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson,
-      wrapUrl: wrapUrl
+      deepCopyJson: deepCopyJson
    };
 
    return MarkupConverter;

@@ -1,11 +1,32 @@
 <div>
    <h1>Markup</h1>
-   Ввести строковое представление json-а:
-   <br />
-   <Controls.Input.Text on:valueChanged="_setJson()" on:keydown="_applyJson()" />
-   <Controls.Button on:click="_applyJson()" caption="подтвердить"/>
-   <br />
-   <br />
-   Результат:<br />
-   <Controls.Decorator.Markup value="{{ json }}" />
+   <div class="ControlsDemo-Markup__testBlock">
+      <ws:for data="i, testValue in testValues">
+         <div class="ControlsDemo-Markup__testCase">
+            <div>
+               Тестовый случай номер {{i}}.
+               Статус: <span  id="test-result{{i}}">{{ statuses[testValue.status] }}</span>.
+               Значение:
+            </div>
+            <Controls.Decorator.Markup attr:id="ControlsDemo-Markup__case{{ i }}"
+                                       attr:class="{{testValue.className}}"
+                                       value="{{ testValue.value }}"
+                                       tagResolver="{{ testValue.tagResolver }}"
+            />
+         </div>
+      </ws:for>
+      <div>
+         Итого: <span class="ControlsDemo-Markup__globalStatus">{{ statuses[globalStatus] }}</span>
+      </div>
+   </div>
+   <div class="ControlsDemo-Markup__userBlock">
+      Ввести строковое представление json-а:
+      <br />
+      <Controls.Input.Text on:valueChanged="_setJson()" on:keydown="_applyJson()" />
+      <Controls.Button on:click="_applyJson()" caption="подтвердить"/>
+      <br />
+      <br />
+      Результат:<br />
+      <Controls.Decorator.Markup value="{{ json }}" tagResolver="{{ tagResolver }}" />
+   </div>
 </div>

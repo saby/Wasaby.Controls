@@ -87,8 +87,9 @@ define('Controls/Decorator/Markup/resources/template', [
          },
          oldEscape,
          value = data._options.value;
-      if (value && !isString(value[0]) && value.length > 1) {
-         value = ['span', value];
+      if (value && value.length) {
+         // Need just one root node.
+         value = ['div', value];
       }
       if (isVdom) {
          // Protect view of text from needless unescape in inferno.

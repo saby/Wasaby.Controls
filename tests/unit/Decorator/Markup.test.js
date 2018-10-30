@@ -93,7 +93,7 @@ define([
                '<p><a> https://ya.ru </a></p>' +
                '<p>e@mail.ru</p>' +
                '<p><a>e@mail.ru</a></p>' +
-               '<p><a>e@mail.ru</a>https://ya.ru</p>' +
+               '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
                ['p', linkNode],
@@ -108,7 +108,7 @@ define([
                ['p', ['a', ' https://ya.ru ']],
                ['p', ['a', { href: 'mailto:e@mail.ru' }, 'e@mail.ru']],
                ['p', ['a', 'e@mail.ru']],
-               ['p', ['a', 'e@mail.ru'], linkNode],
+               ['p', ['a', 'e@mail.ru.'], linkNode],
                ['p',
                   ['a',
                      {
@@ -133,7 +133,7 @@ define([
          });
          it('one big', function() {
             var json = [['p', 'text'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            var html = '<span><p>text</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></span>';
+            var html = '<div><p>text</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
             assert.equal(Converter.jsonToHtml(json), html);
          });
          it('with linkDecorate resolver', function() {
@@ -145,14 +145,14 @@ define([
                ['p', ['strong', linkNode], 'text'],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
-            var html = '<span>' +
+            var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
                '<p>' + decoratedLinkHtml + '   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
-            '</span>';
+            '</div>';
             assert.equal(Converter.jsonToHtml(json, linkDecorateResolver), html);
          });
       });
