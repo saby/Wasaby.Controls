@@ -15,11 +15,7 @@ define('Controls/FormController', [
          var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
 
          readDef.addCallback(function(record) {
-            instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
-            instance._record = record;
-
-            // на изменение рекорда регистрируем пендинг
-            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._setRecord(record);
             instance._readInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
@@ -55,10 +51,7 @@ define('Controls/FormController', [
          var createDef = cfg.dataSource.create(cfg.initValues);
          instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
          createDef.addCallback(function(record) {
-            instance._record = record;
-
-            // на изменение рекорда регистрируем пендинг
-            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
@@ -109,11 +102,8 @@ define('Controls/FormController', [
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
          // use record
-         if (cInstance.instanceOfModule(cfg.record, 'WS.Data/Entity/Record')) {
-            this._record = cfg.record;
-
-            // register a pending to change the record
-            this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
+         if (cfg.record && cfg.record instanceof Model) {
+            this._setRecord(cfg.record);
             this._isNewRecord = !!cfg.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
@@ -138,6 +128,14 @@ define('Controls/FormController', [
          }
          this._isMount = true;
       },
+      _beforeUpdate: function(cfg) {
+         if (cfg.record && cfg.record instanceof Model) {
+            this._setRecord(cfg.record);
+            if (cfg.isNewRecord) {
+               this._isNewRecord = this._options.isNewRecord;
+            }
+         }
+      },
       _afterUpdate: function() {
          if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
@@ -148,13 +146,7 @@ define('Controls/FormController', [
          }
 
          if (this._options.record && this._options.record instanceof Model) {
-            // если есть рекорд - используем его
-            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-            this._record = this._options.record;
-            this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
-            if (this._options.isNewRecord) {
-               this._isNewRecord = this._options.isNewRecord;
-            }
+            // уже установили в _beforeUpdate
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
             this.read(this._options.key, this._options.readMetaData);
@@ -168,6 +160,13 @@ define('Controls/FormController', [
 
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
+      },
+      _setRecord: function(record) {
+         if (!record || record instanceof Model) {
+            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+            this._record = record;
+            this._record && this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
+         }
       },
 
       _tryDeleteNewRecord: function() {
@@ -413,8 +412,7 @@ define('Controls/FormController', [
          var resultDef = this._children.crud.delete(record, destroyMeta);
 
          resultDef.addCallback(function(record) {
-            self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
-            self._record = null;
+            self._setRecord(null);
             self._wasDestroyed = true;
             self._isNewRecord = false;
             self._forceUpdate();
