@@ -169,9 +169,15 @@ define('SBIS3.CONTROLS/Date/Range', [
             self.clearMark();
             self.setStartValue(date, false, true);
          });
+
+         // Set the focus in the end of period input field after the user has entered the date in the start input field.
          this._datePickerStart.subscribe('onInputFinished', function() {
-            self._datePickerEnd.setActive(true);
+            // Set the focus only if the user has entered the date completely.
+            if (self._datePickerStart.getDate()) {
+               self._datePickerEnd.setActive(true);
+            }
          });
+
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self.clearMark();
