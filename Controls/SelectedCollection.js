@@ -10,6 +10,16 @@ define('Controls/SelectedCollection',
    function(Control, template, ItemTemplate, Chain) {
       'use strict';
 
+      /**
+       * Control, that display collection of items.
+       *
+       * @class Controls/SelectedCollection
+       * @extends Core/Control
+       * @mixes Controls/SelectedCollection/SelectedCollectionStyles
+       * @control
+       * @public
+       */
+
       var _private = {
          onResult: function(eventType, item) {
             if (eventType === 'crossClick') {

@@ -10,6 +10,17 @@ define('Controls/Button/SelectorButton', [
 ], function(Control, template, Chain, List, isEqual, SourceController, cMerge) {
    'use strict';
 
+   /**
+    * Button link with the specified text, on clicking on which a selection window opens.
+    *
+    * @class Controls/Button/SelectorButton
+    * @extends Core/Control
+    * @control
+    * @public
+    *
+    * @css @spacing_SelectorButton-between-buttonMore-buttonReset Spacing between button more and button reset.
+    */
+
    var _private = {
       loadItems: function(self, source, filter, selectedKeys, keyProperty, displayProperty) {
          self._sourceController = new SourceController({
