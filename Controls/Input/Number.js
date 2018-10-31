@@ -158,6 +158,7 @@ define('Controls/Input/Number',
                value = newOptions.value !== undefined ? String(newOptions.value) : '';
             }
 
+            // Если в поле ввода не предусмотрен ввод дробной части, то -0 отображаться не должен, оставляем только '-'
             if (newOptions.precision === 0 && value[0] === '-' && newOptions.value === 0) {
                value = '-';
             }
