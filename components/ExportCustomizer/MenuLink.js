@@ -115,26 +115,33 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
             var presetGroup = options.presetGroup;
             var storage = this._storage;
             var canUseCustom = !!(storage && presetGroup && presetGroup.namespace);
+            var canSetCustom;
             if (canUseCustom) {
+               canSetCustom = true;
                var accessZone = presetGroup.accessZone;
-               canUseCustom = !accessZone || !!(RightsManager.getRights(accessZone)[accessZone] && RightsManager.READ_MASK);
+               if (accessZone) {
+                  var rights = RightsManager.getRights(accessZone)[accessZone];
+                  canUseCustom = !!(rights & RightsManager.READ_MASK);
+                  canSetCustom = !!(rights & RightsManager.WRITE_MASK);
+               }
             }
             return (canUseCustom ? storage.load(presetGroup.namespace/*, presetGroup.accessZone*/) : Deferred.success(null)).addCallback(function (presets) {
                var items = [];
+               var _mapper = function (preset) { return cMerge({isPreset:true}, preset); };
                var statics = presetGroup ? presetGroup.staticPresets : null;
                if (statics && statics.length) {
-                  items.push.apply(items, statics.map(function (v) { var o = cMerge({isPreset:true}, v); return o; }));
+                  items.push.apply(items, statics.map(_mapper));
                   var presetCaption = presetGroup ? presetGroup.caption : null;
                   if (presetCaption) {
                      items[0].title = presetCaption;
                   }
                }
                if (presets && presets.length) {
-                  items.push.apply(items, presets.map(function (preset) {
+                  items.push.apply(items, presets.map(canSetCustom ? function (preset) {
                      var item = cMerge({isPreset:true, className:'controls-ExportCustomizer-MenuLink__dual'}, preset);
                      item.title = '<span class="controls-ExportCustomizer-MenuLink__edit icon-16 icon-Edit icon-primary action-hover" title="' + rk('Редактировать шаблон', 'НастройщикЭкспорта') + '"></span>' + item.title;
                      return item;
-                  }));
+                  } : _mapper));
                }
                if (items.length) {
                   var presetIcon = presetGroup ? presetGroup.icon : null;
@@ -146,7 +153,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
                if (firstItems && firstItems.length) {
                   items.unshift.apply(items, firstItems);
                }
-               if (canUseCustom) {
+               if (canSetCustom) {
                   items.push({id:'', title:rk('Создать новый шаблон', 'НастройщикЭкспорта'), className:'controls-ExportCustomizer-MenuLink__last'});
                }
                return new RecordSet({
