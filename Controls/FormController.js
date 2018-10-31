@@ -2,13 +2,15 @@ define('Controls/FormController', [
    'Core/Control',
    'Core/core-instance',
    'wml!Controls/FormController/FormController',
-   'WS.Data/Entity/Model',
    'Core/Deferred',
    'Core/IoC'
-], function(Control, cInstance, tmpl, Model, Deferred, IoC) {
+], function(Control, cInstance, tmpl, Deferred, IoC) {
    'use strict';
 
    var _private = {
+      checkRecordType: function(record) {
+         return cInstance.instanceOfModule(record, 'WS.Data/Entity/Record');
+      },
       readRecordBeforeMount: function(instance, cfg) {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
@@ -102,7 +104,7 @@ define('Controls/FormController', [
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
          // use record
-         if (cfg.record && cfg.record instanceof Model) {
+         if (cfg.record && _private.checkRecordType(cfg.record)) {
             this._setRecord(cfg.record);
             this._isNewRecord = !!cfg.isNewRecord;
 
@@ -129,7 +131,7 @@ define('Controls/FormController', [
          this._isMount = true;
       },
       _beforeUpdate: function(cfg) {
-         if (cfg.record && cfg.record instanceof Model) {
+         if (cfg.record && _private.checkRecordType(cfg.record)) {
             this._setRecord(cfg.record);
             if (cfg.isNewRecord) {
                this._isNewRecord = this._options.isNewRecord;
@@ -145,7 +147,7 @@ define('Controls/FormController', [
             this._wasDestroyed = false;
          }
 
-         if (this._options.record && this._options.record instanceof Model) {
+         if (this._options.record && _private.checkRecordType(this._options.record)) {
             // уже установили в _beforeUpdate
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
@@ -162,17 +164,27 @@ define('Controls/FormController', [
          this._tryDeleteNewRecord();
       },
       _setRecord: function(record) {
-         if (!record || record instanceof Model) {
+         if (!record || _private.checkRecordType(record)) {
             this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
             this._record = record;
             this._record && this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
          }
       },
+      _getRecordId: function() {
+         if (!this._record.getId && !this._options.idProperty) {
+            IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
+            return;
+         }
+
+         return this._options.idProperty
+            ? this._record.get(this._options.idProperty)
+            : this._record.getId();
+      },
 
       _tryDeleteNewRecord: function() {
          var def;
          if (this._isNewRecord && this._record) {
-            var id = this._record.getId();
+            var id = this._getRecordId();
             def = this._options.dataSource.destroy(id, this._options.destroyMeta);
             def.addBoth(function() {
                this._deletedId = id;
