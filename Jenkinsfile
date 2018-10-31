@@ -19,7 +19,7 @@ def exception(err, reason) {
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
-node('controls') {
+node('test-autotest90') {
     LocalDateTime start_time = LocalDateTime.now();
     echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
@@ -173,23 +173,23 @@ node('controls') {
                                 ])
                             }
                         },
-                        checkout_engine: {
-                            echo " Выкачиваем engine"
-                            dir("./controls/tests"){
-                                checkout([$class: 'GitSCM',
-                                branches: [[name: branch_engine]],
-                                doGenerateSubmoduleConfigurations: false,
-                                extensions: [[
-                                    $class: 'RelativeTargetDirectory',
-                                    relativeTargetDir: "sbis3-app-engine"
-                                    ]],
-                                    submoduleCfg: [],
-                                    userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                                        url: 'git@git.sbis.ru:sbis/engine.git']]
-                                ])
-                            }
-                        }
+                        //checkout_engine: {
+                         //   echo " Выкачиваем engine"
+                   //         dir("./controls/tests"){
+                  //              checkout([$class: 'GitSCM',
+                  //              branches: [[name: branch_engine]],
+                   //             doGenerateSubmoduleConfigurations: false,
+                    //            extensions: [[
+                     //               $class: 'RelativeTargetDirectory',
+                      //              relativeTargetDir: "sbis3-app-engine"
+                       //             ]],
+                        //            submoduleCfg: [],
+                         //           userRemoteConfigs: [[
+                          //              credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                           //             url: 'git@git.sbis.ru:sbis/engine.git']]
+                            //    ])
+                            //}
+                        //}
                     )
                 },
                 checkout2: {
