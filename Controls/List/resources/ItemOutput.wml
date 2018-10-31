@@ -8,6 +8,7 @@
       on:swipe="_onItemSwipe(itemData)"
       on:mousedown="_onItemMouseDown(itemData)"
       on:mouseenter="_onItemMouseEnter(itemData)"
+      on:mouseleave="_onItemMouseLeave(itemData)"
       on:mousemove="_onItemMouseMove(itemData)"
       on:wheel="_onItemWheel(itemData)"
       itemActionsTemplate="{{itemActionsTemplate}}"
