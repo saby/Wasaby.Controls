@@ -166,6 +166,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   itemTemplate: dropDownList._options.itemTemplate,
                   itemTemplateProperty: dropDownList._options.itemTemplateProperty,
                   keyProperty: dropDownList._options.keyProperty,
+                  displayProperty: dropDownList._options.displayProperty,
                   parentProperty: dropDownList._options.parentProperty,
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
@@ -179,7 +180,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                target: "MyTarget"
             };
 
-            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList, { target: "MyTarget"}, items.at(0));
+            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
 
 
