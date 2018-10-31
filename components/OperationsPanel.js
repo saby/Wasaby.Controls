@@ -288,7 +288,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
       onSelectedItemsChange: function(idArray) {
          this._isMassMode = !idArray.length;
          this._container.toggleClass('controls-operationsPanel__massMode', this._isMassMode)
-                        .toggleClass('controls-operationsPanel__selectionMode', this._isMassMode);
+                        .toggleClass('controls-operationsPanel__selectionMode', !this._isMassMode);
 
          if (this.isVisible()) {
             this._onSelectedItemsChange(idArray);
