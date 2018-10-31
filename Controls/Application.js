@@ -255,6 +255,7 @@ define('Controls/Application',
                if (constants.browser.safari) {
                   // Need to prevent default behaviour if popup is opened
                   // because safari escapes fullscreen mode on 'ESC' pressed
+                  // TODO https://online.sbis.ru/opendoc.html?guid=5d3fdab0-6a25-41a1-8018-a68a034e14d9
                   if (event.nativeEvent && event.nativeEvent.keyCode === 27) {
                      event.preventDefault();
                   }
