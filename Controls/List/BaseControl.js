@@ -776,6 +776,10 @@ define('Controls/List/BaseControl', [
          this._notify('itemActionsClick', [action, item]);
       },
 
+      _hoveredItemChanged: function(event, item) {
+         this._notify('hoveredItemChanged', [item]);
+      },
+
       _itemMouseMove: function(event, itemData, nativeEvent) {
          this._notify('itemMouseMove', [itemData, nativeEvent]);
       },
