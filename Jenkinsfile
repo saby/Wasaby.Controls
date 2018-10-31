@@ -116,6 +116,10 @@ node('test-autotest90') {
 		dir(workspace){
 			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
 			sh "ls | grep -v -E 'controls' | xargs rm -rf"
+			dir("./controls"){
+				sh "rm -rf ${workspace}/controls/atf"
+				sh "rm -rf ${workspace}/controls/sbis3-app-engine"
+			}
 		}
 
         echo "Выкачиваем хранилища"
@@ -175,21 +179,21 @@ node('test-autotest90') {
                             }
                         },
                         checkout_engine: {
-                      //      echo " Выкачиваем engine"
-                       //     dir("./controls/tests"){
-                      //          checkout([$class: 'GitSCM',
-                      //          branches: [[name: branch_engine]],
-                      //          doGenerateSubmoduleConfigurations: false,
-                      //          extensions: [[
-                      //              $class: 'RelativeTargetDirectory',
-                     //               relativeTargetDir: "sbis3-app-engine"
-                     //               ]],
-                     //               submoduleCfg: [],
-                     //               userRemoteConfigs: [[
-                     //                   credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                     //                   url: 'git@git.sbis.ru:sbis/engine.git']]
-                     //           ])
-                     //       }
+                            echo " Выкачиваем engine"
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_engine]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "sbis3-app-engine"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
                         }
                     )
                 },
