@@ -159,7 +159,7 @@ define('Controls/List/BaseControl', [
 
       onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
+            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
                _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
             }
          }
@@ -326,6 +326,7 @@ define('Controls/List/BaseControl', [
 
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function() {
+            self._hasUndrawChanges = true;
             self._forceUpdate();
          });
          model.subscribe('onGroupsExpandChange', function(event, changes) {
@@ -470,6 +471,7 @@ define('Controls/List/BaseControl', [
 
       _popupOptions: null,
       _isServer: null,
+      _hasUndrawChanges: false,
 
       _beforeMount: function(newOptions, context, receivedState) {
          var
@@ -599,6 +601,10 @@ define('Controls/List/BaseControl', [
       _afterUpdate: function() {
          if (_private.getItemsCount(this)) {
             _private.initializeAverageItemsHeight(this);
+         }
+         if (this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+            _private.checkLoadToDirectionCapability(this);
          }
       },
 
