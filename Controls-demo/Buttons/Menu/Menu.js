@@ -15,6 +15,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
    var ModuleClass = Control.extend(
       {
          _template: template,
+         _oneItem: null,
          _simpleItems: null,
          _simpleItems2: null,
          _iconsItems: null,
@@ -32,6 +33,9 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _hierarchyMultiItems: null,
 
          _beforeMount: function() {
+            this._oneItem = [
+               { id: 1, title: 'Task in development' }
+            ];
             this._simpleItems = [
                { id: 1, title: 'Revision' },
                { id: 2, title: 'Newsletter' },

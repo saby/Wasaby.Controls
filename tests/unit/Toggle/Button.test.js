@@ -48,9 +48,8 @@ define(['Controls/Toggle/Button'], function (Button) {
             size: 'l'
          };
          Btn._beforeUpdate(opt);
-         assert.isTrue(Btn._style === 'iconButtonBordered', 'changing style failed in style');
-         assert.isTrue(Btn._type === 'iconButtonBordered', 'changing style failed in type');
-         assert.isTrue(Btn._typeWithSize === 'iconButtonBordered_size-l', 'changing style failed in typeWithSize');
+         assert.isTrue(Btn._style === 'secondary', 'changing style failed in style');
+         assert.isTrue(Btn._viewMode === 'quickButton', 'changing style failed in type');
          assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
       });
 
@@ -62,9 +61,8 @@ define(['Controls/Toggle/Button'], function (Button) {
             size: 'l'
          };
          Btn._beforeMount(opt);
-         assert.isTrue(Btn._style === 'iconButtonBordered', 'changing style failed in style');
-         assert.isTrue(Btn._type === 'iconButtonBordered', 'changing style failed in type');
-         assert.isTrue(Btn._typeWithSize === 'iconButtonBordered_size-l', 'changing style failed in typeWithSize');
+         assert.isTrue(Btn._style === 'secondary', 'changing style failed in style');
+         assert.isTrue(Btn._viewMode === 'quickButton', 'changing style failed in type');
          assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
       });
    });

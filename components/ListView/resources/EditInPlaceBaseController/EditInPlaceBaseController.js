@@ -14,16 +14,18 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
    "tmpl!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/AddRowTpl",
    "SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace",
    "SBIS3.CONTROLS/ControlHierarchyManager",
-   "WS.Data/Entity/Model",
-   "WS.Data/Entity/Record",
+   "Data/type",
    "Core/core-instance",
    "Core/Indicator",
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
 
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, Indicator) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, type, cInstance, Indicator) {
 
       'use strict';
+
+      var Model = type.Model;
+      var Record = type.Record;
 
       /**
        * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
