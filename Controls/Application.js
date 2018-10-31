@@ -251,7 +251,7 @@ define('Controls/Application',
          },
 
          _keyPressHandler: function(event) {
-            if(this._isPopupShow) {
+            if (this._isPopupShow) {
                if (constants.browser.safari) {
                   // Need to prevent default behaviour if popup is opened
                   // because safari escapes fullscreen mode on 'ESC' pressed
