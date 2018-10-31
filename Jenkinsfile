@@ -143,6 +143,7 @@ node('test-autotest90') {
 						git clean -fd
                         git fetch
                         git checkout ${env.BRANCH_NAME}
+						git pull
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
