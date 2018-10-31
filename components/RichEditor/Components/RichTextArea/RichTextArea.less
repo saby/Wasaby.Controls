@@ -357,14 +357,17 @@
    .controls-RichEditor .controls-ScrollContainer__content {
       &::-webkit-scrollbar:horizontal {
          width: 17px;
-         background-color: #F1F1f1;
+         background-color: transparent;
       }
       &::-webkit-scrollbar-button:horizontal {
-         background-color: #E1E1E1;
+         background-color: transparent;
       }
       &::-webkit-scrollbar-thumb:horizontal {
-         background-color: #C1C1C1;
-         border: 2px solid transparent;
+         border: 6px solid #FFFFFF;
+         background-color: #D9D9D9;
+      }
+      &::-webkit-scrollbar-thumb:horizontal:hover {
+         border-width: 3px;
       }
    }
 
