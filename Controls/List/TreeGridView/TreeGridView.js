@@ -12,8 +12,8 @@ define('Controls/List/TreeGridView/TreeGridView', [
       TreeGridView = GridView.extend({
          _itemOutputWrapper: ItemOutputWrapper,
          _defaultItemTemplate: DefaultItemTpl,
-         _onNodeExpanderClick: function(e, dispItem) {
-            this._notify('nodeExpanderClick', [dispItem], {bubbling: true});
+         _onExpanderClick: function(e, dispItem) {
+            this._notify('expanderClick', [dispItem], {bubbling: true});
             e.stopImmediatePropagation();
          },
          _onLoadMoreClick: function(e, dispItem) {
