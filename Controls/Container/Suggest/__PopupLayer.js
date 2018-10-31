@@ -40,7 +40,8 @@ define('Controls/Container/Suggest/__PopupLayer',
             if (this._options.searchValue !== oldOptions.searchValue ||
                 this._options.filter !== oldOptions.filter ||
                 this._options.showContent !== oldOptions.showContent ||
-                this._options.showFooter !== oldOptions.showFooter) {
+                this._options.showFooter !== oldOptions.showFooter ||
+                this._options.misspellingCaption !== oldOptions.misspellingCaption) {
                _private.openPopup(this, this._children.suggestPopup, this._options);
             }
          }
