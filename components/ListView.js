@@ -621,7 +621,7 @@ define('SBIS3.CONTROLS/ListView',
                 * <b>Пример 3.</b> Установка обработчика удаления записи
                 * <pre>
                 * <div>
-                *    <SBIS3.ENGINE.Controls.Browser name="goodsBrowser">
+                *    <WS3Browser.Browser name="goodsBrowser">
                 *        <ws:content type="string">
                 *            <SBIS3.CONTROLS.DataGridView>
                 *                // ...
@@ -632,7 +632,7 @@ define('SBIS3.CONTROLS/ListView',
                 *                </ws:itemsActions>
                 *            </SBIS3.CONTROLS.DataGridView>
                 *        </ws:content>
-                *    </SBIS3.ENGINE.Controls.Browser>
+                *    </WS3Browser.Browser>
                 * </div>
                 * </pre>
                 *
