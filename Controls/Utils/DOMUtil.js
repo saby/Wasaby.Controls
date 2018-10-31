@@ -15,6 +15,7 @@ define('Controls/Utils/DOMUtil', function() {
             computedStyle,
             containerWidth;
 
+         // toDO Проверка на jQuery до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
          if (window.jQuery && container instanceof window.jQuery) {
             containerWidth = container.width();
          } else if (container instanceof window.Node) {
