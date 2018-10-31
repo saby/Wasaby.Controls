@@ -1,7 +1,11 @@
 /**
  * Created by rn.kondakov on 23.10.2018.
  */
-define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
+define('Controls/Decorator/Markup/resolvers/linkDecorate', [
+   'Core/base64',
+   'Core/constants'
+], function(base64,
+   cConstants) {
    'use strict';
 
    return function linkDecorate(json, parent) {
@@ -36,15 +40,17 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', function() {
          }
       }
       linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';
+      linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
 
-      // TODO: get link decorate service address for src.
+      var image = cConstants.decoratedLinkService ? ((typeof location === 'object' ? location.origin : '') + cConstants.decoratedLinkService) : '' +
+         '?method=LinkDecorator.DecorateAsSvg&params=' + encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
 
       return ['span',
          { 'class': 'LinkDecorator__wrap' },
          ['a',
             linkAttrs,
             ['img',
-               { 'class': 'LinkDecorator__image', alt: linkAttrs.href, src: 'TODO' }
+               { 'class': 'LinkDecorator__image', alt: linkAttrs.href, src: image }
             ]
          ]
       ];

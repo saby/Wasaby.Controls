@@ -60,8 +60,14 @@ define('Controls/Decorator/Markup/Converter', [
       return domToJson(div).slice(1);
    };
 
-   var jsonToHtml = function(json, tagResolver) {
-      return template({ _options: { value: json, tagResolver: tagResolver } }, {});
+   var jsonToHtml = function(json, tagResolver, resolverParams) {
+      return template({
+         _options: {
+            value: json,
+            tagResolver: tagResolver,
+            resolverParams: resolverParams
+         }
+      }, {});
    };
 
    var deepCopyJson = function(json) {

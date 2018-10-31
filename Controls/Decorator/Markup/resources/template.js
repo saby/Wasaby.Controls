@@ -12,6 +12,7 @@ define('Controls/Decorator/Markup/resources/template', [
       defCollection,
       control,
       resolver,
+      resolverParams,
       resolverMode;
 
    function isString(value) {
@@ -29,11 +30,7 @@ define('Controls/Decorator/Markup/resources/template', [
    }
 
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
-      // TODO Спросить Дмитрия Зуева, не стоит ли создать возможность опцией передавать третий парамент для резолвера.
-      // TODO Например, для highlightResolver по задаче Баранова Максима нужно знать подстроку, которую нужно найти и заменить.
-      // TODO Или, например, адрес сервиса декорирования ссылок для резолвера decoratedLink
-      // TODO Если идея хорошая, согласовать с Андреем Бегуновым и реализовать (то есть дописать 3-5 строк)
-      var valueToBuild = resolverMode && resolver ? resolver(value, parent) : value,
+      var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          i;
       if (isString(valueToBuild)) {
          return markupGenerator.createText(markupGenerator.escape(valueToBuild), key);
@@ -77,6 +74,7 @@ define('Controls/Decorator/Markup/resources/template', [
       };
       control = data;
       resolver = data._options.tagResolver;
+      resolverParams = data._options.resolverParams;
       resolverMode = 1;
 
       var elements = [],

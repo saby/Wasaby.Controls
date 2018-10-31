@@ -3,8 +3,10 @@
  */
 define([
    'Controls/Decorator/Markup/Converter',
+   'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate'
 ], function(Converter,
+   highlightResolver,
    linkDecorateResolver) {
    'use strict';
 
@@ -60,7 +62,7 @@ define([
          ],
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
          linkHtml = '<a rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="TODO" /></a></span>';
+         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="?method=LinkDecorator.DecorateAsSvg&params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&id=0&srv=1" /></a></span>';
 
       describe('deepCopyJson', function() {
          it('one big', function() {
@@ -78,7 +80,7 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
-         // Возможно, тут лучше разбить на кучу тестов, причём добавив примеры из WrapURLs.test.js
+         // Возможно, тут лучше разбить на кучу тестов, причём добавив примеры из WrapURLs.test.js.
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
@@ -129,11 +131,11 @@ define([
             assert.equal(Converter.jsonToHtml(emptyNode), '<span></span>');
          });
          it('escape', function() {
-            assert.equal(Converter.jsonToHtml(['p', '&gt;&lt;><']), '<p>&amp;gt;&amp;lt;&gt;&lt;</p>');
+            assert.equal(Converter.jsonToHtml(['p', '&gt;&lt;><']), '<div><p>&amp;gt;&amp;lt;&gt;&lt;</p></div>');
          });
          it('one big', function() {
-            var json = [['p', 'text'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
-            var html = '<div><p>text</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
             assert.equal(Converter.jsonToHtml(json), html);
          });
          it('with linkDecorate resolver', function() {
@@ -154,6 +156,19 @@ define([
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
             assert.equal(Converter.jsonToHtml(json, linkDecorateResolver), html);
+         });
+         it('with highlight resolver', function() {
+            var json = [
+               ['p', ['strong', 'BaBare;gjwergo'], 'aBaweruigerhw', ['em', 'aBa']],
+               ['p', 'aba, abA, aBa, aBA, Aba, AbA, ABa, ABA'],
+               ['p', 'abababababa']
+            ];
+            var html = '<div>' +
+               '<p><strong>B<span class="controls-Highlight_found">aBa</span>re;gjwergo</strong><span class="controls-Highlight_found">aBa</span>weruigerhw<em><span class="controls-Highlight_found">aBa</span></em></p>' +
+               '<p><span class="controls-Highlight_found">aba</span>, <span class="controls-Highlight_found">abA</span>, <span class="controls-Highlight_found">aBa</span>, <span class="controls-Highlight_found">aBA</span>, <span class="controls-Highlight_found">Aba</span>, <span class="controls-Highlight_found">AbA</span>, <span class="controls-Highlight_found">ABa</span>, <span class="controls-Highlight_found">ABA</span></p>' +
+               '<p><span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span></p>' +
+               '</div>';
+            assert.equal(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html);
          });
       });
    });
