@@ -268,10 +268,16 @@ define('SBIS3.CONTROLS/ComboBox', [
             cfg.cssClassName += ' controls-ComboBox__emptyValue';
          }
 
-         if (cfg.selectedKey && cfg._items) {
-            var selectedItem = cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum') ? cfg._items.get() : cfg._items.getRecordById(cfg.selectedKey);
-            if (selectedItem) {
-               cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
+         // Если перечисление, то смотрим индекс выбранного в нем,
+         // если рекордсет, то проверяем selectedKey
+         if (cfg._items) {
+            if(cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')){
+               cfg.text = cfg._items.getAsValue();
+            } else {
+               var selectedItem = cfg._items.getRecordById(cfg.selectedKey);
+               if (selectedItem) {
+                  cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
+               }
             }
          }
          return cfg;
@@ -280,7 +286,7 @@ define('SBIS3.CONTROLS/ComboBox', [
       init : function() {
          ComboBox.superclass.init.apply(this, arguments);
          if (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) {
-            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+            // this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          } else {
             if (this._options.text) {
                this._setKeyByText();
