@@ -237,7 +237,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
             var canChangePresets = true;
             if (accessZone) {
                var rights = RightsManager.getRights([accessZone])[accessZone];
-               canUsePresets = !!(rights & RightsManager.WRITE_MASK);
+               canUsePresets = !!(rights & RightsManager.READ_MASK);
                canChangePresets = !!(rights & RightsManager.WRITE_MASK);
             }
             var presetsOptions;
