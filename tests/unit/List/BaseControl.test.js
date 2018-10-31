@@ -118,11 +118,13 @@ define([
          assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
          assert.equal(ctrl._viewModelConstructor, TreeViewModel);
          assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
+         assert.isTrue(ctrl._hasUndrawChanges);
 
          //сорс грузит асинхронно
          setTimeout(function() {
             assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
             ctrl._afterUpdate();
+            assert.isFalse(ctrl._hasUndrawChanges);
             ctrl._beforeUnmount();
             done();
          }, 100);
@@ -362,10 +364,17 @@ define([
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
+            ctrl._hasUndrawChanges = true;
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
-               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
-               done();
+               assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
+               
+               ctrl._hasUndrawChanges = false;
+               BaseControl._private.onScrollLoadEdge(ctrl, 'down');
+               setTimeout(function() {
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\\\'t load');
+                  done();
+               }, 100);
             }, 100);
          }, 100);
 
@@ -410,6 +419,7 @@ define([
 
          //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
+            ctrl._hasUndrawChanges = false; //_afterUpdate
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
