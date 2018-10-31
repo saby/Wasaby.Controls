@@ -251,9 +251,13 @@ define('Controls/Application',
          },
 
          _keyPressHandler: function(event) {
-            if (constants.browser.safari) {
-               if (event.nativeEvent && event.nativeEvent.keyCode === 27) {
-                  event.preventDefault();
+            if(this._isPopupShow) {
+               if (constants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  if (event.nativeEvent && event.nativeEvent.keyCode === 27) {
+                     event.preventDefault();
+                  }
                }
             }
          },
