@@ -308,6 +308,21 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
+         setCaption: function(newTitle) {
+            this._setCaption(newTitle);
+         },
+
+         setTitle: function(newTitle) {
+            this._setCaption(newTitle);
+         },
+
+         _setCaption: function(newTitle) {
+            var titleContainer = $('.ws-float-area-title', this._container);
+            if (titleContainer.length) {
+               titleContainer.text(newTitle);
+            }
+         },
+
          _getCustomHeaderContainer: function() {
             var customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
 
