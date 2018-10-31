@@ -140,10 +140,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
             var options = View.superclass._modifyOptions.apply(this, arguments);
             var accessZone = options.accessZone;
             options._canChange = !accessZone || !!(RightsManager.getRights([accessZone])[accessZone] & RightsManager.WRITE_MASK);
-            //////////////////////////////////////////////////
-            console.log('DBG: ExC_Presets._modifyOptions: options.namespace=', options.namespace, '; options.accessZone=', options.accessZone, '; options._canChange=', options._canChange, ';');
-            options._canChange = false;//^^^
-            //////////////////////////////////////////////////
             options._items = this._makeItems(options);
             var selectedId = options.selectedId;
             if (selectedId === undefined) {
