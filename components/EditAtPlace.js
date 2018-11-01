@@ -297,6 +297,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
             if (inPlace) {
                this._notify('onShowEditor');
             }
+            this._toggleState();
             this._notifyOnSizeChanged(this, this, true);
          },
 

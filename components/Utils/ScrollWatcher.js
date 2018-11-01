@@ -59,7 +59,7 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
          this._onContainerScroll = this._onContainerScroll.bind(this);
          this._getScrollElement().bind('scroll.wsScrollWatcher', this._onContainerScroll);
       },
-      
+
       _getScrollElement: function() {
          return this._findScrollElement() || $(window);
       },
@@ -80,7 +80,10 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
             return element;
          } else {
             if (this._options.element.hasClass('controls-ScrollContainer')){
-               this._options.element = $('.controls-ScrollContainer__content', this._options.element);
+               //внутри скролл контейнера могут быть другие скролл контейнеры
+               //нам нужен дочерний контейнер именно того, который указан в опции element
+               //поэтому берем первый, это и есть тот, что нужен
+               this._options.element = $('.controls-ScrollContainer__content', this._options.element).first();
             }
             return this._options.element;
          }
@@ -96,7 +99,7 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
          this._notify('onScroll', curScrollTop);
          if (this.isScrollOnTop()) {
             this._notify('onTotalScroll', 'top', curScrollTop);
-         } 
+         }
          if (this.isScrollOnBottom()) {
             this._notify('onTotalScroll', 'bottom', curScrollTop);
          }
@@ -248,11 +251,11 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
 
       destroy: function() {
          this._getScrollElement().unbind('scroll.wsScrollWatcher', this._onContainerScroll);
-         
+
          /* Т.к. опции при разрушении не затираются, необходимо затереть самим */
          this._setOption('element', null);
          this._setOption('opener', null);
-         
+
          ScrollWatcher.superclass.destroy.call(this);
       }
 

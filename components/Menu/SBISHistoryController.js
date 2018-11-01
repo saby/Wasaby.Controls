@@ -393,9 +393,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       getHistoryDataSet: function(self) {
          return new DataSet({
             rawData: {
-               pinned: self._pinned,
-               frequent: self._frequent,
-               recent: self._recent
+               pinned: self._pinned.clone(),
+               frequent: self._frequent.clone(),
+               recent: self._recent.clone()
             }
          });
       },

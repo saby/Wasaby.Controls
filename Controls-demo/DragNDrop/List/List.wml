@@ -27,11 +27,11 @@
                   </ws:itemTemplate>
                   <ws:draggingTemplate>
                      <ws:partial template="Controls/DragNDrop/DraggingTemplate"
-                     mainText="{{draggingTemplate.entity._options.mainText}}"
-                     image="{{draggingTemplate.entity._options.image}}"
-                     additionalText="{{draggingTemplate.entity._options.additionalText}}">
-                  </ws:partial>
-               </ws:draggingTemplate>
+                        mainText="{{draggingTemplate.entity._options.mainText}}"
+                        image="{{draggingTemplate.entity._options.image}}"
+                        additionalText="{{draggingTemplate.entity._options.additionalText}}">
+                     </ws:partial>
+                  </ws:draggingTemplate>
                </Controls.List>
             </Controls.List.MultiSelector>
          </Controls.List.Container>

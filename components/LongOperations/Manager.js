@@ -8,7 +8,6 @@
  * @description file LongOperations.md
  *
  * @demo Examples/LongOperations/MyLongOperations/MyLongOperations
- * @demo Examples/LongOperations/MyLongOperationsSvc/MyLongOperationsSvc
  */
 define('SBIS3.CONTROLS/LongOperations/Manager',
    [

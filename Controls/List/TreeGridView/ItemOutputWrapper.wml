@@ -23,7 +23,7 @@
    </ws:if>
 </ws:template>
 <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup && (currentNode === undefined || listModel.getCurrent().item[listModel.getCurrent().parentProperty] === currentNode.item.getId()) ;">
-   <ws:if data="{{listModel.getCurrent().dispItem.isNode()}}">
+   <ws:if data="{{listModel.getCurrent().item[listModel.getCurrent().nodeProperty] !== null}}">
       <ws:partial template="nodeOutputLocalTemplate" currentNode="{{listModel.getCurrent()}}"/>
    </ws:if>
    <ws:else>

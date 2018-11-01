@@ -92,6 +92,15 @@ define('SBIS3.CONTROLS/NotificationPopup', [
                 */
                activableByClick: false,
                /**
+                * @cfg {Boolean} Устанавливает режим реакции на свайп (swipe)
+                * * true Окно будет закрыто при свайпе на нем.
+                * * false Окно останется на прежнем месте.
+                * @remark
+                * Опция позволяет установить режим работы всплывающего нотификационного уведомления, в котором после свайпа (swipe)
+                * окно будет закрыто или останется на прежнем месте.
+                */
+               closeOnSwipe: true,
+               /**
                 * @noShow
                 */
                additionalClass: 'controls-NotificationPopup_popup',
@@ -115,8 +124,8 @@ define('SBIS3.CONTROLS/NotificationPopup', [
                this.setStatus(this._options.status);
             }
 
-            //По свайпу будем закрывать окно.
-            if(detection.isMobilePlatform) {
+            //По свайпу будем закрывать окно, если это не запрещено опциями
+            if(detection.isMobilePlatform && this._options.closeOnSwipe) {
                this.getContainer().on('swipe', function(){
                   self.close();
                });

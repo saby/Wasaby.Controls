@@ -6,5 +6,6 @@
    swipeTemplate="{{swipeTemplate}}"
    multiSelectTpl="{{multiSelectTpl}}"
    itemTemplate="{{itemTemplate}}"
+   itemData="{{listModel.getCurrent()}}"
    itemActionsPosition="{{itemActionsPosition}}" />
 {{listModel.goToNext()}}

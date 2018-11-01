@@ -1,0 +1,9 @@
+<Controls.Popup.Manager>
+   <Controls.Application.TouchDetector name="touchDetector">
+      <Controls.DragNDrop.Container name="dragNDropContainer">
+         <div>
+            <Controls.Popup.Manager.Container attr:id="popup" />
+         </div>
+      </Controls.DragNDrop.Container>
+   </Controls.Application.TouchDetector>
+</Controls.Popup.Manager>

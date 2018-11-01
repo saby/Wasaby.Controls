@@ -199,6 +199,10 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          _isElementVisible: function(target) {
             return isElementVisible(target);
+         },
+
+         needRecalcOnKeyboardShow: function() {
+            return true;
          }
       });
 

@@ -9,7 +9,6 @@ define('Controls/Dropdown/Controller',
    ],
 
    function(Control, template, SourceController, isEqual, Chain, dropdownUtils) {
-
       'use strict';
 
       /**
@@ -113,6 +112,7 @@ define('Controls/Dropdown/Controller',
 
       var Dropdown = Control.extend({
          _template: template,
+         _items: null,
 
          _beforeMount: function(options, context, receivedState) {
             this._selectedItems = [];
@@ -121,10 +121,8 @@ define('Controls/Dropdown/Controller',
                if (receivedState) {
                   this._items = receivedState;
                   _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
-               } else {
-                  if (options.source) {
-                     return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
-                  }
+               } else if (options.source) {
+                  return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                }
             }
          },
@@ -148,7 +146,6 @@ define('Controls/Dropdown/Controller',
          },
 
          _open: function(event) {
-
             //Проверям что нажата левая кнопка мыши
             if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
@@ -167,14 +164,21 @@ define('Controls/Dropdown/Controller',
                };
                self._children.DropdownOpener.open(config, self);
             }
+            function itemsLoadCallback(items) {
+               if (items.getCount() === 1) {
+                  _private.selectItem.call(self, [items.at(0)]);
+               } else {
+                  open();
+               }
+            }
 
             if (this._options.source && !this._items) {
                _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
-                  open();
+                  itemsLoadCallback(items);
                   return items;
                });
             } else {
-               open();
+               itemsLoadCallback(this._items);
             }
          },
 
