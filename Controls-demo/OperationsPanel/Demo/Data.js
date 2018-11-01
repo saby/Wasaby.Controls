@@ -333,6 +333,12 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             title: 'Распечатать',
             parent: null
          }, {
+            id: 'plainList',
+            '@parent': false,
+            icon: 'icon-ListView',
+            title: 'Развернуть без подразделений',
+            parent: null
+         }, {
             id: 'sum',
             '@parent': false,
             icon: 'icon-Sum',
