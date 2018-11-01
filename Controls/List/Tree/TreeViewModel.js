@@ -106,7 +106,9 @@ define('Controls/List/Tree/TreeViewModel', [
                nodeId;
             if (removedItems.length) {
                for (var idx = 0; idx < removedItems.length; idx++) {
-                  if (removedItems[idx].isNode && removedItems[idx].isNode()) {
+
+                  // removedItems[idx].isNode - fast check on item type === 'group'
+                  if (removedItems[idx].isNode && removedItems[idx].getContents().get(self._options.nodeProperty) !== null) {
                      nodeId = removedItems[idx].getContents().getId();
 
                      // If it is necessary to delete only the nodes deleted from the items, add this condition:
@@ -116,6 +118,33 @@ define('Controls/List/Tree/TreeViewModel', [
                   }
                }
             }
+         },
+         shouldDrawExpander: function(itemData, expanderIcon) {
+            var
+               itemType = itemData.item.get(itemData.nodeProperty);
+
+            // Show expander icon if it is not equal 'none' or render leafs
+            return itemType !== null && expanderIcon !== 'none';
+         },
+         prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
+            var
+               itemType = itemData.item.get(itemData.nodeProperty),
+               expanderClasses = 'controls-TreeGrid__row-expander',
+               expanderIconClass;
+
+            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default');
+            expanderClasses += ' js-controls-ListView__notEditable';
+
+            if (expanderIcon) {
+               expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
+            } else {
+               expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node' : 'hiddenNode');
+            }
+
+            expanderClasses += expanderIconClass;
+            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
+
+            return expanderClasses;
          }
       },
 
@@ -183,6 +212,8 @@ define('Controls/List/Tree/TreeViewModel', [
             current.isExpanded = !!this._expandedNodes[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
+            current.shouldDrawExpander = _private.shouldDrawExpander;
+            current.prepareExpanderClasses = _private.prepareExpanderClasses;
 
             if (!current.isGroup) {
                current.level = current.dispItem.getLevel();
@@ -199,7 +230,7 @@ define('Controls/List/Tree/TreeViewModel', [
             }
 
 
-            if (!current.isGroup && current.dispItem.isNode()) {
+            if (!current.isGroup && current.item.get(current.nodeProperty) !== null) {
                if (current.isExpanded) {
                   current.hasChildren = this._display.getChildren(current.dispItem).getCount();
 

@@ -41,7 +41,7 @@
       <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
                                keyProperty="id"
                                emptyText="{{true}}"
-                               displayProperty="title"
+                               displayProperty="text"
                                itemTemplate="wml!Controls-demo/Combobox/itemTemplateCombobox"
                                bind:selectedKey="_selectedKey5"
                                attr:class="ControlsDemo-ComboboxVDOM__item"/>

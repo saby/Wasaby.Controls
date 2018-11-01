@@ -152,6 +152,10 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
+    * @event Controls/List/interface/IListControl#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+    */
+
+   /**
     * @event  Controls/List/interface/IListControl#markedKeyChanged Occurs when list item was selected (marked).
     * @param {Number} key Key of the selected item.
     */
