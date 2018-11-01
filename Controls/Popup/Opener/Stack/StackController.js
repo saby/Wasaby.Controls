@@ -39,9 +39,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                return template.clientWidth;
             }
             template = container.querySelector('.controls-Popup__template');
-            var cStyle = getComputedStyle(template);
-
-            return parseInt(cStyle.width, 10);
+            return template.offsetWidth;
          },
 
          getStackParentCoords: function() {

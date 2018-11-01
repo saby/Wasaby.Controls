@@ -304,11 +304,11 @@ define('Controls/Popup/Compatible/Layer', [
                   Constants.userConfigSupport = true;
                   loadDataProviders(parallelDef);
                   parallelDefRes.addCallbacks(function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
                         IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
                      });
                   }, function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!SBIS3.ENGINE/Controls/MiniCard']).addErrback(function(err) {
+                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
                         IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
                      });
                   });
