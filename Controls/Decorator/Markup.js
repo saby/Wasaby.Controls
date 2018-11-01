@@ -30,7 +30,7 @@ define('Controls/Decorator/Markup', [
     * Function Arguments:
     * <ol>
     *    <li>value - Json node.</li>
-    *    <li>parent - Json node, a parent of json.</li>
+    *    <li>parent - Json node, a parent of value.</li>
     *    <li>resolverParams - Outer data for tagResolver from resolverParams option.</li>
     * </ol>
     * The function should return valid JsonML. If the return value is not equals (!==) to the origin node,
