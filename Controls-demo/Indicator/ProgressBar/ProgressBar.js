@@ -15,11 +15,7 @@ define(
       return Control.extend({
          _template: template,
 
-         _totalValue: 100,
-
-         _currentValue: 69,
-
-         _smoothFill: true
+         _value: 13
       });
    }
 );

@@ -27,14 +27,8 @@ define(
 
 
       /**
-       * @name Controls/Indicator/Progress/Bar#percentValue
+       * @name Controls/Indicator/Progress/Bar#value
        * @cfg {Number} Progress in percents (ratio of the filled part)
-       */
-
-
-      /**
-       * @name Controls/Indicator/Progress/Bar#smoothFill
-       * @cfg {Boolean} Determines whether the bar fills smoothly
        */
 
       var
@@ -44,14 +38,13 @@ define(
 
       Bar.getOptionTypes = function() {
          return {
-            percentValue: typeDescriptor(Number).required(),
-            smoothFill: typeDescriptor(Boolean)
+            value: typeDescriptor(Number).required()
          };
       };
 
       Bar.getDefaultOptions = function() {
          return {
-            percentValue: 0
+            value: 0
          };
       };
 

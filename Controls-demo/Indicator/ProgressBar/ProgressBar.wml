@@ -1,54 +1,15 @@
 <div class="ProgressBarDemo">
    <div class="ProgressBarDemo__content">
       <p>
-         <b>DefaultLayout</b>
-         <br/>
-         <br/>
-         <Controls.Indicator.Progress.DefaultLayout
-            class="ProgressBarDemo__progressBar"
-            infoLeft="left info"
-            currentValue="{{ _currentValue }}"
-            totalValue="{{ _totalValue }}"
-            smoothFill="{{ _smoothFill }}"
-         >
-            <ws:infoRight>
-               <Controls.Indicator.Progress.Timer
-                  value="{{ 5 }}"
-                  autoTick="{{ true }}"
-               />
-            </ws:infoRight>
-         </Controls.Indicator.Progress.DefaultLayout>
-         <br/>
-         <br/>
-         <b>CompactLayout</b>
-         <br/>
-         <br/>
-         <Controls.Indicator.Progress.CompactLayout
-            class="ProgressBarDemo__progressBar"
-            currentValue="{{ _currentValue }}"
-            totalValue="{{ _totalValue }}"
-            smoothFill="{{ _smoothFill }}"
-         >
-            <ws:infoRight>
-               <Controls.Indicator.Progress.Timer
-                  value="{{ 5 }}"
-                  autoTick="{{ true }}"
-               />
-            </ws:infoRight>
-         </Controls.Indicator.Progress.CompactLayout>
+         <Controls.Indicator.Progress.Bar
+                     class="ProgressBarDemo__progressBar"
+                     value="{{ _value }}"
+         />
       </p>
       <br/>
       <br/>
       <p>
-         totalValue <Controls.Input.Number bind:value="_totalValue" precision="{{0}}" />
-      </p>
-      <br/>
-      <p>
-         currentValue <Controls.Input.Number bind:value="_currentValue" precision="{{0}}" />
-      </p>
-      <br/>
-      <p>
-         barSmoothFill <Controls.Toggle.Checkbox bind:value="_smoothFill" />
+         value <Controls.Input.Number bind:value="_value" precision="{{0}}" />
       </p>
    </div>
 </div>
