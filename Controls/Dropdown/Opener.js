@@ -2,9 +2,10 @@ define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
       'Core/core-merge',
+      'Controls/Utils/getZIndex',
       'Core/IoC'
    ],
-   function(Sticky, coreMerge, IoC) {
+   function(Sticky, coreMerge, getZIndex, IoC) {
       /**
        * Opener for dropdown menu.
        *
@@ -102,6 +103,9 @@ define('Controls/Dropdown/Opener',
          open: function(config, opener) {
             _private.setTemplateOptions(this, config);
             _private.setPopupOptions(this, config);
+
+            // To place zIndex in the old environment
+            config.zIndex = getZIndex(this);
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
@@ -111,7 +115,10 @@ define('Controls/Dropdown/Opener',
       DropdownOpener.getDefaultOptions = function() {
          return coreMerge(
             Sticky.getDefaultOptions(),
-            {closeOnTargetScroll: true});
+            {
+               closeOnTargetScroll: true,
+               _vdomOnOldPage: true
+            });
       };
 
       return DropdownOpener;

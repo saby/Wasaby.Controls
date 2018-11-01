@@ -21,6 +21,7 @@
                      defaultItemTemplate="{{_defaultItemTemplate}}"
                      showClose="{{_options.showClose}}"
                      marker="{{_options.marker}}"
+                     displayProperty="{{_options.displayProperty}}"
                      groupTemplate="{{_groupTemplate}}"
                      parentProperty="{{_options.parentProperty}}"
                      iconPadding="{{_options.iconPadding}}"

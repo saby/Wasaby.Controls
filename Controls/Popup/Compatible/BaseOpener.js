@@ -73,6 +73,7 @@ function(cMerge,
 
          if (cfg.maximize) {
             cfg.className += ' ws-window';
+            cfg.templateOptions.maximize = cfg.maximize;
          }
 
          cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
@@ -440,6 +441,5 @@ function(cMerge,
          var initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
          return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
       }
-
    };
 });

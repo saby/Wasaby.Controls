@@ -366,6 +366,11 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
          this._getLinkedObject().getContainer().addClass(SELECTION_TYPE_CLASSES[selectionType]);
       },
 
+      setLinkedObjectName: function(linkedObjectName) {
+         this._options.linkedObjectName = linkedObjectName;
+         this._linkedObject = this.getChildControlByName(this._options.linkedObjectName);
+      },
+
       getSelectionType: function() {
          return this._options.selectionType;
       },

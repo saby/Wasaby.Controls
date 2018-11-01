@@ -106,7 +106,9 @@ define('Controls/List/Tree/TreeViewModel', [
                nodeId;
             if (removedItems.length) {
                for (var idx = 0; idx < removedItems.length; idx++) {
-                  if (removedItems[idx].isNode && removedItems[idx].isNode()) {
+
+                  // removedItems[idx].isNode - fast check on item type === 'group'
+                  if (removedItems[idx].isNode && removedItems[idx].getContents().get(self._options.nodeProperty) !== null) {
                      nodeId = removedItems[idx].getContents().getId();
 
                      // If it is necessary to delete only the nodes deleted from the items, add this condition:
@@ -116,6 +118,33 @@ define('Controls/List/Tree/TreeViewModel', [
                   }
                }
             }
+         },
+         shouldDrawExpander: function(itemData, expanderIcon) {
+            var
+               itemType = itemData.item.get(itemData.nodeProperty);
+
+            // Show expander icon if it is not equal 'none' or render leafs
+            return itemType !== null && expanderIcon !== 'none';
+         },
+         prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
+            var
+               itemType = itemData.item.get(itemData.nodeProperty),
+               expanderClasses = 'controls-TreeGrid__row-expander',
+               expanderIconClass;
+
+            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default');
+            expanderClasses += ' js-controls-ListView__notEditable';
+
+            if (expanderIcon) {
+               expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
+            } else {
+               expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node' : 'hiddenNode');
+            }
+
+            expanderClasses += expanderIconClass;
+            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
+
+            return expanderClasses;
          }
       },
 
@@ -142,17 +171,21 @@ define('Controls/List/Tree/TreeViewModel', [
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
          },
 
-         toggleExpanded: function(dispItem) {
+         toggleExpanded: function(dispItem, expanded) {
             var
-               itemId = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
-            if (this._expandedNodes[itemId]) {
-               delete this._expandedNodes[itemId];
-            } else {
-               this._expandedNodes[itemId] = true;
+               itemId = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
+               currentExpanded = this._expandedNodes[itemId] || false;
+
+            if (expanded !== currentExpanded || expanded === undefined) {
+               if (this._expandedNodes[itemId]) {
+                  delete this._expandedNodes[itemId];
+               } else {
+                  this._expandedNodes[itemId] = true;
+               }
+               this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+               this._nextVersion();
+               this._notify('onListChange');
             }
-            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            this._nextVersion();
-            this._notify('onListChange');
          },
 
          getDisplayFilter: function(data, cfg) {
@@ -179,8 +212,25 @@ define('Controls/List/Tree/TreeViewModel', [
             current.isExpanded = !!this._expandedNodes[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
+            current.shouldDrawExpander = _private.shouldDrawExpander;
+            current.prepareExpanderClasses = _private.prepareExpanderClasses;
 
-            if (!current.isGroup && current.dispItem.isNode()) {
+            if (!current.isGroup) {
+               current.level = current.dispItem.getLevel();
+            }
+
+            if (this._dragTargetPosition && this._dragTargetPosition.position === 'on') {
+               if (this._dragTargetPosition.index === current.index) {
+                  current.dragTargetNode = true;
+               }
+               if (this._prevDragTargetPosition && this._prevDragTargetPosition.index === current.index) {
+                  current.dragTargetPosition = this._prevDragTargetPosition.position;
+                  current.draggingItemData = this._draggingItemData;
+               }
+            }
+
+
+            if (!current.isGroup && current.item.get(current.nodeProperty) !== null) {
                if (current.isExpanded) {
                   current.hasChildren = this._display.getChildren(current.dispItem).getCount();
 
@@ -209,6 +259,66 @@ define('Controls/List/Tree/TreeViewModel', [
                }
             }
             return current;
+         },
+
+         setDragItems: function(items, itemDragData) {
+            if (items) {
+               //Collapse all the nodes that we move.
+               items.forEach(function(item) {
+                  this.toggleExpanded(this.getItemById(item, this._options.keyProperty), false);
+               }, this);
+               itemDragData.isExpanded = false;
+            }
+
+            TreeViewModel.superclass.setDragItems.apply(this, arguments);
+         },
+
+         _updateDragTargetPosition: function(targetData) {
+            var
+               prevIndex,
+               position;
+
+            if (targetData && targetData.dispItem.isNode()) {
+               prevIndex = this._dragTargetPosition ? this._dragTargetPosition.index : this._draggingItemData.index;
+
+               if (prevIndex === targetData.index) {
+                  position = this._dragTargetPosition.position;
+               } else {
+                  position = prevIndex < targetData.index ? 'before' : 'after';
+               }
+
+               if (!this._prevDragTargetPosition) {
+                  this._prevDragTargetPosition = this._dragTargetPosition || {
+                     index: this._draggingItemData.index,
+                     position: position
+                  };
+               }
+
+               this._dragTargetPosition = {
+                  index: targetData.index,
+                  position: 'on',
+                  startPosition: position
+               };
+            } else {
+               if (targetData) {
+                  this._draggingItemData.level = targetData.level;
+               }
+               this._prevDragTargetPosition = null;
+               TreeViewModel.superclass._updateDragTargetPosition.apply(this, arguments);
+            }
+         },
+
+         setDragPositionOnNode: function(itemData, position) {
+            if (position !== this._dragTargetPosition.startPosition && !(position === 'after' && this._expandedNodes[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)])) {
+               this._dragTargetPosition = {
+                  index: itemData.index,
+                  position: position
+               };
+               this._prevDragTargetPosition = null;
+               this._draggingItemData.level = itemData.level;
+               this._nextVersion();
+               this._notify('onListChange');
+            }
          },
 
          setHasMoreStorage: function(hasMoreStorage) {

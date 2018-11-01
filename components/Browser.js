@@ -262,9 +262,9 @@ define('SBIS3.CONTROLS/Browser', [
              * </pre>
              * 3. В разметке реестра передана конфигурация в опцию columnsConfig:
              * <pre>
-             *     <SBIS3.ENGINE:Controls:Browser:Report columnsConfig="{{ columnsConfig }}">
+             *     <WS3Browser.Report columnsConfig="{{ columnsConfig }}">
              *         ...
-             *     </SBIS3.ENGINE:Controls:Browser:Report>
+             *     </WS3Browser.Report>
              * </pre>
              * Для редактирования набора колонок (в том числе отличных от набора колонок данного браузера) используется команда showColumnsEditor (из любых подкомпонентов браузера)
              * <pre>

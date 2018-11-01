@@ -145,7 +145,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
             id: 'testId2',
             value: 'testValue',
             textValue: '',
-            resetValue: ''
+            resetValue: '',
+            visibility: false
          },
             {
                id: 'testId3',
@@ -163,7 +164,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
             id: 'testId2',
             value: 'testValue1',
             resetValue: '',
-            textValue: ''
+            textValue: '',
+            visibility: true
          }];
          
          var result = [{
@@ -175,7 +177,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
             id: 'testId2',
             value: 'testValue1',
             textValue: '',
-            resetValue: ''
+            resetValue: '',
+            visibility: true
          },
             {
                id: 'testId3',

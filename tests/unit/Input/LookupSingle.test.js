@@ -67,6 +67,7 @@ define([
 
       it('LoadItems', function(done) {
          var self = {
+            _notify: function() {},
             _options : {
                selectedKeys : [1,2],
                source: new Memory({
@@ -292,6 +293,7 @@ define([
          assert.deepEqual(lookup._selectedKeys, [1]);
 
          lookup._beforeUpdate({
+            selectedKeys: [1],
             source: new Memory({
                data: [
                   {id: 1, title: 'Alex', text: 'Alex'}
@@ -299,8 +301,8 @@ define([
                idProperty: 'id'
             })
          });
-         assert.isTrue(lookup._isEmpty);
-         assert.deepEqual(lookup._selectedKeys, []);
+         assert.isFalse(lookup._isEmpty);
+         assert.deepEqual(lookup._selectedKeys, [1]);
 
          lookup._beforeUpdate({
             multiSelect: true,
@@ -314,13 +316,8 @@ define([
                idProperty: 'id'
             }),
             keyProperty: 'id'
-         }).addCallback(function() {
-            lookup._beforeUpdate({
-               keyProperty: 'title'
-            });
-            assert.isFalse(lookup._isEmpty);
-            assert.deepEqual(lookup._selectedKeys, ['Alex', 'Ilya']);
          });
+
          assert.isFalse(lookup._isEmpty);
          assert.deepEqual(lookup._selectedKeys, [1, 2]);
       });
@@ -535,13 +532,15 @@ define([
          var
             templateOptions,
             isShowSelector = false,
-            lookup = new Lookup();
+            lookup = new Lookup(),
+            opener;
 
          lookup._options.lookupTemplate = {};
          lookup._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
+               opener = config.opener;
             }
          };
 
@@ -551,6 +550,7 @@ define([
 
          assert.isTrue(isShowSelector);
          assert.equal(templateOptions.selectedTab, 'Employees');
+         assert.equal(opener, lookup);
       });
    });
 });
