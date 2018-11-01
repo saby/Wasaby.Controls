@@ -29,7 +29,7 @@ define('Controls/Decorator/Markup', [
     * @remark
     * Function Arguments:
     * <ol>
-    *    <li>value - Json node.</li>
+    *    <li>value - Json node to resolve.</li>
     *    <li>parent - Json node, a parent of "value" argument.</li>
     *    <li>resolverParams - Object, outer data for tagResolver from resolverParams option.</li>
     * </ol>
