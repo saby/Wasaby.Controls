@@ -206,7 +206,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (this._options.emptyText) {
                var emptyItem = {};
                var itemData = {};
-               itemData['title'] = this._options.emptyText;
+               itemData[this._options.displayProperty] = this._options.emptyText;
                itemData[this._options.keyProperty] = null;
                var item = new Model({
                   rawData: itemData
