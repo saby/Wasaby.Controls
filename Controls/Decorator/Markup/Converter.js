@@ -114,7 +114,7 @@ define('Controls/Decorator/Markup/Converter', [
    };
 
    /**
-    * @class 'Controls/Decorator/Markup/Converter'
+    * @class Controls/Decorator/Markup/Converter
     * @author Кондаков Р.Н.
     * @public
     */
