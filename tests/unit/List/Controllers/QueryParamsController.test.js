@@ -234,7 +234,7 @@ define(
             });
 
 
-            it('calculate state with nextPage', function () {
+            it('calculate state with nextPosition', function () {
                var pNav = new PositionNavigation({
                   field: 'field',
                   direction: 'both',
@@ -243,8 +243,8 @@ define(
                });
 
                //first query with direction: after
-               dataRs.setMetaData({more: true, nextPage:{before: [1], after: [7]}});
-               pNav.calculateState(dataRsbyLoad);
+               dataRs.setMetaData({more: true, nextPosition:{before: [1], after: [7]}});
+               pNav.calculateState(dataRs);
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
@@ -258,8 +258,8 @@ define(
                });
 
                //first query with direction: after
-               dataRs.setMetaData({more: true, nextPage:[8]});
-               pNav.calculateState(dataRsbyLoad);
+               dataRs.setMetaData({more: true, nextPosition:[7]});
+               pNav.calculateState(dataRs, 'down');
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
                pNav = new PositionNavigation({
@@ -270,8 +270,8 @@ define(
                });
 
                //first query with direction: after
-               dataRs.setMetaData({more: true, nextPage:[1]});
-               pNav.calculateState(dataRsbyLoad);
+               dataRs.setMetaData({more: true, nextPosition:[1]});
+               pNav.calculateState(dataRs, 'up');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
 
             });
