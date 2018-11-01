@@ -154,7 +154,7 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _toggleIndicator: function(visible) {
-            if (Base.isNewEnvironment()) {
+            if (this._useVDOM()) {
                this._children.LoadingIndicator.toggleIndicator(visible);
             }
          },
