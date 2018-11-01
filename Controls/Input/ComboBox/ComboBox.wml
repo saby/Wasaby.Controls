@@ -1,6 +1,7 @@
 <Controls.Dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
+        displayProperty="{{_options.displayProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
         itemTemplate="{{_options.itemTemplate}}"
         selectedKeys="{{[_options.selectedKey]}}"
