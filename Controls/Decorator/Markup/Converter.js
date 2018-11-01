@@ -73,7 +73,7 @@ define('Controls/Decorator/Markup/Converter', [
     * @function Controls/Decorator/Markup/Converter#jsonToHtml
     * @param json {Array} Json based on JsonML.
     * @param tagResolver {Function} exactly like in {@link Controls/Decorator/Markup#tagResolver}.
-    * @param resolverParams {Function} exactly like in {@link Controls/Decorator/Markup#resolverParams}.
+    * @param resolverParams {Object} exactly like in {@link Controls/Decorator/Markup#resolverParams}.
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver, resolverParams) {
