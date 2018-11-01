@@ -535,13 +535,15 @@ define([
          var
             templateOptions,
             isShowSelector = false,
-            lookup = new Lookup();
+            lookup = new Lookup(),
+            opener;
 
          lookup._options.lookupTemplate = {};
          lookup._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
+               opener = config.opener;
             }
          };
 
@@ -551,6 +553,7 @@ define([
 
          assert.isTrue(isShowSelector);
          assert.equal(templateOptions.selectedTab, 'Employees');
+         assert.equal(opener, lookup);
       });
    });
 });
