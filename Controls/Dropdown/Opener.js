@@ -1,9 +1,10 @@
 define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
-      'Core/core-merge'
+      'Core/core-merge',
+      'Core/IoC'
    ],
-   function(Sticky, coreMerge) {
+   function(Sticky, coreMerge, IoC) {
       /**
        * Opener for dropdown menu.
        *
@@ -85,7 +86,11 @@ define('Controls/Dropdown/Opener',
             this.checkIcons(self, config);
          },
          setPopupOptions: function(self, config) {
-            config.className = self._options.className;
+            //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
+            config.className = self._options.className || self._options.popupOptions.className;
+            if (self._options.className) {
+               IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
+            }
             config.template = 'Controls/Dropdown/resources/template/DropdownList';
             config.closeByExternalClick = true;
          }
