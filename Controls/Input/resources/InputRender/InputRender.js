@@ -40,6 +40,9 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             return result;
          },
+         isRequired: function() {
+            return cDetection.isIE;
+         },
 
          getTargetPosition: function(target) {
             return target.selectionEnd;
@@ -61,7 +64,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             // set to space in all browsers except IE. In IE it shouldn't be set at all (or set to empty string).
             // But this method doesn't work if input is inside <form> element, so if someone wants to use forms they
             // should specify a tooltip.
-            return hasHorizontalScroll ? text : tooltip || ((cDetection.isIE || cDetection.isMac) ? '' : ' ');
+            return hasHorizontalScroll ? text : tooltip || '';
          },
 
          /**
@@ -100,6 +103,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: tmplNotify,
          _tooltip: '',
+         _required: false,
 
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
@@ -109,13 +113,11 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
+            this._required = _private.isRequired();
          },
 
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
-         },
-         _isRequired: function() {
-            return !cDetection.isMac;
          },
 
          _mouseEnterHandler: function() {
