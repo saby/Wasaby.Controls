@@ -353,6 +353,11 @@
    }
 }
 .ws-is-desktop-platform {
+   /**
+    * Иногда контент не входит по ширине (например таблица с большим несжимаемым контентом), нужно иметь прокрутку по горизонтали. У нас нет двухкоординатного скрол-контейнера, поэтому иммитируем его здесь
+    * TODO: Если/когда появиться двухкоординатный скрол-контейнер - убрать это
+    * 1175652376 https://online.sbis.ru/opendoc.html?guid=c63752ff-a79a-4021-a55c-6c7960efdff5
+    */
    .controls-RichEditor .controls-ScrollContainer__content {
       &::-webkit-scrollbar:horizontal {
          width: 17px;
