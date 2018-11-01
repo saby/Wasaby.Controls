@@ -75,26 +75,26 @@ define(
             assert.equal(res, '123.456');
          });
 
-         it('trim 0 if value -0', function() {
+         it('trim minus if value -0', function() {
             var config = {
-               precision: 0,
-               value: 10,
                onlyPositive: false,
-               integersLength: 3
+               integersLength: 5,
+               precision: 0,
+               showEmptyDecimals: true,
+               value: null
             };
-
             let num = new Number(config);
-
             num._beforeMount(config);
-            num._beforeUpdate(config);
-            assert.equal(num._numberViewModel._options.value, '10');
+            num._options.precision = 0;
 
-            num._numberViewModel._options.value = '-0';
-            config.value = -0;
-            num._options.value = -0;
-            num._beforeUpdate(config);
+            num._inputCompletedHandler({}, '-0');
+            assert.equal(num._numberViewModel.getValue(), '0');
 
-            assert.equal(num._numberViewModel.getValue(), '-');
+            num._inputCompletedHandler({}, '0000');
+            assert.equal(num._numberViewModel.getValue(), '0');
+
+            num._inputCompletedHandler({}, '-000');
+            assert.equal(num._numberViewModel.getValue(), '0');
          });
 
          it('trimEmptyDecimals (single zero, no dot)', function() {

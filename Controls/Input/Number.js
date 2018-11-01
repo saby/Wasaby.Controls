@@ -158,11 +158,6 @@ define('Controls/Input/Number',
                value = newOptions.value !== undefined ? String(newOptions.value) : '';
             }
 
-            // Если в поле ввода не предусмотрен ввод дробной части, то -0 отображаться не должен, оставляем только '-'
-            if (newOptions.precision === 0 && value[0] === '-' && newOptions.value === 0) {
-               value = '-';
-            }
-
             this._numberViewModel.updateOptions({
                onlyPositive: newOptions.onlyPositive,
                integersLength: newOptions.integersLength,
@@ -186,6 +181,11 @@ define('Controls/Input/Number',
          },
 
          _inputCompletedHandler: function(event, value) {
+            // Если в поле ввода целых чисел введён -000 или 00000 или -0, поменять на 0
+            if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
+               value = '0';
+               this._numberViewModel.updateValue(value);
+            }
             this._notify('inputCompleted', [this._getNumericValue(value)]);
          },
 
