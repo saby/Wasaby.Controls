@@ -467,6 +467,7 @@ define('Controls/Input/Lookup', [
          }, {clone: true});
 
          selectorOpener.open({
+            opener: self,
             isCompoundTemplate: this._options.isCompoundTemplate,
             templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
          });
