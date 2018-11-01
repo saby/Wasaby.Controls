@@ -9,7 +9,7 @@ define('Controls/Popup/Manager/Container',
    function(Control, template, ManagerController, IoC) {
       'use strict';
 
-      //step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
+      // step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
       var POPUP_ZINDEX_STEP = 10;
 
       var Container = Control.extend({
@@ -62,7 +62,7 @@ define('Controls/Popup/Manager/Container',
                   var finishDef = registrator.finishPendingOperations();
                   finishDef.addCallbacks(function() {
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
-                  }.bind(this), function (e) {
+                  }, function(e) {
                      IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
                   });
@@ -72,25 +72,25 @@ define('Controls/Popup/Manager/Container',
 
          _popupClosed: function(event, popupId) {
             var self = this;
-            this._finishPendings(popupId, function () {
-            }, function () {
+            this._finishPendings(popupId, function() {
+            }, function() {
                event.stopPropagation();
-            }, function () {
+            }, function() {
                self._notify('popupClose', [popupId], { bubbling: true });
             });
          },
          _popupDeactivated: function(event, popupId) {
             var self = this;
-            this._finishPendings(popupId, function () {
+            this._finishPendings(popupId, function() {
                if (!self[popupId + '_activeElement']) {
                   self[popupId + '_activeElement'] = document.activeElement;
                }
-            }, function (popup) {
+            }, function(popup) {
                // if pendings is exist, take focus back while pendings are finishing
                popup._container.focus();
-            }, function (popup) {
-               //Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
-               //Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
+            }, function(popup) {
+               // Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
+               // Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
                if (popup && popup._options.isCompoundTemplate) {
                   if (popup._options.closeByExternalClick) {
                      self._getCompoundArea(popup._container).close();
@@ -115,16 +115,16 @@ define('Controls/Popup/Manager/Container',
             event.preventDefault();
          },
 
-         //TODO Compatible
-         //Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
-         //Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
-         //у compoundArea вызовется сразу destroy. такую логику прервать нельзя
+         // TODO Compatible
+         // Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
+         // Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
+         // у compoundArea вызовется сразу destroy. такую логику прервать нельзя
          _getCompoundArea: function(popupContainer) {
             return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
          }
       });
 
-      //To calculate the zIndex in a compatible notification Manager
+      // To calculate the zIndex in a compatible notification Manager
       Container.POPUP_ZINDEX_STEP = POPUP_ZINDEX_STEP;
       return Container;
    });
