@@ -19,7 +19,7 @@ def exception(err, reason) {
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 
-node('test-autotest90') {
+node('test-autotest91') {
     LocalDateTime start_time = LocalDateTime.now();
     echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
