@@ -79,6 +79,7 @@ define('SBIS3.CONTROLS/TextArea', [
          _autoHeightInitialized: false,
          _options: {
             _isMultiline: true,
+            _isRequired: constants.browser.isIE,
             _paddingClass: ' controls-TextArea_padding',
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: inputField,
