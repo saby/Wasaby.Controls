@@ -20,6 +20,9 @@ define(
 
          let opener = new Opener(config);
          opener._beforeMount(config);
+         opener._children.LoadingIndicator = {
+            toggleIndicator: () => {}
+         };
          opener.saveOptions(config);
 
          BaseOpener.isNewEnvironment = function() {
