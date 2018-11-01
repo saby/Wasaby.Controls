@@ -80,7 +80,6 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
-         // Возможно, тут лучше разбить на кучу тестов, причём добавив примеры из WrapURLs.test.js.
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
