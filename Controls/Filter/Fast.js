@@ -171,6 +171,7 @@ define('Controls/Filter/Fast',
                   footerTemplate: getPropValue(item, 'footerTemplate'),
                   selectedKeys: getPropValue(this._items.at(index), 'value')
                },
+               
                //FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
             };
