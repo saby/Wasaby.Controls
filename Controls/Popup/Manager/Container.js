@@ -86,18 +86,18 @@ define('Controls/Popup/Manager/Container',
                   self[popupId + '_activeElement'] = document.activeElement;
                }
             }, function(popup) {
-                     // if pendings is exist, take focus back while pendings are finishing
-                     popup._container.focus();
+               // if pendings is exist, take focus back while pendings are finishing
+               popup._container.focus();
             }, function(popup) {
                // Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
                // Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
-                     if (popup && popup._options.isCompoundTemplate) {
-                        if (popup._options.closeByExternalClick) {
+               if (popup && popup._options.isCompoundTemplate) {
+                  if (popup._options.closeByExternalClick) {
                      self._getCompoundArea(popup._container).close();
-                        }
-                     } else {
+                  }
+               } else {
                   self._notify('popupDeactivated', [popupId], { bubbling: true });
-                     }
+               }
             });
          },
          _popupDestroyed: function(event, popupId) {
