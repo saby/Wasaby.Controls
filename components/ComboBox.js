@@ -142,6 +142,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
          _isClearing: false,
          _options: {
+            _isRequired: constants.browser.isIE,
             textFieldWrapper: textFieldWrapper,
             _emptyRecordProjection: undefined,
             _getRecordsForRedraw: getRecordsForRedrawCB,

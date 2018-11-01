@@ -183,6 +183,7 @@ define('SBIS3.CONTROLS/FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
+                _isRequired: constants.browser.isIE,
                 _paddingClass: ' controls-Text-InputRender_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -485,7 +486,7 @@ define('SBIS3.CONTROLS/FieldLink',
                 }
              }
           },
-   
+
           _getSelectorAction: memoize(function() {
              return new SelectorAction({
                 mode: this._getOption('selectMode'),
@@ -503,7 +504,7 @@ define('SBIS3.CONTROLS/FieldLink',
                }
                return this._options.showAllConfig;
            },
-          
+
           _notify: function(eventName) {
              /* Чтобы не запускался поиск в автодополнении, когда есть выбранная запись и включен комментарий */
              if(eventName === 'onSearch' && this._options.alwaysShowTextBox && !this._isEmptySelection()) {
@@ -611,7 +612,7 @@ define('SBIS3.CONTROLS/FieldLink',
 
              this.hidePicker();
              this._linkCollection && this._linkCollection.hidePicker();
-             
+
              /* При открытии диалога выбора необходимо очистить список в автодополнении,
                 т.к. на диалоге выбора могут производить изменения / удаление записей */
              if(this._list && this._list.getItems() && this._getOption('autoShow')) {
@@ -954,7 +955,7 @@ define('SBIS3.CONTROLS/FieldLink',
              if(result && result.length) {
                 var isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
-                
+
                 if(isModel) {
                    this.addSelectedItems(result);
                 } else {
@@ -1200,11 +1201,11 @@ define('SBIS3.CONTROLS/FieldLink',
                 }
              };
           },
-   
+
           _getLoadingContainer: function() {
              return this.getContainer().find('.controls-FieldLink__fieldWrapper');
           },
-   
+
           _showLoadingIndicator: function() {
              FieldLink.superclass._showLoadingIndicator.call(this);
              this._loadingIndicator.addClass('controls-FieldLink__indicator-position').removeClass('controls-Suggest__loadingIndicator-position');
@@ -1229,17 +1230,17 @@ define('SBIS3.CONTROLS/FieldLink',
                 var pickerContainer = this._picker.getContainer(),
                     list = this.getList(),
                     newIndex;
-                
+
                 if (cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Interfaces/IItemsControl')) {
                    list.getActiveView()._getScrollWatcher().scrollTo('bottom');
                 } else {
                    pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
                 }
-                
+
                 /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
                 if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Mixins/Selectable')) {
                    newIndex = list.getItems().getCount() - 1;
-                   
+
                    if(newIndex !== list.getSelectedIndex()) {
                       list.setSelectedIndex(newIndex);
                    }
