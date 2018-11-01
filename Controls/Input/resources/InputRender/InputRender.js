@@ -11,7 +11,6 @@ define('Controls/Input/resources/InputRender/InputRender',
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
-
       'use strict';
 
       /**
@@ -31,7 +30,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                result = self._selection,
                val = self._options.viewModel.getDisplayValue();
 
-            //Если курсор ещё не был поставлен в поле, то поставим его в конец
+            // Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
                   selectionStart: val ? val.length : 0,
@@ -40,6 +39,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             }
 
             return result;
+         },
+         isRequired: function() {
+            return cDetection.isIE;
          },
 
          getTargetPosition: function(target) {
@@ -58,11 +60,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          getTooltip: function(text, tooltip, hasHorizontalScroll) {
-            //In order to hide browser tooltip (something like "Please fill out this field.") title attribute must be
-            //set to space in all browsers except IE. In IE it shouldn't be set at all (or set to empty string).
-            //But this method doesn't work if input is inside <form> element, so if someone wants to use forms they
-            //should specify a tooltip.
-            return hasHorizontalScroll ? text : tooltip ? tooltip : cDetection.isIE ? '' : ' ';
+            // In order to hide browser tooltip (something like "Please fill out this field.") title attribute must be
+            // set to space in all browsers except IE. In IE it shouldn't be set at all (or set to empty string).
+            // But this method doesn't work if input is inside <form> element, so if someone wants to use forms they
+            // should specify a tooltip.
+            return hasHorizontalScroll ? text : tooltip || '';
          },
 
          /**
@@ -74,17 +76,16 @@ define('Controls/Input/resources/InputRender/InputRender',
          getInputState: function(self, options) {
             if (options.validationErrors && options.validationErrors.length) {
                return 'error';
-            } else if (options.readOnly) {
+            } if (options.readOnly) {
                return 'disabled';
-            } else if (self._inputActive) {
+            } if (self._inputActive) {
                return 'active';
-            } else {
-               return 'default';
             }
+            return 'default';
          },
 
          getInputValueForTooltip: function(inputType, inputValue) {
-            //FIXME будет решаться по ошибке, путём выделения подсказики в HOC https://online.sbis.ru/opendoc.html?guid=6239c863-53dc-4cda-90a1-d2ad96979c80
+            // FIXME будет решаться по ошибке, путём выделения подсказики в HOC https://online.sbis.ru/opendoc.html?guid=6239c863-53dc-4cda-90a1-d2ad96979c80
             return inputType === 'password' ? '' : inputValue;
          },
 
@@ -102,6 +103,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: tmplNotify,
          _tooltip: '',
+         _required: false,
 
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
@@ -111,6 +113,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
+            this._required = _private.isRequired();
          },
 
          _beforeUpdate: function(newOptions) {
@@ -152,7 +155,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                ? RenderHelper.getAdaptiveInputType(e.nativeEvent.inputType, selection)
                : RenderHelper.getInputType(value, newValue, position, selection);
 
-            //Подготавливаем объект с разобранным значением
+            // Подготавливаем объект с разобранным значением
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
             //
@@ -165,7 +168,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
-            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            // TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
                _private.hasHorizontalScroll(this._children.divinput.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
          },
@@ -218,7 +221,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             }
 
             if (!this._options.readOnly && this._options.selectOnClick) {
-               //In IE, the focus event happens earlier than the selection event, so we should use setTimeout
+               // In IE, the focus event happens earlier than the selection event, so we should use setTimeout
                if (cDetection.isIE) {
                   setTimeout(function() {
                      e.target.select();
@@ -265,7 +268,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                selectionEnd: selectionStart + text.length
             };
 
-            //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
+            // Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
             return processedData.position;
          }
       });
@@ -301,5 +304,4 @@ define('Controls/Input/resources/InputRender/InputRender',
       InputRender._private = _private;
 
       return InputRender;
-   }
-);
+   });
