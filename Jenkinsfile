@@ -116,9 +116,9 @@ node('test-autotest90') {
 		dir(workspace){
 			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
 			sh "ls | grep -v -E 'controls' | xargs rm -rf"
-			dir("./controls"){
-				sh "rm -rf ${workspace}/controls/atf"
-				sh "rm -rf ${workspace}/controls/sbis3-app-engine"
+			dir("./controls/tests"){
+				sh "rm -rf ${workspace}/controls/tests/atf"
+				sh "rm -rf ${workspace}/controls/tests/sbis3-app-engine"
 			}
 		}
 
