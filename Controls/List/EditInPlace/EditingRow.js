@@ -17,7 +17,7 @@ define('Controls/List/EditInPlace/EditingRow', [
                LayoutManager.scrollToElement($(self._container));
             });
          } else {
-            requirejs(['cdn!jquery/3.3.1/jquery-min.js'], function() {
+            requirejs(['jquery'], function() {
                requirejs(['Lib/LayoutManager/LayoutManager'], function(LayoutManager) {
                   LayoutManager.scrollToElement($(self._container));
                });
