@@ -123,7 +123,7 @@ define('Controls/List/TileView/TileView', [
 
                   //If the hover on the checkbox does not increase the element
                   if (!event.target.closest('.js-controls-ListView__checkbox')) {
-                     self._setFixedItem(itemSize, item.getBoundingClientRect(), document.body.getBoundingClientRect(), itemData.key);
+                     self._setFixedItem(itemSize, item.getBoundingClientRect(), document.documentElement.getBoundingClientRect(), itemData.key);
                   }
                }, ZOOM_DELAY);
             } else {

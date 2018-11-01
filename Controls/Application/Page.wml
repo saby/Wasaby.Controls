@@ -37,6 +37,7 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
                                  on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"
                                  on:cancelPreviewer="_cancelPreviewerHandler()"
@@ -71,7 +72,7 @@
                                       src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-                              <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+                              <script key="contents" type="text/javascript" src="{{resourceRoot}}contents.js"></script>
                               <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
 
