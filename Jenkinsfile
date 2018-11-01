@@ -117,7 +117,8 @@ node('test-autotest91') {
 			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
 			sh "ls | grep -v -E 'controls' | xargs rm -rf"
 			dir("./controls/tests"){
-				sh "rm -rf ${workspace}/controls/tests/atf"
+				sh "rm -rf ${workspace}/controls/tests/int/atf"
+				sh "rm -rf ${workspace}/controls/tests/reg/atf"
 				sh "rm -rf ${workspace}/controls/tests/sbis3-app-engine"
 			}
 		}
@@ -625,18 +626,18 @@ node('test-autotest91') {
 			}
 			sh "mkdir logs_ps"
 			
-			dir('/home/sbis/Controls'){
-				def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+			//dir('/home/sbis/Controls'){
+			//	def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
 				
-				if ( files_err.length > 0 ){
-					sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-					sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-					dir ( workspace ){
-						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-					}					
-				}
-			}
+			//	if ( files_err.length > 0 ){
+			//		sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+			//		sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+			//		dir ( workspace ){
+			//			sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+			//			archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+			//		}					
+			//	}
+			//}
 		}
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
