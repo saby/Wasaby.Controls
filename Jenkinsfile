@@ -127,10 +127,10 @@ node('controls') {
 		dir(workspace){
 			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
 			sh "ls | grep -v -E 'controls' | xargs rm -rf"
-			dir("./controls/tests"){
+			dir("./controls"){
 				sh "rm -rf ${workspace}/controls/tests/int/atf"
 				sh "rm -rf ${workspace}/controls/tests/reg/atf"
-				sh "rm -rf ${workspace}/controls/tests/sbis3-app-engine"
+				sh "rm -rf ${workspace}/controls/sbis3-app-engine"
 				sh "rm -rf ${workspace}/controls/tests/navigation"
 			}
 		}
@@ -581,21 +581,7 @@ node('controls') {
 					stage ("Unit тесты"){
 						if ( unit ){
 							echo "Запускаем юнит тесты"
-							//dir(workspace){
-							//	sh """
-							//	cd ws_data
-							//	npm i
-							//	cd ../WIS-git-temp
-							//	npm i
-							//	node compileEsAndTs.js
-							//	cd ..
-							//	ln -s ../WIS-git-temp controls/sbis3-ws
-							//	ln -s ../ws_data/WS.Data controls/WS.Data
-							//	ln -s ../ws_data/Data controls/Data
-							//	ln -s ../../ws_data/WS.Data controls/components/WS.Data
-							//	"""
-							//}
-							dir("./controls"){
+								dir("./controls"){
 								sh "npm config set registry http://npmregistry.sbis.ru:81/"
 								echo "run isolated"
 								sh """
