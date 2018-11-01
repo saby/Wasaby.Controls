@@ -8,7 +8,7 @@
                               on:keydown="_applyJson()" />
       </div>
       <div class="ControlsDemo-Markup__block">
-         <Controls.Label name="myLabel1" caption="Добавить или изменить параметр резолвера, выбрать резолвер" />
+         <Controls.Label name="myLabel2" caption="Добавить или изменить параметр резолвера, выбрать резолвер" />
          <Controls.Input.Text bind:value="_newParamKey"
                               attr:id="ControlsDemo-Markup__newParamKey"
                               placeholder="ключ" />
@@ -27,15 +27,15 @@
                                      style="linkAdditional4" />
       </div>
       <div class="ControlsDemo-Markup__block">
-         <Controls.Label name="myLabel1" caption="json массив: {{ strJson }}" />
-         <Controls.Label name="myLabel1" caption="резолвер: {{ tagResolverName }}" />
-         <Controls.Label name="myLabel1" caption="параметры резолвера: {{ objectToStr(resolverParams) }}" />
+         <Controls.Label name="myLabel3" caption="json массив: {{ strJson }}" />
+         <Controls.Label name="myLabel4" caption="резолвер: {{ tagResolverName }}" />
+         <Controls.Label name="myLabel5" caption="параметры резолвера: {{ objectToStr(resolverParams) }}" />
          <Controls.Button on:click="_applyJson()"
                           attr:id="ControlsDemo-Markup__finalApply"
                           caption="Подтвердить все введённые данные" />
       </div>
       <div class="ControlsDemo-Markup__block">
-         <Controls.Label name="myLabel1" caption="Результат:" />
+         <Controls.Label name="myLabel6" caption="Результат:" />
          <Controls.Decorator.Markup value="{{ json }}"
                                     attr:id="ControlsDemo-Markup__result"
                                     tagResolver="{{ tagResolver }}"
