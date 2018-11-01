@@ -15,8 +15,18 @@ define('Controls/Decorator/Markup/resolvers/highlight', function() {
       return result;
    }
 
+   /**
+    *
+    * Module with a function to highlight searched string.
+    * Takes textToHighlight from resolverParams {@link Controls/Decorator/Markup#resolverParams}.
+    * Tag resolver for {@link Controls/Decorator/Markup}.
+    *
+    * @class Controls/Decorator/Markup/resolvers/highlight
+    * @public
+    * @author Кондаков Р.Н.
+    */
    return function linkDecorate(value, parent, resolverParams) {
-      if (typeof value !== 'string' && !(value instanceof String)) {
+      if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
          return value;
       }
       var allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), resolverParams.textToHighlight.toLowerCase());

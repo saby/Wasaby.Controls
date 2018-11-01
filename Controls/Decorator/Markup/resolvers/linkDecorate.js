@@ -8,6 +8,15 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
    cConstants) {
    'use strict';
 
+   /**
+    *
+    * Module with a function to replace common link on decorated link, if it needs.
+    * Tag resolver for {@link Controls/Decorator/Markup}.
+    *
+    * @class Controls/Decorator/Markup/resolvers/highlight
+    * @public
+    * @author Кондаков Р.Н.
+    */
    return function linkDecorate(value, parent) {
       // Decorate tag "a" only.
       if (!Array.isArray(value) || Array.isArray(value[0]) || value[0] != 'a') {
