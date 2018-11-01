@@ -4,6 +4,7 @@
 define('Controls/Decorator/Markup/resolvers/highlight', function() {
    'use strict';
 
+   // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {
       var i = str.indexOf(searchValue),
          result = [];
@@ -26,31 +27,38 @@ define('Controls/Decorator/Markup/resolvers/highlight', function() {
     * @author Кондаков Р.Н.
     */
    return function linkDecorate(value, parent, resolverParams) {
+      // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
          return value;
       }
-      var allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), resolverParams.textToHighlight.toLowerCase());
+
+      var textToHighlight = resolverParams.textToHighlight,
+         allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), textToHighlight.toLowerCase());
+
+      // Text to highlight not found.
       if (!allIndexesOfTextToHighlight.length) {
          return value;
       }
+
       var newValue = [[]],
-         textToHighlightLength = resolverParams.textToHighlight.length,
          j = 0,
-         s1,
-         s2;
+         substringNotToHighlight,
+         substringToHighlight;
+
       for (var i = 0; i < allIndexesOfTextToHighlight.length; ++i) {
-         s1 = value.substring(j, allIndexesOfTextToHighlight[i]);
-         j = allIndexesOfTextToHighlight[i] + textToHighlightLength;
-         s2 = value.substr(allIndexesOfTextToHighlight[i], textToHighlightLength);
-         if (s1) {
-            newValue.push(s1);
+         substringNotToHighlight = value.substring(j, allIndexesOfTextToHighlight[i]);
+         j = allIndexesOfTextToHighlight[i] + textToHighlight.length;
+         substringToHighlight = value.substr(allIndexesOfTextToHighlight[i], textToHighlight.length);
+         if (substringNotToHighlight) {
+            newValue.push(substringNotToHighlight);
          }
-         newValue.push(['span', { 'class': 'controls-Highlight_found' }, s2]);
+         newValue.push(['span', { 'class': 'controls-Highlight_found' }, substringToHighlight]);
       }
-      s1 = value.substring(j);
-      if (s1) {
-         newValue.push(s1);
+      substringNotToHighlight = value.substring(j);
+      if (substringNotToHighlight) {
+         newValue.push(substringNotToHighlight);
       }
+
       return newValue;
    };
 });
