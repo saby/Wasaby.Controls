@@ -165,23 +165,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
                if (count) {
-                  self._activeOperation = null;
-                  if (count === 1) {
-                     self._setFirstOperationMode(true);
-                     self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
-                  }
-                  else {
-                     self._setFirstOperationMode(false);
-                     items.each(function (item, id) {
-                        if (!self._activeOperation && item.get('status') === LongOperationEntry.STATUSES.running) {
-                           self._activeOperation = item;
-                           return false;
-                        }
-                     });
-                     if (!self._activeOperation) {
-                        self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
-                     }
-                  }
+                  self._setFirstOperationMode(count === 1);
+                  self._selectActiveOperation();
                   self._updateState();
 
                   // Данные получены - пора показать окно, если оно не было показано ранее
@@ -275,6 +260,29 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                container.removeClass(cssClass);
                container.animate({opacity:1}, 800);
                this._isIntroduced = true;
+            }
+         },
+
+         /**
+          * Выбрать активную операцию
+          * @protected
+          */
+         _selectActiveOperation: function () {
+            this._activeOperation = null;
+            var items = this._longOpList.getItems();
+            var count = items ? items.getCount() : 0;
+            if (count) {
+               if (1 < count) {
+                  items.each(function (item, id) {
+                     if (!this._activeOperation && item.get('status') === LongOperationEntry.STATUSES.running) {
+                        this._activeOperation = item;
+                        return false;
+                     }
+                  }.bind(this));
+               }
+               if (!this._activeOperation) {
+                  this._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
+               }
             }
          },
 
@@ -570,9 +578,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1, true);
-                  var model = this._longOpList.lookupItem(data, true);
-                  if (model) {
-                     this._activeOperation = model;
+                  var operation = this._longOpList.lookupItem(data);
+                  if (operation) {
+                     operation.status = LongOperationEntry.STATUSES.ended;
+                     operation.isFailed = !!data.error;
+                     this._selectActiveOperation();
                      this._updateState();
                   }
                   break;
