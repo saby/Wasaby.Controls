@@ -18,10 +18,6 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
-          },
           "value": {
             "type": "String",
             "title": "Field value."

@@ -6,12 +6,12 @@ define('Controls/Input/Base/InputUtil', [], function() {
 
       /**
        * Get split by entered string.
-       * @param {String} oldValue Value before working with the field.
-       * @param {String} newValue Value after working with the field.
-       * @param {Number} caretPosition Carriage position after working with the field.
-       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection before working with the field.
-       * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of working with the field.
-       * @return {Controls/Input/Base/Types/SplitValue.typedef} Split
+       * @param {String} oldValue Values in the field before changing it.
+       * @param {String} newValue Values in the field after changing it.
+       * @param {Number} caretPosition Carriage position in the field after changing value.
+       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
+       * @return {Controls/Input/Base/Types/SplitValue.typedef}
        */
       splitValue: function(oldValue, newValue, caretPosition, selection, inputType) {
          var selectionLength = selection.end - selection.start;
@@ -33,16 +33,11 @@ define('Controls/Input/Base/InputUtil', [], function() {
       },
 
       /**
-       * Получить тип ввода.
-       * @variant insert ввод значения.
-       * @variant delete удаление с помощью backspace [ + ctrl] или delete [ + ctrl] с выделением значения.
-       * @variant deleteBackward удаление с помощью backspace [ + ctrl] без выделения значения.
-       * @variant deleteForward удаление с помощью delete [ + ctrl] без выделения значения.
-       * @param {String} oldValue строка до ввода.
-       * @param {String} newValue строка после ввода.
-       * @param {Number} caretPosition позиция каретки после ввода.
-       * @param {Object} selection объект с информацией о выделении.
-       * @returns {String} тип ввода.
+       * @param {String} oldValue Values in the field before changing it.
+       * @param {String} newValue Values in the field after changing it.
+       * @param {Number} caretPosition Carriage position in the field after changing value.
+       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @returns {Controls/Input/Base/Types/InputType.typedef}
        */
       getInputType: function(oldValue, newValue, caretPosition, selection) {
          var
@@ -65,14 +60,9 @@ define('Controls/Input/Base/InputUtil', [], function() {
       },
 
       /**
-       * Получить тип ввода.
-       * @variant insert ввод значения.
-       * @variant delete удаление с помощью backspace [ + ctrl] или delete [ + ctrl] с выделением значения.
-       * @variant deleteBackward удаление с помощью backspace [ + ctrl] без выделения значения.
-       * @variant deleteForward удаление с помощью delete [ + ctrl] без выделения значения.
-       * @param {String} nativeInputType нативный тип ввода.
-       * @param {Object} selection объект с информацией о выделении.
-       * @returns {String} тип ввода.
+       * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
+       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @returns {Controls/Input/Base/Types/InputType.typedef}
        */
       getAdaptiveInputType: function(nativeInputType, selection) {
          var selectionLength, execType;

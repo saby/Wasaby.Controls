@@ -24,18 +24,19 @@ define('Controls/Input/Base',
       var _private = {
 
          /**
-          * @type {Number} The width of the native cursor in the field measured in pixels.
+          * @type {Number} The width of the cursor in the field measured in pixels.
           * @private
           */
-         widthCursor: 1,
+         WIDTH_CURSOR: 1,
 
          /**
           * @param {Controls/Input/Base} self Control instance.
+          * @param {Object} Ctr View model constructor.
           * @param {Object} options View model options.
           * @param {String} value View model value.
           */
-         initViewModel: function(self, options, value) {
-            self._viewModel = new self._viewModel(options, value);
+         initViewModel: function(self, Ctr, options, value) {
+            self._viewModel = new Ctr(options, value);
          },
 
          /**
@@ -46,12 +47,14 @@ define('Controls/Input/Base',
              * When you mount a field in the DOM, the browser can auto fill the field.
              * Then the displayed value in the model will not match the value in the field.
              * In this case, you change the displayed value in the model to the value in the field and
-             * must tell the parent that the value in the field has changed.
+             * must notify the parent that the value in the field has changed.
              */
-            if (_private.hasAutoFillField(self)) {
-               self._viewModel.displayValue = self._getField().value;
-               _private.notifyValueChanged(self);
-            }
+            _private.forField(self, function(field) {
+               if (_private.hasAutoFillField(field)) {
+                  self._viewModel.displayValue = field.value;
+                  _private.notifyValueChanged(self);
+               }
+            });
          },
 
          /**
@@ -81,11 +84,11 @@ define('Controls/Input/Base',
                field.value = value;
             }
 
-            /**
-             * After calling setSelectionRange, the select event is fired. Then will come the preservation of the selection in the model.
-             * We only need to do this with user actions. Therefore cancel this action through _skipSavingSelectionOnce.
-             */
             if (_private.hasSelectionChanged(field, selection)) {
+               /**
+                * After calling setSelectionRange the select event is triggered and saved the selection in model.
+                * You do not need to do this because the model is now the actual selection.
+                */
                self._skipSavingSelectionOnce = true;
                field.setSelectionRange(selection.start, selection.end);
             }
@@ -103,16 +106,11 @@ define('Controls/Input/Base',
 
          /**
           * Determinate whether the field has been auto fill.
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Node} field
           * @return {Boolean}
           */
-         hasAutoFillField: function(self) {
-            /**
-             * In read mode, the field does not exist.
-             */
-            if (!self._options.readOnly) {
-               return !!self._getField().value;
-            }
+         hasAutoFillField: function(field) {
+            return !!field.value;
          },
 
          /**
@@ -204,7 +202,7 @@ define('Controls/Input/Base',
          recalculateLocationVisibleArea: function(field, value, selection) {
             var textWidthBeforeCursor = getTextWidth(value.substring(0, selection.end));
 
-            var positionCursor = textWidthBeforeCursor + _private.widthCursor;
+            var positionCursor = textWidthBeforeCursor + _private.WIDTH_CURSOR;
             var sizeVisibleArea = field.clientWidth;
             var beginningVisibleArea = field.scrollLeft;
             var endingVisibleArea = field.scrollLeft + sizeVisibleArea;
@@ -216,6 +214,40 @@ define('Controls/Input/Base',
 
             if (!hasVisibilityCursor) {
                field.scrollLeft = positionCursor - sizeVisibleArea / 2;
+            }
+         },
+
+         getField: function(self) {
+            return self._children[self._fieldName];
+         },
+
+         /**
+          * Get the beginning and end of the selected portion of the field's text.
+          * @param {Controls/Input/Base} self Control instance.
+          * @return {Controls/Input/Base/Types/Selection.typedef}
+          * @private
+          */
+         getFieldSelection: function(self) {
+            var field = _private.getField(self);
+
+            return {
+               start: field.selectionStart,
+               end: field.selectionEnd
+            };
+         },
+
+         /**
+          * The method executes a provided function once for field.
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/Input/Base/Types/CallbackForField.typedef} callback Function to execute for field.
+          * @private
+          */
+         forField: function(self, callback) {
+            /**
+             * In read mode, the field does not exist.
+             */
+            if (!self._options.readOnly) {
+               callback(_private.getField(self));
             }
          }
       };
@@ -258,12 +290,9 @@ define('Controls/Input/Base',
 
          /**
           * @type {Controls/Input/Base/ViewModel} The display model of the input field.
-          * @remark
-          * On the prototype lie the constructor of the model. In _beforeMount you need to create an instance.
-          * In this way, you can override the model in the inheritors without using an additional variable for the model constructor.
           * @private
           */
-         _viewModel: ViewModel,
+         _viewModel: null,
 
          /**
           * @type {Controls/Utils/tmplNotify}
@@ -308,10 +337,11 @@ define('Controls/Input/Base',
          _isMobileAndroid: detection.isMobileAndroid,
 
          _beforeMount: function(options) {
+            var viewModelCtr = this._getViewModelConstructor();
             var viewModelOptions = this._getViewModelOptions(options);
 
             this._initProperties(this);
-            _private.initViewModel(this, viewModelOptions, options.value);
+            _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
             /**
              * Browsers use auto-complete to the fields with the previously stored name.
@@ -469,6 +499,15 @@ define('Controls/Input/Base',
          },
 
          /**
+          * Get the constructor for the view model.
+          * @return {Controls/Input/Base/ViewModel} View model constructor.
+          * @private
+          */
+         _getViewModelConstructor: function() {
+            return ViewModel;
+         },
+
+         /**
           * Get the tooltip for field.
           * If the displayed value fits in the field, the tooltip option is returned. Otherwise the displayed value is returned.
           * @return {String} Tooltip.
@@ -477,7 +516,7 @@ define('Controls/Input/Base',
          _getTooltip: function() {
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(this._getField());
 
-            return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
+            return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
          },
 
          _calculateValueForTemplate: function() {
@@ -509,7 +548,8 @@ define('Controls/Input/Base',
             style: 'info',
             placeholder: '',
             textAlign: 'left',
-            fontStyle: 'default'
+            fontStyle: 'default',
+            autoComplete: false
          };
       };
 
@@ -521,7 +561,7 @@ define('Controls/Input/Base',
              * placeholder: descriptor(String|Function),
              */
             value: descriptor(String),
-            tooltip: descriptor(String),
+            autoComplete: descriptor(Boolean),
             size: descriptor(String).oneOf([
                's',
                'm',

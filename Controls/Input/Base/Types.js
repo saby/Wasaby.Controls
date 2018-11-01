@@ -38,4 +38,9 @@ define('Controls/Input/Base/Types', [], function() {
     * @property {Function} template Control template.
     * @property {Object} [scope] Control template options.
     */
+
+   /**
+    * @type {Function} CallbackForField
+    * @param {Node} field The field being processed.
+    */
 });

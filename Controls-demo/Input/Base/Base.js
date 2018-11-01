@@ -60,7 +60,6 @@ define('Controls-demo/Input/Base/Base',
             this._componentOptions = {
                name: 'BaseField',
                placeholder: 'Text...',
-               tooltip: 'Please enter text',
                value: '',
                size: undefined,
                style: undefined,

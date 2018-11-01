@@ -5,7 +5,7 @@
       type="{{type}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
-      autocomplete="{{autocomplete ? 'on' : 'new-password'}}"
+      autocomplete="{{autoComplete ? 'on' : 'new-password'}}"
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
       on:input="_inputHandler()"

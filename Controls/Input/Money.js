@@ -24,34 +24,36 @@ define('Controls/Input/Money',
        * @category Input
        */
       var _private = {
-         precision: 2,
+         PRECISION: 2,
 
-         integerPath: function(value) {
+         integerPart: function(value) {
             return value.slice(0, -_private.precision);
          },
 
-         fractionPath: function(value) {
+         fractionPart: function(value) {
             return value.slice(-_private.precision);
          }
       };
       
       var Money = Base.extend({
-         _viewModel: ViewModel,
-
          _initProperties: function() {
             Money.superclass._initProperties.apply(this, arguments);
 
             this._readOnlyField.template = readOnlyFieldTemplate;
-            this._readOnlyField.scope.integerPath = _private.integerPath;
-            this._readOnlyField.scope.fractionPath = _private.fractionPath;
+            this._readOnlyField.scope.integerPart = _private.integerPart;
+            this._readOnlyField.scope.fractionPart = _private.fractionPart;
          },
 
          _getViewModelOptions: function(options) {
             return {
                showEmptyDecimals: true,
-               precision: _private.precision,
+               precision: _private.PRECISION,
                onlyPositive: options.onlyPositive
             };
+         },
+
+         _getViewModelConstructor: function() {
+            return ViewModel;
          }
       });
 

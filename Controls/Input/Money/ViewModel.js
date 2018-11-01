@@ -15,7 +15,9 @@ define('Controls/Input/Money/ViewModel',
                splitValueHelper = new SplitValueHelper(splitValue),
                inputProcessor = new InputProcessor();
 
-            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            /**
+             * If by mistake instead of a point entered a ',' or "b" or "Yu", then perform the replacement.
+             */
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
             switch (inputType) {

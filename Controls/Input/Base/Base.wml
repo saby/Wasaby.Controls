@@ -1,5 +1,4 @@
 <Controls.Input.Render attr:title="{{_tooltip}}"
-                       attr:ws-no-focus="{{_options.readOnly ? 'true'}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        style="{{_options.style}}"
@@ -22,6 +21,6 @@
                   template="{{_field.template}}"
                   value="{{_viewModel.displayValue}}"
                   placeholder="{{_options.placeholder}}"
-                  autocomplete="{{_options.autocomplete}}"/>
+                  autoComplete="{{_options.autoComplete}}"/>
    </ws:else>
 </Controls.Input.Render>

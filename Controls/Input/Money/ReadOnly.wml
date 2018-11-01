@@ -1,4 +1,4 @@
 <div>
-   <span>{{integerPath(value)}}</span>
-   <span class="controls-Money__fractionPath_readOnly">{{fractionPath(value)}}</span>
+   <span>{{integerPart(value)}}</span>
+   <span class="controls-Money__fractionPart_readOnly">{{fractionPart(value)}}</span>
 </div>
