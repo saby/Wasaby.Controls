@@ -108,7 +108,7 @@ node('controls') {
 		} else {
 			branch_engine = props["engine"]
 		}
-		
+
 		def branch_navigation
 		if (params.branch_navigation) {
 			branch_navigation = params.branch_navigation
@@ -160,6 +160,7 @@ node('controls') {
 						git clean -fd
                         git fetch
                         git checkout ${env.BRANCH_NAME}
+						git pull
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
@@ -477,32 +478,32 @@ node('controls') {
             """
             }
         }
-		if ( regr || inte || all_inte) {
-				def soft_restart = "True"
-				if ( params.browser_type in ['ie', 'edge'] ){
-					soft_restart = "False"
-				}
+
+                    if ( regr || inte || all_inte) {
+                        def soft_restart = "True"
+                        if ( params.browser_type in ['ie', 'edge'] ){
+                            soft_restart = "False"}
 				if ( "${params.theme}" != "online" ) {
 					img_dir = "capture_${params.theme}"
 				} else {
 					img_dir = "capture"
-				}
-				writeFile file: "./controls/tests/int/config.ini", text:
-					"""# UTF-8
-					[general]
-					browser = ${params.browser_type}
-					SITE = http://${NODE_NAME}:30010
-					SERVER = test-autotest-db1:5434
-					BASE_VERSION = css_${NODE_NAME}${ver}1
-					DO_NOT_RESTART = True
-					SOFT_RESTART = ${soft_restart}
-					NO_RESOURCES = True
-					DELAY_RUN_TESTS = 2
-					TAGS_NOT_TO_START = iOSOnly
-					ELEMENT_OUTPUT_LOG = locator
-					WAIT_ELEMENT_LOAD = 20
-					SHOW_CHECK_LOG = True
-					HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+                        }
+                    writeFile file: "./controls/tests/int/config.ini", text:
+                        """# UTF-8
+                        [general]
+                        browser = ${params.browser_type}
+                        SITE = http://${NODE_NAME}:30010
+                        SERVER = test-autotest-db1:5434
+                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        DO_NOT_RESTART = True
+                        SOFT_RESTART = ${soft_restart}
+                        NO_RESOURCES = True
+                        DELAY_RUN_TESTS = 2
+                        TAGS_NOT_TO_START = iOSOnly
+                        ELEMENT_OUTPUT_LOG = locator
+                        WAIT_ELEMENT_LOAD = 20
+                        SHOW_CHECK_LOG = True
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
 
 				writeFile file: "./controls/tests/reg/config.ini",
 					text:
@@ -568,7 +569,7 @@ node('controls') {
 							}
 						}
 					}
-					
+
 
 					if ( skip ) {
 						 skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
@@ -606,7 +607,7 @@ node('controls') {
 						if ( inte || all_inte && smoke_result ){
 							echo "Запускаем интеграционные тесты"
 							dir("./controls/tests/int"){
-								
+
 								sh """
 								source /home/sbis/venv_for_test/bin/activate
 								python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
@@ -647,36 +648,31 @@ node('controls') {
     """
 	def exists_dir = fileExists '/home/sbis/Controls'
 	if ( exists_dir ){
-        sh """
-            sudo chmod -R 0777 /home/sbis/Controls
-        """
-	}
+        sh """    sudo chmod -R 0777 /home/sbis/Controls
+    """}
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || inte || all_inte){
         dir(workspace){
             def exists_jinnee_logs = fileExists '/jinnee/logs'
-			if ( exists_jinnee_logs ){
-				sh """
-				7za a log_jinnee -t7z ${workspace}/jinnee/logs
-				"""			
-				archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-			}
+			if ( exists_jinnee_logs ){sh """
+            7za a log_jinnee -t7z ${workspace}/jinnee/logs
+            """
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false}
 			
 			sh "mkdir logs_ps"
 			if ( exists_dir ){
-				dir('/home/sbis/Controls'){
-					def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-					
-					if ( files_err.length > 0 ){
-						sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-						sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-						dir ( workspace ){
-							sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-							archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-						}					
-					}
+			dir('/home/sbis/Controls'){
+				def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+
+				if ( files_err.length > 0 ){
+					sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+					sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}					}
 				}
 			}
 		}
@@ -693,9 +689,9 @@ node('controls') {
     gitlabStatusUpdate()
         }
     }
-LocalDateTime end_time = LocalDateTime.now();
-echo "Время завершения: ${end_time}"
-Duration duration = Duration.between(end_time, start_time);
-diff_time = Math.abs(duration.toMinutes());
-echo "Время сборки: ${diff_time} мин."
+	LocalDateTime end_time = LocalDateTime.now();
+	echo "Время завершения: ${end_time}"
+	Duration duration = Duration.between(end_time, start_time);
+	diff_time = Math.abs(duration.toMinutes());
+	echo "Время сборки: ${diff_time} мин."
 }
