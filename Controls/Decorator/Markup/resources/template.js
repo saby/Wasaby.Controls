@@ -24,7 +24,7 @@ define('Controls/Decorator/Markup/resources/template', [
          dataAttributeRegExp = /^data-([\w-])*$/gi;
       for (var key in from) {
          if (from.hasOwnProperty(key) && (validAttributes[key] || dataAttributeRegExp.test(key))) {
-            to[key] = from[key];
+            to[key] = markupGenerator.escape(from[key]);
          }
       }
    }

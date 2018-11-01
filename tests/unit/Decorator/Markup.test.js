@@ -11,8 +11,7 @@ define([
    'use strict';
 
    describe('Controls.Decorator.Markup.Converter', function() {
-      var emptyNode = [],
-         simpleNode = ['span', 'text'],
+      var simpleNode = ['span', 'text'],
          deepNode = ['span',
             {
                'style': 'text-decoration: line-through;',
@@ -62,7 +61,7 @@ define([
          ],
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
          linkHtml = '<a rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="?method=LinkDecorator.DecorateAsSvg&params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&id=0&srv=1" /></a></span>';
+         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
       describe('deepCopyJson', function() {
          it('one big', function() {
@@ -127,10 +126,10 @@ define([
 
       describe('jsonToHtml', function() {
          it('empty', function() {
-            assert.equal(Converter.jsonToHtml(emptyNode), '<span></span>');
+            assert.equal(Converter.jsonToHtml([]), '<span></span>');
          });
          it('escape', function() {
-            assert.equal(Converter.jsonToHtml(['p', '&gt;&lt;><']), '<div><p>&amp;gt;&amp;lt;&gt;&lt;</p></div>');
+            assert.equal(Converter.jsonToHtml(['p', { title: '"&<>' }, '&gt;&lt;><']), '<div><p title="&quot;&amp;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;</p></div>');
          });
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
