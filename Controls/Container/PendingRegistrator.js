@@ -109,7 +109,7 @@ define('Controls/Container/PendingRegistrator', [
             resultDeferred.callback(pendingResults);
          }).addErrback(function(e) {
             if (!e.canceled) {
-               IoC.resolve('ILogger').error('PendingRegistrator', 'PendingRegistrator error', e);
+               resultDeferred.errback(e);
             }
             return e;
          });
