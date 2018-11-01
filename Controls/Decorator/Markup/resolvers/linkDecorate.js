@@ -8,35 +8,35 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
    cConstants) {
    'use strict';
 
-   return function linkDecorate(json, parent) {
+   return function linkDecorate(value, parent) {
       // Decorate tag "a" only.
-      if (!Array.isArray(json) || Array.isArray(json[0]) || json[0] != 'a') {
-         return json;
+      if (!Array.isArray(value) || Array.isArray(value[0]) || value[0] != 'a') {
+         return value;
       }
 
       // Decorate link right inside paragraph.
       if (!parent || parent[0] != 'p') {
-         return json;
+         return value;
       }
 
       // Decorate link only with text == href, and href length should be less then 1500;
-      if (!json[1] || !json[1].href || json[1].length >= 1500 || json[1].href != json[2]) {
-         return json;
+      if (!value[1] || !value[1].href || value[1].length >= 1500 || value[1].href != value[2]) {
+         return value;
       }
 
       // Decorate link just in the end of paragraph.
       var last = parent.length - 1;
-      if (json !== parent[last] && json !== parent[last - 1]) {
-         return json;
+      if (value !== parent[last] && value !== parent[last - 1]) {
+         return value;
       }
-      if (parent[last] !== json && (Array.isArray(parent[last]) || /[^ \u00a0]/.test(parent[last]))) {
-         return json;
+      if (parent[last] !== value && (Array.isArray(parent[last]) || /[^ \u00a0]/.test(parent[last]))) {
+         return value;
       }
 
       var linkAttrs = {};
-      for (var key in json[1]) {
-         if (json[1].hasOwnProperty(key)) {
-            linkAttrs[key] = json[1][key];
+      for (var key in value[1]) {
+         if (value[1].hasOwnProperty(key)) {
+            linkAttrs[key] = value[1][key];
          }
       }
       linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';

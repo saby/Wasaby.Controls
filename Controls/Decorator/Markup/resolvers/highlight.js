@@ -15,32 +15,32 @@ define('Controls/Decorator/Markup/resolvers/highlight', function() {
       return result;
    }
 
-   return function linkDecorate(json, parent, resolverParams) {
-      if (typeof json !== 'string' && !(json instanceof String)) {
-         return json;
+   return function linkDecorate(value, parent, resolverParams) {
+      if (typeof value !== 'string' && !(value instanceof String)) {
+         return value;
       }
-      var allIndexesOfTextToHighlight = allIndexesOf(json.toLowerCase(), resolverParams.textToHighlight.toLowerCase());
+      var allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), resolverParams.textToHighlight.toLowerCase());
       if (!allIndexesOfTextToHighlight.length) {
-         return json;
+         return value;
       }
-      var newJson = [[]],
+      var newValue = [[]],
          textToHighlightLength = resolverParams.textToHighlight.length,
          j = 0,
          s1,
          s2;
       for (var i = 0; i < allIndexesOfTextToHighlight.length; ++i) {
-         s1 = json.substring(j, allIndexesOfTextToHighlight[i]);
+         s1 = value.substring(j, allIndexesOfTextToHighlight[i]);
          j = allIndexesOfTextToHighlight[i] + textToHighlightLength;
-         s2 = json.substr(allIndexesOfTextToHighlight[i], textToHighlightLength);
+         s2 = value.substr(allIndexesOfTextToHighlight[i], textToHighlightLength);
          if (s1) {
-            newJson.push(s1);
+            newValue.push(s1);
          }
-         newJson.push(['span', { 'class': 'controls-Highlight_found' }, s2]);
+         newValue.push(['span', { 'class': 'controls-Highlight_found' }, s2]);
       }
-      s1 = json.substr(j);
+      s1 = value.substring(j);
       if (s1) {
-         newJson.push(s1);
+         newValue.push(s1);
       }
-      return newJson;
+      return newValue;
    };
 });

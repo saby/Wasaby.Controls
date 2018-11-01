@@ -8,6 +8,45 @@ define('Controls/Decorator/Markup', [
    template) {
    'use strict';
 
+   /**
+    * Builds a control by data in Json array.
+    *
+    * @class Controls/Decorator/Markup
+    * @extends Core/Control
+    * @category Decorator
+    * @author Кондаков Р.Н.
+    * @public
+    */
+
+   /**
+    * @name Controls/Decorator/Markup#value
+    * @cfg {Array} Json array, based on JsonML.
+    */
+
+   /**
+    * @name Controls/Decorator/Markup#tagResolver
+    * @cfg {Function} Tool to change Json before build, if it need. Applies to every node.
+    * @remark
+    * Function Arguments:
+    * <ol>
+    *    <li>value - Json node.</li>
+    *    <li>parent - Json node, a parent of json.</li>
+    *    <li>resolverParams - Outer data for tagResolver from resolverParams option.</li>
+    * </ol>
+    * The function should return valid JsonML. If the return value is not equals (!==) to the origin node,
+    * function will not apply to children of the new value.
+    * Note: Function should not change origin value.
+    *
+    * @example
+    * {@link Controls/Decorator/Markup/resolvers/highlight}
+    * {@link Controls/Decorator/Markup/resolvers/linkDecorate}
+    */
+
+   /**
+    * @name Controls/Decorator/Markup#resolverParams
+    * @cfg {Object} Outer data for tagResolver.
+    */
+
    var MarkupDecorator = Control.extend({
       _template: template
    });

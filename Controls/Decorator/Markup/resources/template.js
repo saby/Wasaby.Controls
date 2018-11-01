@@ -74,7 +74,7 @@ define('Controls/Decorator/Markup/resources/template', [
       };
       control = data;
       resolver = data._options.tagResolver;
-      resolverParams = data._options.resolverParams;
+      resolverParams = data._options.resolverParams || {};
       resolverMode = 1;
 
       var elements = [],
@@ -92,8 +92,8 @@ define('Controls/Decorator/Markup/resources/template', [
       if (isVdom) {
          // Protect view of text from needless unescape in inferno.
          oldEscape = markupGenerator.escape;
-         markupGenerator.escape = function(value) {
-            return value.replace(/&([^&]*;)/g, function(match, entity) {
+         markupGenerator.escape = function(str) {
+            return str.replace(/&([^&]*;)/g, function(match, entity) {
                return '&amp;' + entity;
             });
          };

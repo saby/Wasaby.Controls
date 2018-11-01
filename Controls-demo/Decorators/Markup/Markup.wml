@@ -27,8 +27,8 @@
                                      style="linkAdditional4" />
       </div>
       <div class="ControlsDemo-Markup__block">
-         <Controls.Label name="myLabel1" caption="json массив: {{ objectToStr(json) }}" />
-         <Controls.Label name="myLabel1" caption="резолвер: {{ ragResolverName }}" />
+         <Controls.Label name="myLabel1" caption="json массив: {{ strJson }}" />
+         <Controls.Label name="myLabel1" caption="резолвер: {{ tagResolverName }}" />
          <Controls.Label name="myLabel1" caption="параметры резолвера: {{ objectToStr(resolverParams) }}" />
          <Controls.Button on:click="_applyJson()"
                           attr:id="ControlsDemo-Markup__finalApply"

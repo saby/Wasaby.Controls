@@ -26,7 +26,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       json: [],
       strJson: '',
       tagResolverId: 1000000,
-      ragResolverName: 'Без резолвера',
+      tagResolverName: 'Без резолвера',
       tagResolver: null,
       resolverParams: {},
 
@@ -39,7 +39,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       },
       _updateResolver: function(event, data) {
          this.tagResolverId = data.get('id');
-         this.ragResolverName = data.get('title');
+         this.tagResolverName = data.get('title');
       },
       _applyNewResolverParam: function() {
          if (this._newParamKey) {
