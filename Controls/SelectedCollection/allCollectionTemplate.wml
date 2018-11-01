@@ -1,0 +1,14 @@
+<div attr:class="controls-SelectedCollection__popup"
+     attr:style="width: {{_options.width}}px;"
+     on:mouseleave="_mouseOutHandler()">
+   <span attr:class="controls-SelectedCollection__counterItems">
+      ({{_options.items.getCount ? _options.items.getCount() : _options.items.length}})</span>
+   <Controls.SelectedCollection
+           items="{{_options.items}}"
+           displayProperty="{{_options.displayProperty}}"
+           multiline="{{true}}"
+           on:crossClick="_crossClick()"
+           on:itemClick="_itemClick()"
+           attr:class="controls-SelectedCollection__popup-items">
+   </Controls.SelectedCollection>
+</div>
