@@ -651,9 +651,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
 	}
-    if ( unit ){
-        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-        }
+
     if ( regr || inte || all_inte){
         dir(workspace){
             def exists_jinnee_logs = fileExists '/jinnee/logs'
@@ -682,6 +680,10 @@ node('controls') {
 		}
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+	}
+	
+	if ( unit ){
+        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
 	}
 
     if ( regr ){
