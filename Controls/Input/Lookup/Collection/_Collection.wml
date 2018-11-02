@@ -4,6 +4,7 @@
     <ws:for data="index, item in _options.items">
         <ws:partial attr:class="controls-Lookup__item controls-Lookup__collectionItem_layout_{{_options.itemsLayout}}"
                     template="{{_options.itemTemplate}}"
+                    displayProperty="{{_options.displayProperty}}"
                     item="{{item}}"
                     isSingleItem="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) === 1}}"
                     isLastItem="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) === index + 1}}"
