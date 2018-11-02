@@ -25,7 +25,7 @@ define('Controls/List/Tree/TreeViewModel', [
                isExpanded,
                itemParent = item.getParent ? item.getParent() : undefined;
             if (itemParent) {
-               isExpanded = this.expandedNodes[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)];
+               isExpanded = this.expandedItems[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)];
                if (itemParent.isRoot()) {
                   return itemParent.getOwner().isRootEnumerable() ? isExpanded : true;
                } else if (isExpanded) {
@@ -113,7 +113,7 @@ define('Controls/List/Tree/TreeViewModel', [
 
                      // If it is necessary to delete only the nodes deleted from the items, add this condition:
                      // if (!self._items.getRecordById(nodeId)) {
-                     delete self._expandedNodes[nodeId];
+                     delete self._expandedItems[nodeId];
                      self._notify('onNodeRemoved', nodeId);
                   }
                }
@@ -149,15 +149,15 @@ define('Controls/List/Tree/TreeViewModel', [
       },
 
       TreeViewModel = ListViewModel.extend({
-         _expandedNodes: null,
+         _expandedItems: null,
          _hasMoreStorage: null,
 
          constructor: function(cfg) {
             this._options = cfg;
-            if (cfg.expandedNodes) {
-               this._expandedNodes = cClone(cfg.expandedNodes);
+            if (cfg.expandedItems) {
+               this._expandedItems = cClone(cfg.expandedItems);
             } else {
-               this._expandedNodes = {};
+               this._expandedItems = {};
             }
             this._hierarchyRelation = new HierarchyRelation({
                idProperty: cfg.keyProperty || 'id',
@@ -171,16 +171,22 @@ define('Controls/List/Tree/TreeViewModel', [
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
          },
 
+         isExpanded: function(dispItem) {
+            var
+               itemId = dispItem.getContents().getId();
+            return !!this._expandedItems[itemId];
+         },
+
          toggleExpanded: function(dispItem, expanded) {
             var
-               itemId = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
-               currentExpanded = this._expandedNodes[itemId] || false;
+               itemId = dispItem.getContents().getId(),
+               currentExpanded = this._expandedItems[itemId] || false;
 
             if (expanded !== currentExpanded || expanded === undefined) {
-               if (this._expandedNodes[itemId]) {
-                  delete this._expandedNodes[itemId];
+               if (this._expandedItems[itemId]) {
+                  delete this._expandedItems[itemId];
                } else {
-                  this._expandedNodes[itemId] = true;
+                  this._expandedItems[itemId] = true;
                }
                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
                this._nextVersion();
@@ -196,8 +202,8 @@ define('Controls/List/Tree/TreeViewModel', [
          prepareDisplayFilterData: function() {
             var
                data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
-            data['expandedNodes'] = this._expandedNodes;
-            data['keyProperty'] = this._options.keyProperty;
+            data.expandedItems = this._expandedItems;
+            data.keyProperty = this._options.keyProperty;
             return data;
          },
 
@@ -209,7 +215,7 @@ define('Controls/List/Tree/TreeViewModel', [
          getItemDataByItem: function(dispItem) {
             var
                current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
-            current.isExpanded = !!this._expandedNodes[current.key];
+            current.isExpanded = !!this._expandedItems[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.shouldDrawExpander = _private.shouldDrawExpander;
@@ -309,7 +315,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          setDragPositionOnNode: function(itemData, position) {
-            if (position !== this._dragTargetPosition.startPosition && !(position === 'after' && this._expandedNodes[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)])) {
+            if (position !== this._dragTargetPosition.startPosition && !(position === 'after' && this._expandedItems[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)])) {
                this._dragTargetPosition = {
                   index: itemData.index,
                   position: position
@@ -328,7 +334,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          setRoot: function(root) {
-            this._expandedNodes = {};
+            this._expandedItems = {};
             this._display.setRoot(root);
             this._nextVersion();
             this._notify('onListChange');
