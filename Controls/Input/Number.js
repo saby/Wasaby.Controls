@@ -181,7 +181,7 @@ define('Controls/Input/Number',
          },
 
          _inputCompletedHandler: function(event, value) {
-            // Если в поле ввода целых чисел введён -000 или 00000 или -0, поменять на 0
+            // Convert different interpretations of null(like -0, 0000, -000) to '0'.
             if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
                value = '0';
                this._numberViewModel.updateValue(value);
