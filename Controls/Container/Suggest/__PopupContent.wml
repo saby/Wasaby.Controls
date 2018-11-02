@@ -1,7 +1,7 @@
 <div class="controls-Suggest__suggestionsContainer {{!_options.showContent ? 'ws-hidden'}}">
-    <Controls.Container.Scroll attr:class="controls-Suggest__scrollContainer">
+    <Controls.Container.Scroll attr:class="controls-Suggest__scrollContainer" attr:style="width:{{_options.target.offsetWidth}}px;">
         <ws:content>
-            <ws:partial template="{{_options.content}}" attr:style="width:{{_options.target.offsetWidth}}px;"/>
+            <ws:partial template="{{_options.content}}"/>
         </ws:content>
     </Controls.Container.Scroll>
 </div>

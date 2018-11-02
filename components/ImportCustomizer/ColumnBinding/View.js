@@ -406,6 +406,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   this._setMenuSelection(menu, prevSelectedField, false, false);
                }
                this._setMenuSelection(menu, selectedField, true, true);
+               // При изменении выделенных пунктов меню может измениться и их ширина и, как следствие, ширина всех таблицы. Значит, нужно обновить скрол
+               // 1175970079 https://online.sbis.ru/opendoc.html?guid=6a5c75e2-49c5-41c6-93d9-5cb4f44dfb64
+               var grid = this._grid;
+               if (grid.hasPartScroll()) {
+                  grid.updateScrollAndColumns();
+               }
             }
          },
 

@@ -9,6 +9,7 @@
                            onClose="{{_options.close}}"/>
          <ws:templateOptions
                  keyProperty="{{_options.keyProperty}}"
+                 displayProperty="{{_options.displayProperty}}"
                  parentProperty="{{_options.parentProperty}}"
                  additionalProperty="{{_options.additionalProperty}}"
                  nodeProperty="{{_options.nodeProperty}}"

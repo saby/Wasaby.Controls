@@ -10,6 +10,12 @@ define('Controls/Popup/TargetCoords',
                throw new Error('Target parameter is required');
             }
 
+
+            // todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            if (target.get) {
+               target = target.get(0);
+            }
+
             var
                box = target.getBoundingClientRect(),
                top = box.top,

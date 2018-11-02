@@ -40,9 +40,9 @@ define('Controls-demo/Combobox/ComboboxVDom',
                }
             ];
             this._itemsCode = [
-               {id: 1, title: '01-disease', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS'},
-               {id: 2, title: '02-injury', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS'},
-               {id: 3,  title: '03-quarantine', comment: 'Fully paid by the FSS'}
+               {id: 1, text: '01-disease', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS'},
+               {id: 2, text: '02-injury', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS'},
+               {id: 3, text: '03-quarantine', comment: 'Fully paid by the FSS'}
             ];
             this._itemsWorkers = [
                {id: 1, title: 'Russian commercial organization'},

@@ -66,15 +66,5 @@ subscribe(event, listener) и unsubscribe(event, listener) для того, чт
 <br/>
 
 
-//getName
-//hasCrossTabEvents
-//hasCrossTabData
-//fetch: function (count) {
-//callAction: function (action, operationId) {
-//subscribe: function (eventType, listener) {
-//unsubscribe: function (eventType, listener) {
-//destroy
-
 
 @demo Examples/LongOperations/MyLongOperations/MyLongOperations
-@demo Examples/LongOperations/MyLongOperationsSvc/MyLongOperationsSvc

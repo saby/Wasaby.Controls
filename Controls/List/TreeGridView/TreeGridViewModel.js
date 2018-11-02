@@ -16,11 +16,26 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          _createModel: function(cfg) {
             return new TreeViewModel(cfg);
          },
-         toggleExpanded: function(dispItem) {
-            this._model.toggleExpanded(dispItem);
+         toggleExpanded: function(dispItem, expand) {
+            this._model.toggleExpanded(dispItem, expand);
+         },
+         isExpanded: function(dispItem) {
+            return this._model.isExpanded(dispItem);
          },
          setRoot: function(root) {
             this._model.setRoot(root);
+         },
+         getCurrent: function() {
+            var
+               current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
+               superGetCurrentColumn = current.getCurrentColumn;
+            current.getCurrentColumn = function() {
+               var
+                  currentColumn = superGetCurrentColumn();
+               currentColumn.isExpanded = current.isExpanded;
+               return currentColumn;
+            };
+            return current;
          },
          _onNodeRemoved: function(event, nodeId) {
             this._notify('onNodeRemoved', nodeId);

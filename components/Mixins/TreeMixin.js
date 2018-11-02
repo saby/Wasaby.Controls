@@ -926,10 +926,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          }
       },
       _loadNode: function(id, hash) {
+         var
+            preparedFilter;
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
+            preparedFilter = this._createTreeFilter(id);
+            this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), 0, this._limit);
+            return this._callQuery(preparedFilter, this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
                   this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
                }
