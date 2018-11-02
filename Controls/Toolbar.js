@@ -60,7 +60,7 @@ define('Controls/Toolbar', [
 
       setPopupOptions: function(self, newOptions) {
          self._popupOptions = {
-            className: newOptions.popupClassName + ' controls-Toolbar__menu-position',
+            className: (newOptions.popupClassName ? newOptions.popupClassName : '') + ' controls-Toolbar__menu-position',
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
