@@ -30,7 +30,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
        * Стратегия позиционирования окна.
        * @class Controls/Popup/Opener/Dialog/DialogController
        * @control
-       * @public
+       * @private
        * @category Popup
        * @extends Controls/Popup/Opener/BaseController
        */

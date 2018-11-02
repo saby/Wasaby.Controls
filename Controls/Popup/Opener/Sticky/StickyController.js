@@ -127,7 +127,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * Стратегия позиционирования прилипающего диалога.
        * @class Controls/Popup/Opener/Sticky/StickyController
        * @control
-       * @public
+       * @private
        * @category Popup
        */
       var StickyController = BaseController.extend({
