@@ -1,8 +1,8 @@
-define('Controls/Input/RichArea/plugins/constants', [
+define('Controls/Input/RichArea/helpers/constants', [
    'Core/constants'
 ], function(cConstants) {
    /**
-    * Модуль, содержащий необходимые для БТРа контстанты
+    * Module with constants for rich text editor
     */
 
    var ConstantsPlugin = {
@@ -20,15 +20,15 @@ define('Controls/Input/RichArea/plugins/constants', [
          minYoutubeWidth: 350,
          baseFontSize: 14,
          styles: {
-            title: {
+            header: {
                inline: 'span',
                classes: 'titleText'
             },
-            subTitle: {
+            subheader: {
                inline: 'span',
                classes: 'subTitleText'
             },
-            additionalText: {
+            additional: {
                inline: 'span',
                classes: 'additionalText'
             }
@@ -52,6 +52,22 @@ define('Controls/Input/RichArea/plugins/constants', [
             }
          }
       },
+      defaultFormats: [
+         'bold',
+         'italic',
+         'strikethrough',
+         'blockquote',
+         'aligncenter',
+         'alignjustify',
+         'alignleft',
+         'alignright',
+         'underline',
+         'header',
+         'subheader',
+         'additional',
+         'forecolor',
+         'fontsize'
+      ],
       getTrueIEVersion: function() {
          var version = cConstants.browser.IEVersion;
 
@@ -140,7 +156,8 @@ define('Controls/Input/RichArea/plugins/constants', [
          {
             key: 'twenty fourth', code: '128515', title: '&#128515;', multiline: true
          }
-      ]
+      ],
+      formats: 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,header,subHeader,additional,blockquote'
    };
 
    ConstantsPlugin.BROWSER = cConstants.browser;
