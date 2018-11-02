@@ -30,7 +30,7 @@ define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreE
          this.wsRootFolder = wsRoot.replace(resourceRoot, '');
 
          var fullResourcePath = '';
-         if (appRoot) {
+         if (appRoot && !~resourceRoot.indexOf(appRoot)) {
             fullResourcePath += '/' + appRoot + '/';
          }
          if (resourceRoot) {
