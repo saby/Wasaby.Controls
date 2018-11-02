@@ -380,12 +380,10 @@ define('SBIS3.CONTROLS/Menu', [
                         submenuContainer.height('');
 
                         // После хака с высотой зовем позиционирование (проблем описана выше)
-                        setTimeout(function() {
-                           if (!mySubmenu.isDestroyed()) {
-                              mySubmenu.recalcPosition(true);
-                           }
-                        }, 500);
-                        
+                        // Костыль: несколько раз вызываем recalcPosition, т.к. на медленных тачках через 100мс меню может не успеть построиться
+                        setTimeout(self._recalcSubMenuPosition.bind(self, mySubmenu), 100);
+                        setTimeout(self._recalcSubMenuPosition.bind(self, mySubmenu), 500);
+
                         if (currentHeight) {
                            submenuContainer.height(currentHeight);
                         }
@@ -400,6 +398,12 @@ define('SBIS3.CONTROLS/Menu', [
             }
          }
          Menu.superclass._drawItemsCallback.apply(this, arguments);
+      },
+
+      _recalcSubMenuPosition: function(mySubmenu) {
+         if (!mySubmenu.isDestroyed()) {
+            mySubmenu.recalcPosition(true);
+         }
       },
 
       setItems: function() {
