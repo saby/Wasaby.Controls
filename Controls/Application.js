@@ -193,7 +193,7 @@ define('Controls/Application',
             self.buildnumber = cfg.buildnumber || constants.buildnumber;
             self.appRoot = cfg.appRoot || constants.appRoot;
             self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
-            if(typeof self.staticDomains !== 'string') {
+            if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
             self.wsRoot = cfg.wsRoot || constants.wsRoot;
