@@ -70,6 +70,19 @@ define([
             assert.equal('start', slider._calcSide(2));
             assert.equal('start', slider._calcSide(0));
          });
+         it('_calcValue', function() {
+            slider._wrapper[0] = {
+               getBoundingClientRect: function() {
+                  return {
+                     left: 10,
+                     width: 10
+                  };
+               }
+            };
+            assert.equal(slider.getMinValue(), slider._calcValue(1));
+            assert.equal(slider.getMaxValue(), slider._calcValue(21));
+            assert.equal(3, slider._calcValue(16));
+         });
          it('_lineClick', function () {
             slider._calcValue = function(){ // перебиваем функцию чтобы не было привязки в dom
                return 0;

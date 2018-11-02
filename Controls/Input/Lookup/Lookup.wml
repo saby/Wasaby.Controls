@@ -2,6 +2,7 @@
     <Controls.SelectedCollection
             name="{{name}}"
             itemTemplate="{{_options.itemTemplate}}"
+            displayProperty="{{_options.displayProperty}}"
             itemsLayout="{{itemsLayout}}"
             items="{{items}}"
             readOnly="{{_options.readOnly}}"
@@ -36,7 +37,7 @@
             constraint="{{ _options.constraint }}"
             value="{{ _options.value }}"
             tagStyle="{{ _options.tagStyle }}"
-            placeholder="{{ _isEmpty ? _options.placeholder }}"
+            placeholder="{{ _options.placeholder }}"
             validationErrors="{{ _options.validationErrors }}"
             content="{{ _isEmpty || _options.multiSelect ? 'wml!Controls/Input/resources/input' }}"
             on:valueChanged="_changeValueHandler()"

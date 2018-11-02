@@ -16,8 +16,11 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          _createModel: function(cfg) {
             return new TreeViewModel(cfg);
          },
-         toggleExpanded: function(dispItem) {
-            this._model.toggleExpanded(dispItem);
+         toggleExpanded: function(dispItem, expand) {
+            this._model.toggleExpanded(dispItem, expand);
+         },
+         isExpanded: function(dispItem) {
+            return this._model.isExpanded(dispItem);
          },
          setRoot: function(root) {
             this._model.setRoot(root);

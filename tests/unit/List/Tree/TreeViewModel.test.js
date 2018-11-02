@@ -99,18 +99,18 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
             assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, item), 'Invalid value "isVisibleItem(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild), 'Invalid value "isVisibleItem(234)".');
             treeViewModel.toggleExpanded(item, false);
             assert.isFalse(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild), 'Invalid value "isVisibleItem(234)".');
          });
@@ -119,26 +119,26 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
             treeViewModel.toggleExpanded(item, false);
             assert.isFalse(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
          });
          it('getDisplayFilter', function() {
-            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 1,
+            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 1,
                'Invalid filters count prepared by "getDisplayFilter".');
             treeViewModel = new TreeViewModel(cMerge({itemsFilterMethod: function() {return true;}}, cfg));
-            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 2,
+            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 2,
                'Invalid filters count prepared by "getDisplayFilter" with "itemsFilterMethod".');
          });
          it('shouldDrawExpander', function() {
@@ -283,22 +283,22 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          var
             treeViewModel = new TreeViewModel(cfg);
          it('getCurrent and toggleExpanded', function() {
-            assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" before call "toggleExpanded(123, true)".');
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            assert.isTrue(treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, true)".');
+            assert.isTrue(treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, true)".');
             assert.isTrue(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, false);
-            assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, false)".');
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, false)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, false)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
             treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
-            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after expand "123" and "234".');
+            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
-            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after collapse "123".');
+            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after collapse "123".');
          });
 
          it('multiSelectStatus', function() {
@@ -331,7 +331,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
 
          it('setRoot', function() {
             treeViewModel.setRoot('testRoot');
-            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandNodes" after setRoot("testRoot").');
+            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandNodes" after setRoot("testRoot").');
             assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
             treeViewModel.setRoot(null);
          });
@@ -342,24 +342,24 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                removedItems2 = [
                   new MockedDisplayItem({ id: 'mi2', isNode: true }), new MockedDisplayItem({ id: 'mi4', isNode: false })],
                notifiedOnNodeRemoved = false;
-            treeViewModel._expandedNodes = { 'mi1': true, 'mi2': true };
+            treeViewModel._expandedItems = { 'mi1': true, 'mi2': true };
             treeViewModel._notify = function(eventName) {
                if (eventName === 'onNodeRemoved') {
                   notifiedOnNodeRemoved = true;
                }
             };
             treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems1, null);
-            assert.deepEqual(treeViewModel._expandedNodes, { 'mi2': true }, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel._expandedItems, { 'mi2': true }, 'Invalid value "_expandedItems" after "onCollectionChange".');
             treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems2, null);
-            assert.deepEqual(treeViewModel._expandedNodes, {}, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel._expandedItems, {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
          it('setDragItems', function() {
             var itemData = {};
-            treeViewModel._expandedNodes = {'123': true, '456': true};
+            treeViewModel._expandedItems = {'123': true, '456': true};
 
             treeViewModel.setDragItems(['123', '567'], itemData);
-            assert.deepEqual(treeViewModel._expandedNodes, {'456': true});
+            assert.deepEqual(treeViewModel._expandedItems, {'456': true});
             assert.isFalse(itemData.isExpanded);
          });
          it('updateDragTargetPosition', function() {
@@ -418,7 +418,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
 
             //setDragPosition after opened node
             treeViewModel.setDragTargetItem(itemData);
-            treeViewModel._expandedNodes = {'3': true};
+            treeViewModel._expandedItems = {'3': true};
             treeViewModel.setDragPositionOnNode(itemData, 'after');
             assert.equal(treeViewModel._dragTargetPosition.position, 'on');
             assert.equal(treeViewModel._dragTargetPosition.index, 3);

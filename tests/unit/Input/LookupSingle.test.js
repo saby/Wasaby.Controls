@@ -20,7 +20,8 @@ define([
             sticky: getBaseSticky()
          },
          _options: {
-            keyProperty: 'id'
+            keyProperty: 'id',
+            displayProperty: 'title'
          }
       }
    }
@@ -99,29 +100,35 @@ define([
       
       it('addItem', function() {
          var
+            textValue = '',
             keysChanged = false,
             self = getBaseLookup(),
             item = new Model({
                rawData: {
-                  id: 1
+                  id: 1,
+                  title: 'Roman'
                }
             }),
             item2 = new Model({
                rawData: {
-                  id: 2
+                  id: 2,
+                  title: 'Aleksey'
                }
             });
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, data) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
+            } else if (eventName === 'textValueChanged') {
+               textValue = data;
             }
          };
-         
+
          Lookup._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
+         assert.equal(textValue, 'Roman');
          
          keysChanged = false;
          Lookup._private.addItem(self, item);
@@ -135,6 +142,7 @@ define([
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
          assert.equal(self._items.at(1), item2);
+         assert.equal(textValue, 'Roman, Aleksey');
       });
       
       it('removeItem', function() {
@@ -270,6 +278,15 @@ define([
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
          var selectedKeys = [1];
+         var textValue = '';
+
+         lookup._options.displayProperty = 'title';
+         lookup._notify = function(eventName, data) {
+            if (eventName === 'textValueChanged') {
+               textValue = data;
+            }
+         };
+
          lookup._beforeMount({
             selectedKeys: selectedKeys,
             source: new Memory({

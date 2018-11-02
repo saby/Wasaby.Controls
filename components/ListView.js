@@ -1533,6 +1533,7 @@ define('SBIS3.CONTROLS/ListView',
                   return (itemsProjection.getRoot &&
                      itemsProjection.getRoot() &&
                      itemsProjection.getRoot().getContents() &&
+                     itemsProjection.getRoot().getContents().get &&
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
@@ -1555,7 +1556,7 @@ define('SBIS3.CONTROLS/ListView',
                siblingItem = items.eq(index);
             }
 
-            if (siblingItem) {
+            if (siblingItem && siblingItem.data('id') !== id) {
                return this.getItems().getRecordById(siblingItem.data('id')) || isRootId(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
