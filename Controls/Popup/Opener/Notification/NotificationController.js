@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/Notification/NotificationController',
        * Стратегия позиционирования нотификационного окна.
        * @class Controls/Popup/Opener/Notification/NotificationController
        * @control
-       * @public
+       * @private
        * @category Popup
        * @extends Controls/Popup/Opener/BaseController
        */
