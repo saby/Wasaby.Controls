@@ -189,20 +189,19 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-            self.application = (context.AppData ? context.AppData.application : cfg.application);
-            self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
-            self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
-            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
-            self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
-            self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
-            if (self.resourceRoot[self.resourceRoot.length - 1] !== '/') {
-               self.resourceRoot = self.resourceRoot + '/';
+
+            self.buildnumber = cfg.buildnumber || constants.buildnumber;
+            self.appRoot = cfg.appRoot || constants.appRoot;
+            self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
+            if(typeof self.staticDomains !== 'string') {
+               self.staticDomains = '[]';
             }
-            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
-            self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
-            self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
-            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
-            self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
+            self.wsRoot = cfg.wsRoot || constants.wsRoot;
+            self.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
+            self.RUMEnabled = cfg.RUMEnabled || '';
+            self.product = cfg.product || constants.product;
+            self.lite = cfg.lite || false;
+            self.servicesPath = cfg.servicesPath || constants.servicesPath;
             self.BodyClasses = _private.calculateBodyClasses;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug,
@@ -222,24 +221,11 @@ define('Controls/Application',
                });
             }
 
-            if (receivedState && context.AppData) {
-               context.AppData.buildnumber = self.buildnumber;
-               context.AppData.wsRoot = self.wsRoot;
-               context.AppData.lite = self.lite;
-               context.AppData.appRoot = self.appRoot;
-               context.AppData.resourceRoot = self.resourceRoot;
-               context.AppData.application = self.application;
-               context.AppData.servicesPath = self.servicesPath;
-               context.AppData.product = self.product;
-               context.AppData.staticDomains = self.staticDomains;
-            }
-
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
             def.callback({
-               application: self.application,
                buildnumber: self.buildnumber,
                lite: self.lite,
                csses: ThemesController.getInstance().getCss(),

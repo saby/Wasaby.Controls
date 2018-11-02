@@ -113,9 +113,7 @@
                                  </div>
                               </ws:else>
                               <Controls.Popup.Opener.Previewer name="previewerOpener"/>
-                              <ws:if data="{{ application && application.toLowerCase().indexOf('demo') === -1 }}">
-                                 <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" />
-                              </ws:if>
+                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" />
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>
