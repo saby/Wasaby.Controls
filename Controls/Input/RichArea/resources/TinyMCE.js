@@ -17,18 +17,18 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
    'i18n!SBIS3.CONTROLS/RichEditor',
    'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control,
-            template,
-            constantsHelper,
-            configHelper,
-            textHelper,
-            placeholderHelper,
-            handlersHelper,
-            eventsHelper,
-            editorHelper,
-            pasteHelper,
-            formatHelper,
-            moduleStubs,
-            cClone) {
+   template,
+   constantsHelper,
+   configHelper,
+   textHelper,
+   placeholderHelper,
+   handlersHelper,
+   eventsHelper,
+   editorHelper,
+   pasteHelper,
+   formatHelper,
+   moduleStubs,
+   cClone) {
    /**
     * Component TinyMCE
     * Private component which works with tinyMCE library.
