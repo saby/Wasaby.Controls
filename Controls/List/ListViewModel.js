@@ -43,9 +43,9 @@ define('Controls/List/ListViewModel',
             _private.updateIndexes(self);
          },
 
-         _getItemDataByItem: function() {
+         getItemDataByItem: function() {
             var
-               itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments),
+               itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
@@ -113,7 +113,7 @@ define('Controls/List/ListViewModel',
          setDragItems: function(items, itemDragData) {
             if (this._dragItems !== items) {
                this._dragItems = items;
-               this._draggingItemData = itemDragData || (items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
+               this._draggingItemData = itemDragData || (items ? this.getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
                if (this._draggingItemData) {
                   this._draggingItemData.isDragging = true;
                }

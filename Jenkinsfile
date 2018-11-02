@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "3.18.610"
+def version = "3.18.700"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
@@ -48,6 +48,10 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
+                defaultValue: props["navigation"],
+                description: '',
+                name: 'branch_navigation'),
+            string(
                 defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
@@ -89,7 +93,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls, controls_theme:${workspace}/controls"
         def run_test_fail = ""
 		def branch_atf
 		if (params.branch_atf) {
@@ -105,6 +109,13 @@ node('controls') {
 			branch_engine = props["engine"]
 		}
 
+		def branch_navigation
+		if (params.branch_navigation) {
+			branch_navigation = params.branch_navigation
+		} else {
+			branch_navigation = props["navigation"]
+		}
+
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -116,10 +127,11 @@ node('controls') {
 		dir(workspace){
 			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
 			sh "ls | grep -v -E 'controls' | xargs rm -rf"
-			dir("./controls/tests"){
+			dir("./controls"){
 				sh "rm -rf ${workspace}/controls/tests/int/atf"
 				sh "rm -rf ${workspace}/controls/tests/reg/atf"
-				sh "rm -rf ${workspace}/controls/tests/sbis3-app-engine"
+				sh "rm -rf ${workspace}/controls/sbis3-app-engine"
+				sh "rm -rf ${workspace}/controls/tests/navigation"
 			}
 		}
 
@@ -181,7 +193,7 @@ node('controls') {
                         },
                         checkout_engine: {
                             echo " Выкачиваем engine"
-                            dir("./controls/tests"){
+                            dir("./controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -193,6 +205,23 @@ node('controls') {
                                     userRemoteConfigs: [[
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
+                        },
+                        checkout_navigation: {
+                            echo " Выкачиваем Navigation"
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_navigation]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "navigation"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
                                 ])
                             }
                         }
@@ -365,9 +394,11 @@ node('controls') {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
-            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps2.ini", text: """[Базовая конфигурация]
+                __sbis__url = /another/
+
                 [Ядро.Http]
-                Порт=10020
+                Порт=10030
 
                 [Ядро.Сервер приложений]
                 ЧислоРабочихПроцессов=3
@@ -382,6 +413,26 @@ node('controls') {
                 ExtractRights=Нет
                 ExtractSystemExtensions=Нет
                 ExtractUserInfo=Нет"""
+            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+                [Ядро.Http]
+                Порт=10020
+
+                [Ядро.Сервер приложений]
+                ЧислоРабочихПроцессов=3
+                ЧислоСлужебныхРабочихПроцессов=0
+                ЧислоДополнительныхПроцессов=0
+                ЧислоПотоковВРабочихПроцессах=10
+                МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
+                [Управление облаком.Очередь загрузки]
+                Хранилище=test-redis.unix.tensor.ru:6436
+
+                [Presentation Service]
+                WarmUpEnabled=No
+                ExtractLicense=Нет
+                ExtractRights=Нет
+                ExtractSystemExtensions=Нет
+                ExtractUserInfo=Нет"""
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
                 АдресСервиса=${env.NODE_NAME}:10010
                 ПаузаПередЗагрузкойМодулей=0
@@ -389,20 +440,25 @@ node('controls') {
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
                 РазмерКэшаСессий=3
                 Конфигурация=ini-файл
+
                 [Ядро.Сервер приложений]
                 ПосылатьОтказВОбслуживанииПриОтсутствииРабочихПроцессов=Нет
                 МаксимальноеВремяЗапросаВОчереди=60000
                 ЧислоРабочихПроцессов=4
-				МаксимальныйРазмерВыборкиСписочныхМетодов=0
+                МаксимальныйРазмерВыборкиСписочныхМетодов=0
+
                 [Ядро.Права]
                 Проверять=Нет
+
                 [Ядро.Асинхронные сообщения]
                 БрокерыОбмена=amqp://test-rabbitmq.unix.tensor.ru
+
                 [Ядро.Логирование]
                 Уровень=Параноидальный
                 ОграничениеДляВходящегоВызова=1024
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
+
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
@@ -422,7 +478,7 @@ node('controls') {
             """
             }
         }
-			if ( regr || inte || all_inte) {
+		if ( regr || inte || all_inte) {
 				def soft_restart = "True"
 				if ( params.browser_type in ['ie', 'edge'] ){
 					soft_restart = "False"
@@ -448,7 +504,6 @@ node('controls') {
 					WAIT_ELEMENT_LOAD = 20
 					SHOW_CHECK_LOG = True
 					HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
-
 				writeFile file: "./controls/tests/reg/config.ini",
 					text:
 						"""# UTF-8
@@ -513,7 +568,7 @@ node('controls') {
 							}
 						}
 					}
-					
+
 
 					if ( skip ) {
 						 skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
@@ -526,21 +581,7 @@ node('controls') {
 					stage ("Unit тесты"){
 						if ( unit ){
 							echo "Запускаем юнит тесты"
-							dir(workspace){
-								sh """
-								cd ws_data
-								npm i
-								cd ../WIS-git-temp
-								npm i
-								node compileEsAndTs.js
-								cd ..
-								ln -s ../WIS-git-temp controls/sbis3-ws
-								ln -s ../ws_data/WS.Data controls/WS.Data
-								ln -s ../ws_data/Data controls/Data
-								ln -s ../../ws_data/WS.Data controls/components/WS.Data
-								"""
-							}
-							dir("./controls"){
+								dir("./controls"){
 								sh "npm config set registry http://npmregistry.sbis.ru:81/"
 								echo "run isolated"
 								sh """
@@ -565,10 +606,10 @@ node('controls') {
 						if ( inte || all_inte && smoke_result ){
 							echo "Запускаем интеграционные тесты"
 							dir("./controls/tests/int"){
-								
+
 								sh """
 								source /home/sbis/venv_for_test/bin/activate
-								python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+								python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 								deactivate
 								"""
 							}
@@ -583,7 +624,7 @@ node('controls') {
 							dir("./controls/tests/reg"){
 								sh """
 									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 									deactivate
 								"""
 							}
@@ -595,7 +636,6 @@ node('controls') {
 			if ( !smoke_result ) {
 				exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
 			}
-            
 } catch (err) {
     echo "ERROR: ${err}"
     currentBuild.result = 'FAILURE'
@@ -611,30 +651,31 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
 	}
-
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     if ( regr || inte || all_inte){
         dir(workspace){
-			sh """
-			7za a log_jinnee -t7z ${workspace}/jinnee/logs
-			"""			
-			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-			
+            def exists_jinnee_logs = fileExists '/jinnee/logs'
+			if ( exists_jinnee_logs ){
+				sh """
+				7za a log_jinnee -t7z ${workspace}/jinnee/logs
+				"""
+				archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
+			}
+
 			sh "mkdir logs_ps"
-			
 			if ( exists_dir ){
 				dir('/home/sbis/Controls'){
 					def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-					
+
 					if ( files_err.length > 0 ){
 						sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
 						sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
 						dir ( workspace ){
 							sh """7za a logs_ps -t7z ${workspace}/logs_ps """
 							archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-						}					
+						}
 					}
 				}
 			}
@@ -642,7 +683,7 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
 	}
-		
+
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])

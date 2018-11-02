@@ -24,7 +24,7 @@ define('Controls/interface/IBreadCrumbs', [
     */
 
    /**
-    * @event Controls/interface/IBreadCrumbs#beforeItemEdit Happens after clicking on breadcrumb.
+    * @event Controls/interface/IBreadCrumbs#itemClick Happens after clicking on breadcrumb.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} item Clicked item.
     */

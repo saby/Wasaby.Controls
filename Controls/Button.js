@@ -3,7 +3,7 @@ define('Controls/Button', [
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
-   'css!Controls/Button/Button'
+   'css!theme?Controls/Button/Button'
 ], function(Control, Classes, template, validateIconStyle) {
    'use strict';
 

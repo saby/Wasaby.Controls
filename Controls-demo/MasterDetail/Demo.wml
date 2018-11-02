@@ -1,6 +1,6 @@
 <div>
    <h1>Двухколоночный браузер</h1>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
+   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_First">
       <ws:master>
 
          <div>
@@ -50,7 +50,7 @@
          </div>
       </ws:detail>
    </Controls.Container.MasterDetail>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
+   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_Second">
       <ws:master>
          <div>
             <div class="controls-demo_MasterDetail_master_search">
@@ -102,7 +102,7 @@
          </div>
       </ws:detail>
    </Controls.Container.MasterDetail>
-   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail">
+   <Controls.Container.MasterDetail attr:class="controls-demo_MasterDetail controls-demo_Third">
       <ws:master>
 
          <div>

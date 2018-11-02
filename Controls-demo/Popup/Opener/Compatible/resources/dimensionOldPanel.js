@@ -16,7 +16,7 @@ define('Controls-demo/Popup/Opener/Compatible/resources/dimensionOldPanel',
 
          init: function() {
             Panel.superclass.init.call(this);
-            this._button= this.getChildControlByName('testButton');
+            this._button= this.getChildControlByName('testButton1');
          }
       });
 

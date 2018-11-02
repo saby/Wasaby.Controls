@@ -3,9 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext'
+      'Controls/Application/HeadDataContext',
+      'Core/Themes/ThemesController'
    ],
-   function(Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -22,6 +23,9 @@ define('Controls/Application/_Head',
          },
          _beforeMount: function(options, context, receivedState) {
             if (typeof window !== 'undefined') {
+               var csses = ThemesController.getInstance().getCss();
+               this.themedCss = csses.themedCss;
+               this.simpleCss = csses.simpleCss;
                return;
             }
             if (typeof options.staticDomains === 'string') {
@@ -36,12 +40,18 @@ define('Controls/Application/_Head',
             var innerDef = new Deferred();
             self.cssLinks = [];
             def.addCallback(function(res) {
-               self.cssLinks = res.cssLinks;
+               self.themedCss = res.css.themedCss;
+               self.simpleCss = res.css.simpleCss;
                self.errorState = res.errorState;
                innerDef.callback(true);
                return res;
             });
             return innerDef;
+         },
+         _beforeUpdate: function(options) {
+            if (this._options.theme !== options.theme) {
+               this._notify('themeChanged');
+            }
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);

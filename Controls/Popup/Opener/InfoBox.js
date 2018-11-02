@@ -13,10 +13,11 @@ define('Controls/Popup/Opener/InfoBox',
        * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
+       * @mixes Controls/interface/IInfoboxOptions
        * @control
        * @category Popup
        * @author Красильников А.С.
-       * @private
+       * @public
        */
 
       /**

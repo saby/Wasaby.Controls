@@ -71,6 +71,10 @@
   }
 }
 
+.controls-itemActionsV_editingToolbarVisible {
+  padding-right: 0;
+}
+
 .controls-itemActionsV__action {
   display: inline-flex;
   align-items: center;
@@ -81,14 +85,17 @@
   position: relative;
 }
 .controls-itemActionsV__action_padding {
-  padding: 0 @padding_itemActions_action;
+  margin: 0 @spacing_itemActions_action;
 }
-.controls-itemActionsV__action_bordered {
-  .closeButton();
-  display: inline-flex;;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+.controls-itemActionsV__action_style_bordered {
+  border-radius: @border-radius_ItemActions_action_bordered;
+  border-style: @border-style_ItemActions_action_bordered;
+  border-width: @thickness_ItemActions_action_bordered;
+  box-shadow: @box-shadow_ItemActions_action_bordered;
+  border-color: @border-color_ItemActions_action_bordered;
+  &:last-child {
+    margin: 0 0 0 @spacing_itemActions_action;
+  }
 }
 
 .action_icon_style_error {

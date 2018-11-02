@@ -19,7 +19,7 @@ define('Controls-demo/List/EditInPlace', [
       _template: template,
       editingConfig: null,
       _editOnClick: true,
-      _singleEdit: false,
+      _sequentialEditing: true,
       _autoAdd: false,
       _handleItemClick: false,
       _handleClickError: false,
@@ -124,7 +124,10 @@ define('Controls-demo/List/EditInPlace', [
          });
       },
 
-      _onItemEdit: function(e, options) {
+      _onBeforeBeginEdit: function(e, options, isAdd) {
+         if (isAdd) {
+            return this._onItemAdd();
+         }
          switch (options.item.get('id')) {
             case 1:
                return 'Cancel';
@@ -165,8 +168,10 @@ define('Controls-demo/List/EditInPlace', [
             };
       },
 
-      _cancelItemAdd: function() {
-         return 'Cancel';
+      _cancelItemAdd: function(e, options, isAdd) {
+         if (isAdd) {
+            return 'Cancel';
+         }
       },
 
       _deferredItemAdd: function() {
@@ -187,13 +192,13 @@ define('Controls-demo/List/EditInPlace', [
          return def;
       },
 
-      addItem: function() {
+      beginAdd: function() {
          var options = {};
-         this._children.list.addItem();
+         this._children.list.beginAdd();
       },
 
-      itemEdit: function(options) {
-         this._children.list.itemEdit(options);
+      beginEdit: function(options) {
+         this._children.list.beginEdit(options);
       },
 
       _itemClickHandler: function(e, item, nativeEvent) {

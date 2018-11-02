@@ -4,7 +4,7 @@ define('Controls/Popup/Manager/Container',
       'wml!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
       'Core/IoC',
-      'css!Controls/Popup/Manager/Container'
+      'css!theme?Controls/Popup/Manager/Container'
    ],
    function(Control, template, ManagerController, IoC) {
       'use strict';
