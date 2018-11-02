@@ -49,15 +49,15 @@ define('Controls/Popup/Manager/Container',
             this._popupItems = popupItems;
             this._forceUpdate();
          },
-         _finishPendings: function(popupId, hasPopupCallback, hasPendingCallback, pendingsFinishedCallback) {
+         _finishPendings: function(popupId, popupCallback, pendingCallback, pendingsFinishedCallback) {
             var popup = this._children[popupId];
             if (popup) {
-               hasPopupCallback && hasPopupCallback(popup);
+               popupCallback && popupCallback(popup);
 
                var registrator = this._children[popupId + '_registrator'];
                if (registrator) {
                   if (registrator._hasRegisteredPendings()) {
-                     hasPendingCallback && hasPendingCallback(popup);
+                     pendingCallback && pendingCallback(popup);
                   }
                   var finishDef = registrator.finishPendingOperations();
                   finishDef.addCallbacks(function() {
@@ -72,8 +72,7 @@ define('Controls/Popup/Manager/Container',
 
          _popupClosed: function(event, popupId) {
             var self = this;
-            this._finishPendings(popupId, function() {
-            }, function() {
+            this._finishPendings(popupId, null, function() {
                event.stopPropagation();
             }, function() {
                self._notify('popupClose', [popupId], { bubbling: true });
