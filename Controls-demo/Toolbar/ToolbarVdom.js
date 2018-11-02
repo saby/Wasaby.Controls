@@ -49,7 +49,8 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                {
                   id: '4',
                   buttonIcon: 'icon-24 icon-Linked',
-                  buttonStyle: 'iconButtonBordered',
+                  buttonStyle: 'secondary',
+                  buttonViewMode: 'quickButton',
                   buttonIconStyle: 'secondary',
                   title: 'Связанные документы',
                   '@parent': true,
