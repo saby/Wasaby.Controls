@@ -4,7 +4,6 @@ define('Controls/interface/IDialogOptions', [], function() {
     * Dialog popup options
     *
     * @interface Controls/interface/IDialogOptions
-    * @typedef Object
     * @public
     */
 
@@ -68,6 +67,14 @@ define('Controls/interface/IDialogOptions', [], function() {
     * @see open
     *
     * @public
+    */
+
+
+   /**
+    * @typedef {Object} eventHandlers
+    * @description Callback functions on popup events.
+    * @property {Function} onClose Callback function is called when popup is closed.
+    * @property {Function} onResult Callback function is called at the sendResult event in the popup template.
     */
 
    /**

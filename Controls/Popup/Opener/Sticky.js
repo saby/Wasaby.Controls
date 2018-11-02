@@ -11,7 +11,6 @@ define('Controls/Popup/Opener/Sticky',
        * @control
        * @author Красильников А.С.
        * @category Popup
-       * @extends Controls/Popup/Opener/Base
        * @public
        */
       var Sticky = Base.extend({
@@ -19,7 +18,7 @@ define('Controls/Popup/Opener/Sticky',
          /**
           * Open sticky popup.
           * @function Controls/Popup/Opener/Sticky#open
-          * @param popupOptions Sticky popup options.
+          * @param {Object} {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions} Sticky popup options.
           * @returns {Undefined}
           * @example
           * wml

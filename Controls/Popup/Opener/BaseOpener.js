@@ -35,7 +35,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
        * @control
-       * @public
+       * @private
        * @author Красильников А.С.
        */
       var Base = Control.extend({

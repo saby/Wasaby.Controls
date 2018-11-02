@@ -9,7 +9,6 @@ define('Controls/Popup/Opener/Confirmation',
       /**
        * Component that opens the confirmation popup.
        * @class Controls/Popup/Opener/Confirmation
-       * @extends Core/Control
        * @mixes Controls/interface/IConfirmationOptions
        * @control
        * @public
@@ -62,7 +61,6 @@ define('Controls/Popup/Opener/Confirmation',
           *     });
           * </pre>
           */
-
          open: function(templateOptions) {
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
