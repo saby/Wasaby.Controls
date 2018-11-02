@@ -28,6 +28,11 @@ define('Controls/Application/_Head',
                this.simpleCss = csses.simpleCss;
                return;
             }
+            if (options.staticDomains) {
+               this.staticDomainsStringified = options.staticDomains;
+            } else {
+               this.staticDomainsStringified = '[]';
+            }
             var def = context.headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();

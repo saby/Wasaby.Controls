@@ -1,5 +1,5 @@
 <div class="controls-DropdownList__popup
-            controls-DropdownList__popup-shadow-{{_options.typeShadow}}
+            {{_dropdownClass}}
             {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"
      on:mouseleave="_mouseOutHandler()">
@@ -7,6 +7,7 @@
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
+                  headerClass="{{_headerClass}}"
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
@@ -20,6 +21,7 @@
                      defaultItemTemplate="{{_defaultItemTemplate}}"
                      showClose="{{_options.showClose}}"
                      marker="{{_options.marker}}"
+                     displayProperty="{{_options.displayProperty}}"
                      groupTemplate="{{_groupTemplate}}"
                      parentProperty="{{_options.parentProperty}}"
                      iconPadding="{{_options.iconPadding}}"

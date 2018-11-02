@@ -10,8 +10,9 @@ define('Controls-demo/Suggest/Suggest', [
    'WS.Data/Source/Memory',
    'Core/Deferred',
    'WS.Data/Entity/Model',
+   'Controls-demo/Search/SearchMemory',
    'css!Controls-demo/Suggest/Suggest'
-], function(Control, template, MemorySource, Deferred, Model) {
+], function(Control, template, MemorySource, Deferred, Model, SearchMemory) {
    
    'use strict';
    
@@ -112,43 +113,16 @@ define('Controls-demo/Suggest/Suggest', [
       
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);
-         this._suggestTabSource = new MemorySource({
+         this._suggestTabSource = new SearchMemory({
             idProperty: 'id',
-            data: sourceData
+            data: sourceData,
+            searchParam: 'title'
          });
-         this._suggestSource = new MemorySource({
+         this._suggestSource = new SearchMemory({
             idProperty: 'id',
-            data: sourceData
+            data: sourceData,
+            searchParam: 'title'
          });
-         
-         //Чтобы запрос был асинхронным.
-         var origQuery = this._suggestSource.query;
-         this._suggestTabSource.query = function(query) {
-            var self = this,
-               arg = arguments;
-            var def = new Deferred();
-            origQuery.apply(self, arg).addCallback(function(result) {
-               Deferred.fromTimer(100).addCallback(function() {
-                  var originAll = result.getAll;
-                  
-                  result.getAll = function() {
-                     var items = originAll.call(result);
-                     items.setMetaData({
-                        tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
-                        more: items.getMetaData().more,
-                        results: new Model({
-                           rawData: {
-                              tabsSelectedKey: query.getWhere()['currentTab'] ? query.getWhere()['currentTab'] : 1
-                           }
-                        })
-                     });
-                     return items;
-                  };
-                  def.callback(result);
-               });
-            });
-            return def;
-         };
       }
    });
    

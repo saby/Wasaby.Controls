@@ -17,7 +17,7 @@
       <ws:if data="{{_options.content}}">
          <!-- TODO: перенести name на partial с input после исправления ошибки https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a -->
          <div
-                 name="input"
+                 name="divinput"
             class="controls-InputRender__fieldWrapper controls-InputRender__fieldWrapper{{_options.multiline ? '_multiLine' : '_singleLine'}}">
 
             <ws:partial

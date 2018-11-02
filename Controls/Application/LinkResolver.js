@@ -1,4 +1,4 @@
-define('Controls/Application/LinkResolver', ['Core/core-extend', 'Core/IoC', ''], function(coreExtend, IoC) {
+define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreExtend) {
    'use strict';
 
    // css link should look like:

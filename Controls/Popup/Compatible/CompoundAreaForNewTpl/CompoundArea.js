@@ -65,7 +65,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (wrapper.length) {
                      var wrapperOptions = {
                         template: self._options.template,
-                        templateOptions: self._options.templateOptions
+                        templateOptions: self._options.templateOptions,
+
+                        // Нужно передать себя в качестве родителя, чтобы система фокусов
+                        // могла понять, где находятся вложенные компоненты
+                        parent: self
                      };
                      self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
                      self._afterMountHandler();
@@ -220,7 +224,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
-               this._vDomTemplate._options = newOptions;
+               this._vDomTemplate._options.templateOptions = this._options.templateOptions;
                this._vDomTemplate._forceUpdate();
             }
          },

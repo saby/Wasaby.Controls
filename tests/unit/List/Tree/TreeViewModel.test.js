@@ -11,6 +11,9 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          return {
             getId: function() {
                return self._id;
+            },
+            get: function() {
+               return self._isNode;
             }
          };
       };
@@ -96,18 +99,18 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
             assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, item), 'Invalid value "isVisibleItem(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild), 'Invalid value "isVisibleItem(234)".');
             treeViewModel.toggleExpanded(item, false);
             assert.isFalse(TreeViewModel._private.isVisibleItem.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild), 'Invalid value "isVisibleItem(234)".');
          });
@@ -116,49 +119,186 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
             assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
             treeViewModel.toggleExpanded(item, false);
             assert.isFalse(TreeViewModel._private.displayFilterTree.call({
-               expandedNodes: treeViewModel._expandedNodes,
+               expandedItems: treeViewModel._expandedItems,
                keyProperty: treeViewModel._options.keyProperty
             }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
          });
          it('getDisplayFilter', function() {
-            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 1,
+            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 1,
                'Invalid filters count prepared by "getDisplayFilter".');
             treeViewModel = new TreeViewModel(cMerge({itemsFilterMethod: function() {return true;}}, cfg));
-            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedNodes, treeViewModel._options).length === 2,
+            assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 2,
                'Invalid filters count prepared by "getDisplayFilter" with "itemsFilterMethod".');
+         });
+         it('shouldDrawExpander', function() {
+            var
+               testsShouldDrawExpander = [{
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return null;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'none'
+               }],
+               testsResultShouldDrawExpander = [false, false, false, true, true, false, true, true, false];
+            testsShouldDrawExpander.forEach(function(item, i) {
+               assert.equal(TreeViewModel._private.shouldDrawExpander(testsShouldDrawExpander[i].itemData, testsShouldDrawExpander[i].expanderIcon),
+                  testsResultShouldDrawExpander[i],
+                  'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
+            });
+         });
+         it('prepareExpanderClasses', function() {
+            var
+               testsPrepareExpanderClasses = [{
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return false;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'testIcon'
+               }],
+               testsResultPrepareExpanderClasses = [
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed'
+               ];
+            testsPrepareExpanderClasses.forEach(function(item, i) {
+               assert.equal(TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon),
+                  testsResultPrepareExpanderClasses[i],
+                  'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.');
+            });
          });
       });
       describe('public methods', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
          it('getCurrent and toggleExpanded', function() {
-            assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" before call "toggleExpanded(123, true)".');
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            assert.isTrue(treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, true)".');
+            assert.isTrue(treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, true)".');
             assert.isTrue(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, true)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, false);
-            assert.equal(undefined, treeViewModel._expandedNodes['123'], 'Invalid value "_expandedNodes" after call "toggleExpanded(123, false)".');
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" after call "toggleExpanded(123, false)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" after call "toggleExpanded(123, false)".');
 
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
             treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
-            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after expand "123" and "234".');
+            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
-            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandedNodes" after collapse "123".');
+            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after collapse "123".');
          });
 
          it('multiSelectStatus', function() {
@@ -191,8 +331,9 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
 
          it('setRoot', function() {
             treeViewModel.setRoot('testRoot');
-            assert.deepEqual({}, treeViewModel._expandedNodes, 'Invalid value "_expandNodes" after setRoot("testRoot").');
+            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandNodes" after setRoot("testRoot").');
             assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
+            treeViewModel.setRoot(null);
          });
          it('onCollectionChange', function() {
             var
@@ -201,17 +342,87 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                removedItems2 = [
                   new MockedDisplayItem({ id: 'mi2', isNode: true }), new MockedDisplayItem({ id: 'mi4', isNode: false })],
                notifiedOnNodeRemoved = false;
-            treeViewModel._expandedNodes = { 'mi1': true, 'mi2': true };
+            treeViewModel._expandedItems = { 'mi1': true, 'mi2': true };
             treeViewModel._notify = function(eventName) {
                if (eventName === 'onNodeRemoved') {
                   notifiedOnNodeRemoved = true;
                }
             };
             treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems1, null);
-            assert.deepEqual(treeViewModel._expandedNodes, { 'mi2': true }, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel._expandedItems, { 'mi2': true }, 'Invalid value "_expandedItems" after "onCollectionChange".');
             treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems2, null);
-            assert.deepEqual(treeViewModel._expandedNodes, {}, 'Invalid value "_expandedNodes" after "onCollectionChange".');
+            assert.deepEqual(treeViewModel._expandedItems, {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
+         });
+         it('setDragItems', function() {
+            var itemData = {};
+            treeViewModel._expandedItems = {'123': true, '456': true};
+
+            treeViewModel.setDragItems(['123', '567'], itemData);
+            assert.deepEqual(treeViewModel._expandedItems, {'456': true});
+            assert.isFalse(itemData.isExpanded);
+         });
+         it('updateDragTargetPosition', function() {
+            treeViewModel._draggingItemData = { index: 2 };
+
+            //set node
+            treeViewModel._updateDragTargetPosition({
+               index: 1,
+               dispItem: new MockedDisplayItem({ id: '1', isNode: true })
+            });
+            assert.equal(treeViewModel._dragTargetPosition.position, 'on');
+            assert.equal(treeViewModel._dragTargetPosition.index, 1);
+
+            //set leaf with change level
+            treeViewModel._updateDragTargetPosition({
+               index: 3,
+               level: 2,
+               dispItem: new MockedDisplayItem({ id: '3', isNode: false })
+            });
+            assert.equal(treeViewModel._dragTargetPosition.position, 'after');
+            assert.equal(treeViewModel._dragTargetPosition.index, 3);
+            assert.equal(treeViewModel._draggingItemData.level, 2);
+
+            //set leaf with change level
+            treeViewModel._updateDragTargetPosition({
+               index: 2,
+               level: 1,
+               dispItem: new MockedDisplayItem({ id: '2', isNode: false })
+            });
+            assert.equal(treeViewModel._dragTargetPosition.position, 'before');
+            assert.equal(treeViewModel._dragTargetPosition.index, 2);
+            assert.equal(treeViewModel._draggingItemData.level, 1);
+
+            //set null
+            treeViewModel._updateDragTargetPosition();
+            assert.equal(treeViewModel._dragTargetPosition, null);
+         });
+         it('setDragPositionOnNode', function() {
+            var itemData = {
+               dispItem: new MockedDisplayItem({ id: '3', isNode: true }),
+               key: 3,
+               index: 3
+            };
+
+            //setDragPosition after node
+            treeViewModel.setDragTargetItem(itemData);
+            treeViewModel.setDragPositionOnNode(itemData, 'after');
+            assert.equal(treeViewModel._dragTargetPosition.position, 'after');
+            assert.equal(treeViewModel._dragTargetPosition.index, 3);
+
+            //setDragPosition before node
+            treeViewModel.setDragTargetItem(itemData);
+            treeViewModel.setDragPositionOnNode(itemData, 'before');
+            assert.equal(treeViewModel._dragTargetPosition.position, 'before');
+            assert.equal(treeViewModel._dragTargetPosition.index, 3);
+
+            //setDragPosition after opened node
+            treeViewModel.setDragTargetItem(itemData);
+            treeViewModel._expandedItems = {'3': true};
+            treeViewModel.setDragPositionOnNode(itemData, 'after');
+            assert.equal(treeViewModel._dragTargetPosition.position, 'on');
+            assert.equal(treeViewModel._dragTargetPosition.index, 3);
+
          });
       });
    });

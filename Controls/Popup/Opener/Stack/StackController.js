@@ -39,10 +39,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                return template.clientWidth;
             }
             template = container.querySelector('.controls-Popup__template');
-            var cStyle = getComputedStyle(template);
-
-            // Stack has a left border. Do not consider the border for calculating user template width
-            return parseInt(cStyle.width, 10) - parseInt(cStyle.borderLeftWidth, 10);
+            return template.offsetWidth;
          },
 
          getStackParentCoords: function() {
