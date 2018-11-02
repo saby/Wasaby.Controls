@@ -8,7 +8,7 @@ define('Controls/DragNDrop/Controller',
    function(Control, detection, template) {
       var
          SHIFT_LIMIT = 4,
-         IE_MOUSEMOVE_FIX_DELAY = 10;
+         IE_MOUSEMOVE_FIX_DELAY = 50;
 
       var _private = {
          getPageXY: function(event) {

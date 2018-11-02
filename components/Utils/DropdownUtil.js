@@ -78,7 +78,7 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
             var items = self.getItems();
             
             if (cInstance.instanceOfMixin(items, 'WS.Data/Entity/ICloneable')) {
-               items = items.clone(true);
+               items = items.clone();
             } else {
                items = coreClone(items);
             }

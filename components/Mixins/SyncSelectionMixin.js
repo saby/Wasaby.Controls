@@ -2,12 +2,13 @@
  * Created by am.gerasimov on 28.01.2016.
  */
 define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
-   'WS.Data/Entity/Model',
+   'Data/type',
    'WS.Data/Collection/List',
    'Core/core-instance',
    'Controls/Utils/ArraySimpleValuesUtil',
    'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
-], function(Model, List, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
+], function(type, List, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
+   var Model = type.Model;
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов

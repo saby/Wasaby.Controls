@@ -75,12 +75,16 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._dragItems) {
-               if (this._dragItems[0] === itemsModelCurrent.key) {
+            if (this._draggingItemData) {
+               if (this._draggingItemData.key === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
                if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._dragItems[0] === itemsModelCurrent.key ? !this._dragTargetItem : false;
+                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetItem : false;
+               }
+               if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
+                  itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
+                  itemsModelCurrent.draggingItemData = this._draggingItemData;
                }
             }
             return itemsModelCurrent;
@@ -106,14 +110,13 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         getDraggingItemData: function() {
-            return this._draggingItemData;
-         },
-
-         setDragItems: function(items) {
+         setDragItems: function(items, itemDragData) {
             if (this._dragItems !== items) {
                this._dragItems = items;
-               this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
+               this._draggingItemData = itemDragData || (items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
+               if (this._draggingItemData) {
+                  this._draggingItemData.isDragging = true;
+               }
                this._nextVersion();
                this._notify('onListChange');
             }
@@ -124,7 +127,7 @@ define('Controls/List/ListViewModel',
          },
 
          setDragTargetItem: function(itemData) {
-            if (this._dragTargetItem !== itemData) {
+            if (this._draggingItemData && (!itemData || this._draggingItemData.key !== itemData.key)) {
                this._dragTargetItem = itemData;
                this._updateDragTargetPosition(itemData);
                this._nextVersion();

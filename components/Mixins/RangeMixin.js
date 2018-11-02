@@ -1,4 +1,8 @@
-define('SBIS3.CONTROLS/Mixins/RangeMixin', [], function() {
+define('SBIS3.CONTROLS/Mixins/RangeMixin', [
+   'SBIS3.CONTROLS/Utils/DateUtil'
+], function(
+   dateUtils
+) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -136,14 +140,16 @@ define('SBIS3.CONTROLS/Mixins/RangeMixin', [], function() {
             oldStart = this.getStartValue(),
             oldEnd = this.getEndValue();
 
-         if (this.setStartValue(startValue, true)) {
+         this.setStartValue(startValue, true);
+         if (startValue !== oldStart && !dateUtils.isDatesEqual(startValue, oldStart)) {
             if (!silent) {
                this._notifyOnStartValueChanged(oldStart);
             }
             changed = true;
          }
 
-         if (this.setEndValue(endValue, true)) {
+         this.setEndValue(endValue, true);
+         if (endValue !== oldEnd && !dateUtils.isDatesEqual(endValue, oldEnd)) {
             if (!silent) {
                this._notifyOnEndValueChanged(oldEnd);
             }

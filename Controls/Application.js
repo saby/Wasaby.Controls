@@ -8,6 +8,7 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
+      'Core/constants',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
@@ -39,6 +40,7 @@ define('Controls/Application',
       template,
       Deferred,
       BodyClasses,
+      constants,
       compatibility,
       AppData,
       ScrollContext,
@@ -184,10 +186,13 @@ define('Controls/Application',
             self.application = (context.AppData ? context.AppData.application : cfg.application);
             self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
             self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
-            self.staticDomains = cfg.staticDomains ? cfg.staticDomains : (context.AppData ? context.AppData.staticDomains : []);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
+            if (self.resourceRoot[self.resourceRoot.length - 1] !== '/') {
+               self.resourceRoot = self.resourceRoot + '/';
+            }
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
+            self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
@@ -203,6 +208,7 @@ define('Controls/Application',
                context.AppData.application = self.application;
                context.AppData.servicesPath = self.servicesPath;
                context.AppData.product = self.product;
+               context.AppData.staticDomains = self.staticDomains;
             }
 
             /**
@@ -214,6 +220,7 @@ define('Controls/Application',
                buildnumber: self.buildnumber,
                title: self.title,
                appRoot: self.appRoot,
+               staticDomains: self.staticDomains,
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
@@ -246,6 +253,19 @@ define('Controls/Application',
 
          _closePreviewerHandler: function(event, type) {
             this._children.previewerOpener.close(type);
+         },
+
+         _keyPressHandler: function(event) {
+            if (this._isPopupShow) {
+               if (constants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  // TODO https://online.sbis.ru/opendoc.html?guid=5d3fdab0-6a25-41a1-8018-a68a034e14d9
+                  if (event.nativeEvent && event.nativeEvent.keyCode === 27) {
+                     event.preventDefault();
+                  }
+               }
+            }
          },
 
          _cancelPreviewerHandler: function(event, action) {

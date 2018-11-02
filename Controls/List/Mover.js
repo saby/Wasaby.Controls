@@ -3,8 +3,9 @@ define('Controls/List/Mover', [
    'Core/Deferred',
    'Core/core-instance',
    'WS.Data/Source/ISource',
-   'Controls/Container/Data/ContextOptions'
-], function(Control, Deferred, cInstance, ISource, dataOptions) {
+   'Controls/Container/Data/ContextOptions',
+   'wml!Controls/List/Mover/Mover'
+], function(Control, Deferred, cInstance, ISource, dataOptions, template) {
 
    var BEFORE_ITEMS_MOVE_RESULT = {
       CUSTOM: 'Custom',
@@ -32,8 +33,10 @@ define('Controls/List/Mover', [
          var
             itemIndex,
             movedItem,
+            parentProperty = self._options.parentProperty,
             targetId = _private.getIdByItem(self, target),
-            targetIndex = self._items.getIndex(_private.getModelByItem(self, targetId));
+            targetItem = _private.getModelByItem(self, targetId),
+            targetIndex = self._items.getIndex(targetItem);
 
          items.forEach(function(item) {
             movedItem = _private.getModelByItem(self, item);
@@ -42,6 +45,11 @@ define('Controls/List/Mover', [
                if (itemIndex === -1) {
                   self._items.add(movedItem);
                   itemIndex = self._items.getCount() - 1;
+               }
+
+               if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
+                  //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+                  movedItem.set(parentProperty, targetItem.get(parentProperty));
                }
 
                if (position === ISource.MOVE_POSITION.after && targetIndex < itemIndex) {
@@ -167,6 +175,7 @@ define('Controls/List/Mover', [
     */
 
    var Mover = Control.extend({
+      _template: template,
       _beforeMount: function(options, context) {
          _private.updateDataOptions(this, context.dataOptions);
       },

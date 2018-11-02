@@ -4,8 +4,7 @@ define('Controls/Popup/Manager/Popup',
       'wml!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
-      'Controls/Popup/PopupContext',
-      'css!Controls/Popup/Manager/Popup'
+      'Controls/Popup/PopupContext'
    ],
    function(Control, template, runDelayed, CoreConstants, PopupContext) {
       'use strict';

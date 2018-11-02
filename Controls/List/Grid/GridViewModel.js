@@ -592,8 +592,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setDragTargetItem(itemData);
          },
 
-         setDragItems: function(items) {
-            this._model.setDragItems(items);
+         getDragTargetItem: function() {
+            return this._model.getDragTargetItem();
+         },
+
+         setDragItems: function(items, itemData) {
+            this._model.setDragItems(items, itemData);
          },
 
          getActiveItem: function() {

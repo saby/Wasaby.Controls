@@ -1,34 +1,25 @@
-<ws:if data="{{listModel.getDragTargetPosition() &&
-   listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
-   listModel.getDragTargetPosition().position === 'before'}}">
-   <ws:partial
-      multiSelectTpl="{{multiSelectTpl}}"
-      template="{{itemTemplate}}"
-      itemData="{{listModel.getDraggingItemData()}}"/>
+<ws:if data="{{itemData.dragTargetPosition === 'before'}}">
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
 </ws:if>
-<ws:if data="{{listModel.getCurrent().isVisible !== false}}">
+<ws:if data="{{itemData.isVisible !== false}}">
    <ws:partial
-      on:click="_onItemClick(listModel.getCurrent().dispItem)"
-      on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
-      on:swipe="_onItemSwipe(listModel.getCurrent())"
-      on:mousedown="_onItemMouseDown(listModel.getCurrent())"
-      on:mouseenter="_onItemMouseEnter(listModel.getCurrent())"
-      on:mouseleave="_onItemMouseLeave(listModel.getCurrent())"
-      on:mousemove="_onItemMouseMove(listModel.getCurrent())"
-      on:wheel="_onItemWheel(listModel.getCurrent())"
+      on:click="_onItemClick(itemData.dispItem)"
+      on:contextmenu="_onItemContextMenu(itemData)"
+      on:swipe="_onItemSwipe(itemData)"
+      on:mousedown="_onItemMouseDown(itemData)"
+      on:mouseenter="_onItemMouseEnter(itemData)"
+      on:mouseleave="_onItemMouseLeave(itemData)"
+      on:mousemove="_onItemMouseMove(itemData)"
+      on:mouseleave="_onItemMouseLeave(itemData)"
+      on:wheel="_onItemWheel(itemData)"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
       itemTemplate="{{itemTemplate}}"
       template="wml!Controls/List/ItemTemplateWrapper"
-      itemData="{{listModel.getCurrent()}}"
+      itemData="{{itemData}}"
       actionsType="{{itemActionsPosition}}"/>
 </ws:if>
-<ws:if data="{{listModel.getDragTargetPosition() &&
-   listModel.getDragTargetPosition().index === listModel.getCurrentIndex() &&
-   listModel.getDragTargetPosition().position === 'after'}}">
-   <ws:partial
-      multiSelectTpl="{{multiSelectTpl}}"
-      template="{{itemTemplate}}"
-      itemData="{{listModel.getDraggingItemData()}}"/>
+<ws:if data="{{itemData.dragTargetPosition === 'after'}}">
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
 </ws:if>

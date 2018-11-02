@@ -34,15 +34,12 @@ define('Controls-demo/DragNDrop/Grid', [
          }];
       },
       _dragStart: function(event, items) {
-         var hasBadItems = false;
-         items.forEach(function(item) {
-            if (item.getId() === 0) {
-               hasBadItems = true;
-            }
-         });
-         return hasBadItems ? false : new ListEntity({
+         return new ListEntity({
             items: items
          });
+      },
+      _dragEnd: function(event, items, target, position) {
+         this._children.listMover.moveItems(items, target, position);
       }
    });
 

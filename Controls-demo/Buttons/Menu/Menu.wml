@@ -1,6 +1,17 @@
 <div class="ControlsDemo-ButtonsMenu" style="padding: 50px;">
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <h4>One item</h4>
+      <Controls.Button.Menu
+              keyProperty="id"
+              iconStyle="default"
+              style="buttonPrimary"
+              caption="+ Add"
+              source="{{_createMemory(_oneItem)}}"
+              attr:class="ControlsDemo-ButtonsMenu__item"
+              tooltip="Create"/>
+   </div>
+   <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>Simple</h4>
       <Controls.Button.Menu
               keyProperty="id"
