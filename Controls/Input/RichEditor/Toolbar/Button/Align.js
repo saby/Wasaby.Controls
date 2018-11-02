@@ -97,7 +97,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
          this._updateSelectedAlign(item.get('id'));
       },
 
-      _formatChangedHandler(formats) {
+      _formatChangedHandler: function(formats) {
          this._updateSelectedAlign(_private.getCurrentAlign(formats));
       },
 
