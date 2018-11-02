@@ -8,7 +8,7 @@ define('Controls/Input/RichArea/helpers/format', [
     */
 
    var _private = {
-      getFormat(self, formatName) {
+      getFormat: function(self, formatName) {
          var editor = self._editor,
             selection = editorHelper.getSelection(self),
             currentNode = selection.getNode();
