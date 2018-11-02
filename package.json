@@ -7,7 +7,9 @@
    },
    "files": [
       "Controls/*",
-      "File/*"
+      "File/*",
+      "Controls-theme/*",
+      "Controls-demo/*"
    ],
    "scripts": {
       "start": "node app",
