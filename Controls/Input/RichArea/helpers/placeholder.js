@@ -1,9 +1,9 @@
-define('Controls/Input/RichArea/plugins/placeholder', [], function() {
+define('Controls/Input/RichArea/helpers/placeholder', [], function() {
    /**
-    * Модуль-хэлпер для плэйсхолдера
+    * Module which provides work with TinyMCE's placeholder
     */
 
-   var PlaceholderPlugin = {
+   var PlaceholderHelper = {
 
       /**
        * Function checks placeholder is required or not
@@ -21,5 +21,5 @@ define('Controls/Input/RichArea/plugins/placeholder', [], function() {
       }
    };
 
-   return PlaceholderPlugin;
+   return PlaceholderHelper;
 });
