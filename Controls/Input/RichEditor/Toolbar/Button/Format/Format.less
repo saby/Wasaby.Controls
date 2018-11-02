@@ -1,0 +1,22 @@
+@bgcolor_RichEditorToolbar_button-hover: #F0F5FB;
+@bgcolor_RichEditorToolbar_button-selected: #f3f3f3;
+@border-color_RichEditorToolbar_button-selected: #587ab0;
+@border-radius_RichEditorToolbar_button-selected: 2px;
+@height_RichEditorToolbar_button: 28px;
+@width_RichEditorToolbar_button: 28px;
+
+
+.controls_ToolbarFormatButton {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   box-sizing: border-box;
+   width: @width_RichEditorToolbar_button;
+   height: @height_RichEditorToolbar_button;
+}
+
+.controls_ToolbarFormatButton_active {
+   background: @bgcolor_RichEditorToolbar_button-selected;
+   border: 1px solid @border-color_RichEditorToolbar_button-selected;
+   border-radius: @border-radius_RichEditorToolbar_button-selected;
+}
