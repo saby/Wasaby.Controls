@@ -2,8 +2,10 @@
  * Created by rn.kondakov on 18.10.2018.
  */
 define('Controls/Decorator/Markup/Converter', [
-   'Controls/Decorator/Markup/resources/template'
-], function(template) {
+   'Controls/Decorator/Markup/resources/template',
+   'Core/Util/Object'
+], function(template,
+   ObjectUtils) {
    'use strict';
 
    function domToJson(dom) {
@@ -35,7 +37,8 @@ define('Controls/Decorator/Markup/Converter', [
       return json;
    }
 
-   var linkParseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|(<[^>]*>)))/g;
+   var linkParseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|(<[^>]*>)))/g,
+      hasOpenATagRegExp = /<a(( )|(>))/i;
 
    // Wrap all links and email addresses placed not in tag a.
    function wrapUrl(html) {
@@ -47,9 +50,9 @@ define('Controls/Decorator/Markup/Converter', [
          if (email && !inLink) {
             return '<a href="mailto:' + email + '">' + email + '</a>' + end;
          }
-         if (~end.indexOf('<a')) {
+         if (end.match(hasOpenATagRegExp)) {
             inLink = true;
-         } else if (~end.indexOf('</a')) {
+         } else if (~end.indexOf('</a>')) {
             inLink = false;
          }
          return match;
@@ -93,24 +96,7 @@ define('Controls/Decorator/Markup/Converter', [
     * @return {Array}
     */
    var deepCopyJson = function(json) {
-      if (typeof json === 'string' || json instanceof String) {
-         return json;
-      }
-      var result;
-      if (Array.isArray(json)) {
-         result = [];
-         for (var i = 0; i < json.length; ++i) {
-            result.push(deepCopyJson(json[i]));
-         }
-      } else {
-         result = {};
-         for (var key in json) {
-            if (json.hasOwnProperty(key)) {
-               result[key] = deepCopyJson(json[key]);
-            }
-         }
-      }
-      return result;
+      return ObjectUtils.merge([], json);
    };
 
    /**
