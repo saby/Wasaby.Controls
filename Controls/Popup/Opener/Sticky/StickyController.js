@@ -8,7 +8,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/detection',
       'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
-      'css!Controls/Popup/Opener/Sticky/Sticky'
+      'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
    function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, isElementVisible, TargetCoords) {
       var DEFAULT_OPTIONS = {

@@ -3,6 +3,7 @@
       attr:class="{{ onServer && !isCompatible ? 'pre-load' : '' }}">
 <Controls.Application._Head
    wsRoot="{{ wsRoot }}"
+   linkResolver="{{ linkResolver }}"
    resourceRoot="{{ resourceRoot }}"
    appRoot="{{ appRoot }}"
    RUMEnabled="{{ RUMEnabled }}"
@@ -12,7 +13,8 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
-   servicesPath="{{ servicesPath }}">
+   servicesPath="{{ servicesPath }}"
+   on:themeChanged="themeChangedHandler()">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">
@@ -74,9 +76,15 @@
                                       src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-                              <script key="contents" type="text/javascript" src="{{resourceRoot}}contents.js"></script>
-                              <script key="config" type="text/javascript"
+                              <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
+                              <ws:if data="{{lite}}">
+                                 <script key="config" type="text/javascript"
+                                         src="{{wsRoot}}ext/requirejs/config-lite.js"></script>
+                              </ws:if>
+                              <ws:else>
+                                 <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
+                              </ws:else>
 
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">
@@ -90,7 +98,8 @@
                               <ws:else data="{{!_options.builderCompatible}}">
                                  <div>
                                     <Controls.Application._JsLinks attr:tabindex="-1"
-                                                                   appRoot="{{ appRoot }}"/>
+                                                                   appRoot="{{ appRoot }}"
+                                                                   linkResolver="{{ linkResolver }}"/>
 
                                     <!--
                                        beforeScripts - опция для переноса скриптов перед вставкой серверных скриптов
@@ -110,6 +119,9 @@
                                  <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" />
                               </ws:if>
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+                              <ws:if data="{{ themeChanging }}">
+                                 <div id="theme-changing-overlay"></div>
+                              </ws:if>
                               </body>
                            </Controls.DragNDrop.Container>
                         </Controls.Application.TouchDetector>

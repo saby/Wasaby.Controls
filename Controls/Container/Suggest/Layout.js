@@ -7,7 +7,8 @@ define('Controls/Container/Suggest/Layout',
       'Core/moduleStubs',
       'Core/core-clone',
       'Controls/Search/MissSpell/getSwitcherStrFromData',
-      'css!Controls/Container/Suggest/Layout'
+      'css!theme?Controls/Container/Suggest/Layout/Suggest',
+      'css!theme?Controls/Container/Suggest/Layout'
    ],
    function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
       

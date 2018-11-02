@@ -12,6 +12,15 @@
   "output": "controls-button.package.js"
 }, {
   "include": [
+    "Controls/Operations/*"
+  ],
+  "exclude": [
+    "Controls/Operations/ReportDialog",
+    "Controls/Operations/ReportDialog/*"
+  ],
+  "output": "controls-operations.package.js"
+}, {
+  "include": [
     "Controls/Container/*",
     "Controls/StickyHeader",
     "Controls/StickyHeader/*"
@@ -131,7 +140,8 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/*",
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "output": "controls-popup.package.js"
 }, {
@@ -171,7 +181,8 @@
   "output": "controls-popup-opener-confirmation.package.js"
 }, {
   "include": [
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "exclude": [
     "Controls/Popup/Opener/Confirmation/*",

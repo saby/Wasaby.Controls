@@ -1,7 +1,7 @@
 define('Controls/List/DialogMover/MoveDialog', [
    'Core/Control',
    'wml!Controls/List/DialogMover/MoveDialog/MoveDialog',
-   'css!Controls/List/DialogMover/MoveDialog/MoveDialog'
+   'css!theme?Controls/List/DialogMover/MoveDialog/MoveDialog'
 ], function(Control, template) {
    'use strict';
 

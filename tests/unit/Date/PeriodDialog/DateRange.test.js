@@ -2,7 +2,7 @@ define([
    'Core/core-merge',
    'Controls/Date/PeriodDialog/DateRange',
    'Controls/Utils/Date',
-   'tests/unit/Calendar/Utils'
+   'tests/Calendar/Utils'
 ], function(
    coreMerge,
    DateRange,

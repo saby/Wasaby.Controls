@@ -106,10 +106,10 @@ define('Controls/List/ItemsViewModel', [
 
       getCurrent: function() {
          var dispItem = this._display.at(this._curIndex);
-         return this._getItemDataByItem(dispItem);
+         return this.getItemDataByItem(dispItem);
       },
 
-      _getItemDataByItem: function(dispItem) {
+      getItemDataByItem: function(dispItem) {
          var
             itemData = {
                getPropValue: ItemsUtil.getPropertyValue,

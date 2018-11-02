@@ -3,8 +3,8 @@ define('Controls/Toggle/Button', [
    'Controls/Toggle/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
-   'css!Controls/Button/Button',
-   'css!Controls/Toggle/Button/Button'
+   'css!theme?Controls/Button/Button',
+   'css!theme?Controls/Toggle/Button/Button'
 ], function(Control, Classes, template, validateIconStyle) {
    /**
     * Button that switches between different states. It support different display styles, icon display styles and sizes

@@ -1,7 +1,7 @@
 <div>
     <div class="demo-Grid">
         <h3>С тулбаром</h3>
-        <Controls.List.AddButton caption="Add record" on:click="list.addItem()" class="test_add_record_1"/>
+        <Controls.List.AddButton caption="Add record" on:click="list.beginAdd()" class="test_add_record_1"/>
         <div class="demo-Grid__container">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                 <Controls.Grid
@@ -20,7 +20,7 @@
                         itemActionVisibilityCallback="{{_showAction}}"
                         itemActionsPosition="outside">
                     <ws:editingConfig>
-                        <ws:Object editOnClick="{{true}}" autoAdd="{{true}}" showToolbar="{{true}}"/>
+                        <ws:Object editOnClick="{{true}}" autoAdd="{{true}}" toolbarVisibility="{{true}}"/>
                     </ws:editingConfig>
                 </Controls.Grid>
             </Controls.Container.Scroll>

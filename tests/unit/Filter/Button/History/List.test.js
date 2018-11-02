@@ -3,7 +3,7 @@ define(
       'Controls/Filter/Button/History/List',
       'Core/Serializer',
       'WS.Data/Chain',
-      'tests/unit/Filter/Button/History/testHistorySource'
+      'tests/Filter/Button/History/testHistorySource'
    ],
    function(List, Serializer, Chain, HistorySourceDemo) {
       describe('FilterHistoryList', function() {
