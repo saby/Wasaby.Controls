@@ -1,7 +1,9 @@
-define('Controls/SelectedCollection/allCollectionTemplate',
+define('Controls/SelectedCollection/Popup',
    [
       'Core/Control',
-      'wml!Controls/SelectedCollection/allCollectionTemplate'
+      'wml!Controls/SelectedCollection/Popup',
+      'css!Controls/Popup/Opener/InfoBox/InfoBox',
+      'css!Controls/Popup/Opener/Previewer/PreviewerController'
    ],
 
    function(Control, template) {
@@ -11,15 +13,11 @@ define('Controls/SelectedCollection/allCollectionTemplate',
          _template: template,
 
          _itemClick: function(event, item) {
-            this._notify('sendResult', ['itemClick', item]);
+            this._options.clickCallback('itemClick', item);
          },
 
          _crossClick: function(event, item) {
-            this._notify('sendResult', ['crossClick', item]);
-         },
-
-         _mouseOutHandler: function() {
-            this._notify('close');
+            this._options.clickCallback('crossClick', item);
          }
       });
 

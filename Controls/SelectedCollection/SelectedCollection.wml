@@ -1,17 +1,18 @@
 <div class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
    <ws:if data="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) > _options.maxVisibleItems}}">
-      <div class="controls-SelectedCollection__counterItems" name="collection" on:click="_showAllItems()">
-         <span attr:class="controls-SelectedCollection__counter">({{_options.items.getCount()}})</span>
-         <span>...</span>
-      </div>
-      <Controls.Popup.Opener.Sticky name="stickyOpener">
-         <ws:popupOptions className="controls-SelectedCollection__popup-margins">
-            <ws:eventHandlers onResult="{{_onResult}}"/>
-         </ws:popupOptions>
-      </Controls.Popup.Opener.Sticky>
+      <Controls.Popup.InfoBox
+              trigger="click"
+              templateName="Controls/SelectedCollection/Popup"
+              templateOptions="{{_templateOptions}}"
+              position="bl">
+         <div class="controls-SelectedCollection__counterItems">
+            <span attr:class="controls-SelectedCollection__counter">({{_options.items.getCount()}})</span>
+            <span>...</span>
+         </div>
+      </Controls.Popup.InfoBox>
    </ws:if>
-   <ws:for data="index, item in _visibleItems">
+   <ws:for data="index, item in _visibleItems || _options.items">
       <ws:partial
               attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"

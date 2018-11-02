@@ -17,6 +17,7 @@ define('Controls/SelectedCollection/SelectedCollectionStyles', [],
     * @css @line-height_SelectedCollection-size-h Line height of the item with size h.
     * @css @spacing_SelectedCollection-between-items Spacing between items.
     * @css @spacing_SelectedCollection-between-counter-items Spacing between counter and items.
+    * @css @padding_SelectedCollection-counter Padding counter.
     * @css @border-color_SelectedCollection-popup Border color of pop-up.
     * @css @background-color_SelectedCollection-popup Background color of pop-up.
     * @css @shadow_SelectedCollection-popup Shadow of pop-up.

@@ -132,7 +132,7 @@ define('Controls/Button/SelectorButton', [
 
    SelectorButton.getDefaultOptions = function() {
       return {
-         style: 'linkMain2',
+         style: 'info',
          maxVisibleItems: 7
       };
    };

@@ -37,6 +37,7 @@
             constraint="{{ _options.constraint }}"
             value="{{ _options.value }}"
             tagStyle="{{ _options.tagStyle }}"
+            sidePadding="{{!_isAllRecordsDisplay ? 'right'}}"
             placeholder="{{ _options.placeholder }}"
             validationErrors="{{ _options.validationErrors }}"
             content="{{ _isEmpty || _options.multiSelect ? 'wml!Controls/Input/resources/input' }}"
