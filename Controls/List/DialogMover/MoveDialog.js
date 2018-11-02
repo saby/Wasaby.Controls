@@ -7,7 +7,7 @@ define('Controls/List/DialogMover/MoveDialog', [
 
    return Control.extend({
       _template: template,
-      _expandedNodes: undefined,
+      _expandedItems: undefined,
       _root: undefined,
       _itemActions: undefined,
 
@@ -21,8 +21,8 @@ define('Controls/List/DialogMover/MoveDialog', [
          this._root[options.keyProperty] = options.rootValue;
          this._root[options.columns[0].displayProperty] = rk('Корень');
          this._root[options.nodeProperty] = true;
-         this._expandedNodes = {};
-         this._expandedNodes[options.rootValue] = true;
+         this._expandedItems = {};
+         this._expandedItems[options.rootValue] = true;
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
       },
 
