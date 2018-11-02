@@ -220,18 +220,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                this._longOpList.applyUserAction('resume', this._activeOperation.getRawData());
             }.bind(this));
 
-            //Обработчик, который применяет фильтр "Скрыть приостановленные"
-            var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
-            button.on('click', function () {
-               if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
-                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_NOT_SUSPENDED);
-               }
-               else {
-                  self._longOpList.getLinkedContext().setValue('filter', {});
-               }
-               button.toggleClass('controls-LongOperationsPopup__header_stoppedOperations-show');
-            });
-
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
@@ -676,8 +664,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                '.controls-NotificationPopup__header_caption',
                '.controls-LongOperationsPopup__footer_actionHideContent',
                '.controls-LongOperationsPopup__footer_actionPause',
-               '.controls-NotificationPopup__header',
-               '.controls-LongOperationsPopup__header_stoppedOperationsButton'
+               '.controls-NotificationPopup__header'
             ].forEach(function (selector) {
                container.find(selector).off('click');
             });
