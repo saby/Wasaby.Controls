@@ -72,7 +72,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/CustomFormat', [
          this._selectedFormat = format;
       },
 
-      _formatChangedHandler(formats) {
+      _formatChangedHandler: function(formats) {
          var currentFormat = _private.getCurrentCustomFormat(formats);
 
          if (currentFormat !== this._selectedFormat) {
