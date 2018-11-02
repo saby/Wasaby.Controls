@@ -30,7 +30,7 @@ define('Controls/Input/Text',
        * @public
        * @demo Controls-demo/Input/Text/TextPG
        *
-       * @author Журавлев М.С.
+       * @author Колесова П.С.
        */
 
 

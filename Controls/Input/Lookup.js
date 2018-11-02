@@ -38,7 +38,7 @@ define('Controls/Input/Lookup', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
-    * @author Журавлев М.С.
+    * @author Капустин И.А.
     * @category Input
     */
 

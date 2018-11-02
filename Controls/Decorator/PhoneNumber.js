@@ -22,6 +22,7 @@ define('Controls/Decorator/PhoneNumber',
        * @extends Core/Control
        * @control
        * @public
+       * @author Журавлев М.С.
        * @category Decorators
        */
 

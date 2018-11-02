@@ -34,6 +34,7 @@ define('Controls/History/Source', [
     * @mixes WS.Data/Entity/OptionsMixin
     * @control
     * @public
+    * @author Герасимов А.М.
     * @category Menu
     * @example
     *  <pre>
