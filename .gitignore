@@ -51,3 +51,4 @@
 /tests/**/preprocessor_logs
 /tests/**/screenshots
 /tests/**/__pycache__
+/tests/reg/capture_report
