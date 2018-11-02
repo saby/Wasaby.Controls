@@ -1,7 +1,7 @@
 /**
  * Контрол "Область редактирования настройщика экспорта"
  *
- * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'WS3ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
  * 
  * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
@@ -15,6 +15,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
    [
       'Core/CommandDispatcher',
       'Core/core-merge',
+      'Core/RightsManager',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/ExportCustomizer/Constants',
       'SBIS3.CONTROLS/ExportCustomizer/_Executor',
@@ -27,7 +28,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
+   function (CommandDispatcher, cMerge, RightsManager, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {
       'use strict';
 
       /**
@@ -151,6 +152,10 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                 */
                presetNamespace: null,
                /**
+                * @cfg {string} Зона доступа пользовательских пресетов (опционально)
+                */
+               presetAccessZone: null,
+               /**
                 * @cfg {string|number} Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз (опционально)
                 */
                selectedPresetId: null,
@@ -227,8 +232,16 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
           */
          _reshapeOptions: function (options) {
             var allFields = options.allFields;
+            var accessZone = options.presetAccessZone;
+            var canUsePresets = true;
+            var canChangePresets = true;
+            if (accessZone) {
+               var rights = RightsManager.getRights([accessZone])[accessZone];
+               canUsePresets = !!(rights & RightsManager.READ_MASK);
+               canChangePresets = !!(rights & RightsManager.WRITE_MASK);
+            }
             var presetsOptions;
-            var usePresets = options.usePresets;
+            var usePresets = options.usePresets && canUsePresets;
             if (usePresets) {
                var staticPresets = options.staticPresets;
                var hasStaticPresets = !!(staticPresets && staticPresets.length);
@@ -253,6 +266,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   allFields: allFields,
                   statics: hasStaticPresets ? staticPresets.slice() : null,
                   namespace: options.presetNamespace,
+                  accessZone: options.presetAccessZone,
                   selectedId: options.selectedPresetId,
                   historyTarget: options.historyTarget
                };
@@ -271,13 +285,15 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                }
             }
             var serviceParams = options.serviceParams;
+            var readOnly = usePresets && !canChangePresets;
             options._scopes = {
                presets: presetsOptions,
                columnBinder: {
                   title: options.columnBinderTitle || undefined,
                   fieldGroupTitles: options.fieldGroupTitles || undefined,
                   allFields: allFields,
-                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined
+                  fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
+                  readOnly: readOnly
                },
                formatter: {
                   title: options.formatterTitle,
@@ -285,7 +301,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   allFields: allFields,
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
                   fileUuid: !usePresets && fileUuid ? fileUuid : undefined,
-                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined
+                  serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined,
+                  readOnly: readOnly
                }
             };
          },

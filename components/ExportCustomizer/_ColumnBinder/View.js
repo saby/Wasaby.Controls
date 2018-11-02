@@ -58,7 +58,11 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
                /**
                 * @cfg {object} Список отображаемых названий групп полей (если используются идентификаторы групп)
                 */
-               fieldGroupTitles: null
+               fieldGroupTitles: null,
+               /**
+                * @cfg {bolean} Допускаются ли изменения
+                */
+               readOnly: null
             },
             // Контрол списка соответствий колонок файла и полей данных
             _grid: null,
@@ -81,30 +85,37 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
          },*/
 
          init: function () {
-            //При клике по кнопке добавления колонок
-            CommandDispatcher.declareCommand(this, 'addRows', this._onAdd.bind(this));
+            var readOnly = this._options.readOnly;
+            if (!readOnly) {
+               //При клике по кнопке добавления колонок
+               CommandDispatcher.declareCommand(this, 'addRows', this._onAdd.bind(this));
+            }
             View.superclass.init.apply(this, arguments);
-            this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
-            this._grid.setItemsActions(this._makeRowActions());
-            this._gridMoveController = new ItemsMoveController({
-               linkedView: this._grid
-            });
+            var grid = this._grid = this.getChildControlByName('controls-ExportCustomizer-ColumnBinder-View__grid');
+            grid.setItemsActions(!readOnly ? this._makeRowActions() : []);
+            if (!readOnly) {
+               this._gridMoveController = new ItemsMoveController({
+                  linkedView: grid
+               });
+            }
             this._bindEvents();
          },
 
          _bindEvents: function () {
+            var options = this._options;
             var grid = this._grid;
-
-            //При изменении порядка строк в списке колонок
-            this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
-               var items = grid.getItems();
-               if (items && 1 < items.getCount()) {
-                  var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
-                  this._options.fieldIds = fieldIds;
-                  this._redraw();
-                  this.sendCommand('subviewChanged');
-               }
-            }.bind(this));
+            if (!options.readOnly) {
+               //При изменении порядка строк в списке колонок
+               this.subscribeTo(grid, 'onEndMove', function (evtName, dragObject) {
+                  var items = grid.getItems();
+                  if (items && 1 < items.getCount()) {
+                     var fieldIds = []; items.each(function (v) { fieldIds.push(v.getId()); });
+                     options.fieldIds = fieldIds;
+                     this._redraw();
+                     this.sendCommand('subviewChanged');
+                  }
+               }.bind(this));
+            }
          },
 
          /**

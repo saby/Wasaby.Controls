@@ -131,7 +131,8 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/*",
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "output": "controls-popup.package.js"
 }, {
@@ -171,7 +172,8 @@
   "output": "controls-popup-opener-confirmation.package.js"
 }, {
   "include": [
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "exclude": [
     "Controls/Popup/Opener/Confirmation/*",

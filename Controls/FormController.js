@@ -236,7 +236,7 @@ define('Controls/FormController', [
                   return res;
                }.bind(this), function(e) {
                   this._updateByPopup = false;
-                  def.callback(false);
+                  def.errback(e);
                   return e;
                }.bind(this));
             } else if (answer === false) {

@@ -1,7 +1,7 @@
 /**
  * Исполняемое действие "Настройщик экспорта"
  *
- * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'SBIS3.ENGINE/Controls/ExportPresets/Loader'
+ * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'WS3ExportPresets/Loader'
  * Для того, чтобы возможно было использовать редактируемые стилевые эксель-файлы, необходимо подключить модуль 'PrintingTemplates/ExportFormatter/Excel'
  * 
  * Подробнее о настройке экспорта файлов можно прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/actions/export-excel/">Экспорт реестра в Excel</a>.
@@ -123,6 +123,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {ExportServiceParams} options.serviceParams Прочие параметры, необходимых для работы БЛ
           * @param {Array.<ExportPreset>} options.staticPresets Список пресетов (предустановленных настроек экспорта).
           * @param {String} options.presetNamespace Пространство имён для сохранения пользовательских пресетов.
+          * @param {String} options.presetAccessZone Зона доступа пользовательских пресетов (опционально)
           * @param {String|Number} options.selectedPresetId Идентификатор пресета, который будет выбран в списке пресетов. Если будет указан пустое значение (null или пустая строка), то это будет воспринято как указание создать новый пустой пресет и выбрать его. Если значение не будет указано вовсе (или будет указано значение undefined), то это будет воспринято как указание выбрать пресет, который был выбран в прошлый раз.
           * @param {Array.<BrowserColumnInfo>|WS.Data/Collection/RecordSet<BrowserColumnInfo>} options.allFields Список объектов с информацией о всех колонках в формате, используемом в браузере.
           * @param {Array.<String>} options.fieldIds Список привязки колонок в экспортируемом файле к полям данных
@@ -375,7 +376,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                   };
                   if (!_usePreset(options.staticPresets) && Di.isRegistered(_DI_STORAGE_NAME)) {
                      var promise = new Deferred();
-                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace).addCallback(function (customs) {
+                     Di.resolve(_DI_STORAGE_NAME).load(options.presetNamespace/*, options.presetAccessZone*/).addCallback(function (customs) {
                         _usePreset(customs);
                         promise.callback();
                      });
