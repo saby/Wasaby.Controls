@@ -16,21 +16,19 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
    'css!theme?WS/css/styles/RichContentStyles',
    'i18n!SBIS3.CONTROLS/RichEditor',
    'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
-], function(Control, template, constantsPlugin, contentPlugin, configPlugin, textPlugin, placeholderPlugin, handlersPlugin, eventsPlugin, moduleStubs, cClone) {
-   'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control,
-            template,
-            constantsHelper,
-            configHelper,
-            textHelper,
-            placeholderHelper,
-            handlersHelper,
-            eventsHelper,
-            editorHelper,
-            pasteHelper,
-            formatHelper,
-            moduleStubs,
-            cClone) {
+   template,
+   constantsHelper,
+   configHelper,
+   textHelper,
+   placeholderHelper,
+   handlersHelper,
+   eventsHelper,
+   editorHelper,
+   pasteHelper,
+   formatHelper,
+   moduleStubs,
+   cClone) {
    /**
     * Component TinyMCE
     * Private component which works with tinyMCE library.
