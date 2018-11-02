@@ -205,14 +205,18 @@ define('Controls/FormController', [
             self._notify('registerPending', [def, {
                showLoadingIndicator: false,
                onPendingFail: function(forceFinishValue) {
-                  self._showConfirmDialog(def, forceFinishValue);
-                  def.addCallbacks(function(res) {
-                     self._propertyChangeNotified = false;
-                     return res;
-                  }, function(e) {
-                     self._propertyChangeNotified = false;
-                     return e;
-                  });
+                  if (self._record.isChanged()) {
+                     self._showConfirmDialog(def, forceFinishValue);
+                     def.addCallbacks(function(res) {
+                        self._propertyChangeNotified = false;
+                        return res;
+                     }, function(e) {
+                        self._propertyChangeNotified = false;
+                        return e;
+                     });
+                  } else {
+                     def.callback(true);
+                  }
                   return def;
                }
             }], { bubbling: true });
