@@ -133,6 +133,13 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._children.remover.removeItems(this._selectedKeys);
       },
 
+      _afterItemsMove: function(event, items, target, position) {
+         //To display the records in the correct order
+         if (position === 'on') {
+            this._children.list.reload();
+         }
+      },
+
       _beforeItemsRemove: function(event, items) {
          var
             self = this,

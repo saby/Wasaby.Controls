@@ -31,6 +31,7 @@
                 <Controls.List.DialogMover name="dialogMover"
                                            columns="{{_moveDialogColumns}}"
                                            parentProperty="Раздел"
+                                           on:afterItemsMove="_afterItemsMove()"
                                            filter="{{_moveDialogFilter}}"
                                            nodeProperty="Раздел@"
                                            rootValue="{{null}}"/>
@@ -45,7 +46,6 @@
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     itemActions="{{_itemActions}}"
                                     itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-                                    itemsSortMethod="{{_itemsSortMethod}}"
                                     on:itemActionsClick="_itemActionsClick()"
                                     multiSelectVisibility="{{_panelExpanded ? 'visible'}}"
                                     columns="{{_gridColumns}}"
