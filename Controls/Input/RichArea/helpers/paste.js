@@ -1,12 +1,14 @@
-define('Controls/Input/RichArea/plugins/paste', [], function() {
+define('Controls/Input/RichArea/helpers/paste', [
+   'Controls/Input/RichArea/helpers/editor'
+], function(editorHelper) {
    /**
-    * Модуль для работы со вставкой в БТР
+    * Module which provides work with paste in rich editor
     */
 
-   var PastePlugin = {
+   var PasteHelper = {
 
       /**
-       * Почистить контент из клипборда для его последующей вставки
+       * Function clear content for pasting
        * @param {string} content html-текст
        * @return {string}
        */
@@ -24,8 +26,30 @@ define('Controls/Input/RichArea/plugins/paste', [], function() {
             content = content.replace(/<!DOCTYPE[^>]*>|<html[^>]*>|<body[^>]*>|<\x2Fhtml>|<\x2Fbody>/gi, '').trim();
          }
          return content;
+      },
+
+      /**
+       * Function paste content into current cursor position
+       * @param self
+       * @param content
+       */
+      paste: function(self, content) {
+         content = this.clearPasteContent(content);
+
+         var
+            editor = self._editor,
+            pasteHelper = editor.plugins.paste;
+
+         if (pasteHelper) {
+            pasteHelper.clipboard.pasteHtml(content, false);
+         } else {
+            var eventResult = editor.fire('PastePreProcess', { content: content });
+            editorHelper.insertHtml(self, eventResult.content);
+         }
+
+         self._handlers.inputHandler();
       }
    };
 
-   return PastePlugin;
+   return PasteHelper;
 });

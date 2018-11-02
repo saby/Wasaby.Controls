@@ -1,8 +1,8 @@
-define('Controls/Input/RichArea/plugins/handlers/paste', [
-   'Controls/Input/RichArea/plugins/youtube',
+define('Controls/Input/RichArea/helpers/handlers/paste', [
+   'Controls/Input/RichArea/helpers/youtube',
 ], function(youtubePlugin) {
    /**
-    * Модуль содержащий обработчики вставки в БТР
+    * Module with paste handlers
     */
 
    var PasteHandlersPlugin = {
