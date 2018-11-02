@@ -3,7 +3,6 @@ define('Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog', [
    'wml!Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog/Dialog',
    'css!Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog/Dialog'
 ], function(Control, template) {
-
    /**
     * Component Toolbar/Button/EditLink/Dialog
     * Dialog for editing links

@@ -12,6 +12,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/EditLink', [
     */
 
    var _private = {
+
       /**
        * Function open dialog for edit link
        * @param self
