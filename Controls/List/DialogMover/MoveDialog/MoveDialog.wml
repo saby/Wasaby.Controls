@@ -13,7 +13,7 @@
             navigation="{{_options.navigation}}"
             root="{{_root}}"
             itemsFilterMethod="{{_itemsFilterMethod}}"
-            expandedNodes="{{_expandedNodes}}"
+            expandedItems="{{_expandedItems}}"
             columns="{{_options.columns}}"/>
    </Controls.Container.Scroll>
    </ws:contentArea>
