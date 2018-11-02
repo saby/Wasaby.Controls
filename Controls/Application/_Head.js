@@ -24,9 +24,9 @@ define('Controls/Application/_Head',
             if (typeof window !== 'undefined') {
                return;
             }
-            if(typeof options.staticDomains === 'string') {
+            if (typeof options.staticDomains === 'string') {
                this.staticDomainsStringified = options.staticDomains;
-            } else if(options.staticDomains instanceof Array) {
+            } else if (options.staticDomains instanceof Array) {
                this.staticDomainsStringified = JSON.stringify(options.staticDomains);
             } else {
                this.staticDomainsStringified = '[]';
