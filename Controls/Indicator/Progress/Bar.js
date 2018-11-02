@@ -23,6 +23,8 @@ define(
        * @public
        *
        * @author Baranov M.A.
+       *
+       * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
        */
 
 
