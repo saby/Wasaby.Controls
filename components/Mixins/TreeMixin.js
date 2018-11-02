@@ -1416,12 +1416,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       _folderLoad: function(id) {
          var
             self = this,
-            filter;
+            filter = this._createTreeFilter(id);
          this._toggleIndicator(true);
          if (this._isCursorNavigation()) { //https://online.sbis.ru/opendoc.html?guid=7117f61d-ab58-434b-99b1-fc6528ffe641
-            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+            this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
          }
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             if (this._isCursorNavigation() && this._options.saveReloadPosition) {
                this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
             }
