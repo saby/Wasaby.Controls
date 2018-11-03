@@ -7,7 +7,8 @@
          'Core/constants',
          'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
          'Lib/Control/BaseCompatible/BaseCompatible',
-         'Core/nativeExtensions'
+         'Core/nativeExtensions',
+         'is!browser?jquery'
       ], function(path, lc, appinit, constants) {
          constants.$body = body;
          constants.$window = window;
