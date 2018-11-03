@@ -1,7 +1,8 @@
-<div style="width:250px; display: flex; padding: 20px;">
-    <Controls.Validate.FormController>
+<div style="padding: 20px;">
+    <Controls.Validate.FormController name="formController1">
         <ws:content>
             <div>
+                Validate/Input (Валидация происходит по focusOut)
                 <Controls.Validate.Input   name="InputValidate" attr:style="margin: 30px" >
                     <ws:validators>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsINN</ws:Function>
@@ -17,16 +18,17 @@
                         />
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px"  >
+                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px" >
                     <ws:validators>
-                        <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsINN</ws:Function>
+                        <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsINN</ws:Function>
+                        <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.Input.Text
-                                name="textBox2"
-                                bind:value="_value2"
+                                name="textBox"
+                                bind:value="_value3"
                                 placeholder="{{_placeholder}}"
-                                tagStyle="primary"
+                                tagStyle="success"
                                 validationErrors="{{_validationErrors}}"
                         />
                     </ws:content>
@@ -34,5 +36,26 @@
             </div>
         </ws:content>
     </Controls.Validate.FormController>
-    <Controls.Button caption="c" on:click="_paste()"/>
+    <Controls.Validate.FormController name="formController">
+        <ws:content>
+            <div>
+                Validate/Controller(Кнопка запускает процесс валидации)
+                <Controls.Validate.Controller   name="ControllerValidate" attr:style="margin: 30px"  >
+                    <ws:validators>
+                        <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.Input.Text
+                                name="textBox2"
+                                bind:value="_value2"
+                                placeholder="Email"
+                                tagStyle="primary"
+                                validationErrors="{{_validationErrors}}"
+                        />
+                    </ws:content>
+                </Controls.Validate.Controller>
+            </div>
+        </ws:content>
+    </Controls.Validate.FormController>
+    <Controls.Button caption="Submit"  name="updateButton" on:click="_clickHandler()"/>
 </div>

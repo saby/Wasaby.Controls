@@ -17,11 +17,6 @@ define('Controls/Validate/Controller',
    ) {
       'use strict';
 
-      var _private = {
-         closeInfobox: function() {
-            this._isOpened = false;
-         }
-      };
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
@@ -130,7 +125,7 @@ define('Controls/Validate/Controller',
             }
             if (validationResult) {
                this.openInfoBox();
-            } else {
+            } else if (this._isOpened) {
                this.closeInfoBox();
             }
          },
@@ -149,19 +144,42 @@ define('Controls/Validate/Controller',
                   template: errorMessage,
                   templateOptions: { content: this._validationResult },
                   eventHandlers: {
-                     onClose: _private.closeInfobox.bind(this),
                      onResult: this._mouseInfoboxHandler.bind(this)
                   }
                }], { bubbling: true });
             }
+         },
+         _hoverHandler: function() {
+            clearTimeout(this._closeId);
+            if (!this._isOpened) {
+               this.openInfoBox();
+            }
+         },
+         _mouseInfoboxHandler: function(event) {
+            if (event.type === 'mouseenter') {
+               this._hoverInfoboxHandler(this);
+            } else {
+               this._mouseLeaveHandler(this);
+            }
+         },
+         _mouseLeaveHandler: function() {
+            if (this.isValid()) {
+               this.closeInfoBox();
+            }
+         },
+         _hoverInfoboxHandler: function() {
+            clearTimeout(this._closeId);
          },
 
          /**
           * Скрывает InfoBox с подсказкой
           */
          closeInfoBox: function() {
-            this._isOpened = false;
-            this._notify('closeInfoBox', [this], { bubbling: true });
+            var self = this;
+            this._closeId = setTimeout(function() {
+               self._notify('closeInfoBox', [self], { bubbling: true });
+               self._isOpened = false;
+            }, 300);
          },
 
          /**

@@ -11,16 +11,14 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
       _value: '',
       _value2: '',
       _placeholder: 'Input text',
-      _setValue: function (e, record) {
+      _setValue: function(e, record) {
          this._example = record.get('example');
       },
-      _eventHandler: function (e, value) {
+      _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
-      _paste: function () {
-
-         this._value += '23';
-         this._value2 += '32';
+      _clickHandler: function() {
+         this._children.formController.submit();
       }
    });
    return VdomDemoText;
