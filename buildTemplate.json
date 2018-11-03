@@ -34,7 +34,7 @@
     },
     {
       "name": "WS.Deprecated",
-      "path": "%cd%/node_modules/sbis3-ws/ws/deprecated"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
     },
     {
       "name": "Transport",
