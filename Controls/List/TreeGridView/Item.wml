@@ -71,7 +71,7 @@
                           {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                           controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
               attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{itemData.isSelected && itemData.columnIndex === 0}}">
+            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
             <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
