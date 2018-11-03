@@ -1,10 +1,14 @@
 <div>
-   <Controls.Input.Text on:valueChanged="innChanged()" value="{{_options.inn}}" placeholder="inn" name="inn"/>
-   <Controls.Input.Text on:valueChanged="kppChanged()" value="{{_options.kpp}}" placeholder="kpp" name="kpp"/>
+   <Router.Route mask="inn/:inn">
+      <Controls.Input.Text on:valueChanged="innChanged()" value="{{content.inn}}" placeholder="inn" name="inn"/>
+   </Router.Route>
+   <Router.Route mask="kpp/:kpp">
+      <Controls.Input.Text on:valueChanged="kppChanged()" value="{{content.kpp}}" placeholder="kpp" name="kpp"/>
+   </Router.Route>
    <p>
       <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 100 }}" kpp="{{6}}">
          <a href="{{content.href}}">*inn/100/kpp/6*</a>
-      </Router.Link> <br/>
+      </Router.Link><br/>
       <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 777 }}" kpp="{{25}}">
          <a href="{{content.href}}">*inn/777/kpp/25*</a>
       </Router.Link><br/>
@@ -15,16 +19,16 @@
          <a href="{{content.href}}">Go to list of demos</a>
       </Router.Link><br/>
 
-      <Router.Link href="panel/Controls-demo/app/:app"
+      <Router.Link href="{{'panel/Controls-demo/app/' + _depth + '/:app'}}"
                             prettyUrl="/Controls-demo/app/:app"
-                            app="{{ 'Controls-demo/IndexOld' }}">
+                            app="{{ 'Controls-demo/Router/Panel' }}">
          <ws:content>Open panel from route</ws:content>
       </Router.Link><br/>
 
 
-      <Router.Route mask="panel/Controls-demo/app/:app"
-                       on:succesUrl="successUrl()"
-                       on:errorUrl="errorUrl()"/>
+      <Router.Route mask="{{'panel/Controls-demo/app/' + _depth + '/:app'}}"
+                       on:enter="enterHandler()"
+                       on:leave="leaveHandler()"/>
 
       <Controls.Popup.Opener.Stack name="stack">
          <ws:popupOptions template="Controls-demo/Router/TestStack" closeByExternalClick="{{true}}">
