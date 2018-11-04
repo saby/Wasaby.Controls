@@ -32,16 +32,8 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          getContainerWidth: function(item, container) {
-            var template;
-            if (item.popupOptions.isCompoundTemplate) {
-               //Берем размеры прикладного шаблона
-               template = container.querySelector('.controls-CompoundArea__container').children[0];
-               return template.clientWidth;
-            }
-            template = container.querySelector('.controls-Popup__template');
-            var cStyle = getComputedStyle(template);
-
-            return parseInt(cStyle.width, 10);
+            var template = container.querySelector('.controls-Popup__template');
+            return template.offsetWidth;
          },
 
          getStackParentCoords: function() {

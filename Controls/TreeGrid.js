@@ -39,6 +39,9 @@ define('Controls/TreeGrid', [
             keyProperty: types(String).required(),
             parentProperty: types(String).required()
          };
+      },
+      toggleExpanded: function(id) {
+         this._children.listControl.toggleExpanded(id);
       }
    });
    return Tree;

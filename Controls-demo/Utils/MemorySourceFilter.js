@@ -1,7 +1,9 @@
 /**
  * Created by am.gerasimov on 17.07.2018.
  */
-define('Controls-demo/Utils/MemorySourceFilter', [], function() {
+define('Controls-demo/Utils/MemorySourceFilter', [
+   'Core/helpers/Object/isEqual'
+], function(isEqual) {
    
    'use strict';
    
@@ -32,7 +34,7 @@ define('Controls-demo/Utils/MemorySourceFilter', [], function() {
       return given == expect;
    }
    
-   return function memorySourceFilter() {
+   return function memorySourceFilter(emptyFields) {
       return function(item, queryFilter) {
          var addToData = true;
          
@@ -55,6 +57,9 @@ define('Controls-demo/Utils/MemorySourceFilter', [], function() {
                   addToData = compareValues(itemValue, filterValue, '=') || itemValueLowerCase.indexOf(filterValueLowerCase) !== -1;
                } else {
                   addToData = compareValues(itemValue, filterValue, '=');
+               }
+               if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
+                  addToData = true;
                }
             }
          }

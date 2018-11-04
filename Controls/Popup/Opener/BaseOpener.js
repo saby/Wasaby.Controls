@@ -70,6 +70,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
+            self._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
@@ -96,6 +97,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
                      if (self._useVDOM()) {
                         self._popupIds.push(result);
+                        self._toggleIndicator(false);
 
                         // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
@@ -103,6 +105,8 @@ define('Controls/Popup/Opener/BaseOpener',
                         self._action = result;
                      }
                   });
+               } else {
+                  self._toggleIndicator(false);
                }
             });
          },
@@ -147,6 +151,12 @@ define('Controls/Popup/Opener/BaseOpener',
             CoreMerge(cfg, popupOptions || {});
             cfg.opener = cfg.opener || DefaultOpenerFinder.find(this);
             return cfg;
+         },
+
+         _toggleIndicator: function(visible) {
+            if (this._useVDOM()) {
+               this._children.LoadingIndicator.toggleIndicator(visible);
+            }
          },
 
          /**
@@ -309,7 +319,7 @@ define('Controls/Popup/Opener/BaseOpener',
          if (!managerContainer) {
             managerContainer = document.createElement('div');
             managerContainer.classList.add('controls-PopupContainer');
-            document.body.prepend(managerContainer);
+            document.body.insertBefore(managerContainer, document.body.firstChild);
 
             require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
                var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);

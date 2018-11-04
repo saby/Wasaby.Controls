@@ -165,23 +165,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
                if (count) {
-                  self._activeOperation = null;
-                  if (count === 1) {
-                     self._setFirstOperationMode(true);
-                     self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
-                  }
-                  else {
-                     self._setFirstOperationMode(false);
-                     items.each(function (item, id) {
-                        if (!self._activeOperation && item.get('status') === LongOperationEntry.STATUSES.running) {
-                           self._activeOperation = item;
-                           return false;
-                        }
-                     });
-                     if (!self._activeOperation) {
-                        self._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
-                     }
-                  }
+                  self._setFirstOperationMode(count === 1);
+                  self._selectActiveOperation();
                   self._updateState();
 
                   // Данные получены - пора показать окно, если оно не было показано ранее
@@ -235,18 +220,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                this._longOpList.applyUserAction('resume', this._activeOperation.getRawData());
             }.bind(this));
 
-            //Обработчик, который применяет фильтр "Скрыть приостановленные"
-            var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
-            button.on('click', function () {
-               if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
-                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_NOT_SUSPENDED);
-               }
-               else {
-                  self._longOpList.getLinkedContext().setValue('filter', {});
-               }
-               button.toggleClass('controls-LongOperationsPopup__header_stoppedOperations-show');
-            });
-
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
@@ -275,6 +248,29 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                container.removeClass(cssClass);
                container.animate({opacity:1}, 800);
                this._isIntroduced = true;
+            }
+         },
+
+         /**
+          * Выбрать активную операцию
+          * @protected
+          */
+         _selectActiveOperation: function () {
+            this._activeOperation = null;
+            var items = this._longOpList.getItems();
+            var count = items ? items.getCount() : 0;
+            if (count) {
+               if (1 < count) {
+                  items.each(function (item, id) {
+                     if (!this._activeOperation && item.get('status') === LongOperationEntry.STATUSES.running) {
+                        this._activeOperation = item;
+                        return false;
+                     }
+                  }.bind(this));
+               }
+               if (!this._activeOperation) {
+                  this._activeOperation = items.getRecordById(items.at(0).getId()/*Это fullId!*/);
+               }
             }
          },
 
@@ -570,9 +566,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1, true);
-                  var model = this._longOpList.lookupItem(data, true);
-                  if (model) {
-                     this._activeOperation = model;
+                  var operation = this._longOpList.lookupItem(data);
+                  if (operation) {
+                     operation.status = LongOperationEntry.STATUSES.ended;
+                     operation.isFailed = !!data.error;
+                     this._selectActiveOperation();
                      this._updateState();
                   }
                   break;
@@ -666,8 +664,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                '.controls-NotificationPopup__header_caption',
                '.controls-LongOperationsPopup__footer_actionHideContent',
                '.controls-LongOperationsPopup__footer_actionPause',
-               '.controls-NotificationPopup__header',
-               '.controls-LongOperationsPopup__header_stoppedOperationsButton'
+               '.controls-NotificationPopup__header'
             ].forEach(function (selector) {
                container.find(selector).off('click');
             });

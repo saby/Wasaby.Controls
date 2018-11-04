@@ -5,12 +5,12 @@
             <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{expanderSize ? expanderSize : 'default'}}"></div>
          </ws:for>
       </ws:if>
-      <ws:if data="{{itemData.dispItem.isNode()}}">
-         <div on:click="_onNodeExpanderClick(itemData.dispItem)"
-              class="controls-TreeGrid__row-nodeExpander controls-TreeGrid__row-nodeExpander_size_{{expanderSize ? expanderSize : 'default'}} controls-TreeGrid__row-nodeExpander_{{itemData.isExpanded ? 'expanded' : 'collapsed'}} js-controls-ListView__notEditable"></div>
+      <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
+         <div on:click="_onExpanderClick(itemData.dispItem)"
+              class="{{itemData.prepareExpanderClasses(itemData, expanderIcon, expanderSize)}}"></div>
       </ws:if>
       <ws:else data="{{!expanderSize}}">
-         <div class="controls-TreeGrid__row-nodeExpanderPadding js-controls-ListView__notEditable"></div>
+         <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
    <ws:partial template="{{itemData.getCurrentColumn().template}}"
@@ -29,7 +29,7 @@
    <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
       <ws:partial template="{{multiSelectTpl}}"
                   attr:class="controls-GridView__checkbox">
-         <ws:templateOptions triState="{{itemData.dispItem.isNode()}}"
+         <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
       </ws:partial>
@@ -71,7 +71,7 @@
                           {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                           controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
               attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{itemData.isSelected && itemData.columnIndex === 0}}">
+            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
             <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}

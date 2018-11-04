@@ -14,10 +14,11 @@ define(
          beforeEach(function(){
             popupOpener = new PopupOpener();
             popupOpener._beforeMount();
+            popupOpener._children.LoadingIndicator = {
+               toggleIndicator: () => {}
+            };
             popupOpener._children.opener = {
-               open: function(){
-
-               }
+               open: () => {}
             };
          });
 
