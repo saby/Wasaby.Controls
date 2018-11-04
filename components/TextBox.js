@@ -33,7 +33,6 @@ define('SBIS3.CONTROLS/TextBox', [
    Sanitize,
    detection
 ) {
-
    'use strict';
 
    /**
@@ -486,13 +485,15 @@ define('SBIS3.CONTROLS/TextBox', [
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
             if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               field.attr('title', this._options.text);
+               if (constants.browser.isIE) {
+                  field.attr('title', this._options.text);
+               }
             } else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             } else {
                this._container.attr('title', '');
 
-               //Для работы плейсхолдеров в IE на поля ввода навешивается аттрибут required.
+               // Для работы плейсхолдеров в IE на поля ввода навешивается аттрибут required.
                // При наведении курсора на такие поля, браузеры показывают всплывающую подсказку "Это обязательное поле."
                // Чтобы её скрыть в IE нужно в аттрибут title поставить пустую строку.
                if (constants.browser.isIE) {
