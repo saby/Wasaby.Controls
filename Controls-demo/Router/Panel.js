@@ -1,4 +1,4 @@
-define('Controls-demo/Router/Panel',
+ define('Controls-demo/Router/Panel',
    [
       'Core/Control',
       'wml!Controls-demo/Router/Panel',
@@ -6,14 +6,21 @@ define('Controls-demo/Router/Panel',
    ],
    function(Control, template) {
       'use strict';
-      var myPanels = 0;
+      var _depth = -1;
 
       var module = Control.extend({
          _template: template,
-         myPanels: -1,
-         _beforeMount: function(){
+         _depth: -1,
+         _opened: false,
+         _beforeMount: function() {
             this._onCloseHandler = this._onCloseHandler.bind(this);
-            this.myPanels = myPanels++;
+            this._depth = ++_depth;
+         },
+         _afterMount: function() {
+            document.querySelector('head').controlNodes[0].control._forceUpdate();
+         },
+         _beforeUnmount: function() {
+            _depth--;
          },
          innChanged: function(e, value) {
             this._notify('innChanged', [value], { bubbling: true });
@@ -22,40 +29,32 @@ define('Controls-demo/Router/Panel',
             this._notify('kppChanged', [value], { bubbling: true });
          },
 
-         successUrl: function(event, newLoc, oldLoc) {
-            if (!this._mystack) {
+         _onCloseHandler: function() {
+            if (this._opened) {
+               this._opened = false;
+               this._notify('routerUpdated', [this._lastUrl, this._lastPrettyUrl], { bubbling: true });
+            }
+         },
+
+         enterHandler: function(event, newLoc, oldLoc) {
+            if (!this._opened) {
+               this._opened = true;
+
                this._lastUrl = oldLoc.url;
                this._lastPrettyUrl = oldLoc.prettyUrl;
-               window.requestAnimationFrame(function(){
-                  this._children.stack.open();
-               }.bind(this));
-               this._mystack = true;
+               this._children.stack.open();
             }
          },
-
-         _onCloseHandler: function() {
-            if (this.resolvePromise) {
-               this.resolvePromise();
-               this.resolvePromise = undefined;
-               return;
-            }
-            this._notify('routerUpdated', [this._lastUrl, this._lastPrettyUrl], { bubbling: true });
-         },
-
-         errorUrl: function() {
-            if (this._mystack) {
-               /*return new Promise((resolve)=>{
-                     setTimeout(()=>{resolve(false);}, 1000);
-                  });*/
-               this._mystack = false;
-
-               new Promise(function(resolve) {
-                  this.resolvePromise = resolve;
-               }.bind(this));
+         leaveHandler: function() {
+            if (this._opened) {
                this._children.stack.close();
             }
          }
       });
+
+      module.getDepth = function getDepth() {
+         return _depth;
+      };
 
       return module;
    });

@@ -1,7 +1,3 @@
 <div on:routerUpdated="routerUpdatedHandler()" on:routerCreated="routerCreatedHandler()" on:routerDestroyed="routerDestroyedHandler()">
-   <Router.Route mask="kpp/:kpp">
-      <Router.Route mask="inn/:inn">
-         <Controls-demo.Router.Panel name="panelInst"/>
-      </Router.Route>
-   </Router.Route>
+   <Controls-demo.Router.Panel name="panelInst"/>
 </div>
