@@ -71,6 +71,7 @@ define('Controls/Container/Async',
                require([options.templateName], function(tpl) {
                   self.optionsForComponent = options.templateOptions || {};
                   self.optionsForComponent.resolvedTemplate = tpl;
+                  self._forceUpdate();
                   def.callback();
                }, function() {
                   def.errback('Error loading ' + options.templateName);

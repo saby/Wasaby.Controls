@@ -14,6 +14,9 @@ define('Controls-demo/RootRouter', [
          _template: template,
          backClickHdl: function(){
             window.history.back();
+         },
+         changeTheme: function(event, theme) {
+            this._notify('themeChanged', [theme], { bubbling: true });
          }
       });
 
