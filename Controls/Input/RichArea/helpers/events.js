@@ -29,6 +29,7 @@ define('Controls/Input/RichArea/helpers/events', [
          editor.on('undo redo TypingUndo BeforeAddUndo AddUndo ClearUndos', self._handlers.undoRedoChangedCallback);
 
          // Subscribe for selection events
+         editor.on('NodeChange', self._handlers.selectionChangedCallback);
          editor.on('SelectionChange', self._handlers.formatChangedCallback);
          editor.on('SelectionChange', self._handlers.selectionChangedCallback);
       },
@@ -51,7 +52,8 @@ define('Controls/Input/RichArea/helpers/events', [
                'BeforeAddUndo',
                'AddUndo',
                'ClearUndos',
-               'SelectionChange'
+               'SelectionChange',
+               'NodeChange'
             ],
             editor = self._editor;
 
