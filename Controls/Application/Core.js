@@ -48,7 +48,7 @@ define('Controls/Application/Core',
                headData: this.headDataCtx
             };
          },
-         coreTheme: 'default',
+         coreTheme: '',
          setTheme: function(ev, theme) {
             this.coreTheme = theme;
          },
