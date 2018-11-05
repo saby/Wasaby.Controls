@@ -3,6 +3,9 @@
     "Controls/Application/*",
     "Controls/Application"
   ],
+  "exclude": [
+    "Controls/Application/TouchDetector/TouchContextField"
+  ],
   "output": "controls-application.package.js"
 }, {
   "include": [
