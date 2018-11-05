@@ -5,9 +5,14 @@
       </div>
       <h1>RouterController</h1>
       <div>
-         <Controls.Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/Router/RouterController' }}">
+         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/Router/RouterController' }}">
             <a href="{{content.href}}">Router/RouterController</a>
-         </Controls.Router.Link>
+         </Router.Link>
+      </div>
+      <div>
+         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+            <a href="{{content.href}}">RootRouter</a>
+         </Router.Link>
       </div>
 
       <h1>List</h1>
@@ -15,9 +20,9 @@
          <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>
-         <Controls.Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
+         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
             <a href="{{content.href}}">List/ScrollPaging</a>
-         </Controls.Router.Link>
+         </Router.Link>
       </div>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">

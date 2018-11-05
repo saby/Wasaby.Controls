@@ -9,6 +9,10 @@ define('Controls/Grid', [
 
    /**
     * Table-looking list. Can load data from data source.
+    * List of examples:
+    * <ul>
+    *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    * </ul>
     *
     * @class Controls/Grid
     * @extends Controls/List

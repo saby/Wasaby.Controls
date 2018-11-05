@@ -13,11 +13,18 @@ define('Controls/Utils/DOMUtil', function() {
       width: function(container) {
          var
             computedStyle,
+            containerWidth;
+
+         // toDO Проверка на jQuery до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         if (window.jQuery && container instanceof window.jQuery) {
+            containerWidth = container.width();
+         } else if (container instanceof window.Node) {
             containerWidth = container.clientWidth;
 
-         if (window.getComputedStyle) {
-            computedStyle = window.getComputedStyle(container);
-            containerWidth -= parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
+            if (window.getComputedStyle) {
+               computedStyle = window.getComputedStyle(container);
+               containerWidth -= parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
+            }
          }
 
          return containerWidth;
