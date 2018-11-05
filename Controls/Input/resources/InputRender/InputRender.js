@@ -93,6 +93,23 @@ define('Controls/Input/resources/InputRender/InputRender',
                return false;
             }
             return getWidthUtils.getWidth(text) > target.clientWidth;
+         },
+         
+         getInput: function(self) {
+            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            return self._children.input.querySelector('.controls-InputRender__field');
+         },
+
+         updateSelection: function(self) {
+            var input = _private.getInput(self);
+            var selection = _private.getSelection(self);
+
+            if (input.selectionStart !== selection.selectionStart) {
+               input.selectionStart = selection.selectionStart;
+            }
+            if (input.selectionEnd !== selection.selectionEnd) {
+               input.selectionEnd = selection.selectionEnd;
+            }
          }
       };
 
@@ -112,14 +129,24 @@ define('Controls/Input/resources/InputRender/InputRender',
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
          },
+         
+         _afterMount: function() {
+            /**
+             * The cursor should be at the end until the user changes it.
+             * But setting the value in the field through the value attribute the cursor is at the beginning.
+             * https://jsfiddle.net/yc9f5oad/
+             * Therefore, we will install it ourselves.
+             */
+            _private.updateSelection(this);
+         },
 
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
+            _private.updateSelection(this);
          },
 
          _mouseEnterHandler: function() {
-            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            var input = this._children.input.querySelector('.controls-InputRender__field');
+            var input = _private.getInput(this);
             var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
@@ -165,9 +192,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
-            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(this._children.input.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
+               _private.hasHorizontalScroll(_private.getInput(this), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
