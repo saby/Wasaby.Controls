@@ -59,6 +59,7 @@ define('Controls/Button', [
     * @variant link
     * @variant button
     * @variant quickButton
+    * @variant transparentQuickButton
     * @default button
     * @remark
     * Sizes 's' and 'xl' don't supported by viewModes:
