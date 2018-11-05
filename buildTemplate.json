@@ -9,6 +9,10 @@
       "path": "%cd%/Controls"
     },
     {
+      "name": "Env",
+      "path": "%cd%/Env"
+    },
+    {
       "name": "Controls-demo",
       "path": "%cd%/Controls-demo"
     },
