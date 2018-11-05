@@ -1,7 +1,6 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
    'View/Runner/common'], function(extend, Serializer, common) {
-
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -57,7 +56,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             additionalDeps: allAdditionalDeps
          };
       },
-      deserialize: function(str){
+      deserialize: function(str) {
          var slr = new Serializer();
          this._deserialized = JSON.parse(str, slr.deserialize);
       },
