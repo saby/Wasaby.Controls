@@ -18,10 +18,10 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
    var _private = {
 
       /**
-       * Function returns promise which return content from dialog
+       * Function open dialog where user must paste content.
        * @param self
        * @param withStyles
-       * @returns {string}
+       * @returns {Deferred}
        */
       getHtmlFromDialog: function(self, withStyles) {
          var def = new Deferred(),
@@ -65,12 +65,12 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
       },
 
       /**
-       * Function returns promise which returns content with/without styles
+       * Function returns clipboard content
        * @param self
        * @param withStyles
-       * @returns {*}
+       * @returns {Deferred}
        */
-      getHtml: function(self, withStyles) {
+      getPasteContent: function(self, withStyles) {
          var
             def = new Deferred(),
             service;
@@ -106,7 +106,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
          return def;
 
          function errBack(self) {
-            _private.getHtmlFromDialog(self, withStyles).addCallback(function(content) {
+            _private.getPasteContent(self, withStyles).addCallback(function(content) {
                def.callback(content);
             });
          }
