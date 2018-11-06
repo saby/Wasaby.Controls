@@ -35,7 +35,7 @@ define(
                },
                input: {
                   querySelector: function() {
-                     return {};
+                     return this;
                   }
                }
             };
@@ -77,6 +77,30 @@ define(
                event.target.selectionEnd = 0;
                render._inputHandler(event);
                assert.equal(result, undefined);
+            });
+         });
+         describe('initSelection', function() {
+            it('test1', function() {
+               viewModel.updateOptions({value: '123'});
+               render._viewModel = viewModel;
+               Render._private.initSelection(render);
+
+               assert.equal(render._children.input.selectionStart, 3);
+               assert.equal(render._children.input.selectionEnd, 3);
+            });
+            it('test2', function() {
+               viewModel.updateOptions({value: '123'});
+               render._viewModel = viewModel;
+               render._selection = {
+                  selectionStart: 0,
+                  selectionEnd: 0
+               };
+               render._children.input.selectionStart = 0;
+               render._children.input.selectionEnd = 0;
+               Render._private.initSelection(render);
+
+               assert.equal(render._children.input.selectionStart, 0);
+               assert.equal(render._children.input.selectionEnd, 0);
             });
          });
       });
