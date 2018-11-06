@@ -30,7 +30,7 @@ define(
             render._children = {
                divinput: {
                   querySelector: function() {
-                     return {};
+                     return this;
                   }
                },
                input: {
@@ -86,8 +86,8 @@ define(
                render._options.content = 'content';
                Render._private.initSelection(render);
 
-               assert.equal(render._children.input.selectionStart, 3);
-               assert.equal(render._children.input.selectionEnd, 3);
+               assert.equal(render._children.divinput.selectionStart, 3);
+               assert.equal(render._children.divinput.selectionEnd, 3);
             });
             it('test2', function() {
                viewModel.updateOptions({value: '123'});
@@ -96,12 +96,12 @@ define(
                   selectionStart: 0,
                   selectionEnd: 0
                };
-               render._children.input.selectionStart = 0;
-               render._children.input.selectionEnd = 0;
+               render._children.divinput.selectionStart = 0;
+               render._children.divinput.selectionEnd = 0;
                Render._private.initSelection(render);
 
-               assert.equal(render._children.input.selectionStart, 0);
-               assert.equal(render._children.input.selectionEnd, 0);
+               assert.equal(render._children.divinput.selectionStart, 0);
+               assert.equal(render._children.divinput.selectionEnd, 0);
             });
          });
       });
