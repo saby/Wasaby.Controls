@@ -1671,11 +1671,14 @@ define('SBIS3.CONTROLS/DataGridView',
        },
 
       _updateEditInPlaceColumns: function(columns) {
+          var self = this;
+
          if (this._hasEditInPlace()) {
             // Если используется редактирование по месту, то необходимо:
             // 1. Поменять набор колонок в контроллере
             this._getEditInPlace().addCallback(function(editInPlaceController) {
                editInPlaceController.setColumns(columns);
+               editInPlaceController.setIgnoreFirstColumn(!!self._options.multiselect);
             });
             // 2. Уничтожить запущенное редактирование по месту, чтобы оно пересоздалось с актуальными колонками
             this._destroyEditInPlace();

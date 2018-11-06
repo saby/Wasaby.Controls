@@ -3,8 +3,9 @@ define([
    'WS.Data/Entity/Record',
    'Core/helpers/Function/runDelayed',
    'Core/Deferred',
+   'WS.Data/Source/Memory',
    'require'
-], function(FormController, Record, runDelayed, Deferred, require) {
+], function(FormController, Record, runDelayed, Deferred, MemorySource, require) {
    'use strict';
 
    describe('FormController-tests', function() {
@@ -14,7 +15,14 @@ define([
          var def = new Deferred();
          require(['Core/Control', moduleName], function(CoreControl, Component) {
             var element =  document.body.querySelectorAll('#formControllerComponent')[0];
-            testControl = CoreControl.createControl(Component, { element: element }, element);
+            var config = {
+               element: element,
+               dataSource: new MemorySource({
+                  idProperty: 'id',
+                  data: [{ id: 0 }]
+               })
+            };
+            testControl = CoreControl.createControl(Component, config, element);
             var baseAfterMount = testControl._afterMount;
 
             testControl._afterMount = function() {
@@ -92,7 +100,9 @@ define([
                      emailText: 'no@email.com'
                   };
                   control.__$resultForTests = answer;
-                  control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
                case 'read':
                   control.__$resultForTests = answer;
@@ -101,16 +111,22 @@ define([
                   });
                   break;
                case 'update':
-                  control._update().addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._update().addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
                case 'delete':
-                  control._delete().addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._delete().addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
             }
             if (typeof action === 'function') {
-               action(testControl);
+               action(control);
                def = new Deferred();
-               def.callback();
+               waiting(function() {
+                  def.callback();
+               });
             }
             return def;
          }
@@ -455,6 +471,45 @@ define([
                         selectButtonsCount: 3
                      }
                   },
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      }).timeout(6000);
+
+      it('FormController - check record inside', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           return true;
+                        };
+                     }
+                  }, {
+                     action: function(control) {
+                        var record = new Record();
+                        record.set({ testValue: 'testValue' });
+                        control._updateValuesByRecord(record);
+                     }
+                  }, {
+                     action: function(control) {
+                        assert.equal(control._children.Container._options.record.get('testValue'), 'testValue');
+                     }
+                  }
                ]);
                resultDef.addCallbacks(function() {
                   done();

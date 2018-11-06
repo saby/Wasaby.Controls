@@ -3677,7 +3677,8 @@ define('SBIS3.CONTROLS/ListView',
          _loadNextPage: function(type) {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  self = this;
+                  self = this,
+                  preparedFilter = this.getFilter();
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                var isScrollingUp = type ? type === 'up' : this._isScrollingUp();
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', isScrollingUp);
@@ -3694,13 +3695,13 @@ define('SBIS3.CONTROLS/ListView',
 
                /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
                if (!this._options.navigation || this._options.navigation.type != 'cursor') {
-                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+                  this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), offset, this._limit);
                }
 
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
+               this._loader = this._callQuery(preparedFilter, this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
