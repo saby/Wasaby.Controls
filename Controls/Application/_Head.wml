@@ -25,18 +25,10 @@
       </ws:else>
    </ws:if>
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
-   <ws:if data="{{_options.theme}}">
-      <!-- TODO Костыль, нужно подключать css самой темы, там могут быть подключены шрифты. Непонятно, какой путь до css -->
-      <ws:if data="{{isMultiThemes()}}">
-         <ws:for data="thInd, oneTheme in _options.theme">
-            <link rel="stylesheet" key="{{'theme_' + thInd}}"
-                  href="{{ _options.linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + oneTheme + '/' + oneTheme, 'css') }}"/>
-         </ws:for>
-      </ws:if>
-      <ws:else>
-         <link rel="stylesheet" href="{{ _options.linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + _options.theme + '/' + _options.theme, 'css') }}"/>
-      </ws:else>
-   </ws:if>
+
+   <link rel="stylesheet" key="defaultcss"
+         href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
+
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
          <ws:if data="{{isMultiThemes()}}">
