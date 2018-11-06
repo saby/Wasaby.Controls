@@ -6,6 +6,7 @@
    linkResolver="{{ linkResolver }}"
    resourceRoot="{{ resourceRoot }}"
    appRoot="{{ appRoot }}"
+   lite="{{lite}}"
    RUMEnabled="{{ RUMEnabled }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
@@ -13,8 +14,7 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
-   servicesPath="{{ servicesPath }}"
-   on:themeChanged="themeChangedHandler()">
+   servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">
@@ -39,6 +39,7 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
                                  on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"
                                  on:cancelPreviewer="_cancelPreviewerHandler()"
@@ -52,7 +53,7 @@
                                     <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
                                  </Controls.Application._Wait>
                               </ws:if>
-							  <ws:else>
+                              <ws:else>
                                  <Controls.Application._Wait content="">
                                  </Controls.Application._Wait>
                               </ws:else>
@@ -62,26 +63,22 @@
                                              draggingTemplateOptions="{{content.draggingTemplateOptions}}"
                                              draggingTemplate="{{content.draggingTemplate}}"/>
                               </ws:if>
+
                               <Controls.Popup.Manager.Container attr:id="popup"
                                                                 eventHandler="{{content._managerEventHandler}}"/>
-                                 <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
-                                    <ws:for data="i in _options.scripts">
-                                       <ws:partial template="{{ i }}"/>
-                                    </ws:for>
-                                 </ws:if>
+
+                              <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
+                                 <ws:for data="i in _options.scripts">
+                                    <ws:partial template="{{ i }}"/>
+                                 </ws:for>
+                              </ws:if>
                               <script key="bundles" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
-                              <ws:if data="{{lite}}">
-                                 <script key="config" type="text/javascript"
-                                         src="{{wsRoot}}ext/requirejs/config-lite.js"></script>
-                              </ws:if>
-                              <ws:else>
-                                 <script key="config" type="text/javascript"
+                              <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
-                              </ws:else>
 
 
                               <ws:if data="{{_options.builder && _options.builderCompatible}}">

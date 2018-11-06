@@ -9,6 +9,10 @@ define('Controls/TreeGrid', [
 
    /**
     * Hierarchical list with custom item template. Can load data from data source.
+    * List of examples:
+    * <ul>
+    *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    * </ul>
     *
     * @class Controls/TreeGrid
     * @extends Controls/Grid
@@ -39,6 +43,9 @@ define('Controls/TreeGrid', [
             keyProperty: types(String).required(),
             parentProperty: types(String).required()
          };
+      },
+      toggleExpanded: function(id) {
+         this._children.listControl.toggleExpanded(id);
       }
    });
    return Tree;

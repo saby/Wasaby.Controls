@@ -22,13 +22,16 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options, context, receivedState) {
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate);
             if (typeof window !== 'undefined') {
                var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
                this.simpleCss = csses.simpleCss;
                return;
             }
-            if (options.staticDomains) {
+            if (typeof options.staticDomains === 'string') {
+               this.staticDomainsStringified = options.staticDomains;
+            } else if (options.staticDomains instanceof Array) {
                this.staticDomainsStringified = JSON.stringify(options.staticDomains);
             } else {
                this.staticDomainsStringified = '[]';
@@ -45,11 +48,6 @@ define('Controls/Application/_Head',
                return res;
             });
             return innerDef;
-         },
-         _beforeUpdate: function(options) {
-            if (this._options.theme !== options.theme) {
-               this._notify('themeChanged');
-            }
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);

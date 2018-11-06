@@ -183,6 +183,7 @@ define(
             assert.equal(config.templateOptions.linkedContext,config.linkedContext);
             assert.equal(config.className, 'testClass ws-window ws-hidden');
             assert.isTrue(config.templateOptions.hideCross);
+            assert.isTrue(config.templateOptions.maximize);
             assert.isFalse(config.templateOptions.autoShow);
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);

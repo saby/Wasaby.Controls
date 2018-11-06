@@ -15,10 +15,6 @@ define('Controls/Popup/InfoBox',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
-       * @extends Core/Control
-       * @mixes Controls/interface/IInfoboxOptions
-       *
-       *
        *
        * @public
        * @author Красильников А.С.
@@ -65,11 +61,22 @@ define('Controls/Popup/InfoBox',
        * @default hover
        */
 
+      /**
+       * @name Controls/Popup/InfoBox#float
+       * @cfg {String} Whether the content should wrap around the cross closure.
+       */
+
+      /**
+       * @name Controls/Popup/InfoBox#style
+       * @cfg {String} Infobox display style.
+       */
+
+
       var _private = {
-         getCfg: function(self, event) {
+         getCfg: function(self) {
             return {
                opener: self,
-               target: event.currentTarget || event.target,
+               target: self._container,
                template: OpenerTemplate,
                position: self._options.position,
                eventHandlers: {
@@ -108,8 +115,8 @@ define('Controls/Popup/InfoBox',
             }
          },
 
-         _open: function(event) {
-            var config = _private.getCfg(this, event);
+         _open: function() {
+            var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
                this._notify('openInfoBox', [config], {bubbling: true});
@@ -143,24 +150,32 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            this._open();
             event.stopPropagation();
          },
 
-         _contentMouseenterHandler: function(event) {
+         _contentMouseenterHandler: function() {
             /**
              * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
              */
-            if (!this._context.isTouch.isTouch || this._options.trigger !== 'hover') {
-               var self = this;
-
-               clearTimeout(this._closeId);
-
-               this._openId = setTimeout(function() {
-                  self._open(event);
-                  self._forceUpdate();
-               }, self._options.showDelay);
+            if (!this._context.isTouch.isTouch) {
+               this._startOpeningPopup();
             }
+         },
+
+         _contentTouchStartHandler: function() {
+            this._startOpeningPopup();
+         },
+
+         _startOpeningPopup: function() {
+            var self = this;
+
+            clearTimeout(this._closeId);
+
+            this._openId = setTimeout(function() {
+               self._open();
+               self._forceUpdate();
+            }, self._options.showDelay);
          },
 
          _contentMouseleaveHandler: function() {

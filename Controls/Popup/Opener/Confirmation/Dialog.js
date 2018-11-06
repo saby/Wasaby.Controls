@@ -22,9 +22,8 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
        * @class Controls/Popup/Opener/Confirmation/Dialog
-       * @extends Core/Control
        * @control
-       * @public
+       * @private
        * @author Красильников А.С.
        */
 
