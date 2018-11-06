@@ -93,6 +93,7 @@ define('Controls/Explorer', [
     * @control
     * @public
     * @category List
+    * @author Сухоручкин А.С.
     */
 
    var Explorer = Control.extend({

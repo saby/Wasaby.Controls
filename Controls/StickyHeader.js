@@ -18,6 +18,7 @@ define('Controls/StickyHeader',
        * @public
        * @extends Core/Control
        * @class Controls/StickyHeader
+       * @author Михайловский Д.С.
        */
 
       /**
