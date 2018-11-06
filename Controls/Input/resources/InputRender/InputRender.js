@@ -100,15 +100,14 @@ define('Controls/Input/resources/InputRender/InputRender',
             return self._children.input.querySelector('.controls-InputRender__field');
          },
 
-         updateSelection: function(self) {
+         initSelection: function(self) {
             var input = _private.getInput(self);
-            var selection = _private.getSelection(self);
-
-            if (input.selectionStart !== selection.selectionStart) {
-               input.selectionStart = selection.selectionStart;
-            }
-            if (input.selectionEnd !== selection.selectionEnd) {
-               input.selectionEnd = selection.selectionEnd;
+            var selection = self._selection;
+            var end = self._options.viewModel.getDisplayValue().length;
+            
+            if (!selection) {
+               input.selectionStart = end;
+               input.selectionEnd = end;
             }
          }
       };
@@ -137,12 +136,12 @@ define('Controls/Input/resources/InputRender/InputRender',
              * https://jsfiddle.net/yc9f5oad/
              * Therefore, we will install it ourselves.
              */
-            _private.updateSelection(this);
+            _private.initSelection(this);
          },
 
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
-            _private.updateSelection(this);
+            _private.initSelection(this);
          },
 
          _mouseEnterHandler: function() {
