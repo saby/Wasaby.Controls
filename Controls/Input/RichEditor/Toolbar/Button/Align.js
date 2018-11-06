@@ -1,9 +1,8 @@
 define('Controls/Input/RichEditor/Toolbar/Button/Align', [
    'Core/Control',
    'wml!Controls/Input/RichEditor/Toolbar/Button/Align/Align',
-   'Controls/Input/RichEditor/Toolbar/Button/Align/data',
    'WS.Data/Source/Memory'
-], function(Control, template, alignPickData, Memory) {
+], function(Control, template, Memory) {
    /**
     * Component Toolbar/Button/Align
     * Button for picking text align for selected text
@@ -15,10 +14,24 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
 
    var ALIGN = ['alignright', 'alignjustify', 'aligncenter'];
 
+   var ALIGN_COMMAND_DATA = [{
+      id: 'JustifyLeft',
+      icon: 'icon-AlignmentLeft icon-medium'
+   }, {
+      id: 'JustifyRight',
+      icon: 'icon-AlignmentRight icon-medium'
+   }, {
+      id: 'JustifyCenter',
+      icon: 'icon-AlignmentCenter icon-medium'
+   }, {
+      id: 'JustifyFull',
+      icon: 'icon-AlignmentWidth icon-medium'
+   }];
+
    var _private = {
 
       /**
-       * Function return current align in selectedText
+       * Function return current align from formats list
        * @param formats
        * @returns {string}
        */
@@ -79,7 +92,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
       _beforeMount: function() {
          this._source = new Memory({
             idProperty: 'id',
-            data: alignPickData
+            data: ALIGN_COMMAND_DATA
          });
 
          this._selectedAlign = {
