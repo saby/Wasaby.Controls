@@ -242,14 +242,17 @@ define('SBIS3.CONTROLS/History/HistoryList',
             return result;
          },
 
-         removeAt: function(index) {
+         removeAt: function(index, doNotSave) {
             checkHistory(this, this._history);
             var history = this._history,
                 result;
 
-            if(index < history.getCount()) {
+            if (index < history.getCount()) {
                history.removeAt(index);
-               this.saveHistory();
+               
+               if (!doNotSave) {
+                  this.saveHistory();
+               }
             }
             return result;
          },

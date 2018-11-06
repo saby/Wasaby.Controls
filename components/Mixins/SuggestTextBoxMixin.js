@@ -422,7 +422,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
                         }
                     });
                     if (index !== -1) {
-                       historyController.removeAt(index);
+                       historyController.removeAt(index, true);
                     }
                    historyController.prepend(item.getRawData());
                 }
