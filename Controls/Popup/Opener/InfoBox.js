@@ -13,6 +13,7 @@ define('Controls/Popup/Opener/InfoBox',
        * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
+       * @mixes Controls/interface/IInfoboxOptions
        * @control
        * @category Popup
        * @author Красильников А.С.
@@ -101,6 +102,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
+               zIndex: cfg.zIndex,
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template

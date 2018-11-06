@@ -65,7 +65,8 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
-               itemsGroup: cfg.itemsGroup,
+               groupMethod: cfg.groupMethod,
+               groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
@@ -205,7 +206,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (this._options.emptyText) {
                var emptyItem = {};
                var itemData = {};
-               itemData['title'] = this._options.emptyText;
+               itemData[this._options.displayProperty] = this._options.emptyText;
                itemData[this._options.keyProperty] = null;
                var item = new Model({
                   rawData: itemData

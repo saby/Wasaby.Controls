@@ -90,6 +90,6 @@
       <Controls.Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
    </div>
    <div style="margin-top: 10px;">
-      <input type="text" placeholder="for focusing"/>
+      <Controls.Input.Text placeholder="for focusing"/>
    </div>
 </div>

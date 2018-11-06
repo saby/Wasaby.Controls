@@ -21,7 +21,6 @@ define('Controls/Popup/Opener/BaseOpener',
       Deferred,
       isNewEnvironment
    ) {
-
       var _private = {
          clearPopupIds: function(popupIds, opened, displayMode) {
             if (!opened && displayMode === 'single') {
@@ -36,7 +35,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
        * @control
-       * @public
+       * @private
        * @author Красильников А.С.
        */
       var Base = Control.extend({
@@ -48,7 +47,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _beforeUnmount: function() {
             if (this._options.closePopupBeforeUnmount) {
-               if (Base.isNewEnvironment()) {
+               if (this._useVDOM()) {
                   this._popupIds.forEach(function(popupId) {
                      ManagerController.remove(popupId);
                   });
@@ -71,6 +70,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
 
+            self._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                requirejs(['Controls/Popup/Compatible/Layer'], function(Layer) {
                   Layer.load().addCallback(function() {
@@ -93,16 +93,20 @@ define('Controls/Popup/Opener/BaseOpener',
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                if (!self._isPopupCreating()) {
+                  cfg._vdomOnOldPage = self._options._vdomOnOldPage;
                   Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                     if (Base.isNewEnvironment()) {
+                     if (self._useVDOM()) {
                         self._popupIds.push(result);
+                        self._toggleIndicator(false);
 
-                        //Call redraw to create emitter on scroll after popup opening
+                        // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
                      } else {
                         self._action = result;
                      }
                   });
+               } else {
+                  self._toggleIndicator(false);
                }
             });
          },
@@ -149,16 +153,22 @@ define('Controls/Popup/Opener/BaseOpener',
             return cfg;
          },
 
+         _toggleIndicator: function(visible) {
+            if (this._useVDOM()) {
+               this._children.LoadingIndicator.toggleIndicator(visible);
+            }
+         },
+
          /**
           * Закрыть всплывающую панель
           * @function Controls/Popup/Opener/Base#show
           */
          close: function() {
-            //TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
+            // TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
             if (this._getCurrentPopupId()) {
                ManagerController.remove(this._getCurrentPopupId());
 
-               //Ещё нужно удалить текущий id из массива всех id
+               // Ещё нужно удалить текущий id из массива всех id
                this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.closeDialog();
@@ -190,35 +200,32 @@ define('Controls/Popup/Opener/BaseOpener',
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
-            if (Base.isNewEnvironment()) {
+            if (this._useVDOM()) {
                return !!ManagerController.find(this._getCurrentPopupId());
             }
             if (this._action) {
                return !!this._action.getDialog();
             }
             return null;
+         },
+         _useVDOM: function() {
+            return Base.isNewEnvironment() || this._options._vdomOnOldPage;
          }
       });
       Base.showDialog = function(rootTpl, cfg, controller, popupId, opener) {
          var def = new Deferred();
 
-         if (Base.isNewEnvironment()) {
-            if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-               if (popupId) {
-                  popupId = ManagerController.update(popupId, cfg);
-               } else {
-                  popupId = ManagerController.show(cfg, controller);
-               }
-               def.callback(popupId);
+         if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
+            if (!Base.isNewEnvironment()) {
+               Base.getManager().addCallback(function() {
+                  Base._openPopup(popupId, cfg, controller, def);
+               });
+            } else if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+               Base._openPopup(popupId, cfg, controller, def);
             } else {
                requirejs(['Controls/Popup/Compatible/BaseOpener'], function(CompatibleOpener) {
                   CompatibleOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-                  if (popupId) {
-                     popupId = ManagerController.update(popupId, cfg);
-                  } else {
-                     popupId = ManagerController.show(cfg, controller);
-                  }
-                  def.callback(popupId);
+                  Base._openPopup(popupId, cfg, controller, def);
                });
             }
          } else {
@@ -261,9 +268,9 @@ define('Controls/Popup/Opener/BaseOpener',
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
                if (compoundArea && !isFormController) {
-                  //Перерисовываем открытый шаблон по новым опциям
+                  // Перерисовываем открытый шаблон по новым опциям
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
-                  compoundArea.setInnerComponentOptions(newCfg.componentOptions.innerComponentOptions);
+                  compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                   dialog.setTarget && dialog.setTarget($(newCfg.target));
                } else {
                   action.closeDialog();
@@ -276,10 +283,20 @@ define('Controls/Popup/Opener/BaseOpener',
          return def;
       };
 
+      Base._openPopup = function(popupId, cfg, controller, def) {
+         if (popupId) {
+            popupId = ManagerController.update(popupId, cfg);
+         } else {
+            popupId = ManagerController.show(cfg, controller);
+         }
+         def.callback(popupId);
+      };
+
       Base.getDefaultOptions = function() {
          return {
             closePopupBeforeUnmount: true,
-            displayMode: 'single'
+            displayMode: 'single',
+            _vdomOnOldPage: false // Всегда открываем вдомную панель
          };
       };
 
@@ -293,6 +310,35 @@ define('Controls/Popup/Opener/BaseOpener',
       // TODO Compatible
       Base.isNewEnvironment = function() {
          return isNewEnvironment();
+      };
+
+      // TODO Compatible
+      Base.getManager = function() {
+         var managerContainer = document.body.querySelector('.controls-PopupContainer');
+         var deferred = new Deferred();
+         if (!managerContainer) {
+            managerContainer = document.createElement('div');
+            managerContainer.classList.add('controls-PopupContainer');
+            document.body.insertBefore(managerContainer, document.body.firstChild);
+
+            require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
+               var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
+
+               // mount не синхронный, дожидаемся когда менеджер добавится в дом
+               if (!wrapper._mounted) {
+                  var intervalId = setInterval(function() {
+                     if (wrapper._mounted) {
+                        clearInterval(intervalId);
+                        deferred.callback();
+                     }
+                  }, 20);
+               } else {
+                  deferred.callback();
+               }
+            });
+            return deferred;
+         }
+         return deferred.callback();
       };
 
       Base._private = _private;

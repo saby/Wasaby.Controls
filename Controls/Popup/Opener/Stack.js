@@ -12,8 +12,7 @@ define('Controls/Popup/Opener/Stack',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @extends Controls/Popup/Opener/BaseOpener
-       * @mixes Controls/interface/IDialogOptions
+       * @mixes Controls/interface/IStackOptions
        */
 
       var _private = {
@@ -30,8 +29,9 @@ define('Controls/Popup/Opener/Stack',
 
          /**
           * Open stack popup.
-          * @param {Object} popupOptions Stack popup options.
+          * @function Controls/Popup/Opener/Stack#open
           * @returns {Undefined}
+          * @param {Object} {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions} Stack popup options.
           * @example
           * Open stack with specified configuration.
           * wml
@@ -88,7 +88,7 @@ define('Controls/Popup/Opener/Stack',
 
 /**
  * @name Controls/Popup/Opener/Stack#close
- * Close Stack Popup.
+ * @description Close Stack Popup.
  * @returns {Undefined}
  * @example
  * wml
@@ -125,5 +125,5 @@ define('Controls/Popup/Opener/Stack',
 
 /**
  * @name Controls/Popup/Opener/Stack#isOpened
- * Popup opened status.
+ * @description Popup opened status.
  */

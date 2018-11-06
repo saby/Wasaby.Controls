@@ -9,6 +9,7 @@
    tooltip="{{_options.tooltip}}"
    on:focusin="_focusinHandler()"
    on:valueChanged="_notifyHandler('valueChanged')"
+   on:inputCompleted="_notifyHandler('inputCompleted')"
 >
    <ws:content>
       <ws:partial

@@ -260,7 +260,8 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          queryRecordSet.setMetaData({
             results: new Model({
                rawData: {
-                  tabsSelectedKey: 'testId'
+                  tabsSelectedKey: 'testId',
+                  switchedStr: 'testStr'
                }
             })
          });
@@ -269,12 +270,14 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
    
          assert.equal(self._searchResult.data, queryRecordSet);
          assert.equal(self._tabsSelectedKey, 'testId');
+         assert.equal(self._misspellingCaption, 'testStr');
    
          var queryRecordSetEmpty = new RecordSet();
          queryRecordSetEmpty.setMetaData({
             results: new Model({
                rawData: {
-                  tabsSelectedKey: 'testId2'
+                  tabsSelectedKey: 'testId2',
+                  switchedStr: 'testStr2'
                }
             })
          });
@@ -283,6 +286,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.notEqual(self._searchResult.data, queryRecordSet);
          assert.equal(self._searchResult.data, queryRecordSetEmpty);
          assert.equal(self._tabsSelectedKey, 'testId2');
+         assert.equal(self._misspellingCaption, 'testStr2');
       });
    
       it('Suggest::_tabsSelectedKeyChanged', function() {
@@ -321,7 +325,48 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
       });
+   
+      it('Suggest::_updateSuggestState', function() {
+         var compObj = getComponentObject();
+         compObj._options.fitler = {};
+         compObj._options.searchParam = 'testSearchParam';
+         
+         var suggestComponent = new Suggest();
+         suggestComponent.saveOptions(compObj._options);
+         suggestComponent._searchValue = 'te';
+         
+         compObj._options.autoDropDown = true;
+         Suggest._private.updateSuggestState(suggestComponent);
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te'});
+   
+         compObj._options.autoDropDown = false;
+         suggestComponent._filter = {};
+         Suggest._private.updateSuggestState(suggestComponent);
+         assert.deepEqual(suggestComponent._filter, {});
+      });
+   
+      it('Suggest::_missSpellClick', function() {
+         var suggestComponent = new Suggest();
+         var value;
+   
+         suggestComponent._notify = function(event, val) {
+            if (event === 'valueChanged') {
+               value = val[0];
+            }
+         };
+         suggestComponent._misspellingCaption = 'test';
+         suggestComponent._missSpellClick();
+         
+         assert.equal(value, 'test');
+         assert.equal(suggestComponent._misspellingCaption, '');
+      });
+   
+      it('Suggest::_private.setMissSpellingCaption', function() {
+         var self = {};
+         
+         Suggest._private.setMissSpellingCaption(self, 'test');
+         assert.equal(self._misspellingCaption, 'test');
+      });
       
    });
-   
 });

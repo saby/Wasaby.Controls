@@ -28,6 +28,11 @@ define(
                viewModel: viewModel
             };
             render._children = {
+               divinput: {
+                  querySelector: function() {
+                     return {};
+                  }
+               },
                input: {
                   querySelector: function() {
                      return {};

@@ -46,6 +46,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          keyProperty: 'id',
          nodeProperty: '@parent',
          parentProperty: 'parent',
+         typeShadow: 'suggestionsContainer',
          itemTemplateProperty: 'myTemplate'
       };
    };
@@ -114,17 +115,26 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   horizontalAlign: {
                      offset: 0,
                      side: 'right'
+                  },
+                  verticalAlign: {
+                     offset: 0,
+                     side: 'top'
                   }
                }
             };
 
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig, context);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'right'});
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'right' });
+            assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-top controls-DropdownList__popup-shadow-suggestionsContainer');
+            assert.equal(dropDownList._headerClass, 'controls-DropdownList__head-right');
 
             context.stickyCfg.horizontalAlign.side = 'left';
+            context.stickyCfg.verticalAlign.side = 'bottom';
             dropDownList._beforeUpdate(dropDownConfig, context);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, {side: 'left'});
+            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
+            assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
+            assert.equal(dropDownList._headerClass, 'controls-DropdownList__head-left');
 
          });
 
@@ -156,19 +166,21 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                   itemTemplate: dropDownList._options.itemTemplate,
                   itemTemplateProperty: dropDownList._options.itemTemplateProperty,
                   keyProperty: dropDownList._options.keyProperty,
+                  displayProperty: dropDownList._options.displayProperty,
                   parentProperty: dropDownList._options.parentProperty,
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
                   rootKey: items.at(0).get(dropDownList._options.keyProperty),
                   showHeader: false,
-                  defaultItemTemplate: dropDownList._options.defaultItemTemplate
+                  defaultItemTemplate: dropDownList._options.defaultItemTemplate,
+                  dropdownClassName: dropDownList._options.dropdownClassName
                },
                corner: dropDownList._popupOptions.corner,
                horizontalAlign: dropDownList._popupOptions.horizontalAlign,
                target: "MyTarget"
             };
 
-            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList, { target: "MyTarget"}, items.at(0));
+            var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
 
 

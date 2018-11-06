@@ -1,11 +1,24 @@
 var root = process.cwd(),
+   rootFixed = root.replace('\\', '/'),
    baseRequire = require,
    fs = require('fs'),
    path = require('path');
 
-var reqfile = fs.readFileSync(path.join(root, 'node_modules', 'sbis3-ws', 'ws', 'ext', 'requirejs', 'r.js'), {'encoding': 'utf-8'});
-eval(reqfile);
-require = baseRequire;
+var global = (function() {
+   return this || (0, eval)('this');
+})();
+
+var requirejs = require(path.join(root, 'node_modules', 'sbis3-ws', 'ws', 'ext', 'requirejs', 'r.js'));
+
+global.requirejs = requirejs;
+
+// Configuring requirejs
+var createConfig = require(path.join(root, 'node_modules', 'sbis3-ws', 'ws', 'ext', 'requirejs', 'config.js'));
+var config = createConfig(root + '\\application\\',
+   root + '\\application\\WS.Core\\',
+   root + '\\application\\',
+   { lite: true });
+requirejs.config(config);
 
 /**
  * Look ma, it cp -R.
@@ -40,63 +53,6 @@ var express = require('express'),
    serveStatic = require('serve-static'),
    app = express();
 
-
-var global = (function() {
-   return this || (0, eval)('this');
-})();
-
-function createConfig(baseUrl, wsPath, resourcesPath) {
-   return {
-         baseUrl: baseUrl,
-         paths: {
-            'tslib': path.join(wsPath, 'lib/Ext/tslib'),
-            'Resources': resourcesPath || '.',
-            'css': path.join(wsPath, 'ext/requirejs/plugins/css'),
-            'native-css': path.join(wsPath, 'ext/requirejs/plugins/native-css'),
-            'normalize': path.join(wsPath, 'ext/requirejs/plugins/normalize'),
-            'html': path.join(wsPath, 'ext/requirejs/plugins/html'),
-            'tmpl': path.join(wsPath, 'ext/requirejs/plugins/tmpl'),
-            'wml': path.join(wsPath, 'ext/requirejs/plugins/wml'),
-            'text': path.join(wsPath, 'ext/requirejs/plugins/text'),
-            'is': path.join(wsPath, 'ext/requirejs/plugins/is'),
-            'is-api': path.join(wsPath, 'ext/requirejs/plugins/is-api'),
-            'i18n': path.join(wsPath, 'ext/requirejs/plugins/i18n'),
-            'json': path.join(wsPath, 'ext/requirejs/plugins/json'),
-            'order': path.join(wsPath, 'ext/requirejs/plugins/order'),
-            'template': path.join(wsPath, 'ext/requirejs/plugins/template'),
-            'cdn': path.join(wsPath, 'ext/requirejs/plugins/cdn'),
-            'datasource': path.join(wsPath, 'ext/requirejs/plugins/datasource'),
-            'xml': path.join(wsPath, 'ext/requirejs/plugins/xml'),
-            'preload': path.join(wsPath, 'ext/requirejs/plugins/preload'),
-            'browser': path.join(wsPath, 'ext/requirejs/plugins/browser'),
-            'optional': path.join(wsPath, 'ext/requirejs/plugins/optional'),
-            'remote': path.join(wsPath, 'ext/requirejs/plugins/remote'),
-
-            'Core/i18n': path.join(wsPath, 'core', 'i18n'),
-            'Core/Util': path.join(resourcesPath, 'Core/Util'),
-            'Core/_Util': path.join(resourcesPath, 'Core/_Util'),
-            'Core/Debug': path.join(resourcesPath, 'Core/Debug'),
-            'Core/_Debug': path.join(resourcesPath, 'Core/_Debug'),
-            'Core/Entity': path.join(resourcesPath, 'Core/Entity'),
-            'Core/_Entity': path.join(resourcesPath, 'Core/_Entity'),
-            'Core/ApplyContents': path.join(resourcesPath, 'Core/ApplyContents')
-         }
-      };
-
-}
-
-function setupConfig(require) {
-   global.wsConfig = {wsRoot: root+'\\application\\WS.Core\\',
-      resourceRoot: root+'\\application\\'};
-
-   require.config(createConfig(
-      root+ '/application/',
-      global.wsConfig.wsRoot,
-      global.wsConfig.resourceRoot
-   ));
-}
-
-
 var resourcesPath = path.join('', 'application');
 
 app.use(bodyParser.json());
@@ -108,14 +64,10 @@ var server = app.listen(port);
 
 console.log('app available on port ' + port);
 
-// Кошерный редирект на CDN, который РАБОТАЕТ
-app.get('/cdn*', function(req, res) {
-   if (req.url.indexOf('require-min.js')>-1){
-      res.redirect('/WS.Core/ext/requirejs/require.js');
-   } else {
-      res.redirect(req.url);
-   }
-});
+// // Кошерный редирект на CDN, который РАБОТАЕТ
+// app.get('/cdn*', function(req, res) {
+//    res.redirect('http://wi.sbis.ru' + req.url);
+// });
 
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
 var simpleProxy = function(proxyParams, req, res) {
@@ -250,7 +202,6 @@ var PROXY_PARAMS = {
 console.log('path rjs');
 
 global.require = global.requirejs = require = requirejs;
-setupConfig(requirejs);
 
 console.log('start init');
 require(['Core/core-init'], function(){
@@ -281,7 +232,7 @@ app.get('/:moduleName/*', function(req, res){
 
    try {
       require(cmp);
-   }catch(e){
+   } catch(e){
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.end('');
       return;
@@ -290,7 +241,8 @@ app.get('/:moduleName/*', function(req, res){
       lite: true,
       wsRoot: '/WS.Core/',
       resourceRoot: '/',
-      application: cmp
+      application: cmp,
+      appRoot: '/'
    });
 
    if (html.addCallback) {
@@ -314,12 +266,12 @@ app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, Object.as
    }
 })));
 
-   app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
-      host: 'stomp-test-online.sbis.ru',
-      fixPath: function(reqPath, cookies) {
-         return '/stomp/s-' + cookies['sid'] + '/info';
-      }
-   }));
+app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
+   host: 'stomp-test-online.sbis.ru',
+   fixPath: function(reqPath, cookies) {
+      return '/stomp/s-' + cookies['sid'] + '/info';
+   }
+}));
 
 
 

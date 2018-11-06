@@ -40,15 +40,20 @@ define('Controls/Container/Async',
                      self.optionsForComponent.resolvedTemplate = tpl;
                      def.callback();
                   }, function() {
-                     def.errback('Error loading ' + options.templateName);
+                     self.error = 'Error loading ' + options.templateName;
+                     IoC.resolve('ILogger').error('Async render error', self.error);
+                     def.callback();
                   });
                   return def;
                }
                self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
                return;
             }
-            
-            /*It can work without Controls.Application */
+
+            /*
+             * It can work without Controls.Application
+             * */
+
             if (context.headData && context.headData.pushDepComponent) {
                if (options.templateName) {
                   context.headData.pushDepComponent(options.templateName, true);
@@ -57,7 +62,6 @@ define('Controls/Container/Async',
                }
             }
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
-
          },
 
          _beforeUpdate: function(options) {
@@ -67,6 +71,7 @@ define('Controls/Container/Async',
                require([options.templateName], function(tpl) {
                   self.optionsForComponent = options.templateOptions || {};
                   self.optionsForComponent.resolvedTemplate = tpl;
+                  self._forceUpdate();
                   def.callback();
                }, function() {
                   def.errback('Error loading ' + options.templateName);
@@ -84,5 +89,4 @@ define('Controls/Container/Async',
          };
       };
       return Async;
-   }
-);
+   });

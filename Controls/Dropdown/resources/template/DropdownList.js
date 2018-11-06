@@ -15,7 +15,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var _private = {
 
          setPopupOptions: function(self, horizontalAlign) {
-            var align = horizontalAlign.side || 'right';
+            var align = horizontalAlign || 'right';
             self._popupOptions = {
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
@@ -32,22 +32,33 @@ define('Controls/Dropdown/resources/template/DropdownList',
             };
          },
 
-         getSubMenuOptions: function(instance, event, item) {
+         getDropdownClass: function(verticalAlign, typeShadow) {
+            return 'controls-DropdownList__popup-' + verticalAlign.side +
+               ' controls-DropdownList__popup-shadow-' + typeShadow;
+         },
+
+         getDropdownHeaderClass: function(horizontalAlign) {
+            return 'controls-DropdownList__head-' + horizontalAlign.side;
+         },
+
+         getSubMenuOptions: function(options, popupOptions, event, item) {
             return {
                templateOptions: {
-                  items: instance._options.items,
-                  itemTemplate: instance._options.itemTemplate,
-                  itemTemplateProperty: instance._options.itemTemplateProperty,
-                  keyProperty: instance._options.keyProperty,
-                  parentProperty: instance._options.parentProperty,
-                  nodeProperty: instance._options.nodeProperty,
-                  selectedKeys: instance._options.selectedKeys,
-                  rootKey: item.get(instance._options.keyProperty),
+                  items: options.items,
+                  itemTemplate: options.itemTemplate,
+                  itemTemplateProperty: options.itemTemplateProperty,
+                  keyProperty: options.keyProperty,
+                  displayProperty: options.displayProperty,
+                  parentProperty: options.parentProperty,
+                  nodeProperty: options.nodeProperty,
+                  selectedKeys: options.selectedKeys,
+                  rootKey: item.get(options.keyProperty),
                   showHeader: false,
-                  defaultItemTemplate: instance._options.defaultItemTemplate
+                  dropdownClassName: options.dropdownClassName,
+                  defaultItemTemplate: options.defaultItemTemplate
                },
-               corner: instance._popupOptions.corner,
-               horizontalAlign: instance._popupOptions.horizontalAlign,
+               corner: popupOptions.corner,
+               horizontalAlign: popupOptions.horizontalAlign,
                target: event.target
             };
          }
@@ -57,7 +68,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
       /**
        *
        * Действие открытия прилипающего окна
-       * @class Controls/Popup/Opener/Menu
        * @control
        * @public
        * @category Popup
@@ -93,8 +103,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (config.defaultItemTemplate) {
                this._defaultItemTemplate = config.defaultItemTemplate;
             }
-            if (config.itemsGroup && config.itemsGroup.template) {
-               this._groupTemplate = config.itemsGroup.template;
+            if (config.groupTemplate) {
+               this._groupTemplate = config.groupTemplate;
             }
 
             if (config.showHeader) {
@@ -129,14 +139,16 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
+                  displayProperty: newOptions.displayProperty,
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
-                  itemsGroup: newOptions.itemsGroup
+                  groupTemplate: newOptions.groupTemplate,
+                  groupMethod: newOptions.groupMethod
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
-               _private.setPopupOptions(this, newOptions);
+               _private.setPopupOptions(this);
             }
          },
 
@@ -162,19 +174,15 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
             if (context && context.stickyCfg.horizontalAlign &&
                (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
-               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign);
+               this._dropdownClass = _private.getDropdownClass(context.stickyCfg.verticalAlign, newOptions.typeShadow);
+               this._headerClass = _private.getDropdownHeaderClass(context.stickyCfg.horizontalAlign);
+               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign.side);
             }
          },
 
-
-
-
-
-
-
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
-               var config = _private.getSubMenuOptions(this, event, item);
+               var config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             } else if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();

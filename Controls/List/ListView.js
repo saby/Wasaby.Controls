@@ -3,6 +3,7 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
+   'Core/helpers/Function/debounce',
    'wml!Controls/List/ListView/ListView',
    'wml!Controls/List/ItemTemplate',
    'wml!Controls/List/GroupTemplate',
@@ -10,12 +11,16 @@ define('Controls/List/ListView', [
    'wml!Controls/List/resources/ItemOutput',
    'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
+   cDebounce,
    ListViewTpl,
    defaultItemTemplate,
    GroupTemplate,
    ItemOutputWrapper
 ) {
    'use strict';
+
+   var
+      DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
    var _private = {
       onListChange: function(self) {
@@ -30,7 +35,14 @@ define('Controls/List/ListView', [
             //command to scroll watcher
             self._notify('controlResize', [], {bubbling: true});
          }
-      }
+      },
+
+      setHoveredItem: cDebounce(function(self, item) {
+         if (item !== self._hoveredItem) {
+            self._hoveredItem = item;
+            self._notify('hoveredItemChanged', [item]);
+         }
+      }, DEBOUNCE_HOVERED_ITEM_CHANGED)
    };
 
    var ListView = BaseControl.extend(
@@ -38,6 +50,7 @@ define('Controls/List/ListView', [
          _listModel: null,
          _lockForUpdate: false,
          _queue: null,
+         _hoveredItem: null,
          _template: ListViewTpl,
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: defaultItemTemplate,
@@ -58,8 +71,8 @@ define('Controls/List/ListView', [
          },
 
          _beforeMount: function(newOptions) {
-            if (newOptions.itemsGroup && newOptions.itemsGroup.template) {
-               this._groupTemplate = newOptions.itemsGroup.template;
+            if (newOptions.groupTemplate) {
+               this._groupTemplate = newOptions.groupTemplate;
             }
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
@@ -125,13 +138,18 @@ define('Controls/List/ListView', [
 
          _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
+            _private.setHoveredItem(this, itemData.item);
          },
 
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
          //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
-         _onItemMouseLeave: function() {},
+         _onItemMouseLeave: function() {
+            _private.setHoveredItem(this, null);
+         },
 
-         _onItemMouseMove: function() {},
+         _onItemMouseMove: function(event, itemData) {
+            this._notify('itemMouseMove', [itemData, event]);
+         },
 
          _onItemWheel: function() {},
 

@@ -7,9 +7,10 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
-         staticDomains: '{{ _options.staticDomains }}',
+         staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
-         compatible: {{ _options.compat }}
+         compatible: {{ _options.compat }},
+         lite: {{ _options.lite || false }}
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>

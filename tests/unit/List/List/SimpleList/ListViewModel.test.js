@@ -2,50 +2,33 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListViewModel',
-   'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Collection/RecordSet'
-], function(ListViewModel, ItemsUtil, RecordSet){
-   describe('Controls.List.ListControl.ListViewModel', function () {
-      var data, data2, display;
+   'Controls/List/ListViewModel'
+], function(
+   ListViewModel
+) {
+   describe('Controls.List.ListControl.ListViewModel', function() {
+      var data;
       beforeEach(function() {
          data = [
             {
-               id : 1,
-               title : 'Первый',
+               id: 1,
+               title: 'Первый',
                type: 1
             },
             {
-               id : 2,
-               title : 'Второй',
+               id: 2,
+               title: 'Второй',
                type: 2
             },
             {
-               id : 3,
-               title : 'Третий',
-               type: 2
-            }
-         ]; data2 = [
-            {
-               id : 4,
-               title : 'Четвертый',
-               type: 1
-            },
-            {
-               id : 5,
-               title : 'Пятый',
-               type: 2
-            },
-            {
-               id : 6,
-               title : 'Шестой',
+               id: 3,
+               title: 'Третий',
                type: 2
             }
          ];
-
       });
 
-      it('getCurrent', function () {
+      it('getCurrent', function() {
          var cfg = {
             items: data,
             keyProperty: 'id',
@@ -63,11 +46,10 @@ define([
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
          assert.isTrue(cur.isSelected, 'Incorrect field set on getCurrent()');
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
-
       });
 
 
-      it('Selection', function () {
+      it('Selection', function() {
          var cfg = {
             items: data,
             keyProperty: 'id',
@@ -92,7 +74,7 @@ define([
       it('setDragTargetItem and setDragItems', function() {
          var
             dragItems = [1],
-            target = {index: 1, id: 2},
+            target = { index: 1, key: 2 },
             notifyCont = 0,
             lvm = new ListViewModel({
                items: data,
@@ -111,10 +93,10 @@ define([
 
          assert.equal(lvm._dragTargetItem, null);
          lvm.setDragTargetItem(target);
-         assert.deepEqual(lvm._dragTargetPosition, {index: 1, position: 'after'});
+         assert.deepEqual(lvm._dragTargetPosition, { index: 1, position: 'after' });
          assert.equal(notifyCont, 2);
          lvm.setDragTargetItem(target);
-         assert.equal(notifyCont, 2);
+         assert.equal(notifyCont, 3);
       });
 
       it('_updateSelection', function() {
@@ -130,6 +112,32 @@ define([
          iv._updateSelection([2, 3]);
          assert.deepEqual(iv._selectedKeys, [2, 3]);
       });
-   });
 
+      it('setSwipeItem', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1]
+            },
+            itemData = {
+               test: 'test'
+            },
+            nextVersionCalled = false,
+            onListChangeFired = false;
+
+         var lv = new ListViewModel(cfg);
+         lv._nextVersion = function() {
+            nextVersionCalled = true;
+         };
+         lv.subscribe('onListChange', function() {
+            onListChangeFired = true;
+         });
+         lv.setSwipeItem(itemData);
+         assert.equal(lv._swipeItem, itemData);
+         assert.isTrue(onListChangeFired, 'setSwipeItem should fire "onListChange" event');
+         assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
+      });
+   });
 });

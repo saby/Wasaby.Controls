@@ -38,11 +38,9 @@ define('Controls/Application/Core',
             } catch (e) {
             }
 
-            // TODO Нужно для совместимости. Убрать после синхронизации с WS.
-            // cfg.lite = true;
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, cfg.resourceRoot, cfg.lite);
+            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, true);
          },
          _getChildContext: function() {
             return {

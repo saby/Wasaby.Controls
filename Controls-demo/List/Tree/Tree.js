@@ -14,7 +14,7 @@ define('Controls-demo/List/Tree/Tree', [
       ModuleClass = BaseControl.extend({
          _template: template,
          _actionClicked: '',
-         _itemsGroup: null,
+         _groupMethod: null,
          _itemActions: null,
          _viewSource: null,
          gridData: null,
@@ -85,11 +85,8 @@ define('Controls-demo/List/Tree/Tree', [
                   }
                }
             ];
-            this._itemsGroup = {
-               method: function(item, index, displayItem) {
-                  return item.get('Группа');
-               },
-               template: ''
+            this._groupMethod = function(item, index, displayItem) {
+               return item.get('Группа');
             };
          },
          _showAction: function(action, item) {

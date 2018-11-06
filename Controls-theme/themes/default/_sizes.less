@@ -314,8 +314,8 @@
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
 @margin-left_MenuButton_button:       -1px;
-@margin-top_MenuButton_link_small:         -7px;
-@margin-left_MenuButton_link_small:  -13px;
+@margin-top_MenuButton_link_small:        -8px;
+@margin-left_MenuButton_link_small:       -13px;
 @margin-top_MenuButton_link_medium:   @margin-top_MenuButton_button;
 @margin-left_MenuButton_link_medium:  -13px;
 @margin-top_MenuButton_link_duplicate_medium:   -7px;
@@ -391,6 +391,7 @@
 //VDOM Operations.Button
 @height_OperationsButton:                             24px;
 @width_OperationsButton:                              24px;
+@width_OperationsPanelButton-separator:               1px;
 @font-size_OperationsButton__icon:                    18px;
 
    //VDOM Switch
@@ -485,9 +486,10 @@
 //Tabs/Buttons
 @height_Tabs-separator:                  12px;
 @border-width_Tabs:                      @default-border-width;
+@padding_Tabs-item_default:              12px;
 @line-height_Tabs-baselineFix:           32px;
 @height_Tabs:                            31px;
-@padding_Tabs-item:                      0 12px;
+@padding_Tabs-item:                      0 @padding_Tabs-item_default + @border-width_Tabs;
 @font-size_Tabs-item:                    14px;
 @font-size_Tabs-item_selected:           15px;
 @max-width_Tabs_item:                    630px;
@@ -519,6 +521,8 @@
 @font-family_FilterButton-icon:                    @default-icon-medium-font;
 @font-size_FilterButton-text:                      @default-text-size;
 @icon-size_FilterButton-text-icon:                 @icon-size_default;
+@margin-top_FilterButton_popup:                    -11px;
+@margin-left_FilterButton_popup:                   9px;
 
 //Lookup
 @spacing_Lookup-item:                    4px;
@@ -644,10 +648,10 @@
 @spacing_FilterPanel-header-topTemplate:                       0 16px;
 @height_FilterPanel-header:                                    44px;
 @spacing-bottom_FilterPanel:                                   12px;
-@padding_FilterPanel-history-default:                          6px 12px 12px 12px;
-@padding_FilterPanel-history-column:                           6px 12px 0 12px;
+@padding_FilterPanel-history-vertical:                          6px 12px 12px 12px;
+@padding_FilterPanel-history-horizontal:                           6px 12px 0 12px;
 @margin_FilterPanel-history:                                   12px;
-@border-width_FilterPanel-column:                              1px;
+@border-width_FilterPanel-horizontal:                              1px;
 @spacing_FilterPanel-items:                                    22px;
 //FilterLink
 @height_FilterLink:                                            24px;
@@ -707,15 +711,20 @@
 @width-TreeViewGrid-levelPadding_size_l: 38px;
 @width-TreeViewGrid-levelPadding_size_xl: 46px;
 @width-TreeViewGrid-levelPadding_size_default: @width-TreeViewGrid-levelPadding_size_s;
-@height_TreeGridView-nodeExpander: 16px;
-@width_TreeGridView-nodeExpander: 16px;
+@height_TreeGridView-expander: 16px;
+@width_TreeGridView-expander: 16px;
 @padding_TreeGridView-nodeFooterHasMore: 6px 0 3px 0;
-@padding_TreeGridView-nodeExpander_size_s: 4px;
-@padding_TreeGridView-nodeExpander_size_m: 4px 10px 4px 4px;;
-@padding_TreeGridView-nodeExpander_size_l: 4px 14px 4px 8px;
-@padding_TreeGridView-nodeExpander_size_xl: 4px 18px 4px 12px;
-@padding_TreeGridView-nodeExpander_size_default: @padding_TreeGridView-nodeExpander_size_s;
-@font-size_TreeGridView-nodeExpander: 16px;
+@padding_TreeGridView-expander_size_s: 4px;
+@padding_TreeGridView-expander_size_m: 4px 10px 4px 4px;;
+@padding_TreeGridView-expander_size_l: 4px 14px 4px 8px;
+@padding_TreeGridView-expander_size_xl: 4px 18px 4px 12px;
+@padding_TreeGridView-expander_size_default: @padding_TreeGridView-expander_size_s;
+@font-size_TreeGridView-expander: 16px;
+@icon_TreeGridView-expander_node_collapsed: '\e96e';
+@icon_TreeGridView-expander_node_expanded: '\e96d';
+@icon_TreeGridView-expander_hiddenNode_collapsed: '\e9c2';
+@icon_TreeGridView-expander_hiddenNode_expanded: '\e9c1';
+@border-width_TreeGridView-item_dragging: 2px;
 //Browser
 @height_Browser-header:                   44px;
 @width_Browser-search:                    300px;

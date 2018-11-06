@@ -144,14 +144,11 @@ define(
                let newConfig = {
                   keyProperty: 'id',
                };
-               newConfig.itemsGroup = {
-                  method: function (item) {
-                     if (item.get('group') === 'hidden' || !item.get('group')) {
-                        return ControlsConstants.view.hiddenGroup;
-                     }
-                     return item.get('group');
-                  },
-                  template: '',
+               newConfig.groupMethod = function (item) {
+                  if (item.get('group') === 'hidden' || !item.get('group')) {
+                     return ControlsConstants.view.hiddenGroup;
+                  }
+                  return item.get('group');
                };
                newConfig.items = new RecordSet({
                   idProperty: 'id',

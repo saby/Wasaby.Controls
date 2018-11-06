@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
+define('Controls/Popup/Opener/Sticky/StickyStrategy', ['SBIS3.CONTROLS/Utils/TouchKeyboardHelper'], function(TouchKeyboardHelper) {
    var INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
@@ -123,7 +123,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function() {
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight()
          };
       }
    };

@@ -183,6 +183,7 @@ define(
             assert.equal(config.templateOptions.linkedContext,config.linkedContext);
             assert.equal(config.className, 'testClass ws-window ws-hidden');
             assert.isTrue(config.templateOptions.hideCross);
+            assert.isTrue(config.templateOptions.maximize);
             assert.isFalse(config.templateOptions.autoShow);
             assert.isFalse(config.templateOptions._isVisible);
             assert.isTrue(config.templateOptions.enabled);
@@ -227,8 +228,8 @@ define(
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.catchFocus, true);
-            assert.equal(newConfig.componentOptions.innerComponentOptions, config.templateOptions);
-            assert.equal(newConfig.componentOptions.innerComponentOptions._template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
+            assert.equal(newConfig.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(newConfig.componentOptions.template,'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea');
             assert.equal(newConfig.template, 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea');
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);

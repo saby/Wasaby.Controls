@@ -73,6 +73,7 @@ function(cMerge,
 
          if (cfg.maximize) {
             cfg.className += ' ws-window';
+            cfg.templateOptions.maximize = cfg.maximize;
          }
 
          cfg.templateOptions.caption = this._getCaption(cfg, templateClass);
@@ -267,9 +268,9 @@ function(cMerge,
          cfg.isCompoundTemplate = true;
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
-         cfg.componentOptions = { innerComponentOptions: cfg.templateOptions || cfg.componentOptions };
+         cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
 
-         cfg.componentOptions.innerComponentOptions._template = cfg.template;
+         cfg.componentOptions.template = cfg.template;
          cfg.template = 'Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea';
          cfg.animation = 'off';
          cfg.border = false;
@@ -440,6 +441,5 @@ function(cMerge,
          var initializer = (templateClass.prototype || templateClass)._initializer; // опции можно достать не везде
          return initializer ? OpenDialogUtil.getOptionsFromProto(templateClass) : {};
       }
-
    };
 });
