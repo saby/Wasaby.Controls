@@ -196,12 +196,13 @@ define('Controls/Application',
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
+
             self.wsRoot = cfg.wsRoot || constants.wsRoot;
             self.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
             self.RUMEnabled = cfg.RUMEnabled || '';
             self.product = cfg.product || constants.product;
             self.lite = cfg.lite || false;
-            self.servicesPath = cfg.servicesPath || constants.servicesPath;
+            self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug,
@@ -240,15 +241,6 @@ define('Controls/Application',
                product: self.product
             });
             return def;
-         },
-
-         themeChangedHandler: function() {
-            var self = this;
-            self.themeChanging = true;
-            setTimeout(function() {
-               self.themeChanging = false;
-               self._forceUpdate();
-            }, 1000);
          },
 
          _openInfoBoxHandler: function(event, config) {

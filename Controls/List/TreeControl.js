@@ -28,11 +28,18 @@ define('Controls/List/TreeControl', [
             }
          }
       },
+      toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
+         listViewModel.toggleExpanded(dispItem);
+         self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
+      },
       toggleExpanded: function(self, dispItem) {
          var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
-            nodeKey = dispItem.getContents().getId();
+            item = dispItem.getContents(),
+            nodeKey = item.getId(),
+            expanded = !listViewModel.isExpanded(dispItem);
+         self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
          if (!self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
             self._nodesSourceControllers[nodeKey] = new SourceController({
                source: self._options.source,
@@ -47,10 +54,10 @@ define('Controls/List/TreeControl', [
                } else {
                   listViewModel.appendItems(list);
                }
-               listViewModel.toggleExpanded(dispItem);
+               _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
             });
          } else {
-            listViewModel.toggleExpanded(dispItem);
+            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
          }
       },
       prepareHasMoreStorage: function(sourceControllers) {

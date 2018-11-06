@@ -61,65 +61,43 @@
       </ws:else>
    </ws:template>
 
-    <ws:template name="serverTemplate">
-        <ws:partial template="fullView" name="listView"/>
-
-        <Controls.List.EditInPlace
-                ws:content="listView"
-                name="editInPlace"
-                editingConfig="{{_options.editingConfig}}"
-                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                on:afterBeginEdit="_onAfterBeginEdit()"
-                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                on:afterEndEdit="_onAfterEndEdit()"
-                listModel="{{_listViewModel}}"
-                source="{{_sourceController}}"/>
-    </ws:template>
-
-    <ws:template name="clientTemplate">
-       <ws:if data="{{_options.itemActions.length || _options.editingConfig && _options.editingConfig.toolbarVisibility}}">
-          <Controls.Container.Async name="swipeContainer" templateName="Controls/List/Swipe/SwipeControl">
-             <ws:partial template="{{'Controls/List/Swipe/SwipeControl'}}"
-                         on:menuActionsClick="_showActionsMenu()"
-                         on:closeSwipe="_closeSwipe()"
-                         menuIsShown="{{_menuIsShown}}"
-                         viewName="{{ _options.viewName }}"
-                         listModel="{{_listViewModel}}"
-                         swipeViewMode="{{_options.swipeViewMode}}"
-                         itemActions="{{_options.itemActions}}"
-                         name="swipeControl">
-                <Controls.Container.Async name="itemActionsContainer" templateName="Controls/List/ItemActions/ItemActionsControl">
-                   <ws:partial template="{{'Controls/List/ItemActions/ItemActionsControl'}}"
-                               on:commitActionClick="_commitEditActionHandler()"
-                               on:cancelActionClick="_cancelEditActionHandler()"
-                               on:menuActionsClick="_showActionsMenu()"
-                               on:itemActionsClick="_onItemActionsClick()"
-                               toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
-                               name="itemActions"
-                               style="{{_options.style}}"
-                               listModel="{{_listViewModel}}"
-                               menuIsShown="{{_menuIsShown}}"
-                               itemActions="{{_options.itemActions}}"
-                               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                               itemActionsPosition="{{_options.itemActionsPosition}}">
-                      <ws:partial template="serverTemplate" />
-                   </ws:partial>
-                </Controls.Container.Async>
-             </ws:partial>
-          </Controls.Container.Async>
-       </ws:if>
-       <ws:else>
-          <ws:partial template="serverTemplate" />
-       </ws:else>
-    </ws:template>
-
     <ws:if data="{{_listViewModel}}">
-        <ws:if data="{{_isServer}}">
-            <ws:partial template="serverTemplate"/>
-        </ws:if>
-        <ws:else>
-            <ws:partial template="clientTemplate"/>
-        </ws:else>
+       <ws:partial template="fullView" name="listView"/>
+
+       <Controls.List.EditInPlace
+          ws:content="listView"
+          name="editInPlace"
+          editingConfig="{{_options.editingConfig}}"
+          on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+          on:afterBeginEdit="_onAfterBeginEdit()"
+          on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+          on:afterEndEdit="_onAfterEndEdit()"
+          listModel="{{_listViewModel}}"
+          source="{{_sourceController}}"/>
+       <Controls.List.ItemActions.ItemActionsControl
+          ws:content="listView"
+          on:commitActionClick="_commitEditActionHandler()"
+          on:cancelActionClick="_cancelEditActionHandler()"
+          on:menuActionsClick="_showActionsMenu()"
+          on:itemActionsClick="_onItemActionsClick()"
+          toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
+          name="itemActions"
+          style="{{_options.style}}"
+          listModel="{{_listViewModel}}"
+          menuIsShown="{{_menuIsShown}}"
+          itemActions="{{_options.itemActions}}"
+          itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+          itemActionsPosition="{{_options.itemActionsPosition}}"/>
+       <Controls.List.Swipe.SwipeControl
+          ws:content="listView"
+          on:menuActionsClick="_showActionsMenu()"
+          on:closeSwipe="_closeSwipe()"
+          menuIsShown="{{_menuIsShown}}"
+          viewName="{{ _options.viewName }}"
+          listModel="{{_listViewModel}}"
+          swipeViewMode="{{_options.swipeViewMode}}"
+          itemActions="{{_options.itemActions}}"
+          name="swipeControl"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">

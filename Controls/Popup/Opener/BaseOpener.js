@@ -35,7 +35,7 @@ define('Controls/Popup/Opener/BaseOpener',
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
        * @control
-       * @public
+       * @private
        * @author Красильников А.С.
        */
       var Base = Control.extend({
@@ -319,7 +319,7 @@ define('Controls/Popup/Opener/BaseOpener',
          if (!managerContainer) {
             managerContainer = document.createElement('div');
             managerContainer.classList.add('controls-PopupContainer');
-            document.body.prepend(managerContainer);
+            document.body.insertBefore(managerContainer, document.body.firstChild);
 
             require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
                var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
