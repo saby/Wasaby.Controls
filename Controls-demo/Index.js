@@ -3,7 +3,8 @@
  */
 define('Controls-demo/Index', [
    'Core/Control',
-   'wml!Controls-demo/Index'
+   'wml!Controls-demo/Index',
+   'css!Controls-demo/Demo/Page'
 ], function (BaseControl,
              template
 ) {
@@ -14,7 +15,10 @@ define('Controls-demo/Index', [
          _template: template,
          backClickHdl: function(){
             window.history.back();
-         }
+         },
+         changeTheme: function(event, theme) {
+            this._notify('themeChanged', [theme], {bubbling:true});
+         },
       });
 
    return ModuleClass;

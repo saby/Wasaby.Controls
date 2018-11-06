@@ -4,10 +4,11 @@ define('Controls/Application/HeadDataContext', [
    'Core/Deferred',
    'Core/cookie',
    'View/Runner/common',
-   'Core/Serializer'
+   'Core/Themes/ThemesController',
+   'Core/Serializer',
+   'Core/IoC'
 
-], function(DataContext, DepsCollector, Deferred, cookie, common, Serializer) {
-
+], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer, IoC) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -28,16 +29,24 @@ define('Controls/Application/HeadDataContext', [
 
    var bundles, modDeps, contents;
    try {
-      bundles = require('json!WS.Core/ext/requirejs/bundlesRoute');
       modDeps = require('json!resources/module-dependencies');
+   } catch (e) {
+
+   }
+   try {
       contents = require('json!resources/contents');
    } catch (e) {
 
-   } finally {
-      bundles = bundles || {};
-      modDeps = modDeps || {links: {}, nodes: {}};
-      contents = contents || {};
    }
+   try {
+      bundles = require('json!resources/bundlesRoute');
+   } catch (e) {
+
+   }
+
+   bundles = bundles || {};
+   modDeps = modDeps || { links: {}, nodes: {} };
+   contents = contents || {};
 
    return DataContext.extend({
       _version: 0,
@@ -78,45 +87,60 @@ define('Controls/Application/HeadDataContext', [
       },
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.buildNumber, self.appRoot);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
+            var components = Object.keys(self.depComponentsMap);
+            if (self.isDebug) {
+               var files = {};
+            } else {
+               var files = depsCollector.collectDependencies(components);
+               ThemesController.getInstance().initCss({
+                  themedCss: files.css.themedCss,
+                  simpleCss: files.css.simpleCss
+               });
+            }
+
             var rcsData = self.serializeReceivedStates();
+            var additionalDepsArray = [];
             for (var key in rcsData.additionalDepsMap) {
                if (rcsData.additionalDepsMap.hasOwnProperty(key)) {
-                  self.depComponentsMap[key] = true;
+                  additionalDepsArray.push(key);
                }
             }
-            var components = Object.keys(self.depComponentsMap);
-            if (cookie.get('s3debug') !== 'true' && contents.buildMode !== 'debug') {
-               var files = depsCollector.collectDependencies(components);
-               self.jsLinks = files.js;
-               self.cssLinks = self.cssLinks ? self.cssLinks.concat(files.css) : files.css;
-            } else {
-               self.jsLinks = [];
-               self.cssLinks = self.cssLinks || [];
+
+            // Костыль. Чтобы сериализовать receivedState, нужно собрать зависимости, т.к. в receivedState у компонента
+            // Application сейчас будет список css, для восстановления состояния с сервера.
+            // Но собирать зависимости нам нужно после receivedState, потому что в нем могут тоже могут быть зависимости
+            var additionalDeps = depsCollector.collectDependencies(additionalDepsArray);
+
+            files.js = files.js || [];
+            for (var i = 0; i < additionalDeps.js.length; i++) {
+               if (!~files.js.indexOf(additionalDeps.js[i])) {
+                  files.js.push(additionalDeps.js[i]);
+               }
             }
             self._version++;
             self.defRender.callback({
-               jsLinks: self.jsLinks || [],
-               cssLinks: self.cssLinks || [],
+               js: files.js || [],
+               tmpl: files.tmpl || [],
+               css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serializedMap,
                additionalDeps: Object.keys(rcsData.additionalDepsMap).concat(Object.keys(self.additionalDeps))
-
             });
          });
       },
-      constructor: function(theme, buildNumber, cssLinks, appRoot) {
+      constructor: function(theme, cssLinks, themesActive) {
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateObjectsArray = {};
          this.receivedStateArr = {};
          this.additionalDeps = {};
-         this.buildNumber = buildNumber;
-         this.appRoot = appRoot;
+         this.themesActive = themesActive;
          this.cssLinks = cssLinks;
+         this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
       },
       pushCssLink: function(url) {
          this.cssLinks.push(url);

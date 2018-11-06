@@ -854,7 +854,7 @@ define([
       });
 
       describe('EditInPlace', function() {
-         it('editItem', function() {
+         it('beginEdit', function() {
             var opt = {
                test: 'test'
             };
@@ -886,18 +886,18 @@ define([
             var ctrl = new BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
-                  editItem: function(options) {
+                  beginEdit: function(options) {
                      assert.equal(options, opt);
                      return cDeferred.success();
                   }
                }
             };
-            var result = ctrl.editItem(opt);
+            var result = ctrl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('addItem', function() {
+         it('beginAdd', function() {
             var opt = {
                test: 'test'
             };
@@ -929,13 +929,13 @@ define([
             var ctrl = new BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
-                  addItem: function(options) {
+                  beginAdd: function(options) {
                      assert.equal(options, opt);
                      return cDeferred.success();
                   }
                }
             };
-            var result = ctrl.addItem(opt);
+            var result = ctrl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
@@ -1086,91 +1086,7 @@ define([
             assert.isFalse(result.isSuccessful());
          });
 
-         it('_onBeforeItemAdd', function() {
-            var opt = {
-               test: 'test'
-            };
-            var newOpt = {
-               test2: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._notify = function(e, options) {
-               assert.equal('beforeItemAdd', e);
-               assert.equal(options[0], opt);
-               return newOpt;
-            };
-            var result = ctrl._onBeforeItemAdd({}, opt);
-            assert.equal(result, newOpt);
-         });
-
-         it('_onBeforeItemEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var newOpt = {
-               test2: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._notify = function(e, options) {
-               assert.equal('beforeItemEdit', e);
-               assert.equal(options[0], opt);
-               return newOpt;
-            };
-            var result = ctrl._onBeforeItemEdit({}, opt);
-            assert.equal(result, newOpt);
-         });
-
-         it('_onAfterItemEdit', function() {
+         it('_onAfterBeginEdit', function() {
             var opt = {
                test: 'test'
             };
@@ -1207,14 +1123,14 @@ define([
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
-               assert.equal('afterItemEdit', e);
+               assert.equal('afterBeginEdit', e);
                assert.equal(options[0], opt);
                assert.isNotOk(options[1]);
             };
-            ctrl._onAfterItemEdit({}, opt);
+            ctrl._onAfterBeginEdit({}, opt);
          });
 
-         it('_onAfterItemEdit, isAdd = true', function() {
+         it('_onAfterBeginEdit, isAdd = true', function() {
             var opt = {
                test: 'test'
             };
@@ -1251,111 +1167,14 @@ define([
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, options) {
-               assert.equal('afterItemEdit', e);
+               assert.equal('afterBeginEdit', e);
                assert.equal(options[0], opt);
                assert.isTrue(options[1]);
             };
-            ctrl._onAfterItemEdit({}, opt, true);
+            ctrl._onAfterBeginEdit({}, opt, true);
          });
 
-         it('_onBeforeItemEndEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var newOpt = {
-               test2: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
-            ctrl._notify = function(e, options) {
-               assert.equal('beforeItemEndEdit', e);
-               assert.equal(options[0], opt);
-               assert.isTrue(options[1]);
-               assert.isTrue(options[2]);
-               return newOpt;
-            };
-            var result = ctrl._onBeforeItemEndEdit({}, opt, true, true);
-            assert.equal(result, newOpt);
-         });
-
-         it('_onBeforeItemEndEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var newOpt = {
-               test2: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
-            ctrl._notify = function(e, options) {
-               assert.equal(options[0], opt);
-               return newOpt;
-            };
-            var result = ctrl._onBeforeItemEndEdit({}, opt);
-            assert.equal(result, newOpt);
-         });
-
-         it('_onAfterItemEndEdit', function() {
+         it('_onAfterEndEdit', function() {
             var opt = {
                test: 'test'
             };
@@ -1392,14 +1211,14 @@ define([
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, args) {
-               assert.equal('afterItemEndEdit', e);
+               assert.equal('afterEndEdit', e);
                assert.equal(args[0], opt);
                assert.isNotOk(args[1]);
             };
-            ctrl._onAfterItemEndEdit({}, opt);
+            ctrl._onAfterEndEdit({}, opt);
          });
 
-         it('_onAfterItemEndEdit, isAdd: true', function() {
+         it('_onAfterEndEdit, isAdd: true', function() {
             var opt = {
                test: 'test'
             };
@@ -1436,14 +1255,14 @@ define([
             });
             ctrl._children = {itemActions: {updateItemActions: function() {}}};
             ctrl._notify = function(e, args) {
-               assert.equal('afterItemEndEdit', e);
+               assert.equal('afterEndEdit', e);
                assert.equal(args[0], opt);
                assert.isTrue(args[1]);
             };
-            ctrl._onAfterItemEndEdit({}, opt, true);
+            ctrl._onAfterEndEdit({}, opt, true);
          });
 
-         it('readOnly, editItem', function() {
+         it('readOnly, beginEdit', function() {
             var opt = {
                test: 'test'
             };
@@ -1475,12 +1294,12 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            var result = ctrl.editItem(opt);
+            var result = ctrl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
 
-         it('readOnly, addItem', function() {
+         it('readOnly, beginAdd', function() {
             var opt = {
                test: 'test'
             };
@@ -1512,7 +1331,7 @@ define([
             };
             var ctrl = new BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            var result = ctrl.addItem(opt);
+            var result = ctrl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });

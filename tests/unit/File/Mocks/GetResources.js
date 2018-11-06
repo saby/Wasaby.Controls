@@ -1,4 +1,4 @@
-define('tests/unit/File/Mocks/GetResources', [
+define('tests/File/Mocks/GetResources', [
    'Core/constants',
    'File/LocalFile',
    'File/LocalFileLink',

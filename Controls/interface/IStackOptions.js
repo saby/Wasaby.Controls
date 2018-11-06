@@ -4,7 +4,6 @@ define('Controls/interface/IStackOptions', [], function() {
     * Stack popup options.
     *
     * @interface Controls/interface/IStackOptions
-    * @typedef Object
     * @public
     */
 

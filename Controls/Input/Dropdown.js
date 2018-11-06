@@ -7,7 +7,7 @@ define('Controls/Input/Dropdown',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
       'Core/helpers/Object/isEqual',
-      'css!Controls/Input/Dropdown/Dropdown'
+      'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
       /**

@@ -12,6 +12,15 @@
   "output": "controls-button.package.js"
 }, {
   "include": [
+    "Controls/Operations/*"
+  ],
+  "exclude": [
+    "Controls/Operations/ReportDialog",
+    "Controls/Operations/ReportDialog/*"
+  ],
+  "output": "controls-operations.package.js"
+}, {
+  "include": [
     "Controls/Container/*",
     "Controls/StickyHeader",
     "Controls/StickyHeader/*"

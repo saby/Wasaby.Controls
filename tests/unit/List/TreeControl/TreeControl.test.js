@@ -142,7 +142,7 @@ define([
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
       });
       describe('EditInPlace', function() {
-         it('editItem', function() {
+         it('beginEdit', function() {
             var opt = {
                test: '123'
             };
@@ -150,30 +150,30 @@ define([
                treeControl = new TreeControl({});
             treeControl._children = {
                baseControl: {
-                  editItem: function(options) {
+                  beginEdit: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = treeControl.editItem(opt);
+            var result = treeControl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('editItem, readOnly: true', function() {
+         it('beginEdit, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                treeControl = new TreeControl({});
             treeControl.saveOptions({ readOnly: true });
-            var result = treeControl.editItem(opt);
+            var result = treeControl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
 
-         it('addItem', function() {
+         it('beginAdd', function() {
             var opt = {
                test: '123'
             };
@@ -181,25 +181,25 @@ define([
                treeControl = new TreeControl({});
             treeControl._children = {
                baseControl: {
-                  addItem: function(options) {
+                  beginAdd: function(options) {
                      assert.equal(opt, options);
                      return Deferred.success();
                   }
                }
             };
-            var result = treeControl.addItem(opt);
+            var result = treeControl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
          });
 
-         it('addItem, readOnly: true', function() {
+         it('beginAdd, readOnly: true', function() {
             var opt = {
                test: '123'
             };
             var
                treeControl = new TreeControl({});
             treeControl.saveOptions({ readOnly: true });
-            var result = treeControl.addItem(opt);
+            var result = treeControl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });

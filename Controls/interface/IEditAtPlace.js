@@ -2,11 +2,11 @@ define('Controls/interface/IEditAtPlace', [
 ], function() {
 
    /**
-    * Interface for components that have editing of input fields. The difference between {@link Controls/interface/IEditInPlace Controls/interface/IEditInPlace} and this interface is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
+    * Interface for components that have editing of input fields. The difference between {@link Controls/interface/IEditableList Controls/interface/IEditableList} and this interface is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
     *
     * @interface Controls/interface/IEditAtPlace
     * @public
-    * @see Controls/interface/IEditInPlace
+    * @see Controls/interface/IEditableList
     */
 
    /**
@@ -27,7 +27,7 @@ define('Controls/interface/IEditAtPlace', [
     * @returns {BeforeEditResult}
     * @example
     * The following example creates EditAtPlace and shows how to handle the event.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace on:beforeEdit="beforeEditHandler()" editObject="{{_editObject}}" />
     * </pre>
@@ -54,7 +54,7 @@ define('Controls/interface/IEditAtPlace', [
     * This event fires only if the validation was successful. If you return {@link Core/Deferred Core/Deferred} from the event handler then editing will end only if the deferred resolved successfully.
     * @example
     * The following example shows how to cancel the end of the editing if certain condition is met.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
@@ -68,7 +68,7 @@ define('Controls/interface/IEditAtPlace', [
     *    }
     * </pre>
     * The following example shows how to handle the event asynchronously.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
@@ -91,7 +91,7 @@ define('Controls/interface/IEditAtPlace', [
     * @param {WS.Data/Entity/Record} editObject Editing record.
     * @example
     * The following example shows how to hide and show an image based on the state of editing.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace on:beforeEdit="beforeEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
     *    <ws:if data="{{_imgVisible}}">
@@ -151,7 +151,7 @@ define('Controls/interface/IEditAtPlace', [
     * @cfg {Boolean} Determines whether editing should start on first render.
     * @default false
     * @remark
-    * This option is useful when you want to start editing immediately and do not want to wait for the component to mount.
+    * This option is useful when you want to start editing immediately and do not want to wait for the component to mount. For example, if you want to open modal window and edit something in it, this option will help you avoid blinking.
     * @example
     * <pre>
     *    <Controls.EditAtPlace editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
@@ -198,7 +198,7 @@ define('Controls/interface/IEditAtPlace', [
     * @function Controls/interface/IEditAtPlace#startEdit
     * @example
     * The following example creates EditAtPlace and shows how to start editing.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
     * </pre>
@@ -217,7 +217,7 @@ define('Controls/interface/IEditAtPlace', [
     * @function Controls/interface/IEditAtPlace#cancelEdit
     * @example
     * The following example creates EditAtPlace and shows how to end editing and discard changes.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
     * </pre>
@@ -236,7 +236,7 @@ define('Controls/interface/IEditAtPlace', [
     * @function Controls/interface/IEditAtPlace#commitEdit
     * @example
     * The following example creates EditAtPlace and shows how to end editing and commit changes.
-    * TMPL:
+    * WML:
     * <pre>
     *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
     * </pre>

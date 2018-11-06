@@ -11,9 +11,9 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
    'Core/moduleStubs',
    'Core/core-clone',
 
-   'css!WS/css/styles/RichContentStyles',
+   'css!theme?WS/css/styles/RichContentStyles',
    'i18n!SBIS3.CONTROLS/RichEditor',
-   'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+   'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control, template, constantsPlugin, contentPlugin, configPlugin, textPlugin, placeholderPlugin, handlersPlugin, eventsPlugin, moduleStubs, cClone) {
    var _private = {
       tinyInit: function(self) {
