@@ -128,10 +128,10 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplate
-    * @cfg {additionalTpl} Template for item render in additional block.
+    * @cfg {additionalTpl} Template for item render in the additional block.
     * @remark
     * To display the filter in the additional block, you need to specify in the settings item visibility: false.
-    * When specifying visibility = true, the filter will be displayed in the main block "Selected", but when the filter is reset, it will be displayed in the additional block.
+    * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
     * @example
     * Example of setting options additionalTemplate
     * <pre>
@@ -196,9 +196,10 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render in additional block.
+    * @cfg {additionalTpl} Name of the item property that contains template for item render in the additional block. If not set, additionalTemplate is used instead.
     * @remark
-    * If not set, additionalTemplate is used instead.
+    * To display the filter in the additional block, you need to specify in the settings item visibility: false.
+    * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
     * @example
     * In this example, the template for the "deleted" filter in the additional block, will be loaded from the file MyModule/addTemplateDeleted.wml
     * <pre>
@@ -272,7 +273,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * To display in a string, that is formed by the values from items, you must make a bind:textValue="item.textValue".
     * For proper display, templates for all items should be described.
     * @example
-    * In this example, the template for the "type" filter in the "Selected" block, will be loaded from the file Module/myTemplateForType.wml
+    * In this example, the template for the "type" filter in the main block, will be loaded from the file Module/myTemplateForType.wml
     * TMPL:
     * <pre>
     *    <Controls.Filter.Button.Panel
