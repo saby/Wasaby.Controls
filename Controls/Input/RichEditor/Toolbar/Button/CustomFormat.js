@@ -26,7 +26,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/CustomFormat', [
        * @param formats
        * @returns {string}
        */
-      getCurrentCustomFormat: function(formats) {
+      getCustomFormatFromFormatsList: function(formats) {
          // Default custom format is default
          var currentFormat = 'default';
 
@@ -73,7 +73,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/CustomFormat', [
       },
 
       _formatChangedHandler: function(formats) {
-         var currentFormat = _private.getCurrentCustomFormat(formats);
+         var currentFormat = _private.getCustomFormatFromFormatsList(formats);
 
          if (currentFormat !== this._selectedFormat) {
             this._selectedFormat = currentFormat;

@@ -35,7 +35,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
        * @param formats
        * @returns {string}
        */
-      getCurrentAlign: function(formats) {
+      getAlignFromFormatsList: function(formats) {
          // Alignleft as default
          var currentAlign = 'alignleft';
 
@@ -56,6 +56,8 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
        */
       getSelectedAlignIcon: function(align) {
          var icon;
+
+         // TODO Change after solving the task https://online.sbis.ru/opendoc.html?guid=6fdee982-8623-402e-a9dc-0162c337e824
 
          switch (align) {
             case 'JustifyLeft':
@@ -111,7 +113,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Align', [
       },
 
       _formatChangedHandler: function(formats) {
-         this._updateSelectedAlign(_private.getCurrentAlign(formats));
+         this._updateSelectedAlign(_private.getAlignFromFormatsList(formats));
       },
 
       /**
