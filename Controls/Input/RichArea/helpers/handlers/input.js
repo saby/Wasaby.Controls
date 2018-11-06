@@ -1,13 +1,13 @@
-define('Controls/Input/RichArea/helpers/handlers/key', [
+define('Controls/Input/RichArea/helpers/handlers/input', [
    'Controls/Input/RichArea/helpers/text',
    'Controls/Input/RichArea/helpers/editor',
    'Controls/Input/RichArea/helpers/placeholder'
 ], function(textHelper, editorHelper, placeholderHelper) {
    /**
-    * Module with key handlers
+    * Module with input handlers
     */
 
-   var KeyHandlersHelper = {
+   var InputHandlersHelper = {
       inputHandler: function() {
          var newValue = textHelper.trimText(editorHelper.getEditorValue(this));
 
@@ -20,5 +20,5 @@ define('Controls/Input/RichArea/helpers/handlers/key', [
       }
    };
 
-   return KeyHandlersHelper;
+   return InputHandlersHelper;
 });
