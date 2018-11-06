@@ -124,19 +124,14 @@ define([
             itemData = {
                test: 'test'
             },
-            nextVersionCalled = false,
-            onListChangeFired = false;
+            nextVersionCalled = false;
 
          var lv = new ListViewModel(cfg);
          lv._nextVersion = function() {
             nextVersionCalled = true;
          };
-         lv.subscribe('onListChange', function() {
-            onListChangeFired = true;
-         });
          lv.setSwipeItem(itemData);
          assert.equal(lv._swipeItem, itemData);
-         assert.isTrue(onListChangeFired, 'setSwipeItem should fire "onListChange" event');
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
       });
    });
