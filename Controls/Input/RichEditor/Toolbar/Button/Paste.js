@@ -23,7 +23,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
        * @param withStyles
        * @returns {Deferred}
        */
-      getHtmlFromDialog: function(self, withStyles) {
+      getContentFromPasteDialog: function(self, withStyles) {
          var def = new Deferred(),
             onPaste = function(event) {
                var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
@@ -106,7 +106,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
          return def;
 
          function errBack(self) {
-            _private.getPasteContent(self, withStyles).addCallback(function(content) {
+            _private.getContentFromPasteDialog(self, withStyles).addCallback(function(content) {
                def.callback(content);
             });
          }
