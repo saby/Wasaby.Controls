@@ -44,8 +44,33 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
          * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
          * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
          */
-        //Множитель необходим для суммирования дробных чисел, подробнее о проблеме тут https://habrahabr.ru/post/159313/
-        var FLOAT_MULTIPLIER = 10;
+
+        var _private = {
+           sum: function(firstNumber, secondNumber) {
+              var
+                 result = firstNumber + secondNumber,
+                 decimalFirst = _private.getDecimalCount(firstNumber),
+                 decimalSecond = _private.getDecimalCount(secondNumber);
+
+              if (decimalFirst && decimalSecond) {
+                 result = +(result.toFixed(Math.max(decimalFirst, decimalSecond)));
+              }
+
+              return result;
+           },
+           getDecimalCount: function(number) {
+              var
+                 result = 0,
+                 numberToString = new String(number),
+                 dotPosition = numberToString.indexOf('.');
+
+              if (dotPosition !== -1) {
+                 result = numberToString.length - dotPosition - 1;
+              }
+
+              return result;
+           }
+        };
 
         var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS/Action/List/Sum.prototype */{
             $protected: {
@@ -203,14 +228,14 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                 items.each(function(model) {
                     if (this._needToSum(model, nodeProperty)) {
                        for (i = 0; i < fields.length; i++) {
-                          resultFields[fields[i]] += model.get(fields[i]) * FLOAT_MULTIPLIER || 0;
+                          resultFields[fields[i]] = _private.sum(resultFields[fields[i]], model.get(fields[i]) || 0);
                        }
                        itemsCount++;
                     }
                 }, this);
                 resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, itemsCount);
                 for (i = 0; i < fields.length; i++) {
-                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]] / FLOAT_MULTIPLIER);
+                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
                 }
                 return Deferred.success(resultRecord);
             },

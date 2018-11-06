@@ -34,6 +34,13 @@ define(['SBIS3.CONTROLS/Action/List/Sum', 'WS.Data/Collection/RecordSet', 'WS.Da
          });
          sum._sumByRecordSet(forSum, forSum.getFormat()).addCallback(function(sumRecord) {
             assert.equal(sumRecord.get('number'), 3.8);
+         });
+
+         forSum = new RecordSet({
+            rawData: [ { number: 0.07 }, { number: 0.01 } ]
+         });
+         sum._sumByRecordSet(forSum, forSum.getFormat()).addCallback(function(sumRecord) {
+            assert.equal(sumRecord.get('number'), 0.08);
             done();
          });
       });
