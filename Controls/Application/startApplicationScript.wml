@@ -1,8 +1,8 @@
 <div key="scripts">
    <ws:if data="{{!_options.compat && _options.onServer}}">
       <script key="init_script">
-         require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext'], function(AppData, HeadDataContext){
-            window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
+         require(['Controls/Application/AppData'], function(AppData){
+            window.startContextData = {AppData: new AppData({})};
             var deps = {{ __setHTMLUnsafe(getDeps()) }};
             require(['Core/app'], function(app) { app(deps); });
          });

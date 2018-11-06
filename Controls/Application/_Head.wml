@@ -24,8 +24,8 @@
          <ws:partial template="{{ _options.head }}"/>
       </ws:else>
    </ws:if>
-   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
-   <ws:if data="{{_options.theme}}">
+      <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
+      <ws:if data="{{_options.theme}}">
       <!-- TODO Костыль, нужно подключать css самой темы, там могут быть подключены шрифты. Непонятно, какой путь до css -->
       <ws:if data="{{isMultiThemes()}}">
          <ws:for data="thInd, oneTheme in _options.theme">

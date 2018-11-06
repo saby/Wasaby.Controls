@@ -9,7 +9,7 @@ define('Controls/Application/Core',
       'Env/_Request/createDefault',
       'Controls/Application/StateReceiver',
       'Controls/Application/AppData',
-      'Controls/Application/HeadDataContext',
+      'Controls/Application/HeadData',
       'Core/Themes/ThemesController',
       'native-css',
       'Core/css-resolve'
@@ -20,7 +20,7 @@ define('Controls/Application/Core',
       createDefault,
       StateReceiver,
       AppData,
-      HeadDataContext) {
+      HeadData) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -53,12 +53,12 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, true);
+            var headData = new HeadData(cfg.theme || '', cfg.cssLinks, true);
+            Request.getCurrent().setStorage('HeadData', headData);
          },
          _getChildContext: function() {
             return {
-               AppData: this.ctxData,
-               headData: this.headDataCtx
+               AppData: this.ctxData
             };
          },
          coreTheme: '',

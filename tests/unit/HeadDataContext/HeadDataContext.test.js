@@ -1,15 +1,15 @@
 define(
    [
-      'Controls/Application/HeadDataContext',
+      'Controls/Application/HeadData',
       'Core/Deferred',
       'WS.Data/Collection/RecordSet'
    ],
 
-   function(HeadDataContext, Deferred, RecordSet) {
+   function(HeadData, Deferred, RecordSet) {
       'use strict';
       describe('DepsCollector', function() {
          it('ReceivedState dependencies', function(done) {
-            var hdc = new HeadDataContext();
+            var hdc = new HeadData();
             var def = new Deferred();
             hdc.pushWaiterDeferred(def);
             hdc.addReceivedState('123', new RecordSet({
