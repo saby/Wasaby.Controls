@@ -52,6 +52,10 @@ define('Controls/Input/RichArea/helpers/constants', [
             }
          }
       },
+
+      /**
+       * Default formats contained in format model
+       */
       defaultFormats: [
          'bold',
          'italic',
@@ -157,6 +161,10 @@ define('Controls/Input/RichArea/helpers/constants', [
             key: 'twenty fourth', code: '128515', title: '&#128515;', multiline: true
          }
       ],
+
+      /**
+       * Default formats which are observing by editor's formatter
+       */
       formats: 'bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,header,subHeader,additional,blockquote'
    };
 

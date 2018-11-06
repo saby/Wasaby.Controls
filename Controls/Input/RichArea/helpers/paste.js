@@ -40,6 +40,7 @@ define('Controls/Input/RichArea/helpers/paste', [
             editor = self._editor,
             pasteHelper = editor.plugins.paste;
 
+         // Tinymce paste helper doesn't work in Internet Explorer
          if (pasteHelper) {
             pasteHelper.clipboard.pasteHtml(content, false);
          } else {

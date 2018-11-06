@@ -1,5 +1,5 @@
 define('Controls/Input/RichArea/helpers/handlers', [
-   'Controls/Input/RichArea/helpers/handlers/key',
+   'Controls/Input/RichArea/helpers/handlers/input',
    'Controls/Input/RichArea/helpers/handlers/paste',
    'Controls/Input/RichArea/helpers/handlers/editor'
 ], function() {
