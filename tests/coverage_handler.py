@@ -23,8 +23,8 @@ class Coverage:
 
     def get_fullpath_test_name(self):
         """Получаем пути расположения файлов"""
-        for root_test in (os.path.join('int', 'SBIS3.CONTROLS'), os.path.join('int','VDOM')):
-            for root, dirs , filename in os.walk(root_test):
+        for root_test in ('SBIS3.CONTROLS', 'VDOM'):
+            for root, dirs , filename in os.walk(os.path.join('int', root_test)):
                 for f in filename:
                     self.fullpath.append(os.path.join(root, f))
 
