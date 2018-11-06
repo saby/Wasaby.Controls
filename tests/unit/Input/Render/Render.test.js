@@ -83,6 +83,7 @@ define(
             it('test1', function() {
                viewModel.updateOptions({value: '123'});
                render._viewModel = viewModel;
+               render._options.content = 'content';
                Render._private.initSelection(render);
 
                assert.equal(render._children.input.selectionStart, 3);
