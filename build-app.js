@@ -99,6 +99,7 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
          }
       });
 
+      fs.symlinkSync(path.join(root, 'cdn'), path.join(root, 'application', 'cdn'));
       var alljson = {links: {}, nodes: {}};
       gultConfig.modules.forEach((one) => {
          if (one.name.indexOf('WS.Core') === -1)

@@ -108,7 +108,7 @@ node('controls') {
 		} else {
 			branch_engine = props["engine"]
 		}
-
+		
 		def branch_navigation
 		if (params.branch_navigation) {
 			branch_navigation = params.branch_navigation
@@ -568,7 +568,7 @@ node('controls') {
 							}
 						}
 					}
-
+					
 
 					if ( skip ) {
 						 skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
@@ -606,7 +606,7 @@ node('controls') {
 						if ( inte || all_inte && smoke_result ){
 							echo "Запускаем интеграционные тесты"
 							dir("./controls/tests/int"){
-
+								
 								sh """
 								source /home/sbis/venv_for_test/bin/activate
 								python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
@@ -651,9 +651,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
 	}
-    if ( unit ){
-        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-        }
+
     if ( regr || inte || all_inte){
         dir(workspace){
             def exists_jinnee_logs = fileExists '/jinnee/logs'
@@ -682,6 +680,10 @@ node('controls') {
 		}
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+	}
+	
+	if ( unit ){
+        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
 	}
 
     if ( regr ){

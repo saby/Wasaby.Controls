@@ -23,6 +23,7 @@
    <Controls.Button icon="{{_options.icon}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
+                    viewMode="{{_options.viewMode}}"
                     size="{{_options.size}}"
                     tooltip="{{_options.tooltip}}"/>
    </Controls.Dropdown.Controller>

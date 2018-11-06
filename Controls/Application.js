@@ -199,6 +199,7 @@ define('Controls/Application',
             }
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
             self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
+            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite) || false;
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
@@ -253,15 +254,6 @@ define('Controls/Application',
                product: self.product
             });
             return def;
-         },
-
-         themeChangedHandler: function() {
-            var self = this;
-            self.themeChanging = true;
-            setTimeout(function() {
-               self.themeChanging = false;
-               self._forceUpdate();
-            }, 1000);
          },
 
          _openInfoBoxHandler: function(event, config) {

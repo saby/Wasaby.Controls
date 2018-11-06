@@ -1,6 +1,4 @@
 <div>
-   <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.3.1/jquery-min.js"  data-pack-name="skip"></script>
-   <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
    <script>
       window.wsConfig.compatible = true;
       require(['Core/patchRequireJS',
@@ -9,7 +7,8 @@
          'Core/constants',
          'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
          'Lib/Control/BaseCompatible/BaseCompatible',
-         'Core/nativeExtensions'
+         'Core/nativeExtensions',
+         'is!browser?jquery'
       ], function(path, lc, appinit, constants) {
          constants.$body = body;
          constants.$window = window;

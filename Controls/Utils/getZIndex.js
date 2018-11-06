@@ -10,7 +10,7 @@ define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment'], function(i
    return function getZIndex(instance) {
       if (document && !isNewEnvironment()) {
          var container = $(instance.getContainer());
-         var parentArea = container.closest('.ws-float-area-stack-cut-wrapper, .controls-Popup, .controls-FloatArea, .ws-window');
+         var parentArea = container.closest('.controls-compoundAreaNew__floatArea, .ws-float-area-stack-cut-wrapper, .controls-Popup, .controls-FloatArea, .ws-window');
          if (parentArea.length) {
             return parseInt(parentArea.css('z-index'), 10) + ZINDEX_STEP;
          }
