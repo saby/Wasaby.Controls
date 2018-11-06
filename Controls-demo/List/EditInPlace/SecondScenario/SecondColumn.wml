@@ -10,6 +10,8 @@
                                    keyProperty="id"
                                    displayProperty="category"
                                    selectOnClick="{{ false }}">
+               <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+               <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                <ws:itemTemplate>
                   <ws:partial template="wml!Controls/Input/Lookup/ItemTemplate">
                      <ws:contentTemplate>
@@ -26,6 +28,8 @@
                                    keyProperty="id"
                                    displayProperty="subdivision"
                                    selectOnClick="{{ false }}">
+               <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+               <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
             </Controls.Input.Lookup>
             <ws:if data="{{ itemData.item.subdivision2 }}">
                <Controls.Input.Lookup attr:class="controls-EditingTemplateText__editor"
@@ -35,6 +39,8 @@
                                       keyProperty="id"
                                       displayProperty="subdivision2"
                                       selectOnClick="{{ false }}">
+                  <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                  <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                </Controls.Input.Lookup>
             </ws:if>
          </ws:if>
