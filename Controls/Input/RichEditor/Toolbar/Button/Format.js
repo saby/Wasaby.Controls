@@ -38,7 +38,8 @@ define('Controls/Input/RichEditor/Toolbar/Button/Format', [
                this._notify('applyFormat', [[{ formatName: this._format, state: true }]], { bubbling: true });
             }
          } else {
-            this._notify('execCommand', [[{ command: 'blockquote' }]], { bubbling: true });
+            // TODO Change after solving the task https://online.sbis.ru/opendoc.html?guid=6fdee982-8623-402e-a9dc-0162c337e824
+            this._notify('execCommand', [[{ command: 'mceBlockquote' }]], { bubbling: true });
          }
       },
 
