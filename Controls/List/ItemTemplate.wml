@@ -23,6 +23,7 @@
            <ws:if data="{{ itemData.drawActions }}">
               <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
                           itemData="{{ itemData }}"
+                          swipeTemplate="{{ swipeTemplate }}"
                           itemActionsClass="{{ itemActionsClass }}"
                           itemActionsTemplate="{{ itemActionsTemplate }}"/>
            </ws:if>
@@ -32,6 +33,7 @@
         <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}<ws:if data="{{ itemData.drawActions }}">
               <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
                           itemData="{{ itemData }}"
+                          swipeTemplate="{{ swipeTemplate }}"
                           itemActionsClass="{{ itemActionsClass }}"
                           itemActionsTemplate="{{ itemActionsTemplate }}"/>
            </ws:if>
