@@ -101,13 +101,15 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          initSelection: function(self) {
-            var input = _private.getInput(self);
-            var selection = self._selection;
-            var end = self._options.viewModel.getDisplayValue().length;
-            
-            if (!selection) {
-               input.selectionStart = end;
-               input.selectionEnd = end;
+            if (self._options.content) {
+               var input = _private.getInput(self);
+               var selection = self._selection;
+               var end = self._options.viewModel.getDisplayValue().length;
+
+               if (!selection) {
+                  input.selectionStart = end;
+                  input.selectionEnd = end;
+               }
             }
          }
       };
@@ -141,6 +143,9 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
+         },
+
+         _afterUpdate: function() {
             _private.initSelection(this);
          },
 
