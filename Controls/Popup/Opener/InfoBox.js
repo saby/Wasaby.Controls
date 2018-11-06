@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @control
        * @category Popup
        * @author Красильников А.С.
-       * @public
+       * @private
        */
 
       /**
