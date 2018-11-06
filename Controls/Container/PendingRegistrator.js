@@ -2,9 +2,8 @@ define('Controls/Container/PendingRegistrator', [
    'Core/Control',
    'wml!Controls/Container/PendingRegistrator/PendingRegistrator',
    'Core/Deferred',
-   'Core/ParallelDeferred',
-   'Core/IoC'
-], function(Control, tmpl, Deferred, ParallelDeferred, IoC) {
+   'Core/ParallelDeferred'
+], function(Control, tmpl, Deferred, ParallelDeferred) {
    'use strict';
 
    // pending identificator counter

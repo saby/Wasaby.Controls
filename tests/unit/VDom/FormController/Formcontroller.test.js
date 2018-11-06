@@ -38,7 +38,12 @@ define([
       }
 
       function check(cfg) {
-         assert.equal(document.body.querySelectorAll('.form-content__key')[0].innerText, cfg.key);
+         var key1 = document.body.querySelectorAll('.form-content__key')[0].innerText;
+         var key2 = cfg.key;
+         key1 = typeof key1 === 'string' ? key1.trim() : key1;
+         key2 = typeof key2 === 'string' ? key2.trim() : key2;
+         assert.equal(key1, key2);
+
          assert.equal(document.body.querySelectorAll('.form-content__name .controls-InputRender__field')[0].value, cfg.name);
          assert.equal(document.body.querySelectorAll('.form-content__email .controls-InputRender__field')[0].value, cfg.email);
          assert.equal(document.body.querySelectorAll('.form-content__create .controls-BaseButton__text')[0].innerText, cfg.createButtonText);

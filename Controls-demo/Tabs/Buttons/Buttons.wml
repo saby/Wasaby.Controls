@@ -25,11 +25,11 @@
                       source="{{_source3}}"
         >
             <ws:itemTemplate>
-                <Controls.Router.Link mask="myTab/:id" id="{{itemTemplate.item.id}}">
+                <Router.Link href="myTab/:id" id="{{itemTemplate.item.id}}">
                     <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
                                 item="{{itemTemplate.item}}"
                     ></ws:partial>
-                </Controls.Router.Link>
+                </Router.Link>
             </ws:itemTemplate>
         </Controls.Tabs.Buttons>
     </div>

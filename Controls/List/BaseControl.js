@@ -461,14 +461,12 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
-      _isServer: null,
       _hasUndrawChanges: false,
 
       _beforeMount: function(newOptions, context, receivedState) {
          var
             self = this;
 
-         this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
