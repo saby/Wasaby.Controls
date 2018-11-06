@@ -317,7 +317,7 @@ define('Controls/interface/IFilterPanel', [], function() {
    /**
     * @name Controls/interface/IFilterPanel#historyId
     * @cfg {String} Unique id for save history.
-    * @remark For the correct work of the history, you need to configure the structure of the application by the <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>instruction</a>.
+    * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>instruction</a>.
     */
 
 });
