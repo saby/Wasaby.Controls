@@ -45,10 +45,6 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._excludedKeys = [];
       },
 
-      _itemsSortMethod: function(firstItem, secondItem) {
-         return (+firstItem.item.isNode()) - (+secondItem.item.isNode());
-      },
-
       _panelItemClick: function(event, item) {
          var itemId = item.get('id');
          switch (itemId) {
