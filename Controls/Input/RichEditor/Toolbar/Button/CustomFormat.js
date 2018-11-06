@@ -22,7 +22,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/CustomFormat', [
    var _private = {
 
       /**
-       * Function return current custom format from selected text
+       * Function return current custom format from formats list
        * @param formats
        * @returns {string}
        */

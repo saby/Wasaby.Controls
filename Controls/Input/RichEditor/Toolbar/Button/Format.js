@@ -30,7 +30,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Format', [
       },
 
       _clickHandler: function() {
-         // In tinymce blockqoute isn't format, but have same work as other formats buttons
+         // In tinymce blockqoute isn't format, but it work's as other formats buttons
          if (this._format !== 'blockquote') {
             if (this._isActive) {
                this._notify('removeFormat', [[this._format]], { bubbling: true });
@@ -38,7 +38,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Format', [
                this._notify('applyFormat', [[{ formatName: this._format, state: true }]], { bubbling: true });
             }
          } else {
-            this._notify('execCommand', [[{ command: 'mceBlockquote' }]], { bubbling: true });
+            this._notify('execCommand', [[{ command: 'blockquote' }]], { bubbling: true });
          }
       },
 

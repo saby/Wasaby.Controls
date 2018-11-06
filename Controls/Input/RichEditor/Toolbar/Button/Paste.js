@@ -18,7 +18,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
    var _private = {
 
       /**
-       * Function returns content with/without styles from clipboard
+       * Function returns promise which return content from dialog
        * @param self
        * @param withStyles
        * @returns {string}
@@ -29,7 +29,6 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
                var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
                if (!content || !withStyles) {
                   content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                  content.replace('data-ws-is-rich-text="true"', '');
                }
 
                self._children.confirmationOpener.close();
@@ -64,6 +63,13 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
 
          return def;
       },
+
+      /**
+       * Function returns promise which returns content with/without styles
+       * @param self
+       * @param withStyles
+       * @returns {*}
+       */
       getHtml: function(self, withStyles) {
          var
             def = new Deferred(),
