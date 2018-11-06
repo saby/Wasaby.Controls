@@ -116,7 +116,7 @@ define('Controls/Popup/Opener/Edit',
           * <ul>
           *     <li>if mode option equal 'stack' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
           *     <li>if mode option equal 'dialog' see {@link Controls/interface/IDialogOptions#popupOptions popupOptions}</li>
-          *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
+          *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStickyOpener#popupOptions popupOptions}</li>
           * </ul>
           * @returns {undefined}
           * @example

@@ -20,6 +20,7 @@ define('Controls/Popup/Opener/Sticky',
           * @function Controls/Popup/Opener/Sticky#open
           * @param {Object} {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions} Sticky popup options.
           * @returns {Undefined}
+          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOpener#popupOptions popupOptions}
           * @example
           * wml
           * <pre>
