@@ -73,6 +73,11 @@ define([
       });
 
       describe('htmlToJson', function() {
+         beforeEach(function() {
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
+         });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
