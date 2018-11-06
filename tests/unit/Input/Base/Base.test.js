@@ -20,15 +20,68 @@ define(
             ctrl._children.input = {};
          });
 
-         describe('The _fieldName property value depending on the name option value when mounting the control.', function() {
-            it('Option name is not define.', function() {
+         it('getDefault', function() {
+            Base.getDefaultTypes();
+            Base.getDefaultOptions();
+         });
+         it('Public method paste', function() {
+            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
+
+            ctrl._beforeMount({
+               value: ''
+            });
+            ctrl.paste('test paste');
+
+            assert.deepEqual(calls, [{
+               name: 'notify',
+               arguments: ['valueChanged', ['test paste', 'test paste']]
+            }]);
+         });
+         it('The model belongs to the "Controls/Input/Base/ViewModel" class.', function() {
+            ctrl._beforeMount({
+               value: ''
+            });
+
+            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
+         });
+         describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
+            beforeEach(function() {
+               ctrl._options.readOnly = false;
+               ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
+            });
+            it('No.', function() {
+               ctrl._children.input.value = '';
+
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._afterMount();
+
+               assert.deepEqual(calls.length, 0);
+            });
+            it('Yes.', function() {
+               ctrl._children.input.value = 'test value';
+
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._afterMount();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test value', 'test value']]
+               }]);
+            });
+         });
+         describe('The _fieldName property value equal the name option value when mounting the control, if it defined.', function() {
+            it('No.', function() {
                ctrl._beforeMount({
                   value: ''
                });
 
                assert.equal(ctrl._fieldName, 'input');
             });
-            it('Option name is define.', function() {
+            it('Yes.', function() {
                ctrl._beforeMount({
                   name: 'test name',
                   value: ''
@@ -48,7 +101,7 @@ define(
                   value: '',
                   optionModel: 'test'
                });
-               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['options'], calls, true);
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['options', 'value'], calls, true);
             });
             it('No change.', function() {
                ctrl._beforeUpdate({
@@ -61,7 +114,7 @@ define(
 
             it('There are changes.', function() {
                ctrl._beforeUpdate({
-                  value: '',
+                  value: 'test value',
                   optionModel: 'test option'
                });
 
@@ -70,6 +123,9 @@ define(
                   value: {
                      option: 'test option'
                   }
+               }, {
+                  name: 'value',
+                  value: 'test value'
                }]);
             });
          });
@@ -176,7 +232,7 @@ define(
                   }
                }]);
             });
-            it('Pressing the home arrow', function() {
+            it('Pressing the key home', function() {
                ctrl._keyUpHandler(new SyntheticEvent({
                   keyCode: constants.key.home
                }));
@@ -196,28 +252,6 @@ define(
 
                assert.equal(calls.length, 0);
             });
-         });
-         it('The browser automatically completed the field.', function() {
-            ctrl._options.readOnly = false;
-            ctrl._children.input.value = 'test value';
-            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
-
-            ctrl._beforeMount({
-               value: ''
-            });
-            ctrl._afterMount();
-
-            assert.deepEqual(calls, [{
-               name: 'notify',
-               arguments: ['valueChanged', ['test value', 'test value']]
-            }]);
-         });
-         it('The model belongs to the "Controls/Input/Base/ViewModel" class.', function() {
-            ctrl._beforeMount({
-               value: ''
-            });
-
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
          });
       });
    }

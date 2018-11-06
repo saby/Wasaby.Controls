@@ -18,13 +18,18 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
-          },
           "value": {
             "type": "String",
             "title": "Field value."
+          },
+          "size": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
           },
           "style": {
             "type": "enum",

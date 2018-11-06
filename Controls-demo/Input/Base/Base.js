@@ -22,6 +22,13 @@ define('Controls-demo/Input/Base/Base',
 
          _beforeMount: function() {
             this._dataObject = {
+               size: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 1
+               },
                style: {
                   emptyText: 'none',
                   placeholder: 'select',
@@ -53,8 +60,8 @@ define('Controls-demo/Input/Base/Base',
             this._componentOptions = {
                name: 'BaseField',
                placeholder: 'Text...',
-               tooltip: 'Please enter text',
                value: '',
+               size: undefined,
                style: undefined,
                tagStyle: undefined,
                readOnly: undefined,

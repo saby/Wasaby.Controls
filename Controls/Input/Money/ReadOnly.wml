@@ -1,4 +1,4 @@
 <div>
-   <span>{{value.slice(0, -2)}}</span>
-   <span class="controls-Money__fraction_readOnly">{{value.slice(-2)}}</span>
+   <span>{{integerPart(value)}}</span>
+   <span class="controls-Money__fractionPart_readOnly">{{fractionPart(value)}}</span>
 </div>

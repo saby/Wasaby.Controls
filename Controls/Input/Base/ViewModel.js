@@ -72,8 +72,7 @@ define('Controls/Input/Base/ViewModel',
             }
          },
 
-         constructor: function(options) {
-            var value = '';
+         constructor: function(options, value) {
             var selection = {
                start: 0,
                end: 0

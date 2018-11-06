@@ -6,10 +6,31 @@
    display: inline-block;
    box-sizing: border-box;
    height: @height_Render;
+   padding: 0 @spacing-between_Render_border-text;
+}
+
+.controls-Render__wrapper {
+   height: 100%;
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-Render__baseline {
+   display: flex;
+   align-items: center;
+   height: 100%;
+}
+
+.controls-Render__placeholder {
+   color: @color_Render-placeholder;
+}
+
+.controls-Render__placeholder_overflow {
+   .text-overflow();
 }
 
 .controls-Render_size {
-   @variants: default, small, large;
+   @variants: s, m, l;
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Render_size_@{_item}}";
    } });
@@ -19,8 +40,14 @@
    @variants: default, primary;
    .for(@variants, { &_@{_item} {
       color: ~"@{color_Render_fontStyle_@{_item}}";
-      font-size: ~"@{font-size_Render_fontStyle_@{_item}}";
-      font-weight: ~"@{font-weight_Render_fontStyle_@{_item}}";
+   } });
+}
+
+.controls-Render_fontStyle {
+   @variants: default s, primary s, default m, primary m, default l, primary l;
+   .for(@variants, { @fontStyle: extract(@_item, 1); @size: extract(@_item, 2); &_@{fontStyle}_size_@{size} {
+      font-size: ~"@{font-size_Render_fontStyle_@{fontStyle}_size_@{size}}";
+      font-weight: ~"@{font-weight_Render_fontStyle_@{fontStyle}_size_@{size}}";
    } });
 }
 
@@ -54,8 +81,8 @@
    top: 0;
    right: 0;
    position: absolute;
-   width: @width_Render-tagStyle;
-   height: @height_Render-tagStyle;
+   width: @size_Render-tagStyle;
+   height: @size_Render-tagStyle;
 
    @variants: info, danger, success, primary, warning, secondary;
    .for(@variants, { &_@{_item} {

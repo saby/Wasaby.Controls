@@ -1,11 +1,10 @@
 define('Controls/Input/Money/ViewModel',
    [
       'Controls/Input/Base/ViewModel',
-      'Controls/Input/Money/Formatter',
       'Controls/Input/Number/InputProcessor',
       'Controls/Input/Number/SplitValueHelper'
    ],
-   function(BaseViewModel, Formatter, InputProcessor, SplitValueHelper) {
+   function(BaseViewModel, InputProcessor, SplitValueHelper) {
 
       'use strict';
 
@@ -16,9 +15,9 @@ define('Controls/Input/Money/ViewModel',
                splitValueHelper = new SplitValueHelper(splitValue),
                inputProcessor = new InputProcessor();
 
-            this.options.precision = 2;
-
-            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            /**
+             * If by mistake instead of a point entered a ',' or "b" or "Yu", then perform the replacement.
+             */
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
             switch (inputType) {

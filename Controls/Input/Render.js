@@ -1,13 +1,13 @@
 define('Controls/Input/Render',
    [
       'Core/Control',
+      'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
-      'Controls/Input/resources/RenderHelper',
 
       'wml!Controls/Input/Render/Render',
       'css!Controls/Input/Render/Render'
    ],
-   function(Control, tmplNotify, RenderHelper, template) {
+   function(Control, descriptor, tmplNotify, template) {
 
       'use strict';
 
@@ -15,10 +15,6 @@ define('Controls/Input/Render',
          _template: template,
 
          _notifyHandler: tmplNotify,
-
-         _isShowPlaceholder: function() {
-            return !(this._options.viewModel.displayValue || this._options.readOnly);
-         },
 
          _getState: function() {
             if (this._options.readOnly) {
@@ -30,6 +26,43 @@ define('Controls/Input/Render',
             }
          }
       });
+
+      Render.getDefaultTypes = function() {
+         return {
+            content: descriptor(Function).required(),
+            afterFieldWrapper: descriptor(Function),
+            beforeFieldWrapper: descriptor(Function),
+            size: descriptor(String).oneOf([
+               's',
+               'm',
+               'l'
+            ]).required(),
+            fontStyle: descriptor(String).oneOf([
+               'default',
+               'primary'
+            ]).required(),
+            textAlign: descriptor(String).oneOf([
+               'left',
+               'right'
+            ]).required(),
+            style: descriptor(String).oneOf([
+               'info',
+               'danger',
+               'invalid',
+               'primary',
+               'success',
+               'warning'
+            ]).required(),
+            tagStyle: descriptor(String).oneOf([
+               'info',
+               'danger',
+               'primary',
+               'success',
+               'warning',
+               'secondary'
+            ])
+         };
+      };
 
       return Render;
    }

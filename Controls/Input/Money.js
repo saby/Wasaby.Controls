@@ -23,16 +23,37 @@ define('Controls/Input/Money',
        * @author Журавлев М.С.
        * @category Input
        */
-      var Money = Base.extend({
-         _viewModel: ViewModel,
+      var _private = {
+         PRECISION: 2,
 
-         _readOnlyFieldTemplate: readOnlyFieldTemplate,
+         integerPart: function(value) {
+            return value.slice(0, -_private.precision);
+         },
+
+         fractionPart: function(value) {
+            return value.slice(-_private.precision);
+         }
+      };
+      
+      var Money = Base.extend({
+         _initProperties: function() {
+            Money.superclass._initProperties.apply(this, arguments);
+
+            this._readOnlyField.template = readOnlyFieldTemplate;
+            this._readOnlyField.scope.integerPart = _private.integerPart;
+            this._readOnlyField.scope.fractionPart = _private.fractionPart;
+         },
 
          _getViewModelOptions: function(options) {
             return {
                showEmptyDecimals: true,
+               precision: _private.PRECISION,
                onlyPositive: options.onlyPositive
             };
+         },
+
+         _getViewModelConstructor: function() {
+            return ViewModel;
          }
       });
 
