@@ -110,16 +110,16 @@ define('Controls/Tabs/Buttons', [
    /**
     * @name Controls/Tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
-    * @variant default
-    * @variant additional
-    * @default default
+    * @variant primary
+    * @variant secondary
+    * @default primary
     * @remark
     * If the standard theme does not suit you, you can override the variables:
     * <ul>
-    *     <li>@border-color_Tabs-item_selected_default,</li>
-    *     <li>@text-color_Tabs-item_selected_default,</li>
-    *     <li>@border-color_Tabs-item_selected_additional,</li>
-    *     <li>@text-color_Tabs-item_selected_additional</li>
+    *     <li>@border-color_Tabs-item_selected_primary,</li>
+    *     <li>@text-color_Tabs-item_selected_primary,</li>
+    *     <li>@border-color_Tabs-item_selected_secondary,</li>
+    *     <li>@text-color_Tabs-item_selected_secondary</li>
     * </ul>
     * @example
     * Tabs Buttons with additional style.
@@ -128,7 +128,7 @@ define('Controls/Tabs/Buttons', [
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
-    *       style="additional"
+    *       style="secondary"
     *       .....
     *    />
     * </pre>
@@ -283,7 +283,7 @@ define('Controls/Tabs/Buttons', [
    TabsButtons.getDefaultOptions = function() {
       return {
          itemTemplate: ItemTemplate,
-         style: 'default',
+         style: 'primary',
          displayProperty: 'title'
       };
    };
