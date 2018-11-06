@@ -28,24 +28,24 @@ function(RichUtil) {
           * @param properties
           */
       execCommand: function(self, commandName, userInterface, properties) {
-         var afterProcess = [];
+         var commandCallbacks = [];
 
          switch (commandName) {
             case 'JustifyLeft':
             case 'JustifyRight':
             case 'JustifyCenter':
             case 'JustifyFull':
-               _private.alignPrepare(self, commandName);
+               _private.alignmentPreparation(self, commandName);
                break;
             case 'mceBlockquote':
-               _private.blockquotePrepare(self, afterProcess);
+               _private.blockquotePrepararation(self, commandCallbacks);
          }
 
          self._editor.execCommand(commandName, userInterface, properties);
          self._handlers.inputHandler();
 
-         if (afterProcess.length) {
-            afterProcess.forEach(function(callbackFunc) {
+         if (commandCallbacks.length) {
+            commandCallbacks.forEach(function(callbackFunc) {
                callbackFunc();
             });
          }
@@ -173,11 +173,11 @@ function(RichUtil) {
    var _private = {
 
       /**
-          * Function fixes insert list with align
+          * Function fixes a problem that appearing when user trying to align list's elements
           * @param self
           * @param commandName
           */
-      alignPrepare: function(self, commandName) {
+      alignmentPreparation: function(self, commandName) {
          var
             selection = EditorHelper.getSelection(self),
             currentNode = selection.getNode(),
@@ -195,11 +195,11 @@ function(RichUtil) {
       },
 
       /**
-          * Function fixes multiline blockquote with lists
+          * Function fixes a problem that appearing when user trying to wrap lists in quote
           * @param self
-          * @param afterProcess
+          * @param commandCallbacks
           */
-      blockquotePrepare: function(self, afterProcess) {
+      blockquotePrepararation: function(self, commandCallbacks) {
          var
             selection = EditorHelper.getSelection(self),
             range = selection.getRng(),
@@ -209,8 +209,8 @@ function(RichUtil) {
             EditorHelper.wrap(node, document.createElement('div'));
             selection.select(node.parentNode, false);
             node.setAttribute('contenteditable', false);
-            afterProcess.push(function() {
-               if (node.parentNode.nodeName !== 'BLOCKQUTE') {
+            commandCallbacks.push(function() {
+               if (node.parentNode.nodeName !== 'BLOCKQUOTE') {
                   EditorHelper.unwrap(node);
                }
                node.removeAttribute('contenteditable');
