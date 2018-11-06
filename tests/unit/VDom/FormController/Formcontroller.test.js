@@ -3,8 +3,9 @@ define([
    'WS.Data/Entity/Record',
    'Core/helpers/Function/runDelayed',
    'Core/Deferred',
+   'WS.Data/Source/Memory',
    'require'
-], function(FormController, Record, runDelayed, Deferred, require) {
+], function(FormController, Record, runDelayed, Deferred, MemorySource, require) {
    'use strict';
 
    describe('FormController-tests', function() {
@@ -14,7 +15,14 @@ define([
          var def = new Deferred();
          require(['Core/Control', moduleName], function(CoreControl, Component) {
             var element =  document.body.querySelectorAll('#formControllerComponent')[0];
-            testControl = CoreControl.createControl(Component, { element: element }, element);
+            var config = {
+               element: element,
+               dataSource: new MemorySource({
+                  idProperty: 'id',
+                  data: [{ id: 0 }]
+               })
+            };
+            testControl = CoreControl.createControl(Component, config, element);
             var baseAfterMount = testControl._afterMount;
 
             testControl._afterMount = function() {
@@ -30,7 +38,12 @@ define([
       }
 
       function check(cfg) {
-         assert.equal(document.body.querySelectorAll('.form-content__key')[0].innerText, cfg.key);
+         var key1 = document.body.querySelectorAll('.form-content__key')[0].innerText;
+         var key2 = cfg.key;
+         key1 = typeof key1 === 'string' ? key1.trim() : key1;
+         key2 = typeof key2 === 'string' ? key2.trim() : key2;
+         assert.equal(key1, key2);
+
          assert.equal(document.body.querySelectorAll('.form-content__name .controls-InputRender__field')[0].value, cfg.name);
          assert.equal(document.body.querySelectorAll('.form-content__email .controls-InputRender__field')[0].value, cfg.email);
          assert.equal(document.body.querySelectorAll('.form-content__create .controls-BaseButton__text')[0].innerText, cfg.createButtonText);
@@ -87,7 +100,9 @@ define([
                      emailText: 'no@email.com'
                   };
                   control.__$resultForTests = answer;
-                  control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._create({ initValues: initValues, ResultForTests: answer }).addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
                case 'read':
                   control.__$resultForTests = answer;
@@ -96,16 +111,22 @@ define([
                   });
                   break;
                case 'update':
-                  control._update().addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._update().addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
                case 'delete':
-                  control._delete().addCallbacks(stepCallback, stepErrback);
+                  waiting(function() {
+                     control._delete().addCallbacks(stepCallback, stepErrback);
+                  });
                   break;
             }
             if (typeof action === 'function') {
-               action(testControl);
+               action(control);
                def = new Deferred();
-               def.callback();
+               waiting(function() {
+                  def.callback();
+               });
             }
             return def;
          }
@@ -450,6 +471,45 @@ define([
                         selectButtonsCount: 3
                      }
                   },
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      }).timeout(6000);
+
+      it('FormController - check record inside', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._requestCustomUpdate = function() {
+                           return true;
+                        };
+                     }
+                  }, {
+                     action: function(control) {
+                        var record = new Record();
+                        record.set({ testValue: 'testValue' });
+                        control._updateValuesByRecord(record);
+                     }
+                  }, {
+                     action: function(control) {
+                        assert.equal(control._children.Container._options.record.get('testValue'), 'testValue');
+                     }
+                  }
                ]);
                resultDef.addCallbacks(function() {
                   done();

@@ -2,24 +2,22 @@ define('Controls/FormController', [
    'Core/Control',
    'Core/core-instance',
    'wml!Controls/FormController/FormController',
-   'WS.Data/Entity/Model',
    'Core/Deferred',
    'Core/IoC'
-], function(Control, cInstance, tmpl, Model, Deferred, IoC) {
+], function(Control, cInstance, tmpl, Deferred, IoC) {
    'use strict';
 
    var _private = {
+      checkRecordType: function(record) {
+         return cInstance.instanceOfModule(record, 'WS.Data/Entity/Record');
+      },
       readRecordBeforeMount: function(instance, cfg) {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
          var readDef = cfg.dataSource.read(cfg.key, cfg.readMetaData);
 
          readDef.addCallback(function(record) {
-            instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
-            instance._record = record;
-
-            // на изменение рекорда регистрируем пендинг
-            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._setRecord(record);
             instance._readInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
@@ -55,10 +53,7 @@ define('Controls/FormController', [
          var createDef = cfg.dataSource.create(cfg.initValues);
          instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
          createDef.addCallback(function(record) {
-            instance._record = record;
-
-            // на изменение рекорда регистрируем пендинг
-            instance._record.subscribe('onPropertyChange', instance._onPropertyChangeHandler);
+            instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
@@ -109,11 +104,8 @@ define('Controls/FormController', [
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
          // use record
-         if (cInstance.instanceOfModule(cfg.record, 'WS.Data/Entity/Record')) {
-            this._record = cfg.record;
-
-            // register a pending to change the record
-            this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
+         if (cfg.record && _private.checkRecordType(cfg.record)) {
+            this._setRecord(cfg.record);
             this._isNewRecord = !!cfg.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
@@ -138,6 +130,14 @@ define('Controls/FormController', [
          }
          this._isMount = true;
       },
+      _beforeUpdate: function(cfg) {
+         if (cfg.record && _private.checkRecordType(cfg.record)) {
+            this._setRecord(cfg.record);
+            if (cfg.isNewRecord) {
+               this._isNewRecord = this._options.isNewRecord;
+            }
+         }
+      },
       _afterUpdate: function() {
          if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
@@ -147,14 +147,8 @@ define('Controls/FormController', [
             this._wasDestroyed = false;
          }
 
-         if (this._options.record && this._options.record instanceof Model) {
-            // если есть рекорд - используем его
-            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-            this._record = this._options.record;
-            this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
-            if (this._options.isNewRecord) {
-               this._isNewRecord = this._options.isNewRecord;
-            }
+         if (this._options.record && _private.checkRecordType(this._options.record)) {
+            // уже установили в _beforeUpdate
          } else if (this._options.key !== undefined && this._options.key !== null) {
             // если нет рекорда и есть ключ - прочитаем рекорд
             this.read(this._options.key, this._options.readMetaData);
@@ -169,11 +163,28 @@ define('Controls/FormController', [
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
       },
+      _setRecord: function(record) {
+         if (!record || _private.checkRecordType(record)) {
+            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
+            this._record = record;
+            this._record && this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
+         }
+      },
+      _getRecordId: function() {
+         if (!this._record.getId && !this._options.idProperty) {
+            IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
+            return;
+         }
+
+         return this._options.idProperty
+            ? this._record.get(this._options.idProperty)
+            : this._record.getId();
+      },
 
       _tryDeleteNewRecord: function() {
          var def;
          if (this._isNewRecord && this._record) {
-            var id = this._record.getId();
+            var id = this._getRecordId();
             def = this._options.dataSource.destroy(id, this._options.destroyMeta);
             def.addBoth(function() {
                this._deletedId = id;
@@ -194,14 +205,18 @@ define('Controls/FormController', [
             self._notify('registerPending', [def, {
                showLoadingIndicator: false,
                onPendingFail: function(forceFinishValue) {
-                  self._showConfirmDialog(def, forceFinishValue);
-                  def.addCallbacks(function(res) {
-                     self._propertyChangeNotified = false;
-                     return res;
-                  }, function(e) {
-                     self._propertyChangeNotified = false;
-                     return e;
-                  });
+                  if (self._record.isChanged()) {
+                     self._showConfirmDialog(def, forceFinishValue);
+                     def.addCallbacks(function(res) {
+                        self._propertyChangeNotified = false;
+                        return res;
+                     }, function(e) {
+                        self._propertyChangeNotified = false;
+                        return e;
+                     });
+                  } else {
+                     def.callback(true);
+                  }
                   return def;
                }
             }], { bubbling: true });
@@ -413,8 +428,7 @@ define('Controls/FormController', [
          var resultDef = this._children.crud.delete(record, destroyMeta);
 
          resultDef.addCallback(function(record) {
-            self._record.unsubscribe('onPropertyChange', self._onPropertyChangeHandler);
-            self._record = null;
+            self._setRecord(null);
             self._wasDestroyed = true;
             self._isNewRecord = false;
             self._forceUpdate();
