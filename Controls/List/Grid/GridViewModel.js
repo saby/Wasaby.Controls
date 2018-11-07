@@ -5,7 +5,6 @@ define('Controls/List/Grid/GridViewModel', [
    'Core/core-clone',
    'Core/detection'
 ], function(BaseViewModel, ListViewModel, ControlsConstants, cClone, cDetection) {
-
    'use strict';
 
    var
@@ -15,7 +14,7 @@ define('Controls/List/Grid/GridViewModel', [
                preparedClasses = '';
 
             // Колонки
-            if (params.multiSelectVisibility ? params.columnIndex > 1 :  params.columnIndex > 0) {
+            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
                preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
             if (params.columnIndex < params.columns.length - 1) {
@@ -425,10 +424,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.goToNext();
          },
 
-         getCurrent: function() {
+         getItemDataByItem: function(dispItem) {
             var
                self = this,
-               current = this._model.getCurrent();
+               current = this._model.getItemDataByItem(dispItem);
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
@@ -504,6 +503,11 @@ define('Controls/List/Grid/GridViewModel', [
                }
             }
             return current;
+         },
+
+         getCurrent: function() {
+            var dispItem = this._model._display.at(this._model._curIndex);
+            return this.getItemDataByItem(dispItem);
          },
 
          toggleGroup: function(group, state) {

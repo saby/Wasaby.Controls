@@ -212,9 +212,9 @@ define('Controls/List/Tree/TreeViewModel', [
             _private.onCollectionChange(this, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
-         getCurrent: function() {
+         getItemDataByItem: function(dispItem) {
             var
-               current = TreeViewModel.superclass.getCurrent.apply(this, arguments);
+               current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
             current.isExpanded = !!this._expandedItems[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
