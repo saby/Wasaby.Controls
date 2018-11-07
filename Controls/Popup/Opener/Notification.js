@@ -24,7 +24,7 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Open dialog popup.
           * @function Controls/Popup/Opener/Notification#open
-          * @param {popupOptions} popupOptions Open notification popup.
+          * @param {popupOptions} popupOptions Notification popup options.
           * @returns {Undefined}
           * @example
           * wml
