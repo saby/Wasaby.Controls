@@ -14,6 +14,12 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
+
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
+
+   <link rel="stylesheet" key="defaultcss"
+         href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
+
    <ws:if data="{{ _options.head }}">
       <ws:if data="{{ isArrayHead() }}">
          <ws:for data="i in _options.head">
@@ -24,10 +30,6 @@
          <ws:partial template="{{ _options.head }}"/>
       </ws:else>
    </ws:if>
-   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
-
-   <link rel="stylesheet" key="defaultcss"
-         href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
 
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
