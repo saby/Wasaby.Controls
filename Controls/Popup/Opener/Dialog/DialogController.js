@@ -101,7 +101,8 @@ define('Controls/Popup/Opener/Dialog/DialogController',
 
          needRecalcOnKeyboardShow: function() {
             return true;
-         }
+         },
+         _private: _private
       });
       return new DialogController();
    }
