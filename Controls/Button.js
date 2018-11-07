@@ -3,8 +3,9 @@ define('Controls/Button', [
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
+   'Core/IoC',
    'css!theme?Controls/Button/Button'
-], function(Control, Classes, template, validateIconStyle) {
+], function(Control, Classes, template, validateIconStyle, IoC) {
    'use strict';
 
    /**
@@ -170,7 +171,15 @@ define('Controls/Button', [
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._transparent = options.transparent;
          self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+         if (self._viewMode === ('quickButton' || 'transparentQuickButton')) {
+            self._viewMode = 'toolButton';
+            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+            if (self._viewMode === 'transparentQuickButton') {
+               self._transparent = true;
+            }
+         }
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
