@@ -15,7 +15,7 @@
    />
    <ws:if data="{{!value}}">
       <div class="controls-Base__placeholder">
-         <ws:partial template="{{placeholderTemplate}}" on:click="_clickInPlaceholderHandler()"/>
+         <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
    </ws:if>
 </div>

@@ -3,12 +3,11 @@ define(
       'Core/constants',
       'Core/core-instance',
       'Controls/Input/Base',
-      'tests/unit/resources/ProxyCall',
-      'tests/unit/resources/TemplateUtil',
+      'tests/resources/ProxyCall',
+      'tests/resources/TemplateUtil',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
    function(constants, instance, Base, ProxyCall, TemplateUtil, SyntheticEvent) {
-
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -17,14 +16,20 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new Base();
-            ctrl._children.input = {};
+            ctrl._children.input = {
+               focus: function() {},
+               setSelectionRange: function(start, end) {
+                  this.selectionStart = start;
+                  this.selectionEnd = end;
+               }
+            };
          });
 
          it('getDefault', function() {
             Base.getDefaultTypes();
             Base.getDefaultOptions();
          });
-         it('Public method paste', function() {
+         it('Public method paste.', function() {
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
 
             ctrl._beforeMount({
@@ -129,32 +134,207 @@ define(
                }]);
             });
          });
-         describe('Mouseeneter', function() {
+         describe('MouseEnter', function() {
             describe('Tooltip', function() {
                beforeEach(function() {
                   ctrl._beforeMount({
                      value: 'test value'
                   });
-                  ctrl._options.tooltip = 'test tooltip';
                });
                it('The value fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
                      return false;
                   };
 
-                  ctrl._mouseenterHandler();
+                  ctrl._mouseEnterHandler();
 
-                  assert.equal(ctrl._tooltip, 'test tooltip');
+                  assert.equal(ctrl._tooltip, '');
                });
                it('The value no fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
                      return true;
                   };
 
-                  ctrl._mouseenterHandler();
+                  ctrl._mouseEnterHandler();
 
                   assert.equal(ctrl._tooltip, 'test value');
                });
+            });
+         });
+         describe('User input.', function() {
+            it('The field does not change, but the model changes.', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._children.input.value = 'text';
+               ctrl._children.input.selectionStart = 4;
+               ctrl._children.input.selectionEnd = 4;
+               ctrl._inputHandler(new SyntheticEvent({}));
+
+               assert.equal(ctrl._children.input.value, '');
+               assert.equal(ctrl._children.input.selectionStart, 0);
+               assert.equal(ctrl._children.input.selectionEnd, 0);
+               assert.equal(ctrl._viewModel.value, 'text');
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
+         });
+         describe('Synchronize the field with the model.', function() {
+            describe('Scroll left in the field, depending on the cursor position.', function() {
+               beforeEach(function() {
+                  ctrl._getTextWidth = function(value) {
+                     return 10 * value.length;
+                  };
+                  ctrl._getActiveElement = function() {
+                     return ctrl._children.input;
+                  };
+                  ctrl._beforeMount({
+
+                     // length = 20, width = 200;
+                     value: '01234567890123456789'
+                  });
+                  ctrl._children.input.clientWidth = 100;
+               });
+               it('The cursor is behind the left edge.', function() {
+                  ctrl._children.input.scrollLeft = 100;
+
+                  ctrl._children.input.selectionStart = 10;
+                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._clickHandler();
+                  ctrl._children.input.value = '0123456780123456789';
+                  ctrl._children.input.selectionStart = 9;
+                  ctrl._children.input.selectionEnd = 9;
+                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._template(ctrl);
+
+                  assert.equal(ctrl._children.input.scrollLeft, 41);
+               });
+               it('The cursor between the edges.', function() {
+                  ctrl._children.input.scrollLeft = 50;
+
+                  ctrl._children.input.selectionStart = 10;
+                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._clickHandler();
+                  ctrl._children.input.value = '0123456789t0123456789';
+                  ctrl._children.input.selectionStart = 11;
+                  ctrl._children.input.selectionEnd = 11;
+                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._template(ctrl);
+
+                  assert.equal(ctrl._children.input.scrollLeft, 50);
+               });
+               it('The cursor is behind the right edge.', function() {
+                  ctrl._children.input.scrollLeft = 0;
+
+                  ctrl._children.input.selectionStart = 10;
+                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._clickHandler();
+                  ctrl._children.input.value = '0123456789a0123456789';
+                  ctrl._children.input.selectionStart = 11;
+                  ctrl._children.input.selectionEnd = 11;
+                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._template(ctrl);
+
+                  assert.equal(ctrl._children.input.scrollLeft, 61);
+               });
+            });
+         });
+         describe('Change event', function() {
+            it('Notification when input is complete.', function() {
+               ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
+
+               ctrl._beforeMount({
+                  value: 'test value'
+               });
+               ctrl._changeHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['inputCompleted', ['test value', 'test value']]
+               }]);
+            });
+         });
+         describe('Click event', function() {
+            it('The selection is saved to the model.', function() {
+               ctrl._beforeMount({
+                  value: '1234567890'
+               });
+
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
+
+               ctrl._children.input.selectionStart = 10;
+               ctrl._children.input.selectionEnd = 10;
+               ctrl._clickHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 10,
+                     end: 10
+                  }
+               }]);
+            });
+         });
+         describe('Select event', function() {
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: '1234567890'
+               });
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
+            });
+            it('The selection is saved to the model after user select.', function() {
+               ctrl._children.input.selectionStart = 0;
+               ctrl._children.input.selectionEnd = 10;
+               ctrl._selectHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 0,
+                     end: 10
+                  }
+               }]);
+            });
+            it('The selection is not saved to the model after script actions', function() {
+               ctrl._children.input.value = '';
+               ctrl._children.input.selectionStart = 0;
+               ctrl._children.input.selectionEnd = 0;
+               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._selectHandler();
+
+               assert.equal(calls.length, 0);
+            });
+         });
+         describe('Focus out event', function() {
+            it('Scroll to start.', function() {
+               ctrl._children.input.scrollLeft = 100;
+               ctrl._focusOutHandler();
+
+               assert.equal(ctrl._children.input.scrollLeft, 0);
+            });
+         });
+         describe('Click event on the placeholder.', function() {
+            beforeEach(function() {
+               ctrl._children.input.focus = ProxyCall.apply(ctrl._notify, 'focus', calls, true);
+            });
+            it('Focus the field through a script in ie browser version 10.', function() {
+               ctrl._ieVersion = 10;
+
+               ctrl._placeholderClickHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'focus',
+                  arguments: []
+               }]);
+            });
+            it('Not focus the field through a script in ie browser version 12.', function() {
+               ctrl._ieVersion = 12;
+
+               ctrl._placeholderClickHandler();
+
+               assert.equal(calls.length, 0);
             });
          });
          describe('KeyUp', function() {

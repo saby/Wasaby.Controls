@@ -17,8 +17,11 @@ define('Controls/Input/Base',
 
       'css!Controls/Input/Base/Base'
    ],
-   function(Control, detection, constants, descriptor, tmplNotify, isEqual, getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate) {
-
+   function(
+      Control, detection, constants, descriptor, tmplNotify, isEqual,
+      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
+      fieldTemplate, readOnlyFieldTemplate
+   ) {
       'use strict';
 
       var _private = {
@@ -114,15 +117,6 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Determines whether the field in focus.
-          * @param {Node} field Field to check.
-          * @return {boolean}
-          */
-         hasFieldFocus: function(field) {
-            return document.activeElement === field;
-         },
-
-         /**
           * @param {Controls/Input/Base} self Control instance.
           */
          notifyValueChanged: function(self) {
@@ -154,7 +148,8 @@ define('Controls/Input/Base',
           * @param {String} newValue The value of the field after user input.
           * @param {Number} position The caret position of the field after user input.
           * @param {Controls/Input/Base/Types/Selection.typedef} selection The selection of the field before user input.
-          * @param {Controls/Input/Base/Types/NativeInputType.typedef} [nativeInputType] The value of the type property in the handle of the native input event.
+          * @param {Controls/Input/Base/Types/NativeInputType.typedef} [nativeInputType]
+          * The value of the type property in the handle of the native input event.
           * @return {Controls/Input/Base/Types/InputType.typedef}
           */
          calculateInputType: function(self, oldValue, newValue, position, selection, nativeInputType) {
@@ -162,7 +157,8 @@ define('Controls/Input/Base',
 
             /**
              * On Android if you have enabled spell check and there is a deletion of the last character
-             * then the type of event equal insertCompositionText. However, in this case, the event type must be deleteContentBackward.
+             * then the type of event equal insertCompositionText.
+             * However, in this case, the event type must be deleteContentBackward.
              * Therefore, we will calculate the event type.
              */
             if (self._isMobileAndroid && nativeInputType === 'insertCompositionText') {
@@ -195,12 +191,13 @@ define('Controls/Input/Base',
           * Change the location of the visible area of the field so that the cursor is visible.
           * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
           * the cursor is visible in the middle of the area.
+          * @param {Controls/Input/Base} self Control instance.
           * @param {Node} field
           * @param {String} value
           * @param {Controls/Input/Base/Types/Selection.typedef} selection
           */
-         recalculateLocationVisibleArea: function(field, value, selection) {
-            var textWidthBeforeCursor = getTextWidth(value.substring(0, selection.end));
+         recalculateLocationVisibleArea: function(self, field, value, selection) {
+            var textWidthBeforeCursor = self._getTextWidth(value.substring(0, selection.end));
 
             var positionCursor = textWidthBeforeCursor + _private.WIDTH_CURSOR;
             var sizeVisibleArea = field.clientWidth;
@@ -272,33 +269,65 @@ define('Controls/Input/Base',
 
          /**
           * @type {Function} Control display template.
-          * @private
+          * @protected
           */
          _template: template,
 
          /**
-          * @type {DisplayingControl} Input field in edit mode.
-          * @private
+          * @type {Controls/Input/Base/Types/DisplayingControl.typedef} Input field in edit mode.
+          * @protected
           */
          _field: null,
 
          /**
-          * @type {DisplayingControl} Input field in read mode.
-          * @private
+          * @type {Controls/Input/Base/Types/DisplayingControl.typedef} Input field in read mode.
+          * @protected
           */
          _readOnlyField: null,
 
          /**
           * @type {Controls/Input/Base/ViewModel} The display model of the input field.
-          * @private
+          * @protected
           */
          _viewModel: null,
 
          /**
           * @type {Controls/Utils/tmplNotify}
-          * @private
+          * @protected
           */
          _notifyHandler: tmplNotify,
+
+         /**
+          * @type {String} Text of the tooltip shown when the control is hovered over.
+          * @protected
+          */
+         _tooltip: '',
+
+         /**
+          * @type {String} Value of the type attribute in the native field.
+          * @remark
+          * How an native field works varies considerably depending on the value of its {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types type attribute}.
+          * @protected
+          */
+         _type: 'text',
+
+         /**
+          * @type {String} Value of the name attribute in the native field.
+          * @protected
+          */
+         _fieldName: 'input',
+
+         /**
+          * @type {Boolean} Determines whether to skip once save the current field selection to the model.
+          * @protected
+          */
+         _skipSavingSelectionOnce: false,
+
+         /**
+          * @type {Controls/Utils/getTextWidth}
+          * @private
+          */
+         _getTextWidth: getTextWidth,
 
          /**
           * @type {Controls/Utils/hasHorizontalScroll}
@@ -307,34 +336,25 @@ define('Controls/Input/Base',
          _hasHorizontalScroll: hasHorizontalScroll,
 
          /**
-          * @type {String} Text of the tooltip shown when the control is hovered over.
+          * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
-         _tooltip: '',
-
-         /**
-          * @type {String} Value of the type attribute in the native field.
-          * @remark
-          * How an native field works varies considerably depending on the value of its {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types type attribute}.
-          * @private
-          */
-         _type: 'text',
-
-         /**
-          * @type {String} Value of the name attribute in the native field.
-          * @private
-          */
-         _fieldName: 'input',
-
-         /**
-          * @type {Boolean} Determines whether to skip once save the current field selection to the model.
-          * @private
-          */
-         _skipSavingSelectionOnce: false,
-
          _ieVersion: detection.IEVersion,
 
+         /**
+          * @type {Boolean} The version of IE browser in which the control is build.
+          * @private
+          */
          _isMobileAndroid: detection.isMobileAndroid,
+
+         /**
+          *
+          * @return {HTMLElement}
+          * @private
+          */
+         _getActiveElement: function() {
+            return document.activeElement;
+         },
 
          _beforeMount: function(options) {
             var viewModelCtr = this._getViewModelConstructor();
@@ -382,7 +402,7 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler mouseenter.
+          * Event handler mouse enter.
           * @private
           */
          _mouseEnterHandler: function() {
@@ -390,7 +410,7 @@ define('Controls/Input/Base',
          },
 
          /**
-          * Event handler keyup in native field.
+          * Event handler key up in native field.
           * @param {Object} event Event descriptor.
           * @private
           */
@@ -433,13 +453,17 @@ define('Controls/Input/Base',
             var newValue = field.value;
             var position = field.selectionEnd;
 
-            var inputType = _private.calculateInputType(this, value, newValue, position, selection, event.nativeEvent.inputType);
+            var inputType = _private.calculateInputType(
+               this, value, newValue, position,
+               selection, event.nativeEvent.inputType
+            );
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
             _private.handleInput(this, splitValue, inputType);
 
             /**
-             * The field is displayed according to the control options. When user enters data,the display changes and does not match the options.
+             * The field is displayed according to the control options.
+             * When user enters data,the display changes and does not match the options.
              * Therefore, return the field to the state before entering.
              */
             _private.updateField(this, value, selection);
@@ -449,20 +473,31 @@ define('Controls/Input/Base',
             _private.notifyInputCompleted(this);
          },
 
-         _clickInPlaceholderHandler: function() {
+         _placeholderClickHandler: function() {
             /**
-             * Placeholder is positioned above the input field. When clicking, the cursor should stand in the input field.
+             * Placeholder is positioned above the input field.
+             * When clicking, the cursor should stand in the input field.
              * To do this, we ignore placeholder using the pointer-events property with none value.
-             * The property is not supported in ie lower version 11. In ie 11, you sometimes need to switch versions in emulation to work.
+             * The property is not supported in ie lower version 11.
+             * In ie 11, you sometimes need to switch versions in emulation to work.
              * Therefore, we ourselves will activate the field on click.
              * https://caniuse.com/#search=pointer-events
              */
-            if (detection.IEVersion < 12) {
-               this.activate();
+            if (this._ieVersion < 12) {
+               this._getField().focus();
             }
          },
 
+         /**
+          * Event handler focus out in native field.
+          * @protected
+          */
          _focusOutHandler: function() {
+            /**
+             * After the focus disappears, the field should be scrolled to the beginning.
+             * Each browser works differently. For example, chrome scrolled to the beginning.
+             * IE, Firefox does not scrolled. So we do it ourselves.
+             */
             this._getField().scrollLeft = 0;
          },
 
@@ -509,7 +544,8 @@ define('Controls/Input/Base',
 
          /**
           * Get the tooltip for field.
-          * If the displayed value fits in the field, the tooltip option is returned. Otherwise the displayed value is returned.
+          * If the displayed value fits in the field, the tooltip option is returned.
+          * Otherwise the displayed value is returned.
           * @return {String} Tooltip.
           * @private
           */
@@ -527,8 +563,8 @@ define('Controls/Input/Base',
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (_private.hasFieldFocus(field)) {
-                  _private.recalculateLocationVisibleArea(field, model.displayValue, model.selection);
+               if (this._getActiveElement() === field) {
+                  _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
                }
             }
 
@@ -536,7 +572,8 @@ define('Controls/Input/Base',
          },
 
          paste: function(text) {
-            var splitValue = _private.calculateSplitValueToPaste(text, this._viewModel.displayValue, this._viewModel.selection);
+            var model = this._viewModel;
+            var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
 
             _private.handleInput(this, splitValue, 'insert');
          }
@@ -595,5 +632,4 @@ define('Controls/Input/Base',
       };
 
       return Base;
-   }
-);
+   });

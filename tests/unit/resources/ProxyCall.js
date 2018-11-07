@@ -1,10 +1,10 @@
-define('tests/unit/resources/ProxyCall',
+define('tests/resources/ProxyCall',
    [],
    function() {
-      
       'use strict';
 
       return {
+
          /**
           *
           * @param {Function} func
@@ -48,5 +48,4 @@ define('tests/unit/resources/ProxyCall',
             });
          }
       };
-   }
-);
+   });

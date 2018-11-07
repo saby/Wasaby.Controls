@@ -41,7 +41,7 @@ define('Controls/Input/Base/InputUtil', [], function() {
        */
       getInputType: function(oldValue, newValue, caretPosition, selection) {
          var
-            selectionLength = selection.selectionEnd - selection.selectionStart,
+            selectionLength = selection.end - selection.start,
             isDelete = (oldValue.length - selectionLength >= newValue.length) << 2,
             isSelection = !!selectionLength << 1,
             isOffsetCaret = caretPosition === selection.selectionEnd;

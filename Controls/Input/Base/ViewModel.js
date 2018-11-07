@@ -74,8 +74,8 @@ define('Controls/Input/Base/ViewModel',
 
          constructor: function(options, value) {
             var selection = {
-               start: 0,
-               end: 0
+               start: value.length,
+               end: value.length
             };
 
             this._value = value;
