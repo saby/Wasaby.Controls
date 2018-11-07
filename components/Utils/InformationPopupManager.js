@@ -248,28 +248,57 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                var openerContainer = $('<div class="controls-InformationPopup-opener"></div>');
                var self = this;
                $('body').append(openerContainer);
-               NotificationVDOM.createControlAsync(NotificationVDOM, {}, openerContainer).then(function(instance) {
-                  self._notificationVDOM = instance;
-                  /**
-                   * Ассоциативный объект значений опций старого и нового шаблона.
-                   * [значение в старом шаблоне]: значение в новом шаблоне
-                   */
-                  self._styles = {
-                     success: 'done',
-                     error: 'error',
-                     warning: 'warning'
-                  };
 
-                  /**
-                   * Аналогично this._styles.
-                   */
-                  self._icon = {
-                     success: 'icon-size icon-24 icon-Yes icon-done',
-                     error: 'icon-size icon-24 icon-Alert icon-error',
-                     warning: 'icon-size icon-24 icon-Alert icon-attention'
-                  };
-                  informationOpenerDeferred.callback(instance);
-               });
+               //todo Удалить этот код и оставить тот, что закомменчен ниже, когда добавят createControlAsync
+               // https://online.sbis.ru/opendoc.html?guid=ac019cf6-66b7-4ff4-b817-befeadc3d580
+               this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, openerContainer);
+               var baseAfterMount = this._notificationVDOM._afterMount;
+               this._notificationVDOM._afterMount = function() {
+                  baseAfterMount.apply(self._notificationVDOM, arguments);
+                     /**
+                      * Ассоциативный объект значений опций старого и нового шаблона.
+                      * [значение в старом шаблоне]: значение в новом шаблоне
+                      */
+                     self._styles = {
+                        success: 'done',
+                        error: 'error',
+                        warning: 'warning'
+                     };
+
+                     /**
+                      * Аналогично this._styles.
+                      */
+                     self._icon = {
+                        success: 'icon-size icon-24 icon-Yes icon-done',
+                        error: 'icon-size icon-24 icon-Alert icon-error',
+                        warning: 'icon-size icon-24 icon-Alert icon-attention'
+                     };
+                     informationOpenerDeferred.callback(self._notificationVDOM);
+               };
+
+               // todo Раскоментить код, когда добавят createControlAsync https://online.sbis.ru/opendoc.html?guid=ac019cf6-66b7-4ff4-b817-befeadc3d580
+               // NotificationVDOM.createControlAsync(NotificationVDOM, {}, openerContainer).then(function(instance) {
+               //    self._notificationVDOM = instance;
+               //    /**
+               //     * Ассоциативный объект значений опций старого и нового шаблона.
+               //     * [значение в старом шаблоне]: значение в новом шаблоне
+               //     */
+               //    self._styles = {
+               //       success: 'done',
+               //       error: 'error',
+               //       warning: 'warning'
+               //    };
+               //
+               //    /**
+               //     * Аналогично this._styles.
+               //     */
+               //    self._icon = {
+               //       success: 'icon-size icon-24 icon-Yes icon-done',
+               //       error: 'icon-size icon-24 icon-Alert icon-error',
+               //       warning: 'icon-size icon-24 icon-Alert icon-attention'
+               //    };
+               //    informationOpenerDeferred.callback(instance);
+               // });
             }
             return informationOpenerDeferred;
 
