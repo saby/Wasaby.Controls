@@ -2,5 +2,5 @@
             type="{{ type }}"
             active="{{selectedKey === currentItemId}}"
             attr:class="{{ selectedKey !== currentItemId ? 'ws-hidden' }}">
-   <ws:templateOptions type="{{ type }}" active="{{selectedKey === currentItemId}}"/>
+   <ws:templateOptions type="{{ type }}"/>
 </ws:partial>

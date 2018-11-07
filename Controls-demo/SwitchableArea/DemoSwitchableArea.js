@@ -2,15 +2,13 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'Core/Control',
    'wml!Controls-demo/SwitchableArea/DemoSwitchableArea',
    'WS.Data/Collection/RecordSet',
-   'Controls/Application/HeadDataContext',
    'wml!Controls-demo/SwitchableArea/resources/content',
    'wml!Controls-demo/SwitchableArea/resources/content2',
    'wml!Controls-demo/SwitchableArea/resources/contentAsync',
    'css!Controls-demo/SwitchableArea/DemoSwitchableArea'
 ], function(Control,
             template,
-            RecordSet,
-            HeadDataContext
+            RecordSet
 ) {
    'use strict';
    var demoSwitchableArea = Control.extend({
@@ -19,7 +17,6 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
       _items: null,
       constructor: function() {
          demoSwitchableArea.superclass.constructor.apply(this, arguments);
-         this.headDataCtxField = new HeadDataContext();
          this._items = [
             {
                id: '0',
