@@ -27,6 +27,7 @@ define('Controls/Input/DateTime', [
     * </ol>
     * <a href="/materials/demo-ws4-input-datetime">Demo examples.</a>.
     * @class Controls/Input/DateTime
+    * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IDateTimeMask
