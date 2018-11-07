@@ -18,6 +18,7 @@ define('Controls/SelectedCollection',
        * @mixes Controls/SelectedCollection/SelectedCollectionStyles
        * @control
        * @public
+       * @author Герасимов А.М.
        */
 
       var _private = {

@@ -12,6 +12,7 @@ define('Controls/Operations/Button', [
     * @extends Core/Control
     * @mixes Controls/interface/IExpandable
     * @control
+    * @author Сухоручкин А.С.
     * @public
     *
     * @css @width_OperationsButton

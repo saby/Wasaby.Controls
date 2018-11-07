@@ -90,7 +90,7 @@ define('Controls/Search/Controller',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */

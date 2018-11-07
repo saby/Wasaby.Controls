@@ -6,6 +6,7 @@ define('Controls/List/interface/IListControl', [
     *
     * @interface Controls/List/interface/IListControl
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

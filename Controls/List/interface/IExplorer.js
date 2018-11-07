@@ -5,6 +5,7 @@ define('Controls/List/interface/IExplorer', [
     *
     * @interface Controls/List/interface/IExplorer
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

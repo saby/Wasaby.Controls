@@ -12,6 +12,7 @@ define('Controls/Popup/Previewer',
        * @class Controls/Popup/Previewer
        * @extends Core/Control
        * @public
+       * @author Журавлем М.С.
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.

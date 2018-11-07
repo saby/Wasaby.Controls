@@ -14,6 +14,7 @@ define('Controls/Tabs', [
     * @control
     * @public
     * @category List
+    * @author Крайнов Д.О.
     */
 
    var Tabs = Control.extend({
