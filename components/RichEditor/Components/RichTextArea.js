@@ -268,6 +268,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    */
                   imageFolder: 'images',
                   /**
+                   * @cfg {Boolean} Уменьшать файлы изображений (используя сервис previewer) для точной подгонки к размеру, в котором они будут отображаться. В случае, если изображения будут(могут) показываться в размере, отличающегося от размера при редактировании - опцию лучше отключить
+                   */
+                  fitImagesToSize: true,
+                  /**
                    * позволяет сохранять историю ввода
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
@@ -3597,8 +3601,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   throw new Error('Size is not specified');
                }
                var url = imgInfo.filePath || imgInfo.url;
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               if (!this._options.fitImagesToSize || !/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+                  // Вернуть как есть так как подгонка под размер не требуется или это не файл, хранящийся на СбисДиске
                   return Deferred.success({
                      preview: url,
                      original: url
