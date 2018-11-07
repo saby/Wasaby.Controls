@@ -49,14 +49,7 @@ define('Controls/Explorer', [
             }
          },
          dataLoadCallback: function(self, data) {
-            var
-               path = data.getMetaData().path;
-            if (path) {
-               self._breadCrumbsItems = path;
-            } else {
-               self._breadCrumbsItems = [];
-            }
-            self._breadCrumbsVisibility = !!self._breadCrumbsItems.length;
+            self._breadCrumbsItems = data.getMetaData().path;
             self._forceUpdate();
             if (self._options.dataLoadCallback) {
                self._options.dataLoadCallback(data);
@@ -100,7 +93,6 @@ define('Controls/Explorer', [
    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
-      _breadCrumbsVisibility: false,
       _root: null,
       _viewName: null,
       _viewMode: null,
