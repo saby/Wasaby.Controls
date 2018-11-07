@@ -5,7 +5,7 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'Controls/Application/HeadDataContext',
    'wml!Controls-demo/SwitchableArea/resources/content',
    'wml!Controls-demo/SwitchableArea/resources/content2',
-   'wml!Controls-demo/SwitchableArea/resources/content3',
+   'wml!Controls-demo/SwitchableArea/resources/contentAsync',
    'css!Controls-demo/SwitchableArea/DemoSwitchableArea'
 ], function(Control,
             template,
@@ -15,26 +15,26 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'use strict';
    var demoSwitchableArea = Control.extend({
       _template: template,
-      _demoSelectedKey: '1',
+      _demoSelectedKey: '0',
       _items: null,
       constructor: function() {
          demoSwitchableArea.superclass.constructor.apply(this, arguments);
          this.headDataCtxField = new HeadDataContext();
          this._items = [
             {
-               id: '1',
+               id: '0',
                title: 'content1',
                itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content'
             },
             {
-               id: '2',
+               id: '1',
                title: 'content2',
                itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content2'
             },
             {
-               id: '3',
+               id: '2',
                title: 'content3',
-               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content3'
+               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentAsync'
             }
          ];
       },
