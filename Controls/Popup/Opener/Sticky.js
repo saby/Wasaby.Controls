@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/Sticky',
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
        * @class Controls/Popup/Opener/Sticky
-       * @mixes Controls/interface/IStickyOpener
+       * @mixes Controls/interface/IStickyOptions
        * @control
        * @author Красильников А.С.
        * @category Popup
@@ -20,7 +20,7 @@ define('Controls/Popup/Opener/Sticky',
           * @function Controls/Popup/Opener/Sticky#open
           * @param {Object} popupOptions Sticky popup options.
           * @returns {Undefined}
-          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOpener#popupOptions popupOptions}
+          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
           * @example
           * wml
           * <pre>
