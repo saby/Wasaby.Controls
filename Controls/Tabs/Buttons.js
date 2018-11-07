@@ -71,6 +71,7 @@ define('Controls/Tabs/Buttons', [
     * @class Controls/Tabs/Buttons
     * @extends Core/Control
     * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/Tabs/Buttons/interface/tabsButtonsInterface
     * @control
     * @public
     * @category List
