@@ -109,7 +109,7 @@ define([
 
          var iv = new ListViewModel(cfg);
          assert.deepEqual(iv._selectedKeys, [1]);
-         iv._updateSelection([2, 3]);
+         iv.updateSelection([2, 3]);
          assert.deepEqual(iv._selectedKeys, [2, 3]);
       });
 
