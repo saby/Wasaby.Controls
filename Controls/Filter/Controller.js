@@ -217,7 +217,7 @@ define('Controls/Filter/Controller',
        * @mixes Controls/interface/IFilter
        * @control
        * @public
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        */
 
       /**

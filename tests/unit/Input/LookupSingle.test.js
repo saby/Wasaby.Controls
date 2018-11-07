@@ -5,9 +5,8 @@ define([
    'Controls/Input/Lookup',
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List',
-   'WS.Data/Source/Memory',
-   'Controls/Input/Lookup/_Collection'
-], function(Lookup, Model, List, Memory, Collection) {
+   'WS.Data/Source/Memory'
+], function(Lookup, Model, List, Memory) {
 
    function getBaseLookup() {
       return {

@@ -25,6 +25,7 @@ define('Controls/History/Service', [
      * @implements WS.Data/Source/ISource
      * @mixes WS.Data/Entity/OptionsMixin
      * @public
+     * @author Герасимов А.М.
      * @example
      * <pre>
      *    new historyService({

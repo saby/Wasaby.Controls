@@ -16,6 +16,7 @@ define('Controls/Heading', [
     * @extends Core/Control
     * @control
     * @public
+    * @author Михайловский Д.С.
     * @demo Controls-demo/Headers/headerDemo
     *
     * @mixes Controls/interface/ICaption
