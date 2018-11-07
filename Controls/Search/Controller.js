@@ -7,7 +7,7 @@ define('Controls/Search/Controller',
       'Core/core-clone',
       'Controls/Controllers/_SearchController',
       'Core/helpers/Object/isEqual',
-      'Controls/Search/MissSpell/getSwitcherStrFromData'
+      'Controls/Search/Misspell/getSwitcherStrFromData'
    ],
    
    function(Control, template, DataOptions, clone, _SearchController, isEqual, getSwitcherStrFromData) {

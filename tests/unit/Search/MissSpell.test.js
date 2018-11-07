@@ -1,6 +1,6 @@
-define(['wml!Controls/Search/MissSpell'], function(missSpellTpl) {
+define(['wml!Controls/Search/Misspell'], function(missSpellTpl) {
    
-   describe('Controls.Search.MissSpell', function() {
+   describe('Controls.Search.Misspell', function() {
       
       it('checkTpl', function() {
          var options = {
