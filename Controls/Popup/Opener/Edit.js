@@ -187,6 +187,21 @@ define('Controls/Popup/Opener/Edit',
 
 /**
  * @name Controls/Popup/Opener/Edit#close
- * Close edit popup.
  * @function
+ * @description Close edit popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Edit#popupOptions
+ * @cfg {Object} Sets the popup configuration.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Edit#mode
+ * @cfg {Object} Sets the display mode of the dialog.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Edit#items
+ * @cfg {Object} RecordSet for synchronization with the editing record.
  */

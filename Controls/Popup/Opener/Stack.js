@@ -127,4 +127,5 @@ define('Controls/Popup/Opener/Stack',
 /**
  * @name Controls/Popup/Opener/Stack#isOpened
  * @description Popup opened status.
+ * @function
  */
