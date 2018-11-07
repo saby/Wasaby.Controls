@@ -150,7 +150,6 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         this._createFolderFooter(expandedItem);
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
