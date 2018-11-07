@@ -31,7 +31,7 @@ define('Controls/Input/Number',
        * @public
        * @demo Controls-demo/Input/Number/NumberPG
        *
-       * @author Журавлев М.С.
+       * @author Колесова П.С.
        */
 
       /**

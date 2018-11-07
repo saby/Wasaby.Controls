@@ -19,7 +19,6 @@ define('Controls/Popup/Opener/Edit',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @extends Core/Control
        */
 
       var _private = {
@@ -157,7 +156,7 @@ define('Controls/Popup/Opener/Edit',
             if (data && data.formControllerEvent) {
 
                /**
-                * @event beforeItemEndEdit The event is called before the synchronization with the recordset.
+                * @event Controls/Popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
                 */
                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;

@@ -7,7 +7,7 @@ define('Controls/BreadCrumbs/Path', [
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/BackButton/Back',
    'Controls/Heading/BackButton',
-   'css!Controls/BreadCrumbs/Path/Path'
+   'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
    BreadCrumbsUtil,
@@ -74,6 +74,7 @@ define('Controls/BreadCrumbs/Path', [
     * @mixes Controls/interface/IBreadCrumbs
     * @control
     * @public
+    * @author Зайцев А.С.
     *
     * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */

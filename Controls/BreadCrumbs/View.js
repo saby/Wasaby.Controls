@@ -6,7 +6,7 @@ define('Controls/BreadCrumbs/View', [
    'wml!Controls/BreadCrumbs/View/resources/itemsTemplate',
    'wml!Controls/BreadCrumbs/resources/menuItemTemplate',
    'wml!Controls/BreadCrumbs/resources/menuContentTemplate',
-   'css!Controls/BreadCrumbs/View/View'
+   'css!theme?Controls/BreadCrumbs/View/View'
 ], function(
    Control,
    RecordSet,
@@ -25,6 +25,7 @@ define('Controls/BreadCrumbs/View', [
     * @mixes Controls/interface/IBreadCrumbs
     * @control
     * @private
+    * @author Зайцев А.С.
     */
 
    var BreadCrumbsView = Control.extend({

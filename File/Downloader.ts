@@ -1,19 +1,18 @@
 /// <amd-module name='File/Downloader' />
-import DriverInterface = require('File/Driver/Interface');
+import Interface = require('File/Driver/Interface');
 /**
  * Инициализирует загрузку файла
  * @param {string} entity URL документа, либо Base64-строка
- * @param {Object} [options] name - имя файла, contentType - тип файла
+ * @param {FileParams} [fileParams] name - имя файла, contentType - тип файла
  * @param {DRIVERS_NAMES} [driverName] Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
  */
-function Downloader(entity: string, options?: Object, driverName?: DRIVERS_NAMES) {
-   if (!entity) {
-      throw new Error("Некорректный аргумент entity: " + typeof entity);
-   }
-
-   require([driverName || DetectDriverName(entity)], function (Driver: DriverInterface) {
-      new Driver(entity).download(options);
-   });
+function Downloader(entity: string, fileParams?: Interface.FileParams, driverName?: DRIVERS_NAMES): Promise<Response| void | Error> {
+    if (!entity) {
+        throw new Error("Некорректный аргумент entity: " + typeof entity);
+    }
+    return new Promise((resolve) => require([driverName || DetectDriverName(entity)], (Driver) => {
+        resolve(new Driver(entity).download(fileParams));
+    }));
 }
 
 /**
@@ -21,22 +20,21 @@ function Downloader(entity: string, options?: Object, driverName?: DRIVERS_NAMES
  * @param {string} entity  URL документа, либо Base64-строка
  * @return {DRIVERS_NAMES} driverName Имя драйвера для работы с данным типом фалйла (см Downloader.DRIVERS_NAMES)
  */
-function DetectDriverName(entity: string) {
-   if (entity.indexOf('https://') !== -1 || entity.indexOf('?') !== -1 || entity.indexOf('&') !== -1) {
-      return DRIVERS_NAMES.URL;
-   }
-   return DRIVERS_NAMES.Base64;
+function DetectDriverName(entity: string): DRIVERS_NAMES {
+    if (entity.indexOf('https://') !== -1 || entity.indexOf('?') !== -1 || entity.indexOf('&') !== -1) {
+        return DRIVERS_NAMES.URL;
+    }
+    return DRIVERS_NAMES.Base64;
 }
 
 /**
-   Имена драйверов для работы с файлами    
-   @name File/Downloader#DRIVERS_NAMES
-   @type {enum}
-   @readonly
+ *  @name File/Downloader#DRIVERS_NAMES
+ *  Имена драйверов для работы с файлами    
+ *  @typedef {DRIVERS_NAMES}
 */
 enum DRIVERS_NAMES {
-   URL = 'File/Driver/URL',
-   Base64 = 'File/Driver/Base64'
+    URL = 'File/Driver/URL',
+    Base64 = 'File/Driver/Base64'
 }
 
 Downloader['DRIVERS_NAMES'] = DRIVERS_NAMES;
@@ -63,6 +61,12 @@ export = Downloader;
  *    </li>
  * </ul>
  * </p>
+ * <p> Возвращаемое значение:
+ * <ul>
+ *      <li> В случае скачивания Base64 строки возвращает Promise<void | Error> </li>
+ *      <li> В случае скачивания URL адреса возвращает Promise<Response| void | Error> </li>
+ * </ul>     
+ * </p>
  * <b>Пример использования</b>
  * <pre>
  * require(['File/Downloader'], function(Downloader) {
@@ -71,13 +75,14 @@ export = Downloader;
  *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";
  *    
  *    Downloader(base64_text, {
- *         name: 'phrase.txt',         // Имя, под которым файл будет сохранен (необязательно)
- *         contentType: 'text/plain'   // Тип контента (необязательно)
- *     }, Downloader.DRIVERS_NAMES.Base64);       // Имя файлового драйвера, явно указывает какого типа файл требуется скачать (необязательно)
+ *         name: 'phrase.txt',              // Имя, под которым файл будет сохранен (необязательно)
+ *         contentType: 'text/plain'        // Тип контента (необязательно)
+ *     }, Downloader.DRIVERS_NAMES.Base64)  // Имя файлового драйвера, явно указывает какого типа файл требуется скачать (необязательно)
+ *    .catch(console.error);                // Обработчик ошибки скачивания    
  * 
  * 
  *    // Скачивание документа по URL
- *    Downloader("/file-transfer/file.pdf"); 
+ *    Downloader("https://bad_url").then(parseResponse).catch(console.error); 
  * });
  * </pre>
  *  @see File/Driver/Base64
@@ -95,16 +100,14 @@ export = Downloader;
  *    Downloader("/file-transfer/file.pdf");
  * </pre>
  */
-
 /**
  * @name File/Downloader#fileParams
  * @cfg {FileParams} Параметры скачиваемого файла
  */
 /** 
- * @typedef {Object} FileParams
+ * @typedef  {Object} FileParams
  * @property {String} name  Имя, под которым файл будет сохранен (необязательно)
  * @property {String} contentType Тип файла 
- * <i>Игнорируется при загрузке URL</i>
  * Пример: загрузка текстового файла, закодированного в base64
  * <pre class="brush:js">
  *    var base64_text = "wqtXZWVrcyBvZiBjb2RpbmcgY2FuIHNhdmUgeW91IGhvdXJzIG9mIHBsYW5uaW5nwrssDQogdW5rbm93biBhcnRpc3Qu";

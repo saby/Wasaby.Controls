@@ -9,7 +9,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
       'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
-      'css!Controls/Dropdown/resources/template/DropdownList'
+      'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
    function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
@@ -68,7 +68,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
       /**
        *
        * Действие открытия прилипающего окна
-       * @class Controls/Popup/Opener/Menu
        * @control
        * @public
        * @category Popup

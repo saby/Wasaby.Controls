@@ -3,7 +3,6 @@ define('Controls/StickyHeader',
       'Core/Control',
       'Core/detection',
       'wml!Controls/StickyHeader/StickyHeader',
-
       'Controls/StickyHeader/_StickyHeader'
    ],
    function(Control, detection, template) {
@@ -19,6 +18,7 @@ define('Controls/StickyHeader',
        * @public
        * @extends Core/Control
        * @class Controls/StickyHeader
+       * @author Михайловский Д.С.
        */
 
       /**

@@ -7,7 +7,7 @@ define('Controls/Input/Dropdown',
       'WS.Data/Chain',
       'Controls/Dropdown/Util',
       'Core/helpers/Object/isEqual',
-      'css!Controls/Input/Dropdown/Dropdown'
+      'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
       /**
@@ -25,7 +25,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
-       * @author Журавлев М.С.
+       * @author Красильников А.С.
        * @category Input
        * @demo Controls-demo/Input/Dropdown/Dropdown
        */

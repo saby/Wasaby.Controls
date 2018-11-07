@@ -8,7 +8,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Core/detection',
       'Controls/Utils/getWidth',
       'Core/EventBus',
-      'css!Controls/Input/resources/InputRender/InputRender'
+      'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
       'use strict';

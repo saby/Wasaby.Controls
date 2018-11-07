@@ -2,13 +2,13 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/IoC',
       'Controls/Application/HeadDataContext',
       'wml!Controls/Container/Async/Async',
-      'View/Runner/requireHelper'
+      'View/Runner/requireHelper',
+      'Core/IoC'
    ],
 
-   function(Base, Deferred, IoC, HeadDataContext, template, requireHelper) {
+   function(Base, Deferred, HeadDataContext, template, requireHelper, IoC) {
       'use strict';
 
 
@@ -72,6 +72,7 @@ define('Controls/Container/Async',
                require([options.templateName], function(tpl) {
                   self.optionsForComponent = options.templateOptions || {};
                   self.optionsForComponent.resolvedTemplate = tpl;
+                  self._forceUpdate();
                   def.callback();
                }, function() {
                   def.errback('Error loading ' + options.templateName);
@@ -89,5 +90,4 @@ define('Controls/Container/Async',
          };
       };
       return Async;
-   }
-);
+   });

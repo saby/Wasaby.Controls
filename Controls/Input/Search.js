@@ -4,7 +4,7 @@ define('Controls/Input/Search',
       'wml!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Core/constants',
-      'css!Controls/Input/Search/Search'
+      'css!theme?Controls/Input/Search/Search'
    ],
 
    function(Control, template, BaseViewModel, constants) {
@@ -22,7 +22,7 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
-       * @author Журавлев М.С.
+       * @author Золотова Э.Е.
        */
 
       /**

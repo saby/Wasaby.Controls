@@ -5,7 +5,7 @@ define('Controls/Decorator/Money',
       'WS.Data/Type/descriptor',
       'wml!Controls/Decorator/Money/Money',
 
-      'css!Controls/Decorator/Money/Money'
+      'css!theme?Controls/Decorator/Money/Money'
    ],
    function(IoC, Control, descriptor, template) {
 
@@ -20,7 +20,7 @@ define('Controls/Decorator/Money',
        * @public
        * @category Decorator
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
 
       /**

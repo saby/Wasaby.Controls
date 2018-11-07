@@ -6,7 +6,7 @@ define('Controls/Input/ComboBox',
       'WS.Data/Utils',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify',
-      'css!Controls/Input/ComboBox/ComboBox'
+      'css!theme?Controls/Input/ComboBox/ComboBox'
    ],
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
@@ -24,7 +24,7 @@ define('Controls/Input/ComboBox',
        * @control
        * @public
        * @category Input
-       * @author Журавлев М.С.
+       * @author Золотова Э.Е.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
        */

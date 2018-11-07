@@ -13,9 +13,11 @@ define('Controls/List/BaseControl', [
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
+   'Controls/Utils/tmplNotify',
 
-   'css!Controls/List/BaseControl/BaseControl'
-], function(Control,
+   'css!theme?Controls/List/BaseControl/BaseControl'
+], function(
+   Control,
    IoC,
    cClone,
    cMerge,
@@ -28,7 +30,9 @@ define('Controls/List/BaseControl', [
    Deferred,
    RecordSet,
    tUtil,
-   aUtil) {
+   aUtil,
+   tmplNotify
+) {
    'use strict';
 
    var _private = {
@@ -50,7 +54,7 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
-               // self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
                _private.handleListScroll(self, 0);
@@ -430,13 +434,13 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
-    * @mixes Controls/interface/IEditInPlace
+    * @mixes Controls/interface/IEditableList
     * @control
     * @public
     * @category List
     */
 
-   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl */{
+   var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype */{
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -679,61 +683,33 @@ define('Controls/List/BaseControl', [
          _private.checkLoadToDirectionCapability(this);
       },
 
-      /**
-      * Starts editing in place.
-      * @param {ItemEditOptions} options Options of editing.
-      * @returns {Core/Deferred}
-      */
-      editItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.editItem(options);
+      beginEdit: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginEdit(options);
       },
 
-      /**
-      * Starts adding.
-      * @param {AddItemOptions} options Options of adding.
-      * @returns {Core/Deferred}
-      */
-      addItem: function(options) {
-         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.addItem(options);
+      beginAdd: function(options) {
+         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginAdd(options);
       },
 
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.cancelEdit();
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
       },
 
-      _onBeforeItemAdd: function(e, options) {
-         return this._notify('beforeItemAdd', [options]);
-      },
+      _notifyHandler: tmplNotify,
 
-      _onBeforeItemEdit: function(e, options) {
-         return this._notify('beforeItemEdit', [options]);
-      },
-
-      _onAfterItemEdit: function(e, item, isAdd) {
-         this._notify('afterItemEdit', [item, isAdd]);
+      _onAfterBeginEdit: function(e, item, isAdd) {
+         this._notify('afterBeginEdit', [item, isAdd]);
          if (this._options.itemActions) {
             this._children.itemActions.updateItemActions(item, true);
          }
       },
 
-      _onBeforeItemEndEdit: function(e, item, commit, isAdd) {
-         return this._notify('beforeItemEndEdit', [item, commit, isAdd]);
-      },
-
-      _onAfterItemEndEdit: function(e, item, isAdd) {
-         this._notify('afterItemEndEdit', [item, isAdd]);
+      _onAfterEndEdit: function(e, item, isAdd) {
+         this._notify('afterEndEdit', [item, isAdd]);
          if (this._options.itemActions) {
             this._children.itemActions.updateItemActions(item);
          }

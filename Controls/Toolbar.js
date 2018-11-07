@@ -6,7 +6,7 @@ define('Controls/Toolbar', [
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/Button',
-   'css!Controls/Toolbar/Toolbar'
+   'css!theme?Controls/Toolbar/Toolbar'
 ], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil) {
    'use strict';
 
@@ -25,7 +25,7 @@ define('Controls/Toolbar', [
     * @control
     * @public
     * @category Toolbar
-    * @author Крайнов Д.
+    * @author Михайловский Д.С.
     * @demo Controls-demo/Toolbar/ToolbarVdom
     */
 

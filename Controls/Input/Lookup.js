@@ -16,7 +16,7 @@ define('Controls/Input/Lookup', [
    'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
-   'css!Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, SourceController, List, isEqual, clone, Deferred, merge, Chain, getWidthUtil, DOMUtil, Collection, itemsTemplate, showAllLinksTemplate, showSelectorTemplate) {
 
    'use strict';
@@ -38,7 +38,7 @@ define('Controls/Input/Lookup', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
-    * @author Журавлев М.С.
+    * @author Капустин И.А.
     * @category Input
     */
 

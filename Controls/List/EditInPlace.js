@@ -6,8 +6,16 @@ define('Controls/List/EditInPlace', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
-   'css!Controls/List/EditInPlace/Text'
-], function(Control, template, Deferred, Record, ItemsUtil, getWidthUtil, hasHorizontalScrollUtil) {
+   'css!theme?Controls/List/EditInPlace/Text'
+], function(
+   Control,
+   template,
+   Deferred,
+   Record,
+   ItemsUtil,
+   getWidthUtil,
+   hasHorizontalScrollUtil
+) {
    var
       typographyStyles = [
          'fontFamily',
@@ -19,39 +27,39 @@ define('Controls/List/EditInPlace', [
          'wordSpacing',
          'textIndent'
       ],
-      ItemEditResult = { // Возможные результаты события "onItemEdit"
-         CANCEL: 'Cancel' // Отменить начало редактирования/добавления
+      ItemEditResult = {
+         CANCEL: 'Cancel'
       },
-      ItemEndEditResult = { // Возможные результаты события "onItemEndEdit"
-         CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
+      ItemEndEditResult = {
+         CANCEL: 'Cancel'
       },
       _private = {
-         editItem: function(self, options, isAdd) {
-            var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
+         beginEdit: function(self, options, isAdd) {
+            var result = self._notify('beforeBeginEdit', [options, isAdd]);
             if (!isAdd) {
                self._originalItem = options.item;
             }
-            return _private.processBeforeItemEditResult(self, options, result, isAdd);
+            return _private.processBeforeBeginEditResult(self, options, result, isAdd);
          },
 
-         afterItemEdit: function(self, options, isAdd) {
+         afterBeginEdit: function(self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterItemEdit', [self._editingItem, isAdd]);
+            self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel);
 
             return options;
          },
 
-         processBeforeItemEditResult: function(self, options, eventResult, isAdd) {
+         processBeforeBeginEditResult: function(self, options, eventResult, isAdd) {
             var result;
 
             if (eventResult === ItemEditResult.CANCEL) {
                result = Deferred.fail(options);
             } else if (eventResult instanceof Deferred) {
                self._notify('showIndicator', [], { bubbling: true });
-               eventResult.addBoth(function(result) {
+               eventResult.addBoth(function(defResult) {
                   self._notify('hideIndicator', [], { bubbling: true });
-                  return result;
+                  return defResult;
                });
                result = eventResult;
             } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
@@ -69,7 +77,7 @@ define('Controls/List/EditInPlace', [
                return Deferred.success();
             }
 
-            var result = self._notify('beforeItemEndEdit', [self._editingItem, commit, self._isAdd]);
+            var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
 
             if (result === ItemEndEditResult.CANCEL) {
                return Deferred.fail();
@@ -77,17 +85,17 @@ define('Controls/List/EditInPlace', [
             if (result instanceof Deferred) {
             // Если мы попали сюда, то прикладники сами сохраняют запись
                return result.addCallback(function() {
-                  _private.afterItemEndEdit(self);
+                  _private.afterEndEdit(self);
                });
             }
 
             return _private.updateModel(self, commit).addCallback(function() {
-               _private.afterItemEndEdit(self);
+               _private.afterEndEdit(self);
             });
          },
 
-         afterItemEndEdit: function(self) {
-            self._notify('afterItemEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
+         afterEndEdit: function(self) {
+            self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
             _private.resetVariables(self);
             self._setEditingItemData(null, self._options.listModel);
          },
@@ -135,16 +143,16 @@ define('Controls/List/EditInPlace', [
 
             if (editNextRow) {
                if (index < self._options.listModel.getCount() - 1 && _private.getNext(index, self._options.listModel)) {
-                  self.editItem({
+                  self.beginEdit({
                      item: _private.getNext(index, self._options.listModel)
                   });
                } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
-                  self.addItem();
+                  self.beginAdd();
                } else {
                   self.commitEdit();
                }
             } else if (index > 0 && _private.getPrevious(index, self._options.listModel)) {
-               self.editItem({
+               self.beginEdit({
                   item: _private.getPrevious(index, self._options.listModel)
                });
             } else {
@@ -191,19 +199,29 @@ define('Controls/List/EditInPlace', [
             }
 
             return index;
+         },
+
+         getSequentialEditing: function(newOptions) {
+            // TODO: опция editingConfig.sequentialEditing по умолчанию должна быть true. Но она находится внутри объекта,
+            // а при вызове getDefaultOptions объекты не мержатся. Нужно либо на стороне ws делать мерж объектов, либо
+            // делать 5 опций на списке, либо вот такой костыль:
+            if (newOptions.editingConfig && typeof newOptions.editingConfig.sequentialEditing !== 'undefined') {
+               return newOptions.editingConfig.sequentialEditing;
+            }
+            return true;
          }
       };
 
-   var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace */{
-      _template: template,
+   /**
+    * @class Controls/List/EditInPlace
+    * @extends Core/Control
+    * @mixes Controls/interface/IEditableList
+    * @author Зайцев А.С.
+    * @private
+    */
 
-      /**
-       * @class Controls/List/EditInPlace
-       * @extends Core/Control
-       * @mixes Controls/interface/IEditInPlace
-       * @author Зайцев А.С.
-       * @public
-       */
+   var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace.prototype */{
+      _template: template,
 
       _beforeMount: function(newOptions) {
          if (newOptions.editingConfig) {
@@ -215,43 +233,30 @@ define('Controls/List/EditInPlace', [
                }
             }
          }
+         this._sequentialEditing = _private.getSequentialEditing(newOptions);
       },
 
-      /**
-       * Starts editing in place.
-       * @variant {ItemEditOptions} options Options of editing.
-       * @returns {Core/Deferred}
-       */
-      editItem: function(options) {
+      beginEdit: function(options) {
          var self = this;
 
          if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
             return this.commitEdit().addCallback(function() {
-               return _private.editItem(self, options).addCallback(function(newOptions) {
-                  return _private.afterItemEdit(self, newOptions);
+               return _private.beginEdit(self, options).addCallback(function(newOptions) {
+                  return _private.afterBeginEdit(self, newOptions);
                });
             });
          }
       },
 
-      /**
-       * Starts adding.
-       * @param {AddItemOptions} options Options of adding.
-       * @returns {Core/Deferred}
-       */
-      addItem: function(options) {
+      beginAdd: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
-            return _private.editItem(self, options || {}, true).addCallback(function(newOptions) {
-               return _private.afterItemEdit(self, newOptions, true);
+            return _private.beginEdit(self, options || {}, true).addCallback(function(newOptions) {
+               return _private.afterBeginEdit(self, newOptions, true);
             });
          });
       },
 
-      /**
-       * Ends editing in place with saving.
-       * @returns {Core/Deferred}
-       */
       commitEdit: function() {
          var self = this;
 
@@ -265,10 +270,6 @@ define('Controls/List/EditInPlace', [
          });
       },
 
-      /**
-       * Ends editing in place without saving.
-       * @returns {Core/Deferred}
-       */
       cancelEdit: function() {
          return _private.endItemEdit(this, false);
       },
@@ -277,7 +278,7 @@ define('Controls/List/EditInPlace', [
          if (this._editingItem) {
             switch (e.nativeEvent.keyCode) {
                case 13: // Enter
-                  if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
+                  if (this._options.editingConfig && !this._sequentialEditing) {
                      this.commitEdit();
                   } else {
                      _private.editNextRow(this, true);
@@ -295,7 +296,7 @@ define('Controls/List/EditInPlace', [
             if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
                this.commitEdit();
             } else {
-               this.editItem({
+               this.beginEdit({
                   item: record
                });
                this._clickItemInfo = {
@@ -305,6 +306,10 @@ define('Controls/List/EditInPlace', [
                };
             }
          }
+      },
+
+      _beforeUpdate: function(newOptions) {
+         this._sequentialEditing = _private.getSequentialEditing(newOptions);
       },
 
       _afterUpdate: function() {

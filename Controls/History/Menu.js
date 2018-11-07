@@ -5,7 +5,7 @@ define('Controls/History/Menu',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
       'Controls/Button/Menu/MenuUtils',
-      'css!Controls/History/Menu'
+      'css!theme?Controls/History/Menu'
    ],
    function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
       /**
@@ -15,6 +15,7 @@ define('Controls/History/Menu',
        * @extends Controls/Button/Menu
        * @control
        * @public
+       * @author Герасимов А.М.
        * @category Menu
        * @demo Controls-demo/Menu/MenuVdom
        */

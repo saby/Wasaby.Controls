@@ -33,6 +33,7 @@ define('Controls/History/FilterSource', [
     * @mixes WS.Data/Entity/OptionsMixin
     * @control
     * @public
+    * @author Герасимов А.М.
     * @category Menu
     *  @example
     *  <pre>

@@ -7,7 +7,7 @@ define('Controls/Input/Area', [
    'wml!Controls/Input/Area/Area',
    'Controls/Input/resources/InputHelper',
 
-   'css!Controls/Input/Area/Area'
+   'css!theme?Controls/Input/Area/Area'
 ], function(Text,
    constants,
    types,
@@ -31,7 +31,7 @@ define('Controls/Input/Area', [
     * @category Input
     * @demo Controls-demo/Input/Area/Area
     *
-    * @author Журавлев М.С.
+    * @author Колесова П.С.
     */
 
    /**

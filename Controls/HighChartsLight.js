@@ -5,7 +5,7 @@ define('Controls/HighChartsLight',
       'Core/constants',
       'Core/core-clone',
       'Core/Date',
-      'css!Controls/HighChartsLight/HighChartsLight',
+      'css!theme?Controls/HighChartsLight/HighChartsLight',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
    function(Control, template, constants, cClone) {
@@ -17,7 +17,7 @@ define('Controls/HighChartsLight',
        * @extends Core/Control
        * @mixes Controls/interface/IHighCharts
        * @control
-       * @authors Volotskoy V.D., Sukhoruchkin A.S.
+       * @author Волоцкой В.Д.
        * @demo Controls-demo/HighChartsLight/HighChartsLight
        */
 

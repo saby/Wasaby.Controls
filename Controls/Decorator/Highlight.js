@@ -5,7 +5,7 @@ define('Controls/Decorator/Highlight',
       'WS.Data/Type/descriptor',
       'wml!Controls/Decorator/Highlight/Highlight',
 
-      'css!Controls/Decorator/Highlight/Highlight'
+      'css!theme?Controls/Decorator/Highlight/Highlight'
    ],
    function(Control, RegExpUtil, descriptor, template) {
 
@@ -20,7 +20,7 @@ define('Controls/Decorator/Highlight',
        * @public
        * @category Decorator
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
 
       /**

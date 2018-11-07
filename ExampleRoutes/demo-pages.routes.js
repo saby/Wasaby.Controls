@@ -84,10 +84,10 @@ module.exports = function(Component) {
       },
 
       // Демо-пример: редактирование по месту в списках.
-      '/edit-in-place': function(req, res) {
-         requirejs('Examples/List/EditInPlace/EditInPlace');
+      '/demo-ws4-edit-in-place': function(req, res) {
+         requirejs('Controls-demo/List/EditInPlace/ScenariosWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Examples/List/EditInPlace/EditInPlace',
+            application: 'Controls-demo/List/EditInPlace/ScenariosWithApplication',
             initDependencies: false
          }, []);
       },

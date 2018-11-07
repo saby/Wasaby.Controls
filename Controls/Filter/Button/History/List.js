@@ -10,7 +10,7 @@ define('Controls/Filter/Button/History/List', [
    'WS.Data/Chain',
    'WS.Data/Utils',
    'Controls/Filter/Button/History/resources/historyUtils',
-   'css!Controls/Filter/Button/History/List'
+   'css!theme?Controls/Filter/Button/History/List'
 ], function(BaseControl, template, SbisAdapter, SourceController, RecordSet, Chain, Utils, historyUtils) {
    'use strict';
 

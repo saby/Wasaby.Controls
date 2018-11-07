@@ -41,7 +41,10 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
             this.gridData = TreeWithEditingData;
          },
 
-         _onBeforeItemAdd: function() {
+         _onBeforeBeginEdit: function(e, options, isAdd) {
+            if (!isAdd) {
+               return;
+            }
             return this._viewSource.create().addCallback(function(model) {
                model.set('Раздел', null);
                model.set('Раздел@', true);
