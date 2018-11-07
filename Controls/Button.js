@@ -42,9 +42,9 @@ define('Controls/Button', [
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Quick button with m size.
+    * Toolbar button with m size.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * Uncorrect button. ViewMode button doesn't support xl size.
     * <pre>
@@ -58,29 +58,46 @@ define('Controls/Button', [
     * @cfg {Enum} Button view mode.
     * @variant link
     * @variant button
-    * @variant quickButton
-    * @variant transparentQuickButton
+    * @variant toolButton
     * @default button
     * @remark
     * Sizes 's' and 'xl' don't supported by viewModes:
     * <ul>
     *     <li>button,</li>
-    *     <li>quickButton</li>
+    *     <li>toolButton</li>
     * </ul>
     * @example
     * Button with link viewMode.
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Button with quickButton viewMode.
+    * Button with toolButton viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * Button with button viewMode.
     * <pre>
     *    <Controls.Button caption="Send document" style="success" viewMode="button"/>
     * </pre>
     * @see Size
+    */
+
+   /**
+    * @name Controls/Button#transparent
+    * @cfg {Boolean} Determines whether button having background.
+    * @variant true.
+    * @variant false.
+    * @default false
+    * @example
+    * Button has transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Button hasn't transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+    * </pre>
+    * @see style
     */
 
    /**
@@ -96,7 +113,7 @@ define('Controls/Button', [
     * Sizes 's' and 'xl' don't supported by styles:
     * <ul>
     *     <li>button,</li>
-    *     <li>quickButton</li>
+    *     <li>toolButton</li>
     * </ul>
     * @example
     * L size of primary button.
@@ -190,7 +207,8 @@ define('Controls/Button', [
          style: 'secondary',
          viewMode: 'button',
          size: 'm',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         transparent: false
       };
    };
 

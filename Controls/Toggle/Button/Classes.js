@@ -3,7 +3,7 @@ define('Controls/Toggle/Button/Classes', ['Core/IoC'], function(IoC) {
    var classesOfButton = {
       iconButtonBordered: {
          style: 'secondary',
-         type: 'quickButton'
+         type: 'toolButton'
       },
 
       linkMain: {

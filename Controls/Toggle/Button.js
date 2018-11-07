@@ -65,7 +65,7 @@ define('Controls/Toggle/Button', [
     */
    var stickyButton = [
       'toggledLink',
-      'quickButton'
+      'toolButton'
    ];
 
    var _private = {

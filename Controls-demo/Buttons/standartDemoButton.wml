@@ -101,23 +101,23 @@
         <h3>Bordered button-icon with m size</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__borderedIconM">
             <div attr:class="demo-Button__testBlock__controlPanelFirst">
-                <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="m"/>
                 <span class="demo-Button__Label">Confirm</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
-                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="m"/>
                 <span class="demo-Button__Label">Delete</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
-                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-Forward" style="secondary" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-Forward" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
                 <span class="demo-Button__Label">Advanced editing</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
-                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ArrowUp" style="secondary" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ArrowUp" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
                 <span class="demo-Button__Label">Up</span>
             </div>
             <div attr:class="demo-Button__testBlock__controlPanel">
-                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ArrowDown" style="secondary" viewMode="transparentQuickButton" size="m"/>
+                <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ArrowDown" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
                 <span class="demo-Button__Label">Down</span>
             </div>
         </div>
@@ -125,39 +125,39 @@
         <div attr:class="demo-Button_margin-10 ControlsDemo__borderedIconL">
             <div>
                 <div attr:class="demo-Button__testBlock__controlPanelFirst">
-                    <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="l"/>
                     <span class="demo-Button__Label">Confirm</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="l"/>
                     <span class="demo-Button__Label">Delete</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
                     <span class="demo-Button__Label">Message</span>
                 </div>
             </div>
             <div>
-                <Controls.Button attr:class="demo-Button__testBlock__controlPanelFirst" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-TFCurtailRTE2" style="secondary" viewMode="transparentQuickButton" size="l"/>
-                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ExpandList" style="secondary" viewMode="transparentQuickButton" size="l"/>
-                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmoiconSmile" style="secondary" viewMode="transparentQuickButton" size="l"/>
-                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{true}}" iconStyle="secondary" icon="icon-16 icon-Check" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanelFirst" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-TFCurtailRTE2" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-ExpandList" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmoiconSmile" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+                <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{true}}" iconStyle="secondary" icon="icon-16 icon-Check" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
             </div>
             <div>
                 <div class="demo-Button__Label">Transparent button</div>
                 <div class="demo-Button__background_simple">
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="transparentQuickButton" size="l"/>
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="transparentQuickButton" size="l"/>
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
                     <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="default"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">Not transparent button</div>
                 <div class="demo-Button__background_complex">
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="quickButton" size="l"/>
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="quickButton" size="l"/>
-                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="quickButton" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{false}}" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{false}}" size="l"/>
+                    <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{false}}" size="l"/>
                     <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="primary"/>
                 </div>
             </div>
@@ -189,12 +189,12 @@
             <div>
                 <div class="demo-Button__Label">For the text editor. Second variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor2">
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="quickButton"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="quickButton"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="quickButton"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="quickButton"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="quickButton"/>
-                    <Controls.Toggle.Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="quickButton"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.Toggle.Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
                 </div>
             </div>
             <div>

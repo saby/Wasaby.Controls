@@ -47,7 +47,7 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                iconStyle: 'default',
                caption: '',
                style: 'secondary',
-               viewMode: 'quickButton',
+               viewMode: 'toolButton',
                tooltip: '',
                name: 'Button'
 

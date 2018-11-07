@@ -118,14 +118,17 @@
               "info": "Button display as first accent link style."
             }
           },
+          "transparent": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
           "viewMode": {
             "type": "enum",
             "title": "View mode of button.",
             "enum": {
               "link": "Button display as icon with border.",
               "button": "Button display as main link style.",
-              "quickButton": "Button display as first nonaccent link style.",
-              "transparentQuickButton": "Button display as second nonaccent link style."
+              "toolButton": "Button display as first nonaccent link style."
             }
           },
           "size": {

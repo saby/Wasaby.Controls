@@ -50,7 +50,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   id: '4',
                   buttonIcon: 'icon-24 icon-Linked',
                   buttonStyle: 'secondary',
-                  buttonViewMode: 'quickButton',
+                  buttonViewMode: 'toolButton',
                   buttonIconStyle: 'secondary',
                   title: 'Связанные документы',
                   '@parent': true,
