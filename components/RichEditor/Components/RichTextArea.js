@@ -1585,16 +1585,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
-                     $listNode.wrap('<div>');
-                     selection.select(listNode.parentNode, false);
-                     $listNode.attr('contenteditable', 'false');
-                     afterProcess.push(function () {
-                        if (!$listNode.parent().is('blockquote')) {
-                           $listNode.unwrap();
-                        }
-                        $listNode.removeAttr('contenteditable');
-                        selection.select(listNode, true);
+                     var undoManager = editor.undoManager;
+                     undoManager.ignore(function () {
+                        $listNode.wrap('<div>');
+                        selection.select(listNode.parentNode, false);
+                        $listNode.attr('contenteditable', 'false');
                      });
+                     skipUndo = true;
+                     afterProcess.push(function () {
+                        undoManager.ignore(function () {
+                           if (!$listNode.parent().is('blockquote')) {
+                              $listNode.unwrap();
+                           }
+                           $listNode.removeAttr('contenteditable');
+                           selection.select(listNode, true);
+                        });
+                        undoManager.add();
+                        this._updateTextByTiny();
+                     }.bind(this));
                   }
                   else {
                      var dom = editor.dom;
