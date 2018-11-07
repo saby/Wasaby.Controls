@@ -357,6 +357,33 @@ define(
                assert.equal(item.position.height, 100);
             });
 
+            it('dialog drag start', function() {
+               let item = {
+                  position: {
+                     left: 100,
+                     top: 50
+                  },
+                  sizes: {
+                     width: 50,
+                     height: 50
+                  }
+               };
+               let offset = {
+                  x: 10,
+                  y: 20
+               };
+               let basePrepareConfig = DialogController._private.prepareConfig;
+               DialogController._private.prepareConfig = (item, sizes) => {
+                  assert.equal(item.sizes, sizes);
+               };
+               DialogController.popupDragStart(item, null, offset);
+               assert.equal(item.startPosition.left, 100);
+               assert.equal(item.startPosition.top, 50);
+               assert.equal(item.position.left, 110);
+               assert.equal(item.position.top, 70);
+               DialogController._private.prepareConfig = basePrepareConfig;
+            });
+
             it('dialog draggable position', function() {
                let itemPosition = {left: 100, top: 100};
                let windowData = {

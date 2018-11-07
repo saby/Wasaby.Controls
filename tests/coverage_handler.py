@@ -18,6 +18,18 @@ class Coverage:
     path_result = {}
     build_result = {}
     test_result = []
+    fullpath = []
+
+    def get_fullpath_test_name(self):
+        """Получаем пути расположения файлов"""
+        cwd = os.getcwd()
+        os.chdir('int')
+        for root_test in ('SBIS3.CONTROLS', 'VDOM'):
+            for root, dirs , filename in os.walk(os.path.join(root_test)):
+                for f in filename:
+                    if f.startswith('test_') and f.endswith('.py'):
+                        self.fullpath.append(os.path.join(root, f))
+        os.chdir(cwd)
 
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
@@ -30,7 +42,8 @@ class Coverage:
                 for f in files:
                     if f.endswith('-coverage.json'):
                         path_list.append(os.path.join(top, f))
-            self.path_result[tdir] = path_list
+            path_test = [test for test in self.fullpath if tdir in test][0]
+            self.path_result[path_test] = path_list
 
         for ts, item in enumerate(self.path_result):
             coverage_result = []
@@ -74,6 +87,7 @@ if __name__ == '__main__':
     coverage = Coverage()
     if args.source_path:
         print('Собираем покрытие', args.source_path)
+        coverage.get_fullpath_test_name()
         coverage.build(args.source_path)
 
     if args.changelist:

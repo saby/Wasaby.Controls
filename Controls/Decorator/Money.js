@@ -20,7 +20,7 @@ define('Controls/Decorator/Money',
        * @public
        * @category Decorator
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
 
       /**

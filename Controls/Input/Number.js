@@ -22,6 +22,7 @@ define('Controls/Input/Number',
        * @extends Core/Control
        *
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
@@ -30,7 +31,7 @@ define('Controls/Input/Number',
        * @public
        * @demo Controls-demo/Input/Number/NumberPG
        *
-       * @author Журавлев М.С.
+       * @author Колесова П.С.
        */
 
       /**
