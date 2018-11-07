@@ -5,6 +5,7 @@ define('Controls/interface/IPrinter', [], function() {
     *
     * @interface Controls/interface/IPrinter
     * @public
+    * @author Зайцев А.С.
     */
 
    /**

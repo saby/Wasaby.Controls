@@ -7,6 +7,7 @@ define('Controls/interface/ICanBeDefaultOpener', [], function() {
     *
     * @interface Controls/interface/ICanBeDefaultOpener
     * @public
+    * @author Шипин А.А.
     */
 
    /**

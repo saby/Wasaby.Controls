@@ -5,6 +5,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *
     * @interface Controls/interface/IFilterPanel
     * @public
+    * @author Герасимов А.М.
     */
 
    /**
