@@ -1,10 +1,9 @@
 .controls-Suggest__suggestionsContainer-inInput {
-	top: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
-	left: -(@spacing_Suggest_suggestionsContainer_overInput + @default-border-width);
-	padding-top: @height_InputRender_default + (@spacing_Suggest_suggestionsContainer_overInput * 2);
-	border-width: @default-border-width;
-	.box-shadow(@shadow_suggestionsOverlayContainer);
-	margin-top: -@default-border-width;
+	top: -@top_Suggest_suggestionsContainer_overInput;
+	left: -@left_Suggest_suggestionsContainer_overInput;
+	padding-top: @height_InputRender_default + (@top_Suggest_suggestionsContainer_overInput * 2);
+	border: @thickness_border_default solid @color_border;
+	.box-shadow(@box-shadow_Suggest_suggestionsContainer_overInput);
 	position: absolute;
 }
 
