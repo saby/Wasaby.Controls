@@ -84,8 +84,9 @@ define('Controls/Filter/Controller',
             function processItems(items) {
                Chain(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
+                  var visibility = getPropValue(elem, 'visibility');
 
-                  if (value) {
+                  if (value && (visibility === undefined || visibility === true)) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
