@@ -17,6 +17,40 @@ define('Controls/Validate/Controller',
    ) {
       'use strict';
 
+      var _private = {
+
+         /**
+          * Показывает Infobox с сообщением об ошибке
+          */
+         openInfoBox: function(self) {
+            if (self._validationResult && self._validationResult.length && !self._isOpened) {
+               self._isOpened = true;
+               self._notify('openInfoBox', [{
+                  target: self._container,
+                  style: 'error',
+                  showDelay: 0,
+                  hideDelay: 0,
+                  template: errorMessage,
+                  templateOptions: { content: self._validationResult },
+                  eventHandlers: {
+                     onResult: self._mouseInfoboxHandler.bind(self)
+                  }
+               }], { bubbling: true });
+            }
+         },
+
+         /**
+          * Скрывает InfoBox с подсказкой
+          */
+         closeInfoBox: function(self) {
+            var data = self;
+            self._closeId = setTimeout(function() {
+               data._notify('closeInfoBox', [data], { bubbling: true });
+               data._isOpened = false;
+            }, 300);
+         }
+
+      };
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
@@ -124,35 +158,20 @@ define('Controls/Validate/Controller',
                this._forceUpdate();
             }
             if (validationResult) {
-               this.openInfoBox();
+               _private.openInfoBox(this);
             } else if (this._isOpened) {
-               this.closeInfoBox();
-            }
-         },
-
-         /**
-          * Показывает InfoBox с подсказкой
-          */
-         openInfoBox: function() {
-            if (this._validationResult && this._validationResult.length && !this._isOpened) {
-               this._isOpened = true;
-               this._notify('openInfoBox', [{
-                  target: this._container,
-                  style: 'error',
-                  showDelay: 0,
-                  hideDelay: 0,
-                  template: errorMessage,
-                  templateOptions: { content: this._validationResult },
-                  eventHandlers: {
-                     onResult: this._mouseInfoboxHandler.bind(this)
-                  }
-               }], { bubbling: true });
+               _private.closeInfoBox(this);
             }
          },
          _hoverHandler: function() {
             clearTimeout(this._closeId);
             if (!this._isOpened) {
-               this.openInfoBox();
+               _private.openInfoBox(this);
+            }
+         },
+         _focusInHandler: function() {
+            if (!this._isOpened) {
+               _private.openInfoBox(this);
             }
          },
          _mouseInfoboxHandler: function(event) {
@@ -164,22 +183,11 @@ define('Controls/Validate/Controller',
          },
          _mouseLeaveHandler: function() {
             if (this.isValid()) {
-               this.closeInfoBox();
+               _private.closeInfoBox(this);
             }
          },
          _hoverInfoboxHandler: function() {
             clearTimeout(this._closeId);
-         },
-
-         /**
-          * Скрывает InfoBox с подсказкой
-          */
-         closeInfoBox: function() {
-            var self = this;
-            this._closeId = setTimeout(function() {
-               self._notify('closeInfoBox', [self], { bubbling: true });
-               self._isOpened = false;
-            }, 300);
          },
 
          /**

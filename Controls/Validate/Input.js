@@ -12,15 +12,8 @@ define('Controls/Validate/Input',
       return Controller.extend({
          _template: template,
          _focusOutHandler: function() {
-            this._notify('focusOutController', [this], { bubbling: true });
             this._shouldValidate = true;
             this._forceUpdate();
-         },
-         _focusInHandler: function() {
-            if (!this._isOpened) {
-               this.openInfoBox();
-            }
-            this._notify('focusInController', [this], { bubbling: true });
          },
          _cleanValid: function() {
             if (this._validationResult) {
