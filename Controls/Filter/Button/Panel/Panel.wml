@@ -9,12 +9,12 @@
                <ws:partial template="{{_options.topTemplate}}"/>
             </div>
          </ws:if>
-         <Controls.Button style="linkMain" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
+         <Controls.Button viewMode="link" style="secondary" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
                           on:click="_resetFilter()"
                           name="resetButton"
                           attr:class="controls-FilterPanel__resetButton"/>
 
-         <Controls.Button style="buttonPrimary" caption="{[Отобрать]}" on:click="_applyFilter()"
+         <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" on:click="_applyFilter()"
                           attr:class="controls-FilterPanel__filterButton"/>
       </div>
    </ws:topArea>
@@ -38,9 +38,11 @@
                        attr:class="controls-FilterPanel__AdditionalParams"/>
             </ws:if>
          </div>
-         <ws:if data="{{_historyId}}">
+         <ws:if data="{{_historyId && _historyItems.getCount()}}">
             <Controls.Filter.Button.History.List
+                    items="{{_historyItems}}"
                     historyId="{{_historyId}}"
+                    on:historyChanged="_historyItemsChanged()"
                     attr:class="controls-HistoryList__{{_options.orientation}}"
                     on:applyHistoryFilter="_applyHistoryFilter()"/>
          </ws:if>

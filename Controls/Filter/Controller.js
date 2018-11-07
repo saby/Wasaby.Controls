@@ -9,15 +9,16 @@ define('Controls/Filter/Controller',
       'Controls/History/FilterSource',
       'Controls/History/Service',
       'WS.Data/Source/Memory',
+      'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEmpty',
       'Core/core-merge',
       'Core/core-clone',
       'Controls/Container/Data/ContextOptions'
    ],
-   
-   function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, isEmptyObject, merge, clone) {
-      
+
+   function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, historyUtils, SourceController, isEmptyObject, merge, clone) {
+
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -63,19 +64,20 @@ define('Controls/Filter/Controller',
                return Deferred.success([]);
             }
             var that = this;
-            var recent, lastFilter;
+            var recent, lastFilter,
+               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
-                  source: this.getHistorySource(self, id)
+                  source: source
                });
             }
 
             return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = that.getHistorySource(self, id).getRecent();
+               recent = historyUtils.getHistorySource(id).getRecent();
                if (recent.getCount()) {
                   lastFilter = recent.at(0);
-                  return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+                  return historyUtils.getHistorySource(id).getDataObject(lastFilter.get('ObjectData'));
                }
             });
          },
@@ -347,9 +349,9 @@ define('Controls/Filter/Controller',
                meta = {
                   '$_addFromData': true
                };
-               _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
+               historyUtils.getHistorySource(this._options.historyId).update(isEmptyObject(filter) ? filter : items, meta);
             }
-            
+
             _private.applyItemsToFilter(this, this._options.filter, items);
             _private.notifyFilterChanged(this);
          },
@@ -358,7 +360,7 @@ define('Controls/Filter/Controller',
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
-         
+
       });
 
       Container._private = _private;
