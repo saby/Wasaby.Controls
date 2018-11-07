@@ -61,7 +61,7 @@ define([
             nodeProperty: 'Раздел@',
             keyProperty: 'id',
             listModel: {
-               _updateSelection: function() {
+               updateSelection: function() {
 
                }
             }
@@ -90,7 +90,7 @@ define([
             items: rs,
             keyProperty: 'id',
             listModel: {
-               _updateSelection: function() {
+               updateSelection: function() {
 
                }
             }

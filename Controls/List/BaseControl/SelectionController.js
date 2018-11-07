@@ -38,7 +38,7 @@ define('Controls/List/BaseControl/SelectionController', [
 
          self._notify('selectedKeysCountChanged', [self._multiselection.getCount()]);
 
-         self._options.listModel._updateSelection(self._multiselection.getSelectedKeysForRender());
+         self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
       },
 
       getItemsKeys: function(items) {
@@ -93,7 +93,7 @@ define('Controls/List/BaseControl/SelectionController', [
          var self = this;
          return _private.getMultiselection(options).addCallback(function(multiselectionInstance) {
             self._multiselection = multiselectionInstance;
-            options.listModel._updateSelection(self._multiselection.getSelectedKeysForRender());
+            options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
          });
       },
 
@@ -113,7 +113,7 @@ define('Controls/List/BaseControl/SelectionController', [
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
             this._multiselection.setItems(newOptions.items);
-            this._options.listModel._updateSelection(this._multiselection.getSelectedKeysForRender());
+            this._options.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
          }
 
          if (selectionChanged) {
