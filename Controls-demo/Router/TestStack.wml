@@ -1,0 +1,18 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
+    <ws:contentArea>
+        <div>
+            depth: {{getDepth()}}
+            <Router.Route mask="{{_depth > 0 ? 'app/' + (_depth - 1) + '/:app' : 'app/:app'}}">
+                <ws:if data="{{content.app}}">
+                    <Controls.Container.Async templateName="{{content.app}}">
+                        <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content"
+                                    template="{{content.resolvedTemplate}}" />
+                    </Controls.Container.Async>
+                </ws:if>
+                <ws:else>
+                    <div></div>
+                </ws:else>
+            </Router.Route>
+        </div>
+    </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>

@@ -16,7 +16,8 @@ define('Controls/List/BaseControl', [
    'Controls/Utils/tmplNotify',
 
    'css!theme?Controls/List/BaseControl/BaseControl'
-], function(Control,
+], function(
+   Control,
    IoC,
    cClone,
    cMerge,
@@ -30,7 +31,8 @@ define('Controls/List/BaseControl', [
    RecordSet,
    tUtil,
    aUtil,
-   tmplNotify) {
+   tmplNotify
+) {
    'use strict';
 
    var _private = {
@@ -52,13 +54,13 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(list);
                }
 
-               // self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
 
-               //If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                if (!list.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
@@ -94,7 +96,7 @@ define('Controls/List/BaseControl', [
                   // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
-               //If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                if (!addedItems.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
@@ -156,7 +158,7 @@ define('Controls/List/BaseControl', [
 
       onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
+            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
                _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
             }
          }
@@ -282,7 +284,7 @@ define('Controls/List/BaseControl', [
             if (position === 'middle') {
                self._scrollPagingCtr.handleScroll(scrollTop);
             } else {
-               //when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
+               // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                if (self._sourceController) {
                   hasMoreData = {
                      up: self._sourceController.hasMoreData('up'),
@@ -318,6 +320,7 @@ define('Controls/List/BaseControl', [
 
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function() {
+            self._hasUndrawChanges = true;
             self._forceUpdate();
          });
          model.subscribe('onGroupsExpandChange', function(event, changes) {
@@ -328,14 +331,15 @@ define('Controls/List/BaseControl', [
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
          var
             context = event.type === 'itemcontextmenu',
-            showActions = (context || showAll) && itemData.itemActions.all
-               ? itemData.itemActions.all
-               : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
-                  return action.showType !== tUtil.showType.TOOLBAR;
-               });
-         if (context && self._isTouch) {
+            showActions;
+         if ((context && self._isTouch) || !itemData.itemActions) {
             return false;
          }
+         showActions = (context || showAll) && itemData.itemActions.all
+            ? itemData.itemActions.all
+            : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
+               return action.showType !== tUtil.showType.TOOLBAR;
+            });
          if (showActions && showActions.length) {
             var
                rs = new RecordSet({ rawData: showActions });
@@ -407,7 +411,7 @@ define('Controls/List/BaseControl', [
          if (config.historyIdCollapsedGroups) {
             requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
                GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
-                  result.callback(collapsedGroupsFromStore ? collapsedGroupsFromStore : config.collapsedGroups);
+                  result.callback(collapsedGroupsFromStore || config.collapsedGroups);
                });
             });
          } else {
@@ -461,13 +465,12 @@ define('Controls/List/BaseControl', [
       _menuIsShown: null,
 
       _popupOptions: null,
-      _isServer: null,
+      _hasUndrawChanges: false,
 
       _beforeMount: function(newOptions, context, receivedState) {
          var
             self = this;
 
-         this._isServer = typeof window === 'undefined';
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
@@ -590,6 +593,10 @@ define('Controls/List/BaseControl', [
       _afterUpdate: function() {
          if (_private.getItemsCount(this)) {
             _private.initializeAverageItemsHeight(this);
+         }
+         if (this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+            _private.checkLoadToDirectionCapability(this);
          }
       },
 
@@ -730,6 +737,10 @@ define('Controls/List/BaseControl', [
 
       _onItemActionsClick: function(e, action, item) {
          this._notify('itemActionsClick', [action, item]);
+      },
+
+      _hoveredItemChanged: function(event, item) {
+         this._notify('hoveredItemChanged', [item]);
       },
 
       _itemMouseMove: function(event, itemData, nativeEvent) {

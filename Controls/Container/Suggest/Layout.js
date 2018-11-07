@@ -6,15 +6,16 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Core/moduleStubs',
       'Core/core-clone',
+      'Controls/Search/MissSpell/getSwitcherStrFromData',
       'css!theme?Controls/Container/Suggest/Layout/Suggest',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone) {
+   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
       
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll'];
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/MissSpell', 'Controls/Container/LoadingIndicator'];
       
       var _private = {
          hasMore: function(searchResult) {
@@ -70,6 +71,7 @@ define('Controls/Container/Suggest/Layout',
                var metaData = data && data.getMetaData();
                var result = metaData.results;
    
+               _private.setMissSpellingCaption(self, getSwitcherStrFromData(data));
                if (result && result.get(CURRENT_TAB_META_FIELD)) {
                   self._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
                }
@@ -119,6 +121,10 @@ define('Controls/Container/Suggest/Layout',
                self._dependenciesDeferred = mStubs.require(deps);
             }
             return self._dependenciesDeferred;
+         },
+         
+         setMissSpellingCaption: function(self, value) {
+            self._misspellingCaption = value;
          }
       };
    
@@ -140,6 +146,7 @@ define('Controls/Container/Suggest/Layout',
          
          //context value
          _searchValue: '',
+         _inputValue: '',
          _isFooterShown: false,
          _tabsSource: null,
          _filter: null,
@@ -264,7 +271,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _searchStart: function() {
-            this._loading = true;
+            this._children.indicator.toggleIndicator(this._loading = true);
             if (this._options.searchStartCallback) {
                this._options.searchStartCallback();
             }
@@ -272,7 +279,7 @@ define('Controls/Container/Suggest/Layout',
          
          _searchEnd: function(result) {
             if (this._options.suggestState) {
-               this._loading = false;
+               this._children.indicator.toggleIndicator(this._loading = false);
             }
             this._searchDelay = this._options.searchDelay;
             _private.precessResultData(this, result);
@@ -305,6 +312,11 @@ define('Controls/Container/Suggest/Layout',
             if (event.target === window) {
                _private.close(this);
             }
+         },
+   
+         _missSpellClick: function() {
+            this._notify('valueChanged', [this._misspellingCaption]);
+            _private.setMissSpellingCaption(this, '');
          }
          
          // </editor-fold>

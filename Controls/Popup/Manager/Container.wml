@@ -7,6 +7,7 @@
       <Controls.Container.PendingRegistrator name="{{item.id}}_registrator" attr:key="{{item.id}}">
          <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                        on:deactivated="_popupDeactivated(item.id)"
+                                       on:popupClose="_popupClosed()"
                                        attr:class="controls-Container__popup
                 {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                 {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
