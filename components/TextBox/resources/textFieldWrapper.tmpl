@@ -4,9 +4,9 @@
 	autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
 	value="{{text}}"
 	maxlength="{{maxLength ? maxLength}}"
-	required="true"
+	required="{{_isRequired}}"
 	placeholder="{{' '}}"
-	title="{{tooltip ? tooltip : ' '}}"
+	title="{{tooltip}}"
 	autocorrect="off"
 />
 <ws:if data="{{ enabled && placeholder }}">

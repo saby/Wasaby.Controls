@@ -8,7 +8,6 @@ define('Controls/List/EditInPlace', [
    'Controls/Utils/hasHorizontalScroll',
    'css!Controls/List/EditInPlace/Text'
 ], function(Control, template, Deferred, Record, ItemsUtil, getWidthUtil, hasHorizontalScrollUtil) {
-
    var
       typographyStyles = [
          'fontFamily',
@@ -65,7 +64,7 @@ define('Controls/List/EditInPlace', [
          },
 
          endItemEdit: function(self, commit) {
-         //Чтобы при первом старте редактирования не летели лишние события
+         // Чтобы при первом старте редактирования не летели лишние события
             if (!self._editingItem) {
                return Deferred.success();
             }
@@ -76,7 +75,7 @@ define('Controls/List/EditInPlace', [
                return Deferred.fail();
             }
             if (result instanceof Deferred) {
-            //Если мы попали сюда, то прикладники сами сохраняют запись
+            // Если мы попали сюда, то прикладники сами сохраняют запись
                return result.addCallback(function() {
                   _private.afterItemEndEdit(self);
                });
@@ -106,9 +105,8 @@ define('Controls/List/EditInPlace', [
                   return self._options.source.update(self._editingItem).addCallback(function() {
                      _private.acceptChanges(self);
                   });
-               } else {
-                  _private.acceptChanges(self);
                }
+               _private.acceptChanges(self);
             }
 
             return Deferred.success();
@@ -145,14 +143,12 @@ define('Controls/List/EditInPlace', [
                } else {
                   self.commitEdit();
                }
+            } else if (index > 0 && _private.getPrevious(index, self._options.listModel)) {
+               self.editItem({
+                  item: _private.getPrevious(index, self._options.listModel)
+               });
             } else {
-               if (index > 0 && _private.getPrevious(index, self._options.listModel)) {
-                  self.editItem({
-                     item: _private.getPrevious(index, self._options.listModel)
-                  });
-               } else {
-                  self.commitEdit();
-               }
+               self.commitEdit();
             }
          },
 
@@ -166,9 +162,8 @@ define('Controls/List/EditInPlace', [
                result = listModel.at(index + offset).getContents();
                if (result instanceof Record) {
                   return result;
-               } else {
-                  offset++;
                }
+               offset++;
             }
          },
 
@@ -181,9 +176,8 @@ define('Controls/List/EditInPlace', [
                result = listModel.at(index + offset).getContents();
                if (result instanceof Record) {
                   return result;
-               } else {
-                  offset--;
                }
+               offset--;
             }
          },
 
@@ -282,14 +276,14 @@ define('Controls/List/EditInPlace', [
       _onKeyDown: function(e) {
          if (this._editingItem) {
             switch (e.nativeEvent.keyCode) {
-               case 13: //Enter
+               case 13: // Enter
                   if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
                      this.commitEdit();
                   } else {
                      _private.editNextRow(this, true);
                   }
                   break;
-               case 27: //Esc
+               case 27: // Esc
                   this.cancelEdit();
                   break;
             }
@@ -351,8 +345,8 @@ define('Controls/List/EditInPlace', [
                   previousWidth = currentWidth;
                }
 
-               //EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
-               //Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
+               // EditingRow в afterMount делает this.activate(), чтобы при переходах по табу фокус вставал в поля ввода.
+               // Т.е. если не звать focus(), то фокус может находиться в другом поле ввода.
                target.focus();
 
                lastLetterWidth = currentWidth - previousWidth;
@@ -362,12 +356,10 @@ define('Controls/List/EditInPlace', [
                   } else {
                      target.setSelectionRange(target.value.length - i + 1, target.value.length - i + 1);
                   }
+               } else if (currentWidth - offset < lastLetterWidth / 2) {
+                  target.setSelectionRange(i, i);
                } else {
-                  if (currentWidth - offset < lastLetterWidth / 2) {
-                     target.setSelectionRange(i, i);
-                  } else {
-                     target.setSelectionRange(i - 1, i - 1);
-                  }
+                  target.setSelectionRange(i - 1, i - 1);
                }
 
                target.scrollLeft = 0;
@@ -388,15 +380,15 @@ define('Controls/List/EditInPlace', [
             ? listModel._prepareDisplayItemForAdd(item)
             : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
 
-         listModel.reset(); //reset делается для того, чтобы при добавлении не лезть за пределы проекции
-         var actions =  listModel.getItemActions(item);
-         this._editingItemData = listModel.getCurrent();
-         this._editingItemData.item = this._editingItem;
-         this._editingItemData.dispItem = editingItemProjection;
+         var actions = listModel.getItemActions(item);
+         this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
          this._editingItemData.isEditing = true;
-         this._editingItemData.index = this._isAdd ? listModel.getCount() : index;
-         this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length,
-         this._editingItemData.itemActions = this._isAdd ? listModel.getItemActions(item) : {};
+         this._editingItemData.item = this._editingItem;
+         this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length;
+         this._editingItemData.itemActions = this._isAdd ? actions : {};
+         if (this._isAdd) {
+            this._editingItemData.index = index;
+         }
          listModel._setEditingItemData(this._editingItemData);
       },
 

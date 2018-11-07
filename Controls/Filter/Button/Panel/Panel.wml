@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.title}}"
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.headingCaption}}"
                                                 attr:class="controls-PanelFilter
                                                 {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
    <ws:topArea>

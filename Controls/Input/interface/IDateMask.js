@@ -9,7 +9,7 @@ define('Controls/Input/interface/IDateMask', [
     */
 
    /**
-    * @name Controls/Input/IDateMask#mask
+    * @name Controls/Input/interface/IDateMask#mask
     * @cfg {String} Date format.
     *
     * @variant 'DD.MM.YYYY'
