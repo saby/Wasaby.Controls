@@ -58,9 +58,21 @@
          <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'themed-css-' + index }}"/>
       </ws:else>
    </ws:for>
-   <ws:for data="index, value in simpleCss">
-      <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>
+   <!--<ws:for data="themeName, themedCssMap in resolvedThemed">-->
+      <!--<ws:for data="index, value in themedCssMap">-->
+         <!--<style>-->
+            <!--{{ value }}-->
+         <!--</style>-->
+      <!--</ws:for>-->
+   <!--</ws:for>-->
+   <ws:for data="index, value in resolvedSimple">
+      <style>
+         {{ value }}
+      </style>
    </ws:for>
+   <!--<ws:for data="index, value in simpleCss">-->
+      <!--<link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>-->
+   <!--</ws:for>-->
    <title key="title">{{ _options.title }}</title>
    {{ errorState }}
 </head>

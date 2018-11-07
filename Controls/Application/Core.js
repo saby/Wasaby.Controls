@@ -14,7 +14,8 @@ define('Controls/Application/Core',
    function(Control,
       template,
       AppData,
-      HeadDataContext) {
+      HeadDataContext,
+      ThemesController) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -39,6 +40,7 @@ define('Controls/Application/Core',
             }
 
             AppCore.superclass.constructor.apply(this, arguments);
+            ThemesController.getInstance().pushTheme(this.coreTheme);
             this.ctxData = new AppData(cfg);
             this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, true);
          },
@@ -48,7 +50,7 @@ define('Controls/Application/Core',
                headData: this.headDataCtx
             };
          },
-         coreTheme: '',
+         coreTheme: 'default',
          setTheme: function(ev, theme) {
             this.coreTheme = theme;
          },
