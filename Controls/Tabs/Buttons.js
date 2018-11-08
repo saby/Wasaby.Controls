@@ -74,6 +74,7 @@ define('Controls/Tabs/Buttons', [
     * @control
     * @public
     * @category List
+    * @author Михайловский Д.С.
     * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
