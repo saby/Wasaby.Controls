@@ -25,7 +25,6 @@ class Directory extends ResourceAbstract {
     /**
      * @param {String} name Имя директории
      * @param {Object} [meta] Дополнительные мета-данные
-     * @param {Number} [size] Дополнительные мета-данные
      * @param {File/FileInfo} [info] Объект с информацией о файле.
      * @param {File/IResource} [entries] Содержимое директории.
      * @constructor
