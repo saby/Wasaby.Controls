@@ -258,5 +258,8 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                 return this._sumSource;
             }
         });
+
+        Sum._private = _private;
+
         return Sum;
     });
