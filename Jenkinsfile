@@ -17,6 +17,13 @@ def exception(err, reason) {
     error(err)
 }
 
+def send_status_in_gitlab(state) {
+    def request_url = "http://ci-platform.sbis.ru:8000/set_status"
+    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    echo "${request_data}"
+    sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -65,24 +72,14 @@ echo "Генерируем параметры"
     ])
 
 node('master') {
-    def state
-    def request_url = "http://ci-platform.sbis.ru:8000/set_status"
 
     if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
-        state = "failed"
-        def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
-        echo "${request_data}"
-        sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
+        send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
-        state = "running"
-        def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
-        echo "${request_data}"
-        sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
-
+        // если встала в очередь на билдере
+        send_status_in_gitlab("running")
     }
-
-
 }
 
 node('controls') {
