@@ -1,6 +1,6 @@
 define('Controls/Input/Lookup/_Lookup', [
    'Core/Control',
-   'wml!Controls/Input/Lookup/_Lookup/_Lookup',
+   'wml!Controls/Input/Lookup/_Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
    'WS.Data/Chain',
    'Core/core-merge',
@@ -11,7 +11,7 @@ define('Controls/Input/Lookup/_Lookup', [
    'wml!Controls/Input/Lookup/resources/clearRecordsTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
-   'css!Controls/Input/Lookup/_Lookup/_Lookup'
+   'css!Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
 
    'use strict';
@@ -179,7 +179,6 @@ define('Controls/Input/Lookup/_Lookup', [
 
    var Lookup = Control.extend({
       _template: template,
-
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,
@@ -189,8 +188,6 @@ define('Controls/Input/Lookup/_Lookup', [
       _needSetFocusInInput: false,
 
       _beforeMount: function(options) {
-         this._selectCallback = this._selectCallback.bind(this);
-         this._onClosePickerBind = this._onClosePicker.bind(this);
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
@@ -207,6 +204,7 @@ define('Controls/Input/Lookup/_Lookup', [
 
       _beforeUpdate: function(newOptions) {
          var
+            multiLineState = false,
             self = this,
             maxVisibleItems = 0,
             afterFieldWrapperWidth = 0,
@@ -228,13 +226,17 @@ define('Controls/Input/Lookup/_Lookup', [
                }, 0);
 
                if (collectionWidth <= availableWidth) {
+                  multiLineState = itemsSizes.length !== lastSelectedItems.length;
                   inputWidth = (self._wrapperInputRender.getBoundingClientRect().width ^ 0) - collectionWidth;
+               } else {
+                  multiLineState = true;
                }
             } else {
                maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             }
          }
 
+         this._multiLineState = multiLineState;
          this._inputWidth = inputWidth;
          this._maxVisibleItems = maxVisibleItems;
          this._availableWidthCollection = availableWidth;
@@ -251,11 +253,6 @@ define('Controls/Input/Lookup/_Lookup', [
          }
       },
 
-      _onClosePicker: function() {
-         this._isPickerVisible = false;
-         this._forceUpdate();
-      },
-
       _beforeUnmount: function() {
          this._simpleViewModel = null;
       },
@@ -264,34 +261,8 @@ define('Controls/Input/Lookup/_Lookup', [
          return Chain(this._options.items).value();
       },
 
-      _showSelector: function(templateOptions) {
-         var
-            self = this,
-            multiSelect = this._options.multiSelect,
-            selectorOpener = this._children.selectorOpener;
-
-         templateOptions = merge(templateOptions || {}, {
-            selectedItems: multiSelect ? this._options.items : null,
-            multiSelect: multiSelect,
-            handlers: {
-               onSelectComplete: function(event, result) {
-                  self._selectCallback(result);
-                  selectorOpener.close();
-               }
-            }
-         }, {clone: true});
-
-         selectorOpener.open({
-            opener: self,
-            isCompoundTemplate: this._options.isCompoundTemplate,
-            templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
-         });
-      },
-
       _changeValueHandler: function(event, value) {
          _private.notifyValue(this, value);
-
-         //this._togglePicker(null, false);
       },
 
       _choose: function(event, item) {
@@ -311,12 +282,10 @@ define('Controls/Input/Lookup/_Lookup', [
 
       _deactivated: function() {
          this._suggestState = false;
-
-         //this._togglePicker(null, false);
       },
 
       _suggestStateChanged: function() {
-         if (this._isPickerVisible || this._options.readOnly) {
+         if (this._options.readOnly) {
             this._suggestState = false;
          }
       },
@@ -330,15 +299,11 @@ define('Controls/Input/Lookup/_Lookup', [
       },
 
       _onClickShowSelector: function() {
-         this._showSelector();
+         this._notify('showSelector');
       },
 
       _onClickClearRecords: function() {
          this._notify('updateItems', [[]]);
-      },
-
-      _selectCallback: function(result) {
-         this._notify('updateItems', [result]);
       },
 
       _itemClick: function(event, item) {

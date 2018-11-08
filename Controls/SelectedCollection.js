@@ -58,6 +58,7 @@ define('Controls/SelectedCollection',
          _afterMount: function() {
             this._templateOptions = {
                items: this._options.items,
+               readOnly: this._options.readOnly,
                displayProperty: this._options.displayProperty,
                width: this._container && this._container.offsetWidth,
                clickCallback: this._onResult.bind(this)

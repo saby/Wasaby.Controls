@@ -21,9 +21,4 @@
    <ws:else>
       <Controls.Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
    </ws:else>
-   <Controls.Selector.Opener name="selectorOpener">
-      <ws:popupOptions>
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-      </ws:popupOptions>
-   </Controls.Selector.Opener>
 </div>

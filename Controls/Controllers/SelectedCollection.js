@@ -1,6 +1,6 @@
-define('Controls/Input/Lookup/Controller', [
+define('Controls/Controllers/SelectedCollection', [
    'Core/Control',
-   'wml!Controls/Input/Lookup/Controller/Controller',
+   'wml!Controls/Controllers/SelectedCollection/SelectedCollection',
    'Core/core-clone',
    'Core/Deferred',
    'Controls/Controllers/SourceController',
@@ -126,6 +126,7 @@ define('Controls/Input/Lookup/Controller', [
       _items: null,
 
       _beforeMount: function(options, context, receivedState) {
+         this._selectCallback = this._selectCallback.bind(this);
          this._selectedKeys = options.selectedKeys.slice();
 
          if (this._selectedKeys.length) {
@@ -186,6 +187,41 @@ define('Controls/Input/Lookup/Controller', [
          _private.notifyChanges(this, this._selectedKeys);
       },
 
+      _showSelector: function(templateOptions) {
+         var
+            self = this,
+            multiSelect = this._options.multiSelect,
+            selectorOpener = this._children.selectorOpener,
+            selectorTemplate = this._options.selectorTemplate;
+
+         if (selectorTemplate) {
+            templateOptions = merge(templateOptions || {}, {
+               selectedItems: multiSelect ? _private.getItems(this) : null,
+               multiSelect: multiSelect,
+               handlers: {
+                  onSelectComplete: function(event, result) {
+                     self._selectCallback(result);
+                     selectorOpener.close();
+                  }
+               }
+            }, {clone: true});
+
+            selectorOpener.open({
+               opener: self,
+               isCompoundTemplate: this._options.isCompoundTemplate,
+               templateOptions: merge(selectorTemplate.templateOptions || {}, templateOptions, {clone: true})
+            });
+         }
+      },
+
+      _selectCallback: function(result) {
+         this._setItems(result);
+      },
+
+      _onShowSelectorHandler: function(event, templateOptions) {
+         this._showSelector(templateOptions);
+      },
+
       _onAddItemHandler: function(event, item) {
          _private.addItem(this, item);
          this._notify('choose', [item]);
@@ -195,7 +231,7 @@ define('Controls/Input/Lookup/Controller', [
          _private.removeItem(this, item);
       },
 
-      _onUpdateItems: function(event, items) {
+      _onUpdateItemsHandler: function(event, items) {
          this._setItems(items);
       }
    });

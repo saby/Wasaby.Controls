@@ -1,10 +1,9 @@
 define('Controls/Button/SelectorButton/_SelectorButton', [
    'Core/Control',
-   'wml!Controls/Button/SelectorButton/_SelectorButton/_SelectorButton',
-   'Core/core-merge',
+   'wml!Controls/Button/SelectorButton/_SelectorButton',
    'WS.Data/Chain',
-   'css!Controls/Button/SelectorButton/_SelectorButton/_SelectorButton'
-], function(Control, template, cMerge, Chain) {
+   'css!Controls/Button/SelectorButton/SelectorButton'
+], function(Control, template, Chain) {
    'use strict';
 
    /**
@@ -21,29 +20,12 @@ define('Controls/Button/SelectorButton/_SelectorButton', [
    var SelectorButton = Control.extend({
       _template: template,
 
-      _beforeMount: function() {
-         this._onResult = this._onResult.bind(this);
-      },
-
       _getItemsInArray: function() {
          return Chain(this._options.items).value();
       },
 
       _open: function() {
-         var tplOptions = {
-            selectedItems: this._options.items,
-            multiSelect: this._options.multiSelect
-         };
-         cMerge(tplOptions, this._options.templateOptions);
-         this._children.selectorOpener.open({
-            templateOptions: tplOptions,
-            template: this._options.templateName,
-            target: this._children.link
-         });
-      },
-
-      _onResult: function(result) {
-         this._notify('updateItems', [result]);
+         this._notify('showSelector');
       },
 
       _reset: function() {

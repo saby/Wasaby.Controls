@@ -1,11 +1,13 @@
-<Controls.Input.Lookup.Controller
-        source="{{_options.source}}"
-        selectedKeys="{{_options.selectedKeys}}"
-        keyProperty="{{_options.keyProperty}}"
-        displayProperty="{{_options.displayProperty}}"
-        filter="{{_options.filter}}"
-        lookupTemplate="{{_options.lookupTemplate}}"
-        isCompoundTemplate="{{_options.isCompoundTemplate}}"
-        multiSelect="{{_options.multiSelect}}">
-    <Controls.Input.Lookup._Lookup name="_lookup" scope="{{_options}}"/>
-</Controls.Input.Lookup.Controller>
+<Controls.Controllers.SelectedCollection
+      name="controller"
+      source="{{_options.source}}"
+      selectedKeys="{{_options.selectedKeys}}"
+      keyProperty="{{_options.keyProperty}}"
+      displayProperty="{{_options.displayProperty}}"
+      filter="{{_options.filter}}"
+      selectorTemplate="{{_options.lookupTemplate}}"
+      isCompoundTemplate="{{_options.isCompoundTemplate}}"
+      multiSelect="{{_options.multiSelect}}"
+      attr:class="controls-Lookup">
+   <Controls.Input.Lookup._Lookup scope="{{_options}}"/>
+</Controls.Controllers.SelectedCollection>
