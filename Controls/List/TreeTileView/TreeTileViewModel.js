@@ -31,8 +31,11 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
 
          if (hoveredItem && hoveredItem.key === current.key) {
             current.isHovered = true;
-            current.position = hoveredItem.position;
-            current.animated = hoveredItem.animated;
+            if (hoveredItem.position) {
+               current.isFixed = true;
+               current.position = hoveredItem.position;
+            }
+            current.isAnimated = hoveredItem.isAnimated;
          }
 
          current = cMerge(current, this.getTileItemData());

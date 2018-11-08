@@ -113,7 +113,7 @@ define('Controls/List/TileView/TileView', [
          if (hoveredItem && hoveredItem.endPosition && this._hasFixedItemInDOM()) {
             this._listModel.setHoveredItem({
                key: hoveredItem.key,
-               animated: true,
+               isAnimated: true,
                position: hoveredItem.endPosition
             });
          }
