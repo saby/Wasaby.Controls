@@ -6,6 +6,7 @@ define('Controls/Input/interface/IInputDateTime', [
     *
     * @interface Controls/Input/interface/IInputDateTime
     * @public
+    * @author Миронов А.Ю.
     */
 
    /**
