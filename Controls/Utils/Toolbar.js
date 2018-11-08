@@ -10,14 +10,18 @@ define('Controls/Utils/Toolbar', ['WS.Data/Chain'], function(Chain) {
    return {
       showType: {
 
-         //show only in Menu
+         //show icon and toolbar only in Menu
          MENU: 0,
 
-         //show in Menu and Toolbar
+         //show icon and toolbar in Menu and Toolbar
          MENU_TOOLBAR: 1,
 
-         //show only in Toolbar
-         TOOLBAR: 2
+         //show icon and toolbar only in Toolbar
+         TOOLBAR: 2,
+
+         //show icon in toolbar, in menu show icon and title
+         TOOLBAR_ICON_TITLE: 3
+
       },
 
       getMenuItems: function(items) {
