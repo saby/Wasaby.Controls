@@ -35,6 +35,10 @@ define('Controls/Input/Password/ViewModel',
             var autoComplete = this._options.autoComplete;
             var passwordVisible = this._options.passwordVisible;
 
+            /**
+             * If auto-completion is true, then the displayed value can be saved to the browser history.
+             * Therefore, the field must have a value that is not replaced by •.
+             */
             return autoComplete || passwordVisible ? displayValue : '•'.repeat(displayValue.length);
          }
       });
