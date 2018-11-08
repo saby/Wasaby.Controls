@@ -4,16 +4,13 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Utils',
    'Core/core-clone',
    'Core/helpers/Object/isEqual',
-   'Controls/Controllers/SourceController',
-   'WS.Data/Adapter/Sbis',
    'Controls/Filter/Button/History/resources/historyUtils',
-   'WS.Data/Collection/RecordSet',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
    'Core/IoC',
    'css!theme?Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, isEqual, SourceController, SbisAdapter, historyUtils, RecordSet, _FilterPanelOptions, template, IoC) {
+], function(Control, Chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.

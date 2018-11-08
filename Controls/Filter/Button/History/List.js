@@ -4,15 +4,12 @@
 define('Controls/Filter/Button/History/List', [
    'Core/Control',
    'wml!Controls/Filter/Button/History/List',
-   'WS.Data/Adapter/Sbis',
-   'Controls/Controllers/SourceController',
-   'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
    'Core/helpers/Object/isEqual',
    'WS.Data/Utils',
    'Controls/Filter/Button/History/resources/historyUtils',
    'css!theme?Controls/Filter/Button/History/List'
-], function(BaseControl, template, SbisAdapter, SourceController, RecordSet, Chain, Utils, historyUtils) {
+], function(BaseControl, template, Chain, isEqual, Utils, historyUtils) {
    'use strict';
 
    var MAX_NUMBER_ITEMS = 5;
