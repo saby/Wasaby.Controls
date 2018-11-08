@@ -437,7 +437,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IEditableList
     * @control
     * @public
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     * @category List
     */
 

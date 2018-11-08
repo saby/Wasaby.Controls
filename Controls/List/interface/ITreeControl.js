@@ -6,7 +6,7 @@ define('Controls/List/interface/ITreeControl', [
     *
     * @interface Controls/List/interface/ITreeControl
     * @public
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     */
 
 

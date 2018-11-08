@@ -4,7 +4,7 @@ define('Controls/List/resources/utils/CSSGridLayoutUtils', [], function() {
     * Вспомогательные функции для работы с моделью CSS Grid Layout
     *
     * @class Controls/List/resources/utils/CSSGridLayoutUtils
-    * @author Новожилов И.А.
+    * @author Авраменко А.С.
     *
     * @public
     * @category Helpers

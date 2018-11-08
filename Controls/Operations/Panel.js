@@ -16,7 +16,7 @@ define('Controls/Operations/Panel', [
     * @mixes Controls/interface/IExpandable
     * @control
     * @public
-    * @author Сухоручкин А.С.
+    * @author Зайцев А.С.
     * @demo Controls-demo/OperationsPanel/Panel
     *
     * @css @background-color_OperationsPanel Background color of the panel.
