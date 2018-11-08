@@ -2,14 +2,14 @@ define(
    [
       'Controls/Input/Number'
    ],
-   function(Number) {
+   function(NumberInput) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
          it('trimEmptyDecimals ("000" at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -32,7 +32,7 @@ define(
          it('trimEmptyDecimals ("." at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -55,7 +55,7 @@ define(
          it('trimEmptyDecimals ("456" at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -83,24 +83,18 @@ define(
                showEmptyDecimals: true,
                value: null
             };
-            let num = new Number(config);
+            let num = new NumberInput(config);
             num._beforeMount(config);
             num._options.precision = 0;
 
             num._inputCompletedHandler({}, '-0');
-            assert.equal(num._numberViewModel.getValue(), '0');
-
-            num._inputCompletedHandler({}, '0000');
-            assert.equal(num._numberViewModel.getValue(), '0');
-
-            num._inputCompletedHandler({}, '-000');
             assert.equal(num._numberViewModel.getValue(), '0');
          });
 
          it('trimEmptyDecimals (single zero, no dot)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -123,7 +117,7 @@ define(
             var config = {
                value: null
             };
-            let num = new Number(config);
+            let num = new NumberInput(config);
             num._beforeMount(config);
             assert.equal(num._numberViewModel.getDisplayValue(), '');
          });
