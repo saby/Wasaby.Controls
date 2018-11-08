@@ -3,11 +3,10 @@ define('Controls/SelectedCollection',
       'Core/Control',
       'wml!Controls/SelectedCollection/SelectedCollection',
       'wml!Controls/SelectedCollection/ItemTemplate',
-      'WS.Data/Chain',
       'css!Controls/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, Chain) {
+   function(Control, template, ItemTemplate) {
       'use strict';
 
       /**
@@ -30,7 +29,7 @@ define('Controls/SelectedCollection',
          },
 
          getVisibleItems: function(items, maxVisibleItems) {
-            return maxVisibleItems ? Chain(items).last(maxVisibleItems).value() : items;
+            return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
          }
       };
 
@@ -44,7 +43,7 @@ define('Controls/SelectedCollection',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.items !== newOptions.items) {
+            if (this._options.items !== newOptions.items || this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
                this._visibleItems = _private.getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
                this._templateOptions.items = newOptions.items;
             }
@@ -79,11 +78,7 @@ define('Controls/SelectedCollection',
          },
 
          _crossClick: function(event, index) {
-            var
-               items = this._options.items,
-               currentItem = items.at ? items.at(index) : items[index];
-
-            this._notify('crossClick', [currentItem]);
+            this._notify('crossClick', [this._visibleItems[index]]);
          }
       });
 

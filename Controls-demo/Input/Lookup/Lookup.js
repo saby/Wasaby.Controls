@@ -29,7 +29,7 @@ define('Controls-demo/Input/Lookup/Lookup',
          _selectedKeys7: null,
          _source: null,
          _beforeMount: function() {
-            this._selectedKeys = [4];
+            this._selectedKeys = [1, 2, 3, 4, 5, 6, 7];
             this._selectedKeys1 = [4];
             this._selectedKeys2 = [4];
             this._selectedKeys3 = [4];
