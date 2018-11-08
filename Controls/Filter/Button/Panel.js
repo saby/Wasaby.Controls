@@ -65,8 +65,13 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
-      resolveHistoryId: function(options, context) {
-         return options.historyId || (context && context.historyId);
+      resolveHistoryId: function(self, options, context) {
+         if (options.historyId) {
+            self._historyId = options.historyId;
+         } else if (context) {
+            self._historyId = context.historyId;
+            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
+         }
       },
 
       loadHistoryItems: function(self, historyId) {
@@ -125,7 +130,7 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
-         this._historyId = _private.resolveHistoryId(options, this._contextOptions);
+         _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          return _private.loadHistoryItems(this, this._historyId);
@@ -138,7 +143,7 @@ define('Controls/Filter/Button/Panel', [
             _private.resolveItems(this, newOptions, context);
          }
          if (this._options.historyId !== newOptions.historyId) {
-            this._historyId = _private.resolveHistoryId(newOptions, context);
+            _private.resolveHistoryId(this, newOptions, context);
             return _private.loadHistoryItems(this, this._historyId);
          }
       },
