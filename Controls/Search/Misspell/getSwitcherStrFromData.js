@@ -1,4 +1,4 @@
-define('Controls/Search/MissSpell/getSwitcherStrFromData', [], function() {
+define('Controls/Search/Misspell/getSwitcherStrFromData', [], function() {
    
    'use strict';
    
