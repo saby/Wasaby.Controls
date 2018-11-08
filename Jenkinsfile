@@ -71,13 +71,13 @@ node('master') {
     if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
         state = "failed"
         def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
-        echo ${request_data}
+        echo "${request_data}"
         sh """curl --header "Content-Type: application/json" --request POST --data  ${request_data} ${request_url}"""
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
         state = "running"
         def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
-        echo ${request_data}
+        echo "${request_data}"
         sh """curl --header "Content-Type: application/json" --request POST --data  ${request_data} ${request_url}"""
 
     }
