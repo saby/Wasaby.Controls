@@ -1,6 +1,6 @@
-define(['Controls/Search/MissSpell/getSwitcherStrFromData', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(getSwitchedStrFromData, RecordSet, Model) {
+define(['Controls/Search/Misspell/getSwitcherStrFromData', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(getSwitchedStrFromData, RecordSet, Model) {
    
-   describe('Controls.Search.MissSpell.getSwitchedStrFromData', function() {
+   describe('Controls.Search.Misspell.getSwitchedStrFromData', function() {
       
       it('getSwitchedStrFromData', function() {
          var rs = new RecordSet({
