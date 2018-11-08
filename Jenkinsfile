@@ -68,7 +68,7 @@ node('master') {
     def state
     def request_url = "http://10.76.174.84:8000/set_status"
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || all_inte || only_fail )) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
         state = "failed"
         def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
         echo ${request_data}
