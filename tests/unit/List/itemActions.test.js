@@ -291,7 +291,31 @@ define([
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);
          assert.equal(callBackCount, 2);
       });
-
-
+      it('itemActionsClick', function() {
+         var
+            callBackCount = 0,
+            fakeNativeEvent = {},
+            fakeEvent = {
+               stopPropagation: function() {
+                  callBackCount++;
+               },
+               nativeEvent: fakeNativeEvent
+            },
+            action = {},
+            itemData = {
+               item: 'test'
+            },
+            instance = {
+               _notify: function(eventName, args) {
+                  callBackCount++;
+                  assert.equal(args[0], action);
+                  assert.equal(args[1], itemData.item);
+                  assert.equal(args[2], fakeNativeEvent);
+                  assert.equal(eventName, 'itemActionsClick');
+               }
+            };
+         aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);
+         assert.equal(callBackCount, 2);
+      });
    });
 });
