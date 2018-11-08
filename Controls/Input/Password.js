@@ -3,12 +3,12 @@ define('Controls/Input/Password',
       'Core/Control',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/Password/Password',
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Password/ViewModel',
 
       'css!Controls/Input/Password/Password'
    ],
 
-   function(Control, tmplNotify, template, BaseViewModel) {
+   function(Control, tmplNotify, template, ViewModel) {
 
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
@@ -41,8 +41,10 @@ define('Controls/Input/Password',
          _passwordVisible: false,
 
          _beforeMount: function(options) {
-            this._simpleViewModel = new BaseViewModel({
-               value: options.value
+            this._simpleViewModel = new ViewModel({
+               value: options.value,
+               autoComplete: options.autocomplete,
+               passwordVisible: this._passwordVisible
             });
 
             /**
@@ -56,7 +58,9 @@ define('Controls/Input/Password',
 
          _beforeUpdate: function(newOptions) {
             this._simpleViewModel.updateOptions({
-               value: newOptions.value
+               value: newOptions.value,
+               autoComplete: newOptions.autocomplete,
+               passwordVisible: this._passwordVisible
             });
          },
 
@@ -68,6 +72,7 @@ define('Controls/Input/Password',
       PasswordInput.getDefaultOptions = function() {
          return {
             value: '',
+            autocomplete: true,
             selectOnClick: false
          };
       };
