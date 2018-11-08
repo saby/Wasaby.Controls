@@ -66,7 +66,7 @@ echo "Генерируем параметры"
 
 node('master') {
     def state
-    def request_url = "http://10.76.174.84:8000/set_status"
+    def request_url = "http://ci-platform.sbis.ru:8000/set_status"
 
     if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
         state = "failed"
