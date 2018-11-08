@@ -98,19 +98,6 @@ define('Controls/Input/resources/InputRender/InputRender',
          getInput: function(self) {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             return self._children.input.querySelector('.controls-InputRender__field');
-         },
-
-         initSelection: function(self) {
-            if (self._options.content) {
-               var input = _private.getInput(self);
-               var selection = self._selection;
-               var end = self._options.viewModel.getDisplayValue().length;
-
-               if (!selection) {
-                  input.selectionStart = end;
-                  input.selectionEnd = end;
-               }
-            }
          }
       };
 
@@ -131,22 +118,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._inputState = _private.getInputState(this, options);
          },
          
-         _afterMount: function() {
-            /**
-             * The cursor should be at the end until the user changes it.
-             * But setting the value in the field through the value attribute the cursor is at the beginning.
-             * https://jsfiddle.net/yc9f5oad/
-             * Therefore, we will install it ourselves.
-             */
-            _private.initSelection(this);
-         },
-
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
-         },
-
-         _afterUpdate: function() {
-            _private.initSelection(this);
          },
 
          _mouseEnterHandler: function() {
