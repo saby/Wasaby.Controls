@@ -13,10 +13,10 @@
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                <ws:itemTemplate>
-                  <ws:partial template="wml!Controls/Input/Lookup/ItemTemplate">
+                  <ws:partial template="wml!Controls/SelectedCollection/ItemTemplate">
                      <ws:contentTemplate>
-                        <ws:partial attr:class="ControlsDemo-EipScenarios__categoryNumber" template="wml!Controls/Input/Lookup/Collection/_ContentTemplate" style="bold" size="default" displayProperty="categoryNumber" />
-                        <ws:partial template="wml!Controls/Input/Lookup/Collection/_ContentTemplate" style="default" size="default" displayProperty="category" />
+                        <ws:partial attr:class="ControlsDemo-EipScenarios__categoryNumber" template="wml!Controls/SelectedCollection/_ContentTemplate" style="bold" size="default" displayProperty="categoryNumber" />
+                        <ws:partial template="wml!Controls/SelectedCollection/_ContentTemplate" style="default" size="default" displayProperty="category" />
                      </ws:contentTemplate>
                   </ws:partial>
                </ws:itemTemplate>
