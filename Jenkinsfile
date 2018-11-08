@@ -127,7 +127,7 @@ node('controls') {
 		} else {
 			branch_engine = props["engine"]
 		}
-		
+
 		def branch_navigation
 		if (params.branch_navigation) {
 			branch_navigation = params.branch_navigation
