@@ -173,11 +173,7 @@ node('controls') {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || all_inte || only_fail )) {
-                        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
-                    }
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
