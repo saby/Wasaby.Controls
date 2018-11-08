@@ -16,7 +16,9 @@ define('Controls/Validate/Input',
             this._forceUpdate();
          },
          _cleanValid: function() {
-            this.setValidationResult(null);
+            if (this._validationResult) {
+               this.setValidationResult(null);
+            }
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
@@ -25,5 +27,4 @@ define('Controls/Validate/Input',
             }
          }
       });
-   }
-);
+   });
