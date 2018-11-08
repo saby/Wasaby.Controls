@@ -5,6 +5,7 @@ define('Controls/interface/IStickyOpener', [], function() {
     *
     * @interface Controls/interface/IStickyOpener
     * @public
+    * @author Красильников А.С.
     */
 
    /**

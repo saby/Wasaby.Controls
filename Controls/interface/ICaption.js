@@ -6,6 +6,7 @@ define('Controls/interface/ICaption', [
     *
     * @interface Controls/interface/ICaption
     * @public
+    * @author Михайловский Д.С.
     */
 
    /**
