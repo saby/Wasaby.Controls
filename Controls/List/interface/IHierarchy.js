@@ -6,7 +6,7 @@ define('Controls/List/interface/IHierarchy', [
     *
     * @interface Controls/List/interface/IHierarchy
     * @public
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     */
 
    /**
