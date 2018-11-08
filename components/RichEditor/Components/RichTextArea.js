@@ -2686,14 +2686,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
-               if (!isPlainUrl && !isAfterUrl && rng.collapsed) {
+               if (!BROWSER.firefox && (!isPlainUrl && !isAfterUrl && rng.collapsed)) {
                   // Если вставляется не блочный элемент, то нужно убедиться, что он вставляется в блочный элемент, для этого поднять рэнж выше по дереву, если необходимо
                   // 1175500981 https://online.sbis.ru/opendoc.html?guid=0757be2b-56c9-4714-bb9f-c6f99e90bbf6
                   var node = rng.commonAncestorContainer;
                   if (node.nodeType === 3) {
                      var dom = editor.dom;
                      if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
-
                         var parent = dom.getParent(startNode, function(v) {
                            var p = v.parentNode;
                            return dom.isBlock(p) || 1 < p.childNodes.length;
@@ -2740,6 +2739,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // И теперь (только один раз) вставим в DOM
                content.innerHTML = html;
             },
+
             _onSelectionChange1: function() {
                //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
                //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
