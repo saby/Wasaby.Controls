@@ -17,14 +17,15 @@ def exception(err, reason) {
     error(err)
 }
 
-echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+def send_status_in_gitlab(state) {
+    def request_url = "http://ci-platform.sbis.ru:8000/set_status"
+    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    echo "${request_data}"
+    sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
+}
 
-node('controls') {
-    LocalDateTime start_time = LocalDateTime.now();
-    echo "Время запуска: ${start_time}"
-    echo "Читаем настройки из файла version_application.txt"
-    def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
-    echo "Генерируем параметры"
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
     gitLabConnection('git'),
@@ -44,11 +45,11 @@ node('controls') {
                 description: '',
                 name: 'ws_data_revision'),
             string(
-                defaultValue: props["engine"],
+                defaultValue: '',
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: props["navigation"],
+                defaultValue: '',
                 description: '',
                 name: 'branch_navigation'),
             string(
@@ -69,6 +70,24 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+
+node('master') {
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
+        send_status_in_gitlab("failed")
+        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
+    }else {
+        // если встала в очередь на билдере
+        send_status_in_gitlab("running")
+    }
+}
+
+node('controls') {
+    LocalDateTime start_time = LocalDateTime.now();
+    echo "Время запуска: ${start_time}"
+    echo "Читаем настройки из файла version_application.txt"
+    def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
+
 
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
@@ -170,9 +189,7 @@ node('controls') {
                     }
 
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || all_inte || only_fail )) {
-                        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
-                    }
+
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
