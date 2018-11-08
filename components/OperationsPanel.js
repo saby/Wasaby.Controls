@@ -305,7 +305,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
       },
 
       _updatePickerClassName: function() {
-         var pickerContainer = $('.controls-operationsPanel__itemsMenu_picker');
+         var pickerContainer = this._itemsMenu.getPicker().getContainer();
          pickerContainer.toggleClass('controls-operationsPanel__massMode', this._isMassMode);
          pickerContainer.toggleClass('controls-operationsPanel__selectionMode', !this._isMassMode);
       },
