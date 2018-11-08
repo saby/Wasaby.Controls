@@ -320,7 +320,10 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
             }
-            if (item.isNode && item.isNode()) {
+
+            //Создаем футер если папка открыта. Проверка на isNode не походит, т.к. футеры нужно создавать для скрытых узлов,
+            //а они в рамках проекции не являются папками.
+            if (item.isExpanded && item.isExpanded()) {
                this._createFolderFooter(item);
             }
          }
