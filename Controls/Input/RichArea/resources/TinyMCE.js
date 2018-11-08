@@ -13,9 +13,9 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
    'Core/moduleStubs',
    'Core/core-clone',
 
-   'css!theme?WS/css/styles/RichContentStyles',
+   'css!WS/css/styles/RichContentStyles',
    'i18n!SBIS3.CONTROLS/RichEditor',
-   'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+   'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control,
    template,
    constantsHelper,
