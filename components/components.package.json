@@ -738,16 +738,6 @@
   },
   {
     "include": [
-      "SBIS3.CONTROLS/RichEditor",
-      "SBIS3.CONTROLS/RichEditor/*"
-    ],
-    "exclude": [
-      "css!SBIS3.CONTROLS*"
-    ],
-    "output": "sbis3controls-richeditor.package.js"
-  },
-  {
-    "include": [
       "SBIS3.CONTROLS/SbisDropdownList",
       "SBIS3.CONTROLS/SbisDropdownList/*"
     ],
