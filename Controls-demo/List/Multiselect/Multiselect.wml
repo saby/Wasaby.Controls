@@ -1,6 +1,6 @@
 <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
       <Controls.Container.MultiSelector
-              selectedKeys="{{[1, 3]}}"
+              bind:selectedKeys="_selectedKeys"
               name="multiSelector">
          <div class="123">
             <h2>Default</h2>
