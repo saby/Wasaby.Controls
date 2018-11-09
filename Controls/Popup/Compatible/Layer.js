@@ -297,22 +297,20 @@ define('Controls/Popup/Compatible/Layer', [
             // var tempCompatVal = constants.compat;
             Constants.compat = true;
 
-            if (typeof window !== 'undefined') {
-               // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
-               if (requireHelper.defined('OnlineSbisRu/VDOM/MainPage/MainPage')) {
-                  Constants.systemExtensions = true;
-                  Constants.userConfigSupport = true;
-                  loadDataProviders(parallelDef);
-                  parallelDefRes.addCallbacks(function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
-                  }, function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
+            // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
+            if (window && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu) {
+               Constants.systemExtensions = true;
+               Constants.userConfigSupport = true;
+               loadDataProviders(parallelDef);
+               parallelDefRes.addCallbacks(function() {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
                   });
-               }
+               }, function() {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                  });
+               });
             }
             parallelDefRes.addCallbacks(function() {
                finishLoad(loadDeferred, result);
