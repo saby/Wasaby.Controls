@@ -2,9 +2,10 @@ define(
    [
       'Controls/Dropdown/Controller',
       'WS.Data/Source/Memory',
+      'Core/core-clone',
       'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory, RecordSet) => {
+   (Dropdown, Memory, Clone, RecordSet) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -82,6 +83,26 @@ define(
             let dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config).addCallback(function(items) {
                assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+               done();
+            });
+         });
+
+         it('before mount navigation', (done) => {
+            let navigationConfig = Clone(config);
+            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}};
+            let dropdownController = getDropdownController(navigationConfig);
+            dropdownController._beforeMount(navigationConfig).addCallback(function(items) {
+               assert.deepEqual(items.getCount(), 2);
+               done();
+            });
+         });
+
+         it('before mount filter', (done) => {
+            let filterConfig = Clone(config);
+            filterConfig.filter = {id: ['3', '4']};
+            let dropdownController = getDropdownController(filterConfig);
+            dropdownController._beforeMount(filterConfig).addCallback(function(items) {
+               assert.deepEqual(items.getCount(), 2);
                done();
             });
          });
