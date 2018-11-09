@@ -94,8 +94,7 @@ define('Controls/Popup/Opener/InfoBox',
                if (cfg.hasOwnProperty(i)) {
                   if (cfg[i] !== undefined) {
                      newCfg[i] = cfg[i];
-                  }
-                  else {
+                  } else {
                      if (DEFAULT_CONFIG[i] !== undefined) {
                         newCfg[i] = DEFAULT_CONFIG[i];
                      }
