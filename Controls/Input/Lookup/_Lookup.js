@@ -13,29 +13,7 @@ define('Controls/Input/Lookup/_Lookup', [
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
-
    'use strict';
-
-   /**
-    * Input for selection from source.
-    *
-    * @class Controls/Input/Lookup
-    * @mixes Controls/Input/interface/ISearch
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/interface/IFilter
-    * @mixes Controls/Input/interface/ISuggest
-    * @mixes Controls/Input/interface/ILookup
-    * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidation
-    * @control
-    * @public
-    * @author Журавлев М.С.
-    * @category Input
-    */
 
    var
       MAX_VISIBLE_ITEMS = 20,

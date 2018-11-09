@@ -5,17 +5,6 @@ define('Controls/Button/SelectorButton/_SelectorButton', [
 ], function(Control, template) {
    'use strict';
 
-   /**
-    * Button link with the specified text, on clicking on which a selection window opens.
-    *
-    * @class Controls/Button/SelectorButton/_SelectorButton
-    * @extends Core/Control
-    * @control
-    * @public
-    *
-    * @css @spacing_SelectorButton-between-buttonMore-buttonReset Spacing between button more and button reset.
-    */
-
    var SelectorButton = Control.extend({
       _template: template,
 
