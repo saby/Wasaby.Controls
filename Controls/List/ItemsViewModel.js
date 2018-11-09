@@ -7,7 +7,6 @@ define('Controls/List/ItemsViewModel', [
    'Core/core-instance',
    'Controls/Constants'
 ], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants) {
-
    /**
     *
     * @author Авраменко А.С.
@@ -16,7 +15,7 @@ define('Controls/List/ItemsViewModel', [
 
    var _private = {
 
-      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
+      // проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
       isEqualItems: function(oldList, newList) {
          return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet') &&
             (newList.getModel() === oldList.getModel()) &&
@@ -106,10 +105,10 @@ define('Controls/List/ItemsViewModel', [
 
       getCurrent: function() {
          var dispItem = this._display.at(this._curIndex);
-         return this._getItemDataByItem(dispItem);
+         return this.getItemDataByItem(dispItem);
       },
 
-      _getItemDataByItem: function(dispItem) {
+      getItemDataByItem: function(dispItem) {
          var
             itemData = {
                getPropValue: ItemsUtil.getPropertyValue,
@@ -121,12 +120,11 @@ define('Controls/List/ItemsViewModel', [
                dispItem: dispItem,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                getVersion: function() {
-                  //records have defined method nextVersion, groups haven't
+                  // records have defined method nextVersion, groups haven't
                   if (this.item.getVersion) {
                      return this.item.getVersion();
-                  } else {
-                     return this.item;
                   }
+                  return this.item;
                }
             };
          if (this._options.groupMethod) {
@@ -220,7 +218,6 @@ define('Controls/List/ItemsViewModel', [
             this._nextVersion();
             this._notify('onListChange');
          }
-
       },
       appendItems: function(items) {
          this._items.append(items);

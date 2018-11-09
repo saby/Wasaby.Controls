@@ -35,6 +35,7 @@ define('Controls-demo/List/Multiselect', [
             idProperty: 'id',
             data: srcData
          });
+         this._selectedKeys = [1, 3];
       }
    });
    return ModuleClass;

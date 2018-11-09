@@ -726,6 +726,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          destroy: function(parentFnc) {
             $(window).unbind('resize', this._calculateTileHandler);
             if (this._scrollContainer) {
+               //Удаляем стили, которые мы повесили в конструкторе. Иначе контент скролл контейнера может измениться,
+               //и стили, необходимые для правильной работы плитки, приведут к ошибкам отображения нового контента.
+               this._scrollContainer.css({'z-index': '', 'transform': ''});
                this._scrollContainer.off('scroll', this._onScrollHandler);
             }
             parentFnc.call(this);

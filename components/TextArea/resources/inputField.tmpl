@@ -7,8 +7,8 @@
    ws-invisible"
    rows="{{ minLinesCount ? minLinesCount}}"
    autocorrect="off"
-   title="{{tooltip ? tooltip : ' '}}"
-   required="true"
+   title="{{tooltip}}"
+   required="{{_isRequired}}"
    placeholder="{{' '}}"
 >{{ text }}</textarea>
 <!-- В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,

@@ -1,8 +1,7 @@
 define('Controls/Popup/Templates/Notification/Simple',
    [
       'Core/Control',
-      'wml!Controls/Popup/Templates/Notification/Simple',
-      'css!Controls/Popup/Templates/Notification/Simple'
+      'wml!Controls/Popup/Templates/Notification/Simple'
    ],
    function(Control, template) {
 
