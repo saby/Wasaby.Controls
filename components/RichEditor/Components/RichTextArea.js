@@ -2865,9 +2865,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   e.preventDefault();
                }
                if (e.keyCode === cConstants.key.tab) {
-                  var
-                     area = this.getParent(),
-                     nextControl = area.getNextActiveChildControl(e.shiftKey);
+                  var area = this.getParent();
+                  // Может так статься, что БТР упаковали внутрь компонента, не содержащего других получателей фокуса - njulf нужно поняться до такого родителя, внутри которого будет несколько получателей фокуса
+                  // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
+                  for ( ; !!area; area = area.getParent()) {
+                     var siblings = area.getImmediateChildControls().filter(function (cmp) { return cmp.canAcceptFocus(); });
+                     if (1 < siblings.length) {
+                        break;
+                     }
+                  }
+                  var nextControl = area && area.getNextActiveChildControl(e.shiftKey);
 
                   if (nextControl) {
                      this._fakeArea.focus();
