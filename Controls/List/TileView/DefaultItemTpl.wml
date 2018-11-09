@@ -33,7 +33,7 @@
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
                   itemData="{{itemData}}"
-                  attr:class="controls-TileView__itemActions controls-TileView__itemActions_bottom"/>
+                  itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight"/>
    </div>
 </ws:template>
 
