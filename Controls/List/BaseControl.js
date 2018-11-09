@@ -52,6 +52,7 @@ define('Controls/List/BaseControl', [
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
+                  self._items = list;
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
@@ -428,7 +429,7 @@ define('Controls/List/BaseControl', [
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -508,6 +509,7 @@ define('Controls/List/BaseControl', [
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
                   self._listViewModel.setItems(receivedState);
+                  self._items = receivedState;
                } else {
                   return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
                }
@@ -568,10 +570,6 @@ define('Controls/List/BaseControl', [
          if (filterChanged || sourceChanged) {
             _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
          }
-
-         if (newOptions.selectedKeys !== this._options.selectedKeys) {
-            this._listViewModel._updateSelection(newOptions.selectedKeys);
-         }
       },
 
       _beforeUnmount: function() {
@@ -626,6 +624,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onCheckBoxClick: function(e, key, status) {
+         this._children.selectionController.onCheckBoxClick(key, status);
          this._notify('checkboxClick', [key, status]);
       },
 
@@ -825,7 +824,9 @@ define('Controls/List/BaseControl', [
       return {
          uniqueKeys: true,
          multiSelectVisibility: 'hidden',
-         style: 'default'
+         style: 'default',
+         selectedKeys: [],
+         excludedKeys: []
       };
    };
    return BaseControl;
