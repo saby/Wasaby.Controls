@@ -49,7 +49,6 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
             _okButton: null,
             _editorTpl: null,
             _requireDialog: false,
-            _focusOutHandler: null,
             _options: {
 
                /**
@@ -66,10 +65,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
          init: function() {
             EditAtPlaceGroup.superclass.init.call(this);
             var self = this;
-            this._focusOutHandler = function() {
-               // TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
-               this._applyEdit(true);
-            };
+
             this.reviveComponents();
             if (this._options.displayAsEditor) {
                this.setInPlaceEditMode(true);
@@ -100,7 +96,10 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
             }, this._picker);
             this._addControlPanel(this._picker._container);
          },
-
+         _focusOutHandler: function() {
+            // TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
+            this._applyEdit(true);
+         },
          _iterateChildEditAtPlaces: function(func, parent) {
             var children;
             if (!parent) {
@@ -194,10 +193,11 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
 
          setEnabled: function(enabled) {
 
-            if(enabled !== this.isEnabled()) {
+            EditAtPlaceGroup.superclass.setEnabled.call(this, enabled);
+
+            if (enabled !== this.isEnabled()) {
                var
                   self = this;
-               EditAtPlaceGroup.superclass.setEnabled.call(self, enabled);
                this._iterateChildEditAtPlaces(function(child) {
                   child.setEnabled(enabled);
                });

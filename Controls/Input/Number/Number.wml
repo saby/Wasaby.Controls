@@ -23,6 +23,6 @@
          type="text"
          readOnly="{{_options.readOnly}}"
       />
-
+      {{debug()}}
    </ws:content>
 </Controls.Input.resources.InputRender.InputRender>
