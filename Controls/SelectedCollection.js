@@ -3,10 +3,11 @@ define('Controls/SelectedCollection',
       'Core/Control',
       'wml!Controls/SelectedCollection/SelectedCollection',
       'wml!Controls/SelectedCollection/ItemTemplate',
+      'WS.Data/Chain',
       'css!Controls/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate) {
+   function(Control, template, ItemTemplate, Chain) {
       'use strict';
 
       /**
@@ -28,6 +29,10 @@ define('Controls/SelectedCollection',
             }
          },
 
+         getItemsInArray: function(items) {
+            return Chain(items).value();
+         },
+
          getVisibleItems: function(items, maxVisibleItems) {
             return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
          }
@@ -36,17 +41,18 @@ define('Controls/SelectedCollection',
       var Collection = Control.extend({
          _template: template,
          _templateOptions: null,
+         _items: [],
 
          _beforeMount: function(options) {
             this._onResult = _private.onResult.bind(this);
-            this._visibleItems = _private.getVisibleItems(options.items, options.maxVisibleItems);
+            this._items = _private.getItemsInArray(options.items);
+            this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.items !== newOptions.items || this._options.maxVisibleItems !== newOptions.maxVisibleItems) {
-               this._visibleItems = _private.getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
-               this._templateOptions.items = newOptions.items;
-            }
+            this._items = _private.getItemsInArray(newOptions.items);
+            this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
+            this._templateOptions.items = newOptions.items;
          },
 
          _afterUpdate: function() {

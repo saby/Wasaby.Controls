@@ -2,7 +2,7 @@
    <ws:if data="{{_options.items.getCount()}}">
       <Controls.SelectedCollection
               _counterWidth="{{_options._counterWidth}}"
-              items="{{_getItemsInArray()}}"
+              items="{{_options.items}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
               multiline="{{true}}"

@@ -21,6 +21,11 @@ define([
    }
 
    describe('Controls/Controllers/SelectedCollection', function() {
+      // Убираем работу с вертской
+      if (typeof window === 'undefined') {
+         SelectedCollection._private.getCounterWidth = function() {};
+      }
+
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 

@@ -1,9 +1,8 @@
 define('Controls/Button/SelectorButton/_SelectorButton', [
    'Core/Control',
    'wml!Controls/Button/SelectorButton/_SelectorButton',
-   'WS.Data/Chain',
    'css!Controls/Button/SelectorButton/SelectorButton'
-], function(Control, template, Chain) {
+], function(Control, template) {
    'use strict';
 
    /**
@@ -19,10 +18,6 @@ define('Controls/Button/SelectorButton/_SelectorButton', [
 
    var SelectorButton = Control.extend({
       _template: template,
-
-      _getItemsInArray: function() {
-         return Chain(this._options.items).value();
-      },
 
       _open: function() {
          this._notify('showSelector');

@@ -51,8 +51,8 @@ define('Controls/Input/Lookup/_Lookup', [
       },
 
       initializeContainers: function(self) {
-         var inputRenderContainer = self._children.inputRender._container;
-         self._wrapperInputRender = inputRenderContainer.getElementsByClassName('controls-InputRender__wrapper')[0];
+         self._fieldWrapper = self._children.inputRender._container;
+         self._wrapperInputRender = self._fieldWrapper.getElementsByClassName('controls-InputRender__wrapper')[0];
       },
 
       notifyValue: function(self, value) {
@@ -138,13 +138,13 @@ define('Controls/Input/Lookup/_Lookup', [
 
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
-               items: items,
                itemTemplate: newOptions.itemTemplate,
                readOnly: newOptions.readOnly,
                displayProperty: newOptions.displayProperty,
                maxVisibleItems: maxVisibleItems,
                _counterWidth: newOptions._counterWidth
             }),
+            _items: items,
             _visibleItems: _private.getLastSelectedItems(self, maxVisibleItems)
          });
 
@@ -215,9 +215,9 @@ define('Controls/Input/Lookup/_Lookup', [
 
          if (newOptions.items.getCount()) {
             lastSelectedItems = _private.getLastSelectedItems(this, MAX_VISIBLE_ITEMS);
-            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(newOptions.items.getCount(), newOptions.multiline, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(this._children.inputRender._container, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+            availableWidth = _private.getAvailableCollectionWidth(this._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions);
 
             if (newOptions.multiline) {
                maxVisibleItems = newOptions.maxVisibleItems;
@@ -255,10 +255,6 @@ define('Controls/Input/Lookup/_Lookup', [
 
       _beforeUnmount: function() {
          this._simpleViewModel = null;
-      },
-
-      _getItemsInArray: function() {
-         return Chain(this._options.items).value();
       },
 
       _changeValueHandler: function(event, value) {
