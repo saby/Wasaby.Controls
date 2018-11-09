@@ -1,10 +1,9 @@
 define('Controls/Popup/Opener/InfoBox',
    [
-      'Core/core-merge',
       'Core/core-clone',
       'Controls/Popup/Opener/BaseOpener'
    ],
-   function(cMerge, cClone, Base) {
+   function(cClone, Base) {
       'use strict';
 
       /**
@@ -89,15 +88,11 @@ define('Controls/Popup/Opener/InfoBox',
             this._clearTimeout();
 
             //smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
-            var newCfg = {};
+            var newCfg = cClone(DEFAULT_CONFIG);
             for (var i in cfg) {
                if (cfg.hasOwnProperty(i)) {
                   if (cfg[i] !== undefined) {
                      newCfg[i] = cfg[i];
-                  } else {
-                     if (DEFAULT_CONFIG[i] !== undefined) {
-                        newCfg[i] = DEFAULT_CONFIG[i];
-                     }
                   }
                }
             }
