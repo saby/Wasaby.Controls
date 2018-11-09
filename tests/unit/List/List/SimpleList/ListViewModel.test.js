@@ -2,9 +2,10 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListViewModel'
+   'Controls/List/ListViewModel',
+   'WS.Data/Collection/RecordSet'
 ], function(
-   ListViewModel
+   ListViewModel, RecordSet
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
@@ -69,6 +70,19 @@ define([
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+      });
+
+      it('markerVisibility', function() {
+         var
+            cfg = {
+               keyProperty: 'id',
+               markerVisibility: 'always'
+            },
+            listModel = new ListViewModel(cfg);
+
+         listModel.setItems(new RecordSet({rawData: data, idProperty: 'id'}));
+         assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
+         assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
       });
 
       it('setDragTargetItem and setDragItems', function() {
