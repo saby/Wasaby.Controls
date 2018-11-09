@@ -1,15 +1,14 @@
 define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy',
-      'SBIS3.CONTROLS/Utils/TouchKeyboardHelper'
+      'Controls/Popup/Opener/Dialog/DialogStrategy'
    ],
-   function(BaseController, DialogStrategy, TouchKeyboardHelper) {
+   function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
             var windowData = {
                width: document.body.clientWidth,
-               height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(),
+               height: document.body.clientHeight,
                scrollTop: document.body.scrollTop,
             };
 
@@ -97,7 +96,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
 
          needRecalcOnKeyboardShow: function() {
-            return true;
+            return false;
          }
       });
       return new DialogController();
