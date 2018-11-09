@@ -7,10 +7,14 @@
 	max-width: 100%;
 }
 
+.controls-SelectedCollection__InfoBox {
+  display: inline-block;
+}
+
 .controls-SelectedCollection__counterItems {
-	display: inline;
 	color: @color_SelectedCollection-counter;
-	margin-right: @spacing_SelectedCollection-between-counter-items;
+	padding-right: @spacing_SelectedCollection-between-counter-items;
+  	box-sizing: border-box;
 	cursor: pointer;
 	padding-left: @padding_SelectedCollection-counter;
 }
@@ -101,7 +105,7 @@
 }
 
 .controls-SelectedCollection__collection_multiLine {
-	flex-wrap: wrap;
+	display: inline;
 }
 
 .controls-SelectedCollection__collectionItem_layout_twoColumns {

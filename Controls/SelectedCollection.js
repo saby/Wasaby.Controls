@@ -30,25 +30,30 @@ define('Controls/SelectedCollection',
             }
          },
 
+         getItemsInArray: function(items) {
+            return Chain(items).value();
+         },
+
          getVisibleItems: function(items, maxVisibleItems) {
-            return maxVisibleItems ? Chain(items).last(maxVisibleItems).value() : items;
+            return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
          }
       };
 
       var Collection = Control.extend({
          _template: template,
          _templateOptions: null,
+         _items: [],
 
          _beforeMount: function(options) {
             this._onResult = _private.onResult.bind(this);
-            this._visibleItems = _private.getVisibleItems(options.items, options.maxVisibleItems);
+            this._items = _private.getItemsInArray(options.items);
+            this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.items !== newOptions.items) {
-               this._visibleItems = _private.getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
-               this._templateOptions.items = newOptions.items;
-            }
+            this._items = _private.getItemsInArray(newOptions.items);
+            this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
+            this._templateOptions.items = newOptions.items;
          },
 
          _afterUpdate: function() {
@@ -60,6 +65,7 @@ define('Controls/SelectedCollection',
          _afterMount: function() {
             this._templateOptions = {
                items: this._options.items,
+               readOnly: this._options.readOnly,
                displayProperty: this._options.displayProperty,
                width: this._container && this._container.offsetWidth,
                clickCallback: this._onResult.bind(this)
@@ -80,11 +86,7 @@ define('Controls/SelectedCollection',
          },
 
          _crossClick: function(event, index) {
-            var
-               items = this._options.items,
-               currentItem = items.at ? items.at(index) : items[index];
-
-            this._notify('crossClick', [currentItem]);
+            this._notify('crossClick', [this._visibleItems[index]]);
          }
       });
 
