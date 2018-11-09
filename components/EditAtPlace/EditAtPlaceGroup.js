@@ -49,6 +49,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
             _okButton: null,
             _editorTpl: null,
             _requireDialog: false,
+            _focusOutHandler: null,
             _options: {
 
                /**
@@ -65,6 +66,10 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
          init: function() {
             EditAtPlaceGroup.superclass.init.call(this);
             var self = this;
+            this._focusOutHandler = function() {
+               // TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
+               this._applyEdit(true);
+            };
             this.reviveComponents();
             if (this._options.displayAsEditor) {
                this.setInPlaceEditMode(true);
@@ -83,10 +88,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
                });
             });
             if (!this._options.editInPopup && this.isEnabled()) {
-               this.subscribe('onFocusOut', function() {
-                  // TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
-                  self._applyEdit(true);
-               });
+               this.subscribe('onFocusOut', self._focusOutHandler);
             }
          },
 
@@ -191,22 +193,20 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
          },
 
          setEnabled: function(enabled) {
-            var
-               self = this,
-               focusOutHandler = function() {
-                  // TODO аргумент true чтоб отключить механизм перевода фокуса в методе _deactivateActiveChildControl EditAtPlaceMixin
-                  self._applyEdit(true);
-               };
 
-            EditAtPlaceGroup.superclass.setEnabled.call(self, enabled);
-            this._iterateChildEditAtPlaces(function(child) {
-               child.setEnabled(enabled);
-            });
-            if (!self._options.editInPopup) {
-               if (enabled) {
-                  self.subscribe('onFocusOut', focusOutHandler);
-               } else {
-                  self.unsubscribe('onFocusOut', focusOutHandler);
+            if(enabled !== this.isEnabled()) {
+               var
+                  self = this;
+               EditAtPlaceGroup.superclass.setEnabled.call(self, enabled);
+               this._iterateChildEditAtPlaces(function(child) {
+                  child.setEnabled(enabled);
+               });
+               if (!self._options.editInPopup) {
+                  if (self.isEnabled()) {
+                     self.subscribe('onFocusOut', self._focusOutHandler);
+                  } else {
+                     self.unsubscribe('onFocusOut', self._focusOutHandler);
+                  }
                }
             }
          }
