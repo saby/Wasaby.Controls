@@ -16,12 +16,11 @@
       </ws:else>
    </ws:else>
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
-      <ws:if data="{{itemData.isSwiped}}">
-         <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-      </ws:if>
-      <ws:else >
-         <ws:partial template="{{itemActionsTemplate}}" itemActionsClass="{{itemActionsClass}}" itemData="{{itemData}}"/>
-      </ws:else>
+      <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
+                  itemData="{{ itemData }}"
+                  swipeTemplate="{{ swipeTemplate }}"
+                  itemActionsClass="{{ itemActionsClass }}"
+                  itemActionsTemplate="{{ itemActionsTemplate }}"/>
    </ws:if>
 </ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
