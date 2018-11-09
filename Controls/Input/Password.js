@@ -66,6 +66,10 @@ define('Controls/Input/Password',
 
          _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;
+         },
+
+         _calculateType: function() {
+            return this._passwordVisible || !this._options.autocomplete ? 'text' : 'password';
          }
       });
 
