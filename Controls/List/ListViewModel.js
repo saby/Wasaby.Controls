@@ -211,7 +211,7 @@ define('Controls/List/ListViewModel',
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
-         _updateSelection: function(selectedKeys) {
+         updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
             this._nextVersion();
             this._notify('onListChange');
