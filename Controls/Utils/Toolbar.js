@@ -17,10 +17,7 @@ define('Controls/Utils/Toolbar', ['WS.Data/Chain'], function(Chain) {
          MENU_TOOLBAR: 1,
 
          //show icon and toolbar only in Toolbar
-         TOOLBAR: 2,
-
-         //show icon in toolbar, in menu show icon and title
-         TOOLBAR_ICON_TITLE: 3
+         TOOLBAR: 2
 
       },
 
