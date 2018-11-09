@@ -1,33 +1,7 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/_Head",
-    "wml!Controls/Application/_Head",
-    "Controls/Application/_JsLinks",
-    "wml!Controls/Application/_JsLinks",
-    "Controls/Application/_Wait",
-    "wml!Controls/Application/_Wait",
-    "Controls/Application/AppData",
-    "css!Controls/Application/Application",
-    "Controls/Application/ApplicationWrapper",
-    "wml!Controls/Application/ApplicationWrapper",
-    "wml!Controls/Application/builderRunner",
-    "wml!Controls/Application/builderRunnerCompatible",
-    "Controls/Application/Compatible",
-    "wml!Controls/Application/Compatible",
-    "wml!Controls/Application/CompatibleScripts",
-    "Controls/Application/Core",
-    "wml!Controls/Application/Core",
-    "Controls/Application/HeadDataContext",
-    "wml!Controls/Application/Page",
-    "tmpl!Controls/Application/Route",
-    "wml!Controls/Application/Route",
-    "Controls/Application/Route",
-    "Controls/Application/startApplicationScript",
-    "wml!Controls/Application/startApplicationScript",
-    "Controls/Application/TouchDetector",
-    "wml!Controls/Application/TouchDetector/TouchDetector",
-    "Controls/Application/DepsCollector/DepsCollector"
+    "Controls/Application/*"
   ],
   "output": "controls-application.package.js"
 }, {
