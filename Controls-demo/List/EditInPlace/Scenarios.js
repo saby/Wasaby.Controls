@@ -182,13 +182,11 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          id: 0,
          'Раздел': null,
          'Раздел@': true,
-         'Раздел$': null,
          title: 'Acer'
       }, {
          id: 1,
          'Раздел': null,
-         'Раздел@': false,
-         'Раздел$': null,
+         'Раздел@': null,
          title: 'Ноутбук Packard Bell EasyNote T45453456',
          amount: 5,
          price: 12990,
@@ -196,8 +194,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
       }, {
          id: 2,
          'Раздел': null,
-         'Раздел@': false,
-         'Раздел$': null,
+         'Раздел@': null,
          title: 'Ноутбук Lenovo IdeaPad G5030',
          amount: 4,
          price: 13665,

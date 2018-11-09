@@ -1,5 +1,6 @@
 /// <amd-module name="File/LocalFile" />
-import {ResourceAbstract, FileInfo} from 'File/ResourceAbstract';
+import {ResourceAbstract} from 'File/ResourceAbstract';
+import {FileInfo} from 'File/IResource';
 
 interface Info extends FileInfo {
     path?: string;
@@ -33,6 +34,7 @@ class LocalFile extends ResourceAbstract {
             name: info
         }: info || {};
         this._info.name = this._info.name || (_data instanceof File && _data.name);
+        this._info.size = this._data.size;
 
         if (!this._info.name) {
             // Для корректной загрузки Blob через FormData необходимо имя файла

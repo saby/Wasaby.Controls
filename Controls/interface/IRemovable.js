@@ -6,6 +6,7 @@ define('Controls/interface/IRemovable', [], function() {
     *
     * @interface Controls/interface/IRemovable
     * @public
+    * @author Волоцкой В.Д.
     */
 
    /**
