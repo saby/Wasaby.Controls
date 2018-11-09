@@ -119,7 +119,7 @@ define('Controls/Controllers/SelectedCollection', [
       }
    };
 
-   var ControllerLookup = Control.extend({
+   var CollectionController = Control.extend({
       _template: template,
       _notifyHandler: tmplNotify,
       _selectedKeys: null,
@@ -236,11 +236,12 @@ define('Controls/Controllers/SelectedCollection', [
       }
    });
 
-   ControllerLookup.getDefaultOptions = function() {
+   CollectionController._private = _private;
+   CollectionController.getDefaultOptions = function() {
       return {
          selectedKeys: []
       };
    };
 
-   return ControllerLookup;
+   return CollectionController;
 });
