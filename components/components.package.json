@@ -881,5 +881,49 @@
       "css!SBIS3.CONTROLS*"
     ],
     "output": "sbis3controls-waitindicator.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/handlers",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar"
+    ],
+    "output": "sbis3controls-richeditor-roundtoolbar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles",
+
+      "SBIS3.CONTROLS/RichEditor/Components/ToolbarBase",
+      "css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase/RichEditorToolbarBase",
+
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog/ImagePropertiesDialog",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel"
+    ],
+    "output": "sbis3controls-richeditor-richtextarea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor",
+      "tmpl!SBIS3.CONTROLS/RichEditor/RichEditor",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
+      "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar"
+    ],
+    "output": "sbis3controls-richeditor.package.js"
   }
 ]
