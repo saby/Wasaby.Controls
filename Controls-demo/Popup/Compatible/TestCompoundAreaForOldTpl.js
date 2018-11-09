@@ -25,7 +25,9 @@ define('Controls-demo/Popup/Compatible/TestCompoundAreaForOldTpl', [
          this._children.inputStackOpener.open();
       },
       openValidateStack: function() {
-         this._children.validateStackOpener.open();
+         this._children.validateStackOpener.open({
+            catchFocus: false // Фокусирует сам в шаблоне панели
+         });
       },
       openDialog: function() {
          var dialog = _private.getExistingDialog();
