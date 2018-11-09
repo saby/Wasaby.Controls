@@ -305,22 +305,22 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
             treeViewModel._curIndex = 1; //234
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            treeViewModel._updateSelection(['123', '234', '1', '2', '3']);
+            treeViewModel.updateSelection(['123', '234', '1', '2', '3']);
             treeViewModel._curIndex = 0; //123
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123', '234', '1']);
+            treeViewModel.updateSelection(['123', '234', '1']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123']);
+            treeViewModel.updateSelection(['123']);
             treeViewModel._curIndex = 0; //123
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123', '234', '3']);
+            treeViewModel.updateSelection(['123', '234', '3']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234

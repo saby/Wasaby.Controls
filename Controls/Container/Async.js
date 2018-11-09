@@ -53,15 +53,16 @@ define('Controls/Container/Async',
             /*
              * It can work without Controls.Application
              * */
-
-            if (context.headData && context.headData.pushDepComponent) {
+            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
+            if (self.optionsForComponent.resolvedTemplate && context.headData && context.headData.pushDepComponent) {
                if (options.templateName) {
                   context.headData.pushDepComponent(options.templateName, true);
                } else {
                   IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
                }
+            } else if (!self.optionsForComponent.resolvedTemplate) {
+               IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
             }
-            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
          },
 
          _beforeUpdate: function(options) {

@@ -11,8 +11,8 @@ define('Controls/Input/Lookup', [
    'WS.Data/Chain',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
-   'Controls/Input/Lookup/_Collection',
-   'wml!Controls/Input/Lookup/Collection/_Collection',
+   'Controls/SelectedCollection',
+   'wml!Controls/SelectedCollection/SelectedCollection',
    'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
@@ -38,7 +38,7 @@ define('Controls/Input/Lookup', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
-    * @author Журавлев М.С.
+    * @author Капустин И.А.
     * @category Input
     */
 
@@ -235,7 +235,7 @@ define('Controls/Input/Lookup', [
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Lookup__item'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-SelectedCollection__item'), function(item) {
             itemsSizes.push(item.clientWidth);
          });
          document.body.removeChild(measurer);

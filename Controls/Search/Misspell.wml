@@ -1,0 +1,6 @@
+<div class="controls-Misspell">
+    <span class="controls-Misspell__text">{[Возможно, вы имели в виду]}&nbsp;</span>
+    <span class="controls-Misspell__caption">
+        <ws:partial template="{{_options.caption}}"/>
+    </span>
+</div>

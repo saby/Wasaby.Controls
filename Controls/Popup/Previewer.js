@@ -12,6 +12,7 @@ define('Controls/Popup/Previewer',
        * @class Controls/Popup/Previewer
        * @extends Core/Control
        * @public
+       * @author Красильников А.С.
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
@@ -61,6 +62,7 @@ define('Controls/Popup/Previewer',
 
       var Previewer = Control.extend({
          _template: template,
+         _isPopupOpened: false,
 
          _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
@@ -72,17 +74,21 @@ define('Controls/Popup/Previewer',
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            if (this._isNewEnvironment()) {
-               this._close(event); // close opened popup to avoid jerking the content for repositioning
-               this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
-            } else {
-               this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+            if (!this._isPopupOpened) {
+               if (this._isNewEnvironment()) {
+                  this._close(event); // close opened popup to avoid jerking the content for repositioning
+                  this._isPopupOpened = true;
+                  this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
+               } else {
+                  this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+               }
             }
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
 
+            this._isPopupOpened = false;
             if (this._isNewEnvironment()) {
                this._notify('closePreviewer', [type], {bubbling: true});
             } else {
@@ -106,7 +112,12 @@ define('Controls/Popup/Previewer',
             if (this._options.trigger === 'hover') {
                this._cancel(event, 'opening');
             } else {
-               this._open(event);
+               // Stop mousedown event for prevent closing popup by external click
+               if (this._isPopupOpened) {
+                  event.preventDefault();
+               } else {
+                  this._open(event);
+               }
             }
 
             event.stopPropagation();

@@ -965,9 +965,9 @@
               "horizontal": "Horizontal orientation of the panel. History block is displayed on the right."
             }
           },
-          "title": {
+          "headingCaption": {
             "default": "Отбираются",
-            "title": "Caption of filter panel.",
+            "title": "Text heading.",
             "type": "String"
           },
           "readOnly": {

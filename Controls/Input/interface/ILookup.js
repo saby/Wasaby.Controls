@@ -9,6 +9,7 @@ define('Controls/Input/interface/ILookup', [
     *
     * @interface Controls/Input/interface/ILookup
     * @public
+    * @author Капустин И.А.
     */
 
    /**

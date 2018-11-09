@@ -15,6 +15,7 @@ define('Controls/History/Menu',
        * @extends Controls/Button/Menu
        * @control
        * @public
+       * @author Герасимов А.М.
        * @category Menu
        * @demo Controls-demo/Menu/MenuVdom
        */
