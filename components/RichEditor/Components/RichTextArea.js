@@ -2688,6 +2688,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                if (!BROWSER.firefox && (!isPlainUrl && !isAfterUrl && rng.collapsed)) {
                   // Если вставляется не блочный элемент, то нужно убедиться, что он вставляется в блочный элемент, для этого поднять рэнж выше по дереву, если необходимо
+                  // (Для firefox-а неактуально, он сам поднимает рэнж)
                   // 1175500981 https://online.sbis.ru/opendoc.html?guid=0757be2b-56c9-4714-bb9f-c6f99e90bbf6
                   var node = rng.commonAncestorContainer;
                   if (node.nodeType === 3) {
