@@ -813,7 +813,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, (typeof location === 'object' ? location.origin : '') +
+               text = LinkWrap.wrapURLs(text, true, false,
+                  // В IE 11 нет location.origin
+                  (typeof location === 'object' ? location.origin || location.protocol + '//' + location.host : '') +
                   (cConstants.decoratedLinkService || ''));
                var div = document.createElement('div');
                div.innerHTML = text;
@@ -2128,18 +2130,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      .addBoth(this._stopWaitIndicator.bind(this));
                }.bind(this));
             },
+
             codeSample: function(text, language) {
+               var editor = this._tinyEditor;
                if (this._beforeFocusOutRng) {
-                  this._tinyEditor.selection.setRng(this._beforeFocusOutRng);
+                  editor.selection.setRng(this._beforeFocusOutRng);
+                  this._beforeFocusOutRng = false;
                }
-               var
-                  wasClear = !this._tinyEditor.plugins.codesample.getCurrentCode(this._tinyEditor);
-               this._tinyEditor.plugins.codesample.insertCodeSample(this._tinyEditor, language, text);
+               var plugin = editor.plugins.codesample;
+               var wasClear = !plugin.getCurrentCode(editor);
+               plugin.insertCodeSample(editor, language, text);
                if (wasClear) {
-                  this._tinyEditor.selection.collapse();
-                  this.insertHtml('<p>{$caret}</p>')
+                  editor.selection.collapse();
+                  editor.insertContent('<p>{$caret}</p>');
                }
-               this._beforeFocusOutRng = false;
             },
 
             getCodeSampleDialog: function () {

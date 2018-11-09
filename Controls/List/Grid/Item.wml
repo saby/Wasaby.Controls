@@ -16,12 +16,11 @@
       </ws:else>
    </ws:else>
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
-      <ws:if data="{{itemData.isSwiped}}">
-         <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-      </ws:if>
-      <ws:else >
-         <ws:partial template="{{itemActionsTemplate}}" itemActionsClass="{{itemActionsClass}}" itemData="{{itemData}}"/>
-      </ws:else>
+      <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
+                  itemData="{{ itemData }}"
+                  swipeTemplate="{{ swipeTemplate }}"
+                  itemActionsClass="{{ itemActionsClass }}"
+                  itemActionsTemplate="{{ itemActionsTemplate }}"/>
    </ws:if>
 </ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
@@ -39,7 +38,7 @@
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
               attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{itemData.isSelected && itemData.columnIndex === 0}}">
+            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
             <ws:partial template="columnContent"/>

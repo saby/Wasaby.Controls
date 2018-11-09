@@ -6,7 +6,7 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Core/moduleStubs',
       'Core/core-clone',
-      'Controls/Search/MissSpell/getSwitcherStrFromData',
+      'Controls/Search/Misspell/getSwitcherStrFromData',
       'css!Controls/Container/Suggest/Layout'
    ],
    function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
@@ -14,7 +14,7 @@ define('Controls/Container/Suggest/Layout',
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/MissSpell'];
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
       var _private = {
          hasMore: function(searchResult) {
@@ -270,7 +270,7 @@ define('Controls/Container/Suggest/Layout',
          },
          
          _searchStart: function() {
-            this._loading = true;
+            this._children.indicator.toggleIndicator(this._loading = true);
             if (this._options.searchStartCallback) {
                this._options.searchStartCallback();
             }
@@ -278,7 +278,7 @@ define('Controls/Container/Suggest/Layout',
          
          _searchEnd: function(result) {
             if (this._options.suggestState) {
-               this._loading = false;
+               this._children.indicator.toggleIndicator(this._loading = false);
             }
             this._searchDelay = this._options.searchDelay;
             _private.precessResultData(this, result);

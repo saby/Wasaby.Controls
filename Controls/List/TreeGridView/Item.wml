@@ -17,12 +17,11 @@
                attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
                itemData="{{itemData.getCurrentColumn()}}" />
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
-      <ws:if data="{{itemData.isSwiped}}">
-         <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-      </ws:if>
-      <ws:else >
-         <ws:partial template="{{itemActionsTemplate}}" itemActionsClass="{{itemActionsClass}}" itemData="{{itemData}}"/>
-      </ws:else>
+      <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
+                  itemData="{{ itemData }}"
+                  swipeTemplate="{{ swipeTemplate }}"
+                  itemActionsClass="{{ itemActionsClass }}"
+                  itemActionsTemplate="{{ itemActionsTemplate }}"/>
    </ws:if>
 </ws:template>
 <ws:template name="columnContent">
@@ -71,7 +70,7 @@
                           {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                           controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
               attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{itemData.isSelected && itemData.columnIndex === 0}}">
+            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
             <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}

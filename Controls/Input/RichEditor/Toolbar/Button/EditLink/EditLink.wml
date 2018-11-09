@@ -1,0 +1,9 @@
+<div>
+   <Controls.Button
+      style="linkMain"
+      icon="icon-Link icon-medium icon-primary"
+      attr:title="{[Вставить ссылку]}"
+      on:click="_clickHandler()"
+   />
+   <Controls.Popup.Opener.Sticky name="opener"/>
+</div>

@@ -10,7 +10,8 @@ define('Controls-demo/DragNDrop/Container', [
       _hasList: true,
       _hasGrid: false,
       _hasTree: false,
-      _hasNotes: false
+      _hasNotes: false,
+      _selectedKeys: []
    });
    return ModuleClass;
 });

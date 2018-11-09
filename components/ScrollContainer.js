@@ -670,7 +670,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                requirejs(['SBIS3.CONTROLS/Paging'], function(paging) {
                   if (!this.isDestroyed()) {
                      this._paging = new paging({
-                        element: this._container.find('.js-controls-ScrollContainer__paging'),
+                        element: this._container.children('.js-controls-ScrollContainer__paging'),
                         className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',
                         visiblePath: this._options.navigationToolbar,
                         parent: this
