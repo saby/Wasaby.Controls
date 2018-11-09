@@ -215,11 +215,7 @@ define(
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
                selectedKeys: '[6]',
-               keyProperty: 'id',
-               source: new Memory({
-                  idProperty: 'id',
-                  data: items
-               })
+               keyProperty: 'id'
             });
             assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
          });
