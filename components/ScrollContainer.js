@@ -204,8 +204,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                   this._container.on('mouseenter', this._mouseEnterHandler);
 
                   /**
-                   * Если при создании контрола курсор мыши будет находиться на нем, то событие mouseenter может не сработать.
-                   * Поэтому выполним обработчик на mousemove.
+                   * Если при создании контрола курсор мыши будет находиться на нем, то мы ожидаем, что при смещении мыши сработает
+                   * событие mouseenter, а потом mousemove. Но по не понятно причине, так происходит не всегда. Событие mouseenter может не срабать.
+                   * Чтобы учесть такие ситуации, мы выполним обработчик mouseenter единажды на mousemove. Чтобы не получилось, что обработчик
+                   * выполнится 2 раза, мы должны будем отписать от mousemove, если произойдет mouseenter.
                    * Сценарий: https://online.sbis.ru/opendoc.html?guid=9ddf9803-d00c-44a9-ad5f-699d4575cada
                    */
                   this._container.one('mousemove', this._mouseEnterHandler);
