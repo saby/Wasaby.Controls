@@ -299,7 +299,6 @@ node('controls') {
             if (!inte && !regr) {
                 exception('Не отмечены тип тестов для перезапуска. Укажите опции run_int и/или run_reg', 'USER FAIL')
             }
-            }
         }
     }
         stage("Сборка компонент"){
