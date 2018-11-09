@@ -294,6 +294,14 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
                   return this._getChildren(DATA_TYPE.MARKED_TREE, id, true);
                }
             }, this);
+
+            //Могли позвать выделение записи, которой в рекордсете еще нет, тогда она не попадет в структуру данных
+            //по которой мы вычисляем выделение выше. Все такие записи добавим в набор выделенных.
+            this._options.selectedKeys.forEach(function(key) {
+               if (!this._markedTree.getRecordById(key)) {
+                  result.push(key);
+               }
+            }, this);
          }
 
          return result;
