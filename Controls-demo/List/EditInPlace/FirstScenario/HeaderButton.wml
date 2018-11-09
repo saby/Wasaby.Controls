@@ -1,4 +1,8 @@
 <div class="controls-Grid__header-cell__content">
-   <span class="ControlsDemo-EipScenarios__headerCaption">{{colData.column.title}}</span>
+   <Controls.Heading caption="{{colData.column.title}}"
+                     style="secondary"
+                     readOnly="{{true}}"
+                     attr:class="ControlsDemo-EipScenarios__headerCaption"
+                     size="m"/>
    <Controls.Button icon="icon-small icon-Add" style="iconButtonBordered" />
 </div>
