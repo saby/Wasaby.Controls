@@ -210,8 +210,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.waitForPopupCreated = false;
             var self = this;
             runDelayed(function() {
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
+               if (self._container.length && self._options.catchFocus) {
+                  doAutofocus(self._container);
                }
             });
          },
