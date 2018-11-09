@@ -26,7 +26,7 @@ define('Controls-demo/Popup/Compatible/TestCompoundAreaForOldTpl', [
       },
       openValidateStack: function() {
          this._children.validateStackOpener.open({
-            catchFocus: false // Фокусирует сам в шаблоне панели
+            catchFocus: false // Focus is put down independently on the template
          });
       },
       openDialog: function() {
