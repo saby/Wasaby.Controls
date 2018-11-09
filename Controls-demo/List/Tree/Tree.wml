@@ -7,8 +7,7 @@
       <div class="demo-Grid__container">
          <Controls.Container.Data source="{{_viewSource}}"
                                   keyProperty="id">
-            <Controls.Container.TreeMultiSelector parentProperty="Раздел"
-                                                  nodeProperty="Раздел@">
+            <Controls.Container.MultiSelector>
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                   <Controls.List.Container>
                      <Controls.List.MultiSelector>
@@ -30,7 +29,7 @@
                      </Controls.List.MultiSelector>
                   </Controls.List.Container>
                </Controls.Container.Scroll>
-            </Controls.Container.TreeMultiSelector>
+            </Controls.Container.MultiSelector>
          </Controls.Container.Data>
       </div>
    </div>
@@ -44,7 +43,7 @@
                <ws:viewConfig pagingMode="direct"></ws:viewConfig>
             </ws:navigation>
             <ws:content>
-               <Controls.Container.TreeMultiSelector parentProperty="Раздел" nodeProperty="Раздел@">
+               <Controls.Container.MultiSelector>
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                   <Controls.List.Container>
                      <Controls.List.MultiSelector>
@@ -67,7 +66,7 @@
                      </Controls.List.MultiSelector>
                   </Controls.List.Container>
                </Controls.Container.Scroll>
-            </Controls.Container.TreeMultiSelector>
+            </Controls.Container.MultiSelector>
             </ws:content>
          </Controls.Container.Data>
       </div>

@@ -4,6 +4,7 @@ define('Controls/SelectedCollection/SelectedCollectionStyles', [],
    /**
     * @mixin Controls/SelectedCollection/SelectedCollectionStyles
     * @public
+    * @author Золотова Э.Е.
     *
     * @css @color_SelectedCollection_item-accent Accent item color.
     * @css @color_SelectedCollection_item-primary Primary item color.

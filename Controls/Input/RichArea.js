@@ -13,6 +13,7 @@ define('Controls/Input/RichArea', [
     * @class Controls/Input/RichTextArea
     * @extends Core/Control
     * @control
+    * @public
     * @author Волоцкой В.Д.
     */
 

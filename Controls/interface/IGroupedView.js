@@ -6,6 +6,7 @@ define('Controls/interface/IGroupedView', [
     *
     * @interface Controls/interface/IGroupedView
     * @public
+    * @author Авраменко А.С.
     */
 
    /**

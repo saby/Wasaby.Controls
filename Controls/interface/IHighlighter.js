@@ -7,6 +7,7 @@ define('Controls/interface/IHighlighter', [
     *
     * @interface Controls/interface/IHighlighter
     * @public
+    * @author Авраменко А.С.
     */
 
    /**

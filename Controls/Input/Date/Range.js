@@ -31,6 +31,7 @@ define('Controls/Input/Date/Range', [
     * @public
     * @demo Controls-demo/Input/Date/RangePG
     * @category Input
+    * @author Миронов А.Ю.
     */
 
    var Component = Control.extend([], {

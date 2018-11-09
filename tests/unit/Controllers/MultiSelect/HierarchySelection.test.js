@@ -98,6 +98,27 @@ define([
                assert.equal(1, selectionInstance.getCount());
             });
 
+            it('select child of excluded node', function() {
+               cfg = {
+                  selectedKeys: [1],
+                  excludedKeys: [2],
+                  items: allData,
+                  keyProperty: 'id'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([2], selection.excluded);
+               assert.deepEqual([1, 5], selectionInstance.getSelectedKeysForRender());
+               assert.equal(2, selectionInstance.getCount());
+               selectionInstance.select([4]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1, 4], selection.selected);
+               assert.deepEqual([2], selection.excluded);
+               assert.deepEqual([1, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.equal(3, selectionInstance.getCount());
+            });
+
             it('sequentially select all elements inside node', function() {
                cfg = {
                   selectedKeys: [],

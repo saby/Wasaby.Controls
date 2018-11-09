@@ -5,6 +5,7 @@ define('Controls/interface/IDialogOptions', [], function() {
     *
     * @interface Controls/interface/IDialogOptions
     * @public
+    * @author Красильников А.С.
     */
 
    /**

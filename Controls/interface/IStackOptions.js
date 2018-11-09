@@ -5,6 +5,7 @@ define('Controls/interface/IStackOptions', [], function() {
     *
     * @interface Controls/interface/IStackOptions
     * @public
+    * @author Красильников А.С.
     */
 
    /**

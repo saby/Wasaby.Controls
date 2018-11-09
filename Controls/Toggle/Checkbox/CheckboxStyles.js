@@ -7,6 +7,7 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
    /**
     * @mixin Controls/Toggle/Checkbox/CheckboxStyles
     * @public
+    * @author Михайловский Д.С.
     *
     * @css @font-size_CheckBox Checkbox font-size.
     * @css @height_CheckBox Checkbox height.
