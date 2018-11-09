@@ -11,7 +11,7 @@ define('Controls/Input/Lookup/_Lookup', [
    'wml!Controls/Input/Lookup/resources/clearRecordsTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
-   'css!Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Input/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
 
    'use strict';
