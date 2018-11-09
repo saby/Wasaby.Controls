@@ -97,6 +97,7 @@ define('Controls/Popup/Opener/InfoBox',
             }
          },
          _open: function(cfg) {
+            var infoboxStyle = cfg.style || 'default';
             InfoBox.superclass.open.call(this, {
                target: cfg.target,
                position: cfg.position,
@@ -110,7 +111,7 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   float: cfg.float
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + infoboxStyle,
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
