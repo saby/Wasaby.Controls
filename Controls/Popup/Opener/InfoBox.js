@@ -87,7 +87,21 @@ define('Controls/Popup/Opener/InfoBox',
                this.close(0);
             }
             this._clearTimeout();
-            cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
+
+            //smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
+            var newCfg = {};
+            for (var i in cfg) {
+               if (cfg.hasOwnProperty(i)) {
+                  if (cfg[i] !== undefined) {
+                     newCfg[i] = cfg[i];
+                  }
+                  else {
+                     if (DEFAULT_CONFIG[i] !== undefined) {
+                        newCfg[i] = DEFAULT_CONFIG[i];
+                     }
+                  }
+               }
+            }
 
             // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
             if (cfg.showDelay > 0) {
@@ -97,7 +111,6 @@ define('Controls/Popup/Opener/InfoBox',
             }
          },
          _open: function(cfg) {
-            var infoboxStyle = cfg.style || 'default';
             InfoBox.superclass.open.call(this, {
                target: cfg.target,
                position: cfg.position,
@@ -111,7 +124,7 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   float: cfg.float
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + infoboxStyle,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
