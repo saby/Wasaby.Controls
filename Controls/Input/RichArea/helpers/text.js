@@ -1,12 +1,18 @@
-define('Controls/Input/RichArea/plugins/text', [
+define('Controls/Input/RichArea/helpers/text', [
    'Core/Sanitize',
    'Core/core-merge'
 ], function(Sanitize, cMerge) {
    /**
-    * Модуль для обработки текста в БТРе
+    * Module which provides text's processing
     */
 
-   var TextPlugin = {
+   var TextHelper = {
+
+         /**
+       * Function trims text
+       * @param text
+       * @returns {string}
+       */
          trimText: function(text) {
             if (!text) {
                return '';
@@ -38,6 +44,13 @@ define('Controls/Input/RichArea/plugins/text', [
             text = text.replace(/\xA0/gi, '&nbsp;');
             return text;
          },
+
+         /**
+       * Function returns html text
+       * @param self
+       * @param html
+       * @returns {string}
+       */
          htmlToText: function(self, html) {
             if (!html) {
                return '';
@@ -195,5 +208,5 @@ define('Controls/Input/RichArea/plugins/text', [
          }
       };
 
-   return TextPlugin;
+   return TextHelper;
 });
