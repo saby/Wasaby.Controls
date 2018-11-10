@@ -9,7 +9,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             var windowData = {
                width: document.body.clientWidth,
                height: document.body.clientHeight,
-               scrollTop: document.body.scrollTop,
+               scrollTop: 0 // только в 600
             };
 
             // Positioning relative to body
