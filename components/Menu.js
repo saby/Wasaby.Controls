@@ -380,12 +380,15 @@ define('SBIS3.CONTROLS/Menu', [
                         submenuContainer.height('');
 
                         // После хака с высотой зовем позиционирование (проблем описана выше)
-                        setTimeout(function() {
-                           if (!mySubmenu.isDestroyed()) {
-                              mySubmenu.recalcPosition(true);
-                           }
-                        }, 500);
-                        
+                        // На некоторый ios устройствах, в момент первого позиционирования popupMixin, размеры попапа не
+                        // соответствуют реальным, из-за чего попап позиционируется неправильно.
+                        // Для старых подменю написан костыль - перепозиционироваться после открытия по таймауту.
+                        // 3 таймаута для того, чтобы точно гарантировать, что попап успел получить правильные размеры.
+                        // Один таймаут на 500мс оставлять нельзя, т.к. если подменю спозиционировалось неправильно - через пол секунды будет заметный прыжок.
+                        setTimeout(self._recalcSubMenuPosition.bind(self, mySubmenu), 50);
+                        setTimeout(self._recalcSubMenuPosition.bind(self, mySubmenu), 100);
+                        setTimeout(self._recalcSubMenuPosition.bind(self, mySubmenu), 500);
+
                         if (currentHeight) {
                            submenuContainer.height(currentHeight);
                         }
@@ -400,6 +403,12 @@ define('SBIS3.CONTROLS/Menu', [
             }
          }
          Menu.superclass._drawItemsCallback.apply(this, arguments);
+      },
+
+      _recalcSubMenuPosition: function(mySubmenu) {
+         if (!mySubmenu.isDestroyed()) {
+            mySubmenu.recalcPosition(true);
+         }
       },
 
       setItems: function() {

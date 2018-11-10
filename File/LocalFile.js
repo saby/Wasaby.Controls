@@ -28,6 +28,7 @@ define("File/LocalFile", ["require", "exports", "tslib", "File/ResourceAbstract"
                 name: info
             } : info || {};
             _this._info.name = _this._info.name || (_data instanceof File && _data.name);
+            _this._info.size = _this._data.size;
             if (!_this._info.name) {
                 // Для корректной загрузки Blob через FormData необходимо имя файла
                 throw new Error('Argument "name" is required for Blob data');

@@ -30,12 +30,12 @@ define(
             render._children = {
                divinput: {
                   querySelector: function() {
-                     return {};
+                     return this;
                   }
                },
                input: {
                   querySelector: function() {
-                     return {};
+                     return this;
                   }
                }
             };

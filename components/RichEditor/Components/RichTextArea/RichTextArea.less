@@ -134,7 +134,7 @@
    .controls-RichEditor__dataReview {
       z-index: 1;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       overflow-x: auto;
       overflow-y: hidden;
       padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
@@ -148,6 +148,7 @@
          margin-bottom: 0;
       }
    }
+
    .controls-RichEditor__editorFrame.ws-basic-style {
       box-sizing: border-box;
       word-wrap: break-word;
@@ -362,11 +363,8 @@
          width: 17px;
          background-color: transparent;
       }
-      &::-webkit-scrollbar-button:horizontal {
-         background-color: transparent;
-      }
       &::-webkit-scrollbar-thumb:horizontal {
-         border: 6px solid #FFFFFF;
+         border: 7px solid #FFFFFF;
          background-color: #D9D9D9;
       }
       &::-webkit-scrollbar-thumb:horizontal:hover {

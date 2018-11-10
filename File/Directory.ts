@@ -1,13 +1,14 @@
 /// <amd-module name="File/Directory" />
 import {ResourceAbstract} from 'File/ResourceAbstract';
 import LocalFile = require('File/LocalFile');
+import {FileInfo} from 'File/IResource';
 
 type Entry = Directory | LocalFile;
 type Entries = Array<Entry>;
 
 type DirectoryConfig = {
     name: string;
-    size?: number;
+    info?: FileInfo;
     entries?: Entries,
     meta?: any,
 }
@@ -24,7 +25,6 @@ class Directory extends ResourceAbstract {
     /**
      * @param {String} name Имя директории
      * @param {Object} [meta] Дополнительные мета-данные
-     * @param {Number} [size] Дополнительные мета-данные
      * @param {File/FileInfo} [info] Объект с информацией о файле.
      * @param {File/IResource} [entries] Содержимое директории.
      * @constructor
@@ -32,7 +32,7 @@ class Directory extends ResourceAbstract {
      */
     constructor({
         name,
-        size,
+        info,
         entries,
         meta
     }: DirectoryConfig) {
@@ -41,11 +41,19 @@ class Directory extends ResourceAbstract {
             throw new Error('Argument "name" is required');
         }
         this._info = {
-            size,
+            ...info,
+            size: 0,
             name,
             isDirectory: true
         };
         this.__entries = entries || [];
+        /*
+         * Подсчёт размера содержимого папки
+         * Необходимо чтобы при загрузке бросать событие с корректным процентом загруженности
+         */
+        this.__entries.forEach((entry) => {
+            this._info.size += entry.getInfo().size || 0;
+        });
         this._meta = meta || {};
     }
     /**
@@ -61,7 +69,8 @@ class Directory extends ResourceAbstract {
         let info = entry.getFileInfo();
         info.path = this.getName() + '/' + (info.path || entry.getName());
         entry.setInfo(info);
-        this.__entries.push(entry)
+        this.__entries.push(entry);
+        this._info.size += info.size;
     }
 }
 export  = Directory;

@@ -4,6 +4,8 @@
             value="{{_multiSelectStatus}}"
             triState="{{true}}"
             on:valueChanged="_onCheckBoxClick()"/>
-    <Controls.Operations.__MultiSelector/>
+    <Controls.Operations.__MultiSelector selectedKeys="{{ _options.selectedKeys }}"
+                                         excludedKeys="{{ _options.excludedKeys }}"
+                                         selectedKeysCount="{{ _options.selectedKeysCount }}" />
     <div class="controls-operationsPanelV__multiSelector_separator"></div>
 </div>
