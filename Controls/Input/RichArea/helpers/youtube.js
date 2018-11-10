@@ -1,13 +1,20 @@
-define('Controls/Input/RichArea/plugins/youtube', [
+define('Controls/Input/RichArea/helpers/youtube', [
    'Core/helpers/String/escapeHtml',
-   'Controls/Input/RichArea/plugins/constants',
-   'Controls/Input/RichArea/plugins/content'
-], function(escapeHtml, constantsPlugin, contentPlugin) {
+   'Controls/Input/RichArea/helpers/constants',
+   'Controls/Input/RichArea/helpers/editor'
+], function(escapeHtml, constantsHelper, editorHelper) {
    /**
-    * Модуль-хелпер для работы с youtube видео
+    * Module which provides work with youtube videos
     */
 
-   var YouTubePlugin = {
+   var YouTubeHelper = {
+
+         /**
+       * Function adds youtube video into current cursor position
+       * @param self
+       * @param link
+       * @returns {boolean}
+       */
          addYouTubeVideo: function(self, link) {
             if (!(link && typeof link === 'string')) {
                return false;
@@ -16,7 +23,7 @@ define('Controls/Input/RichArea/plugins/youtube', [
                url = escapeHtml(link, []),
                id = _private.getYouTubeVideoId(link);
             if (id) {
-               contentPlugin.insertHtml(self, _private.makeYouTubeVideoHtml(url, id));
+               editorHelper.insertHtml(self, _private.makeYouTubeVideoHtml(url, id));
                return true;
             }
             return false;
@@ -37,9 +44,9 @@ define('Controls/Input/RichArea/plugins/youtube', [
                timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
             return [
                '<iframe',
-               ' width="' + constantsPlugin.tinyConstants.defaultYoutubeWidth + '"',
-               ' height="' + constantsPlugin.tinyConstants.defaultYoutubeHeight + '"',
-               ' style="min-width:' + constantsPlugin.tinyConstants.minYoutubeWidth + 'px; min-height:' + constantsPlugin.tinyConstants.minYoutubeHeight +
+               ' width="' + constantsHelper.tinyConstants.defaultYoutubeWidth + '"',
+               ' height="' + constantsHelper.tinyConstants.defaultYoutubeHeight + '"',
+               ' style="min-width:' + constantsHelper.tinyConstants.minYoutubeWidth + 'px; min-height:' + constantsHelper.tinyConstants.minYoutubeHeight +
             'px;"',
                ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') +
             '"',
@@ -50,5 +57,5 @@ define('Controls/Input/RichArea/plugins/youtube', [
          }
       };
 
-   return YouTubePlugin;
+   return YouTubeHelper;
 });
