@@ -1,6 +1,7 @@
 <div>
    <Controls.Button
-      style="linkMain"
+      viewMode="link"
+      style="secondary"
       icon="icon-Link icon-medium icon-primary"
       attr:title="{[Вставить ссылку]}"
       on:click="_clickHandler()"
