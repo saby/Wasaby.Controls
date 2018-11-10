@@ -133,11 +133,16 @@ define('Controls/Popup/Compatible/Layer', [
       // Получение данных из контекста
 
       var opt = document.querySelector('html').controlNodes;
-
-      for (var i = 0, len = opt.length; i < len; i++) {
-         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
-            data = opt[i].control._getChildContext().userInfoField.userInfo;
-            break;
+      if (!opt) {
+         if (window.userInfo) {
+            data = window.userInfo;
+         }
+      } else {
+         for (var i = 0, len = opt.length; i < len; i++) {
+            if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+               data = opt[i].control._getChildContext().userInfoField.userInfo;
+               break;
+            }
          }
       }
 
