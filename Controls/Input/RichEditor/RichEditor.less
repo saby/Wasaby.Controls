@@ -1,0 +1,67 @@
+@min-height_RichEditor_area: 48px;
+
+.controls_RichEditor {
+  position: relative;
+}
+
+.controls_RichEditor_area {
+  min-height: @min-height_RichEditor_area;
+}
+
+/* Styles for toolbar */
+
+@height_RichEditorToolbar_opened: 32px;
+@height_RichEditorToolbar_closed: 0;
+@bgcolor_RichEditorToolbar: #E5ECF5;
+
+.controls_RichEditorToolbar {
+  transition-property: height;
+  transition-duration: .3s;
+  background: @bgcolor_RichEditorToolbar;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  &-opened {
+    height: @height_RichEditorToolbar_opened;
+  }
+  &-closed {
+    height: @height_RichEditorToolbar_closed;
+  }
+}
+
+/* Styles for toggle button */
+
+@bgimage_ToolbarToggleButton_closed: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAj0lEQVR42mN4+ubrf0oww6gBowaMGoBmwMPz/9fMm/l/5kwgXrD1/6knaIqfXELIz9vw/9hDbC5AVoRsCJrmE0/weQFF8ab/J+7g1ow7DJANmYlbM/5AfILfZuJiAWTIYtyaR1PiqAHUM+DRy08BT159OU+qRpAekF4GKGAk1iAkjYwMWABOgwhpxGkQIY0A4t0NLMoQAuoAAAAASUVORK5CYII=');
+@bgimage_ToolbarToggleButton_closed_hover: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAkklEQVR42mN4+ubrf0oww6gBowaMGoBmwMNT/+sjK/4b2lX8N0tZ9v/wMzTFz87C5Q0j5//f8RCbC5AUoRiCpnnvM3xeQDYkbtH/vbdxa8YdBsg22uHWjD8Qn+G3mbhYABmSiVvzaEocNYB6Bjx6+Sngyasv50nVCNID0ssABYzEGoSkkZEBC8BpECGNOA0ipBEApZ348FmE4MYAAAAASUVORK5CYII=');
+@bgimage_ToolbarToggleButton_opened: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAhklEQVR42u3SOwqAMAyA4XhDr5dFBFcRTyFuguDmUqmD4iQ6RwuCIn35GFPI+H9NodBPK30ZYIABBjwAWVOa5FTKN4CKIyTEfSIzAs4Y7Qg4b25ryiybgNfasqE81iMnICr7m29IIfgnMvAn0A1zKMelehqqRrVwnMAXuoQBaI4RcoVGyBVu09oNLOSz8lQAAAAASUVORK5CYII=');
+@bgimage_ToolbarToggleButton_opened_hover: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAhklEQVR42mN4+ubrf0oww6gBowaMGkCEAc/O/q/PnP9/7zNyDABpjqz4b2gHxJG4DWEgqNkOvyEMBG2+ffZ/axxuQxiIcvazi/8npGA3BGHAw1P4/YxmyI6Hoylx1ABqGvDo5aeAJ6++nCdVI0gPSC8DFDASaxCSRkYGLACnQYQ04jSIkEYAZ2f49HXkPqUAAAAASUVORK5CYII=');
+
+.controls_RichEditor_toggleButton {
+  height: 32px;
+  width: 18px;
+  z-index: 2;
+  border: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  &-opened {
+    background: @bgimage_ToolbarToggleButton_opened;
+    .ws-is-no-touch &:hover {
+      background: @bgimage_ToolbarToggleButton_opened_hover;
+      cursor: pointer;
+    }
+    &:active {
+      background: @bgimage_ToolbarToggleButton_opened_hover;
+    }
+  }
+  &-closed {
+    background: @bgimage_ToolbarToggleButton_closed;
+    .ws-is-no-touch &:hover {
+      background: @bgimage_ToolbarToggleButton_closed_hover;
+      cursor: pointer;
+    }
+    &:active {
+      background: @bgimage_ToolbarToggleButton_closed_hover;
+    }
+  }
+}

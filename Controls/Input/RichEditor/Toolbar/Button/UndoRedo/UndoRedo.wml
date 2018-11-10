@@ -1,5 +1,6 @@
 <Controls.Button
-   style="linkMain"
+   viewMode="link"
+   style="secondary"
    attr:title="{{_options.title}}"
    icon="icon-{{_options.icon}} icon-medium {{_readOnly ? 'icon-disabled' : 'icon-primary'}}"
    readOnly="{{_readOnly}}"
