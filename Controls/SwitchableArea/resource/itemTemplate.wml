@@ -1,6 +1,6 @@
 <ws:partial template="{{ itemTemplate }}"
             type="{{ type }}"
-            active="{{selectedKey === currentItemId}}"
-            attr:class="{{ selectedKey !== currentItemId ? 'ws-hidden' }}">
-   <ws:templateOptions type="{{ type }}" active="{{selectedKey === currentItemId}}"/>
+            selected="{{selectedKey === currentItemKey}}"
+            attr:class="{{ selectedKey !== currentItemKey ? 'ws-hidden' }}">
+   <ws:templateOptions type="{{ type }}" selected="{{selectedKey === currentItemKey}}"/>
 </ws:partial>
