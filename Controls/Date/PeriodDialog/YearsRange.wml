@@ -1,7 +1,8 @@
 <div class="controls-PeriodDialog-Years">
    <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
       <Controls.Button
-         style="linkMain"
+         style="secondary"
+         viewMode="link"
          icon="icon-24 icon-MarkLeftBold"
          size="l"
          on:click="_onPrevClick()"
@@ -22,7 +23,8 @@
 
    <div attr:class="controls-PeriodDialog-Years__prevNextBtn">
       <Controls.Button
-         style="linkMain"
+         style="secondary"
+         viewMode="link"
          icon="icon-24 icon-MarkRightBold"
          on:click="_onNextClick()"
       />

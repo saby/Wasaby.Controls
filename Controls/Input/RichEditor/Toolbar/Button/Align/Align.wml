@@ -1,6 +1,7 @@
 <Controls.Button.Menu
    keyProperty="id"
-   style="linkMain"
+   style="secondary"
+   viewMode="link"
    showHeader="{{false}}"
    attr:title="{[Выравнивание текста]}"
    icon="{{_selectedAlign.icon}} icon-medium"

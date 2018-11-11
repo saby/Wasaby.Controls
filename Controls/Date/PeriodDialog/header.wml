@@ -3,7 +3,8 @@
       <Controls.Button
          if="{{_yearStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
-         style="linkMain"
+         style="secondary"
+         viewMode="link"
          tooltip="{[Смена режима календаря]}"
          icon="icon-small icon-ArrangeList icon-primary"
          checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
@@ -43,7 +44,8 @@
 
    <Controls.Button
       if="{{_homeButtonVisible}}"
-      style="linkMain"
+      style="secondary"
+      viewMode="link"
       activableByClick="{{false}}"
       iconStyle="default"
       tooltip="{[Текущий период]}"
@@ -51,9 +53,10 @@
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.Button
-      style="iconButtonBordered"
+      viewMode="transparentQuickButton"
+      style="success"
       icon="icon-medium icon-Yes"
-      iconStyle="done"
+      iconStyle="success"
       size="l"
       attr:class="controls-PeriodDialog__applyButton"
       on:click="_applyClick()"

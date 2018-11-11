@@ -7,7 +7,8 @@
             <span class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></span>
             <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
                <Controls.Button
-                  style="linkMain"
+                  style="secondary"
+                  viewMode="link"
                   icon="icon-small icon-Home3"
                   on:click="_onHomeClick()"
                />
@@ -64,7 +65,8 @@
       <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__years-home">
          <Controls.Button
-            style="iconButtonBordered"
+            style="secondary"
+            viewMode="transparentQuickButton"
             icon="icon-small icon-Home3"
             on:click="_onHomeClick()"
          />

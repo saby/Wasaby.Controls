@@ -20,15 +20,17 @@
             <Controls.Button
                on:click="commitEdit()"
                attr:class="controls-EditAtPlaceV__Toolbar__Button"
-               iconStyle="done"
+               iconStyle="success"
                icon="icon-small icon-Yes"
-               style="iconButtonBordered"
+               viewMode="transparentQuickButton"
+               style="success"
             />
             <Controls.Button
                on:click="cancelEdit()"
                attr:class="controls-EditAtPlaceV__Toolbar__Button"
                icon="icon-small icon-Close"
-               style="iconButtonBordered"
+               style="secondary"
+               viewMode="transparentQuickButton"
             />
          </div>
       </ws:if>
