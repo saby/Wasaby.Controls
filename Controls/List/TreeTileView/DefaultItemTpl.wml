@@ -1,5 +1,5 @@
 <ws:template name="folderTpl">
-   <div class="controls-TileView__item controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+   <div class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
             {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
             {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
             {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
@@ -20,7 +20,7 @@
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
                   itemData="{{itemData}}"
-                  attr:class="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
+                  itemActionsClass="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
    </div>
 </ws:template>
 <ws:if data="{{invisible}}">

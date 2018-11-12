@@ -182,6 +182,11 @@ define('Controls/Input/Number',
          },
 
          _inputCompletedHandler: function(event, value) {
+            // Convert different interpretations of null(like -0, 0000, -000) to '0'.
+            if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
+               value = '0';
+               this._numberViewModel.updateValue(value);
+            }
             this._notify('inputCompleted', [this._getNumericValue(value)]);
          },
 

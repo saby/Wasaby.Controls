@@ -12,13 +12,18 @@
    top: 0;
 }
 
+// Удалить при закрытии: https://online.sbis.ru/opendoc.html?guid=2525f9fc-8b96-4bc0-ae35-8597290ecdae
+.controls-ListView__checkbox .controls-Checkbox__caption {
+   display: none;
+}
+
 .controls-ListView__checkbox {
    float: left;
    margin: @padding_List-checkbox;
 }
 
 .controls-ListView__itemContent_withCheckboxes {
-   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 0;
+   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
 }
 
 .controls-ListView__itemContent_withoutCheckboxes {
@@ -27,7 +32,6 @@
 
 .controls-ListView__itemContent {
    z-index: 1;
-   display: flex;
 }
 
 .controls-itemActionsV {
@@ -40,7 +44,7 @@
 
 .controls-ListView__item_editing {
    background-color: @controls-editInPlace-editing-item-bg;
-   > .controls-ListView__itemContent > .controls-itemActionsV {
+   > .controls-itemActionsV {
       display: inline-block;
    }
 }
@@ -52,15 +56,19 @@
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-no-touch:not(.ws-is-mobile-platform) {
-   .controls-ListView__item_showActions:hover > .controls-ListView__itemContent > .controls-itemActionsV {
-      display: inline-block;
+   .controls-ListView__item_showActions {
+      &:hover {
+         > .controls-itemActionsV {
+            display: inline-block;
+         }
+      }
    }
-   .controls-ListView__item_default {
+   .controls-ListView__item_highlightOnHover_default {
       &:hover {
          background-color: @default-bg-color-hovered-item;
       }
    }
-   .controls-ListView__item_editing {
+   .controls-ListView__item_highlightOnHover_editing {
       &:hover {
          background-color: @controls-editInPlace-editing-item-bg;
       }

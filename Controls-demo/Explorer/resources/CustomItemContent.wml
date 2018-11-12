@@ -6,7 +6,7 @@
                itemData="{{itemData}}"
                itemActionsTemplate="{{itemActionsTemplate}}"/>
 </div>
-<div class="demo-Explorer__icons">
+<div class="demo-Explorer__icons js-controls-TileView__withoutZoom">
    <ws:if data="{{itemData.item.isDocument}}">
       <div class="demo-Explorer__docIcon icon-medium icon-DocumentW icon-primary"></div>
    </ws:if>
