@@ -6,6 +6,7 @@ define('Controls/interface/IHierarchicalItems', [
     *
     * @interface Controls/interface/IHierarchicalItems
     * @public
+    * @author Авраменко А.С.
     */
 
    /**

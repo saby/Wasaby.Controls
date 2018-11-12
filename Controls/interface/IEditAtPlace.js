@@ -6,6 +6,7 @@ define('Controls/interface/IEditAtPlace', [
     *
     * @interface Controls/interface/IEditAtPlace
     * @public
+    * @author Зайцев А.С.
     * @see Controls/interface/IEditableList
     */
 
