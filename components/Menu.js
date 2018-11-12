@@ -128,7 +128,8 @@ define('SBIS3.CONTROLS/Menu', [
             /**
              * @cfg {Boolean} Экранирует текст в пунктах меню, если опция не задана на элементе
              */
-            escapeHtmlItems: false
+            escapeHtmlItems: false,
+            subMenuLocationStrategy: null
          }
       },
 
@@ -425,6 +426,7 @@ define('SBIS3.CONTROLS/Menu', [
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
+         config.locationStrategy = this._options.subMenuLocationStrategy;
          config._fixJqueryPositionBug = true;
          config._fixPopupRevertCorner = true;
 
