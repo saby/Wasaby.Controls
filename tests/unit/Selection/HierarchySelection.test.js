@@ -191,5 +191,11 @@ define(
             assert.deepEqual(sel.marked, [1]);
             assert.deepEqual(sel.excluded, []);
          });
+         it('select an item which is not in the data.', function () {
+            selection.select([4]);
+            var sel = selection.getSelection();
+            assert.deepEqual(sel.marked, [4]);
+            assert.deepEqual(sel.excluded, []);
+         });
       });
    });

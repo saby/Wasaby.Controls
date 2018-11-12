@@ -61,10 +61,14 @@ define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
          // Отдельно проверяем, есть ли фокус в полях ввода, т.к. клавиатура показана только в этом случае.
          // Можно обкатать механизм на этих правках и впоследствии избавиться от нотифая глобального события в полях ввода.
          // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
-         // Куда пришел фокус, если это input/textarea (и возможно еще div с contenteditable), то через emitter/listener сообщать
+         // Куда пришел фокус, если это input/textarea/contenteditable, то через emitter/listener сообщать
          // об этом дочерним компонентам.
          if (!isVisible && document.activeElement) {
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+            var isInput = document.activeElement.tagName === 'INPUT';
+            var isTextArea = document.activeElement.tagName === 'TEXTAREA';
+            var isContentEditable = document.activeElement.getAttribute('contenteditable') === 'true';
+
+            if (isInput || isTextArea || isContentEditable) {
                isVisible = true;
             }
          }
