@@ -91,7 +91,6 @@ define('Controls/Popup/Previewer',
 
             this._isPopupOpened = false;
             if (this._isNewEnvironment()) {
-               this._isPopupOpened = false;
                this._notify('closePreviewer', [type], {bubbling: true});
             } else {
                this._children.openerPreviewer.close(type);
