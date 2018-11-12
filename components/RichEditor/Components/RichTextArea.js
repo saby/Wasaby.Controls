@@ -1602,7 +1602,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            $listNode.removeAttr('contenteditable');
                            selection.select(listNode, true);
                         });
+                        // Добавить новый уровень undo/redo
                         undoManager.add();
+                        // И обновить значение опции text
                         this._updateTextByTiny();
                      }.bind(this));
                   }
