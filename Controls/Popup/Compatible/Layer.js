@@ -8,11 +8,10 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
-   'View/Runner/requireHelper',
    'Core/IoC',
    'WS.Data/Source/SbisService',
    'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, requireHelper, IoC, SbisService, Chain) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
