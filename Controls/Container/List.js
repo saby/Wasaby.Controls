@@ -59,6 +59,7 @@ define('Controls/Container/List',
 
          updateSource: function(self, data) {
             var source = _private.getOriginSource(self._options.source);
+            
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new Memory({
@@ -215,7 +216,7 @@ define('Controls/Container/List',
             //костыль до перевода Suggest'a на Search/Controller,
             //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
             //После этого этот модуль можно будет удалить.
-            return cInstance.instanceOfModule(source, "WS.Data/Source/PrefetchProxy") ? source._$target : source;
+            return cInstance.instanceOfModule(source, 'WS.Data/Source/PrefetchProxy') ? source._$target : source;
          }
       };
       
