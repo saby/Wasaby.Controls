@@ -45,6 +45,7 @@ define('Controls/Container/LoadingIndicator', [
 
                      // return spinner value
                      this.useSpinner = this._useSpinnerSaved;
+
                      // clear saved spinner state
                      this._useSpinnerSaved = null;
                      this._forceUpdate();
