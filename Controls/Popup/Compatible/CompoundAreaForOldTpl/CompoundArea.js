@@ -210,8 +210,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.waitForPopupCreated = false;
             var self = this;
             runDelayed(function() {
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
+               if (self._container.length && self._options.catchFocus) {
+                  doAutofocus(self._container);
                }
             });
          },
@@ -300,11 +300,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
-            if (customHeaderContainer.length && this._options.draggable) {
+            if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
                // Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
                // mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
+            }
+         },
+
+         setCaption: function(newTitle) {
+            this._setCaption(newTitle);
+         },
+
+         setTitle: function(newTitle) {
+            this._setCaption(newTitle);
+         },
+
+         _setCaption: function(newTitle) {
+            var titleContainer = $('.ws-float-area-title', this._container);
+            if (titleContainer.length) {
+               titleContainer.text(newTitle);
             }
          },
 
@@ -439,6 +454,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this.close();
+               if (CoreConstants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  event.preventDefault();
+               }
                event.stopPropagation();
             }
          },

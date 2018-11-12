@@ -3,7 +3,8 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext'
+      'Controls/Application/HeadDataContext',
+      'css!WS.Core/css/core-min'
    ],
    function(Base, Deferred, template, HeadDataContext) {
       'use strict';
@@ -24,7 +25,9 @@ define('Controls/Application/_Head',
             if (typeof window !== 'undefined') {
                return;
             }
-            if (options.staticDomains) {
+            if (typeof options.staticDomains === 'string') {
+               this.staticDomainsStringified = options.staticDomains;
+            } else if (options.staticDomains instanceof Array) {
                this.staticDomainsStringified = JSON.stringify(options.staticDomains);
             } else {
                this.staticDomainsStringified = '[]';

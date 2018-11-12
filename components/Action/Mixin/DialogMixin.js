@@ -189,7 +189,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                                  self._reloadTemplate(config);
                                  return;
                               }
-                              config.className = (config.className || "") + " controls-conpoundAreaNew__floatArea";
+                              config.className = (config.className || "") + " controls-compoundAreaNew__floatArea";
                               self._dialog = new Component(config);
                            });
                         } else {
@@ -281,7 +281,15 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
       },
       _needCloseDialog: function(target) {
-         if (!ControlHierarchyManager.checkInclusion(this._dialog, target) && !this._isLinkedPanel(target)) {
+         // Диалог нужно закрыть при клике при следующих условиях
+         if (
+            // 1. Клик был по элементу в body (элемент не удалился сразу после клика)
+            document.body.contains(target) &&
+            // 2. Кликнутый элемент находится не внутри самого диалога
+            !ControlHierarchyManager.checkInclusion(this._dialog, target) &&
+            // 3. Кликнутый элемент не находится внутри "связанного" (например по опенеру) диалога
+            !this._isLinkedPanel(target)
+         ) {
             return true;
          }
          return false;

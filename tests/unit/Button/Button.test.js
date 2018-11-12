@@ -21,7 +21,7 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-main' && btn._type === 'link' && btn._typeWithSize === 'link_size-xl');
+            assert(btn._style === 'secondary' && btn._viewMode === 'link');
          });
 
          it('style linkMain2',function () {
@@ -30,7 +30,7 @@ define(['Controls/Button'], function (Button) {
                size: 'l'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-main2' && btn._type === 'link' && btn._typeWithSize === 'link_size-l');
+            assert(btn._style === 'info' && btn._viewMode === 'link');
          });
 
          it('style linkMain3',function () {
@@ -39,7 +39,7 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-main3' && btn._type === 'link' && btn._typeWithSize === 'link_size-default');
+            assert(btn._style === 'info' && btn._viewMode === 'link');
          });
 
          it('style linkAdditional',function () {
@@ -48,7 +48,7 @@ define(['Controls/Button'], function (Button) {
                size: 's'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-additional' && btn._type === 'link' && btn._typeWithSize === 'link_size-s');
+            assert(btn._style === 'info' && btn._viewMode === 'link');
          });
 
          it('style linkAdditional2',function () {
@@ -57,7 +57,7 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-additional2' && btn._type === 'link');
+            assert(btn._style === 'default' && btn._viewMode === 'link');
          });
 
          it('style linkAdditional3',function () {
@@ -66,7 +66,7 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-additional3' && btn._type === 'link');
+            assert(btn._style === 'danger' && btn._viewMode === 'link');
          });
 
          it('style linkAdditional4',function () {
@@ -75,7 +75,7 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-additional4' && btn._type === 'link');
+            assert(btn._style === 'success' && btn._viewMode === 'link');
          });
 
          it('style linkAdditional5',function () {
@@ -84,7 +84,7 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'link-additional5' && btn._type === 'link');
+            assert(btn._style === 'magic' && btn._viewMode === 'link');
          });
 
          it('style buttonPrimary',function () {
@@ -93,7 +93,7 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'primary' && btn._type === 'button');
+            assert(btn._style === 'primary' && btn._viewMode === 'button');
          });
 
          it('style buttonDefault',function () {
@@ -102,7 +102,7 @@ define(['Controls/Button'], function (Button) {
                size: 'big'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'default' && btn._type === 'button' && btn._typeWithSize === 'button_size-big');
+            assert(btn._style === 'secondary' && btn._viewMode === 'button');
          });
 
          it('style buttonAdd',function () {
@@ -111,16 +111,7 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'primary-add' && btn._type === 'button' && btn._typeWithSize === 'button_size-default');
-         });
-
-         it('uncorrect style',function () {
-            var opt = {
-               style: 'test',
-               size: 'big'
-            };
-            Button._private.cssStyleGeneration(btn, opt);
-            assert(btn._style === 'default' && btn._type === 'button' && btn._typeWithSize === 'button_size-big');
+            assert(btn._style === 'primary' && btn._viewMode === 'button');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {

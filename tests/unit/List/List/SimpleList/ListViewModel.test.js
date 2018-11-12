@@ -2,9 +2,10 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListViewModel'
+   'Controls/List/ListViewModel',
+   'WS.Data/Collection/RecordSet'
 ], function(
-   ListViewModel
+   ListViewModel, RecordSet
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
@@ -71,10 +72,23 @@ define([
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
 
+      it('markerVisibility', function() {
+         var
+            cfg = {
+               keyProperty: 'id',
+               markerVisibility: 'always'
+            },
+            listModel = new ListViewModel(cfg);
+
+         listModel.setItems(new RecordSet({rawData: data, idProperty: 'id'}));
+         assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
+         assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
+      });
+
       it('setDragTargetItem and setDragItems', function() {
          var
             dragItems = [1],
-            target = { index: 1, id: 2 },
+            target = { index: 1, key: 2 },
             notifyCont = 0,
             lvm = new ListViewModel({
                items: data,
@@ -96,7 +110,7 @@ define([
          assert.deepEqual(lvm._dragTargetPosition, { index: 1, position: 'after' });
          assert.equal(notifyCont, 2);
          lvm.setDragTargetItem(target);
-         assert.equal(notifyCont, 2);
+         assert.equal(notifyCont, 3);
       });
 
       it('_updateSelection', function() {
@@ -109,7 +123,7 @@ define([
 
          var iv = new ListViewModel(cfg);
          assert.deepEqual(iv._selectedKeys, [1]);
-         iv._updateSelection([2, 3]);
+         iv.updateSelection([2, 3]);
          assert.deepEqual(iv._selectedKeys, [2, 3]);
       });
 
@@ -124,19 +138,14 @@ define([
             itemData = {
                test: 'test'
             },
-            nextVersionCalled = false,
-            onListChangeFired = false;
+            nextVersionCalled = false;
 
          var lv = new ListViewModel(cfg);
          lv._nextVersion = function() {
             nextVersionCalled = true;
          };
-         lv.subscribe('onListChange', function() {
-            onListChangeFired = true;
-         });
          lv.setSwipeItem(itemData);
          assert.equal(lv._swipeItem, itemData);
-         assert.isTrue(onListChangeFired, 'setSwipeItem should fire "onListChange" event');
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
       });
    });

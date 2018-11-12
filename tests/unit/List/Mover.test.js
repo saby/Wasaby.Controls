@@ -195,6 +195,17 @@ define([
          mover.moveItems([4, 5], 1, 'on');
       });
 
+      it('moveItems in folder with change order', function(done) {
+         mover._notify = function(event) {
+            if (event === 'afterItemsMove') {
+               assert.equal(items.getRecordById(3).get('folder'), 1);
+               done();
+            }
+         };
+
+         mover.moveItems([3], 4, 'after');
+      });
+
       it('moveItems in root', function(done) {
          var movedItems = [];
          movedItems.push(items.getRecordById(4));

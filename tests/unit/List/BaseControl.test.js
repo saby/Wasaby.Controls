@@ -815,11 +815,27 @@ define([
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
+         ctrl._children = {
+            selectionController: {
+               onCheckBoxClick: function(key, status) {
+                  assert.equal(key, 2);
+                  assert.equal(status, 0);
+               }
+            }
+         };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
             assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
+         };
+         ctrl._children = {
+            selectionController: {
+               onCheckBoxClick: function(key, status) {
+                  assert.equal(key, 1);
+                  assert.equal(status, 1);
+               }
+            }
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -1630,6 +1646,49 @@ define([
             //dont show by long tap
             instance._isTouch = true;
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
+
+         it('showActionsMenu context', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu'
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {};
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(callBackCount, 0);
          });
 
          it('no showActionsMenu context without actions', function() {

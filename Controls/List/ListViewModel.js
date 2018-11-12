@@ -39,16 +39,16 @@ define('Controls/List/ListViewModel',
 
             this._selectedKeys = cfg.selectedKeys || [];
 
-            //TODO надо ли?
+            // TODO надо ли?
             _private.updateIndexes(self);
          },
 
-         _getItemDataByItem: function() {
+         getItemDataByItem: function() {
             var
-               itemsModelCurrent = ListViewModel.superclass._getItemDataByItem.apply(this, arguments),
+               itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
@@ -65,7 +65,7 @@ define('Controls/List/ListViewModel',
             if (itemsModelCurrent.drawActions) {
                itemsModelCurrent.hasShowedItemActionWithIcon = false;
                for (var i = 0; i < drawedActions.length; i++) {
-                  if (!!drawedActions[i].icon) {
+                  if (drawedActions[i].icon) {
                      itemsModelCurrent.hasShowedItemActionWithIcon = true;
                      break;
                   }
@@ -75,12 +75,16 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._dragItems) {
-               if (this._dragItems[0] === itemsModelCurrent.key) {
+            if (this._draggingItemData) {
+               if (this._draggingItemData.key === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
                if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._dragItems[0] === itemsModelCurrent.key ? !this._dragTargetItem : false;
+                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetItem : false;
+               }
+               if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
+                  itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
+                  itemsModelCurrent.draggingItemData = this._draggingItemData;
                }
             }
             return itemsModelCurrent;
@@ -106,14 +110,13 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         getDraggingItemData: function() {
-            return this._draggingItemData;
-         },
-
-         setDragItems: function(items) {
+         setDragItems: function(items, itemDragData) {
             if (this._dragItems !== items) {
                this._dragItems = items;
-               this._draggingItemData = items ? this._getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null;
+               this._draggingItemData = itemDragData || (items ? this.getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
+               if (this._draggingItemData) {
+                  this._draggingItemData.isDragging = true;
+               }
                this._nextVersion();
                this._notify('onListChange');
             }
@@ -124,7 +127,7 @@ define('Controls/List/ListViewModel',
          },
 
          setDragTargetItem: function(itemData) {
-            if (this._dragTargetItem !== itemData) {
+            if (this._draggingItemData && (!itemData || this._draggingItemData.key !== itemData.key)) {
                this._dragTargetItem = itemData;
                this._updateDragTargetPosition(itemData);
                this._nextVersion();
@@ -161,7 +164,6 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._notify('onListChange');
             this._nextVersion();
          },
 
@@ -177,6 +179,10 @@ define('Controls/List/ListViewModel',
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._markedKey !== undefined) {
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
+            if (!this._markedItem && this._options.markerVisibility === 'always') {
+               this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
@@ -195,7 +201,7 @@ define('Controls/List/ListViewModel',
          setItemActions: function(item, actions) {
             if (item.get) {
                var itemById = this.getItemById(item.get(this._options.keyProperty));
-               var collectionItem = itemById ?  itemById.getContents() : item;
+               var collectionItem = itemById ? itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
          },
@@ -205,11 +211,11 @@ define('Controls/List/ListViewModel',
 
          getItemActions: function(item) {
             var itemById = this.getItemById(item.getId());
-            var collectionItem = itemById ?  itemById.getContents() : item;
+            var collectionItem = itemById ? itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
-         _updateSelection: function(selectedKeys) {
+         updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
             this._nextVersion();
             this._notify('onListChange');
@@ -231,8 +237,8 @@ define('Controls/List/ListViewModel',
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 
-            //TODO надо вычислить индекс
-            /*if(!this._markedItem) {
+            // TODO надо вычислить индекс
+            /* if(!this._markedItem) {
              if (!this._selectedIndex) {
              this._selectedIndex = 0;//переводим на первый элемент
              }
@@ -240,7 +246,7 @@ define('Controls/List/ListViewModel',
              this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
              }
              this._markedItem = this._display.at(this._selectedIndex);
-             }*/
+             } */
          }
       });
 

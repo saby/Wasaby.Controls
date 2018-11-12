@@ -1,6 +1,7 @@
 <Controls.Dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
+        displayProperty="{{_options.displayProperty}}"
         parentProperty="{{_options.parentProperty}}"
         nodeProperty="{{_options.nodeProperty}}"
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
@@ -11,6 +12,8 @@
         selectedKeys="{{_options.selectedKeys}}"
         showHeader="{{_options.showHeader}}"
         emptyText="{{_options.emptyText}}"
+        filter="{{_options.filter}}"
+        navigation="{{_options.navigation}}"
         popupClassName="{{_options.popupClassName ||  (_options.showHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin')}}"
         caption="{{_options.caption || _text}}"
         dataLoadCallback="{{_setText}}"

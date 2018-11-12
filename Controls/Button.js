@@ -2,8 +2,9 @@ define('Controls/Button', [
    'Core/Control',
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
+   'Controls/Button/validateIconStyle',
    'css!Controls/Button/Button'
-], function(Control, Classes, template) {
+], function(Control, Classes, template, validateIconStyle) {
    'use strict';
 
    /**
@@ -150,15 +151,13 @@ define('Controls/Button', [
       cssStyleGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._style = currentButtonClass.style;
-         self._type = currentButtonClass.type;
-         self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
-         self._styleWithIconStyle = currentButtonClass.style + '_iconStyle-' + options.iconStyle;
+         self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
          self._icon = options.icon;
-         self._isTransparent = !!currentButtonClass.transparent;
+         self._iconStyle = currentButtonClass.buttonAdd ? 'default' : validateIconStyle.iconStyleTransformation(options.iconStyle);
       }
    };
    var Button = Control.extend({
@@ -187,9 +186,10 @@ define('Controls/Button', [
 
    Button.getDefaultOptions = function() {
       return {
-         style: 'buttonDefault',
+         style: 'secondary',
+         viewMode: 'button',
          size: 'm',
-         iconStyle: 'default'
+         iconStyle: 'secondary'
       };
    };
 

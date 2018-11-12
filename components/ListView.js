@@ -1533,6 +1533,7 @@ define('SBIS3.CONTROLS/ListView',
                   return (itemsProjection.getRoot &&
                      itemsProjection.getRoot() &&
                      itemsProjection.getRoot().getContents() &&
+                     itemsProjection.getRoot().getContents().get &&
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
@@ -1555,7 +1556,7 @@ define('SBIS3.CONTROLS/ListView',
                siblingItem = items.eq(index);
             }
 
-            if (siblingItem) {
+            if (siblingItem && siblingItem.data('id') !== id) {
                return this.getItems().getRecordById(siblingItem.data('id')) || isRootId(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
@@ -2623,6 +2624,13 @@ define('SBIS3.CONTROLS/ListView',
             // mousedown уже случился для другого элемента. В итоге click не случается и редактирование другой записи вообще не запускается.
             // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
             event.preventDefault();
+            //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+            var selection = window.getSelection();
+            if (selection.removeAllRanges) {
+               selection.removeAllRanges();
+            } else if (selection.empty) {
+               selection.empty();
+            }
          },
 
          //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
@@ -3669,7 +3677,8 @@ define('SBIS3.CONTROLS/ListView',
          _loadNextPage: function(type) {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  self = this;
+                  self = this,
+                  preparedFilter = this.getFilter();
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                var isScrollingUp = type ? type === 'up' : this._isScrollingUp();
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', isScrollingUp);
@@ -3686,13 +3695,13 @@ define('SBIS3.CONTROLS/ListView',
 
                /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
                if (!this._options.navigation || this._options.navigation.type != 'cursor') {
-                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+                  this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), offset, this._limit);
                }
 
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
+               this._loader = this._callQuery(preparedFilter, this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;

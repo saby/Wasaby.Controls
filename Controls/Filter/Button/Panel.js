@@ -11,7 +11,6 @@ define('Controls/Filter/Button/Panel', [
 
 ], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template, IoC) {
    /**
-    * Control "Filter panel"
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
     *
@@ -32,7 +31,7 @@ define('Controls/Filter/Button/Panel', [
     * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
     * @css @spacing_FilterPanel-between-resetButton-filterButton Spacing between button "By default" and button "Selected".
     * @css @margin_FilterPanel__PropertyGrid Margin for the block "Selected".
-    * @css @margin_FilterPanel-AdditionalParams Margin for the block "Possible to select".
+    * @css @margin_FilterPanel-AdditionalParams Margin for the additional block.
     * @css @spacing_FilterPanel-header-topTemplate Margin for the template in the header of the panel .
     * @css @height_FilterPanel-header Height header of the panel.
     */
@@ -98,7 +97,7 @@ define('Controls/Filter/Button/Panel', [
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
-            if (getPropValue(item, 'visibility') !== undefined && !getPropValue(item, 'visibility')) {
+            if (getPropValue(item, 'visibility') === false) {
                hasAdditional = true;
             }
          });
@@ -168,8 +167,8 @@ define('Controls/Filter/Button/Panel', [
 
    FilterPanel.getDefaultOptions = function getDefaultOptions() {
       return {
-         title: rk('Отбираются'),
-         headerStyle: 'primary',
+         headingCaption: rk('Отбираются'),
+         headingStyle: 'secondary',
          orientation: 'vertical'
       };
    };

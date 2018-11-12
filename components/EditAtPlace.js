@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
          }.bind(this);
 
          var getTextByDateRange = function(range){
-            return [rk('с'), getTextFromDate(range.startDate), rk('по'), getTextFromDate(range.endDate)].join(' ');
+            return [rk('с'), getTextFromDate(range.startDate), rk('по', 'Period'), getTextFromDate(range.endDate)].join(' ');
          }.bind(this);
 
          //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a)
@@ -297,6 +297,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
             if (inPlace) {
                this._notify('onShowEditor');
             }
+            this._toggleState();
             this._notifyOnSizeChanged(this, this, true);
          },
 

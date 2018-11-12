@@ -304,8 +304,8 @@
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
 @margin-left_MenuButton_button:       -1px;
-@margin-top_MenuButton_link_small:         -7px;
-@margin-left_MenuButton_link_small:  -13px;
+@margin-top_MenuButton_link_small:        -8px;
+@margin-left_MenuButton_link_small:       -13px;
 @margin-top_MenuButton_link_medium:   @margin-top_MenuButton_button;
 @margin-left_MenuButton_link_medium:  -13px;
 @margin-top_MenuButton_link_duplicate_medium:   -7px;
@@ -368,7 +368,7 @@
 //VDOM List.TreeTileView
 @font-size_TreeTileView-title:                   15px;
 @height_TreeTileView-item:                       40px;
-@left_TreeTileView-checkbox:                     4px;
+@left_TreeTileView-checkbox:                     0;
 @margin_TreeTileView-title:                      0 8px 0 4px;
 @margin_TreeTileView-icon:                       0 0 0 4px;
 
@@ -411,10 +411,10 @@
 @spacing_Suggest-empty:                          16px;
 
 // DatePicker VDOM
-@margin-left_DatePicker-button:                  7px;
+@spacing_DatePicker-between-input-button:        7px;
 
 // DateRange VDOM
-@margin-left_DateRange-button:                   @margin-left_DatePicker-button;
+@spacing_DateRange-between-input-button:         @spacing_DatePicker-between-input-button;
 @width_DateRange-dash:                           2px;
 @margin_DateRange-dash:                          0 3px 4px 3px;
 @thickness_DateRange-dash:                       1px;
@@ -441,6 +441,7 @@
 @width_CloseButton_small:                24px;
 @height_CloseButton_small:               24px;
 @font-size_CloseButton_small:            24px;
+@height_CloseButton_icon_l:              24px;
 //tabButton
 @height_tabbutton_mainItem_menuLink:     23px;
 //editAtPlace
@@ -475,9 +476,10 @@
 //Tabs/Buttons
 @height_Tabs-separator:                  12px;
 @border-width_Tabs:                      @default-border-width;
+@padding_Tabs-item_default:              12px;
 @line-height_Tabs-baselineFix:           32px;
 @height_Tabs:                            31px;
-@padding_Tabs-item:                      0 12px;
+@padding_Tabs-item:                      0 @padding_Tabs-item_default + @border-width_Tabs;
 @font-size_Tabs-item:                    14px;
 @font-size_Tabs-item_selected:           15px;
 @max-width_Tabs_item:                    630px;
@@ -513,16 +515,16 @@
 @margin-left_FilterButton_popup:                   9px;
 
 //Lookup
-@spacing_Lookup-item:                    4px;
 @spacing_Lookup-collection:              4px;
 @spacing_Lookup-showAllLinks:            4px;
+@spacing_Lookup-item:                    4px;
 
 //itemActions
 @height_itemActions_inside:              24px;
 @height_itemAction_outside:              29px;
 @width_itemActions_outside_bevel:        24px;
 @right_itemActions_inside:               6px;
-@padding_itemActions_inside:             0 6px 3px 6px;
+@padding_itemActions_inside:             0 6px 0 6px;
 @padding_itemActions_outside:            0 6px 3px 0;
 @padding_itemActions_action:             6px;
 @margin_itemActions_separator:           3px;
@@ -693,15 +695,20 @@
 @width-TreeViewGrid-levelPadding_size_l: 38px;
 @width-TreeViewGrid-levelPadding_size_xl: 46px;
 @width-TreeViewGrid-levelPadding_size_default: @width-TreeViewGrid-levelPadding_size_s;
-@height_TreeGridView-nodeExpander: 16px;
-@width_TreeGridView-nodeExpander: 16px;
+@height_TreeGridView-expander: 16px;
+@width_TreeGridView-expander: 16px;
 @padding_TreeGridView-nodeFooterHasMore: 6px 0 3px 0;
-@padding_TreeGridView-nodeExpander_size_s: 4px;
-@padding_TreeGridView-nodeExpander_size_m: 4px 10px 4px 4px;;
-@padding_TreeGridView-nodeExpander_size_l: 4px 14px 4px 8px;
-@padding_TreeGridView-nodeExpander_size_xl: 4px 18px 4px 12px;
-@padding_TreeGridView-nodeExpander_size_default: @padding_TreeGridView-nodeExpander_size_s;
-@font-size_TreeGridView-nodeExpander: 16px;
+@padding_TreeGridView-expander_size_s: 4px;
+@padding_TreeGridView-expander_size_m: 4px 10px 4px 4px;;
+@padding_TreeGridView-expander_size_l: 4px 14px 4px 8px;
+@padding_TreeGridView-expander_size_xl: 4px 18px 4px 12px;
+@padding_TreeGridView-expander_size_default: @padding_TreeGridView-expander_size_s;
+@font-size_TreeGridView-expander: 16px;
+@icon_TreeGridView-expander_node_collapsed: '\e96e';
+@icon_TreeGridView-expander_node_expanded: '\e96d';
+@icon_TreeGridView-expander_hiddenNode_collapsed: '\e9c2';
+@icon_TreeGridView-expander_hiddenNode_expanded: '\e9c1';
+@border-width_TreeGridView-item_dragging: 2px;
 //Browser
 @height_Browser-header:                   44px;
 @width_Browser-search:                    300px;

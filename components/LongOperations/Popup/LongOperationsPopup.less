@@ -57,8 +57,7 @@
     border-right: 0px none;
 }
 
-.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__content,
-.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton {
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__content {
     display: none;
 }
 
@@ -68,12 +67,7 @@
     cursor: pointer;
 }
 
-.controls-LongOperationsPopup .controls-NotificationPopup__header {
-    height: @long-operations-popup-header-height;
-}
-
 .controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
-    padding-top: 8px;
     padding-right: @long-operations-popup-header-pad-rt;
     padding-bottom: 8px;
     line-height: @long-operations-popup-header-line-height;
@@ -110,15 +104,13 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
-.controls-LongOperationsPopup__header_downloadButton,
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
+.controls-LongOperationsPopup__header_downloadButton {
     padding-top: @long-operations-popup-header-but-gap-top;
     line-height: @long-operations-popup-header-line-height;
     font-size: @long-operations-popup-header-but-f-size;
 }
 
-.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_downloadButton,
-.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton {
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_downloadButton {
     padding-top: @long-operations-popup-collapsed-header-but-gap-top;
 }
 
@@ -132,26 +124,6 @@
 
 .controls-LongOperationsPopup__header_downloadButton .controls-Button__text {
     white-space: nowrap;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-    margin-left: 8px;
-    cursor: pointer;
-    white-space: nowrap;
-    color: @long-operations-popup-header-suspended-color;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
-    text-decoration: underline;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
-.controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: none;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: block;
 }
 
 /* End header  */

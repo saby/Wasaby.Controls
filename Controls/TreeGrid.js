@@ -14,7 +14,7 @@ define('Controls/TreeGrid', [
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -39,6 +39,9 @@ define('Controls/TreeGrid', [
             keyProperty: types(String).required(),
             parentProperty: types(String).required()
          };
+      },
+      toggleExpanded: function(id) {
+         this._children.listControl.toggleExpanded(id);
       }
    });
    return Tree;

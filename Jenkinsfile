@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "3.18.600"
+def version = "3.18.610"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
@@ -17,55 +17,72 @@ def exception(err, reason) {
     error(err)
 }
 
+def send_status_in_gitlab(state) {
+    def request_url = "http://ci-platform.sbis.ru:8000/set_status"
+    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    echo "${request_data}"
+    sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+echo "Генерируем параметры"
+properties([
+disableConcurrentBuilds(),
+gitLabConnection('git'),
+buildDiscarder(
+    logRotator(
+        artifactDaysToKeepStr: '3',
+        artifactNumToKeepStr: '3',
+        daysToKeepStr: '3',
+        numToKeepStr: '3')),
+    parameters([
+        string(
+            defaultValue: 'sdk',
+            description: '',
+            name: 'ws_revision'),
+        string(
+            defaultValue: 'sdk',
+            description: '',
+            name: 'ws_data_revision'),
+        string(
+            defaultValue: '',
+            description: '',
+            name: 'branch_engine'),
+        string(
+            defaultValue: "",
+            description: '',
+            name: 'branch_atf'),
+        choice(
+            choices: "online\npresto\ncarry\ngenie",
+            description: '',
+            name: 'theme'),
+        choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
+        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
+        booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
+        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+        booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+        booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
+        ]),
+    pipelineTriggers([])
+])
+
+node('master') {
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
+        send_status_in_gitlab("failed")
+        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
+    }else {
+        // если встала в очередь на билдере
+        send_status_in_gitlab("running")
+    }
+}
 
 node('controls') {
     LocalDateTime start_time = LocalDateTime.now();
     echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
-    echo "Генерируем параметры"
-    properties([
-    disableConcurrentBuilds(),
-    gitLabConnection('git'),
-    buildDiscarder(
-        logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
-        parameters([
-            string(
-                defaultValue: 'sdk',
-                description: '',
-                name: 'ws_revision'),
-            string(
-                defaultValue: 'sdk',
-                description: '',
-                name: 'ws_data_revision'),
-            string(
-                defaultValue: props["engine"],
-                description: '',
-                name: 'branch_engine'),
-            string(
-                defaultValue: "",
-                description: '',
-                name: 'branch_atf'),
-            choice(
-                choices: "online\npresto\ncarry\ngenie",
-                description: '',
-                name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
-            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
-            ]),
-        pipelineTriggers([])
-    ])
-
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -156,11 +173,7 @@ node('controls') {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-
                     updateGitlabCommitStatus state: 'running'
-                    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit || inte || all_inte || only_fail )) {
-                        exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
-                    }
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"

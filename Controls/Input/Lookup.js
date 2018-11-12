@@ -11,8 +11,8 @@ define('Controls/Input/Lookup', [
    'WS.Data/Chain',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
-   'Controls/Input/Lookup/_Collection',
-   'wml!Controls/Input/Lookup/Collection/_Collection',
+   'Controls/SelectedCollection',
+   'wml!Controls/SelectedCollection/SelectedCollection',
    'wml!Controls/Input/Lookup/resources/showAllLinksTemplate',
    'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
@@ -69,7 +69,6 @@ define('Controls/Input/Lookup', [
          self.sourceController.load(filter)
             .addCallback(function(result) {
                resultDef.callback(self._items = result);
-               _private.notifyItemsChanged(self, result);
                return result;
             })
             .addErrback(function(result) {
@@ -83,6 +82,7 @@ define('Controls/Input/Lookup', [
       notifyChanges: function(self, selectedKeys) {
          _private.notifySelectedKeys(self, selectedKeys);
          _private.notifyItemsChanged(self, _private.getItems(self));
+         _private.notifyTextValueChanged(self, _private.getTextValue(self));
       },
 
       notifyItemsChanged: function(self, items) {
@@ -91,6 +91,11 @@ define('Controls/Input/Lookup', [
 
       notifySelectedKeys: function(self, selectedKeys) {
          self._notify('selectedKeysChanged', [selectedKeys]);
+      },
+
+      notifyTextValueChanged: function(self, textValue) {
+         // toDo Выписана задача на написание апи для события https://online.sbis.ru/opendoc.html?guid=cce8c706-a9e8-452e-bd44-5344f3c5fc72
+         self._notify('textValueChanged', textValue);
       },
 
       notifyValue: function(self, value) {
@@ -219,18 +224,18 @@ define('Controls/Input/Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      getItemsSizes: function(self, items, itemTemplate, readOnly) {
+      getItemsSizes: function(self, items, itemTemplate, readOnly, displayProperty) {
          var
             itemsSizes = [],
             measurer = document.createElement('div');
 
          measurer.innerHTML = itemsTemplate({
-            _options: _private.getCollectionOptions(items, itemTemplate, readOnly)
+            _options: _private.getCollectionOptions(items, itemTemplate, readOnly, displayProperty)
          });
 
          measurer.classList.add('controls-Lookup-collection__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Lookup__item'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-SelectedCollection__item'), function(item) {
             itemsSizes.push(item.clientWidth);
          });
          document.body.removeChild(measurer);
@@ -238,11 +243,12 @@ define('Controls/Input/Lookup', [
          return itemsSizes;
       },
 
-      getCollectionOptions: function(items, itemTemplate, readOnly) {
+      getCollectionOptions: function(items, itemTemplate, readOnly, displayProperty) {
          return merge({
             items: items,
             itemTemplate: itemTemplate,
-            readOnly: readOnly
+            readOnly: readOnly,
+            displayProperty: displayProperty
          }, Collection.getDefaultOptions(), {
             preferSource: true
          });
@@ -258,6 +264,16 @@ define('Controls/Input/Lookup', [
          }
 
          return lastSelectedItems;
+      },
+
+      getTextValue: function(self) {
+         var titleItems = [];
+
+         _private.getItems(self).each(function(item) {
+            titleItems.push(item.get(self._options.displayProperty));
+         });
+
+         return titleItems.join(', ');
       }
    };
 
@@ -313,10 +329,8 @@ define('Controls/Input/Lookup', [
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
-         if (keysChanged) {
+         if (keysChanged || sourceIsChanged) {
             newSelectedKeys = newOptions.selectedKeys.slice();
-         } else if (sourceIsChanged) {
-            newSelectedKeys = [];
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
             newSelectedKeys = [];
             _private.getItems(this).each(function(item) {
@@ -329,14 +343,15 @@ define('Controls/Input/Lookup', [
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               self._forceUpdate();
+               _private.notifyItemsChanged(self, result);
+               _private.notifyTextValueChanged(self, _private.getTextValue(self));
                return result;
             });
          }
 
          if (this._selectedKeys.length) {
             lastSelectedItems = _private.getLastSelectedItems(this, MAX_VISIBLE_ITEMS);
-            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly);
+            itemsSizes = _private.getItemsSizes(this, lastSelectedItems, newOptions.itemTemplate, newOptions.readOnly, newOptions.displayProperty);
             availableWidth = _private.getAvailableCollectionWidth(this._children.inputRender._container, newOptions.readOnly, newOptions.multiSelect);
             visibleItems = _private.getVisibleItems(lastSelectedItems, itemsSizes, availableWidth);
             isAllRecordsDisplay = _private.getItems(this).getCount() === visibleItems.length;
@@ -467,6 +482,7 @@ define('Controls/Input/Lookup', [
          }, {clone: true});
 
          selectorOpener.open({
+            opener: self,
             isCompoundTemplate: this._options.isCompoundTemplate,
             templateOptions: merge(this._options.lookupTemplate.templateOptions || {}, templateOptions, {clone: true})
          });

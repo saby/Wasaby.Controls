@@ -2,10 +2,11 @@ define(
    [
       'Controls/Dropdown/Controller',
       'WS.Data/Source/Memory',
+      'Core/core-clone',
       'WS.Data/Collection/RecordSet'
    ],
-   (Dropdown, Memory, RecordSet) => {
-      describe('Container/Dropdown', () => {
+   (Dropdown, Memory, Clone, RecordSet) => {
+      describe('Dropdown/Controller', () => {
          let items = [
             {
                id: '1',
@@ -72,30 +73,49 @@ define(
             })
          };
 
-         let dropdownContainer = new Dropdown(config);
-         let dropdownLazyLoad = new Dropdown(configLazyLoad);
-         dropdownContainer._options = config;
-         dropdownLazyLoad._options = config;
-         beforeEach(() => {
-            return new Promise((resolve) => {
-               dropdownContainer.saveOptions(config);
-               dropdownContainer._beforeMount(config).addCallback(resolve);
-            });
-         });
+         let getDropdownController = function(config) {
+            let dropdownCntroller = new Dropdown(config);
+            dropdownCntroller.saveOptions(config);
+            return dropdownCntroller;
+         };
 
          it('before mount', (done) => {
-            dropdownContainer._beforeMount(config).addCallback(function(items) {
+            let dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config).addCallback(function(items) {
                assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
                done();
             });
          });
 
+         it('before mount navigation', (done) => {
+            let navigationConfig = Clone(config);
+            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}};
+            let dropdownController = getDropdownController(navigationConfig);
+            dropdownController._beforeMount(navigationConfig).addCallback(function(items) {
+               assert.deepEqual(items.getCount(), 2);
+               done();
+            });
+         });
+
+         it('before mount filter', (done) => {
+            let filterConfig = Clone(config);
+            filterConfig.filter = {id: ['3', '4']};
+            let dropdownController = getDropdownController(filterConfig);
+            dropdownController._beforeMount(filterConfig).addCallback(function(items) {
+               assert.deepEqual(items.getCount(), 2);
+               done();
+            });
+         });
+
          it('check received state', () => {
-            dropdownContainer._beforeMount(config, null, itemsRecords);
-            assert.deepEqual(dropdownContainer._items.getRawData(), itemsRecords.getRawData());
+            let dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
          });
 
          it('check selectedItemsChanged event', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._items = itemsRecords;
             let selectedKeys,
                selectedItem;
 
@@ -103,22 +123,25 @@ define(
             //(дефолтный метод для vdom компонент который стреляет событием).
             //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
             //событие и оно полетит с корректными параметрами.
-            dropdownContainer._notify = (e, args) => {
+            dropdownController._notify = (e, args) => {
                if (e == 'selectedItemsChanged') {
                   selectedItem = args[0];
                }
             };
-            Dropdown._private.selectItem.call(dropdownContainer, dropdownContainer._items.at(5));
-            assert.deepEqual(selectedItem, dropdownContainer._items.at(5));
+            Dropdown._private.selectItem.call(dropdownController, dropdownController._items.at(5));
+            assert.deepEqual(selectedItem, dropdownController._items.at(5));
          });
 
          it('before update source', () => {
+            let dropdownController = getDropdownController(config);
             items.push({
                id: '9',
                title: 'Запись 9'
             });
+            dropdownController._selectedItems = [];
+            dropdownController._items = itemsRecords;
             return new Promise((resolve) => {
-               dropdownContainer._beforeUpdate({
+               dropdownController._beforeUpdate({
                   selectedKeys: '[2]',
                   keyProperty: 'id',
                   source: new Memory({
@@ -126,54 +149,76 @@ define(
                      data: items
                   })
                }).addCallback(() => {
-                  assert.equal(dropdownContainer._items.getCount(), items.length);
+                  assert.equal(dropdownController._items.getCount(), items.length);
                   resolve();
                });
             });
          });
 
          it('open dropdown', () => {
-            dropdownContainer._children.DropdownOpener = {
+            let dropdownController = getDropdownController(config);
+            dropdownController._items = itemsRecords;
+            dropdownController._children.DropdownOpener = {
                close: setTrue.bind(this, assert),
                open: setTrue.bind(this, assert)
             };
-            dropdownContainer._open();
+            dropdownController._open();
          });
 
          it('notify footer click', () => {
-            dropdownContainer._notify = (e) => {
-               assert.equal(e, 'footerClick');
-            };
-            dropdownContainer._onResult({action: 'footerClick'});
-         });
-
-         it('check item click', () => {
-            dropdownContainer._notify = (e) => {
-               assert.equal(e, 'selectedItemsChanged');
-            };
-            dropdownContainer._onResult({action: 'itemClick', data: [dropdownContainer._items.at(4)]});
-         });
-         it('without items', () => {
-            dropdownContainer._options = config;
-            dropdownContainer._children.DropdownOpener = {
+            let dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(configLazyLoad);
+            dropdownController._children.DropdownOpener = {
                close: setTrue.bind(this, assert),
                open: setTrue.bind(this, assert)
             };
-            dropdownContainer._items = null;
-            dropdownContainer._open();
+            dropdownController._notify = (e) => {
+               assert.equal(e, 'footerClick');
+            };
+            dropdownController._onResult({action: 'footerClick'});
+         });
+
+         it('check item click', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(configLazyLoad);
+            dropdownController._items = itemsRecords;
+            dropdownController._children.DropdownOpener = {
+               close: setTrue.bind(this, assert),
+               open: setTrue.bind(this, assert)
+            };
+            dropdownController._notify = (e) => {
+               assert.equal(e, 'selectedItemsChanged');
+            };
+            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+         });
+         it('open one item', () => {
+            let dropdownController = getDropdownController(config);
+            let item = new RecordSet({
+               idProperty: 'id',
+               rawData: [ {id: 1, title: 'Запись 1'} ]
+            });
+            dropdownController._items = item;
+            dropdownController._notify = (e, data) => {
+               assert.equal(e, 'selectedItemsChanged');
+               assert.deepEqual(data[0], [item.at(0)]);
+            };
+            dropdownController._open();
          });
 
          it('lazy load', () => {
-            dropdownLazyLoad._beforeMount(configLazyLoad);
-            assert.equal(dropdownLazyLoad._items, undefined);
+            let dropdownController = getDropdownController(configLazyLoad);
+            dropdownController._beforeMount(configLazyLoad);
+            assert.equal(dropdownController._items, undefined);
          });
 
-         it('before update source', () => {
+         it('before update source lazy load', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            dropdownController._beforeMount(configLazyLoad);
             items.push({
                id: '5',
                title: 'Запись 11'
             });
-            dropdownLazyLoad._beforeUpdate({
+            dropdownController._beforeUpdate({
                lazyItemsLoad: true,
                selectedKeys: '[2]',
                keyProperty: 'id',
@@ -182,33 +227,35 @@ define(
                   data: items
                })
             });
-            assert.equal(dropdownLazyLoad._items, null);
+            assert.equal(dropdownController._items, null);
          });
 
          it('before update new key', () => {
-            dropdownContainer._beforeUpdate({
+            let dropdownController = getDropdownController(config);
+            dropdownController._selectedItems = [];
+            dropdownController._items = itemsRecords;
+            dropdownController._beforeUpdate({
                selectedKeys: '[6]',
-               keyProperty: 'id',
-               source: new Memory({
-                  idProperty: 'id',
-                  data: items
-               })
+               keyProperty: 'id'
             });
-            assert.deepEqual(dropdownContainer._selectedItems[0].getRawData(), items[5]);
+            assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
          });
 
          it('check empty item update', () => {
-            dropdownContainer._selectedItems = [];
-            Dropdown._private.updateSelectedItems(dropdownContainer, [null], 'id');
-            assert.deepEqual(dropdownContainer._selectedItems, [null]);
+            let dropdownController = getDropdownController(config);
+            dropdownController._selectedItems = [];
+            Dropdown._private.updateSelectedItems(dropdownController, [null], 'id');
+            assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 
          it('open lazyLoad', () => {
-            dropdownLazyLoad._children.DropdownOpener = {
+            let dropdownController = getDropdownController(configLazyLoad);
+            dropdownController._selectedItems = [];
+            dropdownController._children.DropdownOpener = {
                close: setTrue.bind(this, assert),
                open: setTrue.bind(this, assert)
             };
-            dropdownLazyLoad._open();
+            dropdownController._open();
          });
 
          function setTrue(assert) {

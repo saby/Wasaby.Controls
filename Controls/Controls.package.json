@@ -107,9 +107,17 @@
     "Controls/List/Mover",
     "Controls/List/Remover",
     "Controls/List/DialogMover/*",
-    "Controls/List/DialogMover"
+    "Controls/List/DialogMover",
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
   ],
   "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
+  ],
+  "output": "controls-paging.package.js"
 }, {
   "include": [
     "Controls/List/ItemActions/*",
@@ -131,7 +139,8 @@
   ],
   "exclude": [
     "Controls/Popup/Compatible/*",
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "output": "controls-popup.package.js"
 }, {
@@ -171,7 +180,8 @@
   "output": "controls-popup-opener-confirmation.package.js"
 }, {
   "include": [
-    "Controls/Popup/Opener/*"
+    "Controls/Popup/Opener/*",
+    "Controls/Popup/Manager/ManagerController"
   ],
   "exclude": [
     "Controls/Popup/Opener/Confirmation/*",

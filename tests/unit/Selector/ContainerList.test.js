@@ -114,7 +114,7 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          var clickSelection = false;
          
          self._notify = function(eventName) {
-            if (eventName === 'listSelectionChange') {
+            if (eventName === 'listSelectedKeysChanged') {
                clickSelection = true;
             }
             if (eventName === 'selectComplete') {
@@ -145,7 +145,8 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          var options = {
             keyProperty: 'id',
             multiSelect: false,
-            nodeProperty: 'Раздел@'
+            nodeProperty: 'Раздел@',
+            selectedKeys: selectedKeys
          };
          var selectCompleted = false;
          var selectionResult = null;
@@ -153,7 +154,7 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
             idProperty: 'id',
             rawData: {
                id: 'test',
-               'Раздел@': false
+               'Раздел@': false,
             }
          });
          var otherSelectedItem = new Model({
@@ -168,18 +169,11 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          
          listContainer.saveOptions(options);
          listContainer._ignoreItemClickEvent = false;
-         listContainer.context = {
-            get: function() {
-               return {
-                  selectedKeys: selectedKeys
-               };
-            }
-         };
          listContainer._notify = function(event, result) {
             if (event === 'selectComplete') {
                selectCompleted = true;
             }
-            if (event === 'listSelectionChange') {
+            if (event === 'listSelectedKeysChanged') {
                selectedKeys = result[1];
                selectionResult = result;
             }

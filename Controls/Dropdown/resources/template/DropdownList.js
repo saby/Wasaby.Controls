@@ -41,23 +41,24 @@ define('Controls/Dropdown/resources/template/DropdownList',
             return 'controls-DropdownList__head-' + horizontalAlign.side;
          },
 
-         getSubMenuOptions: function(instance, event, item) {
+         getSubMenuOptions: function(options, popupOptions, event, item) {
             return {
                templateOptions: {
-                  items: instance._options.items,
-                  itemTemplate: instance._options.itemTemplate,
-                  itemTemplateProperty: instance._options.itemTemplateProperty,
-                  keyProperty: instance._options.keyProperty,
-                  parentProperty: instance._options.parentProperty,
-                  nodeProperty: instance._options.nodeProperty,
-                  selectedKeys: instance._options.selectedKeys,
-                  rootKey: item.get(instance._options.keyProperty),
+                  items: options.items,
+                  itemTemplate: options.itemTemplate,
+                  itemTemplateProperty: options.itemTemplateProperty,
+                  keyProperty: options.keyProperty,
+                  displayProperty: options.displayProperty,
+                  parentProperty: options.parentProperty,
+                  nodeProperty: options.nodeProperty,
+                  selectedKeys: options.selectedKeys,
+                  rootKey: item.get(options.keyProperty),
                   showHeader: false,
-                  dropdownClassName: instance._options.dropdownClassName,
-                  defaultItemTemplate: instance._options.defaultItemTemplate
+                  dropdownClassName: options.dropdownClassName,
+                  defaultItemTemplate: options.defaultItemTemplate
                },
-               corner: instance._popupOptions.corner,
-               horizontalAlign: instance._popupOptions.horizontalAlign,
+               corner: popupOptions.corner,
+               horizontalAlign: popupOptions.horizontalAlign,
                target: event.target
             };
          }
@@ -139,11 +140,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
                   itemTemplateProperty: newOptions.itemTemplateProperty,
+                  displayProperty: newOptions.displayProperty,
                   nodeProperty: newOptions.nodeProperty,
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
                   groupTemplate: newOptions.groupTemplate,
-                  groupMethod: newOptions.groupMethod,
+                  groupMethod: newOptions.groupMethod
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
@@ -181,7 +183,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          _itemMouseEnter: function(event, item, hasChildren) {
             if (hasChildren) {
-               var config = _private.getSubMenuOptions(this, event, item);
+               var config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             } else if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();

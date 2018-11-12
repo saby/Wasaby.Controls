@@ -5,9 +5,8 @@ define([
    'Controls/Input/Lookup',
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List',
-   'WS.Data/Source/Memory',
-   'Controls/Input/Lookup/_Collection'
-], function(Lookup, Model, List, Memory, Collection) {
+   'WS.Data/Source/Memory'
+], function(Lookup, Model, List, Memory) {
 
    function getBaseLookup() {
       return {
@@ -21,7 +20,8 @@ define([
             sticky: getBaseSticky()
          },
          _options: {
-            keyProperty: 'id'
+            keyProperty: 'id',
+            displayProperty: 'title'
          }
       }
    }
@@ -67,6 +67,7 @@ define([
 
       it('LoadItems', function(done) {
          var self = {
+            _notify: function() {},
             _options : {
                selectedKeys : [1,2],
                source: new Memory({
@@ -99,29 +100,35 @@ define([
       
       it('addItem', function() {
          var
+            textValue = '',
             keysChanged = false,
             self = getBaseLookup(),
             item = new Model({
                rawData: {
-                  id: 1
+                  id: 1,
+                  title: 'Roman'
                }
             }),
             item2 = new Model({
                rawData: {
-                  id: 2
+                  id: 2,
+                  title: 'Aleksey'
                }
             });
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, data) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
+            } else if (eventName === 'textValueChanged') {
+               textValue = data;
             }
          };
-         
+
          Lookup._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
+         assert.equal(textValue, 'Roman');
          
          keysChanged = false;
          Lookup._private.addItem(self, item);
@@ -135,6 +142,7 @@ define([
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
          assert.equal(self._items.at(1), item2);
+         assert.equal(textValue, 'Roman, Aleksey');
       });
       
       it('removeItem', function() {
@@ -270,6 +278,15 @@ define([
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
          var selectedKeys = [1];
+         var textValue = '';
+
+         lookup._options.displayProperty = 'title';
+         lookup._notify = function(eventName, data) {
+            if (eventName === 'textValueChanged') {
+               textValue = data;
+            }
+         };
+
          lookup._beforeMount({
             selectedKeys: selectedKeys,
             source: new Memory({
@@ -292,6 +309,7 @@ define([
          assert.deepEqual(lookup._selectedKeys, [1]);
 
          lookup._beforeUpdate({
+            selectedKeys: [1],
             source: new Memory({
                data: [
                   {id: 1, title: 'Alex', text: 'Alex'}
@@ -299,8 +317,8 @@ define([
                idProperty: 'id'
             })
          });
-         assert.isTrue(lookup._isEmpty);
-         assert.deepEqual(lookup._selectedKeys, []);
+         assert.isFalse(lookup._isEmpty);
+         assert.deepEqual(lookup._selectedKeys, [1]);
 
          lookup._beforeUpdate({
             multiSelect: true,
@@ -314,13 +332,8 @@ define([
                idProperty: 'id'
             }),
             keyProperty: 'id'
-         }).addCallback(function() {
-            lookup._beforeUpdate({
-               keyProperty: 'title'
-            });
-            assert.isFalse(lookup._isEmpty);
-            assert.deepEqual(lookup._selectedKeys, ['Alex', 'Ilya']);
          });
+
          assert.isFalse(lookup._isEmpty);
          assert.deepEqual(lookup._selectedKeys, [1, 2]);
       });
@@ -535,13 +548,15 @@ define([
          var
             templateOptions,
             isShowSelector = false,
-            lookup = new Lookup();
+            lookup = new Lookup(),
+            opener;
 
          lookup._options.lookupTemplate = {};
          lookup._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
+               opener = config.opener;
             }
          };
 
@@ -551,6 +566,7 @@ define([
 
          assert.isTrue(isShowSelector);
          assert.equal(templateOptions.selectedTab, 'Employees');
+         assert.equal(opener, lookup);
       });
    });
 });

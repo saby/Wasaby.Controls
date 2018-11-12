@@ -393,9 +393,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       getHistoryDataSet: function(self) {
          return new DataSet({
             rawData: {
-               pinned: self._pinned,
-               frequent: self._frequent,
-               recent: self._recent
+               pinned: self._pinned.clone(),
+               frequent: self._frequent.clone(),
+               recent: self._recent.clone()
             }
          });
       },
@@ -526,7 +526,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       addToHistory: function(id) {
          var self = this;
          historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(self));
-         _private.getHistoryDataSource(self).call(typeof id === 'string' ? 'Add' : 'AddInt', {
+         return _private.getHistoryDataSource(self).call(typeof id === 'string' ? 'Add' : 'AddInt', {
             history_id: self._options.historyId,
             id: id,
             history_context: null

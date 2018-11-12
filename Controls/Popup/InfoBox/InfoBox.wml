@@ -14,11 +14,11 @@
    <ws:else>
       <ws:partial template="{{_options.content}}"
                   on:mouseenter="_contentMouseenterHandler()"
-                  on:touchstart="_contentMouseenterHandler()"
+                  on:touchstart="_contentTouchStartHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:else>
    <ws:if data="{{!_isNewEnvironment()}}">
-      <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
+      <Controls.Popup.Opener.InfoBox name="infoBoxOpener" _vdomOnOldPage="{{true}}"/>
    </ws:if>
    <ws:if data="{{_opened}}">
       <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>

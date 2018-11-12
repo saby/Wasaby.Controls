@@ -810,6 +810,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                cfg.idProperty = cfg.keyField;
             }
             var newCfg = parentFnc.call(this, cfg), proj, items;
+
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
@@ -1762,7 +1763,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             filterChanged = typeof(filter) !== 'undefined',
             sortingChanged = typeof(sorting) !== 'undefined',
             offsetChanged = typeof(offset) !== 'undefined',
-            limitChanged = typeof(limit) !== 'undefined';
+            limitChanged = typeof(limit) !== 'undefined',
+            preparedFilter;
 
          this._cancelLoading();
          if (filterChanged) {
@@ -1776,8 +1778,9 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
-             def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
+             preparedFilter = this._getFilterForReload.apply(this, arguments);
+             this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), this._offset, this._limit);
+             def = this._callQuery(preparedFilter, this.getSorting(), this._offset, this._limit)
                 .addCallback(forAliveOnly(function (list) {
                    // https://online.sbis.ru/opendoc.html?guid=fc18c7f9-60f3-492f-a3ad-57b54bd5a63c
                    for (var group in this._options._groupCollapsing) {
@@ -1873,7 +1876,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       },
 
       _getFilterForReload: function() {
-         return this._options.filter;
+         return this._options.filter || {};
       },
 
       _getPropertyValue: function() {

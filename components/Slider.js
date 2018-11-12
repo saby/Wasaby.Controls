@@ -326,10 +326,18 @@ define('SBIS3.CONTROLS/Slider',
             },
             _calcValue: function(pageX) {
                 var
-                  width = this._container.width(),
-                  rangeLength = this._options.maxValue - this._options.minValue,
-                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / width; //дробная часть от того что надо выделить
-                return this._options.minValue + percent * rangeLength;
+                  box = this._wrapper[0].getBoundingClientRect(),
+                  rangeLength,
+                  percent;
+               if (pageX < box.left) {
+                  return this._options.minValue;
+               } else if (pageX > box.left + box.width) {
+                  return this._options.maxValue;
+               } else {
+                  rangeLength = this._options.maxValue - this._options.minValue;
+                  percent = (pageX - this._shift - box.left - window.pageXOffset) / box.width; //дробная часть от того что надо выделить
+                  return this._options.minValue + percent * rangeLength;
+               }
             },
 
             _calcSide: function(value) {

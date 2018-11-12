@@ -1,4 +1,4 @@
-<div class="controls-BaseControl controls-BaseControl__lastRowActions_{{_options.itemActionsPosition}}" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
+<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
@@ -32,6 +32,8 @@
          on:itemContextMenu="_showActionsMenu()"
          on:itemMouseDown="_itemMouseDown()"
          on:itemMouseEnter="_itemMouseEnter()"
+         on:itemMouseMove="_itemMouseMove()"
+         on:hoveredItemChanged="_hoveredItemChanged()"
          on:itemSwipe="_listSwipe()">
          <ws:viewTemplate>
             <ws:partial template="{{_options.viewName}}"/>
@@ -59,66 +61,44 @@
       </ws:else>
    </ws:template>
 
-    <ws:template name="serverTemplate">
-        <ws:partial template="fullView" name="listView"/>
-
-        <Controls.List.EditInPlace
-                ws:content="listView"
-                name="editInPlace"
-                editingConfig="{{_options.editingConfig}}"
-                on:beforeItemAdd="_onBeforeItemAdd()"
-                on:beforeItemEdit="_onBeforeItemEdit()"
-                on:afterItemEdit="_onAfterItemEdit()"
-                on:beforeItemEndEdit="_onBeforeItemEndEdit()"
-                on:afterItemEndEdit="_onAfterItemEndEdit()"
-                listModel="{{_listViewModel}}"
-                source="{{_sourceController}}"/>
-    </ws:template>
-
-    <ws:template name="clientTemplate">
-       <ws:if data="{{_options.itemActions.length || _options.editingConfig && _options.editingConfig.showToolbar}}">
-          <Controls.Container.Async name="swipeContainer" templateName="Controls/List/Swipe/SwipeControl">
-             <ws:partial template="{{'Controls/List/Swipe/SwipeControl'}}"
-                         on:menuActionsClick="_showActionsMenu()"
-                         on:closeSwipe="_closeSwipe()"
-                         menuIsShown="{{_menuIsShown}}"
-                         viewName="{{ _options.viewName }}"
-                         listModel="{{_listViewModel}}"
-                         swipeViewMode="{{_options.swipeViewMode}}"
-                         itemActions="{{_options.itemActions}}"
-                         name="swipeControl">
-                <Controls.Container.Async name="itemActionsContainer" templateName="Controls/List/ItemActions/ItemActionsControl">
-                   <ws:partial template="{{'Controls/List/ItemActions/ItemActionsControl'}}"
-                               on:commitActionClick="_commitEditActionHandler()"
-                               on:cancelActionClick="_cancelEditActionHandler()"
-                               on:menuActionsClick="_showActionsMenu()"
-                               on:itemActionsClick="_onItemActionsClick()"
-                               showToolbar="{{_options.editingConfig.showToolbar}}"
-                               name="itemActions"
-                               style="{{_options.style}}"
-                               listModel="{{_listViewModel}}"
-                               menuIsShown="{{_menuIsShown}}"
-                               itemActions="{{_options.itemActions}}"
-                               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                               itemActionsPosition="{{_options.itemActionsPosition}}">
-                      <ws:partial template="serverTemplate" />
-                   </ws:partial>
-                </Controls.Container.Async>
-             </ws:partial>
-          </Controls.Container.Async>
-       </ws:if>
-       <ws:else>
-          <ws:partial template="serverTemplate" />
-       </ws:else>
-    </ws:template>
-
     <ws:if data="{{_listViewModel}}">
-        <ws:if data="{{_isServer}}">
-            <ws:partial template="serverTemplate"/>
-        </ws:if>
-        <ws:else>
-            <ws:partial template="clientTemplate"/>
-        </ws:else>
+       <ws:partial template="fullView" name="listView"/>
+
+       <Controls.List.EditInPlace
+          ws:content="listView"
+          name="editInPlace"
+          editingConfig="{{_options.editingConfig}}"
+          on:beforeItemAdd="_onBeforeItemAdd()"
+          on:beforeItemEdit="_onBeforeItemEdit()"
+          on:afterItemEdit="_onAfterItemEdit()"
+          on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+          on:afterItemEndEdit="_onAfterItemEndEdit()"
+          listModel="{{_listViewModel}}"
+          source="{{_sourceController}}"/>
+       <Controls.List.ItemActions.ItemActionsControl
+          ws:content="listView"
+          on:commitActionClick="_commitEditActionHandler()"
+          on:cancelActionClick="_cancelEditActionHandler()"
+          on:menuActionsClick="_showActionsMenu()"
+          on:itemActionsClick="_onItemActionsClick()"
+          showToolbar="{{_options.editingConfig.showToolbar}}"
+          name="itemActions"
+          style="{{_options.style}}"
+          listModel="{{_listViewModel}}"
+          menuIsShown="{{_menuIsShown}}"
+          itemActions="{{_options.itemActions}}"
+          itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+          itemActionsPosition="{{_options.itemActionsPosition}}"/>
+       <Controls.List.Swipe.SwipeControl
+          ws:content="listView"
+          on:menuActionsClick="_showActionsMenu()"
+          on:closeSwipe="_closeSwipe()"
+          menuIsShown="{{_menuIsShown}}"
+          viewName="{{ _options.viewName }}"
+          listModel="{{_listViewModel}}"
+          swipeViewMode="{{_options.swipeViewMode}}"
+          itemActions="{{_options.itemActions}}"
+          name="swipeControl"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
@@ -157,4 +137,16 @@
             menuStyle="cross"
             className="controls-Toolbar__menu-position"
             popupOptions="{{_popupOptions}}"/>
+   <ws:if data="{{ _items }}">
+      <Controls.List.BaseControl.SelectionController
+         name="selectionController"
+         keyProperty="{{ _options.keyProperty }}"
+         parentProperty="{{ _options.parentProperty }}"
+         items="{{ _items }}"
+         nodeProperty="{{ _options.nodeProperty }}"
+         selectedKeys="{{ _options.selectedKeys }}"
+         excludedKeys="{{ _options.excludedKeys }}"
+         listModel="{{ _listViewModel }}"
+      />
+   </ws:if>
 </div>

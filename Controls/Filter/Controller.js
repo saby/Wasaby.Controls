@@ -84,9 +84,9 @@ define('Controls/Filter/Controller',
             function processItems(items) {
                Chain(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
-                  var resetValue = getPropValue(elem, 'resetValue');
+                  var visibility = getPropValue(elem, 'visibility');
 
-                  if (!isEqual(value, resetValue)) {
+                  if (value && (visibility === undefined || visibility === true)) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
@@ -159,6 +159,7 @@ define('Controls/Filter/Controller',
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
+                     var visibility = getPropValue(historyItem, 'visibility');
 
                      if (value !== undefined) {
                         setPropValue(item, 'value', value);
@@ -166,6 +167,10 @@ define('Controls/Filter/Controller',
 
                      if (textValue !== undefined && item.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
+                     }
+
+                     if (visibility !== undefined && item.hasOwnProperty('visibility')) {
+                        setPropValue(item, 'visibility', visibility);
                      }
                   }
                });
@@ -302,13 +307,6 @@ define('Controls/Filter/Controller',
        * @cfg {String} The identifier under which the filter history will be saved.
        */
 
-      /**
-       * @name Controls/Filter/Container#filterMode
-       * @cfg {String} Mode of forming a filter.
-       * @variant onlyChanges - only changed fields
-       * @variant full - all fields
-       */
-
       var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
 
          _template: template,
@@ -324,7 +322,7 @@ define('Controls/Filter/Controller',
             itemsDef.addCallback(function() {
                _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
             });
-            
+
             return itemsDef;
          },
 

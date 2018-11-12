@@ -334,7 +334,8 @@ define('SBIS3.CONTROLS/Paging', [
 
       _goToSibling: function(dir) {
          var selKey = parseInt(this.getSelectedKey(), 10);
-         this.setSelectedKey(selKey+dir);
+         var newKey = selKey + dir;
+         this.setSelectedKey(newKey > this.getItems().getCount() ? selKey : newKey);
       },
 
       _goToBegin: function() {

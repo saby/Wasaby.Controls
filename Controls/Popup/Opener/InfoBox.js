@@ -1,10 +1,9 @@
 define('Controls/Popup/Opener/InfoBox',
    [
-      'Core/core-merge',
       'Core/core-clone',
       'Controls/Popup/Opener/BaseOpener'
    ],
-   function(cMerge, cClone, Base) {
+   function(cClone, Base) {
       'use strict';
 
       /**
@@ -87,13 +86,22 @@ define('Controls/Popup/Opener/InfoBox',
                this.close(0);
             }
             this._clearTimeout();
-            cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
+
+            //smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
+            var newCfg = cClone(DEFAULT_CONFIG);
+            for (var i in cfg) {
+               if (cfg.hasOwnProperty(i)) {
+                  if (cfg[i] !== undefined) {
+                     newCfg[i] = cfg[i];
+                  }
+               }
+            }
 
             // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
-            if (cfg.showDelay > 0) {
-               this._openId = setTimeout(this._open.bind(this, cfg), cfg.showDelay);
+            if (newCfg.showDelay > 0) {
+               this._openId = setTimeout(this._open.bind(this, newCfg), newCfg.showDelay);
             } else {
-               this._open(cfg);
+               this._open(newCfg);
             }
          },
          _open: function(cfg) {
@@ -101,6 +109,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
+               zIndex: cfg.zIndex,
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
