@@ -1108,6 +1108,41 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                   case 'bodyBounds':
                      this._container.css('height', height);
                      break;
+                  case 'verticalBodyBounds':
+                     if (this._options.verticalAlign.side !== 'top') {
+                        if (spaces.top < spaces.bottom) {
+                           if (this._options.targetOverlay){
+                              this._container.css('height', height);
+                              offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
+                           } else {
+                              var cfgVerticalBodyBounds = this._calculateOverflow_vertical(orientation, vOffset, offset);
+                              oppositeOffset = cfgVerticalBodyBounds.oppositeOffset;
+                              spaces = cfgVerticalBodyBounds.spaces;
+                              height = cfgVerticalBodyBounds.height;
+
+                              // В этой стратегии высота не должна быть ограничена (единственное ограничение - не больше высоты экрана)
+                              // Снимаем ограничения с высоты и меняем позицию, чтобы попап влез в экран
+                              if (this._container.get(0).scrollHeight > this._windowSizes.height) {
+                                 offset.top = 0;
+                                 height = this._windowSizes.height;
+                              } else {
+                                 var newHeight = this._container.get(0).scrollHeight - this._margins.top + this._margins.bottom;
+                                 var dif = newHeight - height;
+                                 height = newHeight;
+                                 if (dif > 0) {
+                                    offset.top -= dif;
+                                 }
+                              }
+                           }
+                        } else {
+                           offset.top = 0;
+                           //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
+                           if (!this._options.targetOverlay){
+                              height = spaces.top;
+                           }
+                        }
+                     }
+                     break;
                   default:
                      if (this._options.verticalAlign.side !== 'top') {
                         if (spaces.top < spaces.bottom) {
@@ -1115,20 +1150,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                               this._container.css('height', height);
                               offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                            } else {
-                              this._isMovedV = !this._isMovedV;
-                              if (this._options._fixPopupRevertCorner) {
-                                 var revertPositionData = {t: 'l', l: 't'};
-                                 //Логика должна быть всенда такая: при развороте вниз - позиционирование от верхней границы таргета, вверх - от нижней.
-                                 //Сейчас куча лишних расчетов которые косячат, пока не известно нужно ли где-то текущее поведение
-                                 // this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
-                                 if (this._options.corner === 'bl') {
-                                    this._options.corner = 'tl';
-                                 }
-                              }
-                              oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
-                              spaces = this._getSpaces(this._options.corner);
-                              height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
-                              offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                              var cfgBodyBounds = this._calculateOverflow_vertical(orientation, vOffset, offset);
+                              oppositeOffset = cfgBodyBounds.oppositeOffset;
+                              spaces = cfgBodyBounds.spaces;
+                              height = cfgBodyBounds.height;
                            }
                         } else {
                            offset.top = 0;
@@ -1182,6 +1207,22 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             }
             return offset.left;
          }
+      },
+
+      _calculateOverflow_vertical: function(orientation, vOffset, offset) {
+         this._isMovedV = !this._isMovedV;
+         if (this._options._fixPopupRevertCorner) {
+            if (this._options.corner === 'bl') {
+               this._options.corner = 'tl';
+            }
+         }
+         var config = {};
+         config.oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+         config.spaces = this._getSpaces(this._options.corner);
+         config.height = config.spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
+         offset.top = this._targetSizes.offset.top + config.oppositeOffset.top;
+         
+         return config;
       },
 
       //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа

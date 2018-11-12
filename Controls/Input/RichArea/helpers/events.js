@@ -1,6 +1,5 @@
 define('Controls/Input/RichArea/helpers/events', [
-   'Controls/Input/RichArea/helpers/constants'
-], function(constantsHelper) {
+], function() {
    /**
     * Module for add event listeners for tinyMCE instance
     */
