@@ -17,10 +17,12 @@
                attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
                itemData="{{itemData.getCurrentColumn()}}" />
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
-      <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
-                  itemData="{{ itemData }}"
-                  itemActionsClass="{{ itemActionsClass }}"
-                  itemActionsTemplate="{{ itemActionsTemplate }}"/>
+      <ws:if data="{{itemData.isSwiped}}">
+         <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+      </ws:if>
+      <ws:else >
+         <ws:partial template="{{itemActionsTemplate}}" itemActionsClass="{{itemActionsClass}}" itemData="{{itemData}}"/>
+      </ws:else>
    </ws:if>
 </ws:template>
 <ws:template name="columnContent">
