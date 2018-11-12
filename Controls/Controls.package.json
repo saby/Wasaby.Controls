@@ -1,7 +1,7 @@
 [{
   "include": [
-    "Controls/Application/*",
-    "Controls/Application"
+    "Controls/Application",
+    "Controls/Application/*"
   ],
   "output": "controls-application.package.js"
 }, {
