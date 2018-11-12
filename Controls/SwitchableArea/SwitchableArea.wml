@@ -2,7 +2,7 @@
     <ws:for data="index, item in _options.items">
         <ws:if data="{{ _viewModel._items[index].loaded }}">
             <ws:partial template="{{ _options.itemTemplate }}"
-                        currentItemId="{{ item.id }}"
+                        currentItemKey="{{ item.id }}"
                         itemTemplate="{{ item.itemTemplate }}"
                         selectedKey="{{ _options.selectedKey }}"/>
         </ws:if>
