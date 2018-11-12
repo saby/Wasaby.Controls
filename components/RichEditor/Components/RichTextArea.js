@@ -1585,6 +1585,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
+                     // Так как здесь будет произведена сложная (т.е. не в один шаг) манипуляция контентом, то нужно правильно провести её через undoManager
+                     // 1176060100 https://online.sbis.ru/opendoc.html?guid=8d48971e-84bd-4099-92b2-0672bbc7e6c3
                      var undoManager = editor.undoManager;
                      undoManager.ignore(function () {
                         $listNode.wrap('<div>');
