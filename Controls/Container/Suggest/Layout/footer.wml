@@ -1,4 +1,8 @@
 <div class="controls-Suggest__footer">
-    <span if="{{(hasMore && hasMore !== true)}}">Ещё {{hasMore}}</span>
-    <span class="controls-Suggest__showAllLink">{[Показать все]} </span>
+    <ws:if data="{{showMoreButtonTemplate}}">
+        <ws:partial template="{{showMoreButtonTemplate}}"/>
+    </ws:if>
+    <ws:if data="{{showSelectorButtonTemplate}}">
+        <ws:partial template="{{showSelectorButtonTemplate}}"/>
+    </ws:if>
 </div>
