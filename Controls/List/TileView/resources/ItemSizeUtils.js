@@ -5,13 +5,17 @@ define('Controls/List/TileView/resources/ItemSizeUtils', [], function() {
       getItemSize: function(item, zoomCoefficient) {
          var
             result,
-            tileContent = item.getElementsByClassName('controls-TileView__itemContent')[0];
+            rectAfterZoom,
+            tileContent = item.querySelector('.controls-TileView__itemContent'),
+            rectBeforeZoom = tileContent.getBoundingClientRect();
          tileContent.classList.add('controls-TileView__item_hovered');
-         tileContent.style.width = tileContent.clientWidth * zoomCoefficient + 'px';
+         tileContent.style.width = rectBeforeZoom.width * zoomCoefficient + 'px';
+
+         rectAfterZoom = tileContent.getBoundingClientRect();
 
          result = {
-            width: tileContent.clientWidth,
-            height: tileContent.clientHeight
+            width: rectAfterZoom.width,
+            height: rectAfterZoom.height
          };
 
          tileContent.style.width = '';

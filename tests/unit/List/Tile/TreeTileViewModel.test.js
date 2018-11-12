@@ -33,7 +33,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'WS.Data/Collection/Reco
          var cur;
          treeTileViewModel.setHoveredItem({
             key: 2,
-            fixedPosition: 'string with style'
+            position: 'string with style'
          });
          cur = treeTileViewModel.getCurrent();
 
@@ -47,7 +47,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'WS.Data/Collection/Reco
          cur = treeTileViewModel.getCurrent();
          assert.isTrue(!!cur.isHovered);
          assert.isTrue(!!cur.hasSeparator);
-         assert.equal(cur.fixedPosition, 'string with style');
+         assert.equal(cur.position, 'string with style');
       });
 
       it('setTileMode', function() {
