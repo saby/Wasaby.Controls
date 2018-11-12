@@ -16,19 +16,28 @@ define('Controls/Input/RichArea', [
     * @author Волоцкой В.Д.
     */
 
+   var _private = {
+      updateReview: function(self) {
+         if (self._options.readOnly) {
+            self._children.reviewContainer.innerHTML = self._jsonToHtml(self._value);
+         }
+      }
+   };
+
    var RichTextArea = Control.extend({
       _template: template,
       _htmlJson: undefined,
 
       _beforeMount: function(opts) {
          this._htmlJson = new HtmlJson();
-         this._value = this._jsonToHtml(typeof opts.value === 'string' ? JSON.parse(opts.value) : opts.value);
+         this._value = typeof opts.value === 'string' ? JSON.parse(opts.value) : opts.value;
          this._simpleViewModel = new RichModel({
             value: this._value
          });
       },
 
       _afterMount: function() {
+         _private.updateReview(this);
          this._notify('register', ['applyFormat', this, this.applyFormat]);
          this._notify('register', ['removeFormat', this, this.removeFormat]);
          this._notify('register', ['insertLink', this, this._insertLink]);
@@ -48,7 +57,7 @@ define('Controls/Input/RichArea', [
 
       _beforeUpdate: function(opts) {
          if (opts.value && opts.value !== this._value) {
-            this._value = opts.value;
+            this._value = typeof opts.value === 'string' ? JSON.parse(opts.value) : opts.value;
             this._simpleViewModel.updateOptions({
                value: this._value
             });
@@ -56,13 +65,11 @@ define('Controls/Input/RichArea', [
       },
 
       _afterUpdate: function() {
-         if (this._options.readOnly) {
-            this._children.reviewContainer.innerHTML = this._jsonToHtml(this._value);
-         }
+         _private.updateReview(this);
       },
 
       _valueChangedHandler: function(e, value) {
-         var newValue = typeof this._options.value === 'string' ? JSON.stringify(this._valueToJson(value)) : this._valueToJson(value);
+         var newValue = this._valueToJson(value);
          this._simpleViewModel.updateOptions({
             value: newValue
          });
