@@ -17,21 +17,44 @@ define('Controls/Container/LoadingIndicator', [
       overlay: 'default',
       mods: '',
 
+      _useSpinnerSaved: null,
+
       _beforeMount: function(cfg) {
          this._updateProperties(cfg);
       },
       _beforeUpdate: function(cfg) {
          this._updateProperties(cfg);
-         if (this.isLoading !== this._prevLoading && this.isLoading) {
-            var self = this;
-            var useSpinner = self.useSpinner;
-            self.useSpinner = false;
-            setTimeout(function() {
-               if (self.isLoading) {
-                  self.useSpinner = useSpinner;
-                  self._forceUpdate();
-               }
-            }, cfg.delay);
+         var isLoadingStateChanged = this.isLoading !== this._prevLoading;
+
+         if (this.isLoading) {
+            if (isLoadingStateChanged) {
+               // goes to hidden loading state
+               this._useSpinnerSaved = this.useSpinner;
+            }
+
+            // if its hidden loading state now, we don't show spinner
+            if (this._useSpinnerSaved !== null) {
+               this.useSpinner = false;
+            }
+
+            if (isLoadingStateChanged) {
+               clearTimeout(this.delayTimeout);
+               this.delayTimeout = setTimeout(function() {
+                  if (this.isLoading) {
+                     // goes to show loading state
+
+                     // return spinner value
+                     this.useSpinner = this._useSpinnerSaved;
+                     // clear saved spinner state
+                     this._useSpinnerSaved = null;
+                     this._forceUpdate();
+                  }
+               }.bind(this), cfg.delay);
+            }
+         } else {
+            // goes to idle state
+            clearTimeout(this.delayTimeout);
+            this._useSpinnerSaved = null;
          }
          this._prevLoading = this.isLoading;
       },
