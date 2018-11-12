@@ -1592,16 +1592,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
-                     $listNode.wrap('<div>');
-                     selection.select(listNode.parentNode, false);
-                     $listNode.attr('contenteditable', 'false');
-                     afterProcess.push(function () {
-                        if (!$listNode.parent().is('blockquote')) {
-                           $listNode.unwrap();
-                        }
-                        $listNode.removeAttr('contenteditable');
-                        selection.select(listNode, true);
+                     // Так как здесь будет произведена сложная (т.е. не в один шаг) манипуляция контентом, то нужно правильно провести её через undoManager
+                     var undoManager = editor.undoManager;
+                     undoManager.ignore(function () {
+                        $listNode.wrap('<div>');
+                        selection.select(listNode.parentNode, false);
+                        $listNode.attr('contenteditable', 'false');
                      });
+                     skipUndo = true;
+                     afterProcess.push(function () {
+                        undoManager.ignore(function () {
+                           if (!$listNode.parent().is('blockquote')) {
+                              $listNode.unwrap();
+                           }
+                           $listNode.removeAttr('contenteditable');
+                           selection.select(listNode, true);
+                        });
+                        // Добавить новый уровень undo/redo
+                        undoManager.add();
+                        // И обновить значение опции text
+                        this._updateTextByTiny();
+                     }.bind(this));
                   }
                   else {
                      var dom = editor.dom;
