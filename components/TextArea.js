@@ -213,10 +213,13 @@ define('SBIS3.CONTROLS/TextArea', [
             this._inputField.data('minLinesCount', this._options.minLinesCount);
             this._inputField.data('maxLinesCount', this._options.maxLinesCount);
 
-            this._cachedW = this._inputField.width();
-            this._cachedH = this._inputField.height();
-
             if(this.isVisible()){
+               /**
+                * Кешим размеры только видимого поля. Кеш обновляется при смене видимости.
+                */
+               this._cachedW = this._inputField.width();
+               this._cachedH = this._inputField.height();
+
                this._autosizeTextArea();
             }
 

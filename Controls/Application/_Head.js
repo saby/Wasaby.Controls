@@ -3,7 +3,8 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext'
+      'Controls/Application/HeadDataContext',
+      'css!WS.Core/css/core-min'
    ],
    function(Base, Deferred, template, HeadDataContext) {
       'use strict';

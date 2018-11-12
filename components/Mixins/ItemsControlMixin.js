@@ -810,6 +810,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                cfg.idProperty = cfg.keyField;
             }
             var newCfg = parentFnc.call(this, cfg), proj, items;
+
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
@@ -1875,7 +1876,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       },
 
       _getFilterForReload: function() {
-         return this._options.filter;
+         return this._options.filter || {};
       },
 
       _getPropertyValue: function() {
