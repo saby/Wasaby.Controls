@@ -200,7 +200,18 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                if (showScrollbar){
                   this._hideScrollbar = this._hideScrollbar.bind(this);
                   this._initScrollbar = this._initScrollbar.bind(this);
-                  this._container.one('mouseenter', this._initScrollbar);
+                  this._mouseEnterHandler = this._mouseEnterHandler.bind(this);
+                  this._container.on('mouseenter', this._mouseEnterHandler);
+
+                  /**
+                   * Если при создании контрола курсор мыши будет находиться на нем, то мы ожидаем, что при смещении мыши сработает
+                   * событие mouseenter, а потом mousemove. Но так не происходит. Событие mouseenter не срабатывает. Причина в том, что
+                   * событие mouseenter срабатывает, когда мышь пересекает границы DOM элемента. В нашем сценарии такого не происходит.
+                   * Чтобы учесть такую ситуации, мы выполним обработчик mouseenter единажды на mousemove. Чтобы не получилось, что обработчик
+                   * выполнится 2 раза, мы должны будем отписать от mousemove, если произойдет mouseenter.
+                   * Сценарий: https://online.sbis.ru/opendoc.html?guid=9ddf9803-d00c-44a9-ad5f-699d4575cada
+                   */
+                  this._container.one('mousemove', this._mouseEnterHandler);
                   this._container.one('wheel', this._initScrollbar);
 
                   //--------------- Управление видимостью скролла ---------------//
@@ -307,6 +318,23 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             this._toggleGradient();
          },
 
+         _mouseEnterHandler: function() {
+            if (!this._hasInitScrollbar) {
+               this._initScrollbar();
+               this._hasInitScrollbar = true;
+            }
+
+            if (this._hasOnMouseEnter) {
+               this._onMouseenter();
+            }
+
+            /**
+             * Отпишем обработчик mouseenter от события mousemove, потому что подписка осуществлялась на случай,
+             * если mouseenter не сработал.
+             */
+            this._container.off('mousemove', this._mouseEnterHandler);
+         },
+
          /**
           * Updates scrollbarDragging flag. Indicates that user drags the scrollbar at the moment.
           *
@@ -347,15 +375,13 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _subscribeMouseEnterLeave: function() {
-            this._container
-               .on('mouseenter', this._onMouseenter)
-               .on('mouseleave', this._onMouseleave);
+            this._hasOnMouseEnter = true;
+            this._container.on('mouseleave', this._onMouseleave);
          },
 
          _unsubscribeMouseEnterLeave: function() {
-            this._container
-               .off('mouseenter', this._onMouseenter)
-               .off('mouseleave', this._onMouseleave);
+            this._hasOnMouseEnter = false;
+            this._container.off('mouseleave', this._onMouseleave);
          },
 
          _getScrollContainerChannel: function() {
@@ -364,7 +390,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
-            
+
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
@@ -493,7 +519,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (this._page !== page) {
-               
+
                /**
                 * Может быть так, что номер страницы, к которой нам нужно проскролить, будет больше, чем
                 * количество страниц.
@@ -638,6 +664,8 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._content) {
                this._content.off('scroll', this._onScroll);
             }
+            this._container.off('mouseenter', this._mouseEnterHandler);
+            this._container.off('mousemove', this._mouseEnterHandler);
             this._container.off('mousemove', this._initScrollbar);
             ScrollWidthController.remove(this._hideBrowserScrollbar);
             this._unsubscribeMouseEnterLeave();
