@@ -9,6 +9,20 @@
          cursor: pointer;
       }
    }
+
+   .controls-RichTextArea__dataReview {
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: @padding_RichArea-dataReview; /* отступы у первого параграфа через padding родительского блока*/
+      box-sizing: border-box;
+      word-wrap: break-word;
+
+      & > :last-child,
+      & > :last-child li:last-child {
+         margin-bottom: 0;
+      }
+   }
 }
 
 .controls-RichTextArea__readOnly {
@@ -25,16 +39,3 @@
    width: 100%;
 }
 
-.controls-RichTextArea__dataReview {
-   z-index: 1;
-   width: 100%;
-   height: 100%;
-   padding: @padding_RichArea-dataReview; /* отступы у первого параграфа через padding родительского блока*/
-   box-sizing: border-box;
-   word-wrap: break-word;
-
-   & > :last-child,
-   & > :last-child li:last-child {
-      margin-bottom: 0;
-   }
-}

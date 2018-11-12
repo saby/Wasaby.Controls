@@ -1,5 +1,5 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
+define(['SBIS3.CONTROLS/MoneyTextBox', 'Vdom/Synchronizer/resources/SyntheticEvent'], function (NumberTextBox, SyntheticEvent) {
     'use strict';
     var
         MTB,
@@ -52,9 +52,10 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
 
         describe('Caret Position', function (){
            it('_inputFocusInHandler', function (){
+
               MTB.setText(1.234);
               MTB._setCaretPosition(3);
-              MTB._inputFocusInHandler();
+              MTB._inputFocusInHandler(new SyntheticEvent({stopPropagation: function() {}}));
               assert.deepEqual(MTB._getCaretPosition(), [1,1]);
            });
         });

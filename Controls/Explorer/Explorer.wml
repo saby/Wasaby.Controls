@@ -25,5 +25,7 @@
                       on:dragEnd="_notifyHandler('dragEnd')"
                       on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                       on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                      on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                      on:selectedKeysCountChanged="_notifyHandler('selectedKeysCountChanged')"
                       dataLoadCallback="{{_dataLoadCallback}}"/>
 </div>

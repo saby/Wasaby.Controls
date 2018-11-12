@@ -494,7 +494,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - tdPadding < folderTitle[0].getBoundingClientRect().right) {
+            if ( td[0].getBoundingClientRect().right - tdPadding <= Math.round(folderTitle[0].getBoundingClientRect().right)) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];

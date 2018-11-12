@@ -11,8 +11,9 @@ define('Controls-demo/Suggest/Suggest', [
    'Core/Deferred',
    'WS.Data/Entity/Model',
    'Controls-demo/Search/SearchMemory',
+   'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Suggest/Suggest'
-], function(Control, template, MemorySource, Deferred, Model, SearchMemory) {
+], function(Control, template, MemorySource, Deferred, Model, SearchMemory, memorySourceFilter) {
    
    'use strict';
    
@@ -116,12 +117,14 @@ define('Controls-demo/Suggest/Suggest', [
          this._suggestTabSource = new SearchMemory({
             idProperty: 'id',
             data: sourceData,
-            searchParam: 'title'
+            searchParam: 'title',
+            filter: memorySourceFilter()
          });
          this._suggestSource = new SearchMemory({
             idProperty: 'id',
             data: sourceData,
-            searchParam: 'title'
+            searchParam: 'title',
+            filter: memorySourceFilter()
          });
       }
    });

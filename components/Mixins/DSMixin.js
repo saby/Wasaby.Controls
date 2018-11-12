@@ -162,7 +162,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
               * @cfg {Array.<Object>} Набор отображаемых данных.
               * @remark
               * Чтобы компонент смог показать items, необходимо задать значения опциям {@link idProperty} и {@link displayProperty}.
-              * 
+              *
               * <pre>
               *     <SBIS3.CONTROLS.DataGridView name="superView" idProperty="id" displayProperty="title">
               *         <ws:items>
@@ -175,7 +175,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
               *         ...
               *     </SBIS3.CONTROLS.DataGridView>
               * </pre>
-              * 
+              *
               * Те же данные вы можете задать в JS-модуле методом {@link setItems}. Например,
               * <pre>
               * var items = [
@@ -192,11 +192,11 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
               * ];
               * component.setItems(items);
               * </pre>
-              * 
+              *
               * Чтобы сделать данные иерархическими, компоненту требуется задать иерархические поля в опциях {@link SBIS3.CONTROLS/Mixins/TreeMixin#parentProperty}, {@link SBIS3.CONTROLS/Mixins/TreeMixin#nodeProperty} и {@link SBIS3.CONTROLS/Mixins/TreeMixin#hasChildrenProperty}.
               * А затем добавить эти поля в items. Например,
               * <pre>
-              *     <SBIS3.CONTROLS.Tree.DataGridView 
+              *     <SBIS3.CONTROLS.Tree.DataGridView
               *         name="superView"
               *         idProperty="id"
               *         displayProperty="title"
@@ -213,7 +213,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
               *         ...
               *     </SBIS3.CONTROLS.Tree.DataGridView>
               * </pre>
-              * 
+              *
               * @see idProperty
               * @see displayProperty
               * @see SBIS3/CONTROLS/Mixins/TreeMixin#parentProperty
@@ -597,6 +597,10 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
             } else {
                this._items = itemsOpt;
                this._dataSource = null;
+               if (this._options._itemsProjection) {
+                  this._unsetItemsEventHandlers();
+                  this._options._itemsProjection.destroy();
+               }
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
                this._notify('onItemsReady');
@@ -887,6 +891,10 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
          } else {
             this._items = list;
             this._dataSet = list;
+            if (this._options._itemsProjection) {
+               this._unsetItemsEventHandlers();
+               this._options._itemsProjection.destroy();
+            }
             this._createDefaultProjection(this._items);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
