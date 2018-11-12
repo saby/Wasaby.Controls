@@ -4279,11 +4279,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return true;*/
             },
 
-            _sanitizeClasses: function(text, images, options) {
+            _sanitizeClasses: function (text, allowImages, options) {
+               if (!text) {
+                  return '';
+               }
                var _options = options || this._options;
+               // Массив всех имеющихся валидаторов классов
+               var classValidators = [
+                  _options && _options.validateClass,
+                  this._getCustomFormatsClassValidator(_options)
+               ].filter(function (v) { return !!v; });
                var sanitizeOptions = {
                   validNodes: {
-                     img: images ? {
+                     img: allowImages ? {
                         'data-img-uuid': true,
                         'data-mce-src': true,
                         'data-mce-style': true,
@@ -4297,9 +4305,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   },
                   validAttributes: {
-                     'class': function(content, attributeName) {
-                        this._sanitizeClassCallback(content, attributeName, _options);
-                     }.bind(this)
+                     'class': this._sanitizeClassCallback.bind(this, classValidators.length ? {validateClass:this._checkClassesByAll.bind(null, classValidators)} : null)
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false
@@ -4311,11 +4317,66 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return Sanitize(text, sanitizeOptions);
             },
 
-            _sanitizeClassCallback: function(content, attributeName, options) {
+            /**
+             * Построить валидатор классов для пользовательских форматов (опция customFormats) если они есть
+             * @private
+             * @param {object} options Опции компонента
+             * @return {function}
+             */
+            _getCustomFormatsClassValidator: function (options) {
+               var customFormats = options && options.customFormats;
+               if (customFormats && typeof customFormats === 'object') {
+                  var nodes = {};
+                  for (var key in customFormats) {
+                     var format = customFormats[key];
+                     var formatClasses = format.classes;
+                     if (formatClasses && formatClasses.length) {
+                        var nodeName = format.block;
+                        if (nodeName) {
+                           if (nodeName in nodes) {
+                              nodes[nodeName].push.apply(nodes[nodeName], formatClasses);
+                           }
+                           else {
+                              nodes[nodeName] = formatClasses.slice();
+                           }
+                        }
+                     }
+                  }
+                  if (Object.keys(nodes).length) {
+                     return this._checkNodeClass.bind(null, nodes);
+                  }
+               }
+            },
+
+            /**
+             * Проверить допустимость класса className для элемента nodeName согласно имеющемуся списку допустимых классов
+             * @private
+             * @param {object} nodes Список допустимых классов по элементам
+             * @param {string} className Класс
+             * @param {string} nodeName Элемент
+             * @return {boolean}
+             */
+            _checkNodeClass: function(nodes, className, nodeName) {
+               var classes = nodes[nodeName];
+               return classes && classes.indexOf(className) !== -1;
+            },
+
+            /**
+             * Проверить допустимость класса className для элемента nodeName по указанному списку валидаторов (необходимо пройти хотя бы один валидатор)
+             * @private
+             * @param {object} nodes Список валидаторов
+             * @param {string} className Класс
+             * @param {string} nodeName Элемент
+             * @return {boolean}
+             */
+            _checkClassesByAll: function(validators, className, nodeName) {
+               return validators.some(function (v) { return v(className, nodeName); });
+            },
+
+            _sanitizeClassCallback: function(options, content, attributeName) {
                var
-                  _options = options || this._options,
                   //проверка options для юнит тестов, тк там метод зовётся на прототипе
-                  classValidator = _options ? _options.validateClass : null,
+                  classValidator = options ? options.validateClass : null,
                   validateIsFunction = typeof classValidator === 'function',
                   currentValue = content.attributes[attributeName].value,
                   classes = currentValue.split(' '),
@@ -4379,7 +4440,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                while (index >= 0) {
                   if (!~whiteList.indexOf(classes[index]) &&
-                     (!validateIsFunction || !classValidator(classes[index]))) {
+                     (!validateIsFunction || !classValidator(classes[index], content.nodeName))) {
                      classes.splice(index, 1);
                   }
                   index -= 1;
@@ -4390,7 +4451,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                } else {
                   delete content.attributes[attributeName];
                }
-
             },
 
             _htmlToText: function (html) {
