@@ -48,7 +48,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '4',
-                  buttonViewMode: 'iconToolbar',
+                  buttonViewMode: 'quickButton',
                   buttonIcon: 'icon-24 icon-Linked',
                   buttonStyle: 'secondary',
                   buttonIconStyle: 'secondary',
