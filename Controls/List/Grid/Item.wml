@@ -18,7 +18,6 @@
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
       <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
                   itemData="{{ itemData }}"
-                  swipeTemplate="{{ swipeTemplate }}"
                   itemActionsClass="{{ itemActionsClass }}"
                   itemActionsTemplate="{{ itemActionsTemplate }}"/>
    </ws:if>
