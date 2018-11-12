@@ -366,6 +366,28 @@ function(cMerge,
             newCfg.dialogOptions.className = cfg.className;
          }
 
+         if (cfg.hasOwnProperty('showOnControlsReady')) {
+            newCfg.dialogOptions.showOnControlsReady = cfg.showOnControlsReady;
+         } else {
+            newCfg.dialogOptions.showOnControlsReady = false;
+         }
+
+         if (cfg.hasOwnProperty('autoCloseOnHide')) {
+            newCfg.dialogOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         } else {
+            newCfg.dialogOptions.autoCloseOnHide = true;
+         }
+
+         newCfg.dialogOptions.direction = cfg.direction || 'left';
+
+         if (cfg.minWidth) {
+            newCfg.dialogOptions.minWidth = cfg.minWidth;
+         }
+
+         if (cfg.maxWidth) {
+            newCfg.dialogOptions.maxWidth = cfg.maxWidth;
+         }
+
          if (newCfg.target) {
             this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {

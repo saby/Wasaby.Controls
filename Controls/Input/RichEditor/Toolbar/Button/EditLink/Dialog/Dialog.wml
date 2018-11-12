@@ -4,7 +4,8 @@
          <Controls.Button
             caption="{[Сохранить]}"
             on:click="_clickHandler()"
-            style="buttonPrimary"
+            style="primary"
+            viewMode="button"
          />
       </div>
    </ws:topArea>
