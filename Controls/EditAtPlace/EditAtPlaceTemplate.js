@@ -1,17 +1,7 @@
 define('Controls/EditAtPlace/EditAtPlaceTemplate', [
-   'Core/Control',
-   'wml!Controls/EditAtPlace/EditAtPlaceTemplate'
-], function(Control, template) {
+   'Controls/Templates/Editors/Base'
+], function(Control) {
    'use strict';
 
-   var EditAtPlaceTemplate = Control.extend({
-      _template: template,
-
-      _editorValueChangeHandler: function(event, value) {
-         this._notify('valueChanged', [value]);
-      }
-
-   });
-
-   return EditAtPlaceTemplate;
+   return Control;
 });
