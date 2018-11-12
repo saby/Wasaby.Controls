@@ -9,13 +9,14 @@
                {{!!itemData.isActive ? ' controls-TileView__item_active'}}
                {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
-               {{itemData.fixedPosition ? ' controls-TileView__item_fixed'}}
+               {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
+               {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
                {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
                {{!!itemData.showActions && itemData.isHovered ? ' controls-ListView__item_showActions'}}"
-        attr:style="{{itemData.fixedPosition ? itemData.fixedPosition}}">
+        attr:style="{{itemData.position ? itemData.position}}">
       <ws:partial if="{{itemData.multiSelectVisibility}}"
                   template="{{multiSelectTpl}}"
-                  attr:class="controls-TileView__checkbox controls-TileView__checkbox_top">
+                  attr:class="controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom">
          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
       </ws:partial>
       <ws:if data="{{contentTemplate}}">
@@ -33,7 +34,7 @@
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
                   itemData="{{itemData}}"
-                  attr:class="controls-TileView__itemActions controls-TileView__itemActions_bottom"/>
+                  itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight"/>
    </div>
 </ws:template>
 

@@ -2,7 +2,7 @@ define('Controls/SelectedCollection',
    [
       'Core/Control',
       'wml!Controls/SelectedCollection/SelectedCollection',
-      'wml!Controls/SelectedCollection/ItemTemplate',
+      'wml!Controls/SelectedCollection/itemTemplate',
       'WS.Data/Chain',
       'css!Controls/SelectedCollection/SelectedCollection'
    ],

@@ -18,7 +18,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
    var _private = {
 
       /**
-       * Function open dialog where user must paste content.
+       * Function returns promise which return content from dialog
        * @param self
        * @param withStyles
        * @returns {Deferred}
@@ -128,7 +128,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
       },
 
       _menuItemActivateHandler: function(event, item) {
-         _private.getHtml(this, item.get('withStyles')).addCallback(function(content) {
+         _private.getPasteContent(this, item.get('withStyles')).addCallback(function(content) {
             this._notify('_paste', [content], { bubbling: true });
          }.bind(this));
       }
