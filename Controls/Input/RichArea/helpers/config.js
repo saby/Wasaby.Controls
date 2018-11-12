@@ -1,20 +1,20 @@
-define('Controls/Input/RichArea/plugins/config', [
-   'Controls/Input/RichArea/plugins/constants'
-], function(constantsPlugin) {
+define('Controls/Input/RichArea/helpers/config', [
+   'Controls/Input/RichArea/helpers/constants'
+], function(constantsHelper) {
    /**
-    * Модуль, содержащий базовую конфигурацию БТРа
+    * Module with default tinymce's configuration
     */
 
    var ConfigPlugin = {
       editorConfig: {
          theme: false,
          className: null,
-         plugins: 'media,paste,lists,noneditable,codesample',
+         helpers: 'media,paste,lists,noneditable,codesample',
          codesample_content_css: false,
          inline: true,
          relative_urls: false,
          convert_urls: false,
-         formats: constantsPlugin.tinyConstants.styles,
+         formats: constantsHelper.tinyConstants.styles,
          paste_webkit_styles: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
          paste_retain_style_properties: 'color font-size font-weight font-style font-family text-align text-decoration width height max-width line-height padding padding-left padding-right padding-top padding-bottom background',
          paste_as_text: true,

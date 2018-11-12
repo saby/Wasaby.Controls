@@ -102,6 +102,14 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/List/interface/IListControl#markerVisibility
+    * @cfg {String} Determines when marker is visible.
+    * @variant always The marker is always displayed, even if the marked key entry is not specified.
+    * @variant '' Behavior not defined.
+    * @default ''
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Strategy for loading new list items.
     * @variant true Merge, items with the same identifier will be combined into one.
