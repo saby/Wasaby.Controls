@@ -18,7 +18,6 @@ define('Controls/Filter/Controller',
    ],
 
    function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, historyUtils, SourceController, isEmptyObject, merge, clone) {
-
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -42,28 +41,23 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         getHistorySource: function(self, hId) {
-            if (!self._historySource) {
-               self._historySource = new HistorySource({
-                  originSource: new Memory({
-                     idProperty: 'id',
-                     data: []
-                  }),
-                  historySource: new HistoryService({
-                     historyId: hId,
-                     pinned: true,
-                     dataLoaded: true
-                  })
+         minimizeFilterItems: function(items) {
+            var minItems = [];
+            Chain(items).each(function(item) {
+               minItems.push({
+                  id: getPropValue(item, 'id'),
+                  value: getPropValue(item, 'value'),
+                  textValue: getPropValue(item, 'textValue'),
+                  visibility: getPropValue(item, 'visibility')
                });
-            }
-            return self._historySource;
+            });
+            return minItems;
          },
 
          getHistoryItems: function(self, id) {
             if (!id) {
                return Deferred.success([]);
             }
-            var that = this;
             var recent, lastFilter,
                source = historyUtils.getHistorySource(id);
 
@@ -339,17 +333,15 @@ define('Controls/Filter/Controller',
          },
 
          _itemsChanged: function(event, items) {
-            var filter;
             var meta;
 
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               filter = _private.getFilterByItems(this._filterButtonItems, this._fastFilterItems);
                meta = {
                   '$_addFromData': true
                };
-               historyUtils.getHistorySource(this._options.historyId).update(isEmptyObject(filter) ? filter : items, meta);
+               historyUtils.getHistorySource(this._options.historyId).update(_private.minimizeFilterItems(this._filterButtonItems || this._fastFilterItems), meta);
             }
 
             _private.applyItemsToFilter(this, this._options.filter, items);

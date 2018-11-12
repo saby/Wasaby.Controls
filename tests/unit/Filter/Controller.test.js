@@ -252,7 +252,46 @@ define(['Controls/Filter/Controller'], function(Filter) {
          assert.equal(self._fastFilterItems[1].value, '123');
          assert.equal(self._filterButtonItems[0].value, '123');
       });
-      
+
+      it('minimize filter items', function() {
+         var items = [{
+            id: 'testId',
+            value: '',
+            textValue: '',
+            source: [],
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: '',
+            resetValue: '',
+            keys: ['1', '2', '3'],
+            visibility: false
+         }, {
+            id: 'testId3',
+            value: 'testValue2',
+            textValue: 'textTextValue',
+            resetValue: ''
+         }];
+         var minItems = Filter._private.minimizeFilterItems(items);
+         assert.deepEqual(minItems, [{
+            id: 'testId',
+            value: '',
+            textValue: '',
+            visibility: undefined
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: '',
+            visibility: false
+         }, {
+            id: 'testId3',
+            value: 'testValue2',
+            textValue: 'textTextValue',
+            visibility: undefined
+         }]);
+      });
+
    });
-   
+
 });

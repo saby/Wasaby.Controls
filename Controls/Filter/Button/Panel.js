@@ -182,12 +182,6 @@ define('Controls/Filter/Button/Panel', [
             }
          });
          this._isChanged = false;
-      },
-      destroy: function() {
-         FilterPanel.superclass.destroy.apply(this, arguments);
-         if (this._historyId) {
-            historyUtils.destroyHistorySource(this._historyId);
-         }
       }
    });
 
