@@ -24,6 +24,7 @@ define('Controls/EditAtPlace', [
          afterEndEdit: function(self, commit) {
             if (commit) {
                self._editObject.acceptChanges();
+               self._options.editObject.merge(self._editObject);
             } else {
                self._editObject.rejectChanges();
             }

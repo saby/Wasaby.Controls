@@ -1,10 +1,10 @@
 define([
    'Controls/EditAtPlace',
-   'WS.Data/Entity/Record',
+   'WS.Data/Entity/Model',
    'Core/Deferred'
 ], function(
    EditAtPlace,
-   Record,
+   Model,
    Deferred
 ) {
    'use strict';
@@ -13,21 +13,23 @@ define([
       var
          eventQueue,
          instance,
-         cfg = {
-            editWhenFirstRendered: true,
-            editObject: Record.fromObject({
-               text: 'qwerty'
-            })
-         },
-         cfg2 = {
-            editWhenFirstRendered: false,
-            editObject: Record.fromObject({
-               text: 'test'
-            })
-         };
+         cfg,
+         cfg2;
       beforeEach(function() {
          eventQueue = [];
          instance = new EditAtPlace();
+         cfg = {
+            editWhenFirstRendered: true,
+            editObject: Model.fromObject({
+               text: 'qwerty'
+            })
+         };
+         cfg2 = {
+            editWhenFirstRendered: false,
+            editObject: Model.fromObject({
+               text: 'test'
+            })
+         };
       });
       afterEach(function() {
          instance = null;
@@ -244,8 +246,10 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
+            instance._editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
@@ -253,6 +257,7 @@ define([
                assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
                assert.equal(eventQueue[1].event, 'afterEndEdit');
                assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(cfg.editObject.get('text'), 'asdf');
                assert.isFalse(instance._isEditing);
                done();
             }, 0);
@@ -266,13 +271,16 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify('Cancel');
+            instance._editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 1);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
                assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(cfg.editObject.get('text'), 'qwerty');
                assert.isTrue(instance._isEditing);
                done();
             }, 0);
@@ -290,10 +298,12 @@ define([
             };
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
+            instance._editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 0);
                assert.isTrue(instance._isEditing);
+               assert.equal(cfg.editObject.get('text'), 'qwerty');
                done();
             }, 0);
          });
@@ -306,8 +316,10 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify(Deferred.success());
+            instance._editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
@@ -315,6 +327,7 @@ define([
                assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
                assert.equal(eventQueue[1].event, 'afterEndEdit');
                assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.equal(cfg.editObject.get('text'), 'asdf');
                assert.isFalse(instance._isEditing);
                done();
             }, 0);

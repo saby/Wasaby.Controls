@@ -1,6 +1,6 @@
 define('Controls-demo/EditAtPlace/EditAtPlacePG', [
    'Core/Control',
-   'WS.Data/Entity/Record',
+   'WS.Data/Entity/Model',
    'WS.Data/Source/Memory',
    'wml!Controls-demo/EditAtPlace/EditAtPlacePG',
    'json!Controls-demo/EditAtPlace/EAPConfig',
@@ -10,7 +10,7 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
    'css!Controls-demo/EditAtPlace/EditAtPlacePG'
 ], function(
    Control,
-   Record,
+   Model,
    Memory,
    template,
    config
@@ -36,10 +36,10 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
       _beforeMount: function() {
          this._key = 0;
          this._records = [
-            new Record({
+            new Model({
                rawData: tabsData[0]
             }),
-            new Record({
+            new Model({
                rawData: tabsData2[0]
             })
          ];
