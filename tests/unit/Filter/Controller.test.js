@@ -80,7 +80,7 @@ define(['Controls/Filter/Controller'], function(Filter) {
          var items = Filter._private.getItemsByOption(returnOptFunc, history);
          assert.deepEqual(items, history);
       });
-      
+
       it('_private.getFilterByItems(filterButtonItems)', function () {
          var fbItems = [{
             id: 'testId',
@@ -90,12 +90,21 @@ define(['Controls/Filter/Controller'], function(Filter) {
             id: 'testId2',
             value: 'testValue',
             resetValue: ''
+         }, {
+            id: 'testId3',
+            value: '',
+            resetValue: '',
+            visibility: false
+         }, {
+            id: 'testId4',
+            value: 'testValue',
+            resetValue: ''
          }];
-         
+
          var filter = Filter._private.getFilterByItems(fbItems);
-         assert.deepEqual(filter, {testId2: 'testValue'});
+         assert.deepEqual(filter, {testId2: 'testValue', testId4: 'testValue'});
       });
-      
+
       it('_private.getFilterByItems(fastFilterItems)', function () {
          var fastFilterItems = [{
             id: 'testId',

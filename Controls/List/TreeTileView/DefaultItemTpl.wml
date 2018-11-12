@@ -20,7 +20,7 @@
       <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
                   template="{{itemActionsTemplate}}"
                   itemData="{{itemData}}"
-                  attr:class="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
+                  itemActionsClass="controls-TileView__itemActions controls-TreeTileView__itemActions_center"/>
    </div>
 </ws:template>
 <ws:if data="{{invisible}}">

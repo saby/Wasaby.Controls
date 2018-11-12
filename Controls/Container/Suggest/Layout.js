@@ -6,7 +6,7 @@ define('Controls/Container/Suggest/Layout',
       'WS.Data/Type/descriptor',
       'Core/moduleStubs',
       'Core/core-clone',
-      'Controls/Search/MissSpell/getSwitcherStrFromData',
+      'Controls/Search/Misspell/getSwitcherStrFromData',
       'css!Controls/Container/Suggest/Layout'
    ],
    function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
@@ -14,7 +14,7 @@ define('Controls/Container/Suggest/Layout',
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/MissSpell', 'Controls/Container/LoadingIndicator'];
+      var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
       var _private = {
          hasMore: function(searchResult) {
