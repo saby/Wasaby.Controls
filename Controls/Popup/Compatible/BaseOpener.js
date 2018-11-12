@@ -353,11 +353,9 @@ function(cMerge,
          if (cfg.corner && cfg.corner.horizontal) {
             newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
-
-         if (cfg.title) {
-            newCfg.dialogOptions.title = cfg.title;
-         }
-
+         
+         newCfg.dialogOptions.title = cfg.title;
+         
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }
