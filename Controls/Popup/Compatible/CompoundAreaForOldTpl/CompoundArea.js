@@ -210,8 +210,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.waitForPopupCreated = false;
             var self = this;
             runDelayed(function() {
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
+               if (self._container.length && self._options.catchFocus) {
+                  doAutofocus(self._container);
                }
             });
          },
@@ -454,6 +454,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this.close();
+               if (CoreConstants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  event.preventDefault();
+               }
                event.stopPropagation();
             }
          },

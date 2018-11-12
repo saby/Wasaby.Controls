@@ -16,7 +16,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           * @control
           * @public
           * @category Popup
-          * @author Красильников Андрей
+          * @author Красильников А.С.
           */
 
          /**

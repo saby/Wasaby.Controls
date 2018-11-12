@@ -6,6 +6,7 @@ define('Controls/interface/IItemTemplate', [
     *
     * @interface Controls/interface/IItemTemplate
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

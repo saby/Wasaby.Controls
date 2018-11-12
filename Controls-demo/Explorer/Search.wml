@@ -1,11 +1,8 @@
 <div>
    <div>Demo Controls/Explorer</div>
    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
-      <Controls.Container.TreeMultiSelector name="multiSelector"
-                                            bind:selectedKeys="_selectedKeys"
-                                            bind:excludedKeys="_excludedKeys"
-                                            parentProperty="parent"
-                                            nodeProperty="parent@">
+      <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"
+                                        bind:excludedKeys="_excludedKeys">
          <Controls.Search.Controller searchParam="title" minSearchLength="{{3}}">
             <div class="ws-fragment">
                <Controls.Search.Input.Container>
@@ -26,6 +23,6 @@
                </Controls.List.Container>
             </div>
          </Controls.Search.Controller>
-      </Controls.Container.TreeMultiSelector>
+      </Controls.Container.MultiSelector>
    </Controls.Container.Data>
 </div>

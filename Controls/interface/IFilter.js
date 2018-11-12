@@ -6,6 +6,7 @@ define('Controls/interface/IFilter', [
     *
     * @interface Controls/interface/IFilter
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

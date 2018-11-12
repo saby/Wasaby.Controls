@@ -7,6 +7,7 @@ define('Controls/interface/IConfirmationOptions', [
     * @interface Controls/interface/IConfirmationOptions
     * @typedef Object
     * @public
+    * @author Красильников А.С.
     */
 
    /**

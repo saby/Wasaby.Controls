@@ -9,6 +9,7 @@ define('Controls/Input/interface/IDateTimeMask', [
     *
     * @interface Controls/Input/interface/IDateTimeMask
     * @public
+    * @author Миронов А.Ю.
     */
 
    return {

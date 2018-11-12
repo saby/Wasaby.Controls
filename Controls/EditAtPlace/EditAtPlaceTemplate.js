@@ -8,7 +8,7 @@ define('Controls/EditAtPlace/EditAtPlaceTemplate', [
       _template: template,
 
       _editorValueChangeHandler: function(event, value) {
-         this._notify('valueChanged', value);
+         this._notify('valueChanged', [value]);
       }
 
    });

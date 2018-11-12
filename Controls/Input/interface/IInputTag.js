@@ -6,6 +6,7 @@ define('Controls/Input/interface/IInputTag', [
     *
     * @interface Controls/Input/interface/IInputTag
     * @public
+    * @author Колесова П.С.
     */
 
    /**
