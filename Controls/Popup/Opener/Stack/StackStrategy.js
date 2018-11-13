@@ -15,7 +15,9 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
          if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
          } else if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
-            panelWidth = Math.min(item.containerWidth, maxPanelWidthWithOffset); //По ширине контента, но не больше допустимого значения
+            if (item.containerWidth > maxPanelWidthWithOffset) {
+               panelWidth = maxPanelWidthWithOffset; //По ширине контента, но не больше допустимого значения
+            }
          } else if (maxWidth <= maxPanelWidthWithOffset) {
             panelWidth = maxWidth;
          } else if (minWidth > maxPanelWidthWithOffset) { // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна

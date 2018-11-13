@@ -188,6 +188,29 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
             assert.isNull(this.testControl.getDate());
             assert(onDateChange.calledOnce, `onDateChange called ${onDateChange.callCount}`);
          });
+
+         it('should not update options, view and generate events if the same date set.', function () {
+            let
+               sandbox = sinon.sandbox.create(),
+               date = new Date(2018, 0, 1),
+               onTextChange = sinon.spy(),
+               onDateChange = sinon.spy(),
+               onPropertiesChanged = sinon.spy(),
+               onPropertyChanged = sinon.spy();
+            this.testControl.setDate(date);
+            sandbox.stub(this.testControl, '_setDate');
+            this.testControl.subscribe('onTextChange', onTextChange);
+            this.testControl.subscribe('onDateChange', onDateChange);
+            this.testControl.subscribe('onPropertiesChanged', onPropertiesChanged);
+            this.testControl.subscribe('onPropertyChanged', onPropertyChanged);
+            this.testControl.setDate(date);
+            assert(this.testControl._setDate.notCalled, `setDate called ${this.testControl._setDate.callCount}`);
+            assert(onTextChange.notCalled, `onTextChange called ${onTextChange.callCount}`);
+            assert(onDateChange.notCalled, `onDateChange called ${onDateChange.callCount}`);
+            assert(onPropertiesChanged.notCalled, `onPropertiesChanged called ${onPropertiesChanged.callCount}`);
+            assert(onPropertyChanged.notCalled, `onPropertyChanged called ${onPropertyChanged.callCount}`);
+            sandbox.restore();
+         });
       });
 
       describe('._onKeyDown', function () {

@@ -349,6 +349,9 @@ define(
        * @see mask
        */
       setDate: function (date, silent) {
+         if (DateUtil.isDatesEqual(date, this._options.date)) {
+            return;
+         }
          this._setDate(date, silent);
          if (silent) {
             this._lastNotifiedDate = date;
@@ -491,6 +494,15 @@ define(
             this._options.date.setSQLSerializationMode(mode);
          }
          return this._options.date;
+      },
+
+      setMask: function(mask) {
+         if (mask === this._getMask()) {
+            return;
+         }
+         DateBox.superclass.setMask.apply(this, arguments);
+         this._drawDate();
+         this._updateText();
       },
 
       /**
