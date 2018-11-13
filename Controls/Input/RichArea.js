@@ -17,6 +17,8 @@ define('Controls/Input/RichArea', [
     */
 
    var _private = {
+
+      // TODO: Will be removed https://online.sbis.ru/opendoc.html?guid=7571450e-511e-4e86-897f-e392e53fea68
       updatePreviewContainer: function(self) {
          if (self._options.readOnly) {
             self._children.previewContainer.innerHTML = self._jsonToHtml(self._value);
