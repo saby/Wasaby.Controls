@@ -17,9 +17,9 @@ define('Controls/Input/RichArea', [
     */
 
    var _private = {
-      updateReview: function(self) {
+      updatePreviewContainer: function(self) {
          if (self._options.readOnly) {
-            self._children.reviewContainer.innerHTML = self._jsonToHtml(self._value);
+            self._children.previewContainer.innerHTML = self._jsonToHtml(self._value);
          }
       }
    };
@@ -37,7 +37,7 @@ define('Controls/Input/RichArea', [
       },
 
       _afterMount: function() {
-         _private.updateReview(this);
+         _private.updatePreviewContainer(this);
          this._notify('register', ['applyFormat', this, this.applyFormat]);
          this._notify('register', ['removeFormat', this, this.removeFormat]);
          this._notify('register', ['insertLink', this, this._insertLink]);
@@ -65,7 +65,7 @@ define('Controls/Input/RichArea', [
       },
 
       _afterUpdate: function() {
-         _private.updateReview(this);
+         _private.updatePreviewContainer(this);
       },
 
       _valueChangedHandler: function(e, value) {
