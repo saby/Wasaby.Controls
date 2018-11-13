@@ -1,16 +1,16 @@
 define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy'
+      'Controls/Popup/Opener/Dialog/DialogStrategy',
+      'SBIS3.CONTROLS/Utils/TouchKeyboardHelper'
    ],
-   function(BaseController, DialogStrategy) {
+   function(BaseController, DialogStrategy, TouchKeyboardHelper) {
       var _private = {
          prepareConfig: function(item, sizes) {
-            // в 700 этих правок нет. разбираюсь в причинах ошибок в клауде.
             var windowData = {
                width: document.body.clientWidth,
-               height: document.body.clientHeight,
-               scrollTop: 0,
+               height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(),
+               scrollTop: document.body.scrollTop,
             };
 
             // Positioning relative to body
@@ -100,7 +100,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
 
          needRecalcOnKeyboardShow: function() {
-            return false;
+            return true;
          },
          _private: _private
       });
