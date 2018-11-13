@@ -1076,10 +1076,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      self._updateTextByTiny();
                   },
                   onPaste = function(event) {
-                     var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                     if (!content || !save) {
-                        content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                        content.replace('data-ws-is-rich-text="true"', '');
+                     var content;
+                     var isStandard = !!event.clipboardData;
+                     var clipboardData = isStandard ? event.clipboardData : window.clipboardData;
+                     if (clipboardData && clipboardData.getData) {
+                        if (save && isStandard) {
+                           content = clipboardData.getData('text/html');
+                        }
+                        if (!content) {
+                           content = clipboardData.getData(isStandard ?'text/plain' : 'Text') || '';
+                        }
                      }
                      prepareAndInsertContent(content);
                      dialog.close();
@@ -1090,6 +1096,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   },
                   onClose = function() {
                      document.removeEventListener('paste', onPaste, true);
+                     if (BROWSER.isIE) {
+                        $('input#TMP_pasteWithStyles').remove();
+                     }
                      if (typeof onAfterCloseHandler === 'function') {
                         onAfterCloseHandler();
                      }
@@ -1109,7 +1118,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               submitButton: {caption: rk('Отменить')},
                               isModal: true,
                               closeByExternalClick: true,
-                              opener: self
+                              opener: self,
+                              handlers: {
+                                 onShow: BROWSER.isIE ? function () {
+                                    var input = $('<input style="position:absolute; top:-100px;" id="TMP_pasteWithStyles" />').appendTo('body');
+                                    setTimeout(input.focus.bind(input), 100);
+                                 } : null
+                              }
                            },
                            onClose
                         );
