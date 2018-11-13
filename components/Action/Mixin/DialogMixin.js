@@ -301,6 +301,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (floatArea.length) {
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
+         var openerContainer;
 
          //todo Compatible
          var compoundArea = $(target).closest('.controls-CompoundArea');
@@ -310,10 +311,18 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                if (opener === this._dialog) {
                   return true;
                }
-               var openerContainer = opener.getOpener && opener.getOpener() && opener.getOpener().getContainer();
+               openerContainer = opener.getOpener && opener.getOpener() && opener.getOpener().getContainer();
                compoundArea = openerContainer && $(openerContainer).closest('.controls-CompoundArea');
                opener = compoundArea && compoundArea[0] && compoundArea[0].controlNodes[0].control;
             }
+         }
+
+         var vdomPopup = $(target).closest('.controls-Popup')[0];
+         if (vdomPopup) {
+            var vdomPopupInstance = vdomPopup.controlNodes[0].control;
+            openerContainer = vdomPopupInstance._options.opener && vdomPopupInstance._options.opener._container;
+            floatArea = openerContainer && openerContainer.closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area');
+            return ControlHierarchyManager.checkInclusion(this._dialog, floatArea);
          }
 
          //Определяем связь popupMixin и панели по опенерам. в цепочке могут появиться vdom компоненты, поэтому старый механизм может работать с ошибками
