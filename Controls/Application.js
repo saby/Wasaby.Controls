@@ -86,7 +86,7 @@ define('Controls/Application',
 
             // Find opener for Infobox
             if (!config.opener) {
-               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+               requirejs(['Vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
                   config.opener = DefaultOpenerFinder.find(config.target);
                   def.callback(config);
                });
