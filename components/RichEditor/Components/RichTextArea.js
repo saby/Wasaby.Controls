@@ -2784,6 +2784,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                html = this._replaceWhitespaces(html);
                // И теперь (только один раз) вставим в DOM
                content.innerHTML = html;
+               // Иногда текущее выделение выходит за пределы поля редактирования (благодаяр действиям пользователя) - проверить и вернуть выделение внутрь, если это так
+               // 1176153681 https://online.sbis.ru/opendoc.html?guid=4fa1193a-abcb-4311-af55-61b6d2f418ed
+               this._verifySelection();
+            },
+
+            /**
+             * Иногда текущее выделение выходит за пределы поля редактирования (благодаяр действиям пользователя) - проверить и вернуть выделение внутрь, если это так
+             * @protected
+             */
+            _verifySelection: function() {
+               var editor = this._tinyEditor;
+               var selection = editor.selection;
+               var body = editor.getBody();
+               var commonAncestorContainer = selection.getRng().commonAncestorContainer;
+               if (commonAncestorContainer !== body && !body.contains(commonAncestorContainer)) {
+                  selection.select(body, true);
+               }
             },
 
             _onSelectionChange1: function() {
