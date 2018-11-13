@@ -3,11 +3,12 @@ define('Controls/Decorator/Money',
       'Core/IoC',
       'Core/Control',
       'WS.Data/Type/descriptor',
+      'Controls/Utils/splitIntoTriads',
       'wml!Controls/Decorator/Money/Money',
 
       'css!Controls/Decorator/Money/Money'
    ],
-   function(IoC, Control, descriptor, template) {
+   function(IoC, Control, descriptor, splitIntoTriads, template) {
 
       'use strict';
 
@@ -52,10 +53,13 @@ define('Controls/Decorator/Money',
                exec = ['0.00', '0', '.00'];
             }
 
+            var integer = splitIntoTriads(exec[1]);
+            var fraction = exec[2];
+
             return {
-               number: exec[0],
-               integer: exec[1],
-               fraction: exec[2]
+               integer: integer,
+               fraction: fraction,
+               number: integer + fraction
             };
          }
       };
