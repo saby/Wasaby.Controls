@@ -321,8 +321,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          if (vdomPopup) {
             var vdomPopupInstance = vdomPopup.controlNodes[0].control;
             openerContainer = vdomPopupInstance._options.opener && vdomPopupInstance._options.opener._container;
-            floatArea = openerContainer && openerContainer.closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area');
-            return ControlHierarchyManager.checkInclusion(this._dialog, floatArea);
+            return ControlHierarchyManager.checkInclusion(this._dialog, openerContainer);
          }
 
          //Определяем связь popupMixin и панели по опенерам. в цепочке могут появиться vdom компоненты, поэтому старый механизм может работать с ошибками
