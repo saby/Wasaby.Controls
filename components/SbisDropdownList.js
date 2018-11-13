@@ -33,17 +33,18 @@ define('SBIS3.CONTROLS/SbisDropdownList',
             var def = new Deferred();
             DropdownUtil.initHistory(self, function() {
                var items = self.getItems();
+               
+               self._historyDeferred = null;
+               self._historyController.addToRecent(id, new Model({
+                  rawData: {},
+                  adapter: items.getAdapter(),
+                  format: items.getFormat().clone()
+               }));
    
-               if (!items.getRecordById(id)) {
-                  self._historyDeferred = null;
-                  self._historyController.addToRecent(id, new Model({
-                     rawData: {},
-                     adapter: items.getAdapter(),
-                     format: items.getFormat().clone()
-                  }));
-               }
-               self._historyController.addToHistory(self._historyController.getCastId(id));
-               def.callback();
+               self._historyController.addToHistory(self._historyController.getCastId(id)).addCallback(function(res) {
+                  def.callback();
+                  return res;
+               });
             });
             
             return def;
