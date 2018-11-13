@@ -1121,6 +1121,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               opener: self,
                               handlers: {
                                  onShow: BROWSER.isIE ? function () {
+                                    // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
+                                    // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
                                     var input = $('<input style="position:absolute; top:-100px;" id="TMP_pasteWithStyles" />').appendTo('body');
                                     setTimeout(input.focus.bind(input), 100);
                                  } : null
