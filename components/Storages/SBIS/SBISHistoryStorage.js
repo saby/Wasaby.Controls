@@ -209,7 +209,9 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
          
          if(!this._history) {
             if(!STORAGES[this._options.historyId]) {
-               this._getStorageValue(async).addCallback(function(value) {
+               /* Т.к. глобальные параметры клиента сохраняются с определённым префиксом и напрямую в глобальные параметры из-за проверки прав на запись в глобальные параметры,
+                  то и получать их надо из глобальных параметров, а не кэша браузера  */
+               this._getStorageValue(async, this._options.isGlobalUserConfig).addCallback(function(value) {
                   /* Кэшируем данные, чтобы не делать в следующий рас запрос */
                   STORAGES[self._options.historyId] = value;
                   self._history = value;
