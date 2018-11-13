@@ -2,9 +2,8 @@ define('Controls/Input/RichEditor/Controller/FormatModel', [
    'Core/core-simpleExtend',
    'Core/IoC',
    'WS.Data/Collection/RecordSet',
-   'WS.Data/Chain',
    'Controls/Input/RichArea/helpers/constants'
-], function(cExtend, IoC, RecordSet, Chain, constantsHelper) {
+], function(cExtend, IoC, RecordSet, constantsHelper) {
    /**
     * Format model for RTE
     * Contains all current formats from selected text

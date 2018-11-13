@@ -4,8 +4,9 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
-   'Controls/Application/TouchDetector/TouchContextField',
-   'css!theme?Controls/List/ItemActions/ItemActions'
+   'Controls/Context/TouchContextField',
+   'css!theme?Controls/List/ItemActions/ItemActions',
+   'css!Controls/List/ItemActions/ItemActions'
 ], function(
    Control,
    template,
