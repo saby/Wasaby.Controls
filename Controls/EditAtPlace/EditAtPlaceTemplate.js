@@ -6,7 +6,7 @@ define('Controls/EditAtPlace/EditAtPlaceTemplate', [
 
    var EditAtPlaceTemplate = Control.extend({
       constructor: function() {
-         IoC.resolve('ILogger').warn('Controls/EditAtPlace/EditAtPlaceTemplate', 'Контрол еренесен, используйте Controls/Templates/Editors/Base.');
+         IoC.resolve('ILogger').warn('Controls/EditAtPlace/EditAtPlaceTemplate', 'Контрол перенесен, используйте Controls/Templates/Editors/Base.');
          EditAtPlaceTemplate.superclass.constructor.apply(this, arguments);
       }
    });
