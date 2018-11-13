@@ -1,6 +1,6 @@
-define('Controls/Templates/Editors/DateTime',
+define('Controls/BaseEditableArea/Templates/Editors/DateTime',
    [
-      'Controls/Templates/Editors/Base'
+      'Controls/EditableArea/Templates/Editors/Base'
    ],
    function(Base) {
       'use strict';

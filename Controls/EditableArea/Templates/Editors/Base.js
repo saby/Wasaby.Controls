@@ -1,7 +1,7 @@
-define('Controls/Templates/Editors/Base',
+define('Controls/EditableArea/Templates/Editors/Base',
    [
       'Core/Control',
-      'wml!Controls/Templates/Editors/Base/Base'
+      'wml!Controls/EditableArea/Templates/Editors/Base/Base'
    ],
    function(Control, template) {
       'use strict';
