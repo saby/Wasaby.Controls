@@ -251,6 +251,7 @@ define(
 
             config.minWidth = 100;
             config.maxWidth = 1000;
+            config.title = 'заголовок';
 
             config.target = 'testTarget';
             config.className = 'testClass';
@@ -264,6 +265,7 @@ define(
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.equal(newConfig.dialogOptions.className, config.className);
+            assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);

@@ -615,6 +615,14 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             oldStart = this.getStartValue();
             oldEnd = this.getEndValue();
+
+            // Если период меняют из вне, и он изменился для monthRangePicker
+            // то меняем внешний вид выделения с месяцев на дни.
+            if (!this._isDatesEqual(this._monthRangePicker.getStartValue(), start) ||
+                  !this._isDatesEqual(this._monthRangePicker.getEndValue(), end)) {
+               this._monthRangePicker._clearMonthSelection();
+            }
+
             changed = DateRangeBigChoose.superclass.setRange.apply(this, arguments);
             start = this.getStartValue();
             end = this.getEndValue();

@@ -268,6 +268,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    */
                   imageFolder: 'images',
                   /**
+                   * @cfg {Boolean} Уменьшать файлы изображений (используя сервис previewer) для точной подгонки к размеру, в котором они будут отображаться.
+                   * Если опция включена, то картинки при вставке будут ресайзиться в тот размер, который они реально имеют в редакторе (это экономит трафик и ускоряет загрузку). Если размер картинки при показе может быть больше, чем тот, что был в редакторе, то визуально она потеряет в качестве, даже если загружалась очень большая картинка. При отключении этой опции ресайз отключается и картинки всегда будут иметь оригингальный размер
+                   */
+                  fitImagesToSize: true,
+                  /**
                    * позволяет сохранять историю ввода
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
@@ -1438,6 +1443,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   editor.undoManager.add();
                   this._updateTextByTiny();
+                  this._unblinkSelection();
                }
             },
 
@@ -1587,16 +1593,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
-                     $listNode.wrap('<div>');
-                     selection.select(listNode.parentNode, false);
-                     $listNode.attr('contenteditable', 'false');
-                     afterProcess.push(function () {
-                        if (!$listNode.parent().is('blockquote')) {
-                           $listNode.unwrap();
-                        }
-                        $listNode.removeAttr('contenteditable');
-                        selection.select(listNode, true);
+                     // Так как здесь будет произведена сложная (т.е. не в один шаг) манипуляция контентом, то нужно правильно провести её через undoManager
+                     var undoManager = editor.undoManager;
+                     undoManager.ignore(function () {
+                        $listNode.wrap('<div>');
+                        selection.select(listNode.parentNode, false);
+                        $listNode.attr('contenteditable', 'false');
                      });
+                     skipUndo = true;
+                     afterProcess.push(function () {
+                        undoManager.ignore(function () {
+                           if (!$listNode.parent().is('blockquote')) {
+                              $listNode.unwrap();
+                           }
+                           $listNode.removeAttr('contenteditable');
+                           selection.select(listNode, true);
+                        });
+                        // Добавить новый уровень undo/redo
+                        undoManager.add();
+                        // И обновить значение опции text
+                        this._updateTextByTiny();
+                     }.bind(this));
                   }
                   else {
                      var dom = editor.dom;
@@ -1616,22 +1633,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                         if (isChanged) {
                            var bookmark = selection.getBookmark();
-                           afterProcess.push(function () {
+                           afterProcess.push(
                               // Нужно восстанавить последнее выделение после применения команды.
                               // Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
-                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения пораждают
+                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения порождают
                               // мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
                               // несфокусирпованном состоянии
                               // 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
-                              var root = editor.getBody();
-                              selection.select(root);
-                              selection.collapse(true);
-                              root.blur();
-                              setTimeout(function () {
-                                 selection.moveToBookmark(bookmark);
-                                 root.focus();
-                              }, 100);
-                           });
+                              this._unblinkSelection.bind(this, bookmark)
+                           );
                            selection.select(node, true);
                            rng = selection.getRng();
                         }
@@ -1808,6 +1818,39 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isFound = true;
                }
                return isFound;
+            },
+
+            /**
+             * Переустановить рэнж для избавления от мигающих артефактов.
+             * Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
+             * window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения порождают
+             * мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
+             * несфокусирпованном состоянии
+             * 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
+             * 1176137150 https://online.sbis.ru/opendoc.html?guid=e784b049-227b-4c18-9971-207cd89912b4
+             * @param {TinyMCEBookmark} [bookmark] Закладка TinyMCE
+             */
+            _unblinkSelection: function (bookmark) {
+               if (BROWSER.chrome) {
+                  var rects = window.getSelection().getRangeAt(0).getClientRects();
+                  var MAX_WIDTH = 5;
+                  if (rects.length && Array.prototype.some.call(rects, function (r) { return r.width <= MAX_WIDTH; })) {
+                     // Выделение не пустое и содержит мелкие фрагменты - нужно переустановливать рэнж
+                     var editor = this._tinyEditor;
+                     var selection = editor.selection;
+                     if (!bookmark) {
+                        bookmark = selection.getBookmark();
+                     }
+                     var root = editor.getBody();
+                     selection.select(root);
+                     selection.collapse(true);
+                     root.blur();
+                     setTimeout(function () {
+                        selection.moveToBookmark(bookmark);
+                        root.focus();
+                     }, 100);
+                  }
+               }
             },
 
             /**
@@ -3600,8 +3643,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   throw new Error('Size is not specified');
                }
                var url = imgInfo.filePath || imgInfo.url;
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               if (!this._options.fitImagesToSize || !/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+                  // Вернуть как есть так как подгонка под размер не требуется или это не файл, хранящийся на СбисДиске
                   return Deferred.success({
                      preview: url,
                      original: url
