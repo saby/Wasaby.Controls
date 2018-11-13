@@ -1,4 +1,4 @@
-define('SBIS3.CONTROLS/Utils/TitleUtil', ['SBIS3.CONTROLS/Utils/GetTextWidth', 'Core/helpers/String/escapeHtml'], function (getTextWidth, escapeHtml) {
+define('SBIS3.CONTROLS/Utils/TitleUtil', ['Controls/Utils/hasHorizontalScroll'], function (hasHorizontalScroll) {
    /**
     * @class SBIS3.CONTROLS/Utils/TitleUtil
     * @author Крайнов Дмитрий Олегович
@@ -11,16 +11,12 @@ define('SBIS3.CONTROLS/Utils/TitleUtil', ['SBIS3.CONTROLS/Utils/GetTextWidth', '
        */
       setTitle: function(container, ellipsisContainer) {
          var innerText;
-         var style;
-         var width;
          container = container && container.get ? container.get(0) : container;
          ellipsisContainer = ellipsisContainer && ellipsisContainer.get ? ellipsisContainer.get(0) : ellipsisContainer;
          if (container) {
-            style = window.getComputedStyle(ellipsisContainer || container);
-            width = parseInt(style.width, 10);
             innerText = container.innerText;
 
-            if (!container.getAttribute('title') && getTextWidth(escapeHtml(innerText), style.fontSize) > width) {
+            if (!container.getAttribute('title') && hasHorizontalScroll(container || ellipsisContainer)) {
                container.setAttribute('title', innerText);
             }
          }
