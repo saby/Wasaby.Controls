@@ -317,6 +317,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             }
          }
 
+         // Если кликнули в вдомный попап, связанный с текущей панелью по опенерам, то не закрываем панель
          var vdomPopup = $(target).closest('.controls-Popup')[0];
          if (vdomPopup) {
             var vdomPopupInstance = vdomPopup.controlNodes[0].control;
