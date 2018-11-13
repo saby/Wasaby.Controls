@@ -23,17 +23,16 @@ define('Controls/EditAtPlace', [
          },
          afterEndEdit: function(self, commit) {
             if (commit) {
-               self._editObject.acceptChanges();
-               self._options.editObject.merge(self._editObject);
+               self._options.editObject.acceptChanges();
             } else {
-               self._editObject.rejectChanges();
+               self._options.editObject.rejectChanges();
             }
             self._isEditing = false;
-            self._notify('afterEndEdit', [self._editObject], { bubbling: true });
+            self._notify('afterEndEdit', [self._options.editObject], { bubbling: true });
             return Deferred.success();
          },
          endEdit: function(self, commit) {
-            var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
+            var result = self._notify('beforeEndEdit', [self._options.editObject, commit], { bubbling: true });
 
             if (result === EndEditResult.CANCEL) {
                return Deferred.success();
@@ -68,13 +67,6 @@ define('Controls/EditAtPlace', [
 
       _beforeMount: function(newOptions) {
          this._isEditing = newOptions.editWhenFirstRendered;
-         this._editObject = newOptions.editObject.clone();
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (this._options.editObject !== newOptions.editObject) {
-            this._editObject = newOptions.editObject.clone();
-         }
       },
 
       _afterUpdate: function() {
@@ -111,7 +103,7 @@ define('Controls/EditAtPlace', [
       },
 
       startEdit: function(event) {
-         var result = this._notify('beforeEdit', [this._editObject], {
+         var result = this._notify('beforeEdit', [this._options.editObject], {
             bubbling: true
          });
          if (result !== EditResult.CANCEL) {
