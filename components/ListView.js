@@ -3722,7 +3722,7 @@ define('SBIS3.CONTROLS/ListView',
 
                      this._updateScrollOffset();
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     this.getItems().setMetaData(dataSet.getMetaData());
+                     this._updateMetaData(dataSet.getMetaData());
                      if (!hasNextPage) {
                         this._toggleEmptyData(!this.getItems().getCount());
                      }
@@ -3781,6 +3781,22 @@ define('SBIS3.CONTROLS/ListView',
                      return error;
                   }, this));
             }
+         },
+
+         _updateMetaData: function(metaData) {
+            var currentMetaData = this.getItems().getMetaData() || {};
+
+            /* При загрузке данных, возможны 2 сценария:
+             * 1) Итоги возвращают только для первой страницы, подразумевая что для всех остальных страниц они не изменятся
+             * 2) Итоги возвращают при подгрузке каждой страницы.
+             *
+             * Обработаем первую ситуацию, перезаписав текщие итоги в метаданные.
+             */
+            if (currentMetaData.results && !metaData.results) {
+               metaData.results = currentMetaData.results;
+            }
+
+            this.getItems().setMetaData(metaData);
          },
 
          _getNextOffset: function(){

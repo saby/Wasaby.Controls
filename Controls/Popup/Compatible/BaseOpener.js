@@ -353,7 +353,9 @@ function(cMerge,
          if (cfg.corner && cfg.corner.horizontal) {
             newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
-
+         
+         newCfg.dialogOptions.title = cfg.title;
+         
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }
@@ -364,6 +366,28 @@ function(cMerge,
 
          if (cfg.className) {
             newCfg.dialogOptions.className = cfg.className;
+         }
+
+         if (cfg.hasOwnProperty('showOnControlsReady')) {
+            newCfg.dialogOptions.showOnControlsReady = cfg.showOnControlsReady;
+         } else {
+            newCfg.dialogOptions.showOnControlsReady = false;
+         }
+
+         if (cfg.hasOwnProperty('autoCloseOnHide')) {
+            newCfg.dialogOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         } else {
+            newCfg.dialogOptions.autoCloseOnHide = true;
+         }
+
+         newCfg.dialogOptions.direction = cfg.direction || 'left';
+
+         if (cfg.minWidth) {
+            newCfg.dialogOptions.minWidth = cfg.minWidth;
+         }
+
+         if (cfg.maxWidth) {
+            newCfg.dialogOptions.maxWidth = cfg.maxWidth;
          }
 
          if (newCfg.target) {

@@ -49,7 +49,7 @@
    </ws:else>
 </ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
-   <tr attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style || 'default'}}">
+   <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}
                          {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
@@ -64,7 +64,7 @@
    </tr>
 </ws:if>
 <ws:else>
-   <div attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style || 'default'}}">
+   <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}
                           {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}

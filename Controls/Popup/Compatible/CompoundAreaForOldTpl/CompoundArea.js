@@ -454,6 +454,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this.close();
+               if (CoreConstants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  event.preventDefault();
+               }
                event.stopPropagation();
             }
          },

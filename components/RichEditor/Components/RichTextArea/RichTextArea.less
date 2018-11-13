@@ -45,12 +45,12 @@
    }
 
    .controls-RichEditor__editorFrame {
-      // Вместо clearfix используем overflow: hidden. Если чешуться руки и хочется добавить clearfix - не делай этого!
+      // Вместо clearfix используем overflow: hidden или auto или scroll (но не visible). Если чешуться руки и хочется добавить clearfix - не делай этого!
       // https://online.sbis.ru/opendoc.html?guid=2f2422e4-fe69-4ad9-ad85-a2b44b42884d
       position: relative;
       min-width: 100%;
       max-width: max-content;
-      overflow: visible;
+      overflow: auto;
       z-index: 1;
       /* Проблема:
                   tinyMCE при клике на contenteditable="false" элемент внутри поля ввода
@@ -137,7 +137,7 @@
       min-height: 100%;
       overflow-x: auto;
       overflow-y: hidden;
-      padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
+      padding: 2px 0 0 4px; /* отступы у параграфов через padding родительского блока без first-child */
       box-sizing: border-box;
       word-wrap: break-word;
       .engine-DecoratedLink {
@@ -363,11 +363,8 @@
          width: 17px;
          background-color: transparent;
       }
-      &::-webkit-scrollbar-button:horizontal {
-         background-color: transparent;
-      }
       &::-webkit-scrollbar-thumb:horizontal {
-         border: 6px solid #FFFFFF;
+         border: 7px solid #FFFFFF;
          background-color: #D9D9D9;
       }
       &::-webkit-scrollbar-thumb:horizontal:hover {

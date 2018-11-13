@@ -1,7 +1,7 @@
 [{
   "include": [
-    "Controls/Application/*",
-    "Controls/Application"
+    "Controls/Application",
+    "Controls/Application/*"
   ],
   "output": "controls-application.package.js"
 }, {
@@ -107,9 +107,17 @@
     "Controls/List/Mover",
     "Controls/List/Remover",
     "Controls/List/DialogMover/*",
-    "Controls/List/DialogMover"
+    "Controls/List/DialogMover",
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
   ],
   "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
+  ],
+  "output": "controls-paging.package.js"
 }, {
   "include": [
     "Controls/List/ItemActions/*",
