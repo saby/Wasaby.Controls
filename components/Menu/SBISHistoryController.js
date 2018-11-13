@@ -526,7 +526,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
       addToHistory: function(id) {
          var self = this;
          historyUtil.setHistory(this._options.historyId, _private.getHistoryDataSet(self));
-         _private.getHistoryDataSource(self).call(typeof id === 'string' ? 'Add' : 'AddInt', {
+         return _private.getHistoryDataSource(self).call(typeof id === 'string' ? 'Add' : 'AddInt', {
             history_id: self._options.historyId,
             id: id,
             history_context: null

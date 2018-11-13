@@ -2,9 +2,10 @@ define('Controls/Popup/Previewer',
    [
       'Core/Control',
       'wml!Controls/Popup/Previewer/Previewer',
+      'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer'
    ],
-   function(Control, template, PreviewerOpener) {
+   function(Control, template, debounce, PreviewerOpener) {
 
       'use strict';
 
@@ -67,6 +68,7 @@ define('Controls/Popup/Previewer',
 
          _beforeMount: function() {
             this._resultHandler = this._resultHandler.bind(this);
+            this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
          },
 
@@ -95,6 +97,11 @@ define('Controls/Popup/Previewer',
             }
          },
 
+         // Pointer action on hover with content and popup are executed sequentially.
+         // Collect in package and process the latest challenge
+         _debouncedAction: function(method, args) {
+            this[method].apply(this, args);
+         },
 
          _cancel: function(event, action) {
             if (this._isNewEnvironment()) {
@@ -115,7 +122,7 @@ define('Controls/Popup/Previewer',
                if (this._isPopupOpened) {
                   event.preventDefault();
                } else {
-                  this._open(event);
+                  this._debouncedAction('_open', [event]);
                }
             }
 
@@ -123,11 +130,12 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMouseenterHandler: function(event) {
-            this._open(event);
+            this._debouncedAction('_open', [event]);
+            this._cancel(event, 'closing');
          },
 
          _contentMouseleaveHandler: function(event) {
-            this._close(event);
+            this._debouncedAction('_close', [event]);
          },
 
          _previewerClickHandler: function(event) {
@@ -148,11 +156,11 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
                case 'mouseenter':
-                  this._cancel(event, 'closing');
+                  this._debouncedAction('_cancel', [event, 'closing']);
                   break;
                case 'mouseleave':
                   if (this._enableClose && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-                     this._close(event, 'hover');
+                     this._debouncedAction('_close', [event]);
                   }
                   break;
                case 'mousedown':
@@ -165,7 +173,7 @@ define('Controls/Popup/Previewer',
       Previewer.getDefaultOptions = function() {
          return {
             trigger: 'hoverAndClick'
-         };   
+         };
       };
 
       return Previewer;

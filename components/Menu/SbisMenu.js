@@ -123,23 +123,30 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             this._historyDeferred = this._getHistoryController().getUnionIndexesList(self).addCallback(function(data) {
                self._getHistoryController().parseHistoryData(data); // считывает данные
                self._getHistoryController().prepareHistoryData(); // проставляет свойства в рекорд
-               self.setItems(self._getHistoryController().prepareHistory()); // заполняем финальный рекорд со всеми записями
+               SbisMenu.superclass.setItems.call(self, self._getHistoryController().prepareHistory()); // заполняем финальный рекорд со всеми записями
                historyUtil.setHistory(self._options.historyId, self._getHistoryController().getHistoryDataSet());
                SbisMenu.superclass.show.apply(self, arguments);
             }).addErrback(function(error) {
                self._getHistoryController().prepareHistoryData(self);
-               self.setItems(self._getHistoryController().prepareHistory());
+               SbisMenu.superclass.setItems.call(self, self._getHistoryController().prepareHistory());
                SbisMenu.superclass.show.apply(self, arguments);
             });
          } else {
             if (this._historyDeferred.isReady()) {
                if (this._needToRedrawHistory) {
-                  this.setItems(this._getHistoryController().prepareHistory());
+                  SbisMenu.superclass.setItems.call(self, self._getHistoryController().prepareHistory());
                   this._needToRedrawHistory = false;
                }
                SbisMenu.superclass.show.apply(self, arguments);
             }
          }
+      },
+      
+      setItems: function() {
+         // После переустановки записей надо пересобрать историю
+         this._historyController = null;
+         this._historyDeferred = null;
+         SbisMenu.superclass.setItems.apply(this, arguments);
       },
 
       _getHistoryController: function() {
@@ -183,7 +190,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
          if (!(this._isItemHasChild(id))) {
             if (targetClassName.indexOf('controls-Menu-item-pin') !== -1) { // кликнули по пину
                this._getHistoryController().togglePinnedItem(origId, menuItem); // public
-               this.setItems(this._getHistoryController().prepareHistory());
+               SbisMenu.superclass.setItems.call(this, this._getHistoryController().prepareHistory());
                return;
             }
             if (!this._subContainers[origId] && this._getHistoryController().getRecent()) {
