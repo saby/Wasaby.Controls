@@ -268,6 +268,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    */
                   imageFolder: 'images',
                   /**
+                   * @cfg {Boolean} Уменьшать файлы изображений (используя сервис previewer) для точной подгонки к размеру, в котором они будут отображаться.
+                   * Если опция включена, то картинки при вставке будут ресайзиться в тот размер, который они реально имеют в редакторе (это экономит трафик и ускоряет загрузку). Если размер картинки при показе может быть больше, чем тот, что был в редакторе, то визуально она потеряет в качестве, даже если загружалась очень большая картинка. При отключении этой опции ресайз отключается и картинки всегда будут иметь оригингальный размер
+                   */
+                  fitImagesToSize: true,
+                  /**
                    * позволяет сохранять историю ввода
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
@@ -1588,16 +1593,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
-                     $listNode.wrap('<div>');
-                     selection.select(listNode.parentNode, false);
-                     $listNode.attr('contenteditable', 'false');
-                     afterProcess.push(function () {
-                        if (!$listNode.parent().is('blockquote')) {
-                           $listNode.unwrap();
-                        }
-                        $listNode.removeAttr('contenteditable');
-                        selection.select(listNode, true);
+                     // Так как здесь будет произведена сложная (т.е. не в один шаг) манипуляция контентом, то нужно правильно провести её через undoManager
+                     var undoManager = editor.undoManager;
+                     undoManager.ignore(function () {
+                        $listNode.wrap('<div>');
+                        selection.select(listNode.parentNode, false);
+                        $listNode.attr('contenteditable', 'false');
                      });
+                     skipUndo = true;
+                     afterProcess.push(function () {
+                        undoManager.ignore(function () {
+                           if (!$listNode.parent().is('blockquote')) {
+                              $listNode.unwrap();
+                           }
+                           $listNode.removeAttr('contenteditable');
+                           selection.select(listNode, true);
+                        });
+                        // Добавить новый уровень undo/redo
+                        undoManager.add();
+                        // И обновить значение опции text
+                        this._updateTextByTiny();
+                     }.bind(this));
                   }
                   else {
                      var dom = editor.dom;
@@ -3627,8 +3643,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   throw new Error('Size is not specified');
                }
                var url = imgInfo.filePath || imgInfo.url;
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               if (!this._options.fitImagesToSize || !/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+                  // Вернуть как есть так как подгонка под размер не требуется или это не файл, хранящийся на СбисДиске
                   return Deferred.success({
                      preview: url,
                      original: url

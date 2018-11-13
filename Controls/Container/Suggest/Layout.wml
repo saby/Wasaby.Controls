@@ -36,7 +36,14 @@
                 </Controls.Container.LoadingIndicator>
 
                 <ws:if data="{{_isFooterShown}}">
-                    <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+                    <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}">
+                        <ws:showSelectorButtonTemplate>
+                            <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">{[Показать все]} </span>
+                        </ws:showSelectorButtonTemplate>
+                        <ws:showMoreButtonTemplate>
+                            <span if="{{(_searchResult.hasMore && _searchResult.hasMore !== true)}}">Ещё {{_searchResult.hasMore}}</span>
+                        </ws:showMoreButtonTemplate>
+                    </ws:partial>
                 </ws:if>
             </ws:content>
         </ws:partial>
