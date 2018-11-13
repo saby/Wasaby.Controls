@@ -11,6 +11,26 @@
   display: inline-block;
 }
 
+.controls-SelectedCollection__InfoBox_fixed {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  background: @background_FieldLink-showAllLinks_disabled;
+}
+
+.controls-SelectedCollection__InfoBox_fixed:after {
+  content: '';
+  position: absolute;
+  right: -@fieldLink-showAll-shadow-width;
+  width: @fieldLink-showAll-shadow-width;
+  top: 0;
+  bottom: 0;
+  .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
+  background-color: transparent;
+}
+
 .controls-SelectedCollection__counterItems {
 	color: @color_SelectedCollection-counter;
 	padding-right: @spacing_SelectedCollection-between-counter-items;

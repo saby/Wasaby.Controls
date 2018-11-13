@@ -80,7 +80,7 @@ define('Controls/Controllers/SelectedCollection', [
          var
             selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty),
-            indexItem = self._selectedKeys.indexOf(key);
+            indexItem = selectedKeys.indexOf(key);
 
          if (indexItem !== -1) {
             selectedKeys.splice(indexItem, 1);
@@ -141,22 +141,21 @@ define('Controls/Controllers/SelectedCollection', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            newSelectedKeys,
+            itemsCount = _private.getItems(this).getCount(),
             keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
          if (keysChanged || sourceIsChanged) {
-            newSelectedKeys = newOptions.selectedKeys.slice();
+            this._selectedKeys = newOptions.selectedKeys.slice();
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
-            newSelectedKeys = [];
+            this._selectedKeys = [];
             _private.getItems(this).each(function(item) {
-               newSelectedKeys.push(item.get(newOptions.keyProperty));
+               self._selectedKeys.push(item.get(newOptions.keyProperty));
             });
          }
 
-         newSelectedKeys && _private.setSelectedKeys(this, newSelectedKeys);
-         this._counterWidth = _private.getCounterWidth(_private.getItems(this).getCount());
+         this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
