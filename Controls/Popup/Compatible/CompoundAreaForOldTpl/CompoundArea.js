@@ -245,6 +245,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+
             // getParent() возвращает правильного предка, но у предка не зареган потомок.
             // регаем в предке CompoundArea и содержимое начинает искаться по getChildControlByName
             if (self.__parentFromCfg && self._registerToParent) {
@@ -271,7 +272,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
-         
+
          _beforeUnmount: function() {
             this.__parentFromCfg = null;
             this.__openerFromCfg = null;
