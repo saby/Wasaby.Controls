@@ -266,7 +266,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
-         
+
          _beforeUnmount: function() {
             this.__parentFromCfg = null;
             this.__openerFromCfg = null;
@@ -416,8 +416,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          _confirmationClose: function(arg) {
             var self = this;
-            if(!this._options.readOnly && this.getRecord().isChanged()){ // Запрашиваем подтверждение если сделали close()
-               self._openConfirmDialog(false, true).addCallback(function(result){
+            if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
+               self._openConfirmDialog(false, true).addCallback(function(result) {
                   switch (result) {
                      case 'yesButton': {
                         self.updateRecord().addCallback(function() {
