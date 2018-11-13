@@ -135,6 +135,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
           _updateHistoryHandler: function(e, newHistory) {
              var activeFilter;
              var filterButton = this._options.filterButton;
+             var filterButtonStructure  = FilterHistoryControllerUntil.resetNoSaveStructureKeys(filterButton.getFilterStructure(), this._options.noSaveFilters);
              
              if (newHistory[0] && newHistory[0].isActiveFilter) {
                 activeFilter = newHistory[0];
@@ -142,7 +143,7 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              
              if(activeFilter) {
                 filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
-             } else {
+             } else if (FilterToStringUtil.string(filterButtonStructure, 'historyItemTemplate')) { //часть фильтров могут не сохранять в историю, поэтому нельзя инициировать сброс кнопки фильтров, если применены фильтры которые не сохраняются в историю
                 filterButton.sendCommand('reset-filter');
              }
           },

@@ -1,6 +1,6 @@
 <ws:if data="{{_options.misspellValue}}">
     <div class="ws-fragment">
-        <Controls.Search.Misspell>
+        <Controls.Search.Misspell attr:class="{{_options.misspellClass}}">
             <ws:caption>
                 <span on:click="_misspellClick()">{{_options.misspellValue}}</span>
             </ws:caption>

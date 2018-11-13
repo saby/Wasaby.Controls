@@ -1,11 +1,5 @@
-<ws:template name="itemActionsTpl">
-   <ws:partial template="wml!Controls/List/ItemActions/ItemActions"
-               itemData="{{ itemData }}"
-               swipeTemplate="{{ swipeTemplate }}"
-               itemActionsClass="{{ itemActionsClass }}"
-               itemActionsTemplate="{{ itemActionsTemplate }}"/>
-</ws:template>
 <div attr:class="controls-ListView__itemV{{marker !== false && itemData.isSelected ? (' controls-ListView__itemV_withMarker controls-ListView__item__marked_' + itemData.style)}}
+    {{highlightOnHover !== false ? 'controls-ListView__item_highlightOnHover_' + itemData.style}}
     controls-ListView__item_{{itemData.style}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
     {{!!itemData.isActive ? ' controls-ListView__item_active'}}
@@ -26,16 +20,20 @@
 
     <ws:if data="{{contentTemplate}}">
         <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">
-           <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
-           <ws:if data="{{ itemData.drawActions }}">
-              <ws:partial template="itemActionsTpl" />
-           </ws:if>
+            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}<ws:if data="{{ itemData.drawActions }}">
-               <ws:partial template="itemActionsTpl" />
-           </ws:if>
-        </div>
+        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility ? 'withCheckboxes' : 'withoutCheckboxes'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
+    <ws:if data="{{itemData.drawActions}}">
+        <ws:if data="{{itemData.isSwiped}}">
+            <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+        </ws:if>
+        <ws:else >
+            <ws:partial template="{{itemActionsTemplate}}"
+                        itemActionsClass="{{itemActionsClass}}"
+                        itemData="{{itemData}}"/>
+        </ws:else>
+    </ws:if>
 </div>
