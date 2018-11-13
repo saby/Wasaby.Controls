@@ -1,7 +1,7 @@
 define('Controls-demo/EditAtPlace/EditAtPlace', [
    'Core/Control',
    'wml!Controls-demo/EditAtPlace/EditAtPlace',
-   'WS.Data/Entity/Model',
+   'WS.Data/Entity/Record',
    'WS.Data/Source/Memory',
    'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate',
    'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate2',
@@ -10,7 +10,7 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
 ], function(
    Control,
    template,
-   Model,
+   Record,
    MemorySource,
    exampleTabTemplate,
    exampleTabTemplate2
@@ -70,7 +70,7 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
       _tabSource: null,
 
       _beforeMount: function() {
-         this._record = new Model({
+         this._record = new Record({
             rawData: {
                id: 1,
                text1: 'Мой отдел'
