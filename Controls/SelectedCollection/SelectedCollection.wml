@@ -7,7 +7,7 @@
               templateName="Controls/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
               position="bl">
-          <ws:partial template="wml!Controls/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="max-width: {{_options._counterWidth}}px;"/>
+          <ws:partial template="wml!Controls/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_options._counterWidth}}px;"/>
       </Controls.Popup.InfoBox>
    </ws:if>
    <ws:for data="index, item in _visibleItems">

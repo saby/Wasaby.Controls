@@ -1055,8 +1055,13 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
           "placeholder": {
-            "type": "String"
+            "type": "function|String",
+            "title": "Input's placeholder text."
           },
           "minSearchLength": {
             "type": "String"
@@ -1077,20 +1082,52 @@
             "type": "Boolean"
           },
           "source": {
-            "type": "function"
+            "type": "Array"
           },
           "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Button/SelectorButton": {
+    "name": "Controls/Button/SelectorButton",
+    "title": "Button link with the specified text, on clicking on which a selection window opens.",
+    "className": "Controls/Button/SelectorButton",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Button/SelectorButton",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "caption": {
+            "type": "String"
           },
-          "keyProperty": {
+          "maxVisibleItems": {
+            "type": "String"
+          },
+          "multiSelect": {
+            "type": "Boolean"
+          },
+          "readOnly": {
+            "type": "Boolean"
+          },
+          "source": {
+            "type": "Array"
+          },
+          "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
           }
         }

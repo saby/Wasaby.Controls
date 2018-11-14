@@ -8,6 +8,7 @@ define('Controls/Button/SelectorButton', ['Core/Control', 'wml!Controls/Button/S
     * @extends Core/Control
     * @control
     * @public
+    * @demo Controls-demo/Buttons/SelectorButtonPG
     *
     * @css @spacing_SelectorButton-between-buttonMore-buttonReset Spacing between button more and button reset.
     */

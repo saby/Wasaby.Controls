@@ -140,7 +140,7 @@ define('Controls/Input/Lookup/_Lookup', [
          for (var index = itemsCount - 1; index >= 0 &&
             collectionItems[index].offsetTop === collectionItems[itemsCount - 1].offsetTop; index--) {
 
-            itemsSizes.push(Math.ceil(collectionItems[index].getBoundingClientRect().width));
+            itemsSizes.unshift(Math.ceil(collectionItems[index].getBoundingClientRect().width));
          }
 
          document.body.removeChild(measurer);
@@ -184,10 +184,6 @@ define('Controls/Input/Lookup/_Lookup', [
       _afterMount: function() {
          _private.initializeConstants();
          _private.initializeContainers(this);
-
-         if (!this._isEmpty()) {
-            this._forceUpdate();
-         }
       },
 
       _beforeUpdate: function(newOptions) {
@@ -260,7 +256,10 @@ define('Controls/Input/Lookup/_Lookup', [
 
       _choose: function(event, item) {
          this._notify('addItem', [item]);
-         _private.notifyValue(this, '');
+
+         if (this._simpleViewModel.getValue() !== '') {
+            _private.notifyValue(this, '');
+         }
 
          /* move focus to input after select, because focus will be lost after closing popup  */
          this.activate();

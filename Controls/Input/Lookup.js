@@ -20,13 +20,14 @@ define('Controls/Input/Lookup', ['Core/Control', 'wml!Controls/Input/Lookup/Look
     * @public
     * @author Капустин И.А.
     * @category Input
+    * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
     */
 
    return Control.extend({
       _template: template,
 
       showSelector: function(templateOptions) {
-         this._children.controller._showSelector(templateOptions);
+         this._children.controller.showSelector(templateOptions);
       }
    });
 });

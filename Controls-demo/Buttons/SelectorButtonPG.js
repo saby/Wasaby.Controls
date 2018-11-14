@@ -1,4 +1,4 @@
-define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
+define('Controls-demo/Buttons/SelectorButtonPG', [
    'Core/Control',
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
    'WS.Data/Source/Memory',
@@ -8,17 +8,16 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
 ], function (Control, template, Memory, memorySourceFilter, sourceData, config) {
    'use strict';
 
-   var Lookup = Control.extend({
+   return Control.extend({
       _selectedKeys: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       _template: template,
-      _content: 'Controls/Input/Lookup',
+      _content: 'Controls/Button/SelectorButton',
       _dataObject: null,
       _sourceNames: null,
       _sourceCars: null,
       _componentOptions: null,
       _metaData: null,
-      _suggestTemplate: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
-      _lookupTemplate: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
+      _templateName: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
 
       _beforeMount: function () {
          this._sourceNames = new Memory({
@@ -34,31 +33,19 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
          });
 
          this._componentOptions = {
-            name: 'Lookup',
-            autoDropDown: false,
+            name: 'SelectorButton',
+            caption: 'Selected',
             multiSelect: true,
-            multiline: false,
             readOnly: false,
-            searchParam: 'title',
-            placeholder: 'Input text',
-            minSearchLength: '3',
             maxVisibleItems: '7',
             source: this._sourceNames,
             selectedKeys: this._selectedKeys,
             keyProperty: 'id',
             displayProperty: 'title',
-            suggestTemplate: {
-               templateName: this._suggestTemplate
-            },
-            lookupTemplate: {
-               templateName: this._lookupTemplate
-            }
+            templateName: this._templateName
          };
 
          this._dataObject = {
-            value: {
-               readOnly: true
-            },
             displayProperty: {
                keyProperty: 'id',
                displayProperty: 'title',
@@ -77,6 +64,4 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
          this._metaData = config[this._content].properties['ws-config'].options;
       }
    });
-
-   return Lookup;
 });

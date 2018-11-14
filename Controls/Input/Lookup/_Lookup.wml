@@ -53,7 +53,7 @@
                   on:itemClick="_itemClick()"
                   on:crossClick="_crossClick()"
                   attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}"
-                  attr:style="max-width:{{_options.multiSelect ? _availableWidthCollection}}px;"/>
+                  attr:style="max-width:{{_options.multiSelect && !_options.readOnly ? _availableWidthCollection}}px;"/>
          </ws:if>
       </ws:beforeFieldWrapper>
 

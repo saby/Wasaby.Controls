@@ -59,20 +59,20 @@ define('Controls/Controllers/SelectedCollection', [
 
       addItem: function(self, item) {
          var
-            selectedKeys = self._selectedKeys,
+            selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty);
 
          if (self._selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
                selectedKeys.push(key);
-               _private.setSelectedKeys(self, selectedKeys);
                _private.getItems(self).append([item]);
             } else {
-               _private.setSelectedKeys(self, [key]);
+               selectedKeys = [key];
                _private.getItems(self).assign([item]);
             }
 
             _private.notifyChanges(self, self._selectedKeys);
+            _private.setSelectedKeys(self, selectedKeys);
          }
       },
 
@@ -84,9 +84,9 @@ define('Controls/Controllers/SelectedCollection', [
 
          if (indexItem !== -1) {
             selectedKeys.splice(indexItem, 1);
-            _private.setSelectedKeys(self, selectedKeys);
             _private.getItems(self).remove(item);
-            _private.notifyChanges(self, self._selectedKeys);
+            _private.notifyChanges(self, selectedKeys);
+            _private.setSelectedKeys(self, selectedKeys);
          }
       },
 
@@ -106,7 +106,7 @@ define('Controls/Controllers/SelectedCollection', [
       },
 
       getCounterWidth: function(itemsCount) {
-         return  GetWidth.getWidth(CounterTemplate({
+         return GetWidth.getWidth(CounterTemplate({
             itemsCount: itemsCount
          }));
       },
@@ -138,6 +138,12 @@ define('Controls/Controllers/SelectedCollection', [
          }
       },
 
+      _afterMount: function() {
+         if (_private.getItems(this).getCount()) {
+            this._forceUpdate();
+         }
+      },
+
       _beforeUpdate: function(newOptions) {
          var
             self = this,
@@ -161,6 +167,8 @@ define('Controls/Controllers/SelectedCollection', [
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                _private.notifyItemsChanged(self, result);
                _private.notifyTextValueChanged(self, _private.getTextValue(self));
+               self._forceUpdate();
+
                return result;
             });
          }
@@ -181,12 +189,12 @@ define('Controls/Controllers/SelectedCollection', [
             });
          }
 
-         _private.setSelectedKeys(this, selectedKeys);
          _private.getItems(this).assign(items);
          _private.notifyChanges(this, this._selectedKeys);
+         _private.setSelectedKeys(this, selectedKeys);
       },
 
-      _showSelector: function(templateOptions) {
+      showSelector: function(templateOptions) {
          var
             self = this,
             multiSelect = this._options.multiSelect,
@@ -218,12 +226,12 @@ define('Controls/Controllers/SelectedCollection', [
       },
 
       _onShowSelectorHandler: function(event, templateOptions) {
-         this._showSelector(templateOptions);
+         this.showSelector(templateOptions);
       },
 
       _onAddItemHandler: function(event, item) {
-         _private.addItem(this, item);
          this._notify('choose', [item]);
+         _private.addItem(this, item);
       },
 
       _onRemoveItemHandler: function(event, item) {
