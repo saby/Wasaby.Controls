@@ -1,7 +1,7 @@
 [{
   "include": [
-    "Controls/Application/*",
-    "Controls/Application"
+    "Controls/Application",
+    "Controls/Application/*"
   ],
   "output": "controls-application.package.js"
 }, {
@@ -260,4 +260,14 @@
     "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
-}]
+},
+  {
+    "include": [
+      "Controls/Search/*"
+    ],
+    "exclude": [
+      "Controls/Search/Misspell",
+      "wml!Controls/Search/Misspell"
+    ],
+    "output": "controls-search.package.js"
+  }]

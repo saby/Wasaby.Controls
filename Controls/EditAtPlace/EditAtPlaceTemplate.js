@@ -1,16 +1,14 @@
-define('Controls/EditAtPlace/EditAtPlaceTemplate', [
-   'Core/Control',
-   'wml!Controls/EditAtPlace/EditAtPlaceTemplate'
-], function(Control, template) {
+define('Controls/EditableArea/Templates/Editors/Base', [
+   'Core/IoC',
+   'Controls/EditableArea/Templates/Editors/Base'
+], function(IoC, Control) {
    'use strict';
 
    var EditAtPlaceTemplate = Control.extend({
-      _template: template,
-
-      _editorValueChangeHandler: function(event, value) {
-         this._notify('valueChanged', [value]);
+      constructor: function() {
+         IoC.resolve('ILogger').warn('Controls/EditableArea/Templates/Editors/Base', 'Контрол перенесен, используйте Controls/EditableArea/Templates/Editors/Base.');
+         EditAtPlaceTemplate.superclass.constructor.apply(this, arguments);
       }
-
    });
 
    return EditAtPlaceTemplate;

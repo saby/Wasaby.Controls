@@ -3,9 +3,10 @@ define(
       'Controls/Filter/Button/History/List',
       'Core/Serializer',
       'WS.Data/Chain',
-      'tests/Filter/Button/History/testHistorySource'
+      'tests/Filter/Button/History/testHistorySource',
+      'Controls/Filter/Button/History/resources/historyUtils'
    ],
-   function(List, Serializer, Chain, HistorySourceDemo) {
+   function(List, Serializer, Chain, HistorySourceDemo, historyUtils) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -62,28 +63,24 @@ define(
             list.destroy();
          });
 
-         it('get text', function(done) {
-            var savedList = list,
-               text = [];
-            list._beforeMount(config).addCallback(function() {
-               Chain(list._listItems).each(function(item) {
-                  if (item) {
-                     text.push(savedList._getText(item));
-                  }
-               });
-               assert.equal(text[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
-               assert.equal(text[1], 'Past month, Ivanov K.K.');
-               done();
-            });
+         historyUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
+            config.items = items;
+         });
+
+         list.saveOptions(config);
+
+         it('get text', function() {
+            var textArr = [];
+            list._beforeMount(config);
+            textArr = list._getText(list._options.items, historyUtils.getHistorySource(config.historyId));
+            assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
+            assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 
          });
 
-         it('on resize', function(done) {
-            list._beforeMount(config).addCallback(function() {
-               List._private.onResize(list);
-               assert.isTrue(list._isMaxHeight);
-               done();
-            });
+         it('on resize', function() {
+            List._private.onResize(list);
+            assert.isTrue(list._isMaxHeight);
          });
 
          it('click separator', function() {
@@ -92,23 +89,7 @@ define(
             assert.isFalse(list._isMaxHeight);
          });
 
-         it('load items', function(done) {
-            list._beforeMount(config).addCallback(function(items) {
-               list._afterMount();
-               list._afterUpdate();
-               assert.deepEqual(items.getRawData(), list._listItems.getRawData());
-               done();
-            });
-         });
-
-         it('update items', function(done) {
-            list._beforeUpdate({historyId: 'NEW_HISTORY_ID'}).addCallback(function(items) {
-               assert.deepEqual(items.getRawData(), list._listItems.getRawData());
-               done();
-            });
-         });
-
-         it('content click', function(done) {
+         it('content click', function() {
             var histItems = [];
             list._notify = (e, args) => {
                if (e == 'applyHistoryFilter') {
@@ -116,26 +97,20 @@ define(
                }
             };
             var savedList = list;
-            list._beforeMount(config).addCallback(function() {
-               Chain(list._listItems).each(function(item, index) {
-                  if (item) {
-                     savedList._contentClick('click', item);
-                     assert.deepEqual(histItems, itemsHistory[index]);
-                  }
-               });
-               done();
+            Chain(list._options.items).each(function(item, index) {
+               if (item) {
+                  savedList._contentClick('click', item);
+                  assert.deepEqual(histItems, itemsHistory[index]);
+               }
             });
          });
 
-         it('pin click', function(done) {
+         it('pin click', function() {
             var savedList = list;
-            list._beforeMount(config).addCallback(function(items) {
-               Chain(list._listItems).each(function(item) {
-                  if (item) {
-                     savedList._onPinClick('click', item);
-                  }
-               });
-               done();
+            Chain(list._options.items).each(function(item) {
+               if (item) {
+                  savedList._onPinClick('click', item);
+               }
             });
          });
 

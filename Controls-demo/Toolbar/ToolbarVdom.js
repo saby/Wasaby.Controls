@@ -58,6 +58,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '5',
+                  buttonViewMode: 'icon',
                   icon: 'icon-Link',
                   title: 'Скопировать в буфер',
                   '@parent': false,

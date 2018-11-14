@@ -153,9 +153,13 @@ define('Controls/List/Tree/TreeViewModel', [
          _hasMoreStorage: null,
 
          constructor: function(cfg) {
+            var self = this;
             this._options = cfg;
             if (cfg.expandedItems) {
-               this._expandedItems = cClone(cfg.expandedItems);
+               self._expandedItems = {};
+               cfg.expandedItems.forEach(function(item) {
+                  self._expandedItems[item] = true;
+               });
             } else {
                this._expandedItems = {};
             }
