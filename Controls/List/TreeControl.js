@@ -154,6 +154,10 @@ define('Controls/List/TreeControl', [
       },
       reload: function(filter) {
          _private.clearSourceControllers(this);
+
+         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+         this._children.baseControl.getViewModel()
+            .setExpandedItems({});
          this._children.baseControl.reload(filter);
       },
       editItem: function(options) {
