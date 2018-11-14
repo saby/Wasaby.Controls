@@ -2,7 +2,6 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
-   'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/IBind',
    'Controls/Utils/ArraySimpleValuesUtil'
@@ -10,7 +9,6 @@ define('Controls/List/Tree/TreeViewModel', [
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
-   cClone,
    HierarchyRelation,
    IBindCollection,
    ArraySimpleValuesUtil
