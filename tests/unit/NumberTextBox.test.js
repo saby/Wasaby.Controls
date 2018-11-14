@@ -97,6 +97,14 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             assert.deepEqual(NTB._getCaretPosition(), [1, 1]);
          });
       });
+      describe('_toggleMinus', function() {
+         it('The value is equal null', function() {
+            NTB.setText(null);
+            NTB._toggleMinus();
+
+            assert.equal(NTB._options.text, '0.0');
+         });
+      });
       describe('setDecimals', function() {
          it('14 -> 1', function() {
             assert.equal('1.234', NTB.getText());
