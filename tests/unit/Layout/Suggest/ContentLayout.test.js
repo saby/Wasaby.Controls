@@ -86,19 +86,6 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
          assert.equal(__ContentLayer._private.calcHeight(self, getDropDownContainer(900)), 'auto');
          assert.equal(__ContentLayer._private.calcHeight(self, getDropDownContainer(400)), '76px');
       });
-   
-      it('Suggest::_close', function() {
-         var suggestComponent = new __ContentLayer();
-         var closed = false;
-      
-         suggestComponent._notify = function(event) {
-            if (event === 'close') {
-               closed = true;
-            }
-         };
-         suggestComponent._close();
-         assert.isTrue(closed);
-      });
       
    });
    
