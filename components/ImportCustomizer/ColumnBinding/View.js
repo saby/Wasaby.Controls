@@ -198,11 +198,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   grid.setItems(inf.rows);
                }
                else {
-                  if (!('mapping' in changes)) {
-                     options.mapping = {};
-                  }
                   if ('skippedRows' in changes) {
                      this._updateSkippedRows();
+                  }
+                  else
+                  if (!('mapping' in changes)) {
+                     options.mapping = {};
                   }
                   if ('mapping' in changes && options.fields) {
                      var rows = options.rows;
@@ -294,7 +295,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   firstItem[displayProperty] = options.menuTitle;
                   firstItem[parentProperty] = null;
                   commonMenuItems.unshift(firstItem);
-                  // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
+                  // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задать индивидуальные свойства)
                   menuItems = [];
                   menuCaptions = [];
                   var indexes = commonMenuItems.reduce(function (r, v, i) { r[v[idProperty]] = i; return r; }, {});
