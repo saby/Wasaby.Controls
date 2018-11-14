@@ -86,8 +86,8 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#transparent
     * @cfg {Boolean} Determines whether button having background.
-    * @variant true.
-    * @variant false.
+    * @variant true Button has transparent background.
+    * @variant false Button has default background for this viewmode and style.
     * @default false
     * @example
     * Button has transparent background.
