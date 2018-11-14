@@ -258,6 +258,9 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             this._inputField.removeAttr('placeholder');
          }
+         if (constants.browser.retailOffline) {
+            this._inputField.removeAttr('required');
+         }
          this._inputField
             .on('paste', function(event) {
                var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
