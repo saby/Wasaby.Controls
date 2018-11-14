@@ -121,22 +121,6 @@ define(
             num._beforeMount(config);
             assert.equal(num._numberViewModel.getDisplayValue(), '');
          });
-
-         it('number_options.value and value in viewModel are synchronized', function() {
-            var config = {
-               value: -1,
-            };
-            let num = new NumberInput(config);
-            num._beforeMount(config);
-
-            num._numberViewModel.updateValue(13);
-            num._options.value = -1;
-
-            num._beforeUpdate({ value: '-1' });
-            assert.equal(num._numberViewModel.getDisplayValue(), '-1');
-         });
-
-
       });
    }
 );
