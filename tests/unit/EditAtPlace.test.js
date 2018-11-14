@@ -186,8 +186,14 @@ define([
             instance._beforeMount(cfg);
             instance.saveOptions(cfg);
             instance._notify = mockNotify();
-            instance._options.editObject.acceptChanges();
             instance._options.editObject.set('text', 'changed');
+            instance._oldEditObject = {
+               get: function(field) {
+                  if (field === 'text') {
+                     return 'qwerty';
+                  }
+               }
+            };
             instance.cancelEdit();
             assert.equal(eventQueue.length, 2);
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
@@ -195,6 +201,7 @@ define([
             assert.equal(eventQueue[1].event, 'afterEndEdit');
             assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
             assert.equal(instance._options.editObject.get('text'), 'qwerty');
+            assert.isFalse(instance._options.editObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
@@ -202,21 +209,27 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify('Cancel');
-            instance._options.editObject.acceptChanges();
             instance._options.editObject.set('text', 'changed');
             instance.cancelEdit();
             assert.equal(eventQueue.length, 1);
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.equal(instance._options.editObject.get('text'), 'changed');
+            assert.isTrue(instance._options.editObject.isChanged());
          });
 
          it('deferred', function(done) {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify(Deferred.success());
-            instance._options.editObject.acceptChanges();
             instance._options.editObject.set('text', 'changed');
+            instance._oldEditObject = {
+               get: function(field) {
+                  if (field === 'text') {
+                     return 'qwerty';
+                  }
+               }
+            };
             instance.cancelEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
@@ -226,6 +239,7 @@ define([
                assert.equal(eventQueue[1].event, 'afterEndEdit');
                assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
                assert.isFalse(instance._isEditing);
+               assert.isFalse(instance._options.editObject.isChanged());
                done();
             }, 0);
          });
@@ -252,6 +266,7 @@ define([
                assert.equal(eventQueue[1].event, 'afterEndEdit');
                assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
                assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                assert.isFalse(instance._isEditing);
                done();
             }, 0);
@@ -275,6 +290,7 @@ define([
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
                assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
                assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                assert.isTrue(instance._isEditing);
                done();
             }, 0);
@@ -299,6 +315,7 @@ define([
                assert.equal(eventQueue.length, 0);
                assert.isTrue(instance._isEditing);
                assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                done();
             }, 0);
          });
@@ -324,6 +341,7 @@ define([
                assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
                assert.equal(cfg.editObject.get('text'), 'asdf');
                assert.isFalse(instance._isEditing);
+               assert.isTrue(instance._options.editObject.isChanged());
                done();
             }, 0);
          });
