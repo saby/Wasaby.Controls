@@ -1058,6 +1058,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
+                  isOldMSIE = BROWSER.isIE && BROWSER.IEVersion < 12,
+                  oldMSIEInput,
                   prepareAndInsertContent = function(content) {
                      content = self._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
@@ -1096,8 +1098,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   },
                   onClose = function() {
                      document.removeEventListener('paste', onPaste, true);
-                     if (BROWSER.isIE) {
-                        $('input#TMP_pasteWithStyles').remove();
+                     if (oldMSIEInput) {
+                        oldMSIEInput.remove();
                      }
                      if (typeof onAfterCloseHandler === 'function') {
                         onAfterCloseHandler();
@@ -1120,11 +1122,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               closeByExternalClick: true,
                               opener: self,
                               handlers: {
-                                 onShow: BROWSER.isIE ? function () {
+                                 onShow: isOldMSIE ? function () {
                                     // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
                                     // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
-                                    var input = $('<input style="position:absolute; top:-100px;" id="TMP_pasteWithStyles" />').appendTo('body');
-                                    setTimeout(input.focus.bind(input), 100);
+                                    oldMSIEInput = $('<input style="position:absolute; top:-100px;" id="TMP_pasteWithStyles" />').appendTo('body');
+                                    setTimeout(oldMSIEInput.focus.bind(oldMSIEInput), 100);
                                  } : null
                               }
                            },
