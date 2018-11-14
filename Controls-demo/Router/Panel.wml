@@ -6,16 +6,16 @@
       <Controls.Input.Text on:valueChanged="kppChanged()" value="{{content.kpp}}" placeholder="kpp" name="kpp"/>
    </Router.Route>
    <p>
-      <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 100 }}" kpp="{{6}}">
+      <Router.Link href="inn/:inn/kpp/:kpp" prettyUrl="inn/:inn/kpp/:kpp" inn="{{ 100 }}" kpp="{{6}}">
          <a href="{{content.href}}">*inn/100/kpp/6*</a>
       </Router.Link><br/>
-      <Router.Link href="inn/:inn/kpp/:kpp" inn="{{ 777 }}" kpp="{{25}}">
+      <Router.Link href="inn/:inn/kpp/:kpp" prettyUrl="inn/:inn/kpp/:kpp" inn="{{ 777 }}" kpp="{{25}}">
          <a href="{{content.href}}">*inn/777/kpp/25*</a>
       </Router.Link><br/>
-      <Router.Link href="inn/:inn/kpp/:kpp" clear="{{true}}">
+      <Router.Link href="inn/:inn/kpp/:kpp" prettyUrl="inn/:inn/kpp/:kpp" clear="{{true}}">
          <a href="{{content.href}}">*clear inn and kpp*</a>
       </Router.Link><br/>
-      <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+      <Router.Link href="/Controls-demo/app/:app" href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
          <a href="{{content.href}}">Go to list of demos</a>
       </Router.Link><br/>
 
