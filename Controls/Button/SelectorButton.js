@@ -4,7 +4,7 @@ define('Controls/Button/SelectorButton', ['Core/Control', 'wml!Controls/Button/S
    /**
     * Button link with the specified text, on clicking on which a selection window opens.
     *
-    * @class Controls/Button/SelectorButton/_SelectorButton
+    * @class Controls/Button/SelectorButton
     * @extends Core/Control
     * @control
     * @public
