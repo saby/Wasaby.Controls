@@ -3,9 +3,12 @@ define(
       'Controls/Dropdown/Controller',
       'WS.Data/Source/Memory',
       'Core/core-clone',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'Controls/History/Source',
+      'Controls/History/Service',
+      'Core/Deferred'
    ],
-   (Dropdown, Memory, Clone, RecordSet) => {
+   (Dropdown, Memory, Clone, RecordSet, historySource, historyService, Deferred) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -155,6 +158,37 @@ define(
             });
          });
 
+         it('_beforeUpdate new historySource', function() {
+            let dropdownController = getDropdownController(config);
+            let historyS = new historySource({
+               originSource: new Memory({
+                  idProperty: 'id',
+                  data: items
+               }),
+               historySource: new historyService({
+                  historyId: 'TEST_HISTORY_ID'
+               })
+            });
+            historyS.query = function() {
+               var def = new Deferred();
+               def.addCallback(function(set) {
+                  return set;
+               });
+               def.callback(itemsRecords);
+               return def;
+            };
+            dropdownController._selectedItems = [];
+            dropdownController._items = itemsRecords;
+            dropdownController._beforeUpdate({
+               selectedKeys: '[2]',
+               keyProperty: 'id',
+               source: historyS,
+               filter: {}
+            });
+            assert.deepEqual(dropdownController._filter, { $_history: true });
+
+         });
+
          it('open dropdown', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = itemsRecords;
@@ -256,6 +290,12 @@ define(
                open: setTrue.bind(this, assert)
             };
             dropdownController._open();
+         });
+         it('getFilter', () => {
+            let filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
+            assert.deepEqual(filter, {$_history: true, id: 'test'});
+            filter = Dropdown._private.getFilter({id: 'test2'}, new Memory({}));
+            assert.deepEqual(filter, {id: 'test2'});
          });
 
          function setTrue(assert) {

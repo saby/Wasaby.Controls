@@ -40,12 +40,6 @@ define(
       };
 
       describe('Controls/History/Menu', function() {
-         it('_private.getMetaHistory', function() {
-            assert.deepEqual(Menu._private.getMetaHistory(), {
-               $_history: true
-            });
-         });
-
          it('_private.getMetaPinned', function() {
             var item = new Model({
                rawData: {
@@ -57,39 +51,21 @@ define(
                $_pinned: true
             });
          });
-
-         it('_private.prepareFilter', function() {
-            var filter = {
-               test: 'test'
-            };
-
-            assert.deepEqual(Menu._private.prepareFilter(filter), {
-               test: 'test',
-               $_history: true
-            });
-         });
          it('_beforeMount', function() {
             var menu = getHistoryMenu(menuConfig);
             menu._beforeMount(menuConfig);
             assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_small');
-            assert.deepEqual(menu._filter, { $_history: true, id: 'test' });
          });
-         it('_beforeUpdate filter changed', function() {
-            var menu = getHistoryMenu(menuConfig);
-            menu._beforeMount(menuConfig);
-            var newConfig = { filter: { id: 'test2' } };
-            assert.deepEqual(menu._filter, { $_history: true, id: 'test' });
-            menu._beforeUpdate(newConfig);
-            assert.deepEqual(menu._filter, { $_history: true, id: 'test2' });
-         });
-         it('_beforeUpdate source changed', function() {
+         it('_beforeUpdate', function() {
             var menu = getHistoryMenu(menuConfig);
             var newConfig = Clone(menuConfig);
-            newConfig.source = new Memory({
-               data: []
-            });
+            newConfig.viewMode = 'button';
             menu._beforeUpdate(newConfig);
-            assert.deepEqual(menu._filter, { $_history: true, id: 'test' });
+            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button_small');
+            newConfig.size = 'm';
+            newConfig.icon = '';
+            menu._beforeUpdate(newConfig);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button');
          });
       });
    }
