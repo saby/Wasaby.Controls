@@ -224,7 +224,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                         },
                         style: self._styles[config.status],
                         contentTemplate: CompoundContainer,
-                        iconClose: config.closeButton || true
+                        iconClose: config.closeButton
                      }
                   });
                   self._notificationVDOM.isDestroyed = function() {

@@ -8,6 +8,7 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
+         pageName: '{{ _options.pageName }}',
          staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }}
@@ -29,6 +30,7 @@
            <ws:partial template="{{ _options.head }}"/>
        </ws:else>
    </ws:if>
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
          <ws:if data="{{_options.theme}}">
