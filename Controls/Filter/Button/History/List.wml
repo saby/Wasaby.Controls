@@ -1,24 +1,19 @@
-<ws:if data="{{_listItems && _listItems.getCount() !== 0}}">
-   <div class="controls-HistoryList">
-      <div class="controls-FilterPanel__caption">Ранее отбирались</div>
-      <div class="controls-HistoryList__content {{_isMaxHeight ? 'controls-FilterPanel_maxHeight'}}">
-         <ws:for data="item in _listItems">
-            <div class="controls-HistoryList__itemWrapper">
-               <div class="controls-HistoryList__item" on:click="_contentClick(item)">{{_getText(item)}}</div>
-               <span class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
-                     on:click="_onPinClick(item)"></span>
-            </div>
-         </ws:for>
-      </div>
-      <ws:if data="{{_arrowVisible}}">
-         <div class="controls-FilterPanel__separator">
-            <Controls.Button.BigSeparator
-                    value="{{!_isMaxHeight}}"
-                    on:click="_clickSeparatorHandler()"/>
+<div class="controls-HistoryList">
+   <div class="controls-FilterPanel__caption">Ранее отбирались</div>
+   <div class="controls-HistoryList__content {{_isMaxHeight ? 'controls-FilterPanel_maxHeight'}}">
+      <ws:for data="index, item in _options.items">
+         <div class="controls-HistoryList__itemWrapper">
+            <div class="controls-HistoryList__item" on:click="_contentClick(item)">{{_itemsText[index]}}</div>
+            <span class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
+                  on:click="_onPinClick(item)"></span>
          </div>
-      </ws:if>
+      </ws:for>
    </div>
-</ws:if>
-<ws:else>
-   <div></div>
-</ws:else>
+   <ws:if data="{{_arrowVisible}}">
+      <div class="controls-FilterPanel__separator">
+         <Controls.Button.BigSeparator
+                 value="{{!_isMaxHeight}}"
+                 on:click="_clickSeparatorHandler()"/>
+      </div>
+   </ws:if>
+</div>
