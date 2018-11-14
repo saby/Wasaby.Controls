@@ -21,7 +21,7 @@ define([
                   return {
                      setHasMoreStorage: function() {
                      },
-                     clearExpanded: function() {
+                     setExpandedItems: function() {
                      }
                   };
                }
@@ -54,7 +54,7 @@ define([
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {},
-                     clearExpanded: function() {
+                     setExpandedItems: function() {
                      },
                      setRoot: function() {
                         setRootCalled = true;
@@ -274,8 +274,8 @@ define([
                },
                getViewModel: function() {
                   return {
-                     clearExpanded: function() {
-                        treeViewModel.clearExpanded();
+                     setExpandedItems: function() {
+                        treeViewModel.setExpandedItems({});
                      }
                   };
                }
@@ -303,8 +303,8 @@ define([
                },
                getViewModel: function() {
                   return {
-                     clearExpanded: function() {
-                        treeViewModel.clearExpanded();
+                     setExpandedItems: function() {
+                        treeViewModel.setExpandedItems({});
                      }
                   };
                }

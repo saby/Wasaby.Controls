@@ -155,7 +155,7 @@ define('Controls/List/TreeControl', [
       reload: function(filter) {
          _private.clearSourceControllers(this);
          this._children.baseControl.getViewModel()
-            .clearExpanded();
+            .setExpandedItems({});
          this._children.baseControl.reload(filter);
       },
       editItem: function(options) {

@@ -329,12 +329,27 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
          });
 
-         it('setRoot', function() {
-            treeViewModel.setRoot('testRoot');
-            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            treeViewModel.setRoot(null);
+         it('setExpandedItems', function() {
+            treeViewModel.setExpandedItems({});
+            assert.deepEqual({}, treeViewModel._expandedItems);
+
+            treeViewModel.setExpandedItems({
+               1234: true,
+               324234: false
+            });
+            assert.deepEqual({
+               1234: true,
+               324234: false
+            }, treeViewModel._expandedItems);
          });
+
+         it('getCurrent and toggleExpanded', function() {
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
+            assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
+
+         });
+
+
          it('onCollectionChange', function() {
             var
                removedItems1 = [
