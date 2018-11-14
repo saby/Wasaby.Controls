@@ -2922,7 +2922,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (e.key === 'Tab') {
                   // Не обрабатывать нажатие Tab - за переходы между компонентами отвечает первичный родительский класс
                   // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
-                  e.stopImmediatePropagation();
                   return;
                }
                this._typeInProcess = true;
