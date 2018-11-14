@@ -266,7 +266,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
-         
+
          _beforeUnmount: function() {
             this.__parentFromCfg = null;
             this.__openerFromCfg = null;
@@ -408,7 +408,33 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
-            this.close(arg);
+            if (this._options._mode === 'recordFloatArea') {
+               this._confirmationClose(arg);
+            } else {
+               this.close(arg);
+            }
+         },
+         _confirmationClose: function(arg) {
+            var self = this;
+            if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
+               self._openConfirmDialog(false, true).addCallback(function(result) {
+                  switch (result) {
+                     case 'yesButton': {
+                        self.updateRecord().addCallback(function() {
+                           self.close(arg);
+                        });
+                        break;
+                     }
+                     case 'noButton': {
+                        self.getRecord().rollback();
+                        self.close(arg);
+                        break;
+                     }
+                  }
+               });
+            } else {
+               this.close(arg);
+            }
          },
          _mouseenterHandler: function() {
             if (this._options.hoverTarget) {
