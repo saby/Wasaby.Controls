@@ -211,7 +211,9 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
           * @return {Array} Разница между промежутками - два промежутка  [[a,b],[c,d]]  |------|            |------|
           */
          _getDiff: function (currentRange, newRange, count) {
-            var top, bottom, diff = {}, addPosition = 0;
+            var diff = {};
+            var addPosition = 0;
+
             //Если промежутки равны
             if (currentRange[0] == newRange[0] && currentRange[1] == newRange[1]) {
                return false;
@@ -228,17 +230,17 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             }
 
             // Если промежутки не пересекаются
+            //
+            //                a          b   c           d
+            // [a,b]          |----------|
+            // [c,d]                         |-----------|
             if (currentRange[1] < newRange[0]) {
                diff.remove = currentRange;
                diff.add = newRange;
-               addPosition = diff.add[0];
+               // Добавляем новые записи сразу после текущих (которые буду удалены следующим шагом)
+               addPosition = diff.remove[1] + 1;
             }
 
-            // Если промежутки не пересекаются
-            if (currentRange[0] > newRange[1]) {
-               diff.add = newRange;
-               diff.remove = currentRange;
-            }
 
             if (diff.add[0] > count){
                diff.add[0] = count;

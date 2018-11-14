@@ -45,12 +45,12 @@
    }
 
    .controls-RichEditor__editorFrame {
-      // Вместо clearfix используем overflow: hidden. Если чешуться руки и хочется добавить clearfix - не делай этого!
+      // Вместо clearfix используем overflow: hidden или auto или scroll (но не visible). Если чешуться руки и хочется добавить clearfix - не делай этого!
       // https://online.sbis.ru/opendoc.html?guid=2f2422e4-fe69-4ad9-ad85-a2b44b42884d
       position: relative;
       min-width: 100%;
       max-width: max-content;
-      overflow: visible;
+      overflow: auto;
       z-index: 1;
       /* Проблема:
                   tinyMCE при клике на contenteditable="false" элемент внутри поля ввода

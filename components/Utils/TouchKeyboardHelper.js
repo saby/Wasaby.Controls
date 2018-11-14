@@ -1,6 +1,5 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
- * @author Зайцев А.С.
  */
 define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
    "Core/constants",
@@ -49,7 +48,7 @@ define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
       getKeyboardHeight: function(){
          if (this.isKeyboardVisible()){
             if (constants.browser.isMobileIOS){
-               return $(window).height() * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
+               return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          }
          return 0;
