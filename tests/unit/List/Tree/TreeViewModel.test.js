@@ -347,7 +347,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          });
          it('setExpandedItems', function() {
             treeViewModel.setExpandedItems([]);
-            assert.deepEqual([], treeViewModel._expandedItems);
+            assert.deepEqual({}, treeViewModel._expandedItems);
 
             treeViewModel.setExpandedItems([1, 2]);
             assert.deepEqual({
