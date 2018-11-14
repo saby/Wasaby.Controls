@@ -130,7 +130,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                    query,
                    filter = this._getOpenedPath(meta.parentProperty);
                 filter.columns = this._formatColumnsForFilter(meta.columns);
-                query = this._createQuery(filter, this._getLimit(limit, !meta.serverSideExport));
+                query = this._createQuery(filter, this._getLimit(limit, meta.serverSideExport));
                 return this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
             }.bind(this));
         },
