@@ -137,14 +137,16 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
              var filterButton = this._options.filterButton;
              var filterButtonStructure  = FilterHistoryControllerUntil.resetNoSaveStructureKeys(filterButton.getFilterStructure(), this._options.noSaveFilters);
              
-             if (newHistory[0] && newHistory[0].isActiveFilter) {
+             if (newHistory && newHistory[0] && newHistory[0].isActiveFilter) {
                 activeFilter = newHistory[0];
              }
              
-             if(activeFilter) {
-                filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
-             } else if (FilterToStringUtil.string(filterButtonStructure, 'historyItemTemplate')) { //часть фильтров могут не сохранять в историю, поэтому нельзя инициировать сброс кнопки фильтров, если применены фильтры которые не сохраняются в историю
-                filterButton.sendCommand('reset-filter');
+             if (newHistory) {
+                if (activeFilter) {
+                   filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(activeFilter.filter, filterButton.getFilterStructure(), undefined, this._options.noSaveFilters));
+                } else if (FilterToStringUtil.string(filterButtonStructure, 'historyItemTemplate')) { //часть фильтров могут не сохранять в историю, поэтому нельзя инициировать сброс кнопки фильтров, если применены фильтры которые не сохраняются в историю
+                   filterButton.sendCommand('reset-filter');
+                }
              }
           },
 
