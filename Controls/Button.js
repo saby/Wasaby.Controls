@@ -217,7 +217,7 @@ define('Controls/Button', [
          viewMode: 'button',
          size: 'm',
          iconStyle: 'secondary',
-         transparent: false
+         transparent: true
       };
    };
 
