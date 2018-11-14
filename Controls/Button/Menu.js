@@ -43,11 +43,13 @@ define('Controls/Button/Menu',
 
          _beforeMount: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-            this._filter = options.filter;
          },
 
          _beforeUpdate: function(options) {
-            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            if (this._options.size !== options.size || this._options.icon !== options.icon ||
+               this._options.viewMode !== options.viewMode) {
+               this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            }
          },
 
          _onItemClickHandler: function(event, result) {

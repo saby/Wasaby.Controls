@@ -49,6 +49,7 @@ define('Controls/Input/ComboBox',
          _template: template,
          _isOpen: false,
          _notifyHandler: tmplNotify,
+         _filter: null,
 
          _beforeMount: function(options) {
             this._onClose = _private.close.bind(this);
@@ -69,7 +70,9 @@ define('Controls/Input/ComboBox',
          },
 
          _beforeUpdate: function() {
-            this._width = this._container.offsetWidth;
+            if (this._width !== this._container.offsetWidth) {
+               this._width = this._container.offsetWidth;
+            }
          },
 
          _mouseDownHandler: function() {
@@ -102,7 +105,6 @@ define('Controls/Input/ComboBox',
 
       ComboBox.getDefaultOptions = function() {
          return {
-            editable: false,
             placeholder: rk('Выберите...')
          };
       };

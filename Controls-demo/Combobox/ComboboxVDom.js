@@ -3,12 +3,13 @@ define('Controls-demo/Combobox/ComboboxVDom',
       'Core/Control',
       'wml!Controls-demo/Combobox/ComboboxVDom',
       'WS.Data/Source/Memory',
+      'Controls-demo/Combobox/historySourceCombobox',
       'Controls/Input/ComboBox',
       'wml!Controls-demo/Combobox/itemTemplateCombobox',
       'wml!Controls-demo/Combobox/itemTemplateMultiline',
       'css!Controls-demo/Combobox/ComboboxVDom'
    ],
-   function(Control, template, Memory) {
+   function(Control, template, Memory, historySourceCombobox) {
 
       'use strict';
 
@@ -23,6 +24,8 @@ define('Controls-demo/Combobox/ComboboxVDom',
          _selectedKey7: 'Branch, representative of a foreign legal entity accredited in accordance with ' +
          'the established procedure in the ',
          _selectedKeyReadOnly: '1',
+         _selectedKeyHistory: null,
+         _historySource: null,
 
          _beforeMount: function() {
             this._itemsRegions = [
@@ -86,6 +89,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
             ];
             this._cities = ['Yaroslavl', 'Moscow', 'St-Petersburg', 'Astrahan', 'Arhangelsk', 'Abakan', 'Barnaul', 'Belgorod',
                'Voronezh', 'Vladimir', 'Bryansk', 'Ekaterinburg', 'Kostroma', 'Vologda', 'Pskov', 'Kirov'];
+            this._historySource = historySourceCombobox.createMemory();
          },
 
          _createMemory: function(items) {
