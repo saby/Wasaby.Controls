@@ -3,7 +3,19 @@
     "Controls/Application",
     "Controls/Application/*"
   ],
+  "exclude": [
+    "wml!Controls/Application/CompatibleScripts",
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData"
+  ],
   "output": "controls-application.package.js"
+}, {
+  "include": [
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData",
+    "Controls/Context/*"
+  ],
+  "output": "controls-context.package.js"
 }, {
   "include": [
     "Controls/Button/*",
