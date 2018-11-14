@@ -13,7 +13,7 @@
         <ws:else data="{{!!item.buttonStyle}}">
             <Controls.Button readOnly="{{item.buttonReadOnly}}" caption="{{item.buttonCaption}}" iconStyle="{{item.buttonIconStyle}}" icon="{{item.buttonIcon}}" style="{{item.buttonStyle}}" viewMode="{{item.buttonViewMode}}" size="{{size}}"/>
         </ws:else>
-        <ws:if data="{{!!item.title}}">
+        <ws:if data="{{!!item.title && !item.buttonViewMode}}">
             <span class="controls-ToolbarV__item_title {{item.icon ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item.title}}</span>
         </ws:if>
     </ws:else>

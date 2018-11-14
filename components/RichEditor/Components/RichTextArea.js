@@ -2902,29 +2902,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _onKeyDownCallback4: function(e) {
+               if (e.key === 'Tab') {
+                  // Не обрабатывать нажатие Tab - за переходы между компонентами отвечает первичный родительский класс
+                  // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
+                  e.stopImmediatePropagation();
+                  return;
+               }
                this._typeInProcess = true;
                if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp ||
                   (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
                }
-               if (e.keyCode === cConstants.key.tab) {
-                  var
-                     area = this.getParent(),
-                     nextControl = area.getNextActiveChildControl(e.shiftKey);
-
-                  if (nextControl) {
-                     this._fakeArea.focus();
-                     nextControl.setActive(true, e.shiftKey);
-                  }
-
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
-                  this._typeInProcess = false;
-
-                  return false;
-               } else if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12 )) {
+               if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12 )) {
                   //сбрасываем флаг при любом горячем сочетании
                   if (e.which === cConstants.key.enter) {
                      e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие

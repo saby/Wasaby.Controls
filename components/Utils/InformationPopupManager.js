@@ -182,6 +182,15 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
          showNotification: function(config, notHide) {
             if (NotificationVDOM.isNewEnvironment()) {
                var self = this;
+
+               /**
+                * В старом окружении метод возвращает инстанс компонента. В vdom кружении мы не можем его вернуть, потому что он создается ассинхронно,
+                * будем возвращать Deferred в callback которого придет инстанс компонента окна. Для этого в Controls/Popup/Compatible/Notification
+                * отдадим Deferred в опцию _def и отдадим его из метода.
+                * Прикладные разработчики у себя поправят код на работу с Deferred.
+                */
+               config._def = new Deferred();
+
                this._createNotificationOpener().addCallback(function() {
                   /**
                    * Эмулируем код в init SBIS3.CONTROLS/NotificationPopup
@@ -199,14 +208,6 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                    * пробросить вызовы в opener. Поэтому передаем его.
                    */
                   config._opener = self._notificationVDOM;
-
-                  /**
-                   * В старом окружении метод возвращает инстанс компонента. В vdom кружении мы не можем его вернуть, потому что он создается ассинхронно,
-                   * будем возвращать Deferred в callback которого придет инстанс компонента окна. Для этого в Controls/Popup/Compatible/Notification
-                   * отдадим Deferred в опцию _def и отдадим его из метода.
-                   * Прикладные разработчики у себя поправят код на работу с Deferred.
-                   */
-                  config._def = new Deferred();
 
                   /**
                    * Используем базовый шаблон vdom нотификационных окон с контентом Core/CompoundContainer для
@@ -249,12 +250,9 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                var self = this;
                $('body').append(openerContainer);
 
-               //todo Удалить этот код и оставить тот, что закомменчен ниже, когда добавят createControlAsync
-               // https://online.sbis.ru/opendoc.html?guid=ac019cf6-66b7-4ff4-b817-befeadc3d580
-               this._notificationVDOM = NotificationVDOM.createControl(NotificationVDOM, {}, openerContainer);
-               var baseAfterMount = this._notificationVDOM._afterMount;
-               this._notificationVDOM._afterMount = function() {
-                  baseAfterMount.apply(self._notificationVDOM, arguments);
+               requirejs(['Core/Creator'], function(Creator) {
+                  Creator(NotificationVDOM, {}, openerContainer).then(function(instance) {
+                     self._notificationVDOM = instance;
                      /**
                       * Ассоциативный объект значений опций старого и нового шаблона.
                       * [значение в старом шаблоне]: значение в новом шаблоне
@@ -273,32 +271,9 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
                         error: 'icon-size icon-24 icon-Alert icon-error',
                         warning: 'icon-size icon-24 icon-Alert icon-attention'
                      };
-                     informationOpenerDeferred.callback(self._notificationVDOM);
-               };
-
-               // todo Раскоментить код, когда добавят createControlAsync https://online.sbis.ru/opendoc.html?guid=ac019cf6-66b7-4ff4-b817-befeadc3d580
-               // NotificationVDOM.createControlAsync(NotificationVDOM, {}, openerContainer).then(function(instance) {
-               //    self._notificationVDOM = instance;
-               //    /**
-               //     * Ассоциативный объект значений опций старого и нового шаблона.
-               //     * [значение в старом шаблоне]: значение в новом шаблоне
-               //     */
-               //    self._styles = {
-               //       success: 'done',
-               //       error: 'error',
-               //       warning: 'warning'
-               //    };
-               //
-               //    /**
-               //     * Аналогично this._styles.
-               //     */
-               //    self._icon = {
-               //       success: 'icon-size icon-24 icon-Yes icon-done',
-               //       error: 'icon-size icon-24 icon-Alert icon-error',
-               //       warning: 'icon-size icon-24 icon-Alert icon-attention'
-               //    };
-               //    informationOpenerDeferred.callback(instance);
-               // });
+                     informationOpenerDeferred.callback(instance);
+                  });
+               });
             }
             return informationOpenerDeferred;
 

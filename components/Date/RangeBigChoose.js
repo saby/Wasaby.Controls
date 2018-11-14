@@ -218,6 +218,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       selectionTypes: selectionTypes,
 
       $constructor: function () {
+         this._publish('onChoose', 'onCancel');
       },
 
       init: function () {
@@ -336,6 +337,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear + 1, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
+         options.quantum = options.quantum || {};
          if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
             options.quantum.days = [1];
          }
