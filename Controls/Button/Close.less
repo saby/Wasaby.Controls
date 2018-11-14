@@ -6,24 +6,23 @@
    content: "\200b";
 }
 
-.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
+.controls-Button__close__icon_default_l {
    font-size: @font-size_CloseButton_default;
 }
 
 //Icon has odd height, button has even height and chrome center align break down. Height is even for chrome.
 .ws-is-chrome {
-   .controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
+   .controls-Button__close__icon_default_l {
       height: @height_CloseButton_icon_l;
    }
 }
 
-.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l,
-.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
+.controls-Button__close__icon_default_l, .controls-Button__close__icon_default_m {
    font-family: @font-family_CloseButton_default;
    color: @color_CloseButton-icon;
 }
 
-.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
+.controls-Button__close__icon_default_m {
    font-size: @font-size_CloseButton_m;
 }
 
@@ -36,8 +35,7 @@
    text-shadow: @text-shadow_Button;
 }
 
-.controls-Button__close__icon_default_l:active, .controls-Button__close__icon_primary_l:active,
-.controls-Button__close__icon_default_m:active, .controls-Button__close__icon_primary_m:active {
+.controls-Button__close__icon_default_l:active, .controls-Button__close__icon_default_m:active {
    color: @color_CloseButton-icon_hover;
 }
 
@@ -52,28 +50,27 @@
    cursor: pointer;
 }
 
-.controls-Button__close_default {
+.controls-Button__close_default_transparent {
    background-color: @background-color_CloseButton_default;
 }
 
-.controls-Button__close_primary {
+.controls-Button__close_default_untransparent {
    background-color: @background-color_CloseButton_primary;
 }
 
-.controls-Button__close_default_l, .controls-Button__close_primary_l {
+.controls-Button__close_default_l {
    width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
    height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 }
 
-.controls-Button__close_default_l, .controls-Button__close_primary_l,
-.controls-Button__close_default_m, .controls-Button__close_primary_m {
+.controls-Button__close_default_l, .controls-Button__close_default_m {
    border: solid @border-color_CloseButton;
    border-width: @border-width_CloseButton;
    border-radius: @border-radius_CloseButton;
    box-shadow: @box-shadow_CloseButton;
 }
 
-.controls-Button__close_default_m, .controls-Button__close_primary_m {
+.controls-Button__close_default_m {
    width: @width_CloseButton_m - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
    height: @height_CloseButton_m - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 }
@@ -85,13 +82,12 @@
    color: @color_CloseButton-light-icon;
 }
 
-.controls-Button__close_default:active, .controls-Button__close_primary:active {
+.controls-Button__close_default:active {
    border-color: @default-border-color-second;
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__icon_default_l:hover, .controls-Button__close__icon_primary_l:hover,
-   .controls-Button__close__icon_default_m:hover, .controls-Button__close__icon_primary_m:hover {
+   .controls-Button__close__icon_default_l:hover, .controls-Button__close__icon_default_m:hover {
       color: @color_CloseButton-icon_hover;
    }
 
@@ -99,8 +95,7 @@
       color: @color_CloseButton-light-icon_hover;
    }
 
-   .controls-Button__close_default_l:hover, .controls-Button__close_primary_l:hover,
-   .controls-Button__close_default_m:hover, .controls-Button__close_primary_m:hover {
+   .controls-Button__close_default_l:hover, .controls-Button__close_default_m:hover {
       border-color: @default-border-color-second;
    }
 }
