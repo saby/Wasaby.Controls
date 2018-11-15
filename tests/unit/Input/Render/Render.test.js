@@ -1,82 +1,64 @@
 define(
    [
-      'Core/constants',
-      'Controls/Utils/hasHorizontalScroll',
-      'Controls/Input/resources/InputRender/InputRender',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Render',
+      'tests/resources/TemplateUtil',
+      'wml!tests/Input/Render/Content'
    ],
-   function(Constants, hasHorizontalScroll, Render, BaseViewModel) {
-
+   function(Render, TemplateUtil, Content) {
       'use strict';
 
-      if (!Constants.isBrowserPlatform) {
-         return;
-      }
-
       describe('Controls.Input.Render', function() {
-         var render, viewModel, result;
-         var saveFn = getComputedStyle;
+         var ctrl;
 
          beforeEach(function() {
-            result = undefined;
-            viewModel = new BaseViewModel({
-               value: ''
+            ctrl = new Render();
+         });
+
+         describe('Behavior', function() {
+            describe('_getState', function() {
+               it('Control in read mode.', function() {
+                  ctrl._options.readOnly = true;
+
+                  assert.equal(ctrl._getState(), '_readOnly');
+               });
+               it('Control in active mode.', function() {
+                  ctrl._options.readOnly = false;
+                  ctrl._active = true;
+
+                  assert.equal(ctrl._getState(), '_active');
+               });
+               it('Control in inactive mode.', function() {
+                  ctrl._options.readOnly = false;
+                  ctrl._active = false;
+
+                  assert.equal(ctrl._getState(), '');
+               });
             });
-            render = new Render();
-
-            render._options = {
-               viewModel: viewModel
-            };
-            render._children = {
-               divinput: {
-                  querySelector: function() {
-                     return this;
-                  }
-               },
-               input: {
-                  querySelector: function() {
-                     return this;
-                  }
-               }
-            };
-            render._notify = function(eventName) {
-               result = eventName;
-            };
-
-            getComputedStyle = function() {
-               return {};
-            };
          });
-
-         afterEach(function() {
-            getComputedStyle = saveFn;
-         });
-
-         describe('_inputHandler', function() {
-            var event;
+         describe('Template', function() {
+            var template = TemplateUtil.clearTemplate(new Render({})._template);
 
             beforeEach(function() {
-               event = {
-                  target: {
-                     setSelectionRange: function() {}
-                  },
-                  nativeEvent: {}
+               ctrl._options = {
+                  content: Content,
+                  size: 'm',
+                  fontStyle: 'default',
+                  textAlign: 'left',
+                  style: 'info'
                };
             });
+            it('In the content template passed the placeholder template', function() {
+               ctrl._options.placeholder = 'test placeholder';
 
-            it('The value has changed', function() {
-               event.target.value = '123';
-               event.target.selectionStart = 3;
-               event.target.selectionEnd = 3;
-               render._inputHandler(event);
-               assert.equal(result, 'valueChanged');
-            });
-            it('The value has not changed', function() {
-               event.target.value = '';
-               event.target.selectionStart = 0;
-               event.target.selectionEnd = 0;
-               render._inputHandler(event);
-               assert.equal(result, undefined);
+               assert.equal(template(ctrl), '<div class="controls-Render controls-Render_style controls-Render_size_m controls-Render_style_info controls-Render_fontStyle_default controls-Render_fontStyle_default_size_m controls-Render_textAlign_left">' +
+                                                '<div class="controls-Render__wrapper">' +
+                                                   '<span class="controls-Render__baseline">&#65279;</span>' +
+                                                   '<div class="controls-Render__field_textAlign_left">' +
+                                                      '<div>testing the content</div>' +
+                                                      '<div class="controls-Render__placeholder controls-Render__placeholder_overflow">test placeholder</div>' +
+                                                   '</div>' +
+                                                '</div>' +
+                                             '</div>');
             });
          });
       });
