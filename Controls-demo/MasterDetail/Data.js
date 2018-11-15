@@ -1,11 +1,15 @@
-define('Controls-demo/MasterDetail/Data', [], function() {
+define('Controls-demo/MasterDetail/Data', [
+   'Controls-demo/MasterDetail/Images'
+], function(
+   Images
+) {
 
    var ASTASK = {
       id: 0,
       name: 'Андрей Сухоручкин',
       shortMsg: 'Необходимо сделать MasterDetail',
       taskType: 'Ошибка в разработку',
-      img: 'AC',
+      img: Images.AS,
       date: '13 авг'
    }, DKSTASK = {
       id: 1,
@@ -13,14 +17,14 @@ define('Controls-demo/MasterDetail/Data', [], function() {
       taskType: 'Задача в разработку',
       isNew: true,
       shortMsg: 'Нужно сделать печать на VDOM',
-      img: 'DK',
+      img: Images.DK,
       date: '14 авг'
    }, AGTASK = {
       id: 2,
       name: 'Александр Герасимов',
       taskType: 'Ошибка в разработку',
       shortMsg: 'Необходимо сделать Окно выбора на VDOM',
-      img: 'AG',
+      img: Images.AG,
       date: '23 авг'
    }, ABTASK = {
       id: 3,
@@ -28,7 +32,7 @@ define('Controls-demo/MasterDetail/Data', [], function() {
       taskType: 'Аттестация',
       shortMsg: 'Аттестация сотрудника',
       isNew: true,
-      img: 'AB',
+      img: Images.AB,
       date: '26 авг'
    };
 
