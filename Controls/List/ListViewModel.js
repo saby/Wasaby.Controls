@@ -19,8 +19,7 @@ define('Controls/List/ListViewModel',
 
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
-         _dragItems: null,
-         _dragTargetItem: null,
+         _dragEntity: null,
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
@@ -79,8 +78,8 @@ define('Controls/List/ListViewModel',
                if (this._draggingItemData.key === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
-               if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetItem : false;
+               if (this._dragEntity && this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
                }
                if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                   itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -110,56 +109,68 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         setDragItems: function(items, itemDragData) {
-            if (this._dragItems !== items) {
-               this._dragItems = items;
-               this._draggingItemData = itemDragData || (items ? this.getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
-               if (this._draggingItemData) {
-                  this._draggingItemData.isDragging = true;
-               }
+         setDragEntity: function(entity) {
+            if (this._dragEntity !== entity) {
+               this._dragEntity = entity;
                this._nextVersion();
                this._notify('onListChange');
             }
          },
 
-         getDragTargetItem: function() {
-            return this._dragTargetItem;
+         getDragEntity: function() {
+            return this._dragEntity;
          },
 
-         setDragTargetItem: function(itemData) {
-            if (this._draggingItemData && (!itemData || this._draggingItemData.key !== itemData.key)) {
-               this._dragTargetItem = itemData;
-               this._updateDragTargetPosition(itemData);
-               this._nextVersion();
-               this._notify('onListChange');
+         setDragItemData: function(itemData) {
+            this._draggingItemData = itemData;
+            if (this._draggingItemData) {
+               this._draggingItemData.isDragging = true;
             }
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getDragItemData: function() {
+            return this._draggingItemData;
+         },
+
+         calculateDragTargetPosition: function(targetData) {
+            var
+               position,
+               prevIndex = -1;
+
+            if (this._dragTargetPosition) {
+               prevIndex = this._dragTargetPosition.index;
+            } else if (this._draggingItemData) {
+               prevIndex = this._draggingItemData.index;
+            }
+
+            if (prevIndex === -1) {
+               position = 'before';
+            } else if (targetData.index > prevIndex) {
+               position = 'after';
+            } else if (targetData.index < prevIndex) {
+               position = 'before';
+            } else if (targetData.index === prevIndex) {
+               position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
+            }
+
+            return {
+               index: targetData.index,
+               item: targetData.item,
+               data: targetData,
+               position: position
+            };
+         },
+
+         setDragTargetPosition: function(position) {
+            this._dragTargetPosition = position;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          getDragTargetPosition: function() {
             return this._dragTargetPosition;
-         },
-
-         _updateDragTargetPosition: function(targetData) {
-            var
-               position,
-               prevIndex;
-
-            if (targetData) {
-               prevIndex = this._dragTargetPosition ? this._dragTargetPosition.index : this._draggingItemData.index;
-               if (targetData.index > prevIndex) {
-                  position = 'after';
-               } else if (targetData.index < prevIndex) {
-                  position = 'before';
-               } else {
-                  position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
-               }
-               this._dragTargetPosition = {
-                  index: targetData.index,
-                  position: position
-               };
-            } else {
-               this._dragTargetPosition = null;
-            }
          },
 
          setSwipeItem: function(itemData) {

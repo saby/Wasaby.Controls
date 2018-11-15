@@ -1,3 +1,4 @@
 <ws:partial
    on:markedKeyChanged="_markedKeyChangedHandler()"
-   template="{{_options.content}}"/>
+   template="{{_options.content}}"
+   scope="{{_options}}"/>

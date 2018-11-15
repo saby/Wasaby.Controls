@@ -3,6 +3,7 @@ define('Controls/List/BaseControl', [
    'Core/IoC',
    'Core/core-clone',
    'Core/core-merge',
+   'Core/core-instance',
    'wml!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -21,6 +22,7 @@ define('Controls/List/BaseControl', [
    IoC,
    cClone,
    cMerge,
+   cInstance,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -766,7 +768,8 @@ define('Controls/List/BaseControl', [
       },
 
       _dragStart: function(event, dragObject) {
-         this._listViewModel.setDragItems(dragObject.entity.getItems(), this._itemDragData);
+         this._listViewModel.setDragEntity(dragObject.entity);
+         this._listViewModel.setDragItemData(this._itemDragData);
       },
 
       _dragEnd: function(event, dragObject) {
@@ -776,18 +779,33 @@ define('Controls/List/BaseControl', [
       },
 
       _dragEndHandler: function(dragObject) {
-         var
-            items = dragObject.entity.getItems(),
-            dragTarget = this._listViewModel.getDragTargetItem(),
-            targetPosition = this._listViewModel.getDragTargetPosition();
+         var targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget) {
-            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
+         if (targetPosition) {
+            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+         }
+      },
+
+      _dragEnter: function(event, dragObject) {
+         var
+            dragEnterResult,
+            draggingItemProjection;
+
+         if (!this._listViewModel.getDragEntity()) {
+            dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+            if (dragEnterResult) {
+               if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+                  draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+                  this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
+               }
+
+               this._listViewModel.setDragEntity(dragObject.entity);
+            }
          }
       },
 
       _dragLeave: function() {
-         this._listViewModel.setDragTargetItem(null);
+         this._listViewModel.setDragTargetPosition(null);
       },
 
       _documentDragStart: function() {
@@ -796,13 +814,26 @@ define('Controls/List/BaseControl', [
 
       _documentDragEnd: function() {
          this._isDragging = false;
-         this._listViewModel.setDragTargetItem(null);
-         this._listViewModel.setDragItems(null);
+         this._listViewModel.setDragTargetPosition(null);
+         this._listViewModel.setDragEntity(null);
+         this._listViewModel.setDragItemData(null);
       },
 
       _itemMouseEnter: function(event, itemData) {
+         var
+            dragEntity,
+            dragPosition,
+            dragItemData;
+
          if (this._options.itemsDragNDrop && this._isDragging) {
-            this._listViewModel.setDragTargetItem(itemData);
+            dragItemData = this._listViewModel.getDragItemData();
+            dragEntity = this._listViewModel.getDragEntity();
+            if (dragEntity && (!dragItemData || dragItemData.key !== itemData.key)) {
+               dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+               if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                  this._listViewModel.setDragTargetPosition(dragPosition);
+               }
+            }
          }
       }
    });

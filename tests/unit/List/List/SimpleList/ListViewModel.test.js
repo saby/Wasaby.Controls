@@ -85,34 +85,6 @@ define([
          assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
       });
 
-      it('setDragTargetItem and setDragItems', function() {
-         var
-            dragItems = [1],
-            target = { index: 1, key: 2 },
-            notifyCont = 0,
-            lvm = new ListViewModel({
-               items: data,
-               keyProperty: 'id'
-            });
-
-         lvm._notify = function() {
-            notifyCont++;
-         };
-
-         assert.equal(lvm._dragItems, null);
-         lvm.setDragItems(dragItems);
-         assert.equal(notifyCont, 1);
-         lvm.setDragItems(dragItems);
-         assert.equal(notifyCont, 1);
-
-         assert.equal(lvm._dragTargetItem, null);
-         lvm.setDragTargetItem(target);
-         assert.deepEqual(lvm._dragTargetPosition, { index: 1, position: 'after' });
-         assert.equal(notifyCont, 2);
-         lvm.setDragTargetItem(target);
-         assert.equal(notifyCont, 3);
-      });
-
       it('_updateSelection', function() {
          var cfg = {
             items: data,
@@ -147,6 +119,147 @@ define([
          lv.setSwipeItem(itemData);
          assert.equal(lv._swipeItem, itemData);
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
+      });
+
+      describe('DragNDrop methods', function() {
+         var dragItemData, dragEntity, target, lvm, current;
+
+         beforeEach(function() {
+            dragItemData = {};
+            dragEntity = {
+               items: [2, 3],
+               getItems: function() {
+                  return this.items;
+               }
+            };
+            target = { index: 1, key: 2, position: 'after'};
+            lvm = new ListViewModel({
+               items: data,
+               keyProperty: 'id'
+            });
+         });
+
+         it('setDragTargetPosition', function() {
+            assert.equal(lvm.getDragTargetPosition(), null);
+            lvm.setDragTargetPosition(target);
+            assert.equal(lvm.getDragTargetPosition(), target);
+            lvm.setDragTargetPosition(null);
+            assert.equal(lvm.getDragTargetPosition(), null);
+         });
+
+         it('setDragEntity', function() {
+            assert.equal(lvm.getDragEntity(), null);
+            lvm.setDragEntity(dragEntity);
+            assert.equal(lvm.getDragEntity(), dragEntity);
+            lvm.setDragEntity(null);
+            assert.equal(lvm.getDragEntity(), null);
+         });
+
+         it('setDragItemData', function() {
+            assert.equal(lvm.getDragItemData(), null);
+            lvm.setDragItemData(dragItemData);
+            assert.equal(lvm.getDragItemData(), dragItemData);
+            assert.isTrue(dragItemData.isDragging);
+            lvm.setDragItemData(null);
+            assert.equal(lvm.getDragItemData(), null);
+         });
+
+         describe('getItemDataByItem', function() {
+            it('without dragNDrop', function() {
+               current = lvm.getItemDataByItem(lvm.at(1));
+               assert.equal(current.isDragging, undefined);
+               assert.equal(current.isVisible, undefined);
+               assert.equal(current.dragTargetPosition, undefined);
+               assert.equal(current.draggingItemData, undefined);
+            });
+
+            it('without dragTarget and dragEntity', function() {
+               lvm.setDragItemData(lvm.getItemDataByItem(lvm.at(1)));
+               current = lvm.getItemDataByItem(lvm.at(1));
+               assert.equal(current.isDragging, true);
+               assert.equal(current.isVisible, undefined);
+               assert.equal(current.dragTargetPosition, undefined);
+               assert.equal(current.draggingItemData, undefined);
+            });
+
+            it('without dragTarget', function() {
+               lvm.setDragItemData(lvm.getItemDataByItem(lvm.at(1)));
+               lvm.setDragEntity(dragEntity);
+               current = lvm.getItemDataByItem(lvm.at(1));
+               assert.equal(current.isDragging, true);
+               assert.equal(current.isVisible, true);
+               assert.equal(current.dragTargetPosition, undefined);
+               assert.equal(current.draggingItemData, undefined);
+               current = lvm.getItemDataByItem(lvm.at(2));
+               assert.equal(current.isVisible, false);
+            });
+
+            it('with dragTarget', function() {
+               dragItemData = lvm.getItemDataByItem(lvm.at(1));
+               lvm.setDragItemData(dragItemData);
+
+               //move up
+               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+               current = lvm.getItemDataByItem(lvm.at(0));
+               assert.equal(current.dragTargetPosition, 'before');
+               assert.equal(current.draggingItemData, dragItemData);
+
+               //move down
+               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(2))));
+               current = lvm.getItemDataByItem(lvm.at(2));
+               assert.equal(current.dragTargetPosition, 'after');
+               assert.equal(current.draggingItemData, dragItemData);
+            });
+         });
+
+         describe('calculateDragTargetPosition', function() {
+            var
+               itemData,
+               dragItemData,
+               dragTargetPosition;
+
+            it('without setDragTargetPosition and without setDragItemData', function() {
+               itemData = lvm.getItemDataByItem(lvm.at(1));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+            });
+
+            it('without setDragTargetPosition', function() {
+               dragItemData = lvm.getItemDataByItem(lvm.at(1));
+               lvm.setDragItemData(dragItemData);
+
+               //before dragItemData
+               itemData = lvm.getItemDataByItem(lvm.at(0));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+
+               //after dragItemData
+               itemData = lvm.getItemDataByItem(lvm.at(2));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'after');
+            });
+
+            it('with setDragTargetPosition', function() {
+               itemData = lvm.getItemDataByItem(lvm.at(1));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               lvm.setDragTargetPosition(dragTargetPosition);
+
+               //move up
+               itemData = lvm.getItemDataByItem(lvm.at(0));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+
+               //move down
+               itemData = lvm.getItemDataByItem(lvm.at(1));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'after');
+            });
+         });
       });
    });
 });
