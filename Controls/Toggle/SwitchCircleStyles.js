@@ -9,6 +9,7 @@ define('Controls/Toggle/SwitchCircleStyles',
     * Styles of circle in RadioButton and Switch.
     * @mixin Controls/Toggle/resources/SwitchCircle/SwitchCircleStyles
     * @public
+    * @author Михайловский Д.С.
     *
     *
     * @css @color_ToggleCircle_outerCircle_enabled Enabled border circle color.

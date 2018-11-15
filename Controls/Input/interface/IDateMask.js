@@ -6,6 +6,7 @@ define('Controls/Input/interface/IDateMask', [
     *
     * @interface Controls/Input/interface/IDateMask
     * @public
+    * @author Миронов А.Ю.
     */
 
    /**

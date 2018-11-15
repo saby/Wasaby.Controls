@@ -8,10 +8,11 @@ define('Controls/Container/List',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/core-instance'
    ],
    
-   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred) {
+   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, cInstance) {
       
       'use strict';
       
@@ -57,13 +58,15 @@ define('Controls/Container/List',
          },
 
          updateSource: function(self, data) {
+            var source = _private.getOriginSource(self._options.source);
+            
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
             self._source = new Memory({
                model: data.getModel(),
                idProperty: data.getIdProperty(),
                data: data.getRawData(),
-               adapter: self._options.source.getAdapter()
+               adapter: source.getAdapter()
             });
          },
          
@@ -89,12 +92,13 @@ define('Controls/Container/List',
          },
    
          searchErrback: function(self, error) {
+            var source = _private.getOriginSource(self._options.source);
             if (self._options.searchErrback) {
                self._options.searchErrback(error);
             }
             self._source = new Memory({
-               model: self._options.source.getModel(),
-               idProperty: self._options.source.getIdProperty()
+               model: source.getModel(),
+               idProperty: source.getIdProperty()
             });
          },
          
@@ -206,6 +210,13 @@ define('Controls/Container/List',
                self._searchController.abort();
                self._searchController = null;
             }
+         },
+         
+         getOriginSource: function(source) {
+            //костыль до перевода Suggest'a на Search/Controller,
+            //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
+            //После этого этот модуль можно будет удалить.
+            return cInstance.instanceOfModule(source, 'Data/_source/PrefetchProxy') ? source._$target : source;
          }
       };
       

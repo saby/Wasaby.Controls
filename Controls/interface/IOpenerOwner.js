@@ -6,6 +6,7 @@ define('Controls/interface/IOpenerOwner', [], function() {
     *+
     * @interface Controls/interface/IOpenerOwner
     * @public
+    * @author Шипин А.А.
     */
 
    /**

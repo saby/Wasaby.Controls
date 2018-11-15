@@ -181,6 +181,10 @@ define('Controls/List/ListViewModel',
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
+            if (!this._markedItem && this._options.markerVisibility === 'always') {
+               this._markedKey = this._items.at(0).getId();
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
             this._nextVersion();
             _private.updateIndexes(this);
          },
@@ -211,7 +215,7 @@ define('Controls/List/ListViewModel',
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
-         _updateSelection: function(selectedKeys) {
+         updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
             this._nextVersion();
             this._notify('onListChange');

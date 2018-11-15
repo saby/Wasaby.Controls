@@ -37,6 +37,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
             };
             return current;
          },
+         setExpandedItems: function(expandedItems) {
+            this._model.setExpandedItems(expandedItems);
+         },
          _onNodeRemoved: function(event, nodeId) {
             this._notify('onNodeRemoved', nodeId);
          },

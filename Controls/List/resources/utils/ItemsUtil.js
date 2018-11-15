@@ -9,9 +9,6 @@ define('Controls/List/resources/utils/ItemsUtil', [
       getDefaultDisplayFlat: function(items, cfg, filter) {
          var projCfg = {};
          projCfg.keyProperty = cfg.keyProperty;
-         if (cfg.itemsSortMethod) {
-            projCfg.sort = cfg.itemsSortMethod;
-         }
          if (cfg.groupMethod) {
             projCfg.group = cfg.groupMethod;
          }

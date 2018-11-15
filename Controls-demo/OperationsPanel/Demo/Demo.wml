@@ -1,10 +1,8 @@
 <div class="demo-Grid__container">
     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-        <Controls.Container.TreeMultiSelector on:selectedKeysChanged="_selectionChangeHandler()"
-                                              bind:selectedKeys="_selectedKeys"
-                                              bind:excludedKeys="_excludedKeys"
-                                              parentProperty="Раздел"
-                                              nodeProperty="Раздел@">
+        <Controls.Container.MultiSelector on:selectedKeysChanged="_selectionChangeHandler()"
+                                          bind:selectedKeys="_selectedKeys"
+                                          bind:excludedKeys="_excludedKeys">
             <div style="width: 100%;">
                 <Controls.Operations.Button bind:expanded="_panelExpanded"/>
                 <Controls.Operations.Panel
@@ -15,6 +13,9 @@
                         nodeProperty="@parent"
                         keyProperty="id"
                         source="{{_panelSource}}"
+                        selectedKeys="{{ content._options.selectedKeys }}"
+                        excludedKeys="{{ content._options.excludedKeys }}"
+                        selectedKeysCount="{{ content._options.selectedKeysCount }}"
                         on:itemClick="_panelItemClick()">
                     <ws:rightTemplate>
                         <Controls.Button
@@ -44,6 +45,9 @@
                                     parentProperty="{{_parentProperty}}"
                                     nodeProperty="{{_nodeProperty}}"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
+                                    itemActions="{{_itemActions}}"
+                                    itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+                                    on:itemActionsClick="_itemActionsClick()"
                                     multiSelectVisibility="{{_panelExpanded ? 'visible'}}"
                                     columns="{{_gridColumns}}"
                             />
@@ -51,7 +55,7 @@
                     </Controls.List.Container>
                 </Controls.Container.Scroll>
             </div>
-        </Controls.Container.TreeMultiSelector>
+        </Controls.Container.MultiSelector>
     </Controls.Container.Data>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

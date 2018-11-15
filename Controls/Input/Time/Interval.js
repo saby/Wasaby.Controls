@@ -11,7 +11,7 @@ define('Controls/Input/Time/Interval', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @author Журавлев М.С.
+    * @author Мироново А.Ю.
     * @category Input
     */
 

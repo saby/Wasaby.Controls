@@ -1,5 +1,6 @@
 <Controls.Button
-   style="linkMain"
+   viewMode="link"
+   style="secondary"
    icon="icon-{{_options.icon}} icon-medium"
    attr:title="{{_options.title}}"
    attr:class="controls_ToolbarFormatButton {{_isActive ? 'controls_ToolbarFormatButton_active' : 'controls_ToolbarFormatButton_inactive'}}"
