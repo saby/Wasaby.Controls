@@ -86,26 +86,26 @@ define('Controls/Dropdown/Opener',
             }
             this.checkIcons(self, config);
          },
-         setPopupOptions: function(self, config) {
+         setPopupOptions: function(self, popupOptions) {
             //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
-            config.className = self._options.className || self._options.popupOptions.className;
+            popupOptions.className += self._options.className || self._options.popupOptions.className;
             if (self._options.className) {
                IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
             }
-            config.template = 'Controls/Dropdown/resources/template/DropdownList';
-            config.closeByExternalClick = true;
+            popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
+            popupOptions.closeByExternalClick = true;
          }
       };
 
       var DropdownOpener = Sticky.extend({
          _itemTemplateDeferred: undefined,
 
-         open: function(config, opener) {
-            _private.setTemplateOptions(this, config);
-            _private.setPopupOptions(this, config);
+         open: function(popupOptions, opener) {
+            _private.setTemplateOptions(this, popupOptions);
+            _private.setPopupOptions(this, popupOptions);
 
             // To place zIndex in the old environment
-            config.zIndex = getZIndex(this);
+            popupOptions.zIndex = getZIndex(this);
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });
