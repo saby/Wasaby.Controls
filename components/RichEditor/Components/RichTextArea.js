@@ -4202,6 +4202,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $content = $content || $(content);
                   }
                   var contentHeight = content.scrollHeight;
+                  var isFirst = this._lastTotalHeight === undefined && this._lastContentHeight === undefined;
                   var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
                   if (this._hasScrollContainer) {
                      // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
@@ -4222,7 +4223,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isChanged) {
                      this._lastTotalHeight = totalHeight;
                      this._lastContentHeight = contentHeight;
-                     this._notifyOnSizeChanged();
+                     if (!isFirst) {
+                        this._notifyOnSizeChanged();
+                     }
                   }
                }
             },
