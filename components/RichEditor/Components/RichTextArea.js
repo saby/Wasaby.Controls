@@ -268,6 +268,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                    */
                   imageFolder: 'images',
                   /**
+                   * @cfg {Boolean} Уменьшать файлы изображений (используя сервис previewer) для точной подгонки к размеру, в котором они будут отображаться.
+                   * Если опция включена, то картинки при вставке будут ресайзиться в тот размер, который они реально имеют в редакторе (это экономит трафик и ускоряет загрузку). Если размер картинки при показе может быть больше, чем тот, что был в редакторе, то визуально она потеряет в качестве, даже если загружалась очень большая картинка. При отключении этой опции ресайз отключается и картинки всегда будут иметь оригингальный размер
+                   */
+                  fitImagesToSize: true,
+                  /**
                    * позволяет сохранять историю ввода
                    * @cfg {boolean} Сохранять ли историю ввода
                    */
@@ -813,7 +818,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false, (typeof location === 'object' ? location.origin : '') +
+               text = LinkWrap.wrapURLs(text, true, false,
+                  // В IE 11 нет location.origin
+                  (typeof location === 'object' ? location.origin || location.protocol + '//' + location.host : '') +
                   (cConstants.decoratedLinkService || ''));
                var div = document.createElement('div');
                div.innerHTML = text;
@@ -1051,6 +1058,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
+                  isOldMSIE = BROWSER.isIE && BROWSER.IEVersion < 12,
+                  oldMSIEInput,
                   prepareAndInsertContent = function(content) {
                      content = self._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
@@ -1069,10 +1078,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      self._updateTextByTiny();
                   },
                   onPaste = function(event) {
-                     var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                     if (!content || !save) {
-                        content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                        content.replace('data-ws-is-rich-text="true"', '');
+                     var content;
+                     var isStandard = !!event.clipboardData;
+                     var clipboardData = isStandard ? event.clipboardData : window.clipboardData;
+                     if (clipboardData && clipboardData.getData) {
+                        if (save && isStandard) {
+                           content = clipboardData.getData('text/html');
+                        }
+                        if (!content) {
+                           content = clipboardData.getData(isStandard ?'text/plain' : 'Text') || '';
+                        }
                      }
                      prepareAndInsertContent(content);
                      dialog.close();
@@ -1083,6 +1098,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   },
                   onClose = function() {
                      document.removeEventListener('paste', onPaste, true);
+                     if (oldMSIEInput) {
+                        oldMSIEInput.remove();
+                     }
                      if (typeof onAfterCloseHandler === 'function') {
                         onAfterCloseHandler();
                      }
@@ -1102,7 +1120,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               submitButton: {caption: rk('Отменить')},
                               isModal: true,
                               closeByExternalClick: true,
-                              opener: self
+                              opener: self,
+                              handlers: {
+                                 onShow: isOldMSIE ? function () {
+                                    // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
+                                    // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
+                                    oldMSIEInput = $('<input style="position:absolute; left:-10000px;" class="controls-RichEditor__pasteWithStyles-temporary" data-vdomignore="true" />').appendTo(self._container);
+                                    setTimeout(oldMSIEInput.focus.bind(oldMSIEInput), 100);
+                                 } : null
+                              }
                            },
                            onClose
                         );
@@ -1436,6 +1462,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   editor.undoManager.add();
                   this._updateTextByTiny();
+                  this._unblinkSelection();
                }
             },
 
@@ -1585,16 +1612,27 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
                   if (isBlockquoteOfList) {
                      var $listNode = $(listNode);
-                     $listNode.wrap('<div>');
-                     selection.select(listNode.parentNode, false);
-                     $listNode.attr('contenteditable', 'false');
-                     afterProcess.push(function () {
-                        if (!$listNode.parent().is('blockquote')) {
-                           $listNode.unwrap();
-                        }
-                        $listNode.removeAttr('contenteditable');
-                        selection.select(listNode, true);
+                     // Так как здесь будет произведена сложная (т.е. не в один шаг) манипуляция контентом, то нужно правильно провести её через undoManager
+                     var undoManager = editor.undoManager;
+                     undoManager.ignore(function () {
+                        $listNode.wrap('<div>');
+                        selection.select(listNode.parentNode, false);
+                        $listNode.attr('contenteditable', 'false');
                      });
+                     skipUndo = true;
+                     afterProcess.push(function () {
+                        undoManager.ignore(function () {
+                           if (!$listNode.parent().is('blockquote')) {
+                              $listNode.unwrap();
+                           }
+                           $listNode.removeAttr('contenteditable');
+                           selection.select(listNode, true);
+                        });
+                        // Добавить новый уровень undo/redo
+                        undoManager.add();
+                        // И обновить значение опции text
+                        this._updateTextByTiny();
+                     }.bind(this));
                   }
                   else {
                      var dom = editor.dom;
@@ -1614,22 +1652,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         }
                         if (isChanged) {
                            var bookmark = selection.getBookmark();
-                           afterProcess.push(function () {
+                           afterProcess.push(
                               // Нужно восстанавить последнее выделение после применения команды.
                               // Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
-                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения пораждают
+                              // window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения порождают
                               // мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
                               // несфокусирпованном состоянии
                               // 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
-                              var root = editor.getBody();
-                              selection.select(root);
-                              selection.collapse(true);
-                              root.blur();
-                              setTimeout(function () {
-                                 selection.moveToBookmark(bookmark);
-                                 root.focus();
-                              }, 100);
-                           });
+                              this._unblinkSelection.bind(this, bookmark)
+                           );
                            selection.select(node, true);
                            rng = selection.getRng();
                         }
@@ -1806,6 +1837,39 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   isFound = true;
                }
                return isFound;
+            },
+
+            /**
+             * Переустановить рэнж для избавления от мигающих артефактов.
+             * Иногда выделение может содержать очень короткие фрагменты (увидеть их наличие можно, выполнив в консоли код
+             * window.getSelection().getRangeAt(0).getClientRects() ). В таком случае эти короткие фрагменты выделения порождают
+             * мигающие артефакты после снятия выделения. Чтобы этого избежать, будем восстанавливать рэнж с задержкой и в
+             * несфокусирпованном состоянии
+             * 1175903081 https://online.sbis.ru/opendoc.html?guid=61e0ddc9-3d85-4145-9e4b-c699678e67de
+             * 1176137150 https://online.sbis.ru/opendoc.html?guid=e784b049-227b-4c18-9971-207cd89912b4
+             * @param {TinyMCEBookmark} [bookmark] Закладка TinyMCE
+             */
+            _unblinkSelection: function (bookmark) {
+               if (BROWSER.chrome) {
+                  var rects = window.getSelection().getRangeAt(0).getClientRects();
+                  var MAX_WIDTH = 5;
+                  if (rects.length && Array.prototype.some.call(rects, function (r) { return r.width <= MAX_WIDTH; })) {
+                     // Выделение не пустое и содержит мелкие фрагменты - нужно переустановливать рэнж
+                     var editor = this._tinyEditor;
+                     var selection = editor.selection;
+                     if (!bookmark) {
+                        bookmark = selection.getBookmark();
+                     }
+                     var root = editor.getBody();
+                     selection.select(root);
+                     selection.collapse(true);
+                     root.blur();
+                     setTimeout(function () {
+                        selection.moveToBookmark(bookmark);
+                        root.focus();
+                     }, 100);
+                  }
+               }
             },
 
             /**
@@ -2128,18 +2192,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      .addBoth(this._stopWaitIndicator.bind(this));
                }.bind(this));
             },
+
             codeSample: function(text, language) {
+               var editor = this._tinyEditor;
                if (this._beforeFocusOutRng) {
-                  this._tinyEditor.selection.setRng(this._beforeFocusOutRng);
+                  editor.selection.setRng(this._beforeFocusOutRng);
+                  this._beforeFocusOutRng = false;
                }
-               var
-                  wasClear = !this._tinyEditor.plugins.codesample.getCurrentCode(this._tinyEditor);
-               this._tinyEditor.plugins.codesample.insertCodeSample(this._tinyEditor, language, text);
+               var plugin = editor.plugins.codesample;
+               var wasClear = !plugin.getCurrentCode(editor);
+               plugin.insertCodeSample(editor, language, text);
                if (wasClear) {
-                  this._tinyEditor.selection.collapse();
-                  this.insertHtml('<p>{$caret}</p>')
+                  editor.selection.collapse();
+                  editor.insertContent('<p>{$caret}</p>');
                }
-               this._beforeFocusOutRng = false;
             },
 
             getCodeSampleDialog: function () {
@@ -2684,14 +2750,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   }
                }
-               if (!isPlainUrl && !isAfterUrl && rng.collapsed) {
+               if (!BROWSER.firefox && (!isPlainUrl && !isAfterUrl && rng.collapsed)) {
                   // Если вставляется не блочный элемент, то нужно убедиться, что он вставляется в блочный элемент, для этого поднять рэнж выше по дереву, если необходимо
+                  // (Для firefox-а неактуально, он сам поднимает рэнж)
                   // 1175500981 https://online.sbis.ru/opendoc.html?guid=0757be2b-56c9-4714-bb9f-c6f99e90bbf6
                   var node = rng.commonAncestorContainer;
                   if (node.nodeType === 3) {
                      var dom = editor.dom;
                      if (!Array.prototype.some.call(content.childNodes, dom.isBlock)) {
-
                         var parent = dom.getParent(startNode, function(v) {
                            var p = v.parentNode;
                            return dom.isBlock(p) || 1 < p.childNodes.length;
@@ -2737,7 +2803,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                html = this._replaceWhitespaces(html);
                // И теперь (только один раз) вставим в DOM
                content.innerHTML = html;
+               // Пользователь может кликая по разным элемента страницы добиться того, что текущий рэнж будет охватывать элементы вне редактора или выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+               // 1176153681 https://online.sbis.ru/opendoc.html?guid=4fa1193a-abcb-4311-af55-61b6d2f418ed
+               this._verifySelection();
             },
+
+            /**
+             * Текущий рэнж может выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+             * @protected
+             */
+            _verifySelection: function() {
+               var editor = this._tinyEditor;
+               var selection = editor.selection;
+               var body = editor.getBody();
+               var commonAncestorContainer = selection.getRng().commonAncestorContainer;
+               if (commonAncestorContainer !== body && !body.contains(commonAncestorContainer)) {
+                  selection.select(body, true);
+               }
+            },
+
             _onSelectionChange1: function() {
                //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
                //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
@@ -2854,29 +2938,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             },
 
             _onKeyDownCallback4: function(e) {
+               if (e.key === 'Tab') {
+                  // Не обрабатывать нажатие Tab - за переходы между компонентами отвечает первичный родительский класс
+                  // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
+                  return;
+               }
                this._typeInProcess = true;
                if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp ||
                   (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
                }
-               if (e.keyCode === cConstants.key.tab) {
-                  var
-                     area = this.getParent(),
-                     nextControl = area.getNextActiveChildControl(e.shiftKey);
-
-                  if (nextControl) {
-                     this._fakeArea.focus();
-                     nextControl.setActive(true, e.shiftKey);
-                  }
-
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-                  //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
-                  this._typeInProcess = false;
-
-                  return false;
-               } else if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12 )) {
+               if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12 )) {
                   //сбрасываем флаг при любом горячем сочетании
                   if (e.which === cConstants.key.enter) {
                      e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
@@ -3595,8 +3668,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   throw new Error('Size is not specified');
                }
                var url = imgInfo.filePath || imgInfo.url;
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
+               if (!this._options.fitImagesToSize || !/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
+                  // Вернуть как есть так как подгонка под размер не требуется или это не файл, хранящийся на СбисДиске
                   return Deferred.success({
                      preview: url,
                      original: url
@@ -4129,6 +4202,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $content = $content || $(content);
                   }
                   var contentHeight = content.scrollHeight;
+                  var isFirst = this._lastTotalHeight === undefined && this._lastContentHeight === undefined;
                   var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
                   if (this._hasScrollContainer) {
                      // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
@@ -4149,7 +4223,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isChanged) {
                      this._lastTotalHeight = totalHeight;
                      this._lastContentHeight = contentHeight;
-                     this._notifyOnSizeChanged();
+                     if (!isFirst) {
+                        this._notifyOnSizeChanged();
+                     }
                   }
                }
             },
@@ -4275,11 +4351,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return true;*/
             },
 
-            _sanitizeClasses: function(text, images, options) {
+            _sanitizeClasses: function (text, allowImages, options) {
+               if (!text) {
+                  return '';
+               }
                var _options = options || this._options;
+               // Массив всех имеющихся валидаторов классов
+               var classValidators = [
+                  _options && _options.validateClass,
+                  this._getCustomFormatsClassValidator(_options)
+               ].filter(function (v) { return !!v; });
                var sanitizeOptions = {
                   validNodes: {
-                     img: images ? {
+                     img: allowImages ? {
                         'data-img-uuid': true,
                         'data-mce-src': true,
                         'data-mce-style': true,
@@ -4293,9 +4377,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   },
                   validAttributes: {
-                     'class': function(content, attributeName) {
-                        this._sanitizeClassCallback(content, attributeName, _options);
-                     }.bind(this)
+                     'class': this._sanitizeClassCallback.bind(this, classValidators.length ? {validateClass:this._checkClassesByAll.bind(null, classValidators)} : null)
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false
@@ -4307,11 +4389,66 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return Sanitize(text, sanitizeOptions);
             },
 
-            _sanitizeClassCallback: function(content, attributeName, options) {
+            /**
+             * Построить валидатор классов для пользовательских форматов (опция customFormats) если они есть
+             * @private
+             * @param {object} options Опции компонента
+             * @return {function}
+             */
+            _getCustomFormatsClassValidator: function (options) {
+               var customFormats = options && options.customFormats;
+               if (customFormats && typeof customFormats === 'object') {
+                  var nodes = {};
+                  for (var key in customFormats) {
+                     var format = customFormats[key];
+                     var formatClasses = format.classes;
+                     if (formatClasses && formatClasses.length) {
+                        var nodeName = format.block;
+                        if (nodeName) {
+                           if (nodeName in nodes) {
+                              nodes[nodeName].push.apply(nodes[nodeName], formatClasses);
+                           }
+                           else {
+                              nodes[nodeName] = formatClasses.slice();
+                           }
+                        }
+                     }
+                  }
+                  if (Object.keys(nodes).length) {
+                     return this._checkNodeClass.bind(null, nodes);
+                  }
+               }
+            },
+
+            /**
+             * Проверить допустимость класса className для элемента nodeName согласно имеющемуся списку допустимых классов
+             * @private
+             * @param {object} nodes Список допустимых классов по элементам
+             * @param {string} className Класс
+             * @param {string} nodeName Элемент
+             * @return {boolean}
+             */
+            _checkNodeClass: function(nodes, className, nodeName) {
+               var classes = nodes[nodeName];
+               return classes && classes.indexOf(className) !== -1;
+            },
+
+            /**
+             * Проверить допустимость класса className для элемента nodeName по указанному списку валидаторов (необходимо пройти хотя бы один валидатор)
+             * @private
+             * @param {object} nodes Список валидаторов
+             * @param {string} className Класс
+             * @param {string} nodeName Элемент
+             * @return {boolean}
+             */
+            _checkClassesByAll: function(validators, className, nodeName) {
+               return validators.some(function (v) { return v(className, nodeName); });
+            },
+
+            _sanitizeClassCallback: function(options, content, attributeName) {
                var
-                  _options = options || this._options,
                   //проверка options для юнит тестов, тк там метод зовётся на прототипе
-                  classValidator = _options ? _options.validateClass : null,
+                  classValidator = options ? options.validateClass : null,
                   validateIsFunction = typeof classValidator === 'function',
                   currentValue = content.attributes[attributeName].value,
                   classes = currentValue.split(' '),
@@ -4375,7 +4512,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                while (index >= 0) {
                   if (!~whiteList.indexOf(classes[index]) &&
-                     (!validateIsFunction || !classValidator(classes[index]))) {
+                     (!validateIsFunction || !classValidator(classes[index], content.nodeName))) {
                      classes.splice(index, 1);
                   }
                   index -= 1;
@@ -4386,7 +4523,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                } else {
                   delete content.attributes[attributeName];
                }
-
             },
 
             _htmlToText: function (html) {

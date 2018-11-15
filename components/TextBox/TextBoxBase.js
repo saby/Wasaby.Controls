@@ -67,6 +67,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          _textChanged: false,
           _options: {
              _isMultiline: false,
+             _isRequired: constants.browser.isIE,
              _prepareClassesByConfig: function(cfg) {
                var
                   fieldClasses = [],
@@ -200,7 +201,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
 
       $constructor: function() {
          this._publish('onTextChange');
-         
+
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
 
          this.subscribe('onFocusOut', this._focusOutHandler.bind(this));

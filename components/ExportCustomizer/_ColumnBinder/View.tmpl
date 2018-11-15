@@ -3,14 +3,16 @@
       <div class="controls-ExportCustomizer-ColumnBinder-View__title">
          <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикЭкспорта@@Колонки]}</ws:else>
       </div>
-      <SBIS3.CONTROLS.Button.IconButton
-         className="controls-ExportCustomizer-ColumnBinder-View__addRows"
-         command="addRows"
-         size="s"
-         style="bordered"
-         icon="sprite:icon-16 icon-AddButtonNew icon-primary"
-         tooltip="{[НастройщикЭкспорта@@Добавить колонки]}"
-      />
+      <ws:if data="{{!readOnly}}">
+         <SBIS3.CONTROLS.Button.IconButton
+            className="controls-ExportCustomizer-ColumnBinder-View__addRows"
+            command="addRows"
+            size="s"
+            style="bordered"
+            icon="sprite:icon-16 icon-AddButtonNew icon-primary"
+            tooltip="{[НастройщикЭкспорта@@Добавить колонки]}"
+         />
+      </ws:if>
    </div>
    <SBIS3.CONTROLS.DataGridView
       className="controls-DataGridView__hasSeparator controls-ListView__withoutMarker controls-ExportCustomizer-ColumnBinder-View__grid"
@@ -21,5 +23,6 @@
       showHead="{{false}}"
       startScrollColumn="{{1}}"
       emptyHTML="{{emptyHTML}}"
+      enabledMove="{{!readOnly}}"
    />
 </div>

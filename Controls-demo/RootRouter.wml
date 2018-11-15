@@ -1,0 +1,33 @@
+<Router.Route mask="/Controls-demo/">
+   <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
+      <div class="themeSwitcher">
+         <div class="theme_button" on:click="changeTheme('online')">online</div>
+         <div class="theme_button" on:click="changeTheme('carry_m')">carry_m</div>
+         <div class="theme_button theme_dark" on:click="changeTheme('presto_m')">presto_m</div>
+         <div class="theme_button" on:click="changeTheme('carry')">carry</div>
+         <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
+      </div>
+      <link rel="stylesheet" type="text/css" id="controlsThemeStyle" href="{{_theme}}.css"/>
+      <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}"
+                       attr:id="Back" caption="Назад"
+                       style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+
+      <Controls.Container.Scroll attr:class="ControlsDemo-Page_scrollContainer">
+         <Router.Route mask="app/:app">
+            <ws:if data="{{content.app}}">
+               <Controls.Container.Async templateName="{{content.app}}">
+                  <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content"
+                           template="{{content.resolvedTemplate}}" />
+               </Controls.Container.Async>
+            </ws:if>
+            <ws:else>
+               <div>Не указан шаблон. Может быть перейти на
+                  <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+                     <ws:content>разводящую</ws:content>
+                  </Router.Link> ?
+               </div>
+            </ws:else>
+         </Router.Route>
+      </Controls.Container.Scroll>
+   </div>
+</Router.Route>

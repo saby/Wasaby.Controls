@@ -2,14 +2,14 @@ define(
    [
       'Controls/Input/Number'
    ],
-   function(Number) {
+   function(NumberInput) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
          it('trimEmptyDecimals ("000" at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -32,7 +32,7 @@ define(
          it('trimEmptyDecimals ("." at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -55,7 +55,7 @@ define(
          it('trimEmptyDecimals ("456" at the end of string)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -75,10 +75,26 @@ define(
             assert.equal(res, '123.456');
          });
 
+         it('trim minus if value -0', function() {
+            var config = {
+               onlyPositive: false,
+               integersLength: 5,
+               precision: 0,
+               showEmptyDecimals: true,
+               value: null
+            };
+            let num = new NumberInput(config);
+            num._beforeMount(config);
+            num._options.precision = 0;
+
+            num._inputCompletedHandler({}, '-0');
+            assert.equal(num._numberViewModel.getValue(), '0');
+         });
+
          it('trimEmptyDecimals (single zero, no dot)', function() {
             var
                res;
-            Number._private.trimEmptyDecimals({
+            NumberInput._private.trimEmptyDecimals({
                _options: {
                   showEmptyDecimals: false
                },
@@ -101,10 +117,26 @@ define(
             var config = {
                value: null
             };
-            let num = new Number(config);
+            let num = new NumberInput(config);
             num._beforeMount(config);
             assert.equal(num._numberViewModel.getDisplayValue(), '');
          });
+
+         it('number_options.value and value in viewModel are synchronized', function() {
+            var config = {
+               value: -1,
+            };
+            let num = new NumberInput(config);
+            num._beforeMount(config);
+
+            num._numberViewModel.updateValue(13);
+            num._options.value = -1;
+
+            num._beforeUpdate({ value: '-1' });
+            assert.equal(num._numberViewModel.getDisplayValue(), '-1');
+         });
+
+
       });
    }
 );

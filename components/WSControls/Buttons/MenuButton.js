@@ -317,6 +317,9 @@ define('SBIS3.CONTROLS/WSControls/Buttons/MenuButton', [
             menuconfig.dataSource = this._dataSource;
          }
 
+         // Передаем в контекстное меню стратегию позиционирования
+         menuconfig.subMenuLocationStrategy = this._options.subMenuLocationStrategy;
+
          //_getContextMenu отработает синхронно, т.к. в _createPicker попадаем когда menu уже загружено
          return _getContextMenu(function(menu) {
             return new menu(menuconfig);

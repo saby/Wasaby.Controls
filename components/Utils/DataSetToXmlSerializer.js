@@ -112,6 +112,7 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
                cols.appendChild(column = doc.createElement('Column'));
                column.setAttribute('Name', columns[i].title || '');
                column.setAttribute('Field', columns[i].field);
+               column.setAttribute('BreakText', columns[i].breakText || false);
             }
          }
          //TODO здесь будет настройка для иерархии

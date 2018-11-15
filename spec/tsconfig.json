@@ -19,6 +19,7 @@
   "include": [
     "../File/**/*",
     "../Controls/",
+    "../Router/",
     "core.d.ts",
     "tslib.js"
   ],

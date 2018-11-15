@@ -1533,6 +1533,7 @@ define('SBIS3.CONTROLS/ListView',
                   return (itemsProjection.getRoot &&
                      itemsProjection.getRoot() &&
                      itemsProjection.getRoot().getContents() &&
+                     itemsProjection.getRoot().getContents().get &&
                      itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id);
                },
                siblingItem;
@@ -1555,7 +1556,7 @@ define('SBIS3.CONTROLS/ListView',
                siblingItem = items.eq(index);
             }
 
-            if (siblingItem) {
+            if (siblingItem && siblingItem.data('id') !== id) {
                return this.getItems().getRecordById(siblingItem.data('id')) || isRootId(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
@@ -3676,7 +3677,8 @@ define('SBIS3.CONTROLS/ListView',
          _loadNextPage: function(type) {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  self = this;
+                  self = this,
+                  preparedFilter = this.getFilter();
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                var isScrollingUp = type ? type === 'up' : this._isScrollingUp();
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', isScrollingUp);
@@ -3693,13 +3695,13 @@ define('SBIS3.CONTROLS/ListView',
 
                /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
                if (!this._options.navigation || this._options.navigation.type != 'cursor') {
-                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+                  this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), offset, this._limit);
                }
 
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
+               this._loader = this._callQuery(preparedFilter, this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
@@ -3720,7 +3722,7 @@ define('SBIS3.CONTROLS/ListView',
 
                      this._updateScrollOffset();
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                     this.getItems().setMetaData(dataSet.getMetaData());
+                     this._updateMetaData(dataSet.getMetaData());
                      if (!hasNextPage) {
                         this._toggleEmptyData(!this.getItems().getCount());
                      }
@@ -3779,6 +3781,22 @@ define('SBIS3.CONTROLS/ListView',
                      return error;
                   }, this));
             }
+         },
+
+         _updateMetaData: function(metaData) {
+            var currentMetaData = this.getItems().getMetaData() || {};
+
+            /* При загрузке данных, возможны 2 сценария:
+             * 1) Итоги возвращают только для первой страницы, подразумевая что для всех остальных страниц они не изменятся
+             * 2) Итоги возвращают при подгрузке каждой страницы.
+             *
+             * Обработаем первую ситуацию, перезаписав текщие итоги в метаданные.
+             */
+            if (currentMetaData.results && !metaData.results) {
+               metaData.results = currentMetaData.results;
+            }
+
+            this.getItems().setMetaData(metaData);
          },
 
          _getNextOffset: function(){

@@ -11,7 +11,6 @@ define('Controls/Input/Number',
       'Core/detection'
    ],
    function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC, detection) {
-
       'use strict';
 
       /**
@@ -22,6 +21,7 @@ define('Controls/Input/Number',
        * @extends Core/Control
        *
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
@@ -151,9 +151,17 @@ define('Controls/Input/Number',
                IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + newOptions.integersLength + '. Integers length must be greater than 0.');
             }
 
-            //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
+            // If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
             if (this._options.value === newOptions.value) {
-               value = this._numberViewModel.getValue();
+               /**
+                * _numberViewModel.getValue() may returns non numeric value.
+                * https://online.sbis.ru/opendoc.html?guid=088dab47-6acd-4e3d-8249-d5e81c9534f9
+                */
+               if (newOptions.value !== this._getNumericValue(this._numberViewModel.getValue())) {
+                  value = newOptions.value !== undefined ? String(newOptions.value) : '';
+               } else {
+                  value = this._numberViewModel.getValue();
+               }
             } else {
                value = newOptions.value !== undefined ? String(newOptions.value) : '';
             }
@@ -169,11 +177,11 @@ define('Controls/Input/Number',
 
          _afterUpdate: function() {
             if (this._caretPosition) {
-               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+               this._children.input.setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
 
-            //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
+            // Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
             if (this._isFocus) {
                this._children.input.select();
                this._isFocus = false;
@@ -181,6 +189,11 @@ define('Controls/Input/Number',
          },
 
          _inputCompletedHandler: function(event, value) {
+            // Convert different interpretations of null(like -0, 0000, -000) to '0'.
+            if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
+               value = '0';
+               this._numberViewModel.updateValue(value);
+            }
             this._notify('inputCompleted', [this._getNumericValue(value)]);
          },
 
@@ -201,8 +214,14 @@ define('Controls/Input/Number',
        * @private
        */
          _getNumericValue: function(value) {
+
+            /**
+             * value иногда может приходить как число, а не строка
+             * https://online.sbis.ru/opendoc.html?guid=088dab47-6acd-4e3d-8249-d5e81c9534f9
+             */
             var
-               val = parseFloat(value.replace(/ /g, ''));
+               stringValue = typeof (value) === 'string' ? value : String(value),
+               val = parseFloat(stringValue.replace(/ /g, ''));
             return isNaN(val) ? undefined : val;
          },
 
@@ -262,10 +281,10 @@ define('Controls/Input/Number',
 
       NumberInput.getOptionTypes = function() {
          return {
-            precision: types(Number), //Точность (кол-во знаков после запятой)
-            integersLength: types(Number), //Длина целой части
-            onlyPositive: types(Boolean), //Только положительные значения
-            showEmptyDecimals: types(Boolean) //Показывать нули в конце дробной части
+            precision: types(Number), // Точность (кол-во знаков после запятой)
+            integersLength: types(Number), // Длина целой части
+            onlyPositive: types(Boolean), // Только положительные значения
+            showEmptyDecimals: types(Boolean) // Показывать нули в конце дробной части
          };
       };
 

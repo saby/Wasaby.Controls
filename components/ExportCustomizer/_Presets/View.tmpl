@@ -42,24 +42,26 @@
          <ws:if data="{{presetsTooltip}}">{{presetsTooltip}}</ws:if><ws:else>{[НастройщикЭкспорта@@Выбрать другой шаблон]}</ws:else>
       </ws:tooltip>
    </SBIS3.CONTROLS.SelectorButton>
-   <SBIS3.CONTROLS.EditAtPlace
-      className="controls-ExportCustomizer-Presets-View__editor"
-      name="controls-ExportCustomizer-Presets-View__editor"
-      enableControlPanel="{{true}}"
-      editInPopup="{{false}}"
-      visible="{{false}}"
-      text="{{'editedTitle'|mutable}}"
-      >
-      <ws:editorTpl>
-         <SBIS3.CONTROLS.TextBox
-            className="controls-ExportCustomizer-Presets-View__input"
-            name="controls-ExportCustomizer-Presets-View__input"
-            maxLength="64"
-            text="{{'editedTitle'|mutable}}"
-            placeholder="{[НастройщикЭкспорта@@Название шаблона]}"
-         />
-      </ws:editorTpl>
-   </SBIS3.CONTROLS.EditAtPlace>
+   <ws:if data="{{_canChange}}">
+      <SBIS3.CONTROLS.EditAtPlace
+         className="controls-ExportCustomizer-Presets-View__editor"
+         name="controls-ExportCustomizer-Presets-View__editor"
+         enableControlPanel="{{true}}"
+         editInPopup="{{false}}"
+         visible="{{false}}"
+         text="{{'editedTitle'|mutable}}"
+         >
+         <ws:editorTpl>
+            <SBIS3.CONTROLS.TextBox
+               className="controls-ExportCustomizer-Presets-View__input"
+               name="controls-ExportCustomizer-Presets-View__input"
+               maxLength="64"
+               text="{{'editedTitle'|mutable}}"
+               placeholder="{[НастройщикЭкспорта@@Название шаблона]}"
+            />
+         </ws:editorTpl>
+      </SBIS3.CONTROLS.EditAtPlace>
+   </ws:if>
    <ws:if data="{{historyTarget}}">
       <ws:partial
          template="optional!History/Button/Object"
@@ -70,11 +72,13 @@
          visible="{{false}}"
       />
    </ws:if>
-   <SBIS3.CONTROLS.Button.IconButton
-      className="controls-ExportCustomizer-Presets-View__action {{!historyTarget ? 'controls-ExportCustomizer-Presets-View__action-first' : ''}} controls-ExportCustomizer-Presets-View__delete"
-      name="controls-ExportCustomizer-Presets-View__delete"
-      icon="sprite:icon-16 icon-Erase icon-error"
-      tooltip="{[НастройщикЭкспорта@@Удалить этот шаблон]}"
-      command="delete"
-   />
+   <ws:if data="{{_canChange}}">
+      <SBIS3.CONTROLS.Button.IconButton
+         className="controls-ExportCustomizer-Presets-View__action {{!historyTarget ? 'controls-ExportCustomizer-Presets-View__action-first' : ''}} controls-ExportCustomizer-Presets-View__delete"
+         name="controls-ExportCustomizer-Presets-View__delete"
+         icon="sprite:icon-16 icon-Erase icon-error"
+         tooltip="{[НастройщикЭкспорта@@Удалить этот шаблон]}"
+         command="delete"
+      />
+   </ws:if>
 </div>

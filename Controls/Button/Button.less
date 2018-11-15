@@ -82,6 +82,11 @@
 }
 
 .ws-is-no-touch {
+   //root tag "a" should be without underline
+   .controls-BaseButton:hover {
+      text-decoration: none;
+   }
+
    .controls-Button_style-primary_viewMode-button:hover {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_hovered;
@@ -175,6 +180,7 @@
 
 //Common button styles
 .controls-BaseButton {
+   max-width: 100%;
    display: inline-block;
    box-sizing: border-box;
    .user-select();

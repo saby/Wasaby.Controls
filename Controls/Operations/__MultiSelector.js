@@ -1,9 +1,12 @@
 define('Controls/Operations/__MultiSelector', [
    'Core/Control',
    'wml!Controls/Operations/__MultiSelector',
-   'WS.Data/Source/Memory',
-   'Controls/Container/MultiSelector/SelectionContextField'
-], function(Control, template, Memory, SelectionContextField) {
+   'WS.Data/Source/Memory'
+], function(
+   Control,
+   template,
+   Memory
+) {
    'use strict';
    var _defaultItems = [{
       id: 'selectAll',
@@ -15,55 +18,55 @@ define('Controls/Operations/__MultiSelector', [
       id: 'toggleAll',
       title: 'Инвертировать'
    }];
-   
+
    var MultiSelector = Control.extend({
       _template: template,
       _multiSelectStatus: undefined,
       _menuCaption: undefined,
       _menuSource: undefined,
-      
-      _beforeMount: function(newOptions, context) {
+
+      _beforeMount: function(newOptions) {
          this._menuSource = this._getMenuSource();
-         this._updateSelection(context.selection);
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
       },
-      
+
       _getMenuSource: function() {
          return new Memory({
             idProperty: 'id',
             data: _defaultItems
          });
       },
-      
-      _beforeUpdate: function(newOptions, context) {
-         this._updateSelection(context.selection);
+
+      _beforeUpdate: function(newOptions) {
+         if (this._options.selectedKeys !== newOptions.selectedKeys || this._options.excludedKeys !== newOptions.excludedKeys || this._options.selectedKeysCount !== newOptions.selectedKeysCount) {
+            this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
+         }
       },
-      
+
       _afterUpdate: function() {
-         this._notify('controlResize', [], {bubbling: true});
+         if (this._sizeChanged) {
+            this._sizeChanged = false;
+            this._notify('controlResize', [], { bubbling: true });
+         }
       },
-      
-      _updateSelection: function(selection) {
-         if (selection.selectedKeys[0] === null && !selection.excludedKeys.length) {
+
+      _updateSelection: function(selectedKeys, excludedKeys, count) {
+         if (selectedKeys[0] === null && !excludedKeys.length) {
             this._menuCaption = rk('Отмечено всё');
-         } else if (selection.count > 0) {
-            this._menuCaption = rk('Отмечено') + ': ' + selection.count;
+         } else if (count > 0) {
+            this._menuCaption = rk('Отмечено') + ': ' + count;
          } else {
             this._menuCaption = rk('Отметить');
          }
+         this._sizeChanged = true;
       },
-      
+
       _onMenuItemActivate: function(event, model) {
          this._notify('selectedTypeChanged', [model.get('id')], {
             bubbling: true
          });
       }
    });
-   
-   MultiSelector.contextTypes = function contextTypes() {
-      return {
-         selection: SelectionContextField
-      };
-   };
-   
+
    return MultiSelector;
 });
