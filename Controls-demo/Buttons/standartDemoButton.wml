@@ -158,7 +158,7 @@
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="quickButton" size="l"/>
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="quickButton" size="l"/>
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="quickButton" size="l"/>
-                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="primary"/>
+                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" style="default" transparent="{{false}}"/>
                 </div>
             </div>
         </div>
