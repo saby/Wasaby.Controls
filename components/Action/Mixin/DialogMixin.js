@@ -320,8 +320,19 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          // Если кликнули в вдомный попап, связанный с текущей панелью по опенерам, то не закрываем панель
          var vdomPopup = $(target).closest('.controls-Popup')[0];
          if (vdomPopup) {
-            var vdomPopupInstance = vdomPopup.controlNodes[0].control;
-            openerContainer = vdomPopupInstance._options.opener && vdomPopupInstance._options.opener._container;
+            var vdomPopupInstance;
+            var prevOpenerContainer;
+            while (vdomPopup) {
+               // ищем до тех пор, пока не доберемся до опенера, лежащего не в вдом попапе
+               vdomPopupInstance = vdomPopup.controlNodes[0].control;
+               prevOpenerContainer = vdomPopupInstance._options.opener && vdomPopupInstance._options.opener._container;
+               if (prevOpenerContainer) {
+                  openerContainer = prevOpenerContainer;
+                  vdomPopup = $(openerContainer).closest('.controls-Popup')[0];
+               } else {
+                  vdomPopup = null;
+               }
+            }
             return ControlHierarchyManager.checkInclusion(this._dialog, openerContainer);
          }
 
