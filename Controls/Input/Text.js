@@ -1,17 +1,10 @@
 define('Controls/Input/Text',
    [
-      'Core/Control',
-      'Controls/Utils/tmplNotify',
-      'wml!Controls/Input/Text/Text',
+      'Controls/Input/Base',
       'WS.Data/Type/descriptor',
-      'Controls/Input/Text/ViewModel',
-      'Controls/Input/resources/InputHelper',
-
-      'css!theme?Controls/Input/resources/InputRender/InputRender',
-      'wml!Controls/Input/resources/input'
+      'Controls/Input/Text/ViewModel'
    ],
-   function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
-
+   function(Base, descriptor, ViewModel) {
       'use strict';
 
       /**
@@ -87,77 +80,47 @@ define('Controls/Input/Text',
        * </pre>
        */
 
-      var TextBox = Control.extend({
-         _template: template,
-         _caretPosition: null,
-
-         _beforeMount: function(options) {
-            this._textViewModel = new TextViewModel({
-               constraint: options.constraint,
+      var Text = Base.extend({
+         _getViewModelOptions: function(options) {
+            return {
+               trim: options.trim,
                maxLength: options.maxLength,
-               value: options.value
-            });
-
-            /**
-             * Browsers use autocomplete to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            this._inputName = options.name || 'input';
+               constraint: options.constraint,
+               selectOnClick: options.selectOnClick
+            };
          },
 
-         _beforeUpdate: function(newOptions) {
-            this._textViewModel.updateOptions({
-               constraint: newOptions.constraint,
-               maxLength: newOptions.maxLength,
-               value: newOptions.value
-            });
+         _getViewModelConstructor: function() {
+            return ViewModel;
          },
 
-         _afterUpdate: function(oldOptions) {
-            if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-               this._children[this._inputName].setSelectionRange(this._caretPosition, this._caretPosition);
-               this._caretPosition = null;
-            }
-         },
+         _changeHandler: function() {
+            this._viewModel.inputCompleted();
 
-         _inputCompletedHandler: function() {
-            // Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
-            if (this._options.trim) {
-               var newValue = this._options.value.trim();
-               if (newValue !== this._options.value) {
-                  this._notify('valueChanged', [newValue]);
-               }
-            }
-
-            this._notify('inputCompleted', [this._options.value]);
-         },
-         _notifyHandler: tmplNotify,
-         paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children[this._inputName], text);
+            Text.superclass._changeHandler.apply(this, arguments);
          }
       });
 
-      TextBox.getDefaultOptions = function() {
-         return {
-            value: '',
-            trim: false,
-            selectOnClick: false
-         };
+      Text.getDefaultOptions = function() {
+         var defaultOptions = Base.getDefaultOptions();
+
+         defaultOptions.value = '';
+         defaultOptions.trim = false;
+         defaultOptions.selectOnClick = false;
+
+         return defaultOptions;
       };
 
-      TextBox.getOptionTypes = function() {
-         return {
-            trim: types(Boolean),
-            selectOnClick: types(Boolean),
+      Text.getOptionTypes = function() {
+         var optionTypes = Base.getOptionTypes();
 
-            /*placeholder: types(String), вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
-            constraint: types(String),
-            value: types(String),
-            maxLength: types(Number)
-         };
+         optionTypes.trim = descriptor(Boolean);
+         optionTypes.maxLength = descriptor(Number);
+         optionTypes.constraint = descriptor(String);
+         optionTypes.selectOnClick = descriptor(Boolean);
+
+         return optionTypes;
       };
 
-      return TextBox;
+      return Text;
    });
