@@ -19,7 +19,8 @@ define('Controls/Input/Search/Styles', [],
     * @css @icon-size_Search Size of Search controls icons.
     *
     * @css @color_Search_iconSearch Color of search button icon.
-    * @css @color_Search_iconSearch_hovered Color of search button icon when hovered or active.
+    * @css @color_Search_iconSearch_hovered Color of search button icon when hovered.
+    * @css @color_Search_iconSearch_active Color of search button icon when active.
     * @css @color_Search_iconSearch_readOnly Color of search button icon when Search controls is readOnly.
     * @css @color_Search_iconReset Color of reset button icon.
     *
