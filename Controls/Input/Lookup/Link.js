@@ -14,7 +14,8 @@ define('Controls/Input/Lookup/Link', [
 
    Link.getDefaultOptions = function() {
       return {
-         style: 'linkMain3'
+         viewMode: 'link',
+         style: 'secondary'
       };
    };
 

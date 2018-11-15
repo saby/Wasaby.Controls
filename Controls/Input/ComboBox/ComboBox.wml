@@ -32,7 +32,7 @@
          <ws:content>
             <ws:partial
                     template="wml!Controls/Input/resources/input"
-                    readOnly="{{!_options.editable}}"
+                    attr:readOnly="true"
                     value="{{_value}}"/>
          </ws:content>
 

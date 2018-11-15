@@ -1,0 +1,17 @@
+<div>
+   <ws:partial template="{{_options.content}}" items="{{_getItems()}}" _counterWidth="{{_counterWidth}}"
+               on:showSelector="_onShowSelectorHandler()"
+               on:addItem="_onAddItemHandler()"
+               on:removeItem="_onRemoveItemHandler()"
+               on:updateItems="_onUpdateItemsHandler()"
+               on:valueChanged="_notifyHandler('valueChanged')"
+               on:itemClick="_notifyHandler('itemClick')"/>
+
+   <ws:if data="{{_options.selectorTemplate}}">
+      <Controls.Selector.Opener name="selectorOpener">
+         <ws:popupOptions template="{{_options.selectorTemplate.templateName}}">
+            <ws:eventHandlers onResult="{{_selectCallback}}"/>
+         </ws:popupOptions>
+      </Controls.Selector.Opener>
+   </ws:if>
+</div>
