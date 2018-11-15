@@ -62,6 +62,7 @@ define('Controls/Toolbar', [
          self._popupOptions = {
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
+            className: 'controls-Toolbar__menu-position',
             eventHandlers: {
                onResult: self._onResult,
                onClose: self._closeHandler
@@ -75,6 +76,10 @@ define('Controls/Toolbar', [
                showClose: true
             }
          };
+      },
+
+      cssStyleGeneration: function(item) {
+
       }
    };
 
@@ -113,7 +118,7 @@ define('Controls/Toolbar', [
          if (newOptions.keyProperty !== this._options.keyProperty ||
             this._options.parentProperty !== newOptions.parentProperty ||
             this._options.nodeProperty !== newOptions.nodeProperty ||
-            this._options.iconSize !== newOptions.size) {
+            this._options.size !== newOptions.size) {
             _private.setPopupOptions(this, newOptions);
          }
          if (newOptions.source && newOptions.source !== this._options.source) {
@@ -129,9 +134,13 @@ define('Controls/Toolbar', [
 
          if (item.get(this._nodeProperty)) {
             config = {
+               corner: {vertical: 'top', horizontal: 'left'},
+               horizontalAlign: {side: 'right'},
+               className: _private.cssStyleGeneration(item),
                templateOptions: {
                   items: this._items,
                   rootKey: item.get(this._options.keyProperty),
+                  showHeader: item.get('showHeader'),
                   headConfig: {
                      icon: item.get('icon'),
                      caption: item.get('title'),
