@@ -1,0 +1,3 @@
+<Controls.Container.LoadingIndicator name="loadingIndicator" delay="{{1000}}">
+   <Controls.Button caption="Submit" name="submitButton"/>
+</Controls.Container.LoadingIndicator>

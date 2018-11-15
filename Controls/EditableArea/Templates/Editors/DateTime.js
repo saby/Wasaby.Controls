@@ -1,4 +1,4 @@
-define('Controls/BaseEditableArea/Templates/Editors/DateTime',
+define('Controls/EditableArea/Templates/Editors/DateTime',
    [
       'Controls/EditableArea/Templates/Editors/Base'
    ],
