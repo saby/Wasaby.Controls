@@ -30,6 +30,14 @@ define('Controls/Decorator/Money',
        */
 
       /**
+       * @name Controls/Decorator/Money#triads
+       * @cfg {Boolean} Determines whether the number should be split into triads.
+       * @variant true - the number split into triads.
+       * @variant false - does not do anything.
+       * @default false
+       */
+
+      /**
        * @name Controls/Decorator/Money#style
        * @cfg {String} The type with which you want to display money.
        * @variant accentResults
@@ -45,7 +53,7 @@ define('Controls/Decorator/Money',
       var _private = {
          searchPaths: /([0-9]*?)(\.[0-9]{2})/,
 
-         parseNumber: function(number) {
+         parseNumber: function(number, triads) {
             var exec = this.searchPaths.exec(number.toFixed(2));
 
             if (!exec) {
@@ -53,7 +61,7 @@ define('Controls/Decorator/Money',
                exec = ['0.00', '0', '.00'];
             }
 
-            var integer = splitIntoTriads(exec[1]);
+            var integer = triads ? splitIntoTriads(exec[1]) : exec[1];
             var fraction = exec[2];
 
             return {
@@ -70,18 +78,25 @@ define('Controls/Decorator/Money',
          _parsedNumber: null,
 
          _beforeMount: function(options) {
-            this._parsedNumber = _private.parseNumber(options.number);
+            this._parsedNumber = _private.parseNumber(options.number, options.triads);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.number !== this._options.number) {
-               this._parsedNumber = _private.parseNumber(newOptions.number);
+            if (newOptions.number !== this._options.number || newOptions.triads !== this._options.triads) {
+               this._parsedNumber = _private.parseNumber(newOptions.number, newOptions.triads);
             }
          }
       });
 
+      Money.getDefaultOptions = function() {
+         return {
+            triads: false
+         };
+      };
+
       Money.getOptionTypes = function() {
          return {
+            triads: descriptor(Boolean),
             number: descriptor(Number).required()
          };
       };
