@@ -1,6 +1,6 @@
-define('Controls/Controllers/SelectedCollection', [
+define('Controls/Selector/SelectedCollection/Controller', [
    'Core/Control',
-   'wml!Controls/Controllers/SelectedCollection/SelectedCollection',
+   'wml!Controls/Selector/SelectedCollection/Controller',
    'Core/core-clone',
    'Core/Deferred',
    'Controls/Controllers/SourceController',
@@ -9,7 +9,7 @@ define('Controls/Controllers/SelectedCollection', [
    'WS.Data/Collection/List',
    'Core/core-merge',
    'Controls/Utils/getWidth',
-   'wml!Controls/SelectedCollection/CounterTemplate',
+   'wml!Controls/Selector/SelectedCollection/CounterTemplate',
    'Controls/Utils/tmplNotify'
 ], function(Control, template, clone, Deferred, SourceController, isEqual, Chain, List, merge, GetWidth, CounterTemplate, tmplNotify) {
 

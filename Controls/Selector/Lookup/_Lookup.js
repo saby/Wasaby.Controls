@@ -1,17 +1,17 @@
-define('Controls/Input/Lookup/_Lookup', [
+define('Controls/Selector/Lookup/_Lookup', [
    'Core/Control',
-   'wml!Controls/Input/Lookup/_Lookup',
+   'wml!Controls/Selector/Lookup/_Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
    'WS.Data/Chain',
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
-   'Controls/SelectedCollection',
-   'wml!Controls/SelectedCollection/SelectedCollection',
-   'wml!Controls/Input/Lookup/resources/clearRecordsTemplate',
-   'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
+   'Controls/Selector/SelectedCollection',
+   'wml!Controls/Selector/SelectedCollection/SelectedCollection',
+   'wml!Controls/Selector/Lookup/resources/clearRecordsTemplate',
+   'wml!Controls/Selector/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
-   'css!theme?Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Selector/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
    'use strict';
 

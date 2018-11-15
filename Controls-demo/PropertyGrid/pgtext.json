@@ -1044,13 +1044,13 @@
       }
     }
   },
-  "Controls/Input/Lookup": {
-    "name": "Controls/Input/Lookup",
+  "Controls/Selector/Lookup": {
+    "name": "Controls/Selector/Lookup",
     "title": "Control \"Lookup\"",
-    "className": "Controls/Input/Lookup",
+    "className": "Controls/Selector/Lookup",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Lookup",
+    "fullname": "Controls/Selector/Lookup",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -1096,13 +1096,13 @@
       }
     }
   },
-  "Controls/Button/SelectorButton": {
-    "name": "Controls/Button/SelectorButton",
+  "Controls/Selector/Button": {
+    "name": "Controls/Selector/Button",
     "title": "Button link with the specified text, on clicking on which a selection window opens.",
-    "className": "Controls/Button/SelectorButton",
+    "className": "Controls/Selector/Button",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Button/SelectorButton",
+    "fullname": "Controls/Selector/Button",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

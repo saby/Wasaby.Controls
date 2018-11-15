@@ -1,8 +1,8 @@
-define('Controls/SelectedCollection/SelectedCollectionStyles', [],
+define('Controls/Selector/SelectedCollection/SelectedCollectionStyles', [],
    function() {}
 
    /**
-    * @mixin Controls/SelectedCollection/SelectedCollectionStyles
+    * @mixin Controls/Selector/SelectedCollection/SelectedCollectionStyles
     * @public
     * @author Золотова Э.Е.
     *

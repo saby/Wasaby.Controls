@@ -4,10 +4,10 @@
       <Controls.Popup.InfoBox
               attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
               trigger="click"
-              templateName="Controls/SelectedCollection/Popup"
+              templateName="Controls/Selector/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
               position="bl">
-          <ws:partial template="wml!Controls/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_options._counterWidth}}px;"/>
+          <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_options._counterWidth}}px;"/>
       </Controls.Popup.InfoBox>
    </ws:if>
    <ws:for data="index, item in _visibleItems">
@@ -24,10 +24,10 @@
               _itemClick="{{_itemClick}}"
               _crossClick="{{_crossClick}}">
          <ws:contentTemplate>
-            <ws:partial template="wml!Controls/SelectedCollection/_ContentTemplate" on:click="_itemClick(item)"/>
+            <ws:partial template="wml!Controls/Selector/SelectedCollection/_ContentTemplate" on:click="_itemClick(item)"/>
          </ws:contentTemplate>
          <ws:crossTemplate>
-            <ws:partial template="wml!Controls/SelectedCollection/_CrossTemplate" on:click="_crossClick(index)"/>
+            <ws:partial template="wml!Controls/Selector/SelectedCollection/_CrossTemplate" on:click="_crossClick(index)"/>
          </ws:crossTemplate>
       </ws:partial>
    </ws:for>
