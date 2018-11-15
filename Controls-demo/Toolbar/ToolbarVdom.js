@@ -52,6 +52,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   buttonStyle: 'secondary',
                   buttonViewMode: 'toolButton',
                   buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
                   title: 'Связанные документы',
                   '@parent': true,
                   parent: null
