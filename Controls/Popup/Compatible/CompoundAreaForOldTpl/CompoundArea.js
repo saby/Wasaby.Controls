@@ -377,11 +377,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this.close(arg);
+               this.close(arg);
+               return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {
-               return this.close(true);
+               this.close(true);
+               return true; // команда ok не должна всплывать выше окна
             } if (commandName === 'cancel') {
-               return this.close(false);
+               this.close(false);
+               return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
