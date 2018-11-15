@@ -16,7 +16,11 @@ define([
             isSourceControllerDestroyed = false;
          treeControl._children = {
             baseControl: {
-               reload: function() {},
+               reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
+               },
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {
@@ -48,8 +52,11 @@ define([
          treeControl._children = {
             baseControl: {
                reload: function(filter) {
+                  var def = new Deferred();
                   reloadCalled = true;
                   assert.equal(filter['parent'], 'testRoot', 'Invalid value "filter[parentProperty]" after call "_beforeUpdate" with new "root"');
+                  def.callback();
+                  return def;
                },
                getViewModel: function() {
                   return {
