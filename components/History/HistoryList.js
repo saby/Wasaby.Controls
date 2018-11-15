@@ -18,7 +18,8 @@ define('SBIS3.CONTROLS/History/HistoryList',
       'Core/constants',
       'WS.Data/Format/Format',
       'WS.Data/Format/StringField',
-      'WS.Data/Format/RecordField'
+      'WS.Data/Format/RecordField',
+      'WS.Data/Adapter/Cow'
    ],
 
    function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, randomId, isPlainArray, isPlainObject, isEqualObject, IoC, AbstractConfigOld, constants) {
