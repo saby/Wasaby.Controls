@@ -258,6 +258,11 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             this._inputField.removeAttr('placeholder');
          }
+         // На старом вебките любое значение аттрибута required интерпретируется как значение true.
+         // Для того, чтобы отключить поведение, задающееся аттрибутом required (показ нативных тултипов в ie), удаляем аттрибут с контейнера.
+         if (constants.browser.retailOffline) {
+            this._inputField.removeAttr('required');
+         }
          this._inputField
             .on('paste', function(event) {
                var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));

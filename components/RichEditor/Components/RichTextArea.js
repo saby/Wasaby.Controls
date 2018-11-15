@@ -2783,6 +2783,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                html = this._replaceWhitespaces(html);
                // И теперь (только один раз) вставим в DOM
                content.innerHTML = html;
+               // Пользователь может кликая по разным элемента страницы добиться того, что текущий рэнж будет охватывать элементы вне редактора или выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+               // 1176153681 https://online.sbis.ru/opendoc.html?guid=4fa1193a-abcb-4311-af55-61b6d2f418ed
+               this._verifySelection();
+            },
+
+            /**
+             * Текущий рэнж может выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+             * @protected
+             */
+            _verifySelection: function() {
+               var editor = this._tinyEditor;
+               var selection = editor.selection;
+               var body = editor.getBody();
+               var commonAncestorContainer = selection.getRng().commonAncestorContainer;
+               if (commonAncestorContainer !== body && !body.contains(commonAncestorContainer)) {
+                  selection.select(body, true);
+               }
             },
 
             _onSelectionChange1: function() {
@@ -2904,7 +2921,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (e.key === 'Tab') {
                   // Не обрабатывать нажатие Tab - за переходы между компонентами отвечает первичный родительский класс
                   // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
-                  e.stopImmediatePropagation();
                   return;
                }
                this._typeInProcess = true;

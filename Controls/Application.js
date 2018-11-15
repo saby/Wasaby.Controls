@@ -192,6 +192,7 @@ define('Controls/Application',
                self.resourceRoot = self.resourceRoot + '/';
             }
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
+            self.pageName = cfg.pageName ? cfg.pageName : (context.AppData ? context.AppData.pageName : '');
             self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
             self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
