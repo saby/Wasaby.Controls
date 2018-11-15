@@ -1058,6 +1058,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
+                  isOldMSIE = BROWSER.isIE && BROWSER.IEVersion < 12,
+                  oldMSIEInput,
                   prepareAndInsertContent = function(content) {
                      content = self._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
@@ -1076,10 +1078,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      self._updateTextByTiny();
                   },
                   onPaste = function(event) {
-                     var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                     if (!content || !save) {
-                        content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                        content.replace('data-ws-is-rich-text="true"', '');
+                     var content;
+                     var isStandard = !!event.clipboardData;
+                     var clipboardData = isStandard ? event.clipboardData : window.clipboardData;
+                     if (clipboardData && clipboardData.getData) {
+                        if (save && isStandard) {
+                           content = clipboardData.getData('text/html');
+                        }
+                        if (!content) {
+                           content = clipboardData.getData(isStandard ?'text/plain' : 'Text') || '';
+                        }
                      }
                      prepareAndInsertContent(content);
                      dialog.close();
@@ -1090,6 +1098,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   },
                   onClose = function() {
                      document.removeEventListener('paste', onPaste, true);
+                     if (oldMSIEInput) {
+                        oldMSIEInput.remove();
+                     }
                      if (typeof onAfterCloseHandler === 'function') {
                         onAfterCloseHandler();
                      }
@@ -1109,7 +1120,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               submitButton: {caption: rk('Отменить')},
                               isModal: true,
                               closeByExternalClick: true,
-                              opener: self
+                              opener: self,
+                              handlers: {
+                                 onShow: isOldMSIE ? function () {
+                                    // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
+                                    // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
+                                    oldMSIEInput = $('<input style="position:absolute; left:-10000px;" class="controls-RichEditor__pasteWithStyles-temporary" data-vdomignore="true" />').appendTo(self._container);
+                                    setTimeout(oldMSIEInput.focus.bind(oldMSIEInput), 100);
+                                 } : null
+                              }
                            },
                            onClose
                         );
