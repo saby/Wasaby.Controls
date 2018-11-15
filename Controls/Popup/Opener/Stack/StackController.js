@@ -28,12 +28,20 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
-            item.containerWidth = _private.getContainerWidth(item, container);
+            // optimization: don't calculate the size of the container, if the configuration is set
+            if (!item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
+               item.containerWidth = _private.getContainerWidth(item, container);
+            }
          },
 
          getContainerWidth: function(item, container) {
-            var template = container.querySelector('.controls-Popup__template');
-            return template.offsetWidth;
+            // The width can be set when the panel is displayed. To calculate the width of the content, remove this value.
+            var currentContainerWidth = container.style.width;
+            container.style.width = 'auto';
+
+            var templateWidth = container.querySelector('.controls-Popup__template').offsetWidth;
+            container.style.width = currentContainerWidth;
+            return templateWidth;
          },
 
          getStackParentCoords: function() {

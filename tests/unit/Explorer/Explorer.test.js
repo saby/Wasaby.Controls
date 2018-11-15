@@ -1,4 +1,10 @@
-define(['Controls/Explorer'], function(Explorer) {
+define([
+   'Controls/Explorer',
+   'Core/Deferred'
+], function(
+   Explorer,
+   Deferred
+) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
          var
@@ -133,6 +139,76 @@ define(['Controls/Explorer'], function(Explorer) {
          assert.deepEqual(events[0].eventArgs, [1, 2]);
          assert.equal(events[1].eventName, 'beforeBeginEdit');
          assert.deepEqual(events[1].eventArgs, []);
+      });
+
+      describe('EditInPlace', function() {
+         it('beginEdit', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  beginEdit: function(options) {
+                     assert.equal(opt, options);
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.beginEdit(opt);
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('beginAdd', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  beginAdd: function(options) {
+                     assert.equal(opt, options);
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.beginAdd(opt);
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('cancelEdit', function() {
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  cancelEdit: function() {
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.cancelEdit();
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('commitEdit', function() {
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  commitEdit: function() {
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.commitEdit();
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
       });
    });
 });

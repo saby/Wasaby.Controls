@@ -6,11 +6,11 @@
    ],
    function(Control, template) {
       'use strict';
-      var _depth = -1;
+      var _depth = 0;
 
       var module = Control.extend({
          _template: template,
-         _depth: -1,
+         _depth: 0,
          _opened: false,
          _beforeMount: function() {
             this._onCloseHandler = this._onCloseHandler.bind(this);
@@ -42,7 +42,19 @@
 
                this._lastUrl = oldLoc.url;
                this._lastPrettyUrl = oldLoc.prettyUrl;
-               this._children.stack.open();
+
+               if (this._children.stack.isOpened()) {
+                  // возможно панель в процессе закрытия, подождем - может она скоро закроется
+                  // todo https://online.sbis.ru/opendoc.html?guid=fac94ad9-3387-4417-bf74-1dac46402131
+                  var self = this;
+                  setTimeout(function() {
+                     if (!self._children.stack.isOpened()) {
+                        self._children.stack.open();
+                     }
+                  }, 3000);
+               } else {
+                  this._children.stack.open();
+               }
             }
          },
          leaveHandler: function() {

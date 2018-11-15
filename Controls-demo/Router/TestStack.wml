@@ -2,7 +2,7 @@
     <ws:contentArea>
         <div>
             depth: {{getDepth()}}
-            <Router.Route mask="{{_depth > 0 ? 'app/' + (_depth - 1) + '/:app' : 'app/:app'}}">
+            <Router.Route mask="{{_depth > 0 ? 'app/' + _depth + '/:app' : 'app/:app'}}">
                 <ws:if data="{{content.app}}">
                     <Controls.Container.Async templateName="{{content.app}}">
                         <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content"

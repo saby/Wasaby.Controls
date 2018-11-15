@@ -7,10 +7,34 @@
 	max-width: 100%;
 }
 
+.controls-SelectedCollection__InfoBox {
+  display: inline-block;
+}
+
+.controls-SelectedCollection__InfoBox_fixed {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  background: @background_FieldLink-showAllLinks_disabled;
+}
+
+.controls-SelectedCollection__InfoBox_fixed:after {
+  content: '';
+  position: absolute;
+  right: -@fieldLink-showAll-shadow-width;
+  width: @fieldLink-showAll-shadow-width;
+  top: 0;
+  bottom: 0;
+  .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
+  background-color: transparent;
+}
+
 .controls-SelectedCollection__counterItems {
-	display: inline;
 	color: @color_SelectedCollection-counter;
-	margin-right: @spacing_SelectedCollection-between-counter-items;
+	padding-right: @spacing_SelectedCollection-between-counter-items;
+  	box-sizing: border-box;
 	cursor: pointer;
 	padding-left: @padding_SelectedCollection-counter;
 }
@@ -101,7 +125,7 @@
 }
 
 .controls-SelectedCollection__collection_multiLine {
-	flex-wrap: wrap;
+	display: inline;
 }
 
 .controls-SelectedCollection__collectionItem_layout_twoColumns {

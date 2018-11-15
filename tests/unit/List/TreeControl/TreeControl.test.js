@@ -1,11 +1,13 @@
 define([
    'Controls/List/TreeControl',
    'Core/Deferred',
-   'Core/core-instance'
+   'Core/core-instance',
+   'Controls/List/Tree/TreeViewModel'
 ], function(
    TreeControl,
    Deferred,
-   cInstance
+   cInstance,
+   TreeViewModel
 ) {
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function() {
@@ -17,7 +19,10 @@ define([
                reload: function() {},
                getViewModel: function() {
                   return {
-                     setHasMoreStorage: function() {}
+                     setHasMoreStorage: function() {
+                     },
+                     setExpandedItems: function() {
+                     }
                   };
                }
             }
@@ -49,6 +54,8 @@ define([
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {},
+                     setExpandedItems: function() {
+                     },
                      setRoot: function() {
                         setRootCalled = true;
                      }
@@ -249,19 +256,63 @@ define([
             assert.isFalse(result.isSuccessful());
          });
       });
-      it('TreeControl._onNodeRemoved', function() {
+      it('All items collapsed after reload', function() {
          var
-            treeControl = new TreeControl({});
+            treeControl = new TreeControl({}),
+            treeViewModel = new TreeViewModel({});
 
-         treeControl._nodesSourceControllers = {
-            1: {
-               destroy: function() {}
-            },
-            2: {},
-            3: {}
+         treeViewModel._expandedItems = {
+            2246: true,
+            452815: true,
+            457244: true,
+            471641: true
          };
-         treeControl._onNodeRemoved(null, 1);
-         assert.deepEqual({ 2: {}, 3: {} }, treeControl._nodesSourceControllers, 'Incorrect value "_nodesSourceControllers" after call "treeControl._onNodeRemoved(null, 1)".');
+
+         treeControl._children = {
+            baseControl: {
+               reload: function() {
+               },
+               getViewModel: function() {
+                  return {
+                     setExpandedItems: function() {
+                        treeViewModel.setExpandedItems({});
+                     }
+                  };
+               }
+            }
+         };
+
+         treeControl.reload();
+         assert.deepEqual({}, treeViewModel._expandedItems);
+      });
+      it('All items collapsed after reload', function() {
+         var
+            treeControl = new TreeControl({}),
+            treeViewModel = new TreeViewModel({});
+
+         treeViewModel._expandedItems = {
+            2246: true,
+            452815: true,
+            457244: true,
+            471641: true
+         };
+
+         treeControl._children = {
+            baseControl: {
+               reload: function() {
+               },
+               getViewModel: function() {
+                  return {
+                     setExpandedItems: function() {
+                        treeViewModel.setExpandedItems({});
+                     }
+                  };
+               }
+            }
+         };
+
+         treeControl.reload();
+         assert.deepEqual({}, treeViewModel._expandedItems);
       });
    });
 });
