@@ -143,6 +143,16 @@ define('Controls/List/Tree/TreeViewModel', [
             expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
 
             return expanderClasses;
+         },
+         prepareExpandedItems: function(expandedItems) {
+            var
+               result = {};
+            if (expandedItems) {
+               expandedItems.forEach(function(item) {
+                  result[item] = true;
+               });
+            }
+            return result;
          }
       },
 
@@ -151,22 +161,21 @@ define('Controls/List/Tree/TreeViewModel', [
          _hasMoreStorage: null,
 
          constructor: function(cfg) {
-            var self = this;
             this._options = cfg;
-            if (cfg.expandedItems) {
-               self._expandedItems = {};
-               cfg.expandedItems.forEach(function(item) {
-                  self._expandedItems[item] = true;
-               });
-            } else {
-               this._expandedItems = {};
-            }
+            this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
             this._hierarchyRelation = new HierarchyRelation({
                idProperty: cfg.keyProperty || 'id',
                parentProperty: cfg.parentProperty || 'Раздел',
                nodeProperty: cfg.nodeProperty || 'Раздел@'
             });
             TreeViewModel.superclass.constructor.apply(this, arguments);
+         },
+
+         setExpandedItems: function(expandedItems) {
+            this._expandedItems = _private.prepareExpandedItems(expandedItems);
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          _prepareDisplay: function(items, cfg) {
