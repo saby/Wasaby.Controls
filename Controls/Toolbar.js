@@ -77,7 +77,7 @@ define('Controls/Toolbar', [
          };
       },
 
-      getClassName: function(item, size) {
+      getItemClassName: function(item, size) {
          return 'controls-Toolbar_' + item.get('buttonViewMode') + '_' + size;
       }
    };
@@ -135,7 +135,7 @@ define('Controls/Toolbar', [
             config = {
                corner: {vertical: 'top', horizontal: 'left'},
                horizontalAlign: {side: 'right'},
-               className: _private.getClassName(item, this._options.size),
+               className: _private.getItemClassName(item, this._options.size),
                templateOptions: {
                   items: this._items,
                   rootKey: item.get(this._options.keyProperty),
@@ -163,7 +163,7 @@ define('Controls/Toolbar', [
 
       _showMenu: function() {
          var config = {
-            className: (this._options.popupClassName || '') + ' controls-Toolbar__menu-position',
+            className: 'controls-Toolbar__menu-position',
             templateOptions: {
                items: this._menuItems,
                iconSize: this._options.size
