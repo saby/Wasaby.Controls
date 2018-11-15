@@ -9,7 +9,7 @@ define('Controls-demo/Router/TestStack',
 
       var TestDialog = Control.extend({
          _template: template,
-         _afterMount: function() {
+         _beforeMount: function() {
             this._depth = Panel.getDepth();
          },
          getDepth: function getDepth() {

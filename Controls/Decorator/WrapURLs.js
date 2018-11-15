@@ -15,6 +15,7 @@ define('Controls/Decorator/WrapURLs',
        * @extends Core/Control
        * @control
        * @public
+       * @author Журавлев М.С.
        * @category Decorator
        *
        * @author Журавлев Максим Сергеевич

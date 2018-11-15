@@ -279,6 +279,16 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          });
       });
+      describe('expandedItems', function() {
+         it('initialize from options', function() {
+            var
+               treeViewModel = new TreeViewModel({
+                  expandedItems: [1, 2, 3]
+               }),
+               preparedExpandedItems = { 1: true, 2: true, 3: true };
+            assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+         });
+      });
       describe('public methods', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
@@ -305,22 +315,22 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
             treeViewModel._curIndex = 1; //234
             treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            treeViewModel._updateSelection(['123', '234', '1', '2', '3']);
+            treeViewModel.updateSelection(['123', '234', '1', '2', '3']);
             treeViewModel._curIndex = 0; //123
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123', '234', '1']);
+            treeViewModel.updateSelection(['123', '234', '1']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123']);
+            treeViewModel.updateSelection(['123']);
             treeViewModel._curIndex = 0; //123
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._updateSelection(['123', '234', '3']);
+            treeViewModel.updateSelection(['123', '234', '3']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
@@ -329,12 +339,27 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
          });
 
-         it('setRoot', function() {
-            treeViewModel.setRoot('testRoot');
-            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            treeViewModel.setRoot(null);
+         it('setExpandedItems', function() {
+            treeViewModel.setExpandedItems({});
+            assert.deepEqual({}, treeViewModel._expandedItems);
+
+            treeViewModel.setExpandedItems({
+               1234: true,
+               324234: false
+            });
+            assert.deepEqual({
+               1234: true,
+               324234: false
+            }, treeViewModel._expandedItems);
          });
+
+         it('getCurrent and toggleExpanded', function() {
+            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
+            assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
+
+         });
+
+
          it('onCollectionChange', function() {
             var
                removedItems1 = [

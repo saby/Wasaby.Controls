@@ -6,6 +6,7 @@ define('Controls/Input/interface/ISuggest', [
     *
     * @interface Controls/Input/interface/ISuggest
     * @public
+    * @author Герасимов А.М.
     */
    
    /**

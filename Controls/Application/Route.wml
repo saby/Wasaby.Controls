@@ -11,6 +11,7 @@
    appRoot="{{appRoot}}"
    resourceRoot="{{resourceRoot}}"
    RUMEnabled="{{ RUMEnabled }}"
+   pageName="{{ pageName }}"
    jsLinks="{{ jsLinks }}"
    staticDomains="{{staticDomains}}"
    cssBundles="{{ cssBundles }}"

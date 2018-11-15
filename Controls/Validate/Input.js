@@ -11,12 +11,14 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
-         _focusOutHandler: function() {
+         _deactivatedHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
          },
          _cleanValid: function() {
-            this.setValidationResult(null);
+            if (this._validationResult) {
+               this.setValidationResult(null);
+            }
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
@@ -25,5 +27,4 @@ define('Controls/Validate/Input',
             }
          }
       });
-   }
-);
+   });

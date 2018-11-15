@@ -1,1 +1,9 @@
-<ws:partial template="{{_options.content}}" scope="{{_options}}" searchValue="{{_searchValue}}" itemOpenHandler="{{_itemOpenHandler}}" viewMode="{{_viewMode}}" on:search="_search()" on:resetSearch="_resetSearch()"/>
+<ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
+            searchValue="{{_searchValue}}"
+            misspellValue="{{_misspellValue}}"
+            itemOpenHandler="{{_itemOpenHandler}}"
+            viewMode="{{_viewMode}}"
+            on:search="_search()"
+            on:resetSearch="_resetSearch()"
+            on:misspellCaptionClick="_misspellCaptionClick()"/>

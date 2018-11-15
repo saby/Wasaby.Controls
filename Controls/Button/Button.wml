@@ -1,6 +1,7 @@
 <a attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
              controls-Button_viewMode-{{_viewMode}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
+             controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
              controls-Button_style-{{_style}}_viewMode-{{_viewMode}}{{_state}}
              {{_options.readOnly ?  '':'controls-Button_viewMode-' + _viewMode + '_iconStyle-' + _iconStyle + _state}}"
     attr:title="{{_options.tooltip}}"

@@ -1,0 +1,21 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
+    <ws:contentArea>
+        <div>
+            <Controls.Validate.Input   name="InputValidate3" attr:style="margin: 30px" >
+                <ws:validators>
+                    <ws:Function value="{{_value4 }}">Controls/Validate/Validators/IsINN</ws:Function>
+                    <ws:Function value="{{_value4 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                </ws:validators>
+                <ws:content>
+                    <Controls.Input.Text
+                            name="textBox"
+                            bind:value="_value4"
+                            placeholder="input"
+                            tagStyle="success"
+                            validationErrors="{{_validationErrors}}"
+                    />
+                </ws:content>
+            </Controls.Validate.Input>
+        </div>
+    </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>

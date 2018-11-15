@@ -30,10 +30,9 @@ define('Controls/Input/Mask',
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
+       * @author Миронов А.Ю.
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
-       *
-       * @author Журавлев М.С.
        */
 
       /**

@@ -1,0 +1,40 @@
+<div class="ws-flexbox ws-flex-column">
+    <ws:if data="{{!_options.readOnly}}">
+        <div class="controls_RichEditorController_toolbar ws-flexbox ws-flex-shrink-0">
+            <Controls.Event.Registrator register="selectionChanged" name="selectionChanged">
+                <Controls.Event.Registrator register="formatChanged" name="formatChanged">
+                    <Controls.Event.Registrator register="undoRedoChanged" name="undoRedoChanged">
+                        <ws:partial template="{{_options.toolbar}}"
+                                    name="toolbar"
+                                    on:execCommand="_execCommandHandler()"
+                                    on:applyFormat="_applyFormatHandler()"
+                                    on:removeFormat="_removeFormatHandler()"
+                                    on:insertHtml="_insertHtmlHandler()"
+                                    on:_paste="_pasteHandler()"
+                                    on:_insertLink="_insertLinkHandler()"/>
+                    </Controls.Event.Registrator>
+                </Controls.Event.Registrator>
+            </Controls.Event.Registrator>
+            <ws:partial template="{{_options.toggleButton}}"/>
+        </div>
+    </ws:if>
+    <Controls.Event.Registrator register="execCommand" name="execCommand">
+        <Controls.Event.Registrator register="insertLink" name="insertLink">
+            <Controls.Event.Registrator register="insertHtml" name="insertHtml">
+                <Controls.Event.Registrator register="applyFormat" name="applyFormat">
+                    <Controls.Event.Registrator register="removeFormat" name="removeFormat">
+                        <Controls.Event.Registrator register="paste" name="paste">
+                            <ws:partial template="{{_options.input}}"
+                                        name="input"
+                                        on:valueChanged="_valueChangedHandler()"
+                                        on:formatChanged="_formatChangedHandler()"
+                                        on:undoRedoChanged="_undoRedoChangedHandler()"
+                                        on:selectionChanged="_selectionChangedHandler()"
+                                        readOnly="{{_options.readOnly}}"/>
+                        </Controls.Event.Registrator>
+                    </Controls.Event.Registrator>
+                </Controls.Event.Registrator>
+            </Controls.Event.Registrator>
+        </Controls.Event.Registrator>
+    </Controls.Event.Registrator>
+</div>

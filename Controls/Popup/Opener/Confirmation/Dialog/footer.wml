@@ -2,7 +2,8 @@
    <ws:if data="{{type === 'ok'}}">
       <Controls.Button
          ws-autofocus="{{true}}"
-         style="buttonPrimary"
+         style="primary"
+         viewmode="button"
          caption="{{okCaption}}"
          attr:class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-standard"
          on:click="_sendResult()"/>
@@ -10,7 +11,8 @@
    <ws:else>
       <Controls.Button
          ws-autofocus="{{true}}"
-         style="buttonPrimary"
+         style="primary"
+         viewMode="button"
          caption="{{yesCaption}}"
          attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
          on:click="_sendResult(true)"

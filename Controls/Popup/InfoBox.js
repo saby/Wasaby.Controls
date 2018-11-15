@@ -4,7 +4,7 @@ define('Controls/Popup/InfoBox',
       'wml!Controls/Popup/InfoBox/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
-      'Controls/Application/TouchDetector/TouchContextField',
+      'Controls/Context/TouchContextField',
       'Controls/Utils/getZIndex'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
@@ -79,6 +79,7 @@ define('Controls/Popup/InfoBox',
                target: self._container,
                template: OpenerTemplate,
                position: self._options.position,
+               style: self._options.style,
                eventHandlers: {
                   onResult: self._resultHandler
                },
@@ -150,7 +151,7 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open();
+            this._open(event);
             event.stopPropagation();
          },
 

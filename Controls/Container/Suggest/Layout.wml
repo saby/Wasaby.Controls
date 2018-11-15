@@ -24,11 +24,11 @@
         <ws:partial template="{{_options.layerName}}" target="{{_container}}" filter="{{_filter}}" searchValue="{{_searchValue}}" showContent="{{_showContent}}" showFooter="{{_isFooterShown}}" misspellingCaption="{{_misspellingCaption}}" on:close="_close()">
             <ws:content>
                 <ws:if data="{{_misspellingCaption}}">
-                    <Controls.Search.MissSpell>
+                    <ws:partial template="{{'Controls/Search/Misspell'}}" attr:class="controls-Suggest__Misspell">
                         <ws:caption>
                             <span on:click="_missSpellClick()">{{_misspellingCaption}}</span>
                         </ws:caption>
-                    </Controls.Search.MissSpell>
+                    </ws:partial>
                 </ws:if>
 
                 <Controls.Container.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" overlay="dark" name="indicator">
@@ -36,7 +36,14 @@
                 </Controls.Container.LoadingIndicator>
 
                 <ws:if data="{{_isFooterShown}}">
-                    <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" on:click="_showAllClick()" hasMore="{{_searchResult ? _searchResult.hasMore}}"/>
+                    <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}">
+                        <ws:showSelectorButtonTemplate>
+                            <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">{[Показать все]} </span>
+                        </ws:showSelectorButtonTemplate>
+                        <ws:showMoreButtonTemplate>
+                            <span if="{{(_searchResult.hasMore && _searchResult.hasMore !== true)}}">Ещё {{_searchResult.hasMore}}</span>
+                        </ws:showMoreButtonTemplate>
+                    </ws:partial>
                 </ws:if>
             </ws:content>
         </ws:partial>

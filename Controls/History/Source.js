@@ -12,8 +12,7 @@ define('Controls/History/Source', [
    'WS.Data/Entity/Model',
    'WS.Data/Source/DataSet',
    'WS.Data/Chain',
-   'WS.Data/Collection/Factory/RecordSet',
-   'WS.Data/Di'
+   'WS.Data/Collection/Factory/RecordSet'
 ], function(CoreExtend,
    OptionsMixin,
    ISource,
@@ -24,8 +23,7 @@ define('Controls/History/Source', [
    Model,
    DataSet,
    Chain,
-   recordSetFactory,
-   Di) {
+   recordSetFactory) {
    /**
     * Source
     * Proxy source adding history data to the original source
@@ -34,6 +32,7 @@ define('Controls/History/Source', [
     * @mixes WS.Data/Entity/OptionsMixin
     * @control
     * @public
+    * @author Герасимов А.М.
     * @category Menu
     * @example
     *  <pre>
@@ -407,6 +406,5 @@ define('Controls/History/Source', [
 
    Source._private = _private;
 
-   Di.register('demoSourceHistory', Source);
    return Source;
 });

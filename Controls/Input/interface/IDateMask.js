@@ -6,10 +6,11 @@ define('Controls/Input/interface/IDateMask', [
     *
     * @interface Controls/Input/interface/IDateMask
     * @public
+    * @author Миронов А.Ю.
     */
 
    /**
-    * @name Controls/Input/IDateMask#mask
+    * @name Controls/Input/interface/IDateMask#mask
     * @cfg {String} Date format.
     *
     * @variant 'DD.MM.YYYY'

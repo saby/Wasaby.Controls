@@ -1,0 +1,23 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "font-family-no-missing-generic-family-keyword": null,
+    "indentation": 3,
+    "color-named": "never",
+    "shorthand-property-no-redundant-values": true,
+    "value-no-vendor-prefix": true,
+    "property-no-vendor-prefix": true,
+    "declaration-block-single-line-max-declarations": 0,
+    "selector-max-attribute": 0,
+    "selector-max-combinators": 1,
+    "selector-max-empty-lines": 0,
+    "selector-max-id": 0,
+    "selector-max-pseudo-class": 1,
+    "selector-max-type": 0,
+    "selector-max-universal": 0,
+    "selector-no-vendor-prefix": true,
+    "max-nesting-depth": 1,
+    "no-unknown-animations": true,
+    "declaration-no-important": true
+  }
+}

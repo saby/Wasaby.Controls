@@ -20,7 +20,6 @@ define('Controls/BreadCrumbs', [
     * @control
     * @public
     * @author Зайцев А.С.
-    *
     * @demo Controls-demo/BreadCrumbs/BreadCrumbs
     */
 
