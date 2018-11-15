@@ -31,7 +31,8 @@ define('Controls/Popup/Opener/Stack',
           * Open stack popup.
           * @function Controls/Popup/Opener/Stack#open
           * @returns {Undefined}
-          * @param {Object} {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions} Stack popup options.
+          * @param {Object} popupOptions Stack popup options.
+          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStackOptions#popupOptions popupOptions}
           * @example
           * Open stack with specified configuration.
           * wml
@@ -126,4 +127,5 @@ define('Controls/Popup/Opener/Stack',
 /**
  * @name Controls/Popup/Opener/Stack#isOpened
  * @description Popup opened status.
+ * @function
  */

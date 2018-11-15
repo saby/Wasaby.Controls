@@ -9,14 +9,14 @@
    >
       <div class="ControlsDemo-EditAtPlace__firstExampleWrapper">
          <span class="ControlsDemo-EditAtPlace__label">Шаблон:</span>
-         <Controls.EditAtPlace.EditAtPlaceTemplate
+         <Controls.EditableArea.Templates.Editors.Base
               bind:value="content.editObject.text1"
               style="asLink"
          >
             <ws:editorTemplate>
                <Controls.Input.Text selectOnClick="{{ false }}" />
             </ws:editorTemplate>
-         </Controls.EditAtPlace.EditAtPlaceTemplate>
+         </Controls.EditableArea.Templates.Editors.Base>
       </div>
    </Controls.EditAtPlace>
    <div class="ControlsDemo-EditAtPlace__title">Пример 2 - редактирование во вкладке</div>

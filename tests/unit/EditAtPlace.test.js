@@ -1,10 +1,10 @@
 define([
    'Controls/EditAtPlace',
-   'WS.Data/Entity/Record',
+   'WS.Data/Entity/Model',
    'Core/Deferred'
 ], function(
    EditAtPlace,
-   Record,
+   Model,
    Deferred
 ) {
    'use strict';
@@ -13,21 +13,23 @@ define([
       var
          eventQueue,
          instance,
-         cfg = {
-            editWhenFirstRendered: true,
-            editObject: Record.fromObject({
-               text: 'qwerty'
-            })
-         },
-         cfg2 = {
-            editWhenFirstRendered: false,
-            editObject: Record.fromObject({
-               text: 'test'
-            })
-         };
+         cfg,
+         cfg2;
       beforeEach(function() {
          eventQueue = [];
          instance = new EditAtPlace();
+         cfg = {
+            editWhenFirstRendered: true,
+            editObject: Model.fromObject({
+               text: 'qwerty'
+            })
+         };
+         cfg2 = {
+            editWhenFirstRendered: false,
+            editObject: Model.fromObject({
+               text: 'test'
+            })
+         };
       });
       afterEach(function() {
          instance = null;
@@ -47,17 +49,6 @@ define([
       it('_beforeMount', function() {
          instance._beforeMount(cfg);
          assert.equal(cfg.isEditing, instance.editWhenFirstRendered);
-         assert.isTrue(cfg.editObject.isEqual(instance._editObject));
-         assert.isFalse(cfg.editObject === instance._editObject);
-      });
-
-      it('_beforeUpdate', function() {
-         instance._beforeMount(cfg);
-         assert.isTrue(cfg.editObject.isEqual(instance._editObject));
-         assert.isFalse(cfg.editObject === instance._editObject);
-         instance._beforeUpdate(cfg2);
-         assert.isTrue(cfg2.editObject.isEqual(instance._editObject));
-         assert.isFalse(cfg2.editObject === instance._editObject);
       });
 
       it('_afterUpdate', function() {
@@ -166,22 +157,24 @@ define([
             };
 
          it('without cancelling', function() {
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
             instance.startEdit(event);
             assert.equal(eventQueue[0].event, 'beforeEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
             assert.isTrue(instance._startEditTarget);
          });
 
          it('cancel', function() {
+            instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
             instance._notify = mockNotify('Cancel');
             instance.startEdit(event);
             assert.equal(eventQueue[0].event, 'beforeEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isFalse(instance._isEditing);
             assert.isNotOk(instance._startEditTarget);
@@ -191,45 +184,62 @@ define([
       describe('cancelEdit', function() {
          it('without cancelling', function() {
             instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
             instance._notify = mockNotify();
-            instance._editObject.acceptChanges();
-            instance._editObject.set('text', 'changed');
+            instance._options.editObject.set('text', 'changed');
+            instance._oldEditObject = {
+               get: function(field) {
+                  if (field === 'text') {
+                     return 'qwerty';
+                  }
+               }
+            };
             instance.cancelEdit();
             assert.equal(eventQueue.length, 2);
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.equal(eventQueue[1].event, 'afterEndEdit');
-            assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
-            assert.equal(instance._editObject.get('text'), 'qwerty');
+            assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
+            assert.equal(instance._options.editObject.get('text'), 'qwerty');
+            assert.isFalse(instance._options.editObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
          it('cancel', function() {
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify('Cancel');
-            instance._editObject.acceptChanges();
-            instance._editObject.set('text', 'changed');
+            instance._options.editObject.set('text', 'changed');
             instance.cancelEdit();
             assert.equal(eventQueue.length, 1);
             assert.equal(eventQueue[0].event, 'beforeEndEdit');
-            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
-            assert.equal(instance._editObject.get('text'), 'changed');
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+            assert.equal(instance._options.editObject.get('text'), 'changed');
+            assert.isTrue(instance._options.editObject.isChanged());
          });
 
          it('deferred', function(done) {
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify(Deferred.success());
-            instance._editObject.acceptChanges();
-            instance._editObject.set('text', 'changed');
+            instance._options.editObject.set('text', 'changed');
+            instance._oldEditObject = {
+               get: function(field) {
+                  if (field === 'text') {
+                     return 'qwerty';
+                  }
+               }
+            };
             instance.cancelEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
-               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
-               assert.equal(instance._editObject.get('text'), 'qwerty');
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+               assert.equal(instance._options.editObject.get('text'), 'qwerty');
                assert.equal(eventQueue[1].event, 'afterEndEdit');
-               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
                assert.isFalse(instance._isEditing);
+               assert.isFalse(instance._options.editObject.isChanged());
                done();
             }, 0);
          });
@@ -244,15 +254,19 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
+            instance._options.editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
-               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
                assert.equal(eventQueue[1].event, 'afterEndEdit');
-               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
+               assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                assert.isFalse(instance._isEditing);
                done();
             }, 0);
@@ -266,13 +280,17 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify('Cancel');
+            instance._options.editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 1);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
-               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+               assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                assert.isTrue(instance._isEditing);
                done();
             }, 0);
@@ -288,12 +306,16 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
+            instance._options.editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 0);
                assert.isTrue(instance._isEditing);
+               assert.equal(cfg.editObject.get('text'), 'asdf');
+               assert.isTrue(instance._options.editObject.isChanged());
                done();
             }, 0);
          });
@@ -306,16 +328,20 @@ define([
                   }
                }
             };
+            instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify(Deferred.success());
+            instance._options.editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
                assert.equal(eventQueue.length, 2);
                assert.equal(eventQueue[0].event, 'beforeEndEdit');
-               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
                assert.equal(eventQueue[1].event, 'afterEndEdit');
-               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._editObject));
+               assert.isTrue(eventQueue[1].eventArgs[0].isEqual(instance._options.editObject));
+               assert.equal(cfg.editObject.get('text'), 'asdf');
                assert.isFalse(instance._isEditing);
+               assert.isTrue(instance._options.editObject.isChanged());
                done();
             }, 0);
          });

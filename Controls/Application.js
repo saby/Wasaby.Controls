@@ -86,7 +86,7 @@ define('Controls/Application',
 
             // Find opener for Infobox
             if (!config.opener) {
-               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+               requirejs(['Vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
                   config.opener = DefaultOpenerFinder.find(config.target);
                   def.callback(config);
                });
@@ -198,6 +198,7 @@ define('Controls/Application',
                self.resourceRoot = self.resourceRoot + '/';
             }
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
+            self.pageName = cfg.pageName ? cfg.pageName : (context.AppData ? context.AppData.pageName : '');
             self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
             self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite) || false;
             self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);

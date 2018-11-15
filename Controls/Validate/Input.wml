@@ -2,7 +2,8 @@
             validationErrors="{{isValid()}}"
             scope="{{_options}}"
             on:valueChanged="_cleanValid()"
-            on:focusOut="_focusOutHandler()"
+            on:deactivated="_deactivatedHandler()"
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
-            on:mouseleave="_mouseLeaveHandler()"/>
+            on:mouseleave="_mouseLeaveHandler()"
+/>

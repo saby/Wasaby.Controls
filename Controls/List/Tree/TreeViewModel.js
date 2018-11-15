@@ -2,7 +2,6 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
-   'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/IBind',
    'Controls/Utils/ArraySimpleValuesUtil'
@@ -10,7 +9,6 @@ define('Controls/List/Tree/TreeViewModel', [
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
-   cClone,
    HierarchyRelation,
    IBindCollection,
    ArraySimpleValuesUtil
@@ -153,9 +151,13 @@ define('Controls/List/Tree/TreeViewModel', [
          _hasMoreStorage: null,
 
          constructor: function(cfg) {
+            var self = this;
             this._options = cfg;
             if (cfg.expandedItems) {
-               this._expandedItems = cClone(cfg.expandedItems);
+               self._expandedItems = {};
+               cfg.expandedItems.forEach(function(item) {
+                  self._expandedItems[item] = true;
+               });
             } else {
                this._expandedItems = {};
             }
@@ -333,6 +335,9 @@ define('Controls/List/Tree/TreeViewModel', [
             this._notify('onListChange');
          },
 
+         setExpandedItems: function(expandedItems) {
+            this._expandedItems = expandedItems;
+         },
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);

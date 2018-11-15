@@ -3,7 +3,6 @@ define(
       'Controls/Decorator/Highlight'
    ],
    function(Highlight) {
-
       'use strict';
 
       describe('Controls.Decorator.Highlight', function() {
@@ -13,14 +12,14 @@ define(
             var parseText = Highlight._private.parseText.bind(Highlight._private);
 
             it('Highlights text', function() {
-               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'ip');
+               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'ip', 'substring');
                assert.deepEqual(result, [
                   {
                      type: 'text',
                      value: 'Lorem '
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'ip'
                   },
                   {
@@ -28,7 +27,7 @@ define(
                      value: 'sum dolor sit amet, consectetur ad'
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'ip'
                   },
                   {
@@ -38,21 +37,21 @@ define(
                ]);
             });
             it('Does not highlight unmatched', function() {
-               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'sits');
+               result = parseText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.', 'sits', 'substring');
                assert.deepEqual(result, [{
                   type: 'text',
                   value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur.'
                }]);
             });
             it('The highlight text contains special regular expression characters.', function() {
-               result = parseText('Lorem ipsum dolor sit amet, consectetur\\ adipiscing elit. Nunc consectetur.', 'consectetur\\');
+               result = parseText('Lorem ipsum dolor sit amet, consectetur\\ adipiscing elit. Nunc consectetur.', 'consectetur\\', 'substring');
                assert.deepEqual(result, [
                   {
                      type: 'text',
                      value: 'Lorem ipsum dolor sit amet, '
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'consectetur\\'
                   },
                   {
@@ -61,15 +60,32 @@ define(
                   }
                ]);
             });
-            it('A few words to highlight.', function() {
-               result = parseText('Lorem ipsum dolor sit amet.Hello ipsum child dolor.', 'ipsum dolor');
+            it('Word search.', function() {
+               result = parseText('Lorem ipsum dolor ip sit amet, consectetur adipiscing elit. Nunc consectetur.', 'ip', 'word');
+               assert.deepEqual(result, [
+                  {
+                     type: 'text',
+                     value: 'Lorem ipsum dolor'
+                  },
+                  {
+                     type: 'highlight',
+                     value: ' ip '
+                  },
+                  {
+                     type: 'text',
+                     value: 'sit amet, consectetur adipiscing elit. Nunc consectetur.'
+                  }
+               ]);
+            });
+            it.skip('A few words to highlight.', function() {
+               result = parseText('Lorem ipsum dolor sit amet.Hello ipsum child dolor.', 'ipsum dolor', 'setSubstring');
                assert.deepEqual(result, [
                   {
                      type: 'text',
                      value: 'Lorem '
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'ipsum dolor'
                   },
                   {
@@ -77,7 +93,7 @@ define(
                      value: ' sit amet.Hello '
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'ipsum'
                   },
                   {
@@ -85,7 +101,7 @@ define(
                      value: ' child '
                   },
                   {
-                     type: 'found',
+                     type: 'highlight',
                      value: 'dolor'
                   },
                   {

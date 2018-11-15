@@ -6,7 +6,7 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
    'json!Controls-demo/EditAtPlace/EAPConfig',
    'wml!Controls-demo/EditAtPlace/resources/oneField',
    'wml!Controls-demo/EditAtPlace/resources/twoFields',
-   'Controls/EditAtPlace/EditAtPlaceTemplate',
+   'Controls/EditableArea/Templates/Editors/Base',
    'css!Controls-demo/EditAtPlace/EditAtPlacePG'
 ], function(
    Control,

@@ -17,7 +17,6 @@ define('Controls/Decorator/Highlight',
        * @extends Core/Control
        * @control
        * @public
-       * @category Decorator
        *
        * @author Журавлев М.С.
        */
@@ -49,6 +48,10 @@ define('Controls/Decorator/Highlight',
 
          isSearchByWords: function(searchMode) {
             return searchMode === 'word' || searchMode === 'setWords';
+         },
+
+         isSearchBySet: function(searchMode) {
+            return searchMode === 'setWords' || searchMode === 'setSubstrings';
          },
 
          isWord: function(value) {
@@ -110,6 +113,22 @@ define('Controls/Decorator/Highlight',
             });
          },
 
+         uniteToSet: function(value) {
+            var hasUnite;
+
+            return value.reduce(function(set, current) {
+               if (hasUnite) {
+                  hasUnite = false;
+                  set[set.length - 1].value += current.value;
+               }
+
+               if (current.type === 'text' && current.value.test(_private.separatorsRegExp)) {
+                  hasUnite = true;
+                  set[set.length - 1].value += current.value;
+               }
+            }, []);
+         },
+
          parseText: function(text, highlight, searchMode) {
             var highlightedWords = RegExpUtil.escapeSpecialChars(highlight).split(_private.separatorsRegExp);
 
@@ -129,6 +148,10 @@ define('Controls/Decorator/Highlight',
             }
 
             _private.addText(parsedText, iterator);
+
+            if (_private.isSearchBySet(searchMode)) {
+               _private.uniteToSet(parsedText);
+            }
 
             return parsedText;
          }
@@ -170,7 +193,7 @@ define('Controls/Decorator/Highlight',
 
       Highlight.getDefaultOptions = function() {
          return {
-            searchMode: 'word',
+            searchMode: 'substring',
             class: 'controls-Highlight_found'
          };
       };

@@ -2,7 +2,7 @@ define('Controls/Application/TouchDetector', [
    'Core/Control',
    'wml!Controls/Application/TouchDetector/TouchDetector',
    'Core/compatibility',
-   'Controls/Application/TouchDetector/TouchContextField'
+   'Controls/Context/TouchContextField'
 ], function(
    Control,
    template,

@@ -6,18 +6,14 @@ define('Controls/Filter/Controller',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Core/helpers/Object/isEqual',
-      'Controls/History/FilterSource',
-      'Controls/History/Service',
-      'WS.Data/Source/Memory',
+      'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEmpty',
       'Core/core-merge',
       'Core/core-clone',
       'Controls/Container/Data/ContextOptions'
    ],
-   
-   function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, isEmptyObject, merge, clone) {
-      
+
+   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone) {
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -41,41 +37,37 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         getHistorySource: function(self, hId) {
-            if (!self._historySource) {
-               self._historySource = new HistorySource({
-                  originSource: new Memory({
-                     idProperty: 'id',
-                     data: []
-                  }),
-                  historySource: new HistoryService({
-                     historyId: hId,
-                     pinned: true,
-                     dataLoaded: true
-                  })
+         minimizeFilterItems: function(items) {
+            var minItems = [];
+            Chain(items).each(function(item) {
+               minItems.push({
+                  id: getPropValue(item, 'id'),
+                  value: getPropValue(item, 'value'),
+                  textValue: getPropValue(item, 'textValue'),
+                  visibility: getPropValue(item, 'visibility')
                });
-            }
-            return self._historySource;
+            });
+            return minItems;
          },
 
          getHistoryItems: function(self, id) {
             if (!id) {
                return Deferred.success([]);
             }
-            var that = this;
-            var recent, lastFilter;
+            var recent, lastFilter,
+               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
-                  source: this.getHistorySource(self, id)
+                  source: source
                });
             }
 
             return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = that.getHistorySource(self, id).getRecent();
+               recent = historyUtils.getHistorySource(id).getRecent();
                if (recent.getCount()) {
                   lastFilter = recent.at(0);
-                  return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+                  return historyUtils.getHistorySource(id).getDataObject(lastFilter.get('ObjectData'));
                }
             });
          },
@@ -337,19 +329,17 @@ define('Controls/Filter/Controller',
          },
 
          _itemsChanged: function(event, items) {
-            var filter;
             var meta;
 
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               filter = _private.getFilterByItems(this._filterButtonItems, this._fastFilterItems);
                meta = {
                   '$_addFromData': true
                };
-               _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
+               historyUtils.getHistorySource(this._options.historyId).update(_private.minimizeFilterItems(this._filterButtonItems || this._fastFilterItems), meta);
             }
-            
+
             _private.applyItemsToFilter(this, this._options.filter, items);
             _private.notifyFilterChanged(this);
          },
@@ -358,7 +348,7 @@ define('Controls/Filter/Controller',
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
-         
+
       });
 
       Container._private = _private;
