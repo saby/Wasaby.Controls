@@ -218,6 +218,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       selectionTypes: selectionTypes,
 
       $constructor: function () {
+         this._publish('onChoose', 'onCancel');
       },
 
       init: function () {
@@ -336,6 +337,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear + 1, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
+         options.quantum = options.quantum || {};
          if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
             options.quantum.days = [1];
          }
@@ -615,6 +617,14 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             oldStart = this.getStartValue();
             oldEnd = this.getEndValue();
+
+            // Если период меняют из вне, и он изменился для monthRangePicker
+            // то меняем внешний вид выделения с месяцев на дни.
+            if (!this._isDatesEqual(this._monthRangePicker.getStartValue(), start) ||
+                  !this._isDatesEqual(this._monthRangePicker.getEndValue(), end)) {
+               this._monthRangePicker._clearMonthSelection();
+            }
+
             changed = DateRangeBigChoose.superclass.setRange.apply(this, arguments);
             start = this.getStartValue();
             end = this.getEndValue();

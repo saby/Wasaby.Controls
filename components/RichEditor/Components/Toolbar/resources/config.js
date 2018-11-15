@@ -131,7 +131,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
                handlers: {
                   onActivated: handlers.blockquote
                },
-               order: 65,
+               order: 75,
                tabindex: 0
             },
 

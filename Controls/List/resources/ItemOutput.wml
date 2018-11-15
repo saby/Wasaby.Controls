@@ -10,7 +10,6 @@
       on:mouseenter="_onItemMouseEnter(itemData)"
       on:mouseleave="_onItemMouseLeave(itemData)"
       on:mousemove="_onItemMouseMove(itemData)"
-      on:mouseleave="_onItemMouseLeave(itemData)"
       on:wheel="_onItemWheel(itemData)"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"

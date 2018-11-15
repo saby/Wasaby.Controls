@@ -3,12 +3,13 @@ define('Controls/Popup/Manager/Container',
       'Core/Control',
       'wml!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
+      'Core/IoC',
       'css!Controls/Popup/Manager/Container'
    ],
-   function(Control, template, ManagerController) {
+   function(Control, template, ManagerController, IoC) {
       'use strict';
 
-      //step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
+      // step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
       var POPUP_ZINDEX_STEP = 10;
 
       var Container = Control.extend({
@@ -48,33 +49,55 @@ define('Controls/Popup/Manager/Container',
             this._popupItems = popupItems;
             this._forceUpdate();
          },
-
-         _popupDeactivated: function(event, popupId) {
+         _finishPendings: function(popupId, popupCallback, pendingCallback, pendingsFinishedCallback) {
             var popup = this._children[popupId];
             if (popup) {
-               if (!this[popupId + '_activeElement']) {
-                  this[popupId + '_activeElement'] = document.activeElement;
-               }
+               popupCallback && popupCallback(popup);
+
                var registrator = this._children[popupId + '_registrator'];
                if (registrator) {
                   if (registrator._hasRegisteredPendings()) {
-                     // if pendings is exist, take focus back while pendings are finishing
-                     popup._container.focus();
+                     pendingCallback && pendingCallback(popup);
                   }
                   var finishDef = registrator.finishPendingOperations();
-                  finishDef.addCallback(function() {
-                     //Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
-                     //Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
-                     if (popup && popup._options.isCompoundTemplate) {
-                        if (popup._options.closeByExternalClick) {
-                           this._getCompoundArea(popup._container).close();
-                        }
-                     } else {
-                        this._notify('popupDeactivated', [popupId], { bubbling: true });
-                     }
-                  }.bind(this));
+                  finishDef.addCallbacks(function() {
+                     pendingsFinishedCallback && pendingsFinishedCallback(popup);
+                  }, function(e) {
+                     IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                     pendingsFinishedCallback && pendingsFinishedCallback(popup);
+                  });
                }
             }
+         },
+
+         _popupClosed: function(event, popupId) {
+            var self = this;
+            this._finishPendings(popupId, null, function() {
+               event.stopPropagation();
+            }, function() {
+               self._notify('popupClose', [popupId], { bubbling: true });
+            });
+         },
+         _popupDeactivated: function(event, popupId) {
+            var self = this;
+            this._finishPendings(popupId, function() {
+               if (!self[popupId + '_activeElement']) {
+                  self[popupId + '_activeElement'] = document.activeElement;
+               }
+            }, function(popup) {
+               // if pendings is exist, take focus back while pendings are finishing
+               popup._container.focus();
+            }, function(popup) {
+               // Старые панели прерывали свое закрытие без механизма пендингов, на onBeforeClose.
+               // Поддерживаю старую логику, закрываю compoundArea через close, чтобы прошел весь цикл закрытия
+               if (popup && popup._options.isCompoundTemplate) {
+                  if (popup._options.closeByExternalClick) {
+                     self._getCompoundArea(popup._container).close();
+                  }
+               } else {
+                  self._notify('popupDeactivated', [popupId], { bubbling: true });
+               }
+            });
          },
          _popupDestroyed: function(event, popupId) {
             if (this[popupId + '_activeElement']) {
@@ -91,16 +114,16 @@ define('Controls/Popup/Manager/Container',
             event.preventDefault();
          },
 
-         //TODO Compatible
-         //Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
-         //Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
-         //у compoundArea вызовется сразу destroy. такую логику прервать нельзя
+         // TODO Compatible
+         // Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
+         // Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
+         // у compoundArea вызовется сразу destroy. такую логику прервать нельзя
          _getCompoundArea: function(popupContainer) {
             return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
          }
       });
 
-      //To calculate the zIndex in a compatible notification Manager
+      // To calculate the zIndex in a compatible notification Manager
       Container.POPUP_ZINDEX_STEP = POPUP_ZINDEX_STEP;
       return Container;
    });

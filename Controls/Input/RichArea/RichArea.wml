@@ -3,21 +3,19 @@
    <Controls.Container.Scroll
       class="controls-RichTextArea__scrollContainer"
       name="areaScrollContainer">
-      <div>
-         <ws:if data="{{_options.readOnly}}">
-            <div class="controls-RichTextArea__dataReview"
-                 name="previewContainer">
-               {{_value}}
-            </div>
-         </ws:if>
-         <ws:else>
-            <div>
-               <Controls.Input.RichArea.resources.TinyMCE
-                  value="{{_value}}"
-                  on:valueChanged="_onTextChanged()"
-                  placeholder="{{_options.placeholder}}"/>
-            </div>
-         </ws:else>
-      </div>
+      <ws:if data="{{_options.readOnly}}">
+         <!--TODO Вернуть Core/HtmlJson, когда будет решена задача https://online.sbis.ru/opendoc.html?guid=623a3e92-8646-4bcb-a2c6-84d29efc8ea2-->
+         <div name="previewContainer" class="ws-basic-style controls-RichTextArea__dataReview"></div>
+      </ws:if>
+      <ws:else>
+         <Controls.Input.RichArea.resources.TinyMCE
+            name="editor"
+            value="{{_jsonToHtml(_value)}}"
+            placeholder="{{_options.placeholder}}"
+            on:valueChanged="_valueChangedHandler()"
+            on:formatChanged="_formatChangedHandler()"
+            on:undoRedoChanged="_undoRedoChangedHandler()"
+            on:selectionChanged="_selectionChangedHandler()"/>
+      </ws:else>
    </Controls.Container.Scroll>
 </div>

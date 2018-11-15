@@ -12,12 +12,18 @@
 .controls-TileView__itemContent {
    box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
    background-color: @background-color_TileView-item;
+   box-sizing: border-box;
    z-index: 1;
    overflow: hidden;
    position: absolute;
    top: 0;
    left: 0;
    right: 0;
+}
+
+.controls-TileView__item_animated {
+   transition-property: left, right, bottom, top;
+   transition-duration: 0.15s;
 }
 
 .controls-TileView__title {
@@ -119,4 +125,17 @@
    margin-top: 0;
    margin-bottom: 0;
    border: none;
+}
+
+//TODO: Выписана задача. чтобы унести стили из плитки https://online.sbis.ru/opendoc.html?guid=f1421bfc-67dd-4aa5-bf13-28df0a9ab79b
+.controls-TileView__itemActions_bottomRight {
+   bottom: 0;
+   right: 0;
+}
+
+//TODO: Выписана задача. чтобы унести стили из плитки https://online.sbis.ru/opendoc.html?guid=f1421bfc-67dd-4aa5-bf13-28df0a9ab79b
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_showActions:hover > .controls-itemActionsV {
+      display: inline-block;
+   }
 }

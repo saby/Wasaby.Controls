@@ -146,7 +146,8 @@ define('SBIS3.CONTROLS/OperationsPanel', [
              * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
              */
             hasItemsMenu: false
-         }
+         },
+         _isMassMode: true
       },
       $constructor: function() {
          this._publish('onToggle');
@@ -163,6 +164,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
             //После перерисовки надо обновить содержимое itemsMenu
             if(self._itemsMenu){
                self._updateActionsMenuButtonItems();
+               this._updatePickerClassName();
             }
 
             if(self._options.hasItemsMenu){
@@ -284,8 +286,9 @@ define('SBIS3.CONTROLS/OperationsPanel', [
       },
 
       onSelectedItemsChange: function(idArray) {
-         this._container.toggleClass('controls-operationsPanel__massMode', !idArray.length)
-                        .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+         this._isMassMode = !idArray.length;
+         this._container.toggleClass('controls-operationsPanel__massMode', this._isMassMode)
+                        .toggleClass('controls-operationsPanel__selectionMode', !this._isMassMode);
 
          if (this.isVisible()) {
             this._onSelectedItemsChange(idArray);
@@ -296,13 +299,21 @@ define('SBIS3.CONTROLS/OperationsPanel', [
          }
 
          if(this._options.hasItemsMenu){
-            var pickerContainer = $('.controls-operationsPanel__itemsMenu_picker');
-            pickerContainer.toggleClass('controls-operationsPanel__massMode', !idArray.length);
-            pickerContainer.toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
-
+            this._updatePickerClassName();
             this._checkCapacity();
          }
       },
+
+      _updatePickerClassName: function() {
+         var pickerContainer;
+
+         if (this._itemsMenu && this._itemsMenu.getPicker()) {
+            pickerContainer = this._itemsMenu.getPicker().getContainer();
+            pickerContainer.toggleClass('controls-operationsPanel__massMode', this._isMassMode);
+            pickerContainer.toggleClass('controls-operationsPanel__selectionMode', !this._isMassMode);
+         }
+      },
+
       _onSelectedItemsChange: function(idArray) {
          var
             instances = this.getItemsInstances(),

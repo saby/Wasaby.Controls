@@ -146,7 +146,10 @@ define('Controls-demo/FilterSearch/FilterSearch', [
       _afterMount: function() {
          this._source = new MemorySource({
             data: memorySourceData,
-            filter: memorySourceFilter('firstName'),
+            filter: memorySourceFilter({
+               'owner': '0',
+               'department': 'По департаменту'
+            }),
             idProperty: 'id'
          });
          this._forceUpdate();

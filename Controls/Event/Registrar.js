@@ -39,6 +39,22 @@ define('Controls/Event/Registrar',
             }
          },
 
+         startAsync: function() {
+            if (!this._registry) {
+               return;
+            }
+            var promises = [];
+            for (var i in this._registry) {
+               if (this._registry.hasOwnProperty(i)) {
+                  var obj = this._registry[i];
+                  var res = obj && obj.callback.apply(obj.component, arguments);
+                  promises.push(res);
+               }
+            }
+
+            return Promise.all(promises);
+         },
+
          startOnceTarget: function(target) {
             var argsClone;
             if (!this._registry) {

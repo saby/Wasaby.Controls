@@ -12,11 +12,13 @@ define('Controls/Application/HeadDataContext', [
       var moduleInfo;
       var deps = {};
       var modules = slr._linksStorage;
+      var parts;
       for (var key in modules) {
          if (modules.hasOwnProperty(key)) {
             moduleInfo = modules[key];
             if (moduleInfo.module) {
-               deps[moduleInfo.module] = true;
+               parts = Serializer.parseDeclaration(moduleInfo.module);
+               deps[parts.name] = true;
             }
          }
       }

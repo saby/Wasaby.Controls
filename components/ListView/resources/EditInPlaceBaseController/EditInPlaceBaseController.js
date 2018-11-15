@@ -160,6 +160,10 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                this._options.columns = columns;
             },
 
+            setIgnoreFirstColumn: function(value) {
+               this._options.ignoreFirstColumn = value;
+            },
+
             _getEditInPlaceConfig: function() {
                var
                   self = this,

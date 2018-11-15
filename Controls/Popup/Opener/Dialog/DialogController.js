@@ -1,16 +1,16 @@
 define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy',
-      'SBIS3.CONTROLS/Utils/TouchKeyboardHelper'
+      'Controls/Popup/Opener/Dialog/DialogStrategy'
    ],
-   function(BaseController, DialogStrategy, TouchKeyboardHelper) {
+   function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
+            // в 700 этих правок нет. разбираюсь в причинах ошибок в клауде.
             var windowData = {
                width: document.body.clientWidth,
-               height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(),
-               scrollTop: document.body.scrollTop,
+               height: document.body.clientHeight,
+               scrollTop: 0,
             };
 
             // Positioning relative to body
@@ -84,7 +84,9 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             item.dragged = true;
             item.position.left = item.startPosition.left + offset.x;
             item.position.top = item.startPosition.top + offset.y;
-            this.prepareConfig(item, container);
+
+            // Take the size from cache, because they don't change when you move
+            _private.prepareConfig(item, item.sizes);
          },
 
          popupDragEnd: function(item) {
@@ -93,12 +95,14 @@ define('Controls/Popup/Opener/Dialog/DialogController',
 
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
+            cfg.sizes = sizes;
             _private.prepareConfig(cfg, sizes);
          },
 
          needRecalcOnKeyboardShow: function() {
-            return true;
-         }
+            return false;
+         },
+         _private: _private
       });
       return new DialogController();
    }

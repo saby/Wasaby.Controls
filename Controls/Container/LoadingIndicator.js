@@ -8,6 +8,8 @@ define('Controls/Container/LoadingIndicator', [
    var module = Control.extend({
       _template: tmpl,
       isLoading: false,
+      _isPreloading: false,
+      _prevLoading: null,
 
       isGlobal: true,
       useSpinner: true,
@@ -17,23 +19,13 @@ define('Controls/Container/LoadingIndicator', [
       overlay: 'default',
       mods: '',
 
+      _isLoadingSaved: null,
+
       _beforeMount: function(cfg) {
          this._updateProperties(cfg);
       },
       _beforeUpdate: function(cfg) {
          this._updateProperties(cfg);
-         if (this.isLoading !== this._prevLoading && this.isLoading) {
-            var self = this;
-            var useSpinner = self.useSpinner;
-            self.useSpinner = false;
-            setTimeout(function() {
-               if (self.isLoading) {
-                  self.useSpinner = useSpinner;
-                  self._forceUpdate();
-               }
-            }, cfg.delay);
-         }
-         this._prevLoading = this.isLoading;
       },
       _updateProperties: function(cfg) {
          if (cfg.isGlobal !== undefined) {
@@ -60,9 +52,44 @@ define('Controls/Container/LoadingIndicator', [
       },
 
       toggleIndicator: function(isLoading) {
-         this._prevLoading = this.isLoading;
-         this.isLoading = isLoading;
-         this._forceUpdate();
+         this._isPreloading = isLoading;
+
+         var isLoadingStateChanged = this._isPreloading !== this._prevLoading;
+
+         if (this._isPreloading) {
+            if (isLoadingStateChanged) {
+               // goes to hidden loading state
+               this._isLoadingSaved = this._isPreloading;
+            }
+
+            // if its hidden loading state now, we don't show spinner
+            if (this._isLoadingSaved !== null) {
+               this.isLoading = false;
+            }
+
+            if (isLoadingStateChanged) {
+               clearTimeout(this.delayTimeout);
+               this.delayTimeout = setTimeout(function() {
+                  if (this._isPreloading) {
+                     // goes to show loading state
+
+                     // return spinner value
+                     this.isLoading = this._isLoadingSaved;
+
+                     // clear saved spinner state
+                     this._isLoadingSaved = null;
+                     this._forceUpdate();
+                  }
+               }.bind(this), this._options.delay);
+            }
+         } else {
+            // goes to idle state
+            clearTimeout(this.delayTimeout);
+            this._isLoadingSaved = null;
+            this.isLoading = this._isPreloading;
+            this._forceUpdate();
+         }
+         this._prevLoading = this._isPreloading;
       },
       _toggleIndicatorHandler: function(e, isLoading) {
          this.toggleIndicator(isLoading);

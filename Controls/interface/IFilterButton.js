@@ -9,8 +9,8 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @typedef {Boolean} Visibility
-    * @variant true The filter editor is located in the "Selected"
-    * @variant false The filter editor is located in the "Possible to select"
+    * @variant true The filter editor is located in the main block.
+    * @variant false The filter editor is located in the additional block.
     */
 
    /**
@@ -87,8 +87,8 @@ define('Controls/interface/IFilterButton', [
     * Important: for lazy loading template in the option give the path to the control
     * @example
     * Example setting options for two filters.
-    * Templates for displaying both filters in the "Select" block are in "MyModule/mainBlockTemplate.wml"
-    * Templates for displaying second filter in the "Possible to select" block are in "MyModule/additionalBlockTemplate.wml"
+    * Templates for displaying both filters in the main block are in "MyModule/mainBlockTemplate.wml"
+    * Templates for displaying second filter in the additional block are in "MyModule/additionalBlockTemplate.wml"
     * TMPL:
     * <pre>
     *    <Controls.Filter.Button

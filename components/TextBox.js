@@ -33,7 +33,6 @@ define('SBIS3.CONTROLS/TextBox', [
    Sanitize,
    detection
 ) {
-
    'use strict';
 
    /**
@@ -79,12 +78,13 @@ define('SBIS3.CONTROLS/TextBox', [
    var _private = {
       prepareInformationIconColor: function(color) {
          var resColor = color;
-         //поддержка старых цветов, чтоб не ломать старые контроы
+
+         // поддержка старых цветов, чтоб не ломать старые контроы
          if (color === 'attention') {
             resColor = 'warning';
          }
          if (color === 'done') {
-            resColor= 'success';
+            resColor = 'success';
          }
          if (color === 'error') {
             resColor = 'danger';
@@ -111,7 +111,7 @@ define('SBIS3.CONTROLS/TextBox', [
          _inputField: null,
          _compatPlaceholder: null,
 
-         //Сделаем значение по умолчанию undefined, т.к. это отсутствие значение, а null может прилететь из контекста.
+         // Сделаем значение по умолчанию undefined, т.к. это отсутствие значение, а null может прилететь из контекста.
          _tooltipText: undefined,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
@@ -238,9 +238,9 @@ define('SBIS3.CONTROLS/TextBox', [
          var self = this;
          this._inputField = this._getInputField();
 
-         //В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
-         //но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/
-         //Так что в Safari тоже нельзя убирать плейсхолдер
+         // В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
+         // но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/
+         // Так что в Safari тоже нельзя убирать плейсхолдер
          if (!constants.browser.chrome && !constants.browser.safari) {
             /*
              В IE есть баг что при установке фокуса в поле ввода, в котором есть плейсхолдер, стреляет событие input:
@@ -248,9 +248,9 @@ define('SBIS3.CONTROLS/TextBox', [
              Нативным плейсхолдером мы пользуемся, чтобы хром навешивал псевдокласс :placeholder-shown, так что
              лучше буду навешивать плейсхолдер только в хроме
              */
-            //Плейсхолдер навешивается в шаблоне, иначе он будет моргать
+            // Плейсхолдер навешивается в шаблоне, иначе он будет моргать
             if (constants.browser.IEVersion < 12) {
-               //Оказывается, в IE до 11 версии событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
+               // Оказывается, в IE до 11 версии событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
                this._inputField.one('input', function(e) {
                   e.preventDefault();
                   e.stopImmediatePropagation();
@@ -258,10 +258,15 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             this._inputField.removeAttr('placeholder');
          }
+         // На старом вебките любое значение аттрибута required интерпретируется как значение true.
+         // Для того, чтобы отключить поведение, задающееся аттрибутом required (показ нативных тултипов в ie), удаляем аттрибут с контейнера.
+         if (constants.browser.retailOffline) {
+            this._inputField.removeAttr('required');
+         }
          this._inputField
             .on('paste', function(event) {
                var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
-      
+
                if (userPasteResult !== false) {
                   self._pasteProcessing++;
                   self._inputField.addClass('controls-InputRender__field_pasteProcessing');
@@ -280,7 +285,6 @@ define('SBIS3.CONTROLS/TextBox', [
                } else {
                   event.preventDefault();
                }
-      
             })
             .on('drop', function(event) {
                self._isDropped = true;
@@ -292,7 +296,7 @@ define('SBIS3.CONTROLS/TextBox', [
             .on('change', function() {
                var newText = $(this).val(),
                   inputRegExp = self._options.inputRegExp;
-         
+
                if (newText != self._options.text) {
                   if (inputRegExp) {
                      newText = self._checkRegExp(newText, inputRegExp);
@@ -303,7 +307,7 @@ define('SBIS3.CONTROLS/TextBox', [
             .on('mousedown', this._inputMousedownHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this))
             .on('focusin', this._inputFocusInHandler.bind(this));
-         
+
          /* На Ipad'e при вставке текста из т9/autocorrect'a стреляет только событие input.
             Проверить, что это была вставка, можно по опции текст, т.к. в остальных случаях,
             мы обновляем опцию, раньше наступления события input. */
@@ -316,11 +320,11 @@ define('SBIS3.CONTROLS/TextBox', [
                }
             });
          }
-         
+
          this._container
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
             .on('keyup mouseenter', function() {
-               self._applyTooltip(); 
+               self._applyTooltip();
             })
             .on('touchstart', function() {
                self._fromTouch = true;
@@ -457,12 +461,12 @@ define('SBIS3.CONTROLS/TextBox', [
       _checkInputVal: function(fromInit) {
          var text = this._getInputValue();
 
-         //При ините не должен вызываться trim, поэтому будем проверять по этому флагу попали в checkInputVal из init или нет
+         // При ините не должен вызываться trim, поэтому будем проверять по этому флагу попали в checkInputVal из init или нет
          if (this._options.trim && !fromInit) {
             text = text.trim();
          }
 
-         //Установим текст только если значения различны и оба не пустые
+         // Установим текст только если значения различны и оба не пустые
          if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)) {
             this.setText(text);
          }
@@ -486,15 +490,20 @@ define('SBIS3.CONTROLS/TextBox', [
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
             if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               field.attr('title', this._options.text === '' ? constants.browser.isIE ? '' : ' ' : this._options.text);
+               if (constants.browser.isIE) {
+                  field.attr('title', this._options.text);
+               }
             } else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             } else {
                this._container.attr('title', '');
 
-               //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
-               //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               field.attr('title', constants.browser.isIE ? '' : ' ');
+               // Для работы плейсхолдеров в IE на поля ввода навешивается аттрибут required.
+               // При наведении курсора на такие поля, браузеры показывают всплывающую подсказку "Это обязательное поле."
+               // Чтобы её скрыть в IE нужно в аттрибут title поставить пустую строку.
+               if (constants.browser.isIE) {
+                  field.attr('title', '');
+               }
             }
             this._tooltipText = this._options.text;
          }
@@ -525,9 +534,10 @@ define('SBIS3.CONTROLS/TextBox', [
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
-         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
-         //Поэтому для IE просто не будем навешивать аттрибут maxLength
+
+         // IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
+         // Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
+         // Поэтому для IE просто не будем навешивать аттрибут maxLength
          this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       },
 
@@ -647,7 +657,7 @@ define('SBIS3.CONTROLS/TextBox', [
       _inputRegExp: function(e, regexp) {
          var keyCode = e.which || e.keyCode;
 
-         //Клавиши стрелок, delete, backspace и тд
+         // Клавиши стрелок, delete, backspace и тд
          if (!e.charCode) {
             return true;
          }
@@ -685,7 +695,7 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         if (!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0]))) {
+         if (!isDestroyed && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0]))) {
             this._checkInputVal();
          }
 
@@ -707,7 +717,7 @@ define('SBIS3.CONTROLS/TextBox', [
          this._inputField[0].scrollTop = 99999;
          this._inputField[0].scrollLeft = 99999;
       },
-      
+
       _inputClickHandler: function(e) {
 
       },
@@ -718,8 +728,8 @@ define('SBIS3.CONTROLS/TextBox', [
             EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick) {
-            //IE теряет выделение, если select вызывается из обработчика focusin, так что обернём в setTimeout.
-            //https://codepen.io/anon/pen/LBYLpJ
+            // IE теряет выделение, если select вызывается из обработчика focusin, так что обернём в setTimeout.
+            // https://codepen.io/anon/pen/LBYLpJ
             if (detection.isIE) {
                setTimeout(function() {
                   if (self.isActive()) {
@@ -729,22 +739,20 @@ define('SBIS3.CONTROLS/TextBox', [
             } else {
                self._selectText();
             }
-         } else {
-            if (this.isEnabled() && !this._clicked) {
-               /**
+         } else if (this.isEnabled() && !this._clicked) {
+            /**
                 * Нельзя перемещать курсор, если фокус перешел по средствам перетаскивания значения в поле.
                 */
-               if (this._isDropped) {
-                  this._isDropped = false;
-               } else {
-                  this._moveCursorAfterActivation();
-               }
+            if (this._isDropped) {
+               this._isDropped = false;
+            } else {
+               this._moveCursorAfterActivation();
             }
          }
 
          /* При получении фокуса полем ввода, сделаем контрол активным.
           *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
-          *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
+          *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы. */
          if (!this.isActive()) {
             this.setActive(true, false, true);
             e.stopPropagation();
@@ -821,5 +829,4 @@ define('SBIS3.CONTROLS/TextBox', [
    });
 
    return TextBox;
-
 });
