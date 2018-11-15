@@ -7,7 +7,7 @@ define('Controls/Search/Controller',
       'Core/core-clone',
       'Controls/Controllers/_SearchController',
       'Core/helpers/Object/isEqual',
-      'Controls/Search/MissSpell/getSwitcherStrFromData'
+      'Controls/Search/Misspell/getSwitcherStrFromData'
    ],
    
    function(Control, template, DataOptions, clone, _SearchController, isEqual, getSwitcherStrFromData) {
@@ -44,7 +44,7 @@ define('Controls/Search/Controller',
             self._notify('itemsChanged', [result.data], {bubbling: true});
             
             if (switcherStr) {
-               this._notify('misspelling', [switcherStr]);
+               self._misspellValue = switcherStr;
             }
          },
          
@@ -53,9 +53,9 @@ define('Controls/Search/Controller',
                self._viewMode = self._previousViewMode;
                self._previousViewMode = null;
                self._searchValue = '';
+               self._misspellValue = '';
                self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
-               self._notify('misspelling', [null]);
             }
          },
          
@@ -90,7 +90,7 @@ define('Controls/Search/Controller',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/INavigation
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */
@@ -103,6 +103,7 @@ define('Controls/Search/Controller',
          _previousViewMode: null,
          _viewMode: null,
          _searchValue: null,
+         _misspellValue: null,
 
          constructor: function() {
             this._itemOpenHandler = _private.itemOpenHandler.bind(this);
@@ -142,6 +143,11 @@ define('Controls/Search/Controller',
                this._searchController = null;
             }
             this._dataOptions = null;
+         },
+         
+         _misspellCaptionClick: function() {
+            this._search(null, this._misspellValue);
+            this._misspellValue = '';
          }
       });
    

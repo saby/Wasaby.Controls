@@ -1,31 +1,29 @@
 define('Controls/Operations/MultiSelector', [
    'Core/Control',
    'wml!Controls/Operations/MultiSelector/MultiSelector',
-   'Controls/Container/MultiSelector/SelectionContextField',
    'css!theme?Controls/Operations/MultiSelector/MultiSelector'
 ], function(
    Control,
-   template,
-   SelectionContextField
+   template
 ) {
    'use strict';
-   
+
    var MultiSelector = Control.extend({
       _template: template,
       _multiSelectStatus: undefined,
 
-      _beforeMount: function(newOptions, context) {
-         this._updateSelection(context.selection);
+      _beforeMount: function(newOptions) {
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
       },
 
-      _beforeUpdate: function(newOptions, context) {
-         this._updateSelection(context.selection);
+      _beforeUpdate: function(newOptions) {
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
       },
 
-      _updateSelection: function(selection) {
-         if (selection.selectedKeys[0] === null && !selection.excludedKeys.length) {
+      _updateSelection: function(selectedKeys, excludedKeys, count) {
+         if (selectedKeys[0] === null && !excludedKeys.length) {
             this._multiSelectStatus = true;
-         } else if (selection.count > 0) {
+         } else if (count > 0) {
             this._multiSelectStatus = null;
          } else {
             this._multiSelectStatus = false;
@@ -38,12 +36,6 @@ define('Controls/Operations/MultiSelector', [
          });
       }
    });
-
-   MultiSelector.contextTypes = function contextTypes() {
-      return {
-         selection: SelectionContextField
-      };
-   };
 
    return MultiSelector;
 });

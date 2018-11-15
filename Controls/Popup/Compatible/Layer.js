@@ -8,11 +8,10 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
-   'View/Runner/requireHelper',
    'Core/IoC',
    'WS.Data/Source/SbisService',
    'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, requireHelper, IoC, SbisService, Chain) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
@@ -133,11 +132,16 @@ define('Controls/Popup/Compatible/Layer', [
       // Получение данных из контекста
 
       var opt = document.querySelector('html').controlNodes;
-
-      for (var i = 0, len = opt.length; i < len; i++) {
-         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
-            data = opt[i].control._getChildContext().userInfoField.userInfo;
-            break;
+      if (!opt) {
+         if (window.userInfo) {
+            data = window.userInfo;
+         }
+      } else {
+         for (var i = 0, len = opt.length; i < len; i++) {
+            if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+               data = opt[i].control._getChildContext().userInfoField.userInfo;
+               break;
+            }
          }
       }
 
@@ -297,22 +301,20 @@ define('Controls/Popup/Compatible/Layer', [
             // var tempCompatVal = constants.compat;
             Constants.compat = true;
 
-            if (typeof window !== 'undefined') {
-               // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
-               if (requireHelper.defined('OnlineSbisRu/VDOM/MainPage/MainPage')) {
-                  Constants.systemExtensions = true;
-                  Constants.userConfigSupport = true;
-                  loadDataProviders(parallelDef);
-                  parallelDefRes.addCallbacks(function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
-                  }, function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
+            // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
+            if (window && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu) {
+               Constants.systemExtensions = true;
+               Constants.userConfigSupport = true;
+               loadDataProviders(parallelDef);
+               parallelDefRes.addCallbacks(function() {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
                   });
-               }
+               }, function() {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                  });
+               });
             }
             parallelDefRes.addCallbacks(function() {
                finishLoad(loadDeferred, result);

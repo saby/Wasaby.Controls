@@ -93,6 +93,11 @@ define('Controls/Input/resources/InputRender/InputRender',
                return false;
             }
             return getWidthUtils.getWidth(text) > target.clientWidth;
+         },
+         
+         getInput: function(self) {
+            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            return self._children.divinput.querySelector('.controls-InputRender__field');
          }
       };
 
@@ -114,14 +119,13 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
          },
-
+         
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
          },
 
          _mouseEnterHandler: function() {
-            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
-            var input = this._children.divinput.querySelector('.controls-InputRender__field');
+            var input = _private.getInput(this);
             var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
@@ -167,9 +171,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
 
-            // TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(this._children.divinput.querySelector('.controls-InputRender__field'), this._options.viewModel.getDisplayValue()));
+               _private.hasHorizontalScroll(_private.getInput(this), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {

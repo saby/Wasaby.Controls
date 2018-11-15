@@ -31,6 +31,7 @@ define('Controls/Input/Date/Range', [
     * @public
     * @demo Controls-demo/Input/Date/RangePG
     * @category Input
+    * @author Миронов А.Ю.
     */
 
    var Component = Control.extend([], {
@@ -58,6 +59,7 @@ define('Controls/Input/Date/Range', [
             opener: this,
             target: this._container,
             className: 'controls-PeriodDialog__picker',
+            isCompoundTemplate: true,
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
             eventHandlers: {
@@ -68,9 +70,17 @@ define('Controls/Input/Date/Range', [
                endValue: this._rangeModel.endValue,
                selectionType: this._options.selectionType,
                quantum: this._options.quantum,
-               headerType: 'input'
+               headerType: 'input',
+               rangeselect: true,
+               handlers: {
+                  onChoose: this._onResultWS3.bind(this)
+               }
             }
          });
+      },
+
+      _onResultWS3: function(event, startValue, endValue) {
+         this._onResult(startValue, endValue);
       },
 
       _onResult: function(startValue, endValue) {

@@ -12,6 +12,7 @@ define('Controls/Operations/ReportDialog', [
     * @class Controls/Operations/ReportDialog
     * @extends Core/Control
     * @control
+    * @author Сухоручкин А.С.
     * @public
     *
     * @css @font-size_ReportDialog-title Title font-size.

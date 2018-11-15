@@ -5,6 +5,7 @@ define('Controls/Toggle/interface/ICheckable', [], function() {
     *
     * @interface Controls/Toggle/interface/ICheckable
     * @public
+    * @author Михайловский Д.С.
     */
 
    /**

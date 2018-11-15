@@ -2,7 +2,7 @@
    <div class="demo-Grid__container">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
-                 selectedKeys="{{['448390']}}"
+                 bind:selectedKeys="_firstSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="default">
                <Controls.List.Container>
@@ -51,7 +51,7 @@
    <div class="demo-Grid__container">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
-                 selectedKeys="{{['448390']}}"
+                 bind:selectedKeys="_secondSelectedKeys"
                  name="multiSelector">
             <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="mark_record">
                <Controls.List.Container>

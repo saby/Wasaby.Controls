@@ -2,7 +2,7 @@ define('Controls/SelectedCollection',
    [
       'Core/Control',
       'wml!Controls/SelectedCollection/SelectedCollection',
-      'wml!Controls/SelectedCollection/ItemTemplate',
+      'wml!Controls/SelectedCollection/itemTemplate',
       'WS.Data/Chain',
       'css!Controls/SelectedCollection/SelectedCollection'
    ],
@@ -18,6 +18,7 @@ define('Controls/SelectedCollection',
        * @mixes Controls/SelectedCollection/SelectedCollectionStyles
        * @control
        * @public
+       * @author Капустин И.А.
        */
 
       var _private = {

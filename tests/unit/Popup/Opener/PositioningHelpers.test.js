@@ -543,21 +543,26 @@ define(
 
             it('stack from target container', function() {
                var position = Stack.getPosition({top: 100, right: 100}, item);
-               assert.isTrue(position.width === item.popupOptions.maxWidth);
+               assert.equal(position.width, item.popupOptions.maxWidth);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
             });
             it('stack without config sizes', function() {
+               Stack.getMaxPanelWidth = () => 1000;
                let item = {
                   popupOptions: {},
                   containerWidth: 800
                };
                var position = Stack.getPosition({top: 0, right: 0}, item);
-               assert.isTrue(position.width === item.containerWidth);
+               assert.equal(position.width, undefined);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
+
+               item.containerWidth = 1200;
+               position = Stack.getPosition({top: 0, right: 0}, item);
+               assert.equal(position.width, Stack.getMaxPanelWidth());
             });
 
             it('stack with wrong options type', function() {

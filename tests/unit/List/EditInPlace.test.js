@@ -231,7 +231,7 @@ define([
                source: source
             });
 
-            eip.addItem().addCallback(function() {
+            eip.beginAdd().addCallback(function() {
                assert.instanceOf(eip._editingItem, Model);
                assert.equal(eip._editingItemData.index, 0);
                assert.isTrue(eip._isAdd);
