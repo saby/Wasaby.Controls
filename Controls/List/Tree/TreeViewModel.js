@@ -344,9 +344,6 @@ define('Controls/List/Tree/TreeViewModel', [
             this._notify('onListChange');
          },
 
-         setExpandedItems: function(expandedItems) {
-            this._expandedItems = expandedItems;
-         },
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
