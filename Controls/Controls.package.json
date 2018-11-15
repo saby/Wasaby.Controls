@@ -274,13 +274,23 @@
   ],
   "output": "controls-calendar.package.js"
 },
-  {
-    "include": [
-      "Controls/Search/*"
-    ],
-    "exclude": [
-      "Controls/Search/Misspell",
-      "wml!Controls/Search/Misspell"
-    ],
-    "output": "controls-search.package.js"
-  }]
+{
+  "include": [
+    "Controls/Search/*"
+  ],
+  "exclude": [
+    "Controls/Search/Misspell",
+    "wml!Controls/Search/Misspell"
+  ],
+  "output": "controls-search.package.js"
+}, {
+  "include": [
+    "Controls/EditableArea",
+    "Controls/EditableArea/*"
+  ],
+  "exclude": [
+    "Controls/EditableArea/Constants"
+  ],
+  "output": "controls-editablearea.package.js"
+}
+]
