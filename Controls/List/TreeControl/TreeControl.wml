@@ -1,5 +1,4 @@
-<Controls.List.BaseControl on:markedKeyChanged="_markedKeyChangedHandler()"
-                           on:itemMouseMove="_itemMouseMove()"
+<Controls.List.BaseControl on:itemMouseMove="_itemMouseMove()"
                            scope="{{_options}}"
                            name="baseControl">
    <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" />
