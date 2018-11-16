@@ -97,12 +97,12 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             assert.deepEqual(NTB._getCaretPosition(), [1, 1]);
          });
       });
-      describe('_toggleMinus', function() {
+      describe('Pressed "-"', function() {
          it('The value is equal null', function() {
             NTB.setText(null);
-            NTB._toggleMinus();
+            NTB._keyDownBind({which: 173, preventDefault: function() {}});
 
-            assert.equal(NTB._options.text, '0.0');
+            assert.equal(NTB._options.text, '-0.0');
          });
       });
       describe('setDecimals', function() {
