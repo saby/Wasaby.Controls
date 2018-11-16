@@ -1,23 +1,24 @@
-define('Controls/EditableArea/Templates/Editors/Base',
-   [
-      'Core/Control',
-      'wml!Controls/EditableArea/Templates/Editors/Base/Base'
-   ],
-   function(Control, template) {
-      'use strict';
+define('Controls/EditableArea/Templates/Editors/Base', [
+   'Core/Control',
+   'wml!Controls/EditableArea/Templates/Editors/Base/Base',
+   'css!theme?Controls/EditableArea/Templates/Editors/Base'
+], function(
+   Control,
+   template
+) {
+   'use strict';
 
-      var Base = Control.extend({
-         _template: template,
+   var Base = Control.extend({
+      _template: template,
 
-         _prepareValueForEditor: function(value) {
-            return value;
-         },
+      _prepareValueForEditor: function(value) {
+         return value;
+      },
 
-         _editorValueChangeHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
-         }
-      });
+      _editorValueChangeHandler: function(event, value) {
+         this._notify('valueChanged', [value]);
+      }
+   });
 
-      return Base;
-   }
-);
+   return Base;
+});
