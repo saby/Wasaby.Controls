@@ -5,13 +5,12 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/Deferred',
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
-   'WS.Data/Chain',
    'WS.Data/Collection/List',
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'wml!Controls/Selector/SelectedCollection/CounterTemplate',
    'Controls/Utils/tmplNotify'
-], function(Control, template, clone, Deferred, SourceController, isEqual, Chain, List, merge, GetWidth, CounterTemplate, tmplNotify) {
+], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify) {
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
