@@ -1061,10 +1061,16 @@
           "minSearchLength": {
             "type": "String"
           },
+          "maxVisibleItems": {
+            "type": "String"
+          },
           "autoDropDown": {
             "type": "Boolean"
           },
           "multiSelect": {
+            "type": "Boolean"
+          },
+          "multiline": {
             "type": "Boolean"
           },
           "readOnly": {

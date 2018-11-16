@@ -31,6 +31,12 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
 
+   <Controls.Popup.Opener.Stack name="stack2">
+      <ws:popupOptions template="Controls-demo/Popup/TestStack" closeByExternalClick="{{true}}">
+         <ws:templateOptions type="stack"/>
+      </ws:popupOptions>
+   </Controls.Popup.Opener.Stack>
+
    <Controls.Popup.Opener.Stack name="executingStack">
       <ws:popupOptions template="Controls-demo/Popup/TestExecutingStack" closeByExternalClick="{{false}}" minWidth="500" maxWidth="700">
       </ws:popupOptions>
@@ -73,6 +79,9 @@
    </div>
    <div>
       <Controls.Button name="stackButton" caption="stack" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
+   </div>
+   <div>
+      <Controls.Button name="openStackWithTemplateSizes" caption="openStackWithTemplateSizes" on:click="openStackWithTemplateSizes()" attr:class="ControlsDemo-PopupPage__stackButton"/>
    </div>
    <div>
       <Controls.Button name="stackExecutingButton" caption="openExecutingPopup" on:click="openExecutingPopup()" attr:class="ControlsDemo-PopupPage__openExecutingPopupButton"/>

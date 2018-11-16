@@ -1,9 +1,18 @@
 <div>
    <script>
-      require(['Controls/Application/AppData', 'Controls/Application/HeadDataContext', 'Core/app-start', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, HeadDataContext, AppStart, control, tclosure) {
+      require([
+         'Controls/Application/AppData',
+         'Controls/Application/HeadDataContext',
+         'Core/app-start',
+         'Core/app-init',
+         'Controls/Application/Core',
+         'View/Runner/tclosure',
+         {{_options.dependencies | unescape}}
+      ], function(AppData, HeadDataContext, AppStart, appInit, Core, tclosure) {
+         appInit();
          window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
          var templateFn = {{_options.builder | unescape}};
-         var cnt = control.extend({
+         var cnt = Core.extend({
             _template: templateFn
          });
          AppStart._shouldStart = false;

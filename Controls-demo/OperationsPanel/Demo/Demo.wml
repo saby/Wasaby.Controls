@@ -45,6 +45,9 @@
                                     parentProperty="{{_parentProperty}}"
                                     nodeProperty="{{_nodeProperty}}"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
+                                    itemActions="{{_itemActions}}"
+                                    itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+                                    on:itemActionsClick="_itemActionsClick()"
                                     multiSelectVisibility="{{_panelExpanded ? 'visible'}}"
                                     columns="{{_gridColumns}}"
                             />
