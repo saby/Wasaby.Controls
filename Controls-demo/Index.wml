@@ -1,6 +1,6 @@
 <Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
    <ws:head>
-      <link rel="stylesheet" href="{{ '/Controls/themes/' + _options.theme + '/' + _options.theme + '.css' }}"/>
+      <link rel="stylesheet" href="{{ linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + _options.theme + '/' + _options.theme, 'css') }}"/>
    </ws:head>
    <ws:content>
       <div>
