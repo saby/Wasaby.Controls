@@ -1,0 +1,4 @@
+<div>
+   <span>{{integerPart(value)}}</span>
+   <span class="controls-Money__fractionPart_readOnly">{{fractionPart(value)}}</span>
+</div>

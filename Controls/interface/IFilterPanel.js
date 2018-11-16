@@ -27,7 +27,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @variant horizontal Horizontal orientation of the panel. History block is displayed on the right.
     * @default vertical
     * @remark
-    * If there is no history in the panel, the component will be displayed in one column.
+    * If a “horizontal” value is specified, but there is no history in the panel, the component will be displayed in one column.
     * @example
     * In this example panel will be displayed in two column.
     * <pre>
@@ -46,7 +46,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @cfg {String} Text heading.
     * @default "Selected"
     * @example
-    * In this example, the panel has the title "Sales"
+    * In this example, the panel has the caption "Sales"
     * <pre>
     *    <Controls.Filter.Button.Panel
     *          items={{_items}}

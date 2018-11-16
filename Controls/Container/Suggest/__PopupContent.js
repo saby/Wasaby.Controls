@@ -11,17 +11,12 @@ define('Controls/Container/Suggest/__PopupContent',
       var __PopupContent = BaseLayer.extend({
          
          _template: template,
-         
-         _beforeMount: function(options) {
-            this.setLayerContext(options);
-         },
-         
-         _beforeUpdate: function(newOptions) {
-            this.updateLayerContext(newOptions);
-         },
-         
-         _getChildContext: function() {
-            return this.getLayerContext();
+   
+         _afterUpdate: function(oldOptions) {
+            //need to notify resize after show content, that the popUp recalculated its position
+            if (this._options.showContent !== oldOptions.showContent) {
+               this._notify('controlResize', [], {bubbling: true});
+            }
          }
       });
       

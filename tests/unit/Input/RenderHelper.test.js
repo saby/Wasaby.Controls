@@ -166,6 +166,19 @@ define(
          });
 
          describe('getSplitInputValue', function() {
+            it('auto-complete', function() {
+               splitInputValue = RenderHelper.getSplitInputValue('test test', 'test', 9, {
+                  selectionStart: 0,
+                  selectionEnd: 0
+               }, 'insert');
+
+               assert.deepEqual(splitInputValue, {
+                  before: '',
+                  insert: 'test',
+                  delete: 'test test',
+                  after: ''
+               });
+            });
 
             it('Ввод 0. Состояние текста |', function() {
                splitInputValue = RenderHelper.getSplitInputValue('', '0', 1, {

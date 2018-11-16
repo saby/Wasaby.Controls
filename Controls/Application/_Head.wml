@@ -7,6 +7,7 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
+         pageName: '{{ _options.pageName }}',
          staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }},
@@ -24,6 +25,7 @@
          <ws:partial template="{{ _options.head }}"/>
       </ws:else>
    </ws:if>
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
    <ws:if data="{{_options.theme}}">
       <!-- TODO Костыль, нужно подключать css самой темы, там могут быть подключены шрифты. Непонятно, какой путь до css -->
       <ws:if data="{{isMultiThemes()}}">

@@ -5,7 +5,7 @@ define('Controls/Application/_Head',
       'wml!Controls/Application/_Head',
       'Controls/Application/HeadDataContext',
       'Core/Themes/ThemesController',
-      'css!WS.Core/css/core-min'
+      'Controls/Application/HeadDataContext'
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';

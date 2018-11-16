@@ -16,6 +16,7 @@ define('Controls/Input/Time/Picker', [
     * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
+    * @author Мироново А.Ю.
     * @category Input
     */
 
