@@ -7,7 +7,7 @@ define('Controls/EditableArea/Templates/Editors/DateTime',
 
       var DateTime = Base.extend({
          _prepareValueForEditor: function(value) {
-            return value.toLocaleDateString();
+            return value.toLocaleDateString('ru-RU', {year: '2-digit', month: 'numeric', day: 'numeric'});
          }
       });
 
