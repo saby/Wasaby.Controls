@@ -262,7 +262,7 @@ define([
          assert.equal(selectedCollection._items.getCount(), items.length);
       });
 
-      it('_showSelector', function() {
+      it('showSelector', function() {
          var
             templateOptions,
             isShowSelector = false,
@@ -278,7 +278,7 @@ define([
             }
          };
 
-         selectedCollection._showSelector({
+         selectedCollection.showSelector({
             selectedTab: 'Employees'
          });
 
