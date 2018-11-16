@@ -1,15 +1,16 @@
 <div class="controls-ImportCustomizer-Area{{dialogMode ? ' controls-ImportCustomizer-Area_dialog' : ''}}">
    <ws:if data="{{dialogMode}}">
       <div class="controls-ImportCustomizer-Area__head  ws-window-titlebar">
-         <div class="controls-ImportCustomizer-Area__head-title">
+         <div class="controls-ImportCustomizer-Area__head-caption">
             <ws:if data="{{dialogTitle}}">{{dialogTitle}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
-            <SBIS3.CONTROLS.Link
-               className="controls-ImportCustomizer-Area__head-title-link"
-               href="{{file.url}}"
-               caption="{{file.name}}"
-               inNewTab="{{true}}"
-            />
          </div>
+         <SBIS3.CONTROLS.Link
+            className="controls-ImportCustomizer-Area__head-link"
+            href="{{file.url}}"
+            caption="{{file.name}}"
+            tooltip="{{file.name}}"
+            inNewTab="{{true}}"
+         />
          <SBIS3.CONTROLS.Button
             className="controls-ImportCustomizer-Area__applyButton"
             command="complete" primary="true"

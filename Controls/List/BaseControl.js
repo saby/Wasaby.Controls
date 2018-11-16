@@ -34,12 +34,13 @@ define('Controls/List/BaseControl', [
 
    var _private = {
       reload: function(self, filter, userCallback, userErrback) {
+         var
+            resDeferred = new Deferred();
          if (self._sourceController) {
             _private.showIndicator(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            var resDeferred = new Deferred();
             self._sourceController.load(filter, self._sorting).addCallback(function(list) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -66,10 +67,11 @@ define('Controls/List/BaseControl', [
                _private.processLoadError(self, error, userErrback);
                resDeferred.callback(null);
             });
-
-            return resDeferred;
+         } else {
+            resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+         return resDeferred;
       },
 
       loadToDirection: function(self, direction, userCallback, userErrback) {

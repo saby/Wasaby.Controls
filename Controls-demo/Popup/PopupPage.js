@@ -49,6 +49,15 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openStackWithTemplateSizes: function () {
+            this._children.stack2.open({
+               opener: this._children.stackButton,
+               templateOptions: {
+                  width: '10000px'
+               }
+            });
+         },
+
          openExecutingPopup: function () {
             this._children.executingStack.open({
                opener: this._children.stackButton,

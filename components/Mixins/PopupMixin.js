@@ -778,6 +778,12 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
 
+            // Баг в jquery при расчете офсета на ios: http://dev.jquery.com/ticket/6446
+            // Решение взял с https://gist.github.com/mataspetrikas/431639
+            if (detection.isMobileIOS && this._fixed) {
+               this._targetSizes.offset.top -= window.scrollY;
+            }
+
             if (this._options.parentContainer) {
                var parContainer = this._getParentContainer(),
                    parOffset = parContainer.offset();
