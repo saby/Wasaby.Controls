@@ -52,11 +52,11 @@ class Base64 implements DriverInterface {
      */
     public download(options?: Object) {
         const type = (options && options.contentType) ? options.contentType : this.contentType;
-        if (detection.isMobileSafari && detection.IOSVersion >= 12) {
+        if (typeof window !== 'undefined' && detection.isMobileSafari && detection.IOSVersion >= 12) {
             window.open(BASE64_PREFIX(type) + this.base64Data);
             return;
         }
-        if (detection.safari && detection.IOSVersion >= 12) {
+        if (typeof window !== 'undefined' && detection.safari && detection.IOSVersion >= 12) {
             window.location.href = (BASE64_PREFIX(type) + this.base64Data);
             return;
         }
