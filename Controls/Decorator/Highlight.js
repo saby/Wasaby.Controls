@@ -1,5 +1,6 @@
 define('Controls/Decorator/Highlight',
    [
+      'Core/IoC',
       'Core/Control',
       'Controls/Utils/RegExp',
       'WS.Data/Type/descriptor',
@@ -7,7 +8,7 @@ define('Controls/Decorator/Highlight',
 
       'css!theme?Controls/Decorator/Highlight/Highlight'
    ],
-   function(Control, RegExpUtil, descriptor, template) {
+   function(IoC, Control, RegExpUtil, descriptor, template) {
       'use strict';
 
       /**
@@ -39,6 +40,10 @@ define('Controls/Decorator/Highlight',
       /**
        * @name Controls/Decorator/Highlight#searchMode
        * @cfg {String}
+       * @variant word
+       * @variant substring
+       * @variant setWords
+       * @variant setSubstrings
        */
 
       var _private = {
@@ -58,14 +63,23 @@ define('Controls/Decorator/Highlight',
             return value.length >= _private.MINIMUM_WORD_LENGTH;
          },
 
+         isNotEmpty: function(value) {
+            return value !== '';
+         },
+
          calculateHighlightRegExp: function(highlightedWords, searchMode) {
+            var startSeparator = '';
+            var endSeparator = '';
             var regExp;
 
             regExp = highlightedWords.join('|');
 
             if (_private.isSearchByWords(searchMode)) {
-               regExp = '^|\\s(' + regExp + ')\\s|$';
+               startSeparator = '^|\\s';
+               endSeparator = '\\s|$';
             }
+
+            regExp = '(' + startSeparator + ')(' + regExp + ')(' + endSeparator + ')';
 
             return new RegExp(regExp, 'ig');
          },
@@ -87,8 +101,9 @@ define('Controls/Decorator/Highlight',
                   obj.found = '';
                   obj.index = value.length;
                } else {
-                  obj.found = exec[0];
-                  obj.index = exec.index;
+                  obj.found = exec[2];
+                  regExp.lastIndex -= exec[3].length;
+                  obj.index = exec.index + exec[1].length;
                }
 
                return obj;
@@ -114,26 +129,45 @@ define('Controls/Decorator/Highlight',
          },
 
          uniteToSet: function(value) {
-            var hasUnite;
-
             return value.reduce(function(set, current) {
-               if (hasUnite) {
-                  hasUnite = false;
-                  set[set.length - 1].value += current.value;
+               var lastItem = set[set.length - 1];
+
+               switch (lastItem.type) {
+                  case 'highlight':
+                     if (current.type === 'highlight' || /^\s+$/.test(current.value)) {
+                        lastItem.value += current.value;
+                     } else {
+                        set.push(current);
+                     }
+                     break;
+                  case 'text':
+                     set.push(current);
+                     break;
+                  default:
+                     break;
                }
 
-               if (current.type === 'text' && current.value.test(_private.separatorsRegExp)) {
-                  hasUnite = true;
-                  set[set.length - 1].value += current.value;
-               }
-            }, []);
+               return set;
+            }, [value.shift()]);
          },
 
          parseText: function(text, highlight, searchMode) {
-            var highlightedWords = RegExpUtil.escapeSpecialChars(highlight).split(_private.separatorsRegExp);
+            var highlightedWords =
+               RegExpUtil.escapeSpecialChars(highlight)
+                  .split(_private.separatorsRegExp)
+                  .filter(_private.isNotEmpty);
 
             if (_private.isSearchByWords(searchMode)) {
                highlightedWords = highlightedWords.filter(_private.isWord);
+            }
+
+            if (highlightedWords.length === 0) {
+               IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there was a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
+
+               return [{
+                  type: 'text',
+                  value: text
+               }];
             }
 
             var highlightRegExp = _private.calculateHighlightRegExp(highlightedWords, searchMode);
@@ -150,7 +184,7 @@ define('Controls/Decorator/Highlight',
             _private.addText(parsedText, iterator);
 
             if (_private.isSearchBySet(searchMode)) {
-               _private.uniteToSet(parsedText);
+               parsedText = _private.uniteToSet(parsedText);
             }
 
             return parsedText;
@@ -193,12 +227,10 @@ define('Controls/Decorator/Highlight',
 
       Highlight.getDefaultOptions = function() {
          return {
-            searchMode: 'substring',
-            class: 'controls-Highlight_found'
+            searchMode: 'setWords',
+            class: 'controls-Highlight_highlight'
          };
       };
-
-      Highlight._private = _private;
 
       return Highlight;
    });
