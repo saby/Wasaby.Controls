@@ -1,5 +1,4 @@
-<Controls.List.BaseControl on:markedKeyChanged="_markedKeyChangedHandler()"
-                           scope="{{_options}}"
+<Controls.List.BaseControl scope="{{_options}}"
                            name="baseControl">
    <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
    <ws:partial template="{{content.viewTemplate}}" itemTemplate="{{_options.itemTemplate}}"/>

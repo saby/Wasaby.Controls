@@ -14,6 +14,7 @@ define('Controls/Application/AppData', [
          this.wsRoot = cfg.wsRoot;
          this.resourceRoot = cfg.resourceRoot;
          this.RUMEnabled = cfg.RUMEnabled;
+         this.pageName = cfg.pageName;
          this.product = cfg.product;
          this.cssBundles = cfg.cssBundles;
          this.buildnumber = cfg.buildnumber;

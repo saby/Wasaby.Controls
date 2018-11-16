@@ -39,12 +39,10 @@
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
-         <ws:if data="{{_displayState.shadowPosition.indexOf('top') > -1 && !_stickyHeaderId}}">
-            <div class="controls-Scroll__shadow controls-Scroll__shadow_top"></div>
-         </ws:if>
-         <ws:if data="{{_displayState.shadowPosition.indexOf('bottom') > -1}}">
-            <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom"></div>
-         </ws:if>
+         <div class="controls-Scroll__shadow controls-Scroll__shadow_top
+                     {{_displayState.shadowPosition.indexOf('top') === -1 || _stickyHeaderId ? ' ws-invisible'}}"></div>
+         <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom
+                     {{_displayState.shadowPosition.indexOf('bottom') === -1 ? ' ws-invisible'}}"></div>
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">

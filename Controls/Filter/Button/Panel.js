@@ -4,12 +4,13 @@ define('Controls/Filter/Button/Panel', [
    'WS.Data/Utils',
    'Core/core-clone',
    'Core/helpers/Object/isEqual',
+   'Controls/Filter/Button/History/resources/historyUtils',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
    'Core/IoC',
    'css!theme?Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, isEqual, _FilterPanelOptions, template, IoC) {
+], function(Control, Chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -61,8 +62,22 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
-      resolveHistoryId: function(options, context) {
-         return options.historyId || (context && context.historyId);
+      resolveHistoryId: function(self, options, context) {
+         if (options.historyId) {
+            self._historyId = options.historyId;
+         } else if (context) {
+            self._historyId = context.historyId;
+            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
+         }
+      },
+
+      loadHistoryItems: function(self, historyId) {
+         if (historyId) {
+            return historyUtils.loadHistoryItems(historyId).addCallback(function(items) {
+               self._historyItems = items;
+               return items;
+            });
+         }
       },
 
       cloneItems: function(items) {
@@ -112,21 +127,26 @@ define('Controls/Filter/Button/Panel', [
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
-         
-         this._historyId = _private.resolveHistoryId(options, this._contextOptions);
+         _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
+         return _private.loadHistoryItems(this, this._historyId);
       },
 
       _beforeUpdate: function(newOptions, context) {
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
-         if (this._options.historyId !== newOptions.historyId) {
-            this._historyId = _private.resolveHistoryId(newOptions, context);
-         }
          if (!isEqual(this._options.items, newOptions.items)) {
             _private.resolveItems(this, newOptions, context);
          }
+         if (this._options.historyId !== newOptions.historyId) {
+            _private.resolveHistoryId(this, newOptions, context);
+            return _private.loadHistoryItems(this, this._historyId);
+         }
+      },
+
+      _historyItemsChanged: function() {
+         this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
       },
 
       _valueChangedHandler: function() {
@@ -139,7 +159,7 @@ define('Controls/Filter/Button/Panel', [
 
       _applyHistoryFilter: function(event, items) {
          var filter = _private.getFilter(this, items);
-         filter['$_history'] = true;
+         filter.$_history = true;
          this._applyFilter(event, items);
       },
 

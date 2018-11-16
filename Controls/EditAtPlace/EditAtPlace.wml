@@ -10,7 +10,7 @@
       <ws:partial
          template="{{_options.content}}"
          scope="{{_options}}"
-         editObject="{{_editObject}}"
+         editObject="{{_options.editObject}}"
          on:click="_onClickHandler()"
          on:keyDown="_onKeyDown()"
          isEditing="{{_isEditing}}"

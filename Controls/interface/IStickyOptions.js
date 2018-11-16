@@ -81,7 +81,7 @@ define('Controls/interface/IStickyOpener', [], function() {
 
    /**
     * @name Controls/interface/IStickyOpener#eventHandlers
-    * @cfg {EventHandlers[]} Callback functions on popup events.
+    * @cfg {PopupOptions[]} Callback functions on popup events.
     * @variant onClose Callback function is called when popup is closed.
     * @variant onResult Callback function is called at the sendResult event in the popup template.
     * @default {}

@@ -4,14 +4,12 @@
 define('Controls/Filter/Button/History/List', [
    'Core/Control',
    'wml!Controls/Filter/Button/History/List',
-   'WS.Data/Adapter/Sbis',
-   'Controls/Controllers/SourceController',
-   'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
+   'Core/helpers/Object/isEqual',
    'WS.Data/Utils',
    'Controls/Filter/Button/History/resources/historyUtils',
    'css!theme?Controls/Filter/Button/History/List'
-], function(BaseControl, template, SbisAdapter, SourceController, RecordSet, Chain, Utils, historyUtils) {
+], function(BaseControl, template, Chain, isEqual, Utils, historyUtils) {
    'use strict';
 
    var MAX_NUMBER_ITEMS = 5;
@@ -19,46 +17,23 @@ define('Controls/Filter/Button/History/List', [
    var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
    var _private = {
-      loadItems: function(instance, source) {
-         var filter = {
-            '$_history': true
-         };
-         instance._sourceController = new SourceController({
-            source: source
-         });
-         return instance._sourceController.load(filter).addCallback(function(items) {
-            instance._listItems = new RecordSet({
-               rawData: items.getRawData(),
-               adapter: new SbisAdapter()
-            });
-            return items;
-         });
-      },
-
-      getHistorySource: function(self, hId) {
-         if (!self._historySource) {
-            self._historySource = historyUtils.getHistorySource(hId);
-         }
-         return self._historySource;
-      },
-
       getStringHistoryFromItems: function(items) {
-         var text = [];
+         var textArr = [];
          Chain(items).each(function(elem) {
-            var value = getPropValue(elem, 'value');
+            var value = getPropValue(elem, 'value'),
+               resetValue = getPropValue(elem, 'resetValue'),
+               textValue = getPropValue(elem, 'textValue'),
+               visibility = getPropValue(elem, 'visibility');
 
-            if ((value !== getPropValue(elem, 'resetValue')) && (!elem.hasOwnProperty('visibility') || getPropValue(elem, 'visibility'))) {
-               var textValue = getPropValue(elem, 'textValue');
-               if (textValue) {
-                  text.push(textValue);
-               }
+            if (!isEqual(value, resetValue) && (visibility === undefined || visibility) && textValue) {
+               textArr.push(textValue);
             }
          });
-         return text.join(', ');
+         return textArr.join(', ');
       },
 
       onResize: function(self) {
-         self._arrowVisible = self._listItems.getCount() > MAX_NUMBER_ITEMS;
+         self._arrowVisible = self._options.items.getCount() > MAX_NUMBER_ITEMS;
 
          if (!self._arrowVisible) {
             self._isMaxHeight = true;
@@ -71,30 +46,29 @@ define('Controls/Filter/Button/History/List', [
       _template: template,
       _historySource: null,
       _isMaxHeight: true,
-
-      _onPinClick: function(event, item) {
-         _private.getHistorySource(this).update(item, {
-            $_pinned: !item.get('pinned')
-         });
-         var self = this;
-         return _private.loadItems(this, _private.getHistorySource(this, this._options.historyId)).addCallback(function() {
-            self._forceUpdate();
-         });
-      },
-      _contentClick: function(event, item) {
-         var items = _private.getHistorySource(this).getDataObject(item.get('ObjectData'));
-         this._notify('applyHistoryFilter', [items]);
-      },
+      _itemsText: null,
 
       _beforeMount: function(options) {
-         if (options.historyId) {
-            return _private.loadItems(this, _private.getHistorySource(this, options.historyId));
+         if (options.items) {
+            this._itemsText = this._getText(options.items, historyUtils.getHistorySource(options.historyId));
          }
       },
+
       _beforeUpdate: function(newOptions) {
-         if (newOptions.historyId && newOptions.historyId !== this._options.historyId) {
-            return _private.loadItems(this, _private.getHistorySource(this, newOptions.historyId));
+         if (!isEqual(this._options.items, newOptions.items)) {
+            this._itemsText = this._getText(newOptions.items, historyUtils.getHistorySource(newOptions.historyId));
          }
+      },
+
+      _onPinClick: function(event, item) {
+         historyUtils.getHistorySource(this._options.historyId).update(item, {
+            $_pinned: !item.get('pinned')
+         });
+         this._notify('historyChanged');
+      },
+      _contentClick: function(event, item) {
+         var items = historyUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
+         this._notify('applyHistoryFilter', [items]);
       },
 
       _afterMount: function() {
@@ -105,24 +79,21 @@ define('Controls/Filter/Button/History/List', [
          _private.onResize(this);
       },
 
-      _getText: function(item) {
-         var text = '';
-         var items = JSON.parse(item.get('ObjectData'));
-         if (items) {
-            text = _private.getStringHistoryFromItems(items);
-         }
-         return text;
+      _getText: function(items, historySource) {
+         var itemsText = {};
+         Chain(items).each(function(item, index) {
+            var text = '';
+            var historyItems = historySource.getDataObject(item.get('ObjectData'));
+            if (historyItems) {
+               text = _private.getStringHistoryFromItems(historyItems);
+            }
+            itemsText[index] = text;
+         });
+         return itemsText;
       },
 
       _clickSeparatorHandler: function() {
          this._isMaxHeight = !this._isMaxHeight;
-      },
-
-      destroy: function() {
-         HistoryList.superclass.destroy.apply(this, arguments);
-         _private.getHistorySource(this).destroy({}, {
-            '$_history': true
-         });
       }
    });
 

@@ -11,22 +11,22 @@ define('Controls/interface/IGroupedView', [
 
    /**
     * @name Controls/interface/IGroupedView#groupMethod
-    * @property {Function} groupMethod Function that returns group identifier for a given item.
+    * @cfg {Function} groupMethod Function that returns group identifier for a given item.
     */
 
    /**
     * @name Controls/interface/IGroupedView#groupTemplate
-    * @property {String} groupTemplate Group template.
+    * @cfg {String} groupTemplate Group template.
     */
 
    /**
     * @name Controls/interface/IGroupedView#collapsedGroups
-    * @property {Array} collapsedGroups List of collapsed group identifiers. Identifiers of groups are obtained as a result of calling the groupMethod method.
+    * @cfg {Array} collapsedGroups List of collapsed group identifiers. Identifiers of groups are obtained as a result of calling the groupMethod method.
     */
 
    /**
     * @name Controls/interface/IGroupedView#historyIdCollapsedGroups
-    * @property {String} historyIdCollapsedGroups Unique id for save to history a list of identifiers collapsed groups.
+    * @cfg {String} historyIdCollapsedGroups Unique id for save to history a list of identifiers collapsed groups.
     */
 
    /**

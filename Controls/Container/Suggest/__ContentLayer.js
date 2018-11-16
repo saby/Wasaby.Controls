@@ -84,14 +84,6 @@ define('Controls/Container/Suggest/__ContentLayer',
          _template: template,
          _height: 'auto',
          
-         _beforeMount: function(options) {
-            this.setLayerContext(options);
-         },
-         
-         _beforeUpdate: function(newOptions) {
-            this.updateLayerContext(newOptions);
-         },
-         
          _afterUpdate: function() {
             /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
              2) do not change orientation of suggest, if suggest already showed or data loading now */
@@ -111,11 +103,8 @@ define('Controls/Container/Suggest/__ContentLayer',
          
          _close: function() {
             this._notify('close', [], {bubbling: true});
-         },
-   
-         _getChildContext: function() {
-            return this.getLayerContext();
          }
+         
       });
    
       __ContentLayer._private = _private;

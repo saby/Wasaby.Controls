@@ -5,7 +5,7 @@
       </div>
    </ws:topArea>
    <ws:contentArea>
-      <div style="width: 700px;">
+      <div style="width: {{ _options.width || '700px'}}">
          <Controls.Popup.Opener.Stack name="stack">
             <ws:popupOptions template="Controls-demo/Popup/TestStack">
                <ws:componentOptions type="stack"/>

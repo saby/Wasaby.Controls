@@ -245,6 +245,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+
+            // getParent() возвращает правильного предка, но у предка не зареган потомок.
+            // регаем в предке CompoundArea и содержимое начинает искаться по getChildControlByName
+            if (self.__parentFromCfg && self._registerToParent) {
+               self._registerToParent(self.__parentFromCfg);
+            }
             self.__openerFromCfg = self._options.__openerFromCfg;
             self._parent = self._options.parent;
             self._logicParent = self._options.parent;
@@ -266,7 +272,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
-         
+
          _beforeUnmount: function() {
             this.__parentFromCfg = null;
             this.__openerFromCfg = null;
@@ -371,11 +377,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this.close(arg);
+               this.close(arg);
+               return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {
-               return this.close(true);
+               this.close(true);
+               return true; // команда ok не должна всплывать выше окна
             } if (commandName === 'cancel') {
-               return this.close(false);
+               this.close(false);
+               return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
@@ -408,7 +417,33 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
-            this.close(arg);
+            if (this._options._mode === 'recordFloatArea') {
+               this._confirmationClose(arg);
+            } else {
+               this.close(arg);
+            }
+         },
+         _confirmationClose: function(arg) {
+            var self = this;
+            if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
+               self._openConfirmDialog(false, true).addCallback(function(result) {
+                  switch (result) {
+                     case 'yesButton': {
+                        self.updateRecord().addCallback(function() {
+                           self.close(arg);
+                        });
+                        break;
+                     }
+                     case 'noButton': {
+                        self.getRecord().rollback();
+                        self.close(arg);
+                        break;
+                     }
+                  }
+               });
+            } else {
+               this.close(arg);
+            }
          },
          _mouseenterHandler: function() {
             if (this._options.hoverTarget) {

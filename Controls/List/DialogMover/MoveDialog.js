@@ -21,8 +21,7 @@ define('Controls/List/DialogMover/MoveDialog', [
          this._root[options.keyProperty] = options.rootValue;
          this._root[options.columns[0].displayProperty] = rk('Корень');
          this._root[options.nodeProperty] = true;
-         this._expandedItems = {};
-         this._expandedItems[options.rootValue] = true;
+         this._expandedItems = [options.rootValue];
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
       },
 

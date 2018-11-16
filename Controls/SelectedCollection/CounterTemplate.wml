@@ -1,0 +1,4 @@
+<div class="controls-SelectedCollection__counterItems">
+    <span attr:class="controls-SelectedCollection__counter">({{itemsCount}})</span>
+    <span>...</span>
+</div>
