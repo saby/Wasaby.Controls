@@ -1,6 +1,6 @@
-<div attr:class="controls-LabelV">
+<div attr:class="controls-LabelV controls-LabelV_{{_options.readOnly ? 'disabled' : 'enabled'}}">
    <div attr:class="controls-LabelV__caption
-                    controls-LabelV_{{_options.readOnly ? 'disabled' : 'enabled'}}
                     {{_options.required ? ' controls-LabelV__caption_required'}}
+                    {{_options.required && !_options.readOnly ? ' controls-LabelV__caption_required_enabled'}}
                     ws-flexbox ws-align-items-center">{{_options.caption}}</div>
 </div>
