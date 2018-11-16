@@ -105,6 +105,8 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
        * </pre>
        */
       $protected: {
+         _isSourceOwner: false,
+         _isItemsOwner: false,
          _needToRedraw: false,
          _itemsProjection: null,
          _items : null,
@@ -578,6 +580,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
                      data: itemsOpt.getRawData(),
                      idProperty: this._options.idProperty
                   });
+                  this._isSourceOwner = true;
                }
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
@@ -594,6 +597,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.idProperty
                });
+               this._isSourceOwner = true;
             } else {
                this._items = itemsOpt;
                this._dataSource = null;
@@ -631,6 +635,19 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
             if (this._itemsProjection) {
                this._itemsProjection.destroy();
                this._itemsProjection = null;
+            }
+            if (this._isSourceOwner) {
+               if (this._dataSource) {
+                  this._dataSource.destroy()
+               }
+            }
+            if (this._isItemsOwner) {
+               if (this._items) {
+                  this._items.destroy()
+               }
+               if (this._dataSet) {
+                  this._dataSet.destroy()
+               }
             }
          }
       },
@@ -748,6 +765,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
           if (!noLoad) {
              return this.reload();
           }
+          this._isSourceOwner = false;
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
@@ -845,6 +863,9 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
                            self._scrollToItem(firstItem.getContents().getId());
                        }
                     }
+
+                    //Если мы владеем сорсом, то и итемс тоже
+                    this._isItemsOwner = this._isSourceOwner;
                     //self._notify('onBeforeRedraw');
                     return list;
                 }, self))
@@ -1080,6 +1101,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
           } else {
              this.redraw();
           }
+          this._isItemsOwner = false;
       },
 
       _drawItemsCallback: function () {
