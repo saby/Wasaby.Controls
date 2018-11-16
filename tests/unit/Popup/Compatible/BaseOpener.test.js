@@ -303,6 +303,9 @@ define(
             assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
             testconfig.horizontalAlign = null;
             newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.direction, 'right');
+            testconfig._type = 'stack';
+            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, 'left');
          });
 
