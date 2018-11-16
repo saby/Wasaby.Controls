@@ -1,9 +1,36 @@
+<ws:template name="panelContent">
+   <div class="controls-FilterPanel__filtersWrapper">
+      <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
+                                                 itemTemplate="{{_options.itemTemplate}}"
+                                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                                 on:valueChanged="_valueChangedHandler()"
+                                                 on:visibilityChanged="_visibilityChangedHandler()"
+                                                 attr:class="controls-FilterPanel__PropertyGrid"/>
+      <ws:if data="{{_hasAdditionalParams}}">
+         <Controls.Filter.Button.Panel.AdditionalParams
+                 items="{{_items}}"
+                 itemTemplate="{{_options.additionalTemplate}}"
+                 itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+                 on:valueChanged="_valueChangedHandler()"
+                 on:visibilityChanged="_visibilityChangedHandler()"
+                 attr:class="controls-FilterPanel__AdditionalParams"/>
+      </ws:if>
+   </div>
+   <ws:if data="{{_historyId && _historyItems.getCount()}}">
+      <Controls.Filter.Button.History.List
+              items="{{_historyItems}}"
+              historyId="{{_historyId}}"
+              on:historyChanged="_historyItemsChanged()"
+              attr:class="controls-HistoryList__{{_options.orientation}}"
+              on:applyHistoryFilter="_applyHistoryFilter()"/>
+   </ws:if>
+</ws:template>
+
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.headingCaption}}"
                                                 attr:class="controls-PanelFilter
                                                 {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
    <ws:topArea>
       <div class="controls-FilterPanel__header">
-
          <ws:if data="{{_options.topTemplate}}">
             <div class="controls-FilterPanel__header-topTemplate">
                <ws:partial template="{{_options.topTemplate}}"/>
@@ -20,33 +47,14 @@
    </ws:topArea>
    <ws:contentArea>
       <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
-      <div class="{{_options.orientation === 'horizontal' ? 'controls-FilterPanel__content-horizontal'}}">
-         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
-            <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
-                                   itemTemplate="{{_options.itemTemplate}}"
-                                   itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                                   on:valueChanged="_valueChangedHandler()"
-                                   on:visibilityChanged="_visibilityChangedHandler()"
-                                   attr:class="controls-FilterPanel__PropertyGrid"/>
-            <ws:if data="{{_hasAdditionalParams}}">
-               <Controls.Filter.Button.Panel.AdditionalParams
-                       items="{{_items}}"
-                       itemTemplate="{{_options.additionalTemplate}}"
-                       itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                       on:valueChanged="_valueChangedHandler()"
-                       on:visibilityChanged="_visibilityChangedHandler()"
-                       attr:class="controls-FilterPanel__AdditionalParams"/>
-            </ws:if>
-         </div>
-         <ws:if data="{{_historyId && _historyItems.getCount()}}">
-            <Controls.Filter.Button.History.List
-                    items="{{_historyItems}}"
-                    historyId="{{_historyId}}"
-                    on:historyChanged="_historyItemsChanged()"
-                    attr:class="controls-HistoryList__{{_options.orientation}}"
-                    on:applyHistoryFilter="_applyHistoryFilter()"/>
+         <ws:if data="{{_options.orientation === 'horizontal'}}">
+            <div class="controls-FilterPanel__content-horizontal">
+               <ws:partial template="panelContent"/>
+            </div>
          </ws:if>
-      </div>
+         <ws:else>
+            <ws:partial template="panelContent"/>
+         </ws:else>
       </Controls.Container.Scroll>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
