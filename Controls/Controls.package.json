@@ -112,7 +112,6 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "Controls/List/resources/utils/CSSGridLayoutUtils",
     "wml!Controls/List/Grid/OldGridView",
     "wml!Controls/List/Grid/NewGridView",
     "Controls/List/ItemActions/resources/*",
