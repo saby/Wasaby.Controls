@@ -1388,6 +1388,16 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             if (this._options.activateAfterShow) {
                doAutofocus(this._container);
             }
+            if (detection.isMobileIOS) {
+               // Известная бага: ios не хватает перерисовки, чтобы правильно отрисовать абсолютно спозиционированный элемент по оси z
+               // вызываю reflow сам
+               this._container.css('transform', 'scaleX(1)');
+               setTimeout(function() {
+                  if (!this.isDestroyed()) {
+                     this._container.css('transform', '');
+                  }
+               }.bind(this), 0);
+            }
          },
 
          _keyboardHover: function(event) {
