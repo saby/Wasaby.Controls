@@ -72,8 +72,8 @@ define('Controls/List/BaseControl', [
             });
          } else {
             resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          return resDeferred;
       },
 
