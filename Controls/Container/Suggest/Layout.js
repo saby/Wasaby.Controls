@@ -256,7 +256,7 @@ define('Controls/Container/Suggest/Layout',
 
             //loading showAll templates
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
-               self._children.stackOpener.open({ opener: this }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
+               self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
             });
             _private.close(this);
          },
