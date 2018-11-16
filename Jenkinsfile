@@ -460,7 +460,9 @@ node('controls') {
 					ELEMENT_OUTPUT_LOG = locator
 					WAIT_ELEMENT_LOAD = 20
 					SHOW_CHECK_LOG = True
-					HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+					HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
+					[filestostart]
+					test_vdom_input_text.py"""
 
 				writeFile file: "./controls/tests/reg/config.ini",
 					text:
