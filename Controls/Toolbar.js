@@ -140,7 +140,6 @@ define('Controls/Toolbar', [
                   items: this._items,
                   rootKey: item.get(this._options.keyProperty),
                   showHeader: item.get('showHeader'),
-                  iconSize: this._options.size,
                   headConfig: {
                      icon: item.get('icon'),
                      caption: item.get('title'),
