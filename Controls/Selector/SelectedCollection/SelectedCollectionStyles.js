@@ -11,11 +11,10 @@ define('Controls/Selector/SelectedCollection/SelectedCollectionStyles', [],
     * @css @color_SelectedCollection-counter Counter color.
     * @css @color_SelectedCollection_cross Cross color.
     * @css @icon-size_SelectedCollection_cross Icon cross size.
-    * @css @line-height_SelectedCollection__before SelectedCollection line height.
+    * @css @line-height_SelectedCollection-item SelectedCollection items line height.
     * @css @font-size_SelectedCollection-size-m Font size of item with size m.
     * @css @font-size_SelectedCollection-size-l Font size of item with size l.
     * @css @font-size_SelectedCollection-size-h Font size of item with size h.
-    * @css @line-height_SelectedCollection-size-h Line height of the item with size h.
     * @css @spacing_SelectedCollection-between-items Spacing between items.
     * @css @spacing_SelectedCollection-between-counter-items Spacing between counter and items.
     * @css @padding_SelectedCollection-counter Padding counter.

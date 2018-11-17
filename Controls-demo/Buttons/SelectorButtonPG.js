@@ -4,7 +4,8 @@ define('Controls-demo/Buttons/SelectorButtonPG', [
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Input/Lookup/LookupData',
-   'json!Controls-demo/PropertyGrid/pgtext'
+   'json!Controls-demo/PropertyGrid/pgtext',
+   'css!Controls-demo/Buttons/SelectorButtonPG'
 ], function (Control, template, Memory, memorySourceFilter, sourceData, config) {
    'use strict';
 

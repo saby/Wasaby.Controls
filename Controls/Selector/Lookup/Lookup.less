@@ -8,17 +8,25 @@
   width: 100%;
 }
 
+.controls-Lookup__inputRender {
+  padding-right: 0;
+}
+
 .controls-Lookup__inputRender_fieldWrapper_hidden .controls-InputRender__fieldWrapper {
   display: none;
 }
 
 .controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
   display: inline-block;
-  width: ~"calc(100% - 16px)";
+  width: ~"calc(100% - @{spacing_Lookup-for-showSelector})";
 }
 
 .controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
   width: auto;
+}
+
+.controls-Lookup__inputRender_content_width_default .controls-InputRender__fieldWrapper {
+  line-height: @line-height_Lookup-input-wrapper;
 }
 
 .controls-Lookup__afterFieldWrapper {
@@ -34,43 +42,29 @@
 .controls-Lookup__afterFieldWrapper_multiLine {
   position: absolute;
   top: 0;
-  right: -16px;
+  right: -@spacing_Lookup-for-showSelector;
   justify-content: space-between;
-  flex-flow: column;
+  flex-flow: column-reverse;
 }
 
 .controls-Lookup__icon {
   .icon-size-without-important();
+  padding: @padding_Lookup-icon;
   cursor: pointer;
 }
 
 .controls-Lookup__showSelector {
-  color: @color_Lookup_showSelector;
-}
-
-.controls-Lookup__showSelector_multiLine {
-  margin-top: 2px;
-}
-
-.controls-Lookup__showSelector:hover {
-  color: @color_Lookup-showSelector_hovered;
+  color: @color_Lookup-showSelector;
+  &:hover {
+    color: @color_Lookup-showSelector-hovered;
+  }
 }
 
 .controls-Lookup__clearRecords {
-  color: @color_Lookup_clearRecords;
-}
-
-.controls-Lookup__clearRecords_singleLine {
-  padding-right: 4px;
-}
-
-.controls-Lookup__clearRecords_multiLine {
-  order: 1;
-  margin-bottom: 2px;
-}
-
-.controls-SelectedCollection__collection.controls-Lookup__collection_hidden {
-  display: none;
+  color: @color_Lookup-clearRecords;
+  &:hover {
+    color: @color_Lookup-clearRecords-hovered;
+  }
 }
 
 .controls-Lookup__collection_single {
