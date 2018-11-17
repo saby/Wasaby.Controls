@@ -72,14 +72,14 @@ define('Controls/List/Grid/GridViewModel', [
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount());
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (current.multiSelectVisibility && columnIndex === 0) {
+            if (current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0) {
                cellClasses += ' controls-Grid__row-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: current.columns,
                   style: current.style,
-                  columnIndex: columnIndex,
-                  multiSelectVisibility: current.multiSelectVisibility,
+                  columnIndex: current.columnIndex,
+                  multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
                   leftPadding: current.leftPadding,
                   rightPadding: current.rightPadding,
                   rowSpacing: current.rowSpacing
@@ -463,8 +463,7 @@ define('Controls/List/Grid/GridViewModel', [
             current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
             current.style = this._options.style;
 
-
-            if (current.multiSelectVisibility) {
+            if (current.multiSelectVisibility !== 'hidden') {
                current.columns = [{}].concat(this._columns);
             } else {
                current.columns = this._columns;
