@@ -9,22 +9,34 @@
 @spacing_FilterPanel_between_panelCaption_topTemplate:        @spacing_default_xl;
 @spacing_FilterPanel_between_topTemplate_resetButton:         @spacing_default_xl;
 
-//Content of filterPanel
-@spacing_FilterPanel_between_left-side_content:               @spacing_default_l;
-@spacing_FilterPanel_between_right-side_content:              @spacing_default_l;
-@spacing_FilterPanel_between_bottom-side_content:             @spacing_default_l;
-@spacing_FilterPanel_between_blocks:                          @spacing_default_l;
-
 //Captions of filterPanel blocks
 @font-size_FilterPanel_block_caption:                         @size_text_l;
 @color_FilterPanel_block_caption:                             @color_Heading_secondary;
 @height_FilterPanel_block_caption:                            @height_control_default;
 
+//common block variables
+@spacing_FilterPanel_block-content_bottom-side:               @spacing_default_l;
+
 //PropertyGrid
-@spacing_FilterPanel_between_left-side_propertyGrid:          @spacing_default_xl + @spacing_default_s;//spacing between left side content + between icon content spacing;
+@spacing_FilterPanel_between_left-side_propertyGrid:          @spacing_default_l + @spacing_default_xl + @spacing_default_s;//spacing between left side content + icon spacing + between icon content spacing;
+@spacing_FilterPanel_between_right-side_propertyGrid:         @spacing_default_l;
 
 //AdditionalParams
+@spacing_FilterPanel_between_left-side_additionalParams:      @spacing_default_l;
+@spacing_FilterPanel_between_right-side_additionalParams:     @spacing_default_l;
 @spacing_FilterPanel_between_propertyGrid_additionalParams:   @spacing_default_l;
 
 //History
-@spacing_FilterPanel_vertical_between_additionalParams_history:@spacing_default_l;
+@spacing_FilterPanel_vertical_between_top-side_history:       @spacing_default_l;
+@spacing_FilterPanel_vertical_between_left-side_history:      @spacing_default_l;
+@spacing_FilterPanel_vertical_between_right-side_history:     @spacing_default_l;
+@spacing_FilterPanel_vertical_between_bottom-side_history:    @spacing_default_l;
+
+@spacing_FilterPanel_horizontal_between_top-side_history:     @spacing_default_s;
+@spacing_FilterPanel_horizontal_between_left-side_history:    @spacing_default_l;
+@spacing_FilterPanel_horizontal_between_right-side_history:   @spacing_default_l;
+@spacing_FilterPanel_horizontal_between_bottom-side_history:  @spacing_default_l;
+
+@border-left_FilterPanel_horizontal_history:                  @thickness_border_default solid @color_border;
+@max-height_FilterPanel_expandable_block:                     @height_control_default*5;
+@height_FilterPanel_button_expand:                            26px;
