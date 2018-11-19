@@ -1815,8 +1815,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
-               if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
-                  this._getTinyEditorValue() == '') {
+               if (BROWSER.isIE && command === 'undo' && !this._getTinyEditorValue()) {
                   selection.select(editor.getBody(), true);
                }
             },
