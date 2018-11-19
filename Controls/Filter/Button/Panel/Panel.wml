@@ -1,21 +1,22 @@
-<ws:template name="panelContent">
-   <div class="controls-FilterPanel__filtersWrapper">
-      <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
-                                                 itemTemplate="{{_options.itemTemplate}}"
-                                                 itemTemplateProperty="{{_options.itemTemplateProperty}}"
-                                                 on:valueChanged="_valueChangedHandler()"
-                                                 on:visibilityChanged="_visibilityChangedHandler()"
-                                                 attr:class="controls-FilterPanel__PropertyGrid"/>
-      <ws:if data="{{_hasAdditionalParams}}">
-         <Controls.Filter.Button.Panel.AdditionalParams
-                 items="{{_items}}"
-                 itemTemplate="{{_options.additionalTemplate}}"
-                 itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-                 on:valueChanged="_valueChangedHandler()"
-                 on:visibilityChanged="_visibilityChangedHandler()"
-                 attr:class="controls-FilterPanel__AdditionalParams"/>
-      </ws:if>
-   </div>
+<ws:template name="filtersContent">
+   <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
+                                              itemTemplate="{{_options.itemTemplate}}"
+                                              itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                              on:valueChanged="_valueChangedHandler()"
+                                              on:visibilityChanged="_visibilityChangedHandler()"
+                                              attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount())) ? 'controls-FilterPanel_lastBlock'}}"/>
+   <ws:if data="{{_hasAdditionalParams}}">
+      <Controls.Filter.Button.Panel.AdditionalParams
+              items="{{_items}}"
+              itemTemplate="{{_options.additionalTemplate}}"
+              itemTemplateProperty="{{_options.additionalTemplateProperty}}"
+              on:valueChanged="_valueChangedHandler()"
+              on:visibilityChanged="_visibilityChangedHandler()"
+              attr:class="controls-FilterPanel__AdditionalParams {{!_historyId || !_historyItems.getCount() ? 'controls-FilterPanel_lastBlock'}}"/>
+   </ws:if>
+</ws:template>
+
+<ws:template name="history">
    <ws:if data="{{_historyId && _historyItems.getCount()}}">
       <Controls.Filter.Button.History.List
               items="{{_historyItems}}"
@@ -49,11 +50,15 @@
       <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
          <ws:if data="{{_options.orientation === 'horizontal'}}">
             <div class="controls-FilterPanel__content-horizontal">
-               <ws:partial template="panelContent"/>
+               <div class="controls-FilterPanel__filtersWrapper">
+                  <ws:partial template="filtersContent"/>
+               </div>
+               <ws:partial template="history"/>
             </div>
          </ws:if>
          <ws:else>
-            <ws:partial template="panelContent"/>
+            <ws:partial template="filtersContent"/>
+            <ws:partial template="history"/>
          </ws:else>
       </Controls.Container.Scroll>
    </ws:contentArea>
