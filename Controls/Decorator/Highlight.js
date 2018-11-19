@@ -93,17 +93,21 @@ define('Controls/Decorator/Highlight',
             obj.next = function() {
                obj.lastIndex = regExp.lastIndex;
 
-               var exec = regExp.exec(value);
+               var resultSearch = regExp.exec(value);
 
-               obj.hasFinished = !exec;
+               obj.hasFinished = !resultSearch;
 
                if (obj.hasFinished) {
-                  obj.found = '';
+                  obj.highlight = '';
                   obj.index = value.length;
                } else {
-                  obj.found = exec[2];
-                  regExp.lastIndex -= exec[3].length;
-                  obj.index = exec.index + exec[1].length;
+                  var highlight = resultSearch[2];
+                  var startSeparator = resultSearch[1];
+                  var endSeparator = resultSearch[3];
+
+                  obj.highlight = highlight;
+                  regExp.lastIndex -= endSeparator.length;
+                  obj.index = resultSearch.index + startSeparator.length;
                }
 
                return obj;
@@ -124,30 +128,30 @@ define('Controls/Decorator/Highlight',
          addHighlight: function(target, iterator) {
             target.push({
                type: 'highlight',
-               value: iterator.found
+               value: iterator.highlight
             });
          },
 
          uniteToSet: function(value) {
-            return value.reduce(function(set, current) {
-               var lastItem = set[set.length - 1];
+            return value.reduce(function(result, current) {
+               var lastItem = result[result.length - 1];
 
                switch (lastItem.type) {
                   case 'highlight':
                      if (current.type === 'highlight' || /^\s+$/.test(current.value)) {
                         lastItem.value += current.value;
                      } else {
-                        set.push(current);
+                        result.push(current);
                      }
                      break;
                   case 'text':
-                     set.push(current);
+                     result.push(current);
                      break;
                   default:
                      break;
                }
 
-               return set;
+               return result;
             }, [value.shift()]);
          },
 
