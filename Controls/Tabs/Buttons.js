@@ -62,6 +62,9 @@ define('Controls/Tabs/Buttons', [
          if (item.get('type')) {
             classes.push('controls-Tabs__item_type_' + item.get('type'));
          }
+         if (item.get('isMainTab')) {
+            classes.push('controls-Tabs__item_canShrink');
+         }
          return classes.join(' ');
       }
    };
