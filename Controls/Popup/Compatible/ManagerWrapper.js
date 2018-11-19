@@ -4,8 +4,7 @@
 define('Controls/Popup/Compatible/ManagerWrapper',
    [
       'Core/Control',
-      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
-      'css!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
+      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
    ],
    function(Control, template) {
       'use strict';
