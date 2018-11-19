@@ -103,7 +103,7 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             event.which = 173; // клавиша "-"
             NTB._keyDownBind(event);
 
-            assert.equal(NTB._getInputValue(), '-0.0');
+            assert.equal(NTB.getText(), '-0.0');
          });
       });
       describe('setDecimals', function() {
