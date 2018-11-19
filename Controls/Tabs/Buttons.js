@@ -6,11 +6,13 @@ define('Controls/Tabs/Buttons', [
    'Controls/Controllers/SourceController',
    'wml!Controls/Tabs/Buttons/Buttons',
    'wml!Controls/Tabs/Buttons/ItemTemplate',
+   'Core/IoC',
    'css!theme?Controls/Tabs/Buttons/Buttons'
 ], function(Control,
    SourceController,
    TabButtonsTpl,
-   ItemTemplate
+   ItemTemplate,
+   IoC
 ) {
    'use strict';
 
@@ -47,13 +49,23 @@ define('Controls/Tabs/Buttons', [
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item'];
+            classes = ['controls-Tabs__item'],
+            modifyToNewStyle = '';
+         if (options.style === 'default') {
+            modifyToNewStyle = 'primary';
+            IoC.resolve('ILogger').error('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
+         } else if (options.style === 'additional') {
+            modifyToNewStyle = 'secondary';
+            IoC.resolve('ILogger').error('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
+         } else {
+            modifyToNewStyle = options.style;
+         }
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + options.style + '__item_state_selected');
+            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected');
             classes.push('controls-Tabs__item_state_selected');
          } else {
             classes.push('controls-Tabs__item_state_default');
