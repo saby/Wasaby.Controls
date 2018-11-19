@@ -114,6 +114,9 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          _elementDestroyed: function(item, container) {
+            if (item.popupState === BaseController.POPUP_STATE_INITIALIZING) {
+               return (new Deferred()).callback();
+            }
             if (item.popupState === BaseController.POPUP_STATE_DESTROYED || item.popupState === BaseController.POPUP_STATE_DESTROYING) {
                return item._destroyDeferred;
             }
