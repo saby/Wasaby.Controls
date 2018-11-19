@@ -10,19 +10,8 @@ define('Controls/Container/Suggest/__PopupContent',
       
       var __PopupContent = BaseLayer.extend({
          
-         _template: template,
+         _template: template
          
-         _beforeMount: function(options) {
-            this.setLayerContext(options);
-         },
-         
-         _beforeUpdate: function(newOptions) {
-            this.updateLayerContext(newOptions);
-         },
-         
-         _getChildContext: function() {
-            return this.getLayerContext();
-         }
       });
       
       return __PopupContent;
