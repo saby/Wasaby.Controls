@@ -3,7 +3,7 @@
  *
  * Для того, чтобы возможно было использовать сохранямые и редактируемые пресеты (предустановленные сочетания параметров экспорта), необходимо подключить модуль 'WS3ExportPresets/Loader'
  *
- * Кроме указанных опций доступны все опции компонента {@link SBIS3.CONTROLS/ExportCustomizer/MenuLink}
+ * Кроме указанных опций доступны все опции компонента {@link SBIS3.CONTROLS/Menu/MenuLink}
  *
  * @public
  * @class SBIS3.CONTROLS/ExportCustomizer/MenuLink
