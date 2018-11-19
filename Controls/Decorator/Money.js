@@ -30,7 +30,7 @@ define('Controls/Decorator/Money',
        */
 
       /**
-       * @name Controls/Decorator/Money#triads
+       * @name Controls/Decorator/Money#delimiters
        * @cfg {Boolean} Determines whether the number should be split into triads.
        * @variant true - the number split into triads.
        * @variant false - does not do anything.
@@ -53,7 +53,7 @@ define('Controls/Decorator/Money',
       var _private = {
          searchPaths: /([0-9]*?)(\.[0-9]{2})/,
 
-         parseNumber: function(number, triads) {
+         parseNumber: function(number, delimiters) {
             var exec = this.searchPaths.exec(number.toFixed(2));
 
             if (!exec) {
@@ -61,7 +61,7 @@ define('Controls/Decorator/Money',
                exec = ['0.00', '0', '.00'];
             }
 
-            var integer = triads ? splitIntoTriads(exec[1]) : exec[1];
+            var integer = delimiters ? splitIntoTriads(exec[1]) : exec[1];
             var fraction = exec[2];
 
             return {
@@ -78,25 +78,25 @@ define('Controls/Decorator/Money',
          _parsedNumber: null,
 
          _beforeMount: function(options) {
-            this._parsedNumber = _private.parseNumber(options.number, options.triads);
+            this._parsedNumber = _private.parseNumber(options.number, options.delimiters);
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.number !== this._options.number || newOptions.triads !== this._options.triads) {
-               this._parsedNumber = _private.parseNumber(newOptions.number, newOptions.triads);
+            if (newOptions.number !== this._options.number || newOptions.delimiters !== this._options.delimiters) {
+               this._parsedNumber = _private.parseNumber(newOptions.number, newOptions.delimiters);
             }
          }
       });
 
       Money.getDefaultOptions = function() {
          return {
-            triads: false
+            delimiters: false
          };
       };
 
       Money.getOptionTypes = function() {
          return {
-            triads: descriptor(Boolean),
+            delimiters: descriptor(Boolean),
             number: descriptor(Number).required()
          };
       };
