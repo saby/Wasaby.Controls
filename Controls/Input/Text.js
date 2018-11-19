@@ -94,8 +94,19 @@ define('Controls/Input/Text',
             return ViewModel;
          },
 
+         _clickHandler: function() {
+            if (this._options.selectOnClick) {
+               this._viewModel.selection = {
+                  start: 0,
+                  end: this._viewModel.displayValue.length
+               };
+            }
+         },
+
          _changeHandler: function() {
-            this._viewModel.inputCompleted();
+            if (this._options.trim) {
+               this._viewModel.displayValue = this._viewModel.displayValue.trim();
+            }
 
             Text.superclass._changeHandler.apply(this, arguments);
          }
@@ -111,8 +122,8 @@ define('Controls/Input/Text',
          return defaultOptions;
       };
 
-      Text.getOptionTypes = function() {
-         var optionTypes = Base.getOptionTypes();
+      Text.getDefaultTypes = function() {
+         var optionTypes = Base.getDefaultTypes();
 
          optionTypes.trim = descriptor(Boolean);
          optionTypes.maxLength = descriptor(Number);
