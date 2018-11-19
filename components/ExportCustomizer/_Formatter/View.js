@@ -607,7 +607,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred}
           */
          remove: function (fileUuid, historyInfo) {
-            return this._callFormatterDelete(fileUuid, historyInfo);
+            return this._formatter ? this._callFormatterDelete(fileUuid, historyInfo) : Deferred.success();
          },
 
          /**
@@ -621,6 +621,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<string>}
           */
          endTransaction: function (isCommit, historyInfo, saving) {
+            if (!this._formatter) {
+               return Deferred.success();
+            }
             var promises = this._promises;
             if (promises.length) {
                // Если есть незавершённые вызовы форматтера - дождаться их
@@ -683,6 +686,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          restate: function (values, meta) {
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
+            }
+            if (!this._formatter) {
+               return;
             }
             var options = this._options;
             var changes = objectChange(options, values, {fieldIds:true, primaryUuid:false, fileUuid:false, consumerId:false});
