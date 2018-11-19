@@ -18,6 +18,7 @@ define('Controls/Utils/Toolbar', ['WS.Data/Chain'], function(Chain) {
 
          //show only in Toolbar
          TOOLBAR: 2
+
       },
 
       getMenuItems: function(items) {

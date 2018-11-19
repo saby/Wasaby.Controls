@@ -24,6 +24,7 @@ define('Controls/Validate/Controller',
           */
          openInfoBox: function(self) {
             if (self._validationResult && self._validationResult.length && !self._isOpened) {
+               
                self._isOpened = true;
                self._notify('openInfoBox', [{
                   target: self._container,
@@ -59,6 +60,7 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
+            this._notify('closeInfoBox', [this], { bubbling: true });
          },
          _validationResult: undefined,
 

@@ -1,9 +1,22 @@
 [{
   "include": [
-    "Controls/Application/*",
-    "Controls/Application"
+    "Controls/Application",
+    "Controls/Application/*"
+  ],
+  "exclude": [
+    "wml!Controls/Application/CompatibleScripts",
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData",
+    "Controls/Application/DepsCollector/DepsCollector"
   ],
   "output": "controls-application.package.js"
+}, {
+  "include": [
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData",
+    "Controls/Context/*"
+  ],
+  "output": "controls-context.package.js"
 }, {
   "include": [
     "Controls/Button/*",
@@ -108,10 +121,10 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "Controls/List/resources/utils/CSSGridLayoutUtils",
     "wml!Controls/List/Grid/OldGridView",
     "wml!Controls/List/Grid/NewGridView",
-    "Controls/List/ItemActions/*",
+    "Controls/List/ItemActions/resources/*",
+    "Controls/List/ItemActions/ItemActionsControl",
     "Controls/List/Swipe/*",
     "Controls/List/Mover",
     "Controls/List/Remover",
@@ -260,4 +273,14 @@
     "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
-}]
+},
+  {
+    "include": [
+      "Controls/Search/*"
+    ],
+    "exclude": [
+      "Controls/Search/Misspell",
+      "wml!Controls/Search/Misspell"
+    ],
+    "output": "controls-search.package.js"
+  }]

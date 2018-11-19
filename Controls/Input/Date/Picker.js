@@ -48,6 +48,7 @@ define('Controls/Input/Date/Picker', [
             opener: this,
             target: this._container,
             className: 'controls-PeriodDialog__picker-withoutModeBtn',
+            isCompoundTemplate: true,
             horizontalAlign: { side: 'right' },
             corner: { horizontal: 'left' },
             eventHandlers: {
@@ -58,9 +59,16 @@ define('Controls/Input/Date/Picker', [
                endValue: this._options.value,
                mask: this._options.mask,
                selectionType: 'single',
-               headerType: 'input'
+               headerType: 'input',
+               handlers: {
+                  onChoose: this._onResultWS3.bind(this)
+               }
             }
          });
+      },
+
+      _onResultWS3: function(event, startValue) {
+         this._onResult(startValue);
       },
 
       _onResult: function(startValue) {

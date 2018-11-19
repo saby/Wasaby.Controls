@@ -33,6 +33,13 @@
                         />
                     </ws:content>
                 </Controls.Validate.Input>
+                <Controls.Button name="Panel" on:click="_openPanel()" caption="Panel"/>
+                <Controls.Popup.Opener.Stack name="opener">
+                    <ws:popupOptions template="Controls-demo/Input/Validate/Text">
+                        <ws:eventHandlers/>
+                    </ws:popupOptions>
+                </Controls.Popup.Opener.Stack>
+
             </div>
         </ws:content>
     </Controls.Validate.FormController>

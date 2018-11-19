@@ -17,7 +17,7 @@ define('Controls/Date/MonthList/CalendarSource', [
       _moduleName: 'Controls.Date.MonthList.CalendarSource',
       $protected: {
          _dataSetItemsProperty: 'items',
-         _dataSetTotalProperty: 'total'
+         _dataSetMetaProperty: 'meta'
       },
 
       _$idProperty: 'id',
@@ -80,7 +80,7 @@ define('Controls/Date/MonthList/CalendarSource', [
             );
             items = this._prepareQueryResult({
                items: adapter.getData(),
-               total: yearEqual ? { before: true, after: true } : false
+               meta: {total: yearEqual ? { before: true, after: true } : false}
             });
 
             return items;

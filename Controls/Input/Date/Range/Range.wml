@@ -24,7 +24,7 @@
    />
    <Controls.Popup.Opener.Sticky name="opener">
       <ws:popupOptions
-         template="Controls/Date/PeriodDialog"
+         template="SBIS3.CONTROLS/Date/RangeBigChoose"
          closeByExternalClick="{{true}}"
       />
    </Controls.Popup.Opener.Sticky>

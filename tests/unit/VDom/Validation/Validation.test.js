@@ -36,7 +36,7 @@ define([
                   $(document).ready(function () {
                      setTimeout(function () { // ждем когда оживятся дети
 
-                        testControl._children.validate._focusOutHandler();
+                        testControl._children.validate._deactivatedHandler();
                         runDelayed(function () { // ждем синхронизатор
                            runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                               runDelayed(function () { // ждем когда пройдет валидация
@@ -45,7 +45,7 @@ define([
                                  testControl.setText('ya@ya.ya');
                                  runDelayed(function () { // ждем синхронизатор
                                     runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
-                                       testControl._children.validate._focusOutHandler();
+                                       testControl._children.validate._deactivatedHandler();
                                        runDelayed(function () { // ждем синхронизатор
                                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                                              runDelayed(function () { // ждем когда пройдет валидация

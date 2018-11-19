@@ -1,4 +1,4 @@
-define('Controls/Application/TouchDetector/TouchContextField', [
+define('Controls/Context/TouchContextField', [
    'Core/compatibility',
    'Core/DataContext'
 ], function(compatibility, DataContext) {

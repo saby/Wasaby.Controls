@@ -29,7 +29,7 @@ define('Controls/Input/Suggest',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Suggest/Suggest
-       * @author Журавлев М.С.
+       * @author Герасимов А.М.
        */
       
       'use strict';

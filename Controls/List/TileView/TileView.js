@@ -2,7 +2,7 @@ define('Controls/List/TileView/TileView', [
    'Controls/List/ListView',
    'wml!Controls/List/TileView/TileView',
    'wml!Controls/List/TileView/DefaultItemTpl',
-   'Controls/Application/TouchDetector/TouchContextField',
+   'Controls/Context/TouchContextField',
    'Controls/List/TileView/resources/ItemSizeUtils',
    'css!Controls/List/TileView/TileView'
 ], function(ListView, template, defaultItemTpl, TouchContextField, ItemSizeUtils) {

@@ -1,6 +1,6 @@
 define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Suggest, List, RecordSet, Model){
    
-   describe('Controls.Container.Suggest.Layout', function () {
+   describe('Controls.Container.Suggest.Layout', function() {
    
       var hasMoreTrue = {
          hasMore: true
@@ -184,6 +184,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          Suggest._private.searchErrback(self);
          
          assert.isFalse(self._loading);
+      });
+   
+      it('Suggest::check footer template', function(done) {
+         var footerTpl;
+         
+         requirejs(['wml!Controls/Container/Suggest/Layout/footer'], function(result) {
+            footerTpl = result;
+            
+            assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
+            assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore'}), '<div class="controls-Suggest__footer">testShowMore</div>');
+            assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
+            done();
+         });
       });
    
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
