@@ -178,19 +178,19 @@
         <div class="type_block" test_name="button_icon_border">
             <div class="demo_element">
                 <span class="span_label">iconButtonBordered, readOnly="false", iconStyle="error", size="m"</span>
-                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="danger" icon="icon-16 icon-Author" style="danger" viewMode="transparentQuickButton"/>
+                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_1" iconStyle="danger" icon="icon-16 icon-Author" style="danger" viewMode="toolButton" transparent="{{true}}"/>
             </div>
             <div class="demo_element">
                 <span class="span_label">iconButtonBordered, readOnly="false", size="l", iconStyle="done"</span>
-                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_2" iconStyle="success" icon="icon-16 icon-Author" style="success" viewMode="transparentQuickButton" size="l"/>
+                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_2" iconStyle="success" icon="icon-16 icon-Author" style="success" viewMode="toolButton" transparent="{{true}}" size="l"/>
             </div>
             <div class="demo_element">
                 <span class="span_label">iconButtonBordered, readOnly="false", size="l", iconStyle="default"</span>
-                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_3" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" viewMode="transparentQuickButton" size="l"/>
+                <Controls.Button readOnly="{{false}}" attr:test_name="icon_border_3" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" transparent="{{true}}" size="l"/>
             </div>
             <div class="demo_element">
                 <span class="span_label">iconButtonBordered, readOnly="true", iconStyle="default", size="m"</span>
-                <Controls.Button readOnly="{{true}}" attr:test_name="icon_border_4" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" viewMode="transparentQuickButton"/>
+                <Controls.Button readOnly="{{true}}" attr:test_name="icon_border_4" iconStyle="secondary" icon="icon-16 icon-Author" style="secondary" viewMode="toolButton" transparent="{{true}}"/>
             </div>
         </div>
     </div>
