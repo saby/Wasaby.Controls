@@ -3,14 +3,9 @@ define('Controls/Button/Classes', ['Core/IoC'], function(IoC) {
    'use strict';
 
    var deprecatedClassesOfButton = {
-      iconButtonBorderedAdditional: {
-         style: 'secondary',
-         type: 'quickButton'
-      },
-
       iconButtonBordered: {
          style: 'secondary',
-         type: 'transparentQuickButton'
+         type: 'toolButton'
       },
 
       linkMain: {

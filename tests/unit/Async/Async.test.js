@@ -10,7 +10,7 @@ define([
          var async = new Async();
          async._beforeMount({
             templateName: 'wml!Controls/Button/Button'
-         });
+         }, {});
          setTimeout(function() {
             assert.equal(async.optionsForComponent.resolvedTemplate, require('wml!Controls/Button/Button'));
             async._beforeUpdate({

@@ -134,8 +134,21 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                },
                itemTemplateProperty: {
                   readOnly: false,
-                  value: 'templateTwo'
+                  value: 'Not specified',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'templateTwo',
+                        value: 'templateTwo'
+                     },
+                     {
+                        id: '2',
+                        title: 'Not specified',
+                        value: null
+                     }
+                  ]
                }
+
             };
             this._componentOptions = {
                selectedKey: 1,
@@ -144,7 +157,7 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                keyProperty: 'id',
                displayProperty: 'title',
                name: 'TabsButtons',
-               itemTemplateProperty: 'templateTwo',
+               itemTemplateProperty: null,
                tabSpaceTemplate: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
