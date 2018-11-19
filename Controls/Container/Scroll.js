@@ -72,7 +72,9 @@ define('Controls/Container/Scroll',
                if (scrollTop > 0) {
                   shadowPosition += 'top';
                }
-               if (scrollHeight - containerHeight - scrollTop) {
+
+               // Compare with 1 to prevent rounding errors in the scale do not equal 100%
+               if (scrollHeight - containerHeight - scrollTop >= 1) {
                   shadowPosition += 'bottom';
                }
 
