@@ -70,17 +70,10 @@ define('Controls/interface/IDialogOptions', [], function() {
     * @public
     */
 
-
-   /**
-    * @typedef {Object} eventHandlers
-    * @description Callback functions on popup events.
-    * @property {Function} onClose Callback function is called when popup is closed.
-    * @property {Function} onResult Callback function is called at the sendResult event in the popup template.
-    */
-
    /**
     * @name Controls/interface/IDialogOptions#eventHandlers
-    * @cfg {EventHandlers[]} Callback functions on popup events.
+    * @cfg {PopupOptions[]} Callback functions on popup events.
+    * @variant onResult Callback function is called at the sendResult event in the popup template.
     * @variant onClose Callback function is called when popup is closed.
     * @default {}
     * @remark

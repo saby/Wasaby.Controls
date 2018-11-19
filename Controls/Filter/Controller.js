@@ -6,18 +6,14 @@ define('Controls/Filter/Controller',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Core/helpers/Object/isEqual',
-      'Controls/History/FilterSource',
-      'Controls/History/Service',
-      'WS.Data/Source/Memory',
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEmpty',
       'Core/core-merge',
       'Core/core-clone',
       'Controls/Container/Data/ContextOptions'
    ],
 
-   function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, historyUtils, SourceController, isEmptyObject, merge, clone) {
+   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone) {
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);

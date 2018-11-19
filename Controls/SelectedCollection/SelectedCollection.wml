@@ -1,24 +1,24 @@
-<div class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
+<div attr:class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
-   <ws:if data="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) > _options.maxVisibleItems}}">
+   <ws:if data="{{_items.length > _options.maxVisibleItems}}">
       <Controls.Popup.InfoBox
+              attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
               trigger="click"
               templateName="Controls/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
               position="bl">
-         <div class="controls-SelectedCollection__counterItems">
-            <span attr:class="controls-SelectedCollection__counter">({{_options.items.getCount()}})</span>
-            <span>...</span>
-         </div>
+          <ws:partial template="wml!Controls/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="max-width: {{_options._counterWidth}}px;"/>
       </Controls.Popup.InfoBox>
    </ws:if>
-   <ws:for data="index, item in _visibleItems || _options.items">
+   <ws:for data="index, item in _visibleItems">
       <ws:partial
+              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _options._counterWidth + 'px);'}}"
               attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"
               item="{{item}}"
-              isSingleItem="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) === 1}}"
-              isLastItem="{{(_options.items.getCount ? _options.items.getCount() : _options.items.length) === index + 1}}"
+              displayProperty="{{_options.displayProperty}}"
+              isSingleItem="{{_visibleItems.length === 1}}"
+              isLastItem="{{_visibleItems.length === index + 1}}"
               readOnly="{{_options.readOnly}}"
               itemsLayout="{{_options.itemsLayout}}"
               _itemClick="{{_itemClick}}"
