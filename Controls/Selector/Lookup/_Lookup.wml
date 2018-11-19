@@ -62,7 +62,8 @@
          <ws:if data="{{!_options.readOnly}}">
             <div class="controls-Lookup__afterFieldWrapper controls-Lookup__afterFieldWrapper_{{_multiLineState ? 'multiLine' : 'singleLine'}}">
                <ws:if data="{{!_options.readOnly && _options.items.getCount() > 1}}">
-                  <ws:partial template="wml!Controls/Selector/Lookup/resources/clearRecordsTemplate" name="clearRecords" on:click="_onClickClearRecords()"/>
+                  <ws:partial template="wml!Controls/Selector/Lookup/resources/clearRecordsTemplate" name="clearRecords" on:click="_onClickClearRecords()"
+                              attr:class="controls-Lookup__clearRecords_{{_multiLineState ? 'multiLine' : 'singleLine'}}"/>
                </ws:if>
                <ws:partial template="wml!Controls/Selector/Lookup/resources/showSelectorTemplate" name="showSelector" on:click="_onClickShowSelector()"/>
             </div>

@@ -61,7 +61,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
             selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty);
 
-         if (self._selectedKeys.indexOf(key) === -1) {
+         if (selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
                selectedKeys.push(key);
                _private.getItems(self).append([item]);
@@ -70,7 +70,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
                _private.getItems(self).assign([item]);
             }
 
-            _private.notifyChanges(self, self._selectedKeys);
+            _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
          }
       },
@@ -189,7 +189,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
 
          _private.getItems(this).assign(items);
-         _private.notifyChanges(this, this._selectedKeys);
+         _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },
 

@@ -44,7 +44,7 @@
   top: 0;
   right: -@spacing_Lookup-for-showSelector;
   justify-content: space-between;
-  flex-flow: column-reverse;
+  flex-flow: column;
 }
 
 .controls-Lookup__icon {
@@ -66,6 +66,11 @@
     color: @color_Lookup-clearRecords-hovered;
   }
 }
+
+.controls-Lookup__clearRecords_multiLine {
+  order: 1;
+}
+
 
 .controls-Lookup__collection_single {
   .flex-shrink(1);
