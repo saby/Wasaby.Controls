@@ -2582,9 +2582,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
 
-               editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
+               if (!this.isDestroyed()) {
+                  editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
 
-               this._notify('onInitEditor');
+                  this._notify('onInitEditor');
+               }
             },
             _formatChangedCallback: function(state, obj) {
                this._notify('onFormatChange', obj, state);
