@@ -216,6 +216,29 @@ define([
             });
          });
 
+         it('Empty list', function(done) {
+            listModel.setItems(new RecordSet({
+               rawData: [],
+               idProperty: 'id'
+            }));
+            var source = new Memory({
+               idProperty: 'id',
+               data: listModel._items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            eip.beginAdd().addCallback(function() {
+               assert.instanceOf(eip._editingItem, Model);
+               assert.equal(eip._editingItemData.index, 0);
+               assert.isTrue(eip._isAdd);
+               done();
+            });
+         });
+
          it('Object without item', function(done) {
             var source = new Memory({
                idProperty: 'id',

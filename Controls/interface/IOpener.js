@@ -5,6 +5,7 @@ define('Controls/interface/IOpener', [], function() {
     *
     * @interface Controls/interface/IOpener
     * @public
+    * @author Красильников А.С.
     */
 
    /**

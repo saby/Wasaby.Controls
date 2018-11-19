@@ -2,12 +2,12 @@ define([
    'Controls/List/TreeControl',
    'Core/Deferred',
    'Core/core-instance',
-   'WS.Data/Collection/RecordSet'
+   'Controls/List/Tree/TreeViewModel'
 ], function(
    TreeControl,
    Deferred,
    cInstance,
-   RecordSet
+   TreeViewModel
 ) {
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function() {
@@ -16,10 +16,18 @@ define([
             isSourceControllerDestroyed = false;
          treeControl._children = {
             baseControl: {
-               reload: function() {},
+               reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
+               },
                getViewModel: function() {
                   return {
-                     setHasMoreStorage: function() {}
+                     setHasMoreStorage: function() {
+                     },
+                     setExpandedItems: function() {
+                        this._expandedItems = {};
+                     }
                   };
                }
             }
@@ -45,12 +53,18 @@ define([
          treeControl._children = {
             baseControl: {
                reload: function(filter) {
+                  var def = new Deferred();
                   reloadCalled = true;
                   assert.equal(filter['parent'], 'testRoot', 'Invalid value "filter[parentProperty]" after call "_beforeUpdate" with new "root"');
+                  def.callback();
+                  return def;
                },
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {},
+                     setExpandedItems: function() {
+                        this._expandedItems = {};
+                     },
                      setRoot: function() {
                         setRootCalled = true;
                      }
@@ -251,145 +265,37 @@ define([
             assert.isFalse(result.isSuccessful());
          });
       });
-      it('TreeControl._onNodeRemoved', function() {
+      it('All items collapsed after reload', function() {
          var
-            treeControl = new TreeControl({});
+            treeControl = new TreeControl({}),
+            treeViewModel = new TreeViewModel({});
 
-         treeControl._nodesSourceControllers = {
-            1: {
-               destroy: function() {}
-            },
-            2: {},
-            3: {}
+         treeViewModel._expandedItems = {
+            2246: true,
+            452815: true,
+            457244: true,
+            471641: true
          };
-         treeControl._onNodeRemoved(null, 1);
-         assert.deepEqual({ 2: {}, 3: {} }, treeControl._nodesSourceControllers, 'Incorrect value "_nodesSourceControllers" after call "treeControl._onNodeRemoved(null, 1)".');
-      });
-      describe('_onCheckBoxClick', function() {
-         it('select', function() {
-            var
-               treeControl = new TreeControl({}),
-               cfg = {
-                  selectedKeys: [1, 2, 3]
-               };
-            treeControl.saveOptions(cfg);
-            treeControl._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs[0], [1, 2, 3, 4]);
-               assert.deepEqual(eventArgs[1], [4]);
-               assert.deepEqual(eventArgs[2], []);
-            };
-            treeControl._onCheckBoxClick({}, 4, false);
-         });
-         it('unselect all children', function() {
-            var
-               treeControl = new TreeControl({}),
-               cfg = {
-                  selectedKeys: [1, 2, 3],
-                  parentProperty: 'parent',
-                  nodeProperty: 'parent@',
-                  keyProperty: 'id',
-                  items: new RecordSet({
-                     idProperty: 'id',
-                     rawData: [{
-                        id: 1,
-                        'parent': null,
-                        'parent@': true
-                     }, {
-                        id: 2,
-                        'parent': 1,
-                        'parent@': false
-                     }, {
-                        id: 3,
-                        'parent': 1,
-                        'parent@': false
-                     }]
-                  })
-               };
-            treeControl.saveOptions(cfg);
-            treeControl._beforeMount(cfg);
-            treeControl._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs[0], [1, 3]);
-               assert.deepEqual(eventArgs[1], []);
-               assert.deepEqual(eventArgs[2], [2]);
-            };
-            treeControl._onCheckBoxClick({}, 2, true);
-            treeControl._options.selectedKeys = [1, 3];
-            treeControl._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs[0], []);
-               assert.deepEqual(eventArgs[1], []);
-               assert.deepEqual(eventArgs[2], [1, 3]);
-            };
-            treeControl._onCheckBoxClick({}, 3, true);
-         });
-         it('unselect folder', function() {
-            var
-               treeControl = new TreeControl({}),
-               cfg = {
-                  selectedKeys: [1, 2, 3],
-                  parentProperty: 'parent',
-                  nodeProperty: 'parent@',
-                  keyProperty: 'id',
-                  items: new RecordSet({
-                     idProperty: 'id',
-                     rawData: [{
-                        id: 1,
-                        'parent': null,
-                        'parent@': true
-                     }, {
-                        id: 2,
-                        'parent': 1,
-                        'parent@': true
-                     }, {
-                        id: 3,
-                        'parent': 2,
-                        'parent@': false
-                     }]
-                  })
-               };
-            treeControl.saveOptions(cfg);
-            treeControl._beforeMount(cfg);
-            treeControl._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs[0], []);
-               assert.deepEqual(eventArgs[1], []);
-               assert.deepEqual(eventArgs[2], [1, 2, 3]);
-            };
-            treeControl._onCheckBoxClick({}, 1, true);
-         });
-         it('unselect child while inside a folder (so folder doesn\'t exist in items)', function() {
-            var
-               treeControl = new TreeControl({}),
-               cfg = {
-                  selectedKeys: [1, 2, 3],
-                  parentProperty: 'parent',
-                  nodeProperty: 'parent@',
-                  keyProperty: 'id',
-                  items: new RecordSet({
-                     idProperty: 'id',
-                     rawData: [{
-                        id: 2,
-                        'parent': 1,
-                        'parent@': false
-                     }, {
-                        id: 3,
-                        'parent': 1,
-                        'parent@': false
-                     }]
-                  })
-               };
-            treeControl.saveOptions(cfg);
-            treeControl._beforeMount(cfg);
-            treeControl._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs[0], [1, 3]);
-               assert.deepEqual(eventArgs[1], []);
-               assert.deepEqual(eventArgs[2], [2]);
-            };
-            treeControl._onCheckBoxClick({}, 2, true);
-         });
+
+         treeControl._children = {
+            baseControl: {
+               reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
+               },
+               getViewModel: function() {
+                  return {
+                     setExpandedItems: function() {
+                        treeViewModel.setExpandedItems([]);
+                     }
+                  };
+               }
+            }
+         };
+
+         treeControl.reload();
+         assert.deepEqual({}, treeViewModel._expandedItems);
       });
    });
 });

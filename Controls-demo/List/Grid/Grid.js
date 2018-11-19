@@ -50,6 +50,8 @@ define('Controls-demo/List/Grid/Grid', [
             this._actionClicked = action.title;
          },
          _beforeMount: function() {
+            this._firstSelectedKeys = ['448390'];
+            this._secondSelectedKeys = ['448390'];
             this.showType = {
 
                // show only in Menu

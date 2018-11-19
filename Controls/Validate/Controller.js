@@ -4,26 +4,64 @@ define('Controls/Validate/Controller',
       'wml!Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
-      'Core/Deferred'
+      'Core/Deferred',
+      'wml!Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
       template,
       IoC,
       ParallelDeferred,
-      Deferred
+      Deferred,
+      errorMessage
    ) {
       'use strict';
 
-      var Validate = Base.extend({
-         _template: template,
-         _afterMount: function() {
-            this._notify('validateCreated', [this], {bubbling: true});
-         },
-         _beforeUnmount: function() {
-            this._notify('validateDestroyed', [this], {bubbling: true});
+      var _private = {
+
+         /**
+          * Показывает Infobox с сообщением об ошибке
+          */
+         openInfoBox: function(self) {
+            if (self._validationResult && self._validationResult.length && !self._isOpened) {
+               
+               self._isOpened = true;
+               self._notify('openInfoBox', [{
+                  target: self._container,
+                  style: 'error',
+                  showDelay: 0,
+                  hideDelay: 0,
+                  template: errorMessage,
+                  templateOptions: { content: self._validationResult },
+                  eventHandlers: {
+                     onResult: self._mouseInfoboxHandler.bind(self)
+                  }
+               }], { bubbling: true });
+            }
          },
 
+         /**
+          * Скрывает InfoBox с подсказкой
+          */
+         closeInfoBox: function(self) {
+            var data = self;
+            self._closeId = setTimeout(function() {
+               data._notify('closeInfoBox', [data], { bubbling: true });
+               data._isOpened = false;
+            }, 300);
+         }
+
+      };
+      var Validate = Base.extend({
+         _template: template,
+         _isOpened: false,
+         _afterMount: function() {
+            this._notify('validateCreated', [this], { bubbling: true });
+         },
+         _beforeUnmount: function() {
+            this._notify('validateDestroyed', [this], { bubbling: true });
+            this._notify('closeInfoBox', [this], { bubbling: true });
+         },
          _validationResult: undefined,
 
          _callValidators: function callValidators(validators) {
@@ -121,6 +159,37 @@ define('Controls/Validate/Controller',
             if (!(validationResult instanceof Deferred)) {
                this._forceUpdate();
             }
+            if (validationResult) {
+               _private.openInfoBox(this);
+            } else if (this._isOpened) {
+               _private.closeInfoBox(this);
+            }
+         },
+         _hoverHandler: function() {
+            clearTimeout(this._closeId);
+            if (!this._isOpened) {
+               _private.openInfoBox(this);
+            }
+         },
+         _focusInHandler: function() {
+            if (!this._isOpened) {
+               _private.openInfoBox(this);
+            }
+         },
+         _mouseInfoboxHandler: function(event) {
+            if (event.type === 'mouseenter') {
+               this._hoverInfoboxHandler(this);
+            } else {
+               this._mouseLeaveHandler(this);
+            }
+         },
+         _mouseLeaveHandler: function() {
+            if (this.isValid()) {
+               _private.closeInfoBox(this);
+            }
+         },
+         _hoverInfoboxHandler: function() {
+            clearTimeout(this._closeId);
          },
 
          /**
@@ -132,5 +201,4 @@ define('Controls/Validate/Controller',
          }
       });
       return Validate;
-   }
-);
+   });

@@ -6,6 +6,7 @@ define('Controls/interface/INavigation', [
     *
     * @interface Controls/interface/INavigation
     * @public
+    * @author Крайнов Д.О.
     */
 
    /**

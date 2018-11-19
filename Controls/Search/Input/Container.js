@@ -15,7 +15,7 @@ define('Controls/Search/Input/Container',
        *
        * @class Controls/Search/Input/Container
        * @extends Core/Control
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */

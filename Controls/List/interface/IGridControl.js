@@ -6,6 +6,7 @@ define('Controls/List/interface/IGridControl', [
     *
     * @interface Controls/List/interface/IGridControl
     * @public
+    * @author Авраменко А.С.
     */
 
    /**

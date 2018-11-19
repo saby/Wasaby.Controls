@@ -2,7 +2,6 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
-   'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/IBind',
    'Controls/Utils/ArraySimpleValuesUtil'
@@ -10,7 +9,6 @@ define('Controls/List/Tree/TreeViewModel', [
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
-   cClone,
    HierarchyRelation,
    IBindCollection,
    ArraySimpleValuesUtil
@@ -145,6 +143,16 @@ define('Controls/List/Tree/TreeViewModel', [
             expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
 
             return expanderClasses;
+         },
+         prepareExpandedItems: function(expandedItems) {
+            var
+               result = {};
+            if (expandedItems) {
+               expandedItems.forEach(function(item) {
+                  result[item] = true;
+               });
+            }
+            return result;
          }
       },
 
@@ -154,17 +162,20 @@ define('Controls/List/Tree/TreeViewModel', [
 
          constructor: function(cfg) {
             this._options = cfg;
-            if (cfg.expandedItems) {
-               this._expandedItems = cClone(cfg.expandedItems);
-            } else {
-               this._expandedItems = {};
-            }
+            this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
             this._hierarchyRelation = new HierarchyRelation({
                idProperty: cfg.keyProperty || 'id',
                parentProperty: cfg.parentProperty || 'Раздел',
                nodeProperty: cfg.nodeProperty || 'Раздел@'
             });
             TreeViewModel.superclass.constructor.apply(this, arguments);
+         },
+
+         setExpandedItems: function(expandedItems) {
+            this._expandedItems = _private.prepareExpandedItems(expandedItems);
+            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          _prepareDisplay: function(items, cfg) {

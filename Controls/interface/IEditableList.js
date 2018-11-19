@@ -6,6 +6,7 @@ define('Controls/interface/IEditableList', [
     *
     * @interface Controls/interface/IEditableList
     * @public
+    * @author Зайцев А.С.
     * @see Controls/EditingArea
     */
 

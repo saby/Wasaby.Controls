@@ -119,11 +119,12 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             return hierarchyRelation.getChildren(rootId, items).reduce(function(acc, child) {
                childId = child.getId();
 
-               if (selectedKeys.indexOf(childId) !== -1 || parentSelected && excludedKeys.indexOf(childId) === -1) {
+               if (selectedKeys.indexOf(childId) !== -1 || (parentSelected && excludedKeys.indexOf(rootId) === -1)) {
+                  var newCount = excludedKeys.indexOf(childId) === -1 ? acc + 1 : acc;
                   if (hierarchyRelation.isNode(child)) {
-                     return acc + 1 + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
+                     return newCount + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
                   } else {
-                     return acc + 1;
+                     return newCount;
                   }
                } else {
                   if (hierarchyRelation.isNode(child) && excludedKeys.indexOf(childId) === -1) {

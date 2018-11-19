@@ -210,8 +210,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.waitForPopupCreated = false;
             var self = this;
             runDelayed(function() {
-               if (self._container.length && self._options.catchFocus && !self._childControl.isActive()) {
-                  self._childControl.setActive(true);
+               if (self._container.length && self._options.catchFocus) {
+                  doAutofocus(self._container);
                }
             });
          },
@@ -245,6 +245,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waiting = self._waiting || [];
 
             self.__parentFromCfg = self._options.__parentFromCfg;
+
+            // getParent() возвращает правильного предка, но у предка не зареган потомок.
+            // регаем в предке CompoundArea и содержимое начинает искаться по getChildControlByName
+            if (self.__parentFromCfg && self._registerToParent) {
+               self._registerToParent(self.__parentFromCfg);
+            }
             self.__openerFromCfg = self._options.__openerFromCfg;
             self._parent = self._options.parent;
             self._logicParent = self._options.parent;
@@ -266,7 +272,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                });
             });
          },
-         
+
          _beforeUnmount: function() {
             this.__parentFromCfg = null;
             this.__openerFromCfg = null;
@@ -371,11 +377,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this.close(arg);
+               this.close(arg);
+               return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {
-               return this.close(true);
+               this.close(true);
+               return true; // команда ok не должна всплывать выше окна
             } if (commandName === 'cancel') {
-               return this.close(false);
+               this.close(false);
+               return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
@@ -408,7 +417,33 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          closeHandler: function(e, arg) {
             e.stopPropagation();
-            this.close(arg);
+            if (this._options._mode === 'recordFloatArea') {
+               this._confirmationClose(arg);
+            } else {
+               this.close(arg);
+            }
+         },
+         _confirmationClose: function(arg) {
+            var self = this;
+            if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
+               self._openConfirmDialog(false, true).addCallback(function(result) {
+                  switch (result) {
+                     case 'yesButton': {
+                        self.updateRecord().addCallback(function() {
+                           self.close(arg);
+                        });
+                        break;
+                     }
+                     case 'noButton': {
+                        self.getRecord().rollback();
+                        self.close(arg);
+                        break;
+                     }
+                  }
+               });
+            } else {
+               this.close(arg);
+            }
          },
          _mouseenterHandler: function() {
             if (this._options.hoverTarget) {
@@ -454,6 +489,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _keyDown: function(event) {
             if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this.close();
+               if (CoreConstants.browser.safari) {
+                  // Need to prevent default behaviour if popup is opened
+                  // because safari escapes fullscreen mode on 'ESC' pressed
+                  event.preventDefault();
+               }
                event.stopPropagation();
             }
          },
@@ -836,6 +876,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return;
             }
 
+            // Unregister CompoundArea's inner Event/Listener, before its
+            // container is destroyed by compatibility layer
+            this._unregisterEventListener();
+
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
@@ -859,6 +903,35 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
 
+         _unregisterEventListener: function() {
+            var
+               element = this._container[0],
+               controlNodes = element && element.controlNodes,
+               controlNode;
+
+            if (controlNodes) {
+               // Find CompoundArea's control node
+               for (var i = 0; i < controlNodes.length; i++) {
+                  if (controlNodes[i].control === this) {
+                     controlNode = controlNodes[i];
+                     break;
+                  }
+               }
+
+               if (controlNode) {
+                  // Get event listener's control node
+                  var
+                     listenerNode = controlNode.childrenNodes && controlNode.childrenNodes[1],
+                     listener = listenerNode && listenerNode.control;
+
+                  if (listener) {
+                     // Tell event listener to unregister from its Registrar to
+                     // prevent leaks
+                     listener._notify('unregister', ['controlResize', listener], { bubbling: true });
+                  }
+               }
+            }
+         },
 
          _removeOpFromCollections: function(operation) {
             removeOperation(operation, this._producedPendingOperations);

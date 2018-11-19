@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" scope="{{...}}"/>
+<ws:partial template="wml!Controls/SelectedCollection/itemTemplate" scope="{{...}}"/>

@@ -5,6 +5,7 @@ define('Controls/Input/interface/IInputPlaceholder', [], function() {
     *
     * @interface Controls/Input/interface/IInputPlaceholder
     * @public
+    * @author Колесова П.С.
     */
 
    /**

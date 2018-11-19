@@ -6,6 +6,7 @@ define('Controls/interface/ISource', [
     *
     * @interface Controls/interface/ISource
     * @public
+    * @author Крайнов Д.О.
     */
 
    /**

@@ -1,0 +1,7 @@
+<Controls.Input.ComboBox
+   keyProperty="id"
+   displayProperty="caption"
+   itemTemplate="wml!Controls/Input/RichEditor/Toolbar/Button/CustomFormat/item"
+   on:selectedKeyChanged="_selectedKeyChangedHandler()"
+   bind:selectedKey="_selectedFormat"
+   source="{{_source}}"/>

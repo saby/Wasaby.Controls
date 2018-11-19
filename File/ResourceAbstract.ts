@@ -11,7 +11,7 @@ import {IResource, FileInfo} from 'File/IResource';
  */
 export abstract class ResourceAbstract implements IResource {
     protected _meta?: object;
-    protected _info?: FileInfo;
+    protected _info: FileInfo;
 
     /**
      * Возвращает дополнительную информацию по ресурсу

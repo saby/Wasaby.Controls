@@ -6,6 +6,7 @@ define('Controls/interface/IEditAtPlace', [
     *
     * @interface Controls/interface/IEditAtPlace
     * @public
+    * @author Зайцев А.С.
     * @see Controls/interface/IEditableList
     */
 
@@ -162,16 +163,16 @@ define('Controls/interface/IEditAtPlace', [
     * @name Controls/interface/IEditAtPlace#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
-    * If you want content to look exactly as {@link Controls/Input/Text Controls/Input/Text} then you should use {@link Controls/EditAtPlace/EditAtPlaceTemplate Controls/EditAtPlace/EditAtPlaceTemplate}. If for some reason it doesn't suit you then you can use your own template.
+    * If you want content to look exactly as {@link Controls/Input/Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
-    * Using Controls.EditAtPlace.EditAtPlaceTemplate:
+    * Using Controls.EditableArea.Templates.Editors.Base:
     * <pre>
     *     <Controls.EditAtPlace editObject="{{_editObject}}">
-    *        <Controls.EditAtPlace.EditAtPlaceTemplate bind:value="content.editObject.text">
+    *        <Controls.EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
     *              <Controls.Input.Text />
     *           </ws:editorTemplate>
-    *        </Controls.EditAtPlace.EditAtPlaceTemplate>
+    *        </Controls.EditableArea.Templates.Editors.Base>
     *     </Controls.EditAtPlace>
     * </pre>
     * Using custom template:
@@ -190,7 +191,7 @@ define('Controls/interface/IEditAtPlace', [
     *       <ws:partial template="editingTemplate" bind:value="content.editObject.text" />
     *    </Controls.EditAtPlace>
     * </pre>
-    * @see Controls/EditAtPlace/EditAtPlaceTemplate
+    * @see Controls/EditableArea/Templates/Editors/Base
     */
 
    /**

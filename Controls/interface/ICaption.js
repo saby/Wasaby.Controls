@@ -6,6 +6,7 @@ define('Controls/interface/ICaption', [
     *
     * @interface Controls/interface/ICaption
     * @public
+    * @author Михайловский Д.С.
     */
 
    /**
@@ -16,11 +17,11 @@ define('Controls/interface/ICaption', [
     * @example
     * Control has caption 'Dialog'.
     * <pre>
-    *    <ControlsDirectory.Control caption=”Dialog”/>
+    *    <ControlsDirectory.Control caption="Dialog"/>
     * </pre>
     * Control has markup caption.
     * <pre>
-    *    <ControlsDirectory.Control caption=”captionTemplate”/>
+    *    <ControlsDirectory.Control caption="captionTemplate"/>
     * </pre>
     * captionTemplate
     * <pre>

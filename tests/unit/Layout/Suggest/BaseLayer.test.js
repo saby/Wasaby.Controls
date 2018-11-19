@@ -1,43 +1,14 @@
 define(['Controls/Container/Suggest/__BaseLayer'], function(__LayerBase) {
    
-   var getContextValues = function() {
-     return {
-        searchValue: 'text',
-        filter: {
-           searchValue: 'text'
-        }
-     };
-   };
-   
    describe('Controls.Container.Suggest.__LayerBase', function() {
-      
-      it('Suggest::setLayerContext', function() {
-         var baseLayer = new __LayerBase();
-         baseLayer.setLayerContext(getContextValues());
-         
-         assert.equal(baseLayer._searchLayoutField.searchValue, 'text');
-         assert.deepEqual(baseLayer._filterLayoutField.filter, {
-            searchValue: 'text'
-         });
-      });
    
-      it('Suggest::updateLayerContext', function() {
+      it('__LayerBase::_getChildContext', function() {
          var baseLayer = new __LayerBase();
-         baseLayer.setLayerContext(getContextValues());
-         var contextFilter = baseLayer.getLayerContext().filterLayoutField.filter;
-         baseLayer.updateLayerContext(getContextValues());
-         assert.isTrue(contextFilter !== baseLayer.getLayerContext().filterLayoutField.filter);
-      });
+         baseLayer._options.filter = {test: 'test'};
+         baseLayer._options.searchValue = 'test';
    
-      it('Suggest::getLayerContext', function() {
-         var baseLayer = new __LayerBase();
-         baseLayer.setLayerContext(getContextValues());
-         var context = baseLayer.getLayerContext();
-   
-         assert.equal(context.searchLayoutField.searchValue, 'text');
-         assert.deepEqual(context.filterLayoutField.filter, {
-            searchValue: 'text'
-         });
+         assert.equal(baseLayer._getChildContext().searchLayoutField.searchValue, 'test');
+         assert.deepEqual(baseLayer._getChildContext().filterLayoutField.filter, {test: 'test'});
       });
       
    });

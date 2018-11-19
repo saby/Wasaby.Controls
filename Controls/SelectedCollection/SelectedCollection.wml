@@ -1,0 +1,34 @@
+<div attr:class="controls-SelectedCollection__collection{{_options.itemsLayout !== 'oneRow' ? ' controls-SelectedCollection__collection_multiLine' : ' controls-SelectedCollection__collection_singleLine'}}"
+     attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
+   <ws:if data="{{_items.length > _options.maxVisibleItems}}">
+      <Controls.Popup.InfoBox
+              attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
+              trigger="click"
+              templateName="Controls/SelectedCollection/Popup"
+              templateOptions="{{_templateOptions}}"
+              position="bl">
+          <ws:partial template="wml!Controls/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="max-width: {{_options._counterWidth}}px;"/>
+      </Controls.Popup.InfoBox>
+   </ws:if>
+   <ws:for data="index, item in _visibleItems">
+      <ws:partial
+              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _options._counterWidth + 'px);'}}"
+              attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
+              template="{{_options.itemTemplate}}"
+              item="{{item}}"
+              displayProperty="{{_options.displayProperty}}"
+              isSingleItem="{{_visibleItems.length === 1}}"
+              isLastItem="{{_visibleItems.length === index + 1}}"
+              readOnly="{{_options.readOnly}}"
+              itemsLayout="{{_options.itemsLayout}}"
+              _itemClick="{{_itemClick}}"
+              _crossClick="{{_crossClick}}">
+         <ws:contentTemplate>
+            <ws:partial template="wml!Controls/SelectedCollection/_ContentTemplate" on:click="_itemClick(item)"/>
+         </ws:contentTemplate>
+         <ws:crossTemplate>
+            <ws:partial template="wml!Controls/SelectedCollection/_CrossTemplate" on:click="_crossClick(index)"/>
+         </ws:crossTemplate>
+      </ws:partial>
+   </ws:for>
+</div>

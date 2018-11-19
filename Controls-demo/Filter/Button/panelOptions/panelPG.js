@@ -227,7 +227,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                historyId: undefined,
                orientation: 'vertical',
                headerStyle: 'primary',
-               title: 'Отбираются',
+               headingCaption: 'Отбираются',
                readOnly: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;

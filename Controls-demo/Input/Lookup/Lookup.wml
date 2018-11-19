@@ -17,6 +17,7 @@
                             keyProperty="id"
                             displayProperty="notTitle"
                             multiSelect="{{true}}"
+                            multiline="{{true}}"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
@@ -49,7 +50,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="bold"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="bold"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>
@@ -76,7 +77,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="accent" size="l"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="accent" size="l"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>
@@ -101,7 +102,7 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/Collection/ItemTemplate" style="primary" size="l"/>
+                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="primary" size="l"/>
                         </ws:itemTemplate>
                     </Controls.Input.Lookup>
                 </div>

@@ -39,7 +39,7 @@ define('Controls/List/ListViewModel',
 
             this._selectedKeys = cfg.selectedKeys || [];
 
-            //TODO надо ли?
+            // TODO надо ли?
             _private.updateIndexes(self);
          },
 
@@ -48,7 +48,7 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
@@ -65,7 +65,7 @@ define('Controls/List/ListViewModel',
             if (itemsModelCurrent.drawActions) {
                itemsModelCurrent.hasShowedItemActionWithIcon = false;
                for (var i = 0; i < drawedActions.length; i++) {
-                  if (!!drawedActions[i].icon) {
+                  if (drawedActions[i].icon) {
                      itemsModelCurrent.hasShowedItemActionWithIcon = true;
                      break;
                   }
@@ -164,7 +164,6 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._notify('onListChange');
             this._nextVersion();
          },
 
@@ -180,6 +179,10 @@ define('Controls/List/ListViewModel',
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._markedKey !== undefined) {
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
+            if (!this._markedItem && this._options.markerVisibility === 'always') {
+               this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
@@ -198,7 +201,7 @@ define('Controls/List/ListViewModel',
          setItemActions: function(item, actions) {
             if (item.get) {
                var itemById = this.getItemById(item.get(this._options.keyProperty));
-               var collectionItem = itemById ?  itemById.getContents() : item;
+               var collectionItem = itemById ? itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
          },
@@ -208,11 +211,11 @@ define('Controls/List/ListViewModel',
 
          getItemActions: function(item) {
             var itemById = this.getItemById(item.getId());
-            var collectionItem = itemById ?  itemById.getContents() : item;
+            var collectionItem = itemById ? itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
-         _updateSelection: function(selectedKeys) {
+         updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
             this._nextVersion();
             this._notify('onListChange');
@@ -234,8 +237,8 @@ define('Controls/List/ListViewModel',
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 
-            //TODO надо вычислить индекс
-            /*if(!this._markedItem) {
+            // TODO надо вычислить индекс
+            /* if(!this._markedItem) {
              if (!this._selectedIndex) {
              this._selectedIndex = 0;//переводим на первый элемент
              }
@@ -243,7 +246,7 @@ define('Controls/List/ListViewModel',
              this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
              }
              this._markedItem = this._display.at(this._selectedIndex);
-             }*/
+             } */
          }
       });
 

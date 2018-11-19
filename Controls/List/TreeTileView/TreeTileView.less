@@ -11,6 +11,14 @@
    left: @left_TreeTileView-checkbox;
 }
 
+.ws-is-ie {
+   .controls-TreeTileView__checkbox, .controls-TreeTileView__itemActions_center {
+      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
+      top: 50%;
+      transform: translateY(-50%);
+   }
+}
+
 .controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
    background-color: @background-color_TileView-title;
    box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
@@ -34,6 +42,7 @@
 //TODO: Можно убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=38c5aa2c-f30c-42e9-a654-5358bc7691fd
 .controls-itemActionsV.controls-TreeTileView__itemActions_center {
    bottom: auto;
+   right: 0;
 }
 //TODO: end
 

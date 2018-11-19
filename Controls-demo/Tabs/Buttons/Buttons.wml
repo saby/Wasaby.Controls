@@ -25,11 +25,10 @@
                       source="{{_source3}}"
         >
             <ws:itemTemplate>
-                <Router.Link href="myTab/:id" id="{{itemTemplate.item.id}}">
-                    <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
-                                item="{{itemTemplate.item}}"
-                    ></ws:partial>
-                </Router.Link>
+                <ws:partial template="wml!Controls/Tabs/Buttons/ItemTemplate"
+                            item="{{itemTemplate.item}}"
+                            displayProperty="carambola"
+                ></ws:partial>
             </ws:itemTemplate>
         </Controls.Tabs.Buttons>
     </div>

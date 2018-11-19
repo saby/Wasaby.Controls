@@ -1,0 +1,5 @@
+<ul>
+    <ws:for data="item in content" >
+        <li>{{item}}</li>
+    </ws:for>
+</ul>

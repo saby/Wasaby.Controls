@@ -15,7 +15,6 @@ define('Controls/Validate/FormController',
 
       var Form = Base.extend({
          _template: template,
-
          constructor: function(cfg) {
             Form.superclass.constructor.call(this, cfg);
             this._validates = [];

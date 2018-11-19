@@ -2,8 +2,7 @@
 define('Controls/Popup/Templates/BaseTemplate',
    [
       'Core/Control',
-      'wml!Controls/Popup/Templates/BaseTemplate',
-      'css!Controls/Popup/Templates/BaseTemplate'
+      'wml!Controls/Popup/Templates/BaseTemplate'
    ],
    function(Control, template) {
       'use strict';

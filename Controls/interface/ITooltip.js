@@ -6,6 +6,7 @@ define('Controls/interface/ITooltip', [
     *
     * @interface Controls/interface/ITooltip
     * @public
+    * @author Красильников А.С.
     */
 
    /**

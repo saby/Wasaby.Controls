@@ -22,17 +22,15 @@ define('Controls/EditAtPlace', [
             return self._children.formController.submit();
          },
          afterEndEdit: function(self, commit) {
-            if (commit) {
-               self._editObject.acceptChanges();
-            } else {
-               self._editObject.rejectChanges();
+            if (!commit) {
+               _private.rejectChanges(self);
             }
             self._isEditing = false;
-            self._notify('afterEndEdit', [self._editObject], { bubbling: true });
+            self._notify('afterEndEdit', [self._options.editObject], { bubbling: true });
             return Deferred.success();
          },
          endEdit: function(self, commit) {
-            var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
+            var result = self._notify('beforeEndEdit', [self._options.editObject, commit], { bubbling: true });
 
             if (result === EndEditResult.CANCEL) {
                return Deferred.success();
@@ -45,6 +43,26 @@ define('Controls/EditAtPlace', [
             }
 
             return _private.afterEndEdit(self, commit);
+         },
+         rejectChanges: function(self) {
+            /*
+             * TL;DR: we should never change the state of the record and leave it to the owner.
+             *
+             * EditAtPlace should never call neither acceptChanges() nor rejectChanges() because of the following problems:
+             *
+             * 1) acceptChanges breaks change detection. If we call acceptChanges then the owner of the record has no easy
+             * way to know if the record has changed, because isChanged() will return an empty array.
+             *
+             * 2) rejectChanges() doesn't work if nobody calls acceptChanges() between commits. For example, this scenario
+             * wouldn't work: start editing - make changes - commit - start editing again - make changes - cancel. If
+             * acceptChanges() is never called then rejectChanges() will revert everything, not just changes made since last commit.
+             */
+            var changedFields = self._options.editObject.getChanged();
+            if (changedFields) {
+               changedFields.forEach(function(field) {
+                  self._options.editObject.set(field, self._oldEditObject.get(field));
+               });
+            }
          }
       };
 
@@ -67,13 +85,6 @@ define('Controls/EditAtPlace', [
 
       _beforeMount: function(newOptions) {
          this._isEditing = newOptions.editWhenFirstRendered;
-         this._editObject = newOptions.editObject.clone();
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (this._options.editObject !== newOptions.editObject) {
-            this._editObject = newOptions.editObject.clone();
-         }
       },
 
       _afterUpdate: function() {
@@ -110,11 +121,12 @@ define('Controls/EditAtPlace', [
       },
 
       startEdit: function(event) {
-         var result = this._notify('beforeEdit', [this._editObject], {
+         var result = this._notify('beforeEdit', [this._options.editObject], {
             bubbling: true
          });
          if (result !== EditResult.CANCEL) {
             this._isEditing = true;
+            this._oldEditObject = this._options.editObject.clone();
             this._startEditTarget = event.target.closest('.controls-EditAtPlaceV__editorWrapper');
          }
       },

@@ -23,12 +23,13 @@ define('Controls/Input/Suggest',
        * @mixes Controls/interface/INavigation
        * @mixes Controls/Input/Suggest/SuggestStyles
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @control
        * @public
        * @category Input
        * @demo Controls-demo/Input/Suggest/Suggest
-       * @author Журавлев М.С.
+       * @author Герасимов А.М.
        */
       
       'use strict';

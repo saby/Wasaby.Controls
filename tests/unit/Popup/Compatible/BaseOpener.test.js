@@ -246,6 +246,13 @@ define(
                x:25,
                y:25
             };
+
+            delete config.autoCloseOnHide;
+
+            config.minWidth = 100;
+            config.maxWidth = 1000;
+            config.title = 'заголовок';
+
             config.target = 'testTarget';
             config.className = 'testClass';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
@@ -258,6 +265,7 @@ define(
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
             assert.equal(newConfig.dialogOptions.className, config.className);
+            assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);
             assert.equal(newConfig.mode, 'floatArea');
             assert.isTrue(newConfig.dialogOptions.fitWindow);
@@ -266,6 +274,11 @@ define(
             assert.isTrue(newConfig.dialogOptions.closeChildWindows);
             assert.equal(newConfig.dialogOptions.closeOnTargetScroll, config.closeOnTargetScroll);
             assert.equal(newConfig.dialogOptions.offset, config.offset);
+
+            assert.equal(newConfig.dialogOptions.showOnControlsReady, false);
+            assert.equal(newConfig.dialogOptions.autoCloseOnHide, true);
+            assert.equal(newConfig.dialogOptions.minWidth, config.minWidth);
+            assert.equal(newConfig.dialogOptions.maxWidth, config.maxWidth);
             let testconfig = {
                horizontalAlign: {
                   side: 'left',
@@ -290,7 +303,10 @@ define(
             assert.equal(newTestConfig.dialogOptions.side, testconfig.corner.horizontal);
             testconfig.horizontalAlign = null;
             newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
-            assert.equal(newTestConfig.dialogOptions.direction,'right');
+            assert.equal(newTestConfig.dialogOptions.direction, 'right');
+            testconfig._type = 'stack';
+            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.direction, 'left');
          });
 
          it('_getDimensions', function() {

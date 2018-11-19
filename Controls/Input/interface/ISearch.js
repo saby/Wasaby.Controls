@@ -6,6 +6,7 @@ define('Controls/Input/interface/ISearch', [
     *
     * @interface Controls/Input/interface/ISearch
     * @public
+    * @author Золотова Э.Е.
     */
 
    /**

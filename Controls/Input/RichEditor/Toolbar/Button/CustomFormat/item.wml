@@ -1,0 +1,5 @@
+<ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate">
+   <ws:contentTemplate>
+      <div class="controls_ToolbarButton_FormatPick-item-{{itemData.item.id}}">{{itemData.item.caption}}</div>
+   </ws:contentTemplate>
+</ws:partial>

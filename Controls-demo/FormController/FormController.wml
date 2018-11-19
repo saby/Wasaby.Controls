@@ -20,7 +20,8 @@
          on:requestCustomUpdate="_requestCustomUpdate()"
 >
    <Controls.Container.PendingRegistrator name="registrator">
-      <Controls.FormController name="formControllerInst" dataSource="{{ _dataSource }}" record="{{ _record }}" key="{{ _key }}">
+      <Controls.FormController name="formControllerInst" dataSource="{{ _options.dataSource || _dataSource }}" record="{{ _record }}" key="{{ _key }}">
+         <Controls-demo.FormController.Container name="Container">
          <div attr:class="form-content">
             <div>
                <span attr:class="form-content__key">now is {{ _key }}</span>
@@ -47,10 +48,11 @@
                   </ws:content>
                </Controls.Validate.Controller>
             </div>
-			
-			<div attr:class="form-content__submit">
-				<Controls.Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()" />
-			</div>
+
+               <div attr:class="form-content__submit">
+                  <Controls.Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()" />
+               </div>
+
             <div class="form-result">
                <div if="{{ _recordAsText }}">
                   Record is {{ _recordAsText }}
@@ -61,6 +63,7 @@
                </div>
             </div>
          </div>
+         </Controls-demo.FormController.Container>
       </Controls.FormController>
    </Controls.Container.PendingRegistrator>
 

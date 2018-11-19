@@ -6,6 +6,7 @@ define('Controls/interface/IMovable', [
     *
     * @interface Controls/interface/IMovable
     * @public
+    * @author Волоцкой В.Д.
     */
 
    /**

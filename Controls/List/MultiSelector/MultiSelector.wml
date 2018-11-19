@@ -1,6 +1,7 @@
 <ws:partial
    template="{{_options.content}}"
    scope="{{_options}}"
-   on:selectedKeysChanged="_onSelectionChange()"
-   selectedKeys="{{_context.selection.calculatedSelectedKeys}}"
+   on:selectedKeysChanged="_selectionChangeHandler('listSelectedKeysChanged')"
+   on:excludedKeysChanged="_selectionChangeHandler('listExcludedKeysChanged')"
+   on:selectedKeysCountChanged="_selectionChangeHandler('listSelectedKeysCountChanged')"
 />

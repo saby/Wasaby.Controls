@@ -6,6 +6,7 @@ define('Controls/List/interface/IListControl', [
     *
     * @interface Controls/List/interface/IListControl
     * @public
+    * @author Авраменко А.С.
     */
 
    /**
@@ -98,6 +99,14 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#markedKey
     * @cfg {Number} Identifier of the marked collection item.
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#markerVisibility
+    * @cfg {String} Determines when marker is visible.
+    * @variant always The marker is always displayed, even if the marked key entry is not specified.
+    * @variant '' Behavior not defined.
+    * @default ''
     */
 
    /**

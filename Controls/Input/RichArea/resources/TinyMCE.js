@@ -1,21 +1,49 @@
 define('Controls/Input/RichArea/resources/TinyMCE', [
    'Core/Control',
    'wml!Controls/Input/RichArea/resources/TinyMCE/TinyMCE',
-   'Controls/Input/RichArea/plugins/constants',
-   'Controls/Input/RichArea/plugins/content',
-   'Controls/Input/RichArea/plugins/config',
-   'Controls/Input/RichArea/plugins/text',
-   'Controls/Input/RichArea/plugins/placeholder',
-   'Controls/Input/RichArea/plugins/handlers',
-   'Controls/Input/RichArea/plugins/events',
+   'Controls/Input/RichArea/helpers/constants',
+   'Controls/Input/RichArea/helpers/config',
+   'Controls/Input/RichArea/helpers/text',
+   'Controls/Input/RichArea/helpers/placeholder',
+   'Controls/Input/RichArea/helpers/handlers',
+   'Controls/Input/RichArea/helpers/events',
+   'Controls/Input/RichArea/helpers/editor',
+   'Controls/Input/RichArea/helpers/paste',
+   'Controls/Input/RichArea/helpers/format',
    'Core/moduleStubs',
    'Core/core-clone',
 
-   'css!theme?WS/css/styles/RichContentStyles',
+   'css!WS/css/styles/RichContentStyles',
    'i18n!SBIS3.CONTROLS/RichEditor',
-   'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
-], function(Control, template, constantsPlugin, contentPlugin, configPlugin, textPlugin, placeholderPlugin, handlersPlugin, eventsPlugin, moduleStubs, cClone) {
+   'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+], function(Control,
+   template,
+   constantsHelper,
+   configHelper,
+   textHelper,
+   placeholderHelper,
+   handlersHelper,
+   eventsHelper,
+   editorHelper,
+   pasteHelper,
+   formatHelper,
+   moduleStubs,
+   cClone) {
+   /**
+    * Component TinyMCE
+    * Private component which works with tinyMCE library.
+    * @class Controls/Input/RichTextArea
+    * @extends Core/Control
+    * @control
+    * @author Волоцкой В.Д.
+    */
+
    var _private = {
+
+      /**
+       * Function init tinymce instance
+       * @param self
+       */
       tinyInit: function(self) {
          self._editorConfig.target = self._children.mceContainer;
          self._editorConfig.setup = self._setupTinyMCECallback.bind(self);
@@ -35,31 +63,62 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
       _clipboardText: '',
 
       _beforeMount: function(options) {
-         this._value = contentPlugin.prepareContent(options.value);
-         this._placeHolderActive = placeholderPlugin.isPlaceholderActive(this._value);
-         this._editorConfig = cClone(configPlugin.editorConfig);
+         this._value = editorHelper.prepareContent(editorHelper.prepareFromJson(options.value));
+         this._editorConfig = cClone(configHelper.editorConfig);
+
+         formatHelper.initFormats(this, options.additionalFormats || {});
 
          // Save context for callbacks
-         handlersPlugin.saveContext(this);
+         handlersHelper.saveContext(this);
 
-         this._sanitizeClasses = textPlugin.sanitizeClasses.bind(this);
+         this._sanitizeClasses = textHelper.sanitizeClasses.bind(this);
 
-         return moduleStubs.require([constantsPlugin.EDITOR_MODULE]);
+         return moduleStubs.require([constantsHelper.EDITOR_MODULE]);
       },
 
       _afterMount: function() {
          this._children.mceContainer.innerHTML = this._value;
+
          _private.tinyInit(this);
+
+         this._placeHolderActive = placeholderHelper.isPlaceholderActive(editorHelper.getEditorValue(this));
       },
 
       _beforeUpdate: function() {
-         this._placeHolderActive = placeholderPlugin.isPlaceholderActive(this._value);
+         this._placeHolderActive = placeholderHelper.isPlaceholderActive(this._value);
       },
 
       _beforeUnmount: function() {
          this._editorConfig = null;
-         eventsPlugin.offEvents(this);
+         eventsHelper.offEvents(this);
          this._editor = null;
+      },
+
+      /**
+       * Function exec command to editor
+       * @param command
+       * @param userInterface
+       * @param properties
+       */
+      execCommand: function(command, userInterface, properties) {
+         editorHelper.execCommand(this, command, userInterface, properties);
+      },
+
+      /**
+       * Function apply format to selected text
+       * @param formatName
+       * @param state
+       */
+      applyFormat: function(formatName, state) {
+         editorHelper.applyFormat(this, formatName, state);
+      },
+
+      /**
+       * Function remove format from selected text
+       * @param formatName
+       */
+      removeFormat: function(formatName) {
+         editorHelper.removeFormat(this, formatName);
       },
 
       getDefaultOptions: function() {
@@ -70,9 +129,18 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
          };
       },
 
+      _insertLink: function(link, name) {
+         editorHelper.insertLink(this, link, name);
+      },
+
+      _paste: function(content) {
+         pasteHelper.paste(this, content);
+      },
+
       _setupTinyMCECallback: function(editor) {
          this._editor = editor;
-         eventsPlugin.bindEvents(this);
+
+         eventsHelper.bindEvents(this);
       }
    });
 

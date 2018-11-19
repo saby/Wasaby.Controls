@@ -1,5 +1,5 @@
-<div name="editorContainer">
-   <div class="controls-TinyMCE ws-basic-style"
+<div name="editorContainer" class="controls-TinyMCE__editorContainer">
+   <div class="controls-TinyMCE ws-basic-style controls-TinyMCE__mceContainer"
         name="mceContainer">
    </div>
    <ws:if data="{{_placeHolderActive}}">

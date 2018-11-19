@@ -5,6 +5,7 @@ define('Controls/interface/IFastFilter', [
     * Interface for component Fast Filter
     * @interface Controls/interface/IFastFilter
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

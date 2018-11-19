@@ -308,8 +308,11 @@
 @offset_DropdownList-submenu:   -3px;
 @right_DropdownList-cross:             5px;
 @top_DropdownList-cross:               6px;
+
+//Toolbar
 @margin-left_Toolbar-popup:               @right_DropdownList-cross;
 @margin-top_Toolbar-popup:                -@top_DropdownList-cross;
+@spacing_Toolbar-between-icon-text:             @spacing_Button-between-icon-text;
 
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
@@ -378,7 +381,7 @@
 //VDOM List.TreeTileView
 @font-size_TreeTileView-title:                   15px;
 @height_TreeTileView-item:                       40px;
-@left_TreeTileView-checkbox:                     4px;
+@left_TreeTileView-checkbox:                     0;
 @margin_TreeTileView-title:                      0 8px 0 4px;
 @margin_TreeTileView-icon:                       0 0 0 4px;
 
@@ -422,10 +425,10 @@
 @spacing_Suggest-empty:                          16px;
 
 // DatePicker VDOM
-@margin-left_DatePicker-button:                  7px;
+@spacing_DatePicker-between-input-button:        7px;
 
 // DateRange VDOM
-@margin-left_DateRange-button:                   @margin-left_DatePicker-button;
+@spacing_DateRange-between-input-button:         @spacing_DatePicker-between-input-button;
 @width_DateRange-dash:                           2px;
 @margin_DateRange-dash:                          0 3px 4px 3px;
 @thickness_DateRange-dash:                       1px;
@@ -452,6 +455,7 @@
 @width_CloseButton_small:                24px;
 @height_CloseButton_small:               24px;
 @font-size_CloseButton_small:            24px;
+@height_CloseButton_icon_l:              24px;
 //tabButton
 @height_tabbutton_mainItem_menuLink:     23px;
 //editAtPlace
@@ -525,9 +529,8 @@
 @margin-left_FilterButton_popup:                   9px;
 
 //Lookup
-@spacing_Lookup-item:                    4px;
 @spacing_Lookup-collection:              4px;
-@spacing_Lookup-showAllLinks:            4px;
+@spacing_Lookup-item:                    4px;
 
 //itemActions
 @height_itemActions_inside:              24px;

@@ -587,8 +587,8 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
-         _updateSelection: function(selectedKeys) {
-            this._model._updateSelection(selectedKeys);
+         updateSelection: function(selectedKeys) {
+            this._model.updateSelection(selectedKeys);
             this._nextVersion();
          },
 

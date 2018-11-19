@@ -6,6 +6,7 @@ define('Controls/interface/INotificationOptions', [
     *
     * @interface Controls/interface/INotificationOptions
     * @public
+    * @author Красильников А.С.
     */
 
    /**

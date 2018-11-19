@@ -19,8 +19,8 @@ define('Controls-demo/FormController/FormController', [
       _key: 0,
       _record: null,
       _recordAsText: '',
-      _beforeMount: function() {
-         this._dataSource = new MemorySource({
+      _beforeMount: function(cfg) {
+         this._dataSource = cfg.dataSource || new MemorySource({
             idProperty: 'id',
             data: [{ id: 0 }]
          });

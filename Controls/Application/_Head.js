@@ -4,7 +4,8 @@ define('Controls/Application/_Head',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
       'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController'
+      'Core/Themes/ThemesController',
+      'Controls/Application/HeadDataContext'
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';

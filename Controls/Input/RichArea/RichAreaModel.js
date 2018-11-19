@@ -20,5 +20,4 @@ define('Controls/Input/RichArea/RichAreaModel',
             this._options.value = options.value;
          }
       });
-   }
-);
+   });

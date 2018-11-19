@@ -48,9 +48,9 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '4',
+                  buttonViewMode: 'quickButton',
                   buttonIcon: 'icon-24 icon-Linked',
                   buttonStyle: 'secondary',
-                  buttonViewMode: 'quickButton',
                   buttonIconStyle: 'secondary',
                   title: 'Связанные документы',
                   '@parent': true,
@@ -58,6 +58,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '5',
+                  buttonViewMode: 'icon',
                   icon: 'icon-Link',
                   title: 'Скопировать в буфер',
                   '@parent': false,

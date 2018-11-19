@@ -86,7 +86,7 @@ define('Controls/Application',
 
             // Find opener for Infobox
             if (!config.opener) {
-               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+               requirejs(['Vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
                   config.opener = DefaultOpenerFinder.find(config.target);
                   def.callback(config);
                });
@@ -199,7 +199,9 @@ define('Controls/Application',
 
             self.wsRoot = cfg.wsRoot || constants.wsRoot;
             self.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
-            self.RUMEnabled = cfg.RUMEnabled || '';
+            // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
+            // Т.к. это должно храниться в отдельном сторе
+            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
             self.product = cfg.product || constants.product;
             self.lite = cfg.lite || false;
             self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';

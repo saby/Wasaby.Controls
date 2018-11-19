@@ -1,7 +1,7 @@
 define('Controls/List/Swipe/SwipeControl', [
    'Core/Control',
    'wml!Controls/List/Swipe/SwipeControl',
-   'Controls/Application/TouchDetector/TouchContextField',
+   'Controls/Context/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Core/Deferred',
    'WS.Data/Type/descriptor',

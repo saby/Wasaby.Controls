@@ -9,7 +9,10 @@
                                    bind:selectedKeys="itemData.item.selectedKeys"
                                    keyProperty="id"
                                    displayProperty="title"
-                                   selectOnClick="{{ false }}" />
+                                   selectOnClick="{{ false }}">
+               <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+               <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+            </Controls.Input.Lookup>
          </ws:if>
          <ws:else>
             <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
