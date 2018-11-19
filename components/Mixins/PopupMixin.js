@@ -1116,35 +1116,24 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                      break;
                   case 'verticalBodyBounds':
                      if (this._options.verticalAlign.side !== 'top') {
-                        if (spaces.top < spaces.bottom) {
-                           if (this._options.targetOverlay){
-                              this._container.css('height', height);
-                              offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
-                           } else {
-                              var cfgVerticalBodyBounds = this._calculateOverflow_vertical(orientation, vOffset, offset);
-                              oppositeOffset = cfgVerticalBodyBounds.oppositeOffset;
-                              spaces = cfgVerticalBodyBounds.spaces;
-                              height = cfgVerticalBodyBounds.height;
+                        var cfgVerticalBodyBounds = this._calculateOverflow_vertical(orientation, vOffset, offset);
+                        oppositeOffset = cfgVerticalBodyBounds.oppositeOffset;
+                        spaces = cfgVerticalBodyBounds.spaces;
+                        height = cfgVerticalBodyBounds.height;
 
-                              // В этой стратегии высота не должна быть ограничена (единственное ограничение - не больше высоты экрана)
-                              // Снимаем ограничения с высоты и меняем позицию, чтобы попап влез в экран
-                              if (this._container.get(0).scrollHeight > this._windowSizes.height) {
-                                 offset.top = 0;
-                                 height = this._windowSizes.height;
-                              } else {
-                                 var newHeight = this._container.get(0).scrollHeight - this._margins.top + this._margins.bottom;
-                                 var dif = newHeight - height;
-                                 height = newHeight;
-                                 if (dif > 0) {
-                                    offset.top -= dif;
-                                 }
-                              }
-                           }
-                        } else {
+                        // В этой стратегии высота не должна быть ограничена (единственное ограничение - не больше высоты экрана)
+                        // Снимаем ограничения с высоты и меняем позицию, чтобы попап влез в экран
+                        if (this._container.get(0).scrollHeight > this._windowSizes.height) {
                            offset.top = 0;
-                           //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                           if (!this._options.targetOverlay){
-                              height = spaces.top;
+                           height = this._windowSizes.height;
+                           this._container.css('overflow-y', detection.firefox ? 'scroll' : 'auto');
+                        } else {
+                           this._container.css('overflow-y', '');
+                           var newHeight = this._container.get(0).scrollHeight - this._margins.top + this._margins.bottom;
+                           var dif = newHeight - height;
+                           height = newHeight;
+                           if (dif > 0) {
+                              offset.top -= dif;
                            }
                         }
                      }
