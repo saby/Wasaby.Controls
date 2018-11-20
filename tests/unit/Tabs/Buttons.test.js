@@ -106,15 +106,23 @@ define([
                   type: 'photo'
                }
             }),
+            item3 = new Record({
+               rawData: {
+                  karambola: '12',
+                  _order: 1
+               }
+            }),
             options = {
                style: 'additional',
                selectedKey: '15',
                keyProperty: 'karambola'
             },
             expected = 'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_additional__item_state_selected controls-Tabs__item_state_selected',
-            expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_type_photo';
+            expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_type_photo',
+            expected3 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_extreme controls-Tabs__item_state_default';
          assert.equal(expected, TabsButtons._private.prepareItemClass(item, '144', options, 144), 'wrong order cross-brwoser styles');
          assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, '2', options, 144), 'wrong order cross-brwoser styles');
+         assert.equal(expected3, TabsButtons._private.prepareItemClass(item3, 1, options, 144), 'wrong order cross-brwoser styles');
       });
       it('_beforeMount with received state', function() {
          var tabs = new TabsButtons(),
