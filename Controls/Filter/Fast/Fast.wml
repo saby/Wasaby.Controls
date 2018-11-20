@@ -10,7 +10,7 @@
             </svg>
 
             <div class="controls-Dropdown__text  {{!_options.readOnly ? 'controls-FastFilter__text_enabled'}}"
-                 title="{{item.textValue}}">{{item.textValue}}
+                 title="{{_configs[index].text}}">{{_configs[index].text}}
             </div>
          </div>
          <ws:if data="{{!_options.readOnly && item.resetValue && item.value !== item.resetValue}}">

@@ -40,7 +40,10 @@ define(
                value: 'фэнтези',
                textValue: '',
                properties: {
-                  items: items[1],
+                  source: new Memory({
+                     data: items[1],
+                     idProperty: 'key'
+                  }),
                   keyProperty: 'title',
                   displayProperty: 'title'
                }
