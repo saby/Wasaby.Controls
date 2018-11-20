@@ -396,39 +396,53 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _open: function (options, opener) {
             var wiatIndicator = new WaitIndicator(null, rk('Загружается', 'НастройщикЭкспорта'), {overlay:'dark'}, 1000);
-            require(['SBIS3.CONTROLS/ExportCustomizer/Area', 'Lib/Control/FloatArea/FloatArea'], function (Area, FloatArea) {
-               wiatIndicator.remove();
-               var needDelay = options.usePresets && !options.selectedPresetId;
-               var componentOptions = cMerge({
-                  name: 'controls-ExportCustomizer__area',
-                  enabled: !needDelay,
-                  //waitingMode: needDelay,
-                  dialogMode: true,
-                  handlers: {
-                     onComplete: this._onAreaComplete.bind(this),
-                     onFatalError: this._onAreaError.bind(this)
+            require([
+               'Controls/Popup/Compatible/Layer',
+               'SBIS3.CONTROLS/Action/OpenDialog',
+               'SBIS3.CONTROLS/ExportCustomizer/Area'
+            ], function (CompatibleLayer, OpenDialogAction) {
+               CompatibleLayer.load().addCallback(function () {
+                  if (!this._openDialogAction) {
+                     this._openDialogAction = new OpenDialogAction({
+                        mode: 'floatArea',
+                        template: 'SBIS3.CONTROLS/ExportCustomizer/Area'
+                     })
                   }
-               }, options);
-               this._areaContainer = new FloatArea({
-                  opener: opener || this,
-                  direction: 'left',
-                  animation: 'slide',
-                  isStack: true,
-                  autoCloseOnHide: true,
-                  template: 'SBIS3.CONTROLS/ExportCustomizer/Area',
-                  className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
-                  closeByExternalClick: true,
-                  closeButton: true,
-                  componentOptions: componentOptions,
-                  handlers: {
-                     onAfterShow: needDelay ? function () {
-                        this._areaContainer.getChildControlByName('controls-ExportCustomizer__area').setEnabled(true);
-                     }.bind(this) : null,
+                  wiatIndicator.remove();
+                  var needDelay = options.usePresets && !options.selectedPresetId;
+                  var componentOptions = cMerge({
+                     name: 'controls-ExportCustomizer__area',
+                     enabled: !needDelay,
+                     //waitingMode: needDelay,
+                     dialogMode: true,
+                     handlers: {
+                        onComplete: this._onAreaComplete.bind(this),
+                        onFatalError: this._onAreaError.bind(this)
+                     }
+                  }, options);
+                  var handlers = {
                      onClose: this._onAreaClose.bind(this)
+                  };
+                  if (needDelay) {
+                     handlers.onAfterShow = function (evt) {
+                        evt.getTarget().getChildControlByName('controls-ExportCustomizer__area').setEnabled(true);
+                     };
                   }
-               });
-               this._notify('onSizeChange');
-               this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+                  this._openDialogAction.execute({
+                     dialogOptions: {
+                        opener: opener || this,
+                        direction: 'left',
+                        animation: 'slide',
+                        isStack: true,
+                        autoCloseOnHide: true,
+                        className: 'ws-float-area__block-layout controls-ExportCustomizer__area',
+                        closeByExternalClick: true,
+                        closeButton: true,
+                        handlers: handlers
+                     },
+                     componentOptions: componentOptions
+                  });
+               }.bind(this));
             }.bind(this));
          },
 
@@ -471,10 +485,6 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           * @param {Core/EventObject} evtName Дескриптор события
           */
          _onAreaClose: function (evtName) {
-            if (this._areaContainer) {
-               this._areaContainer.destroy();
-               this._areaContainer = null;
-            }
             var result = this._result;
             this._result = null;
             if (result) {
@@ -492,8 +502,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
          _complete: function (isSuccess, outcome) {
             var result = this._result;
             this._result = null;
-            if (this._areaContainer) {
-               this._areaContainer.close();
+            if (this._openDialogAction) {
+               this._openDialogAction.closeDialog();
             }
             if (isSuccess) {
                result.callback(outcome);
@@ -535,6 +545,13 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
           */
          _notifyOnExecuted: function (options, results) {
             return this._notify(this, 'onExecuted', options, results) || results;
+         },
+
+         destroy: function () {
+            if (this._openDialogAction) {
+               this._openDialogAction.destroy();
+               this._openDialogAction = null;
+            }
          }
       });
 
