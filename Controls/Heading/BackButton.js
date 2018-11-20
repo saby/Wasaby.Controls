@@ -11,7 +11,7 @@ define('Controls/Heading/BackButton', [
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
-    * @class Controls/Heading/Back
+    * @class Controls/Heading/BackButton
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
@@ -20,9 +20,8 @@ define('Controls/Heading/BackButton', [
     * @author Михайловский Д.С.
     * @category Button
     *
-    * @mixes Controls/Heading/BackButton/BackStyles
     *
-    * @demo Controls-demo/Buttons/BackButton/backDemo
+    * @demo Controls-demo/Buttons/BackButton/BackButtonDemoPG
     */
 
    /**
