@@ -2095,15 +2095,18 @@ define('SBIS3.CONTROLS/ListView',
 
          _drawSelectedItems: function (idArray, changes) {
             function findElements(ids, itemsContainer, cfg) {
-               var elements = $([]), elem;
+               var elements = $([]), elem, id;
                for (i = 0; i < ids.length; i++) {
+                  // Необходимо экранировать '\', иначе jQuery поиск не будет работать,
+                  // т.к. такой символ будет вырезан из строки
+                  id = ids[i].replace(/\\/, '\\\\');
                   //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
                   //TODO переделать при отказе от data-id
                   if ((ids[i] + '').indexOf('\'') < 0) {
-                     elem = itemsContainer.children(".controls-ListView__item[data-id='" + ids[i] + "']");
+                     elem = itemsContainer.children(".controls-ListView__item[data-id='" + id + "']");
                   }
                   else {
-                     elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     elem = itemsContainer.children('.controls-ListView__item[data-id="' + id + '"]');
                   }
                   if (elem.length) {
                      //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
