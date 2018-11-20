@@ -338,7 +338,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
                   format: oldItem.getFormat()
                });
                recordSet.add(newItem);
-            }else if(type === 'pinned') {
+            } else if(type === 'pinned' && self._options.unpinIfNotExist) {
                self.setPin(id, false);
             }
          });
@@ -493,7 +493,8 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             oldItems: null,
             subContainers: null,
             parentProperty: null,
-            maxHistoryLength: null
+            maxHistoryLength: null,
+            unpinIfNotExist: true
          },
          _historyDataSource: null,
          _historyDeferred: null,
