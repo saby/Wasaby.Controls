@@ -577,7 +577,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          step = value ? 1 : 2;
 
          // Если в числе не было минуса, то смещаем коретку вправо, чтобы сохранить её позицию относительно числа
-         if (this._options.text.indexOf('-') === -1) {
+         if (value.indexOf('-') === -1) {
             cpStart = cpStart + step;
             cpEnd = cpEnd + step;
 
@@ -606,7 +606,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
                value = '0';
             }
 
-            if (this._options.text.indexOf('-') == -1) {
+            if (value.indexOf('-') == -1) {
                this._setText('-' + value);
             } else {
                this._setText(value.substr(1));
