@@ -87,13 +87,6 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             NTB.setText('123 123 123 123 123');
             assert.equal(NTB._getInputValue(), '123 123 123 123 123');
          });
-         it('The value is equal null', function() {
-            NTB.setText(null);
-            event.which = 173; // клавиша "-"
-            NTB.getContainer().trigger(event);
-
-            assert.equal(NTB._getInputValue(), '-0.0');
-         });
       });
       describe('Caret Position', function() {
          it('Delete last symbol in integer part', function() {
