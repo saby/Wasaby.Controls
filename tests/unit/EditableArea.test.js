@@ -1,15 +1,17 @@
 define([
-   'Controls/EditAtPlace',
+   'Controls/EditableArea',
    'WS.Data/Entity/Model',
-   'Core/Deferred'
+   'Core/Deferred',
+   'Controls/EditableArea/Constants'
 ], function(
-   EditAtPlace,
+   EditableArea,
    Model,
-   Deferred
+   Deferred,
+   EditConstants
 ) {
    'use strict';
 
-   describe('Controls.EditAtPlace', function() {
+   describe('Controls.EditableArea', function() {
       var
          eventQueue,
          instance,
@@ -17,7 +19,7 @@ define([
          cfg2;
       beforeEach(function() {
          eventQueue = [];
-         instance = new EditAtPlace();
+         instance = new EditableArea();
          cfg = {
             editWhenFirstRendered: true,
             editObject: Model.fromObject({
@@ -53,7 +55,7 @@ define([
 
       it('_afterUpdate', function() {
          var focusCalled = false;
-         instance._startEditTarget = {
+         instance._beginEditTarget = {
             getElementsByTagName: function(tagName) {
                if (tagName === 'input') {
                   return [{
@@ -66,7 +68,7 @@ define([
          };
          instance._afterUpdate();
          assert.isTrue(focusCalled);
-         assert.isNull(instance._startEditTarget);
+         assert.isNull(instance._beginEditTarget);
       });
 
       describe('_onClickHandler', function() {
@@ -76,7 +78,7 @@ define([
                readOnly: false
             });
             instance._beforeMount(cfg);
-            instance.startEdit = function() {
+            instance.beginEdit = function() {
                result = true;
             };
             instance._onClickHandler();
@@ -88,7 +90,7 @@ define([
                readOnly: false
             });
             instance._beforeMount(cfg2);
-            instance.startEdit = function() {
+            instance.beginEdit = function() {
                result = true;
             };
             instance._onClickHandler();
@@ -146,12 +148,12 @@ define([
          });
       });
 
-      describe('startEdit', function() {
+      describe('beginEdit', function() {
          var
             event = {
                target: {
                   closest: function(selector) {
-                     return selector === '.controls-EditAtPlaceV__editorWrapper';
+                     return selector === '.controls-EditableArea__editorWrapper';
                   }
                }
             };
@@ -160,24 +162,24 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._notify = mockNotify();
-            instance.startEdit(event);
-            assert.equal(eventQueue[0].event, 'beforeEdit');
+            instance.beginEdit(event);
+            assert.equal(eventQueue[0].event, 'beforeBeginEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
-            assert.isTrue(instance._startEditTarget);
+            assert.isTrue(instance._beginEditTarget);
          });
 
          it('cancel', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
-            instance._notify = mockNotify('Cancel');
-            instance.startEdit(event);
-            assert.equal(eventQueue[0].event, 'beforeEdit');
+            instance._notify = mockNotify(EditConstants.CANCEL);
+            instance.beginEdit(event);
+            assert.equal(eventQueue[0].event, 'beforeBeginEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isFalse(instance._isEditing);
-            assert.isNotOk(instance._startEditTarget);
+            assert.isNotOk(instance._beginEditTarget);
          });
       });
 
@@ -208,7 +210,7 @@ define([
          it('cancel', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._notify = mockNotify('Cancel');
+            instance._notify = mockNotify(EditConstants.CANCEL);
             instance._options.editObject.set('text', 'changed');
             instance.cancelEdit();
             assert.equal(eventQueue.length, 1);
@@ -282,7 +284,7 @@ define([
             };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._notify = mockNotify('Cancel');
+            instance._notify = mockNotify(EditConstants.CANCEL);
             instance._options.editObject.set('text', 'asdf');
             instance.commitEdit();
             setTimeout(function() {
