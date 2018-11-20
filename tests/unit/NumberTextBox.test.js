@@ -9,10 +9,10 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
    var componentElement;
 
    describe('SBIS3.CONTROLS/NumberTextBox', function() {
-      if (typeof window === 'undefined') {
-         return;
-      }
       beforeEach(function() {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
          componentElement = $('<div id="component"></div>');
          $('#mocha').append(componentElement);
          NTB = new NumberTextBox({
@@ -87,6 +87,13 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
             NTB.setText('123 123 123 123 123');
             assert.equal(NTB._getInputValue(), '123 123 123 123 123');
          });
+         it('The value is equal null', function() {
+            NTB.setText(null);
+            event.which = 173; // клавиша "-"
+            NTB.getContainer().trigger(event);
+
+            assert.equal(NTB._getInputValue(), '-0.0');
+         });
       });
       describe('Caret Position', function() {
          it('Delete last symbol in integer part', function() {
@@ -100,10 +107,7 @@ define(['SBIS3.CONTROLS/NumberTextBox'], function(NumberTextBox) {
       describe('Pressed "-"', function() {
          it('The value is equal null', function() {
             NTB.setText(null);
-            event.which = 173; // клавиша "-"
-            NTB._keyDownBind(event);
-
-            assert.equal(NTB.getText(), '-0.0');
+            assert.doesNotThrow(NTB._toggleMinus.bind(NTB));
          });
       });
       describe('setDecimals', function() {
