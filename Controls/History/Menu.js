@@ -60,7 +60,7 @@ define('Controls/History/Menu',
          },
          
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter) || !isEqual(this._options.source, newOptions.source)) {
+            if (!isEqual(this._options.filter, newOptions.filter) || this._options.source !== newOptions.source) {
                this._filter = _private.prepareFilter(newOptions.filter);
             }
          },
