@@ -130,10 +130,22 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                    query,
                    filter = this._getOpenedPath(meta.parentProperty);
                 filter.columns = this._formatColumnsForFilter(meta.columns);
-                query = this._createQuery(filter, limit);
+                query = this._createQuery(filter, this._getLimit(limit, meta.serverSideExport));
                 return this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
             }.bind(this));
         },
+
+       //При выгрузке на клиенте, нужно установить ограничение в MAX_RECORDS_COUNT записей.
+       //При выгрузке на сервере ограничения не нужны, если пользователь не указал количесвто выгружаемых записей.
+       _getLimit: function(userLimit, serverSideExport) {
+           var result = userLimit;
+
+          if (!serverSideExport && (!userLimit || userLimit > MAX_RECORDS_COUNT)) {
+             result = MAX_RECORDS_COUNT;
+          }
+
+          return result;
+       },
 
        _getOpenedPath: function(parentProperty) {
           var
@@ -163,8 +175,11 @@ define('SBIS3.CONTROLS/Action/List/Save', [
 
            query.where(cMerge(viewFilter, filter))
                 .orderBy(linkedObject.getSorting())
-                .offset(linkedObject.getOffset())
-                .limit(limit || MAX_RECORDS_COUNT);
+                .offset(linkedObject.getOffset());
+
+           if (limit) {
+              query.limit(limit);
+           }
 
            return query;
         },

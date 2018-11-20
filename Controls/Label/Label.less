@@ -8,11 +8,11 @@
 .controls-LabelV__caption_required:after {
    content: ' *';
 }
+.controls-LabelV__caption_required_enabled:after {
+   color: @color_Label-caption-after_enabled;
+}
 .controls-LabelV_enabled {
    color: @color_Label-caption_enabled;
-}
-.controls-LabelV_enabled:after {
-   color: @color_Label-caption-after_enabled;
 }
 .controls-LabelV_disabled {
    color: @color_Label-caption_disabled;
@@ -42,7 +42,7 @@
 .controls-Label_underline_color-hovered,
 .controls-Label_underline-hovered {
    padding: 0 !important;
-   height:  0 !important;
+   height:  auto !important;
 }
 .controls-Label_underline_color-hovered {
    text-decoration: underline;

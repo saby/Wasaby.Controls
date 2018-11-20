@@ -886,6 +886,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                RichTextArea.superclass.setActive.apply(this, arguments);
+               // Так как среди предков этого класса есть "Lib/Mixins/CompoundActiveFixMixin", который предполагает, что текущий контрол не имеет внутри себя других контролов, то свойство this._activeChildControl всегда будет -1, что здесь неправильно. Поэтому переопределим его руками:
+               // 1176210240 https://online.sbis.ru/opendoc.html?guid=e6527295-9960-4742-b14a-da7969f2f6c9
+               this._activeChildControl = 1;
             },
             _offTinyEvents: function() {
                if(this._delayOffSelectionChange) {
@@ -1058,6 +1061,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   save = typeof saveStyles === 'undefined' ? true : saveStyles,
                   self = this,
                   dialog,
+                  isOldMSIE = BROWSER.isIE && BROWSER.IEVersion < 12,
+                  oldMSIEInput,
                   prepareAndInsertContent = function(content) {
                      content = self._clearPasteContent(content);
                      //получение результата из события PastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
@@ -1076,10 +1081,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      self._updateTextByTiny();
                   },
                   onPaste = function(event) {
-                     var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                     if (!content || !save) {
-                        content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                        content.replace('data-ws-is-rich-text="true"', '');
+                     var content;
+                     var isStandard = !!event.clipboardData;
+                     var clipboardData = isStandard ? event.clipboardData : window.clipboardData;
+                     if (clipboardData && clipboardData.getData) {
+                        if (save && isStandard) {
+                           content = clipboardData.getData('text/html');
+                        }
+                        if (!content) {
+                           content = clipboardData.getData(isStandard ?'text/plain' : 'Text') || '';
+                        }
                      }
                      prepareAndInsertContent(content);
                      dialog.close();
@@ -1090,6 +1101,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   },
                   onClose = function() {
                      document.removeEventListener('paste', onPaste, true);
+                     if (oldMSIEInput) {
+                        oldMSIEInput.remove();
+                     }
                      if (typeof onAfterCloseHandler === 'function') {
                         onAfterCloseHandler();
                      }
@@ -1109,7 +1123,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               submitButton: {caption: rk('Отменить')},
                               isModal: true,
                               closeByExternalClick: true,
-                              opener: self
+                              opener: self,
+                              handlers: {
+                                 onShow: isOldMSIE ? function () {
+                                    // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
+                                    // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
+                                    oldMSIEInput = $('<input style="position:absolute; left:-10000px;" class="controls-RichEditor__pasteWithStyles-temporary" data-vdomignore="true" />').appendTo(self._container);
+                                    setTimeout(oldMSIEInput.focus.bind(oldMSIEInput), 100);
+                                 } : null
+                              }
                            },
                            onClose
                         );
@@ -2563,9 +2585,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
 
-               editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
+               if (!this.isDestroyed()) {
+                  editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
 
-               this._notify('onInitEditor');
+                  this._notify('onInitEditor');
+               }
             },
             _formatChangedCallback: function(state, obj) {
                this._notify('onFormatChange', obj, state);
@@ -2784,6 +2808,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                html = this._replaceWhitespaces(html);
                // И теперь (только один раз) вставим в DOM
                content.innerHTML = html;
+               // Пользователь может кликая по разным элемента страницы добиться того, что текущий рэнж будет охватывать элементы вне редактора или выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+               // 1176153681 https://online.sbis.ru/opendoc.html?guid=4fa1193a-abcb-4311-af55-61b6d2f418ed
+               this._verifySelection();
+            },
+
+            /**
+             * Текущий рэнж может выходить за пределы области редактирования - проверить и вернуть выделение внутрь области редактирования, если это так
+             * @protected
+             */
+            _verifySelection: function() {
+               var editor = this._tinyEditor;
+               var selection = editor.selection;
+               var body = editor.getBody();
+               var commonAncestorContainer = selection.getRng().commonAncestorContainer;
+               if (commonAncestorContainer !== body && !body.contains(commonAncestorContainer)) {
+                  selection.select(body, true);
+               }
             },
 
             _onSelectionChange1: function() {
@@ -2905,7 +2946,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (e.key === 'Tab') {
                   // Не обрабатывать нажатие Tab - за переходы между компонентами отвечает первичный родительский класс
                   // 1176160478 https://online.sbis.ru/opendoc.html?guid=42f57d98-e77e-462a-98f1-623157676ea2
-                  e.stopImmediatePropagation();
                   return;
                }
                this._typeInProcess = true;
@@ -4167,6 +4207,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      $content = $content || $(content);
                   }
                   var contentHeight = content.scrollHeight;
+                  var isFirst = this._lastTotalHeight === undefined && this._lastContentHeight === undefined;
                   var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
                   if (this._hasScrollContainer) {
                      // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
@@ -4187,7 +4228,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isChanged) {
                      this._lastTotalHeight = totalHeight;
                      this._lastContentHeight = contentHeight;
-                     this._notifyOnSizeChanged();
+                     if (!isFirst) {
+                        this._notifyOnSizeChanged();
+                     }
                   }
                }
             },
