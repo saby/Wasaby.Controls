@@ -218,7 +218,8 @@ define(
                StickyController._isElementVisible = () => { return true; };
                let item = {
                   position: {},
-                  popupOptions : {}
+                  popupOptions : {},
+                  sizes: {}
                };
                let container = {
                   offsetWidth: 100,
@@ -226,6 +227,7 @@ define(
                };
                StickyController.elementCreated(item, container);
                assert.equal(typeof item.positionConfig, 'object'); //Конфиг сохранился
+               assert.equal(item.sizes.width, 100); //Конфиг сохранился
                var classes = item.popupOptions.className;
 
                StickyController.elementUpdated(item, container);

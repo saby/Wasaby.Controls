@@ -166,12 +166,15 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          _getPopupSizes: function(config, container) {
-            var sizes = _private.getContentSizes(container);
-            return {
-               width: config.popupOptions.maxWidth || sizes.width,
-               height: config.popupOptions.maxHeight || sizes.height,
-               margins: _private.getMargins(config, container)
+            var containerSizes = _private.getContentSizes(container);
+            var sizes = {
+               width: config.popupOptions.maxWidth || containerSizes.width,
+               height: config.popupOptions.maxHeight || containerSizes.height,
+               // Optimization: to consider the styles on each update is expensive
+               margins: config.sizes.margin || _private.getMargins(config, container)
             };
+            config.sizes = sizes;
+            return config.sizes;
          },
          _checkContainer: function(item, container, stage) {
             if (!container) {
