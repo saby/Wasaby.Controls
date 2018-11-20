@@ -50,7 +50,11 @@
    .inline-flexbox();
 }
 
-.ws-is-chrome {
+/**
+ * В ie правляем видимостью placeholder через :invalid, в остальных через :placeholder-shown, потому что он не поддерживается в ie.
+ * https://developer.mozilla.org/ru/docs/Web/CSS/:placeholder-shown
+ */
+body:not(.ws-is-ie) {
    //Хром обновился и стал вешать :invalid в тех ситуациях, когда количество символов в поле ввода превышает maxlength,
    //так что в нем будем показывать плейсхолдер так.
    .controls-InputRender__field:placeholder-shown + .controls-Text__placeholder {
@@ -58,7 +62,7 @@
    }
 }
 
-body:not(.ws-is-chrome) {
+body.ws-is-ie {
    .controls-InputRender__field:invalid + .controls-Text__placeholder {
       display: inline-flex;
    }
