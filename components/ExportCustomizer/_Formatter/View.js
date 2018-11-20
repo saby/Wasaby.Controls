@@ -15,7 +15,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
       'SBIS3.CONTROLS/WaitIndicator',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
-      'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
+      'css!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/_Formatter/View'
    ],
 
    function (Deferred, ParallelDeferred, CompoundControl, collectionSelectByIds, objectChange, WaitIndicator, Di, dotTplFn) {

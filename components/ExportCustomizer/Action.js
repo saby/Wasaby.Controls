@@ -21,7 +21,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
       'SBIS3.CONTROLS/Utils/ImportExport/OptionsTool',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'SBIS3.CONTROLS/WaitIndicator',
-      'WS.Data/Di'
+      'WS.Data/Di',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/Action'
    ],
 
    function (cMerge, Deferred, Action, Constants, Executor, OptionsTool, InformationPopupManager, WaitIndicator, Di) {
@@ -516,7 +518,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                InformationPopupManager.showMessageDialog({
                   status: 'error',
                   message: rk('Ошибка', 'НастройщикЭкспорта'),
-                  details: ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикЭкспорта')) +
+                  details: ((err && err.message ? err.message : err) || rk('При получении данных произошла неизвестная ошибка', 'НастройщикЭкспорта')) +
                            '\n' + rk('Настройка экспорта будет прервана', 'НастройщикЭкспорта')
                }, promise.callback.bind(promise, null));
                promise.addCallback(this._complete.bind(this, false, err));

@@ -6,7 +6,9 @@
 define('SBIS3.CONTROLS/ExportCustomizer/Constants',
    [
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/Constants'
    ],
 
    function (RemoteCall, RecordSet) {

@@ -21,7 +21,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/item',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_Presets/tmpl/footer',
-      'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
+      'css!SBIS3.CONTROLS/ExportCustomizer/_Presets/View',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/_Presets/View'
    ],
 
    function (CommandDispatcher, Deferred, createGUID, cObjectIsEqual, RightsManager, CompoundControl, collectionSelectByIds, ItemNamer, objectChange, RecordSet, Di, dotTplFn) {

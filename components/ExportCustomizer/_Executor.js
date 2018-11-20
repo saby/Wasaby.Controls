@@ -9,7 +9,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Executor',
       'Core/Deferred',
       'SBIS3.CONTROLS/ExportCustomizer/Utils/CollectionSelectByIds',
       'SBIS3.CONTROLS/Utils/ImportExport/RemoteCall',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager'
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/_Executor'
    ],
 
    function (Deferred, collectionSelectByIds, RemoteCall, InformationPopupManager) {

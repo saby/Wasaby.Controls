@@ -18,7 +18,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/MenuLink',
       'WS.Data/Di',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/MenuLink',
-      'css!SBIS3.CONTROLS/ExportCustomizer/MenuLink'
+      'css!SBIS3.CONTROLS/ExportCustomizer/MenuLink',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/MenuLink'
    ],
 
    function (Deferred, cMerge, RightsManager, CompoundControl, Di, RecordSet, tmpl) {

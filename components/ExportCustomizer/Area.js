@@ -25,7 +25,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/Area',
       'css!SBIS3.CONTROLS/ExportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
-      'SBIS3.CONTROLS/ScrollContainer'
+      'SBIS3.CONTROLS/ScrollContainer',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/Area'
    ],
 
    function (CommandDispatcher, cMerge, RightsManager, CompoundControl, Constants, Executor, OptionsTool, /*InformationPopupManager,*/ RecordSet, tmpl) {

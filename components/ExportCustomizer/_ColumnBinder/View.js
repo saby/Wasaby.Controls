@@ -14,7 +14,9 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
       'SBIS3.CONTROLS/Utils/ObjectChange',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
-      'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
+      'css!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
+
+      'i18n!SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View'
    ],
 
    function (CommandDispatcher, ColumnsEditor, CompoundControl, ItemsMoveController, objectChange, RecordSet, dotTplFn) {
