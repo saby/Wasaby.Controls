@@ -28,8 +28,18 @@ define('Controls/Heading/BackButton', [
    /**
     * @name Controls/Heading/Back#style
     * @cfg {String} Back button display style.
-    * @variant primary Primary display style.
-    * @variant default Default display style. It is the default value.
+    * @variant primaryN Primary display style.
+    * @variant secondary Secondary display style.
+    * @default primaryN
+    * @example
+    * Back button has default style.
+    * <pre>
+    *    <Controls.Heading.BackButton/>
+    * </pre>
+    * Back button has 'secondary' style.
+    * <pre>
+    *    <Controls.Heading.BackButton style="secondary"/>
+    * </pre>
     */
 
    /**
@@ -38,11 +48,16 @@ define('Controls/Heading/BackButton', [
     * @variant s Small button size.
     * @variant m Medium button size. It is the default value.
     * @variant l Large button size.
-    */
-
-   /**
-    * @name Controls/Heading/Back#caption
-    * @cfg {String} Caption text.
+    * @default m
+    * @example
+    * Medium back button size.
+    * <pre>
+    *    <Controls.Header.BackButton/>
+    * </pre>
+    * Large back button size.
+    * <pre>
+    *    <Controls.Header.BackButton size="l"/>
+    * </pre>
     */
 
    var _private = {
