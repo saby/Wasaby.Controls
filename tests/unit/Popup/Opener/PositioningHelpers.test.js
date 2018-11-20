@@ -206,6 +206,14 @@ define(
                assert.equal(itemConfig.popupState, undefined); //ничего не произошло, т.к. не было создания
             });
 
+            it('Sticky initializing state', () => {
+               let itemConfig = {
+                  popupState: StickyController.POPUP_STATE_INITIALIZING
+               };
+               let destroyDef = StickyController._elementDestroyed(itemConfig);
+               assert.equal(destroyDef.isReady(), true);
+            });
+
             it('Sticky updated classes', function() {
                StickyController._isElementVisible = () => { return true; };
                let item = {

@@ -3,8 +3,9 @@ define('Controls/Button', [
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
+   'Core/IoC',
    'css!theme?Controls/Button/Button'
-], function(Control, Classes, template, validateIconStyle) {
+], function(Control, Classes, template, validateIconStyle, IoC) {
    'use strict';
 
    /**
@@ -42,9 +43,9 @@ define('Controls/Button', [
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Quick button with 'danger' style.
+    * Toolbar button with 'danger' style.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * @see Size
     */
@@ -67,15 +68,33 @@ define('Controls/Button', [
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Button with 'quickButton' viewMode.
+    * Button with 'toolButton' viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * Button with 'button' viewMode.
     * <pre>
     *    <Controls.Button caption="Send document" style="success" viewMode="button"/>
     * </pre>
     * @see Size
+    */
+
+   /**
+    * @name Controls/Button#transparent
+    * @cfg {Boolean} Determines whether button having background.
+    * @variant true Button has transparent background.
+    * @variant false Button has default background for this viewmode and style.
+    * @default false
+    * @example
+    * Button has transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Button hasn't transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+    * </pre>
+    * @see style
     */
 
    /**
@@ -91,7 +110,7 @@ define('Controls/Button', [
     * Sizes 's' and 'xl' don't supported by styles:
     * <ul>
     *     <li>button,</li>
-    *     <li>quickButton</li>
+    *     <li>toolButton</li>
     * </ul>
     * @example
     * 'L' size of primary button.
@@ -148,7 +167,15 @@ define('Controls/Button', [
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._transparent = options.transparent;
          self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+         if (self._viewMode === ('quickButton' || 'transparentQuickButton')) {
+            self._viewMode = 'toolButton';
+            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+            if (self._viewMode === 'transparentQuickButton') {
+               self._transparent = true;
+            }
+         }
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
@@ -185,7 +212,8 @@ define('Controls/Button', [
          style: 'secondary',
          viewMode: 'button',
          size: 'm',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         transparent: true
       };
    };
 

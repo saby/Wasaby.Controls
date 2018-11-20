@@ -2,6 +2,7 @@
              controls-Button_viewMode-{{_viewMode}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
              controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
              controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
+             controls-Button_viewMode-{{_viewMode}}{{_transparent ? '_transparent' : '_withBackground'}}
              controls-Button_style-{{_style}}_viewMode-{{_viewMode}}{{_state}}
              {{_options.readOnly ?  '':'controls-Button_viewMode-' + _viewMode + '_iconStyle-' + _iconStyle + _state}}"
     attr:title="{{_options.tooltip}}"
