@@ -109,10 +109,6 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return packages;
    }
 
-   function fixThemedName(name) {
-      return name.replace('theme?', '');
-   }
-
    function getCssPackages(allDeps, bundlesRoute, themesActive) {
       var packages = {
          themedCss: {},
@@ -120,7 +116,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       };
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            var bundleName = bundlesRoute[fixThemedName(key)];
+            var bundleName = bundlesRoute[key];
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
