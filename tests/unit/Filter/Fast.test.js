@@ -24,6 +24,7 @@ define(
                id: 'first',
                value: 'Россия',
                resetValue: 'все страны',
+               textValue: '',
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
@@ -37,6 +38,7 @@ define(
                id: 'second',
                resetValue: 'фэнтези',
                value: 'фэнтези',
+               textValue: '',
                properties: {
                   items: items[1],
                   keyProperty: 'title',
@@ -47,6 +49,7 @@ define(
                id: 'third',
                value: 0,
                resetValue: 0,
+               textValue: '',
                properties: {
                   keyProperty: 'key',
                   displayProperty: 'title',
@@ -63,6 +66,7 @@ define(
                id: 'fourth',
                value: 'все страны',
                resetValue: 'все страны',
+               textValue: '',
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
@@ -197,14 +201,14 @@ define(
             });
          });
 
-         it('getText', function(done) {
+         it('setText', function(done) {
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function(items) {
                   fastData._setText();
-                  assert.equal(fastData._configs[0].text, 'США');
-                  assert.equal(fastData._configs[1].text, 'фэнтези');
-                  assert.equal(fastData._configs[2].text, 'все страны');
-                  assert.equal(fastData._configs[3].text, 'все страны');
+                  assert.equal(fastData._items.at(0).get('textValue'), 'США');
+                  assert.equal(fastData._items.at(1).get('textValue'), 'фэнтези');
+                  assert.equal(fastData._items.at(2).get('textValue'), 'все страны');
+                  assert.equal(fastData._items.at(3).get('textValue'), 'все страны');
                   done();
                });
             });

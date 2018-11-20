@@ -190,7 +190,7 @@ define('Controls/Filter/Fast',
                }
                Chain(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
-                     config.text = getPropValue(item, config.displayProperty);
+                     setPropValue(self._items.at(index), 'textValue', getPropValue(item, config.displayProperty));
                   }
                });
             });
@@ -199,6 +199,7 @@ define('Controls/Filter/Fast',
          _reset: function(event, item, index) {
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
+            setPropValue(this._items.at(index), 'textValue', '');
             _private.notifyChanges(this, this._items);
             this._setText();
          }
