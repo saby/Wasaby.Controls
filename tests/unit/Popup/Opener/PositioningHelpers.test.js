@@ -184,8 +184,10 @@ define(
             });
             it('Check fixed state', function() {
                var itemConfig = {};
+               StickyController._private.getWindowWidth = () => 1000;
                StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
+               assert.equal(itemConfig.position.maxWidth, 1000);
 
                StickyController._checkContainer = () => { return false; };
                StickyController._elementCreated(itemConfig);
