@@ -62,6 +62,9 @@ define('Controls/Tabs/Buttons', [
          if (item.get('type')) {
             classes.push('controls-Tabs__item_type_' + item.get('type'));
          }
+
+         // TODO: по поручению опишут как и что должно сжиматься. Пока сжимаем только те вкладки, которые прикладники явно пометили
+         // https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
          if (item.get('isMainTab')) {
             classes.push('controls-Tabs__item_canShrink');
          }
