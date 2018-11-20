@@ -83,7 +83,6 @@ define('Controls-demo/OperationsPanel/Panel', [
       _template: template,
       _expanded: false,
       _eventName: '',
-      _multiSelectorVisibility: true,
       _rightTemplate: true,
       _rightTemplateTpl: null,
       _viewSource: null,
