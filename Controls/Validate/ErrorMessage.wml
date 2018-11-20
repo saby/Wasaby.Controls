@@ -1,6 +1,7 @@
 <div>
     <ws:for data="item in content" >
+        <div style="display: flex; flex-direction: column;">
         {{item}}
-        <br/>
+        </div>
     </ws:for>
 </div>
