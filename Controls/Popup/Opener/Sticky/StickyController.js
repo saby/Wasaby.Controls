@@ -120,7 +120,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                verticalAlign: cfg.align.vertical,
                corner: cfg.corner
             };
-         }
+         },
+
+         getWindowWidth: function() {
+            return window.innerWidth;
+         },
       };
 
       /**
@@ -183,7 +187,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             item.position = {
                top: -10000,
                left: -10000,
-
+               maxWidth: _private.getWindowWidth(),
                // Плавающая ошибка на ios, когда position:absolute контейнер создается за пределами экрана и растягивает страницу
                // что влечет за собой неправильное позиционирование ввиду неверных координат. + на странице стреляют события скролла
                // Лечится position:fixed при позиционировании попапа за пределами экрана
@@ -203,7 +207,8 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
          needRecalcOnKeyboardShow: function() {
             return true;
-         }
+         },
+         _private: _private
       });
 
       return new StickyController();
