@@ -248,9 +248,19 @@
    .controls-EditAtPlace {
       background: transparent; //Фон в редактировании должен быть от вкладки
       .controls-EditAtPlace__fieldWrapper {
-         display: inline-flex; //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+         .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
          .controls-EditAtPlace__textField {
             border-width: 0;
+         }
+      }
+   }
+}
+
+.controls-TabButtons__fixEditAtPlace-display {
+   .controls-TabButton {
+      .controls-EditAtPlace {
+         .controls-EditAtPlace__fieldWrapper {
+            display: inline-flex;
          }
       }
    }
@@ -283,6 +293,7 @@
 .ws-is-ie, .ws-is-firefox {
    //Как-то так должно выглядеть редактирование по месту, перебил все что можно
    .controls-TabButton .controls-EditAtPlace__fieldWrapper {
+      .inline-flexbox();
       height: 24px;
       line-height: normal;
       margin: 0;
