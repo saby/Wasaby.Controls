@@ -65,9 +65,9 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
             выставляется он методе setText. Если опция забиндена на контекст, то компонент должен создаваться уже проставленой опцией,
             поэтому в методе setText опция должна меняться. */
          _textChanged: false,
+          _isRequired: constants.browser.isIE,
           _options: {
              _isMultiline: false,
-             _isRequired: constants.browser.isIE,
              _prepareClassesByConfig: function(cfg) {
                var
                   fieldClasses = [],
