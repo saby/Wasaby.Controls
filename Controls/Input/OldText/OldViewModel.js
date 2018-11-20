@@ -1,4 +1,4 @@
-define('Controls/Input/Text/OldViewModel',
+define('Controls/Input/OldText/OldViewModel',
    [
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],

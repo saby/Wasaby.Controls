@@ -3,7 +3,7 @@ define('Controls/Input/Suggest',
       'Core/Control',
       'wml!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
-      'Controls/Input/Text/OldViewModel',
+      'Controls/Input/OldText/OldViewModel',
       'Controls/Utils/tmplNotify',
       'css!theme?Controls/Input/Suggest/Suggest'
    ],

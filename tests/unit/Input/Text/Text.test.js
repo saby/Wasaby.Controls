@@ -2,9 +2,10 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Text',
-      'tests/resources/ProxyCall'
+      'tests/resources/ProxyCall',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(instance, Text, ProxyCall) {
+   function(instance, Text, ProxyCall, SyntheticEvent) {
       'use strict';
 
       describe('Controls.Input.Text', function() {
@@ -37,17 +38,22 @@ define(
             ctrl._options.trim = true;
             ctrl._changeHandler();
 
-            assert.deepEqual(calls, [{
-               name: 'notify',
-               arguments: ['inputCompleted', ['test value', 'test value']]
-            }]);
+            assert.deepEqual(calls, [
+               {
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test value', 'test value']]
+               },
+               {
+                  name: 'notify',
+                  arguments: ['inputCompleted', ['test value', 'test value']]
+               }]);
          });
          describe('User input.', function() {
             it('Test constraint.', function() {
                ctrl._beforeMount({
-                  value: ''
+                  value: '',
+                  constraint: '[0-9]'
                });
-               ctrl._options.constraint = '[0-9]';
                ctrl._children.input.value = 'text';
                ctrl._children.input.selectionStart = 4;
                ctrl._children.input.selectionEnd = 4;
@@ -61,9 +67,9 @@ define(
             });
             it('Test max length.', function() {
                ctrl._beforeMount({
-                  value: ''
+                  value: '',
+                  maxLength: 3
                });
-               ctrl._options.maxLength = 3;
                ctrl._children.input.value = 'text';
                ctrl._children.input.selectionStart = 4;
                ctrl._children.input.selectionEnd = 4;

@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Input/Text/OldViewModel'
+      'Controls/Input/OldText/OldViewModel'
    ],
    function(TextViewModel) {
 

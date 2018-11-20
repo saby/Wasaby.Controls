@@ -501,6 +501,14 @@ define('Controls/Input/Base',
             this._getField().scrollLeft = 0;
          },
 
+         _notifyValueChanged: function() {
+            _private.notifyValueChanged(this);
+         },
+
+         _notifyInputCompleted: function() {
+            _private.notifyInputCompleted(this);
+         },
+
          /**
           * Get the native field.
           * @return {Node}
