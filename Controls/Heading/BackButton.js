@@ -2,8 +2,9 @@ define('Controls/Heading/BackButton', [
    'Core/Control',
    'wml!Controls/Heading/BackButton/Back',
    'WS.Data/Type/descriptor',
+   'Core/IoC',
    'css!Controls/Heading/BackButton/Back'
-], function(Control, template, types) {
+], function(Control, template, types, IoC) {
 
    /**
     * Specialized heading to go to the previous level. Support different display styles and sizes.
@@ -44,8 +45,30 @@ define('Controls/Heading/BackButton', [
     * @cfg {String} Caption text.
     */
 
+   var _private = {
+      convertOldStyleToNew: function(options, self) {
+         if (options.style !== self._options.style) {
+            if (options.style === 'default') {
+               self._style = 'primaryN';
+               IoC.resolve('ILogger').error('Heading.BackButton', 'Используются устаревшие стили. Используйте style primary вместо style default');
+            } else if (options.style === 'primary') {
+               self._style = 'secondary';
+               IoC.resolve('ILogger').error('Heading.BackButton', 'Используются устаревшие стили. Используйте style secondary вместо style primary');
+            } else {
+               self._style = options.style;
+            }
+         }
+      }
+   };
+
    var BackButton = Control.extend({
-      _template: template
+      _template: template,
+      _beforeMount: function(options) {
+         _private.convertOldStyleToNew(options, this);
+      },
+      _beforeUpdate: function(newOptions) {
+         _private.convertOldStyleToNew(newOptions, this);
+      }
    });
 
    BackButton.getOptionTypes =  function getOptionTypes() {
@@ -53,6 +76,8 @@ define('Controls/Heading/BackButton', [
          caption: types(String).required(),
          style: types(String).oneOf([
             'primary',
+            'primaryN',
+            'secondary',
             'default'
          ]),
          size: types(String).oneOf([
@@ -65,7 +90,7 @@ define('Controls/Heading/BackButton', [
 
    BackButton.getDefaultOptions = function() {
       return {
-         style: 'default',
+         style: 'primaryN',
          size: 'm'
       };
    };
