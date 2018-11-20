@@ -76,6 +76,10 @@ define('Controls/Toolbar', [
                showClose: true
             }
          };
+      },
+
+      getItemClassName: function(item, size) {
+         return 'controls-Toolbar_' + item.get('buttonViewMode') + '_' + size;
       }
    };
 
@@ -114,7 +118,7 @@ define('Controls/Toolbar', [
          if (newOptions.keyProperty !== this._options.keyProperty ||
             this._options.parentProperty !== newOptions.parentProperty ||
             this._options.nodeProperty !== newOptions.nodeProperty ||
-            this._options.iconSize !== newOptions.size) {
+            this._options.size !== newOptions.size) {
             _private.setPopupOptions(this, newOptions);
          }
          if (newOptions.source && newOptions.source !== this._options.source) {
@@ -130,9 +134,13 @@ define('Controls/Toolbar', [
 
          if (item.get(this._nodeProperty)) {
             config = {
+               corner: {vertical: 'top', horizontal: 'left'},
+               horizontalAlign: {side: 'right'},
+               className: _private.getItemClassName(item, this._options.size),
                templateOptions: {
                   items: this._items,
                   rootKey: item.get(this._options.keyProperty),
+                  showHeader: item.get('showHeader'),
                   headConfig: {
                      icon: item.get('icon'),
                      caption: item.get('title'),
@@ -155,6 +163,7 @@ define('Controls/Toolbar', [
 
       _showMenu: function() {
          var config = {
+            className: 'controls-Toolbar__menu-position',
             templateOptions: {
                items: this._menuItems,
                iconSize: this._options.size

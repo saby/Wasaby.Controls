@@ -358,7 +358,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _headerMouseDown: function(event) {
             var dialogTemplate = this._children.DialogTemplate;
-            if (dialogTemplate) {
+
+            // Если мы кликнули в контрол в шапке - то работаем с этим контролом.
+            // d'n'd работает, когда кликнули непосредственно в шапку
+            var isClickedInControl = $(event.target).wsControl() !== this;
+            if (dialogTemplate && !isClickedInControl) {
                dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },
@@ -876,6 +880,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return;
             }
 
+            // Unregister CompoundArea's inner Event/Listener, before its
+            // container is destroyed by compatibility layer
+            this._unregisterEventListener();
+
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
@@ -899,6 +907,35 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
 
+         _unregisterEventListener: function() {
+            var
+               element = this._container[0],
+               controlNodes = element && element.controlNodes,
+               controlNode;
+
+            if (controlNodes) {
+               // Find CompoundArea's control node
+               for (var i = 0; i < controlNodes.length; i++) {
+                  if (controlNodes[i].control === this) {
+                     controlNode = controlNodes[i];
+                     break;
+                  }
+               }
+
+               if (controlNode) {
+                  // Get event listener's control node
+                  var
+                     listenerNode = controlNode.childrenNodes && controlNode.childrenNodes[1],
+                     listener = listenerNode && listenerNode.control;
+
+                  if (listener) {
+                     // Tell event listener to unregister from its Registrar to
+                     // prevent leaks
+                     listener._notify('unregister', ['controlResize', listener], { bubbling: true });
+                  }
+               }
+            }
+         },
 
          _removeOpFromCollections: function(operation) {
             removeOperation(operation, this._producedPendingOperations);
