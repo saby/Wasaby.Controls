@@ -170,6 +170,7 @@ define('Controls/Popup/Opener/BaseController',
             var sizes = {
                width: config.popupOptions.maxWidth || containerSizes.width,
                height: config.popupOptions.maxHeight || containerSizes.height,
+
                // Optimization: to consider the styles on each update is expensive
                margins: config.sizes.margin || _private.getMargins(config, container)
             };
@@ -186,7 +187,7 @@ define('Controls/Popup/Opener/BaseController',
       });
 
       BaseController.POPUP_STATE_INITIALIZING = 'initializing';
-      BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING; //For Manager Controller that uses the BaseController inheritor
+      BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING; // For Manager Controller that uses the BaseController inheritor
       BaseController.POPUP_STATE_CREATING = 'creating';
       BaseController.POPUP_STATE_CREATED = 'created';
       BaseController.POPUP_STATE_UPDATING = 'updating';
