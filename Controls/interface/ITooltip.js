@@ -11,7 +11,7 @@ define('Controls/interface/ITooltip', [
 
    /**
     * @name Controls/interface/ITooltip#tooltip
-    * @cfg {String} Tooltip text.
+    * @cfg {String} Text of the tooltip shown when the control is hovered over.
     * @default Undefined
     * @remark Tooltip works as a title attribute in html. It display information when it fit not in component.
     * @example
