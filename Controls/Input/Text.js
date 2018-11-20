@@ -83,10 +83,8 @@ define('Controls/Input/Text',
       var Text = Base.extend({
          _getViewModelOptions: function(options) {
             return {
-               trim: options.trim,
                maxLength: options.maxLength,
-               constraint: options.constraint,
-               selectOnClick: options.selectOnClick
+               constraint: options.constraint
             };
          },
 
@@ -101,6 +99,8 @@ define('Controls/Input/Text',
                   end: this._viewModel.displayValue.length
                };
             }
+
+            Text.superclass._clickHandler.apply(this, arguments);
          },
 
          _changeHandler: function() {
