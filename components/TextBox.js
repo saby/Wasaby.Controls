@@ -89,6 +89,9 @@ define('SBIS3.CONTROLS/TextBox', [
          if (color === 'error') {
             resColor = 'danger';
          }
+         if (color === 'primary') {
+            resColor = 'secondary';
+         }
          return resColor;
       }
    };

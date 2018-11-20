@@ -886,6 +886,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                RichTextArea.superclass.setActive.apply(this, arguments);
+               // Так как среди предков этого класса есть "Lib/Mixins/CompoundActiveFixMixin", который предполагает, что текущий контрол не имеет внутри себя других контролов, то свойство this._activeChildControl всегда будет -1, что здесь неправильно. Поэтому переопределим его руками:
+               // 1176210240 https://online.sbis.ru/opendoc.html?guid=e6527295-9960-4742-b14a-da7969f2f6c9
+               this._activeChildControl = 1;
             },
             _offTinyEvents: function() {
                if(this._delayOffSelectionChange) {
@@ -1815,8 +1818,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
-               if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
-                  this._getTinyEditorValue() == '') {
+               if (BROWSER.isIE && command === 'undo' && !this._getTinyEditorValue()) {
                   selection.select(editor.getBody(), true);
                }
             },
@@ -2582,9 +2584,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
 
-               editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
+               if (!this.isDestroyed()) {
+                  editor.formatter.formatChanged(formats, this._formatChangedCallback.bind(this));
 
-               this._notify('onInitEditor');
+                  this._notify('onInitEditor');
+               }
             },
             _formatChangedCallback: function(state, obj) {
                this._notify('onFormatChange', obj, state);
