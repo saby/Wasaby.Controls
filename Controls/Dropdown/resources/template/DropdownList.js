@@ -234,6 +234,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
                event.stopPropagation();
             }
             this._notify('sendResult', [result]);
+            if (!pinClicked) {
+               this._notify('close');
+            }
          },
          _footerClick: function(event) {
             var result = {
