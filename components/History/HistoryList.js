@@ -161,28 +161,41 @@ define('SBIS3.CONTROLS/History/HistoryList',
                   if (serialize) {
                      list = JSON.stringify(value, serializer.serialize);
                   } else {
-                     /* Из-за того, что clone(true) у рекордсета лишь рвёт ссылку,
-                        оставляя при этом ссылки на вложенные объекты,
-                        то у пользователей могли появляться дубли, надо на это проверять. */
                      if (value) {
-                        list = JSON.parse(value, serializer.deserialize);
-                        list.each(function(model) {
-                           id = model.get(ID_FIELD);
+                        //По ошибке от Лёхи Мальцева в историю могли сохраняться некоррктные _moduleName контролов,
+                        //из-за этого при сериализации могли возникать ошибки или же сериализатор некорретно отрабатывал,
+                        //такие значения из истории не обрабатываем
+                        try {
+                           list = JSON.parse(value, serializer.deserialize);
    
-                           if(!items.hasOwnProperty(id)) {
-                              items[id] = true;
-                              toAppend.push(model);
+                           /* Из-за того, что clone(true) у рекордсета лишь рвёт ссылку,
+                              оставляя при этом ссылки на вложенные объекты,
+                              то у пользователей могли появляться дубли, надо на это проверять. */
+                           if (list) {
+                              list.each(function(model) {
+                                 id = model.get(ID_FIELD);
+      
+                                 if (!items.hasOwnProperty(id)) {
+                                    items[id] = true;
+                                    toAppend.push(model);
+                                 }
+                              });
+   
+                              if (toAppend.length) {
+                                 list = getEmptyRecordSet();
+                                 list.append(toAppend);
+                              }
                            }
-                        });
-                        
-                        if (toAppend.length) {
-                           list = getEmptyRecordSet();
-                           list.append(toAppend);
+                        } catch (e) {
+                           IoC.resolve('ILogger').error('HistoryList', e.message, e);
                         }
-                     } else {
+                     }
+                     
+                     if (!list) {
                         list = getEmptyRecordSet();
                      }
                   }
+                  
                   return list;
                },
                emptyValue: getEmptyRecordSet(),
