@@ -4,10 +4,12 @@
 define([
    'Controls/Decorator/Markup/Converter',
    'Controls/Decorator/Markup/resolvers/highlight',
-   'Controls/Decorator/Markup/resolvers/linkDecorate'
+   'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Core/constants'
 ], function(Converter,
    highlightResolver,
-   linkDecorateResolver) {
+   linkDecorateResolver,
+   cConstants) {
    'use strict';
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -59,9 +61,10 @@ define([
             },
             'www.ya.ru'
          ],
+         decoratedLinkService,
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
          linkHtml = '<a rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
       describe('deepCopyJson', function() {
          it('one big', function() {
@@ -130,6 +133,13 @@ define([
       });
 
       describe('jsonToHtml', function() {
+         beforeEach(function() {
+            decoratedLinkService = cConstants.decoratedLinkService;
+            cConstants.decoratedLinkService = '/test/';
+         });
+         afterEach(function() {
+            cConstants.decoratedLinkService = decoratedLinkService;
+         });
          it('empty', function() {
             assert.equal(Converter.jsonToHtml([]), '<span></span>');
          });
@@ -139,6 +149,110 @@ define([
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
+            assert.equal(Converter.jsonToHtml(json), html);
+         });
+         it('all valid tags and attributes', function() {
+            var json = [
+               ['p',
+                  ['html',
+                     ['head',
+                        ['title', 'Test title'],
+                        ['meta', { charset: 'utf-8' }],
+                        ['script', 'alert("Test script");'],
+                        ['style', '.testStyle { color: red; }'],
+                        ['link', { rel: 'stylesheet', type: 'text/css', href: '/resources/WS.Core/css/core-min.css' }]
+                     ],
+                     ['body',
+                        ['div', 'Test division'],
+                        ['code', 'Test code'],
+                        ['p', 'Test paragraph'],
+                        ['span', 'Test span'],
+                        ['img', { alt: 'Test image', src: 'test.gif', onclick: 'alert("Test")' }],
+                        ['br'],
+                        ['hamlet', 'Not to be: that is the answer'],
+                        ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
+                        ['pre', 'Test pretty print'],
+                        ['label', 'Test label'],
+                        ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
+                        ['blockquote', { cite: 'http://www.worldwildlife.org/who/index.html' }, ['div', 'Test block quote']],
+                        ['p', ['b', 'T'], ['strong', 'e'], ['i', 's'], ['em', 't'], ['u', ' '], ['s', 's'], ['strike', 't'], ['q', 'yles']],
+                        ['p', ['h0', 'No!'], ['h1', 'head'], ['h2', 'head'], ['h3', 'head'], ['h4', 'head'], ['h5', 'head'], ['h6', 'head'], ['h7', 'No!']],
+                        ['input', { id: 'testInput', type: 'text', value: 'Test input' }],
+                        ['dl', ['dt', 'Test description list'], ['dd', 'Yes'], ['dt', 'Test filthy language'], ['dd', 'No']],
+                        ['dir', ['li', 'Test'], ['li', 'directed'], ['li', 'titles']],
+                        ['ol', ['li', 'Test'], ['li', 'ordered'], ['li', 'list']],
+                        ['ul', ['li', 'Test'], ['li', 'unordered'], ['li', 'list']],
+                        ['table',
+                           ['caption', 'Test table'],
+                           ['colgroup', ['col', { style: 'background-color: yellow;' }], ['col', { style: 'background-color: red;' }]],
+                           ['thead', ['tr', ['th', 'Test'], ['th', 'head']]],
+                           ['tbody', ['tr', ['td', 'Test'], ['td', 'body']]],
+                           ['tfoot', ['tr', ['td', 'Test'], ['td', 'foot']]]
+                        ]
+                     ]
+                  ]
+               ],
+               ['p',
+                  {
+                     alt: 'testAlt',
+                     'class': 'testClass',
+                     colspan: 'testColspan',
+                     config: 'testConfig',
+                     'data-bind': 'testDataOne',
+                     'data-random-ovdmxzme': 'testDataTwo',
+                     'data-some-id': 'testDataThree',
+                     hasmarkup: 'testHasmarkup',
+                     height: 'testHeight',
+                     href: 'testHref',
+                     id: 'testId',
+                     name: 'testName',
+                     rel: 'testRel',
+                     rowspan: 'testRowspan',
+                     src: 'testSrc',
+                     style: 'testStyle',
+                     tabindex: 'testTabindex',
+                     target: 'testTarget',
+                     title: 'testTitle',
+                     width: 'testWidth'
+                  },
+                  'All valid attributes'
+               ]
+            ];
+            var html = '<div>' +
+               '<p>' +
+               '<html>' +
+               '<head></head>' +
+               '<body>' +
+               '<div>Test division</div>' +
+               '<code>Test code</code>' +
+               '<p>Test paragraph</p>' +
+               '<span>Test span</span>' +
+               '<img alt="Test image" src="test.gif" />' +
+               '<br />' +
+               '<a rel="noreferrer" target="_blank">Test link</a>' +
+               '<pre>Test pretty print</pre>' +
+               '<label>Test label</label>' +
+               '<font>Test font</font>' +
+               '<blockquote><div>Test block quote</div></blockquote>' +
+               '<p><b>T</b><strong>e</strong><i>s</i><em>t</em><u> </u><s>s</s><strike>t</strike><q>yles</q></p>' +
+               '<p><h1>head</h1><h2>head</h2><h3>head</h3><h4>head</h4><h5>head</h5><h6>head</h6></p>' +
+               '<input id="testInput" />' +
+               '<dl><dt>Test description list</dt><dd>Yes</dd><dt>Test filthy language</dt><dd>No</dd></dl>' +
+               '<dir><li>Test</li><li>directed</li><li>titles</li></dir>' +
+               '<ol><li>Test</li><li>ordered</li><li>list</li></ol>' +
+               '<ul><li>Test</li><li>unordered</li><li>list</li></ul>' +
+               '<table>' +
+               '<caption>Test table</caption>' +
+               '<colgroup><col style="background-color: yellow;" /><col style="background-color: red;" /></colgroup>' +
+               '<thead><tr><th>Test</th><th>head</th></tr></thead>' +
+               '<tbody><tr><td>Test</td><td>body</td></tr></tbody>' +
+               '<tfoot><tr><td>Test</td><td>foot</td></tr></tfoot>' +
+               '</table>' +
+               '</body>' +
+               '</html>' +
+               '</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="testHref" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '</div>';
             assert.equal(Converter.jsonToHtml(json), html);
          });
          it('with linkDecorate resolver', function() {
