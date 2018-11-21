@@ -35,8 +35,8 @@ define(['Controls/Heading/Back'], function(BackBtn) {
                   stateStyle: 'test'
                },
                {
-                  optionStyle: 'primary',
-                  stateStyle: 'secondary'
+                  optionStyle: 'default',
+                  stateStyle: 'primary'
                }
             ];
          styles.forEach(function(setOfStyle) {
