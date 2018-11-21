@@ -1,13 +1,13 @@
 <div class="ws-align-items-baseline ws-inline-flexbox">
-   <Controls.EditAtPlace
+   <Controls.EditableArea
       editObject="{{item}}"
       readOnly="{{!selected}}"
       style="withoutBorder"
    >
-      <div class="ControlsDemo-EditAtPlace__eapWrapper">
+      <div class="ControlsDemo-EditableArea__eapWrapper">
          <Controls.EditableArea.Templates.Editors.Base
             bind:value="content.editObject.name"
-            attr:class="ControlsDemo-EditAtPlace__tabEditor"
+            attr:class="ControlsDemo-EditableArea__tabEditor"
             size="l"
             style="accentHeader"
          >
@@ -18,5 +18,5 @@
             </ws:editorTemplate>
          </Controls.EditableArea.Templates.Editors.Base>
       </div>
-   </Controls.EditAtPlace>
+   </Controls.EditableArea>
 </div>

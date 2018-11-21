@@ -1,12 +1,12 @@
-define('Controls-demo/EditAtPlace/EditAtPlace', [
+define('Controls-demo/EditableArea/EditableArea', [
    'Core/Control',
-   'wml!Controls-demo/EditAtPlace/EditAtPlace',
+   'wml!Controls-demo/EditableArea/EditableArea',
    'WS.Data/Entity/Record',
    'WS.Data/Source/Memory',
-   'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate',
-   'wml!Controls-demo/EditAtPlace/resources/exampleTabTemplate2',
+   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate',
+   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2',
 
-   'css!Controls-demo/EditAtPlace/EditAtPlace'
+   'css!Controls-demo/EditableArea/EditableArea'
 ], function(
    Control,
    template,
@@ -62,7 +62,7 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
          }
       ];
 
-   var EditAtPlace = Control.extend({
+   var EditableArea = Control.extend({
       _template: template,
       _record: null,
       _selectedTab: 0,
@@ -90,5 +90,5 @@ define('Controls-demo/EditAtPlace/EditAtPlace', [
          });
       }
    });
-   return EditAtPlace;
+   return EditableArea;
 });

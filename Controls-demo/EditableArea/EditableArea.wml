@@ -1,14 +1,14 @@
-<div class="ControlsDemo-EditAtPlace">
-   <div class="ControlsDemo-EditAtPlace__title">Пример 1 - на подложке</div>
-   <Controls.EditAtPlace
+<div class="ControlsDemo-EditableArea">
+   <div class="ControlsDemo-EditableArea__title">Пример 1 - на подложке</div>
+   <Controls.EditableArea
       name="edit"
       editObject="{{_record}}"
       style="withBackground"
       toolbarVisibility="{{true}}"
-      attr:class="ControlsDemo-EditAtPlace__firstExample"
+      attr:class="ControlsDemo-EditableArea__firstExample"
    >
-      <div class="ControlsDemo-EditAtPlace__firstExampleWrapper">
-         <span class="ControlsDemo-EditAtPlace__label">Шаблон:</span>
+      <div class="ControlsDemo-EditableArea__firstExampleWrapper">
+         <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
          <Controls.EditableArea.Templates.Editors.Base
               bind:value="content.editObject.text1"
               style="asLink"
@@ -18,13 +18,13 @@
             </ws:editorTemplate>
          </Controls.EditableArea.Templates.Editors.Base>
       </div>
-   </Controls.EditAtPlace>
-   <div class="ControlsDemo-EditAtPlace__title">Пример 2 - редактирование во вкладке</div>
+   </Controls.EditableArea>
+   <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
    <ws:partial template="Controls/Popup/Templates/Stack/StackTemplate"
                showMaximizedButton="{{true}}">
       <ws:topArea>
-         <div class="ControlsDemo-EditAtPlace__topAreaWrapper">
-            <div class="ControlsDemo-EditAtPlace__row">
+         <div class="ControlsDemo-EditableArea__topAreaWrapper">
+            <div class="ControlsDemo-EditableArea__row">
                <Controls.Toolbar
                   parentProperty="parent"
                   nodeProperty="@parent"
@@ -34,16 +34,16 @@
                <Controls.Button caption="Сохранить"
                                 style="linkMain2"
                                 size="m"
-                                attr:class="ControlsDemo-EditAtPlace__button" />
+                                attr:class="ControlsDemo-EditableArea__button" />
                <Controls.Button caption="На выполнение"
                                 style="buttonPrimary"
-                                attr:class="ControlsDemo-EditAtPlace__button" />
+                                attr:class="ControlsDemo-EditableArea__button" />
             </div>
          </div>
       </ws:topArea>
       <ws:contentArea>
          <Controls.Tabs.Buttons
-            attr:class="ControlsDemo-EditAtPlace__tabs"
+            attr:class="ControlsDemo-EditableArea__tabs"
             bind:selectedKey="_selectedTab"
             keyProperty="id"
             itemTemplateProperty="itemTemplate"
@@ -51,22 +51,22 @@
          />
       </ws:contentArea>
    </ws:partial>
-   <div class="ControlsDemo-EditAtPlace__title">Пример 3 - редактирование во вкладке</div>
+   <div class="ControlsDemo-EditableArea__title">Пример 3 - редактирование во вкладке</div>
    <ws:partial template="Controls/Popup/Templates/Stack/StackTemplate"
                showMaximizedButton="{{true}}">
       <ws:topArea>
-         <div class="ControlsDemo-EditAtPlace__topAreaWrapper">
-            <div class="ControlsDemo-EditAtPlace__row">
+         <div class="ControlsDemo-EditableArea__topAreaWrapper">
+            <div class="ControlsDemo-EditableArea__row">
                <Controls.Button caption="Сохранить"
                                 style="linkMain2"
                                 size="m"
-                                attr:class="ControlsDemo-EditAtPlace__button" />
+                                attr:class="ControlsDemo-EditableArea__button" />
             </div>
          </div>
       </ws:topArea>
       <ws:contentArea>
          <Controls.Tabs.Buttons
-            attr:class="ControlsDemo-EditAtPlace__tabs"
+            attr:class="ControlsDemo-EditableArea__tabs"
             bind:selectedKey="_selectedTab"
             keyProperty="id"
             itemTemplateProperty="itemTemplate"

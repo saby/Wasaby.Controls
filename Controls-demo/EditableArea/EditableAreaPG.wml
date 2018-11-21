@@ -4,7 +4,7 @@
       dataObject="{{_dataObject}}"
       componentOpt="{{_componentOptions}}"
       on:optionsChanged="_optionsChangedHandler()"
-      attr:class="ControlsDemo-EditAtPlace__pgWrapper"
+      attr:class="ControlsDemo-EditableArea__pgWrapper"
       content="{{_content}}">
    </Controls-demo.PropertyGrid.PropertyGridWrapper>
 </div>

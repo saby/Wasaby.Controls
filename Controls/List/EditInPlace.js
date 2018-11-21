@@ -6,6 +6,7 @@ define('Controls/List/EditInPlace', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
+   'Controls/EditableArea/Constants',
    'css!theme?Controls/List/EditInPlace/Text'
 ], function(
    Control,
@@ -14,7 +15,8 @@ define('Controls/List/EditInPlace', [
    Record,
    ItemsUtil,
    getWidthUtil,
-   hasHorizontalScrollUtil
+   hasHorizontalScrollUtil,
+   EditConstants
 ) {
    var
       typographyStyles = [
@@ -27,12 +29,6 @@ define('Controls/List/EditInPlace', [
          'wordSpacing',
          'textIndent'
       ],
-      ItemEditResult = {
-         CANCEL: 'Cancel'
-      },
-      ItemEndEditResult = {
-         CANCEL: 'Cancel'
-      },
       _private = {
          beginEdit: function(self, options, isAdd) {
             var result = self._notify('beforeBeginEdit', [options, isAdd]);
@@ -53,7 +49,7 @@ define('Controls/List/EditInPlace', [
          processBeforeBeginEditResult: function(self, options, eventResult, isAdd) {
             var result;
 
-            if (eventResult === ItemEditResult.CANCEL) {
+            if (eventResult === EditConstants.CANCEL) {
                result = Deferred.fail(options);
             } else if (eventResult instanceof Deferred) {
                self._notify('showIndicator', [], { bubbling: true });
@@ -79,7 +75,7 @@ define('Controls/List/EditInPlace', [
 
             var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
 
-            if (result === ItemEndEditResult.CANCEL) {
+            if (result === EditConstants.CANCEL) {
                return Deferred.fail();
             }
             if (result instanceof Deferred) {
