@@ -22,6 +22,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          isExpanded: function(dispItem) {
             return this._model.isExpanded(dispItem);
          },
+         setExpandedItems: function(expandedItems) {
+            this._model.setExpandedItems(expandedItems);
+         },
          setRoot: function(root) {
             this._model.setRoot(root);
          },
@@ -36,9 +39,6 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
                return currentColumn;
             };
             return current;
-         },
-         setExpandedItems: function(expandedItems) {
-            this._model.setExpandedItems(expandedItems);
          },
          _onNodeRemoved: function(event, nodeId) {
             this._notify('onNodeRemoved', nodeId);

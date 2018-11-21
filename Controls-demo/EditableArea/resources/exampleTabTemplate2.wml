@@ -1,0 +1,22 @@
+<div class="ws-align-items-baseline ws-inline-flexbox">
+   <Controls.EditableArea
+      editObject="{{item}}"
+      readOnly="{{!selected}}"
+      style="withoutBorder"
+   >
+      <div class="ControlsDemo-EditableArea__eapWrapper">
+         <Controls.EditableArea.Templates.Editors.Base
+            bind:value="content.editObject.name"
+            attr:class="ControlsDemo-EditableArea__tabEditor"
+            size="l"
+            style="accentHeader"
+         >
+            <ws:editorTemplate>
+               <Controls.Input.Text selectOnClick="{{ false }}"
+                                    size="l"
+                                    style="header" />
+            </ws:editorTemplate>
+         </Controls.EditableArea.Templates.Editors.Base>
+      </div>
+   </Controls.EditableArea>
+</div>

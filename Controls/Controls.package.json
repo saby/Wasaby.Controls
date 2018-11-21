@@ -6,7 +6,8 @@
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
     "Controls/Application/HeadDataContext",
-    "Controls/Application/AppData"
+    "Controls/Application/AppData",
+    "Controls/Application/DepsCollector/DepsCollector"
   ],
   "output": "controls-application.package.js"
 }, {
@@ -96,7 +97,9 @@
   ],
   "exclude": [
     "Controls/Input/RichArea",
-    "Controls/Input/RichArea/*"
+    "Controls/Input/RichArea/*",
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
   ],
   "output": "controls-input.package.js"
 }, {
@@ -105,6 +108,12 @@
     "Controls/Input/RichArea/*"
   ],
   "output": "controls-richarea.package.js"
+}, {
+  "include": [
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
+  ],
+  "output": "controls-richeditor.package.js"
 }, {
   "include": [
     "Controls/Label/*",
@@ -120,7 +129,6 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "Controls/List/resources/utils/CSSGridLayoutUtils",
     "wml!Controls/List/Grid/OldGridView",
     "wml!Controls/List/Grid/NewGridView",
     "Controls/List/ItemActions/resources/*",
@@ -274,13 +282,23 @@
   ],
   "output": "controls-calendar.package.js"
 },
-  {
-    "include": [
-      "Controls/Search/*"
-    ],
-    "exclude": [
-      "Controls/Search/Misspell",
-      "wml!Controls/Search/Misspell"
-    ],
-    "output": "controls-search.package.js"
-  }]
+{
+  "include": [
+    "Controls/Search/*"
+  ],
+  "exclude": [
+    "Controls/Search/Misspell",
+    "wml!Controls/Search/Misspell"
+  ],
+  "output": "controls-search.package.js"
+}, {
+  "include": [
+    "Controls/EditableArea",
+    "Controls/EditableArea/*"
+  ],
+  "exclude": [
+    "Controls/EditableArea/Constants"
+  ],
+  "output": "controls-editablearea.package.js"
+}
+]

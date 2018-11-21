@@ -186,8 +186,25 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
 
          });
 
+         it('resultHandler itemClick', function() {
+            var dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            dropdownList._notify = function(event, data) {
+               if (event === 'sendResult') {
+                  assert.equal(data[0].action, 'itemClick');
+               }
+            };
+            dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
+            dropdownList.resultHandler({ action: 'itemClick' });
+         });
+         it('resultHandler pinClick', function() {
+            var dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            dropdownList._notify = function(event, data) {
+               if (event === 'sendResult') {
+                  assert.equal(data[0].action, 'pinClicked');
+               }
+            };
+            dropdownList.resultHandler({ action: 'pinClicked' });
+         });
       });
-
    });
-
 });

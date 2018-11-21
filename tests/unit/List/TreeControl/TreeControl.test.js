@@ -16,12 +16,17 @@ define([
             isSourceControllerDestroyed = false;
          treeControl._children = {
             baseControl: {
-               reload: function() {},
+               reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
+               },
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {
                      },
                      setExpandedItems: function() {
+                        this._expandedItems = {};
                      }
                   };
                }
@@ -48,13 +53,17 @@ define([
          treeControl._children = {
             baseControl: {
                reload: function(filter) {
+                  var def = new Deferred();
                   reloadCalled = true;
                   assert.equal(filter['parent'], 'testRoot', 'Invalid value "filter[parentProperty]" after call "_beforeUpdate" with new "root"');
+                  def.callback();
+                  return def;
                },
                getViewModel: function() {
                   return {
                      setHasMoreStorage: function() {},
                      setExpandedItems: function() {
+                        this._expandedItems = {};
                      },
                      setRoot: function() {
                         setRootCalled = true;
@@ -271,40 +280,14 @@ define([
          treeControl._children = {
             baseControl: {
                reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
                },
                getViewModel: function() {
                   return {
                      setExpandedItems: function() {
-                        treeViewModel.setExpandedItems({});
-                     }
-                  };
-               }
-            }
-         };
-
-         treeControl.reload();
-         assert.deepEqual({}, treeViewModel._expandedItems);
-      });
-      it('All items collapsed after reload', function() {
-         var
-            treeControl = new TreeControl({}),
-            treeViewModel = new TreeViewModel({});
-
-         treeViewModel._expandedItems = {
-            2246: true,
-            452815: true,
-            457244: true,
-            471641: true
-         };
-
-         treeControl._children = {
-            baseControl: {
-               reload: function() {
-               },
-               getViewModel: function() {
-                  return {
-                     setExpandedItems: function() {
-                        treeViewModel.setExpandedItems({});
+                        treeViewModel.setExpandedItems([]);
                      }
                   };
                }

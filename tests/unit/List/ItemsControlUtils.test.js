@@ -8,7 +8,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
       'use strict';
 
       describe('Controls.List.Utils', function () {
-         var data, cfg1, sortFnc, filterFnc, groupFnc;
+         var data, cfg1, filterFnc, groupFnc;
 
          beforeEach(function() {
             data = [
@@ -25,9 +25,6 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
                   title : 'Третий'
                }
             ],
-            sortFnc = function() {
-               return true
-            },
             filterFnc = function() {
                return true
             },
@@ -35,7 +32,6 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
                return true
             },
             cfg1 = {
-               itemsSortMethod : sortFnc,
                itemsFilterMethod : filterFnc,
                groupMethod: groupFnc
             };
@@ -46,7 +42,6 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             it('Flat display Array', function () {
                proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1, [cfg1.itemsFilterMethod]);
 
-               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
                assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
             });
@@ -57,7 +52,6 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
                   idProperty : 'id'
                });
                proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1, [cfg1.itemsFilterMethod]);
-               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
                assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
                assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
 

@@ -4,4 +4,5 @@
    <Controls-demo.Decorators.WrapURLs.WrapURLs/>
    <Controls-demo.Decorators.Highlight.Highlight/>
    <Controls-demo.Decorators.PhoneNumber.PhoneNumber/>
+   <Controls-demo.Decorators.Markup.Markup/>
 </div>

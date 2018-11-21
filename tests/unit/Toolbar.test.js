@@ -33,6 +33,7 @@ define(
             {
                id: '4',
                title: 'Запись 4',
+               buttonViewMode: 'link',
                parent: '2',
                '@parent': null,
                showType: 0
@@ -176,6 +177,9 @@ define(
                   isMenuClosed = true;
                };
                assert.equal(isMenuClosed, false);
+            });
+            it('getItemClassName', () => {
+               assert.equal('controls-Toolbar_link_s', Toolbar._private.getItemClassName(records.at(3), 's'));
             });
          });
 

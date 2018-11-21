@@ -24,8 +24,10 @@ define('Controls-demo/OperationsPanel/Demo', [
 
       _beforeMount: function() {
          this._panelSource = this._getPanelSource([]);
+         this._itemActions = Data.itemActions;
          this._selectionChangeHandler = this._selectionChangeHandler.bind(this);
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
          this._moveDialogFilter = {
             onlyFolders: true
          };
@@ -71,6 +73,38 @@ define('Controls-demo/OperationsPanel/Demo', [
          }
       },
 
+      _itemActionVisibilityCallback: function(action, item) {
+         var
+            index = this._items.getIndex(item),
+            prevItem = this._items.at(index - 1),
+            nextItem = this._items.at(index + 1);
+
+         switch (action.id) {
+            case 'moveUp':
+               /*У первого не показывать кнопку вверх*/
+               return prevItem && prevItem.get('Раздел@') === item.get('Раздел@') && prevItem.get('Раздел') === item.get('Раздел');
+            case 'moveDown':
+               /*У последнего не показывать кнопку вниз*/
+               return nextItem && nextItem.get('Раздел@') === item.get('Раздел@') && nextItem.get('Раздел') === item.get('Раздел');
+            default:
+               return true;
+         }
+      },
+
+      _itemActionsClick: function(event, action, item) {
+         switch (action.id) {
+            case 'moveUp':
+               this._children.dialogMover.moveItemUp(item);
+               break;
+            case 'moveDown':
+               this._children.dialogMover.moveItemDown(item);
+               break;
+            case 'remove':
+               this._children.remover.removeItems([item.get('id')]);
+               break;
+         }
+      },
+
       _onClickAddBlock: function() {
          this._showPopup('Клик в блок доп. операций');
       },
@@ -95,10 +129,11 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._children.remover.removeItems(this._selectedKeys);
       },
 
-      _afterItemsMove: function() {
-         //TODO: иначе дереву совсем плохо
-         //https://online.sbis.ru/opendoc.html?guid=d413c319-1e28-4ddf-ad5f-4605ec69a758
-         this._children.list.reload();
+      _afterItemsMove: function(event, items, target, position) {
+         //To display the records in the correct order
+         if (position === 'on') {
+            this._children.list.reload();
+         }
       },
 
       _beforeItemsRemove: function(event, items) {
@@ -123,25 +158,13 @@ define('Controls-demo/OperationsPanel/Demo', [
       },
 
       _getPanelSource: function(keys) {
-         var
-            item,
-            leafs = 0,
-            self = this,
-            items = Data.panelItems.slice();
+         var items = Data.panelItems.slice();
+
          if (keys[0] !== null && !!keys.length) {
             items.unshift(Data.removeOperation);
+            items.unshift(Data.moveOperation);
          }
 
-         keys.forEach(function(key) {
-            item = self._items.getRecordById(key);
-            if (item && !item.get(self._nodeProperty)) {
-               leafs++;
-            }
-         });
-
-         if (leafs >= 2) {
-            items.push(Data.mergeOperation);
-         }
          return new Memory({
             idProperty: 'id',
             data: items

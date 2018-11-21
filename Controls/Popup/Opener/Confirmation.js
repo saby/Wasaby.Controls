@@ -34,7 +34,8 @@ define('Controls/Popup/Opener/Confirmation',
 
          /**
           * Open confirmation popup.
-          * @param config Confirmation options.
+          * @function Controls/Popup/Opener/Confirmation#open
+          * @param {Object} config Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
           * @remark
           * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.

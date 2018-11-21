@@ -17,6 +17,7 @@
                             keyProperty="id"
                             displayProperty="notTitle"
                             multiSelect="{{true}}"
+                            multiline="{{true}}"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
