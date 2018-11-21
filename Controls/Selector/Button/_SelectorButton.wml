@@ -1,6 +1,6 @@
 <div class="controls-SelectorButton">
    <ws:if data="{{_options.items.getCount()}}">
-      <Controls.SelectedCollection
+      <Controls.Selector.SelectedCollection
               _counterWidth="{{_options._counterWidth}}"
               items="{{_options.items}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
@@ -9,12 +9,12 @@
               clickable="{{true}}"
               on:itemClick="_itemClickHandler()"
               on:crossClick="_crossClick()">
-      </Controls.SelectedCollection>
-      <ws:if data="{{_options.multiSelect}}">
+      </Controls.Selector.SelectedCollection>
+      <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
                           attr:class="controls-SelectorButton_button-more"/>
       </ws:if>
-      <ws:if data="{{_options.items.getCount() > 1}}">
+      <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"/>
       </ws:if>
    </ws:if>
